@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Select from 'react-select'
 import { useLocation } from 'react-router-dom'
 
@@ -14,7 +14,6 @@ function SelectLessons({
   const location = useLocation();
   const isRootPath = location.pathname === '/my-course-in-entrepreneurship/journal';
 
-  // Function to get level-specific placeholder
   const getLevelPlaceholder = () => {
     switch (activeLevel) {
       case 0:
@@ -28,7 +27,20 @@ function SelectLessons({
     }
   };
 
-  // Use selected course label if available and not on root path
+  useEffect(() => {
+    const savedSelection = localStorage.getItem('selectedLesson');
+    if (savedSelection && !selectedCourse) {
+      try {
+        const parsedSelection = JSON.parse(savedSelection);
+        if (parsedSelection.activeLevel === activeLevel) {
+          setSelectedCourse(parsedSelection.course);
+        }
+      } catch (error) {
+        console.error('Error parsing saved selection:', error);
+      }
+    }
+  }, [activeLevel, selectedCourse, setSelectedCourse]);
+
   const displayPlaceholder = isRootPath || !selectedCourse?.label
     ? getLevelPlaceholder()
     : selectedCourse.label;
@@ -40,6 +52,13 @@ function SelectLessons({
       return;
     }
     setSelectedCourse(selectedOption);
+    // Save selection to localStorage
+    if (selectedOption) {
+      localStorage.setItem('selectedLesson', JSON.stringify({
+        course: selectedOption,
+        activeLevel: activeLevel
+      }));
+    }
   };
 
   const currentSelection = options?.find(option =>

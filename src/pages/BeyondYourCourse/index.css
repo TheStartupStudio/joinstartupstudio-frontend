@@ -166,7 +166,7 @@
         width: 100%;
         padding: .5rem 1rem;
         justify-content: center;
-        color: #2d3748 !important;
+        color: #000000 !important;
         font-weight: 600;
     }
 }
@@ -444,10 +444,12 @@
     justify-content: center;
     margin-bottom: 2rem;
     padding: .2rem;
-    background: white;
     border-radius: 15px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
+    background-color: transparent!important;
+
+    
 }
 
 .small-videos-thumb {
@@ -457,7 +459,7 @@
 
 .course-level {
     padding: .5rem 6.5rem;
-    color: #2d3748 !important;
+    color: #000000 !important;
     cursor: pointer;
     transition: all 0.1s ease;
     display: flex;
@@ -472,12 +474,12 @@
 }
 
 .course-level:hover {
-    background-color: #ff167f33;
+    background-color: #FF339933;
     transform: translateY(-1px);
 }
 
 .course-level-master:hover {
-    background-color: #ff167f33;
+    background-color: #FF339933;
     transform: translateY(-1px);
 }
 
@@ -485,7 +487,7 @@
 .active-level,
 .active-level-master {
     color: #2d3748;
-    font-weight: 600;
+    font-weight: 500;
     position: relative;
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09);
     width: 100%;
@@ -498,7 +500,7 @@
 }
 
 .active-level-master {
-    background-color: #ff167f33;
+    background-color: #FF339933!important;
 }
 
 .active-level-master::before {
@@ -508,13 +510,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ff167f33;
+    background-color: #FF339933;
     z-index: -1;
     border-radius: 8px;
 }
 
 .active-level-master:hover {
-    background-color: #ff167f33;
+    background-color: #FF339933;
 }
 
 .active-level::before {
@@ -842,14 +844,14 @@
 
 /* For master classes page (pink theme) */
 .gradient-background-master .course-level:hover {
-    background-color: #ff167f33;
+    background-color: #FF339933;
     transform: translateY(-1px);
 }
 
 .gradient-background-master .active-level-master {
     color: #2d3748;
     font-weight: 600;
-    background-color: #ff167f33;
+    background-color: #FF339933;
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09);
     position: relative;
 }
@@ -861,7 +863,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ff167f33;
+    background-color: #FF339933;
     z-index: -1;
     border-radius: 8px;
 }
@@ -873,7 +875,7 @@
 }
 
 .gradient-background-course .active-level {
-    color: #2d3748;
+    color: #000000;
     font-weight: 600;
     background-color: #7ecbff33;
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09);
@@ -891,7 +893,11 @@
     z-index: -1;
     border-radius: 8px;
 }
-
+.guidance-subtitle {
+    font: normal normal 300 12px Montserrat;
+    letter-spacing: 0px;
+    color: rgb(0, 0, 0);
+  }
 /* Responsive styles */
 @media (max-width: 1024px) {
     .level-navigation {

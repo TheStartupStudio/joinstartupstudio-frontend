@@ -775,14 +775,14 @@ a.sidenav.active {
 .beyond-your-course-video-thumb-icon {
   color: #fff;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 60%;
+  left: 55%;
   margin: -30px 0 0 -30px;
   width: 30px;
   height: 30px;
   border: 3px solid white;
   border-radius: 50%;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 .beyond-your-course-video-thumb-icon-fullscreen {
@@ -799,8 +799,8 @@ a.sidenav.active {
 }
 
 .beyond-your-course-video-thumb-icon svg {
-  width: inherit !important;
-  height: inherit !important;
+  width:15px !important;
+  height: 15px !important;
 }
 
 .beyond-your-course-video-thumb-small-icon {
@@ -908,11 +908,12 @@ a.sidenav.active {
 }
 
 .guidance-encouragement-page-titles h3 {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 500;
   letter-spacing: 0px;
   color: #333d3d;
   opacity: 1;
+  margin-bottom:0!important;
 }
 
 .guidance-link {
@@ -928,7 +929,7 @@ a.sidenav.active {
 }
 
 .page-padding {
-  padding: 40px 35px;
+  padding: 30px 35px;
 }
 
 .account-page-padding {
@@ -5826,7 +5827,7 @@ wave > wave:first-child {
 .journal-entries__video {
   float: right;
   margin-left: 13px;
-  margin-bottom: 13px;
+  /* margin-bottom: 13px; */
 
   /* max-width: 60%; */
   width: 100%;
@@ -5844,7 +5845,7 @@ strong {
   .journal-entries__video {
     max-width: 100%;
     width: 100%;
-    margin-bottom: 25px;
+    /* margin-bottom: 25px; */
   }
 }
 
@@ -7038,4 +7039,13 @@ _::-webkit-full-page-media,
 _:future,
 :root body {
   height: 100% !important;
+}
+
+.journal-entries__videos .journal-entries__video {
+  margin-bottom: 0;
+}
+
+.journal-entries__videos .journal-entries__video:has(+ .nav-videos),
+.journal-entries__videos .journal-entries__video--welcome-video:has(+ .nav-videos) {
+  margin-bottom: 2rem;
 }

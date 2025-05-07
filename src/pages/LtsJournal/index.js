@@ -559,13 +559,13 @@ function LtsJournal(props) {
 
   const handleLevelClick = (clickedLevel) => {
     if (clickedLevel === 1 && !finishedContent.includes(58)) {
-      setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
+      setLockModalMessage('This lesson is currently locked. You must complete Level 1 before it to gain access to Level 2.');
       setShowLockModal(true);
       return;
     }
 
     if (clickedLevel === 2 && !finishedContent.includes(68)) {
-      setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
+      setLockModalMessage('This lesson is currently locked. You must complete Level 2 before it to gain access to Level 3.');
       setShowLockModal(true);
       return;
     }
@@ -856,13 +856,17 @@ function LtsJournal(props) {
       });
 
       if (emptyReflections.length > 0) {
-        toast.info('Please complete the reflection before continuing.');
+        toast.info('Please complete the reflection before continuing.', {
+          className: 'toastify-success-info'
+        });
         setSaving(false);
         return;
       }
 
       if (!hasValidReflection) {
-        toast.info('Please write something on reflection before continuing.');
+        toast.info('Please write something on reflection before continuing.', {
+          className: 'toastify-success-info'
+        });
         setSaving(false);
         return;
       }
@@ -897,9 +901,13 @@ function LtsJournal(props) {
       setReflectionsData({});
 
       if (didSave) {
-        toast.success('Reflection has been saved successfully!');
+        toast.success('Reflection has been saved successfully!', {
+          className: 'toastify-success-info'
+        });
       } else {
-        toast.info('No reflection to save. Please write something before saving.');
+        toast.info('No reflection to save. Please write something before saving.', {
+          className: 'toastify-success-info'
+        });
         setSaving(false);
         return;
       }
@@ -925,11 +933,17 @@ function LtsJournal(props) {
     } catch (error) {
       console.error('Save error:', error);
       if (error.response) {
-        toast.error(error.response.data.errors.map(e => e.message).join('.'));
+        toast.error(error.response.data.errors.map(e => e.message).join('.'), {
+          className: 'toastify-success-info'
+        });
       } else if (error.request) {
-        toast.error('No response received from server. Please check your connection.');
+        toast.error('No response received from server. Please check your connection.', {
+          className: 'toastify-success-info'
+        });
       } else {
-        toast.error('Something went wrong, please try to save the answer again.');
+        toast.error('Something went wrong, please try to save the answer again.', {
+          className: 'toastify-success-info'
+        });
       }
     } finally {
       setSaving(false);
@@ -1010,15 +1024,25 @@ function LtsJournal(props) {
                   <div className='gradient-background-journal' ref={contentContainer}>
                     <div>
                       <div className='levels-container-journal'>
-                        {levels.map((level, index) => (
-                          <div
-                            key={index}
-                            className={`course-level-journal ${index === activeLevel ? 'active-level-journal' : ''}`}
-                            onClick={() => handleLevelClick(index)}
-                          >
-                            {level.title}
-                          </div>
-                        ))}
+                        {levels.map((level, index) => {
+                          let levelClass = '';
+                          if (index === activeLevel) {
+                            levelClass = 'active-level-journal';
+                          } else if (!isContentAccessible(lessonsByLevel[index]?.[0]?.redirectId)) {
+                            levelClass = 'inactive-level-journal';
+                          } else {
+                            levelClass = 'accessible-level-journal';
+                          }
+                          return (
+                            <div
+                              key={index}
+                              className={`course-level-journal ${levelClass}`}
+                              onClick={() => handleLevelClick(index)}
+                            >
+                              {level.title}
+                            </div>
+                          );
+                        })}
                       </div>
 
                       <div className='course-section'>
@@ -1187,9 +1211,9 @@ function LtsJournal(props) {
                                   alt="page-icon"
                                   style={{ width: '36px', height: '36px', marginRight: '10px' }}
                                 />
-                                <h6>Reflection</h6>
+                                <h6>Level 1: Entrepreneurship and You</h6>
                               </div>
-                              <p className='pt-3'>Entrepreneurship is a mindset,and in the first level of this program,you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship.You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values, your purpose,your mindset, and your skillset.The first step in creating this proof is developing content that solidifies your statement of "I Am". Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.</p>
+                              <p className='pt-3'>Entrepreneurship is a mindset, and in the first level of this program, you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship. You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values, your purpose,your mindset, and your skillset. The first step in creating this proof is developing content that solidifies your statement of "I Am". Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.</p>
 
 
                             </div>
@@ -1245,7 +1269,7 @@ function LtsJournal(props) {
                     </label>
                   </div> */}
 
-                    <div className='page-card__sidebar-content styled-scrollbar'>
+                    {/* <div className='page-card__sidebar-content styled-scrollbar'>
                       <Accordion
                         defaultActiveKey='0'
                         className='accordion-menu lizas-accordion'
@@ -1330,7 +1354,7 @@ function LtsJournal(props) {
                           </div>
                         ))}
                       </Accordion>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -1338,164 +1362,6 @@ function LtsJournal(props) {
           </div>
         </div>
       </div>
-      {modal && (
-        <Modal
-          isOpen={modal}
-          toggle={toggleModal}
-          className='certificate-modal'
-        >
-          <span
-            className='cursor-pointer'
-            onClick={toggleModal}
-            style={{ zIndex: '1' }}
-          >
-            <img className='left-arrow-modal' src={leftArrow} alt='left' />
-          </span>
-          <ModalBody>
-            <img src={progressLogo} alt='user' className='mb-3' />
-            <div className='d-flex justify-content-between align-items-center'>
-              <h3 className='fs-14' style={{ marginBottom: '0' }}>
-                View Progress Details
-              </h3>
-            </div>
-
-            <div className='accordion mt-5' id='progressAccordion'>
-              {/* Level 1 */}
-              <div className='accordion-item progress-details-accordion'>
-                <h2 className='accordion-header' id='headingOne'>
-                  <button
-                    className='accordion-button collapsed text-secondary fw-medium'
-                    type='button'
-                    data-bs-toggle='collapse'
-                    data-bs-target='#collapseOne'
-                    aria-expanded='false'
-                    aria-controls='collapseOne'
-                  >
-                    LEVEL 1 | The Myths of Entrepreneurship
-                  </button>
-                </h2>
-                <div
-                  id='collapseOne'
-                  className='accordion-collapse collapse'
-                  aria-labelledby='headingOne'
-                  data-bs-parent='#progressAccordion'
-                >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
-                    <div className='d-flex flex-column gap-4'>
-                      <CircularProgress
-                        percentage={levelProgress?.level1?.percentage || 0}
-                        level={1}
-                      />
-                    </div>
-                    <div className='d-flex flex-column gap-3'>
-                      {lessonsByLevel[0].map((lesson) => {
-                        const status = getCourseStatus(lesson.redirectId)
-                        return status === 'done' ? (
-                          <ProgressDone title={lesson.title} />
-                        ) : status === 'inProgress' ? (
-                          <InProggresCourse title={lesson.title} />
-                        ) : (
-                          <CourseNotStarted title={lesson.title} />
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Level 2 */}
-              <div className='accordion-item progress-details-accordion'>
-                <h2 className='accordion-header' id='headingTwo'>
-                  <button
-                    className='accordion-button collapsed text-secondary fw-medium'
-                    type='button'
-                    data-bs-toggle='collapse'
-                    data-bs-target='#collapseTwo'
-                    aria-expanded='false'
-                    aria-controls='collapseTwo'
-                  >
-                    LEVEL 2 | Understanding Learn to Start
-                  </button>
-                </h2>
-                <div
-                  id='collapseTwo'
-                  className='accordion-collapse collapse'
-                  aria-labelledby='headingTwo'
-                  data-bs-parent='#progressAccordion'
-                >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
-                    <div className='d-flex flex-column gap-4'>
-                      <CircularProgress
-                        percentage={levelProgress?.level2?.percentage || 0}
-                        level={2}
-                      />
-                    </div>
-                    <div className='d-flex flex-column gap-3'>
-                      {lessonsByLevel[1].map((lesson) => {
-                        const status = getCourseStatus(lesson.redirectId)
-                        return status === 'done' ? (
-                          <ProgressDone title={lesson.title} />
-                        ) : status === 'inProgress' ? (
-                          <InProggresCourse title={lesson.title} />
-                        ) : (
-                          <CourseNotStarted title={lesson.title} />
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className='accordion-item progress-details-accordion'>
-                <h2 className='accordion-header' id='headingThree'>
-                  <button
-                    className='accordion-button collapsed text-secondary fw-medium'
-                    type='button'
-                    data-bs-toggle='collapse'
-                    data-bs-target='#collapseThree'
-                    aria-expanded='false'
-                    aria-controls='collapseThree'
-                  >
-                    LEVEL 3 | The LEARN Stage
-                  </button>
-                </h2>
-                <div
-                  id='collapseThree'
-                  className='accordion-collapse collapse'
-                  aria-labelledby='headingThree'
-                  data-bs-parent='#progressAccordion'
-                >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
-                    <div className='d-flex flex-column gap-4'>
-                      <CircularProgress
-                        percentage={levelProgress?.level3?.percentage || 0}
-                        level={3}
-                      />
-                    </div>
-                    <div className='d-flex flex-column gap-3 text-black'>
-                      {lessonsByLevel[2].map((section) => (
-                        <>
-                          <p className='mb-0'>{section.title}</p>
-                          {section.children.map((lesson) => {
-                            const status = getCourseStatus(lesson.redirectId)
-                            return status === 'done' ? (
-                              <ProgressDone title={lesson.title} />
-                            ) : status === 'inProgress' ? (
-                              <InProggresCourse title={lesson.title} />
-                            ) : (
-                              <CourseNotStarted title={lesson.title} />
-                            )
-                          })}
-                        </>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ModalBody>
-        </Modal>
-      )}
 
       {showLockModal && (
         <Modal
@@ -1514,7 +1380,7 @@ function LtsJournal(props) {
             <img src={lockSign} alt='lock' className='mb-3' />
             <div className='d-flex justify-content-between align-items-center'>
               <h3 className='fs-14' style={{ marginBottom: '0' }}>
-                Lesson Locked
+                Level Locked
               </h3>
             </div>
 

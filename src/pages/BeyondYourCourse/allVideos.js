@@ -275,7 +275,7 @@ function GuidanceEncouragement({ intl }) {
               
                 </div>
            <div className='gradient-background-master'>
-                <div className="level-navigation">
+                <div className="level-navigation" style={{backgroundColor:'transparent'}}>
                   {levels.map((level, index) => (
                     <div
                       key={level.id}

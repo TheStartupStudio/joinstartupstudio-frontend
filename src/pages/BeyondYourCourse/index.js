@@ -10,6 +10,8 @@ import masterIcon from '../../assets/images/master-icon.png';
 import storyInMotion from '../../assets/images/story-in-motion-logo.png';
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png';
 import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 import './index.css';
 
 export default function BeyondYourCourse() {
@@ -91,8 +93,16 @@ export default function BeyondYourCourse() {
                   <p className="fs-13 fw-light text-black">
                     <IntMessages id="beyond_your_course.page_description" />
                   </p>
+                
                 </div>
+               
               </div>
+              <img
+                    src={MenuIcon}
+                    alt='menu'
+                    className='menu-icon-cie self-start-tab cursor-pointer'
+                    onClick={() => dispatch(toggleCollapse())}
+                  />
             </div>
             <div className="gradient-background-master">
               <div className="videos-container">
@@ -104,9 +114,12 @@ export default function BeyondYourCourse() {
                       style={{ width: '36px', height: '36px' }}
                       className="welcome-journey-text__icon"
                     />
-                    <h3>
-                      <IntMessages id="beyond_your_course.encouragement_no_videos" />
-                    </h3>
+                    <div>
+                      <h3 className="mb-0">
+                        <IntMessages id="beyond_your_course.encouragement_no_videos" />
+                      </h3>
+                      <p className="guidance-subtitle mb-0">Gary Conroy, Founder and CEO of Learn to Start</p>
+                    </div>
                   </div>
                   <Link
                     className="guidance-link"

@@ -338,13 +338,18 @@
     /* top: 65%;
     left: 61%;
     width: 40px; */
-    height: 40px;
+    /* height: 40px; */
   }
 
   .sidebar-scroll {
     height: 100vh;
   }
 }
+@media (max-width: 769px) {
+  .beyond-your-course-video-thumb-icon {
+    top: 55%!important;
+    left: 52%!important;
+  }}
 
 @media (min-width: 576px) {
   .guidance-videos {

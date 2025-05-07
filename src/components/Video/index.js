@@ -105,7 +105,7 @@ export default function VideoView(props) {
                   width='100%'
                   alt='video'
                 />
-                <div className='beyond-your-course-video-thumb-icon' style={{border:'5px solid white',borderRadius:'50%',padding:'1.5rem',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <div className='beyond-your-course-video-thumb-icon' style={{border:'4px solid white',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center'}}>
                   <FontAwesomeIcon icon={faPlay} />
                 </div>
               </div>
