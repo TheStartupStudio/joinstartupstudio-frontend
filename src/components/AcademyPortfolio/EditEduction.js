@@ -381,6 +381,19 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                   onChange={(date) => setEndDate(date)}
                   disabled={isCurrentStudent}
                   className='form-control'
+                  popperPlacement='bottom-start'
+                  popperModifiers={[
+                    {
+                      name: 'preventOverflow',
+                      options: {
+                        boundary: 'window'
+                      }
+                    },
+                    {
+                      name: 'flip',
+                      enabled: false // Prevents flipping upward
+                    }
+                  ]}
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />

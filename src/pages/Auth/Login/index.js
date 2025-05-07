@@ -136,7 +136,11 @@ const ChooseLogin = () => {
   return (
     <div className='container-fluid md-px-5 ps-md-5 choose-login_container-academy gradient-background'>
       <a href='https://academy.learntostart.com/'>
-        <img src={StartupStudioLogo} alt='course-logo' className='w-200-mob' />
+        <img
+          src={StartupStudioLogo}
+          alt='course-logo'
+          className='w-200-mob my-3'
+        />
       </a>
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
         <Col md='10' lg='8' className='main-login-container'>
@@ -146,7 +150,7 @@ const ChooseLogin = () => {
                 <img
                   src={StartupStudioLogo}
                   alt='logo'
-                  style={{ width: '247px' }}
+                  style={{ width: '200px' }}
                 />
               </div>
               {confirmEmail ? (
@@ -162,7 +166,7 @@ const ChooseLogin = () => {
                 <>
                   <h1 className='login-title text-black'>Welcome...</h1>
                   <p className='text-black fs-5 fw-light'>
-                    ...The Startup Studio Online Academy in Entrepreneurship{' '}
+                    to The Startup Studio Online Academy in Entrepreneurship{' '}
                     <br className='d-none-mob' /> powered by Learn to Start.
                     Please log in or create <br className='d-none-mob' /> an
                     account.
@@ -247,7 +251,7 @@ const ChooseLogin = () => {
               </p>
               <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
-                <div className='d-flex gap-3'>
+                <div className='d-flex gap-3 auth-logos-buttons'>
                   <button>
                     <img className='auth-logos' src={googleLogo} alt='google' />
                   </button>

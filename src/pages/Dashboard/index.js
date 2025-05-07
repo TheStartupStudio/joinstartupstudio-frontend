@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Select from 'react-select'
-import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
+import AcademyLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
 import profilePic from '../../assets/images/academy-icons/profile.jpeg'
 import CourseProgress from '../../components/CourseProgress/CourseProgress'
 import UserDetails from '../../components/UserDetails/UserDetails'
@@ -123,8 +123,8 @@ function Dashboard() {
           <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between flex-col-mob mb-1rem-tab gap-1rem-mob '>
             <div className='d-flex align-items-center gap-3 flex-col-mob'>
               <div className='d-flex gap-1'>
-                <img src={AcademyLogo} alt='logo' style={{ width: '3rem' }} />
-                <div>
+                <img src={AcademyLogo} alt='logo' style={{ width: '150px' }} />
+                {/* <div>
                   <h4 className='academy-header'>
                     <span className='header-title'>THE</span>
                     <br />
@@ -135,7 +135,7 @@ function Dashboard() {
                   <p className='powered' style={{ marginBottom: 0 }}>
                     Powered by Learn to Start
                   </p>
-                </div>
+                </div> */}
               </div>
               <h3 className='page-title bold-page-title text-black mb-0 text-center-mob'>
                 Course in Entrepreneurship

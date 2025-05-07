@@ -29,15 +29,19 @@ const Header = (props) => {
 
           {!isCollapsed && (
             <div>
-              <h4 className='academy-header'>
+              <h4 className='academy-header' style={{ marginBottom: '.75rem' }}>
                 <span className='header-title'>THE</span>
                 <br />
                 STARTUP
                 <br />
                 STUDIO
               </h4>
-              <p className='powered white-space-no-wrap'>
-                Powered by Learn to Start
+              <p
+                className='powered white-space-no-wrap lh-1'
+                style={{ fontSize: '.65rem' }}
+              >
+                Online Academy in <br />
+                Entrepreneurship
               </p>
             </div>
           )}

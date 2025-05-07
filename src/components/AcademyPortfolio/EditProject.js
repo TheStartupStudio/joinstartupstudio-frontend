@@ -7,7 +7,11 @@ import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
 import ModalInput from '../ModalInput/ModalInput'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
-import { updateMarketProject, deleteMarketProject, getMarketProjects } from '../../redux/portfolio/Actions'
+import {
+  updateMarketProject,
+  deleteMarketProject,
+  getMarketProjects
+} from '../../redux/portfolio/Actions'
 import uploadImage from '../../assets/images/academy-icons/svg/upload-image.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -18,7 +22,7 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [deleteProject, setDeleteProject] = useState(false)
   const [imageFile, setImageFile] = useState(null)
-  
+
   const [formData, setFormData] = useState({
     projectFile: '',
     urlToVideo: '',
@@ -37,7 +41,7 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
   }, [projectData])
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
@@ -45,7 +49,7 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
 
   const validateForm = () => {
     const newErrors = {}
-    
+
     if (!formData.projectFile?.trim()) {
       newErrors.projectFile = 'Project name is required'
     }
@@ -79,7 +83,7 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
 
     const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
     const maxSize = 1 * 1024 * 1024 // 1MB
-    
+
     if (!validTypes.includes(file.type)) {
       toast.error('Only PNG, JPG, or JPEG files are allowed.')
       return false
@@ -178,20 +182,28 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
                   labelTitle={'Project File*'}
                   imgSrc={penIcon}
                   value={formData.projectFile}
-                  onChange={(e) => handleInputChange('projectFile', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('projectFile', e.target.value)
+                  }
                 />
-                {errors.projectFile && <span className="text-danger">{errors.projectFile}</span>}
+                {errors.projectFile && (
+                  <span className='text-danger'>{errors.projectFile}</span>
+                )}
                 <ModalInput
                   id={'urlToVideo'}
                   labelTitle={'URL To File Or Video*'}
                   imgSrc={penIcon}
                   value={formData.urlToVideo}
-                  onChange={(e) => handleInputChange('urlToVideo', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('urlToVideo', e.target.value)
+                  }
                 />
-                {errors.urlToVideo && <span className="text-danger">{errors.urlToVideo}</span>}
+                {errors.urlToVideo && (
+                  <span className='text-danger'>{errors.urlToVideo}</span>
+                )}
               </div>
             </div>
-            
+
             <div className='mt-5'>
               <h4 className='fs-15'>Project Thumbnail</h4>
               <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
@@ -216,7 +228,9 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
                   <div className='container d-flex justify-content-center align-items-center'>
                     <div
                       className='upload-box text-center cursor-pointer'
-                      onClick={() => document.getElementById('fileInput').click()}
+                      onClick={() =>
+                        document.getElementById('fileInput').click()
+                      }
                       onDrop={handleDrop}
                       onDragOver={(e) => e.preventDefault()}
                     >
@@ -249,10 +263,13 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
                             <p className='upload-text'>
                               <span className='fw-medium'>Click to upload</span>
                               <br />
-                              <span className='text-secondary'>or drag and drop</span>
+                              <span className='text-secondary'>
+                                or drag and drop
+                              </span>
                             </p>
                             <p className='fs-14'>
-                              Only png, jpg, or jpeg file format supported (max. 1MB)
+                              Only png, jpg, or jpeg file format supported (max.
+                              1MB)
                             </p>
                           </>
                         )}
@@ -263,7 +280,7 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
               </div>
             </div>
 
-            <div className='d-flex justify-content-between align-items-center'>
+            <div className='d-flex justify-content-between align-items-center flex-col-500'>
               <div
                 className='d-flex gap-2 align-items-center mt-5 cursor-pointer'
                 onClick={() => setDeleteProject(true)}
@@ -275,13 +292,13 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
                 <Button
                   className='close-btn'
                   onClick={() => setIsOpen(false)}
-                  type="button"
+                  type='button'
                 >
                   CANCEL
                 </Button>
-                <Button 
+                <Button
                   className='modal-save-btn'
-                  type="submit"
+                  type='submit'
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'SAVING...' : 'SAVE'}
@@ -313,10 +330,7 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
             >
               NO, TAKE ME BACK
             </Button>
-            <Button
-              className='sub-modal-save-btn'
-              onClick={handleDelete}
-            >
+            <Button className='sub-modal-save-btn' onClick={handleDelete}>
               YES, DELETE PROJECT
             </Button>
           </div>
