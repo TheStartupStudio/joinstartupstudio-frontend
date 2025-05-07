@@ -6,6 +6,7 @@ import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
+import instructorImg from '../../assets/images/DrLeslieWilliams.png'
 
 function YourInstructor({ 
   profilePic, 
@@ -43,7 +44,7 @@ function YourInstructor({
             <div className='d-flex gap-4 align-items-center'>
               <img
                 className='profile-dashboard-academy'
-                src={profilePic}
+                src={instructorImg}
                 alt='profile'
               />
               <div className='academy-profile-info'>
