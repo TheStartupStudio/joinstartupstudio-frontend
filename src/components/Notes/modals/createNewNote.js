@@ -82,14 +82,21 @@ const CreateNewNote = (props) => {
   const titleInputRef = useRef(null)
 
   const validate = () => {
-    if (note.notesTitle == '' || note.notesTitle == undefined) {
-      return toast.error('Title for note is required')
-    } else if (
-      note.value == '<p></p>' ||
-      note.value == '<p><br></p>' ||
-      note.value == ''
+    // Set default title if empty
+    if (!note.notesTitle || note.notesTitle.trim() === '') {
+      setNote(prev => ({
+        ...prev,
+        notesTitle: 'New Notes'
+      }))
+    }
+
+    // Check only for content since title will now have a default
+    if (
+      note.value === '<p></p>' ||
+      note.value === '<p><br></p>' ||
+      note.value === ''
     ) {
-      return toast.error('Note is required')
+      return toast.error('Note is required')  
     }
     handleSubmit()
   }
@@ -97,20 +104,26 @@ const CreateNewNote = (props) => {
   const handleSubmit = async () => {
     setLoading(true)
 
+    // Ensure the title is set before submitting
+    const noteToSubmit = {
+      ...note,
+      notesTitle: note.notesTitle || 'New Notes'
+    }
+
     if (foulWords) {
       await FoulWords.register(loggedUser.id, foulWords, NOTES)
       setFoulWords(null)
     }
 
     axiosInstance
-      .post('/notes/new', note)
+      .post('/notes/new', noteToSubmit)
       .then((res) => {
         props.updateNotes((old) => [res.data.response, ...old])
         toast.success('Note saved successful')
-        setNote((prevValues) => ({
-          title: '',
+        setNote({
+          notesTitle: '',
           value: '<p></p>'
-        }))
+        })
         setLoading(false)
         props.onHide('create_new_note')
       })
