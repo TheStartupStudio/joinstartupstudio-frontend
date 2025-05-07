@@ -65,11 +65,10 @@ const quillFormats = [
 
 const EditNote = (props) => {
   const [note, setNote] = useState('')
-  // const [noteValue, setNoteValue] = useState('')
   const [loading, setLoading] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
-  const [noteTitle, setNoteTitle] = useState(props.data?.title)
+  const [noteTitle, setNoteTitle] = useState('')
 
   const handleQuillInput = (QuillInput) => {
     setNote(QuillInput)
@@ -81,19 +80,18 @@ const EditNote = (props) => {
     }
   }
 
+  const handleTitleChange = (e) => {
+    setNoteTitle(e.target.value)
+  }
+
   useEffect(() => {
-    handleQuillInput(props.data?.value)
+    if (props.data) {
+      handleQuillInput(props.data.value)
+      setNoteTitle(props.data.title)
+    }
   }, [props.data])
 
   const validate = () => {
-    // if (
-    //   note.value == '<p></p>' ||
-    //   note.value == '<p><br></p>' ||
-    //   note.value == ''
-    // ) {
-    //   return toast.error('Note is needed')
-    // }
-    // //setNote({})
     handleSubmit()
   }
 
@@ -108,7 +106,7 @@ const EditNote = (props) => {
     axiosInstance
       .put('/notes/new', {
         id: props.data.id,
-        title: noteTitle,
+        title: noteTitle || props.data.title,
         value: note,
         createdFrom: props.data.createdFrom
       })
@@ -143,12 +141,18 @@ const EditNote = (props) => {
           style={{ cursor: 'move' }}
           className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-5 mb-2'
         >
-          <h3 className='mb-1 pt-4 mt-2 newNote_title  flex-grow-1'>
-            {props.from != 'editFromVideo' ? (
-              props?.data?.title
-            ) : (
-              <IntlMessages id={props?.data?.title} />
-            )}
+          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
+            <input
+              type="text"
+              value={noteTitle}
+              onChange={handleTitleChange}
+              className="note-title-input"
+              style={{
+                border: 'none',
+                background: 'transparent',
+                width: '80%'
+              }}
+            />
             <FontAwesomeIcon
               icon={faPencilAlt}
               style={{ color: '#707070' }}
@@ -171,17 +175,6 @@ const EditNote = (props) => {
             {moment(props.data?.updatedAt).format('L')}
           </span>
           <div className='mt-2'>
-            {props.from !== 'editFromVideo' && (
-              <input
-                type='text'
-                className={'form-control mb-2'}
-                placeholder='Title'
-                value={noteTitle ? noteTitle : props.data?.title}
-                onChange={(e) => {
-                  setNoteTitle(e.target.value)
-                }}
-              />
-            )}
             <ReactQuill
               theme='snow'
               name='value'

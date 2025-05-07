@@ -18,122 +18,121 @@ export const NotesButton = (props) => {
   const [notesDiv, setNotesDiv] = useState(false)
   const [dataForEdit, setDataForEdit] = useState()
   const page = window.location.pathname.split('/')[1]
-
+  
   const [createNewNotesModal, setCreateNewNotesModal] = useState(false)
   const [showAllNoteFromThisPage, setShowAllNoteFromThisPage] = useState(false)
   const [editNoteModal, setEditNoteModal] = useState(false)
 
-  const updateState = (data) => {
-    let allNotes = []
-    // const updateState = (data) => {
-    setNotes(
-      notes.map((el) =>
-        el.id == data.data.id
+  // Update notes state with new or edited note
+  const updateState = (updatedNote) => {
+    setNotes(prevNotes => 
+      prevNotes.map(note => 
+        note.id === updatedNote.id 
           ? {
-              ...el,
-              title: data.data.title,
-              value: data.data.value,
-              updatedAt: moment(new Date(Date.now())).format('YYYY-MM-D')
+              ...note,
+              title: updatedNote.title,
+              value: updatedNote.value,
+              updatedAt: moment().format('YYYY-MM-DD')
             }
-          : el
+          : note
       )
     )
+    // Refresh notes after update
+    getNotes()
   }
 
-  const getUser = async () => {
-    await axiosInstance
-      .get(
-        `/notes/new/${
-          props.from === 'video' ? 'videoModal-' + props.data.id :
-          props.from === 'leadershipJournal' ? 'leadershipJournal-' + props.journalId :
-          props.from === 'entrepreneurshipJournal' ? 'entrepreneurshipJournal-' + props.data.id :
-          page
-        }`
-      )
-      .then((res) => {
-        setNotes(res.data)
-      })
-      .catch((err) => err)
+  // Get notes for current context
+  const getNotes = async () => {
+    try {
+      const noteId = props.from === 'video' 
+        ? `videoModal-${props.data.id}`
+        : props.from === 'leadershipJournal'
+        ? `leadershipJournal-${props.journalId}`
+        : props.from === 'entrepreneurshipJournal'
+        ? `entrepreneurshipJournal-${props.data.id}`
+        : page;
+
+      const response = await axiosInstance.get(`/notes/new/${noteId}`)
+      setNotes(response.data)
+    } catch (err) {
+      console.error('Error fetching notes:', err)
+    }
   }
 
+  // Initial load
   useEffect(() => {
-    getUser()
+    getNotes()
   }, [])
 
+  // Refresh when journalId/data changes
   useEffect(() => {
-    // Refresh notes when journalId changes
-    getUser();
-  }, [props.journalId]);
+    getNotes()
+  }, [props.journalId, props.data?.id])
 
   function changeState(name, type) {
-    if (name == 'create_new_note') {
-      type == 'show'
-        ? setCreateNewNotesModal(true)
-        : setCreateNewNotesModal(false)
-    } else if (name == 'all_note_on_this_page') {
-      type == 'show'
-        ? setShowAllNoteFromThisPage(true)
-        : setShowAllNoteFromThisPage(false)
-    } else if (name == 'edit_single_note_modal') {
-      type == 'show' ? setEditNoteModal(true) : setEditNoteModal(false)
+    if (name === 'create_new_note') {
+      setCreateNewNotesModal(type === 'show')
+    } else if (name === 'all_note_on_this_page') {
+      setShowAllNoteFromThisPage(type === 'show') 
+    } else if (name === 'edit_single_note_modal') {
+      setEditNoteModal(type === 'show')
     }
   }
 
   return (
     <div className='notes-wrapper'>
-      {/* <Draggable onStart={() => (notesDiv ? false : true)}> */}
       <div className='text-end'>
         <button
           className='rounded-circle text-center ps-1 text-center'
-          onClick={() => {
-            setNotesDiv(!notesDiv)
-          }}
+          onClick={() => setNotesDiv(!notesDiv)}
           id='notesButton'
         >
-          <FontAwesomeIcon
-            // unicode={'f044'}
-            icon={faEdit}
-            style={{ fontSize: '20px', color: 'white' }}
-          />
+          <FontAwesomeIcon icon={faEdit} style={{ fontSize: '20px', color: 'white' }} />
         </button>
       </div>
+
       <CreateNewNote
         from={props.from}
         data={props.data}
         show={createNewNotesModal}
-        updateNotes={(data) => setNotes(data)}
-        sendDataToEdit={(data) => setDataForEdit(data)}
-        onHide={(data, type) => changeState(data, type)}
-        changeState={(data, type) => {
-          changeState(data, type)
+        updateNotes={(newNotes) => {
+          setNotes(newNotes)
+          getNotes() // Refresh after creating
         }}
+        sendDataToEdit={setDataForEdit}
+        onHide={changeState}
+        changeState={changeState}
       />
+
       <AllNotesFromThisPage
         show={showAllNoteFromThisPage}
         from={props.from}
         allNotes={notes}
-        sendDataToEdit={(data) => setDataForEdit(data)}
-        onHide={(data, type) => changeState(data, type)}
-        changeState={(data, type) => {
-          changeState(data, type)
-        }}
+        sendDataToEdit={setDataForEdit}
+        onHide={changeState}
+        changeState={changeState}
+        refreshNotes={getNotes} // Add refresh function
       />
+
       <SmallPageForNote
         data={notes}
         fromPage={props.from}
-        sendDataToEdit={(data) => setDataForEdit(data)}
+        sendDataToEdit={setDataForEdit}
         setNotesDiv={setNotesDiv}
         display={notesDiv}
-        changeState={(data, type) => changeState(data, type)}
+        changeState={changeState}
+        refreshNotes={getNotes} // Add refresh function
       />
+
       <EditNotes
         show={editNoteModal}
-        from={props.from == 'video' && 'editFromVideo'}
+        from={props.from === 'video' ? 'editFromVideo' : props.from}
         data={dataForEdit}
-        updateState={(data) => updateState(data)}
-        changeState={(data, type) => {
-          changeState(data, type)
+        updateState={(updatedNote) => {
+          updateState(updatedNote)
+          getNotes() // Refresh after editing
         }}
+        changeState={changeState}
       />
     </div>
   )
