@@ -86,7 +86,7 @@ const CreateNewNote = (props) => {
     if (!note.notesTitle || note.notesTitle.trim() === '') {
       setNote(prev => ({
         ...prev,
-        notesTitle: 'New Notes'
+        notesTitle: 'NEW NOTE'
       }))
     }
 
