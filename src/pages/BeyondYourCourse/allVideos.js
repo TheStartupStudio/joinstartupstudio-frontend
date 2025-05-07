@@ -15,6 +15,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ModalInput from '../../components/ModalInput/ModalInput'
 import searchJ from '../../assets/images/academy-icons/search.png'
 import { injectIntl } from 'react-intl';
+import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
 
 function GuidanceEncouragement({ intl }) {
   const history = useHistory(); // Add this hook
@@ -108,6 +109,12 @@ function GuidanceEncouragement({ intl }) {
     }
     getUserConnections()
   }, [])
+
+    useEffect(() => {
+      dispatch(getGuidanceVideos());
+      dispatch(getMasterclassVideos());
+      dispatch(getAllPodcast());
+    }, [dispatch]);
 
   useEffect(() => {
     switch(activeLevel) {

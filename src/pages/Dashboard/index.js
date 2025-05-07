@@ -20,6 +20,7 @@ import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -41,6 +42,12 @@ function Dashboard() {
     dispatch(getEventsStart())
     dispatch(fetchLtsCoursefinishedContent())
     dispatch(changeSidebarState(false))
+
+    //load to master classes videos on first sight
+
+    dispatch(getGuidanceVideos()),
+    dispatch(getMasterclassVideos()),
+    dispatch(getAllPodcast())
   }, [dispatch])
 
   function getFormattedDate() {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
 import ReactPaginate from 'react-paginate';
 import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
 import ModalInput from '../../components/ModalInput/ModalInput';
@@ -10,6 +9,8 @@ import searchJ from '../../assets/images/academy-icons/search.png';
 import Select from 'react-select';
 import Video from '../../components/Video';
 import './StoryInMotion.css';
+import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
+import '../../pages/BeyondYourCourse/index.css';
 
 function StoryInMotion({ intl }) {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ function StoryInMotion({ intl }) {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [filterBy, setFilterBy] = useState(null);
   const location = useLocation();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const filters = [
     { value: 'tl', label: 'Title' },
@@ -35,6 +37,42 @@ function StoryInMotion({ intl }) {
   const handleFilter = (selectedFilter) => {
     setFilterBy(selectedFilter);
   };
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        await Promise.all([
+          dispatch(getGuidanceVideos()),
+          dispatch(getMasterclassVideos()),
+          dispatch(getAllPodcast())
+        ]);
+        setIsInitialLoad(false);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        setIsInitialLoad(false);
+      }
+    };
+
+    loadInitialData();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!loading && !isInitialLoad) {
+      switch (activeLevel) {
+        case 0:
+          setPageVideos(guidanceVideos);
+          break;
+        case 1:
+          setPageVideos(masterclassVideos);
+          break;
+        case 2:
+          setPageVideos(podcasts);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [activeLevel, loading, isInitialLoad, guidanceVideos, masterclassVideos, podcasts]);
 
   useEffect(() => {
     const endOffset = itemOffset + videosPerPage;
@@ -54,31 +92,6 @@ function StoryInMotion({ intl }) {
       setActiveLevel(parseInt(tabParam));
     }
   }, [location]);
-
-  useEffect(() => {
-    switch (activeLevel) {
-      case 0: // Encouragement Videos
-        setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS');
-        setPageDescription('Videos From The Founder And CEO Of The Startup Studio To Help You On Your Journey.');
-        dispatch(getGuidanceVideos());
-        setPageVideos(guidanceVideos);
-        break;
-      case 1: // Career Guidance Videos
-        setPageTitle('MASTER CLASSES | CAREER GUIDANCE');
-        setPageDescription('Ongoing Guidance From Entrepreneurs And Experts To Help You On Your Journey');
-        dispatch(getMasterclassVideos());
-        setPageVideos(masterclassVideos);
-        break;
-      case 2: // Story in Motion Podcast Episodes
-        setPageTitle('MASTER CLASSES | STORY IN MOTION PODCAST EPISODES');
-        setPageDescription('Ongoing Guidance From Entrepreneurs And Experts To Help You On Your Journey');
-        dispatch(getAllPodcast());
-        setPageVideos(podcasts);
-        break;
-      default:
-        break;
-    }
-  }, [activeLevel, dispatch]);
 
   const handleLevelChange = (index) => {
     setActiveLevel(index); // Update the active tab
@@ -236,45 +249,47 @@ function StoryInMotion({ intl }) {
             </div>
 
             <div className='content-videos-container-wrapper'>
-
-
-              <div className="content-videos-container">
-                {currentPageVideos.map((video, index) => (
-                  <Video
-                    key={index}
-                    id={video.id}
-                    thumbnail={video.thumbnail || storyInMotionPodcast}
-                    title={video.title}
-                    description={video.description}
-                    page={activeLevel === 2 ? 'podcast' : activeLevel === 1 ? 'master-classes' : 'encouragement'}
-                    videoData={video}
-                  />
-                ))}
-              </div>
-
-              {/* Pagination inside the podcast episodes div */}
-              {pageVideos.length > videosPerPage && (
-                <div className="pagination-container" style={{ marginTop: '20px' }}>
-                  <ReactPaginate
-                    previousLabel="<<"
-                    nextLabel=">>"
-                    breakLabel="..."
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={3}
-                    onPageChange={handlePageClick}
-                    containerClassName="pagination custom-pagination"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    activeClassName="active"
-                  />
-                </div>
+              {isInitialLoad ? (
+                <div>Loading...</div>
+              ) : (
+                <>
+                  <div className="content-videos-container">
+                    {currentPageVideos.map((video, index) => (
+                      <Video
+                        key={index}
+                        id={video.id}
+                        thumbnail={video.thumbnail || storyInMotionPodcast}
+                        title={video.title}
+                        description={video.description}
+                        page={activeLevel === 2 ? 'podcast' : activeLevel === 1 ? 'master-classes' : 'encouragement'}
+                        videoData={video}
+                      />
+                    ))}
+                  </div>
+                  {/* Pagination inside the podcast episodes div */}
+                  {pageVideos.length > videosPerPage && (
+                    <div className="pagination-container" style={{ marginTop: '20px' }}>
+                      <ReactPaginate
+                        previousLabel="<<"
+                        nextLabel=">>"
+                        breakLabel="..."
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination custom-pagination"
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousClassName="page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                      />
+                    </div>
+                  )}
+                </>
               )}
-
             </div>
 
           </div>
