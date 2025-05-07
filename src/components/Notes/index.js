@@ -30,7 +30,7 @@ export const NotesButton = (props) => {
         note.id === updatedNote.id 
           ? {
               ...note,
-              title: updatedNote.title,
+              title: updatedNote.title || note.title, // Keep existing title if not changed
               value: updatedNote.value,
               updatedAt: moment().format('YYYY-MM-DD')
             }
@@ -39,6 +39,19 @@ export const NotesButton = (props) => {
     )
     // Refresh notes after update
     getNotes()
+  }
+
+  const handleEditNote = (noteData) => {
+    // Ensure title is preserved for video notes
+    if (props.from === 'video') {
+      setDataForEdit({
+        ...noteData,
+        title: noteData.title || props.data?.title // Use video title as fallback
+      })
+    } else {
+      setDataForEdit(noteData)
+    }
+    setEditNoteModal(true)
   }
 
   // Get notes for current context
@@ -108,7 +121,7 @@ export const NotesButton = (props) => {
         show={showAllNoteFromThisPage}
         from={props.from}
         allNotes={notes}
-        sendDataToEdit={setDataForEdit}
+        sendDataToEdit={handleEditNote} // Use new handler
         onHide={changeState}
         changeState={changeState}
         refreshNotes={getNotes} // Add refresh function
@@ -117,7 +130,7 @@ export const NotesButton = (props) => {
       <SmallPageForNote
         data={notes}
         fromPage={props.from}
-        sendDataToEdit={setDataForEdit}
+        sendDataToEdit={handleEditNote} // Use new handler
         setNotesDiv={setNotesDiv}
         display={notesDiv}
         changeState={changeState}
@@ -128,10 +141,7 @@ export const NotesButton = (props) => {
         show={editNoteModal}
         from={props.from === 'video' ? 'editFromVideo' : props.from}
         data={dataForEdit}
-        updateState={(updatedNote) => {
-          updateState(updatedNote)
-          getNotes() // Refresh after editing
-        }}
+        updateState={updateState}
         changeState={changeState}
       />
     </div>
