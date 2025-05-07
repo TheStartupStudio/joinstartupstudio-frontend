@@ -893,7 +893,11 @@
     z-index: -1;
     border-radius: 8px;
 }
-
+.guidance-subtitle {
+    font: normal normal 300 12px Montserrat;
+    letter-spacing: 0px;
+    color: rgb(0, 0, 0);
+  }
 /* Responsive styles */
 @media (max-width: 1024px) {
     .level-navigation {

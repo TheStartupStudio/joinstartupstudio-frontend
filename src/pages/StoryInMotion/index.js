@@ -10,8 +10,10 @@ import searchJ from '../../assets/images/academy-icons/search.png';
 import Select from 'react-select';
 import Video from '../../components/Video';
 import './StoryInMotion.css';
-import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
-import { toggleCollapse } from '../../redux/sidebar/Actions'
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg';
+import { toggleCollapse } from '../../redux/sidebar/Actions';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function StoryInMotion({ intl }) {
   const dispatch = useDispatch();
@@ -125,29 +127,23 @@ function StoryInMotion({ intl }) {
       <div>
         <div>
           <div className="page-padding">
-          <img
-                    src={MenuIcon}
-                    alt='menu'
-                    className='menu-icon-cie self-start-tab cursor-pointer'
-                    onClick={() => dispatch(toggleCollapse())}
-                    style={{position:'absolute',right:'1rem'}}
-                  />
+            <img
+              src={MenuIcon}
+              alt="menu"
+              className="menu-icon-cie self-start-tab cursor-pointer"
+              onClick={() => dispatch(toggleCollapse())}
+              style={{ position: 'absolute', right: '1rem' }}
+            />
             <div style={{ marginBottom: '2rem' }}>
               <Link to="/beyond-your-course" style={{ color: '#000000' }}>
-                Master Classes &gt;{' '}
+                <FontAwesomeIcon icon={faArrowLeft} />
               </Link>
-              
-              <span>{getSubtitle()}</span>
-             
+              <span style={{ marginLeft: '0.5rem' }}>{getSubtitle()}</span>
             </div>
-           
 
             <h3 className="page-title">{pageTitle}</h3>
             <p className="page-description">{pageDescription}</p>
-         
           </div>
-        
-          
 
           <div className="gradient-background-story">
             <div className="level-navigation">
@@ -174,85 +170,9 @@ function StoryInMotion({ intl }) {
               </div>
             </div>
 
-            <div className='d-flex justify-content-between'>
-              {/* <div className="search-input-wrapper">
-                <div className="justify-content-between">
-                  <div>
-                    <ModalInput
-                      className="course-btn search-journal"
-                      onChange={(e) => handleJournalSearch(e)}
-                      id={'searchBar'}
-                      type={'search'}
-                      labelTitle={
-                        activeLevel === 2
-                          ? intl.formatMessage({
-                              id: 'my_journal.search_podcasts',
-                              defaultMessage: 'Search podcast episodes',
-                            })
-                          : intl.formatMessage({
-                              id: 'my_journal.search_videos_',
-                              defaultMessage: 'Search lessons',
-                            })
-                      }
-                      imgSrc={searchJ}
-                      imageStyle={{ filter: 'grayscale(1)' }}
-                    />
-                  </div>
-                </div>
-              </div> */}
-              {/* <div
-                style={{
-                  display: 'inline-block',
-                  borderRadius: '8px',
-                  background:
-                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                  padding: '1px', // Adjust this value to control border thickness
-                  height: '58px',
-                  boxShadow: '0px 4px 10px 0px #00000040',
+            <div className="d-flex justify-content-between"></div>
 
-                }}>
-                <Select
-                  options={filters}
-                  value={filterBy}
-                  onChange={handleFilter}
-                  placeholder='Sort By'
-                  menuPortalTarget={document.body}
-                  isSearchable={false}
-                  styles={{
-                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    control: (base) => ({
-                      ...base,
-                      width: '157px',
-                      minHeight: '40px',
-                      overflow: 'hidden',
-                      border: 'none',
-                      borderRadius: '6px'
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }),
-                    option: (base, state) => ({
-                      ...base,
-                      backgroundColor: state.isFocused ? '#51C7DF' : base.backgroundColor,
-                      color: state.isFocused ? 'white' : base.color,
-                      '&:hover': {
-                        backgroundColor: '#51C7DF',
-                        color: 'white'
-                      }
-                    })
-                  }}
-                  components={{
-                    IndicatorSeparator: () => null
-                  }}
-                /></div> */}
-            </div>
-
-            <div className='content-videos-container-wrapper'>
-
-
+            <div className="content-videos-container-wrapper">
               <div className="content-videos-container">
                 {currentPageVideos.map((video, index) => (
                   <Video
@@ -289,9 +209,7 @@ function StoryInMotion({ intl }) {
                   />
                 </div>
               )}
-
             </div>
-
           </div>
         </div>
       </div>
