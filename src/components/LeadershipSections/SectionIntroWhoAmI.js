@@ -1,5 +1,7 @@
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
+import { NotesButton } from '../../components/Notes'
+
 
 function IntroWhoAmI({ setIsReflection }) {
   setIsReflection(false)
@@ -35,6 +37,14 @@ function IntroWhoAmI({ setIsReflection }) {
           customTitle="Who am I?"
         />
       </div>
+       <NotesButton from="leadershipJournal"
+                    data={{
+                      id: 1001062,
+                      title: 'Introduction to Who am I?'
+                    }}
+                    createdFrom={'Introduction to Who am I?'}
+                    journalId={1001062} 
+              />
       <SectionsWrapper
         title={'Introduction to Who am I?'}
         paragraphs={paragraphs}

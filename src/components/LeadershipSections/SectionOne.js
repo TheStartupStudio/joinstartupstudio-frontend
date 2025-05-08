@@ -4,6 +4,9 @@ import AccordionLead from '../../components/LeadershipJournal/AccordionLead'
 import SectionsWrapper from './SectionsWrapper'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 
+import { NotesButton } from '../../components/Notes'
+
+
 function SectionOne({ setIsReflection }) {
   setIsReflection(false)
 
@@ -211,6 +214,16 @@ function SectionOne({ setIsReflection }) {
             </div>
           </div>
         </div>
+
+        <NotesButton from="leadershipJournal"
+              data={{
+                id: 1001061,
+                title: 'Welcome to the Leadership Journal'
+              }}
+              createdFrom={'Welcome to the Leadership Journal'}
+              journalId={1001061} 
+        />
+        
       </SectionsWrapper>
     </div>
   )

@@ -1,5 +1,7 @@
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
+import { NotesButton } from '../../components/Notes'
+
 
 function SectionThree({ setIsReflection }) {
   setIsReflection(false)
@@ -35,6 +37,14 @@ function SectionThree({ setIsReflection }) {
           customTitle="How do I prove it?"
         />
       </div>
+      <NotesButton from="leadershipJournal"
+                          data={{
+                            id: 1001064,
+                            title: 'Introduction to How do I prove it?'
+                          }}
+                          createdFrom={'Introduction to How do I prove it?'}
+                          journalId={1001064} 
+                    />
       <SectionsWrapper
         title={'Introduction to How do I prove it?'}
         paragraphs={paragraphs}

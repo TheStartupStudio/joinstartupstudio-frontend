@@ -1,5 +1,7 @@
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
+import { NotesButton } from '../../components/Notes'
+
 
 function SectionTwo({ setIsReflection }) {
   setIsReflection(false)
@@ -35,6 +37,14 @@ function SectionTwo({ setIsReflection }) {
           customTitle="What can I do?"
         />
       </div>
+      <NotesButton from="leadershipJournal"
+                          data={{
+                            id: 1001063,
+                            title: 'Introduction to What can I do?'
+                          }}
+                          createdFrom={'Introduction to What can I do?'}
+                          journalId={1001063} 
+                    />
       <SectionsWrapper
         title={'Introduction to What can I do?'}
         paragraphs={paragraphs}

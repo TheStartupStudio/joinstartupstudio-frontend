@@ -255,25 +255,24 @@ const LeadershipJournal = memo(() => {
   const handleSaveAndContinue = async () => {
     try {
       setIsSaving(true);
-
-      // Get current component ref
+  
       const currentComponent = valueRefs.current[activeTabData.option?.value];
-
-      // Handle intro sections differently
+  
+      // Check if this is an intro section
       const isIntroSection = [
         'Welcome to the Leadership Journal',
         'Section One: Who am I?',
         'Section Two: What can I do?',
         'Section Three: How do I prove it?'
       ].includes(activeTabData.option?.value);
-
+  
       if (isIntroSection) {
-        // For intro sections, just move to the next content
+        // Handle intro sections as before...
         const currentSection = allTabs[activeTabData.activeTab].options;
         const currentOptionIndex = currentSection.findIndex(
           option => option.value === activeTabData.option?.value
         );
-
+  
         if (currentOptionIndex < currentSection.length - 1) {
           setActiveTabData({
             ...activeTabData,
@@ -282,28 +281,34 @@ const LeadershipJournal = memo(() => {
         }
         return;
       }
-
-      // First save changes if it's a reflection section
+  
+      // Save changes if it's a reflection section
       if (currentComponent?.saveChanges) {
         await currentComponent.saveChanges();
       }
-
-      // Fetch updated content after saving
+  
+      // Fetch updated content
       await dispatch(fetchJournalFinishedContent());
       const { journal: { finishedContent: updatedContent } } = store.getState();
-
+  
       // Check if current content is completed
       if (!updatedContent.includes(activeTabData.option?.value)) {
         setShowLockModal(true);
         return;
       }
-
-      // Find next content in sections
+  
+      // Special handling for Vision section
+      if (activeTabData.option?.value === 'Vision' && updatedContent.includes('Vision')) {
+        window.location.href = '/leadership-journal';
+        return;
+      }
+  
+      // Rest of the function remains the same...
       const currentSection = allTabs[activeTabData.activeTab].options;
       const currentOptionIndex = currentSection.findIndex(
         option => option.value === activeTabData.option?.value
       );
-
+  
       if (currentOptionIndex < currentSection.length - 1) {
         const nextOption = currentSection[currentOptionIndex + 1];
         setActiveTabData({
@@ -320,28 +325,8 @@ const LeadershipJournal = memo(() => {
           setShowLockModal(true);
         }
       }
-
-      // Update isNext flags after content changes
-      setAllTabs(prevTabs => {
-        const updatedTabs = [...prevTabs];
-
-        updatedTabs.forEach((tab) => {
-          let foundNext = false;
-          tab.options = tab.options.map(option => {
-            const finished = updatedContent.includes(option.label);
-            const isNext = !finished && !foundNext;
-            if (isNext) foundNext = true;
-
-            return {
-              ...option,
-              isNext
-            };
-          });
-        });
-
-        return updatedTabs;
-      });
-
+  
+      // Update isNext flags...
     } catch (error) {
       console.error('Error saving:', error);
     } finally {
