@@ -14,7 +14,8 @@ import { toast } from 'react-toastify'
 import { NotesButton } from '../Notes'
 import { useHistory } from 'react-router-dom'
 
-const Value = memo(forwardRef(({ id, setIsReflection, onTitleChange }, ref) => {
+const Value = forwardRef((props, ref) => {
+  const { id, setIsReflection, onTitleChange } = props
   const [currentId, setCurrentId] = useState(id)
   const [pendingChanges, setPendingChanges] = useState({})
   const [showVideo, setShowVideo] = useState(false)
@@ -54,49 +55,6 @@ const Value = memo(forwardRef(({ id, setIsReflection, onTitleChange }, ref) => {
     }))
   }
 
-  const findNextLesson = (currentId) => {
-    const lessons = [
-      { 
-        now: <Value id={1001065} setIsReflection={setIsReflection} />,
-        next: <Value id={1001066} setIsReflection={setIsReflection} />
-      },
-      { 
-        now: <Value id={1001066} setIsReflection={setIsReflection} />,
-        next: <Value id={1001067} setIsReflection={setIsReflection} />
-      },
-      { 
-        now: <Value id={1001067} setIsReflection={setIsReflection} />,
-        next: <Value id={1001068} setIsReflection={setIsReflection} />
-      },
-      { 
-        now: <Value id={1001069} setIsReflection={setIsReflection} />,
-        next: <Value id={1001070} setIsReflection={setIsReflection} />
-      },
-      { 
-        now: <Value id={1001070} setIsReflection={setIsReflection} />,
-        next: <Value id={1001071} setIsReflection={setIsReflection} />
-      },
-      { 
-        now: <Value id={1001071} setIsReflection={setIsReflection} />,
-        next: <Value id={1001072} setIsReflection={setIsReflection} />
-      },
-
-      { 
-        now: <Value id={1001073} setIsReflection={setIsReflection} />,
-        next: <Value id={1001074} setIsReflection={setIsReflection} />
-      },
-      { 
-        now: <Value id={1001074} setIsReflection={setIsReflection} />,
-        next: <Value id={1001075} setIsReflection={setIsReflection} />
-      },
-      { 
-        now: <Value id={1001075} setIsReflection={setIsReflection} />,
-        next: <Value id={1001076} setIsReflection={setIsReflection} />
-      }
-    ]
-    return lessons.find(l => l.now.props.id === parseInt(currentId))?.next
-  }
-
   useImperativeHandle(ref, () => ({
     saveChanges: async () => {
       try {
@@ -132,27 +90,11 @@ const Value = memo(forwardRef(({ id, setIsReflection, onTitleChange }, ref) => {
         await Promise.all(savePromises)
         setPendingChanges({})
         await refreshData()
-
-        const allEntriesHaveContent = journalData?.entries.every(entry => 
-          entry.userAnswers && entry.userAnswers.length > 0
-        )
-
-        if (allEntriesHaveContent) {
-          const nextComponent = findNextLesson(parseInt(currentId))
-          if (nextComponent) {
-            const nextId = nextComponent.props.id
-            setCurrentId(nextId)
-            dispatch(getJournalData(nextId)).then(() => {
-              // Update title after data is fetched
-              if (journalData?.title) {
-                onTitleChange?.(journalData.title)
-              }
-            })
-          }
-        }
-
+        
+        return true
       } catch (error) {
         console.error('Error saving reflections:', error)
+        return false
       }
     }
   }))
@@ -268,8 +210,6 @@ const Value = memo(forwardRef(({ id, setIsReflection, onTitleChange }, ref) => {
       </SectionsWrapper>
     </div>
   )
-}), (prevProps, nextProps) => {
-  return prevProps.id === nextProps.id
 })
 
-export default Value
+export default memo(Value)
