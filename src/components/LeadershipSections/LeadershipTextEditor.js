@@ -162,6 +162,7 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
         <div key={reflection.id} className='reflection-container mb-4'>
           <ReactQuill
             value={reflection.content}
+            placeholder='Write your reflection...'
             onChange={(value) => handleContentChange(reflection.id, value)}
             className='my-quill-editor'
             modules={{

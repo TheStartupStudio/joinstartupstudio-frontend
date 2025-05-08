@@ -30,7 +30,10 @@ const LeadershipJournal = memo(() => {
   const [allTabs, setAllTabs] = useState([])
   const [activeTabData, setActiveTabData] = useState({
     activeTab: 0,
-    option: null
+    option: {
+      label: 'Welcome to the Leadership Journal',
+      value: 'Welcome to the Leadership Journal'
+    }
   })
   const [showLockModal, setShowLockModal] = useState(false)
   const [currentTitle, setCurrentTitle] = useState('')
@@ -44,107 +47,107 @@ const LeadershipJournal = memo(() => {
     one: [
       { title: 'Welcome to the Leadership Journal', component: <SectionOne setIsReflection={setIsReflection} /> },
       { title: 'Section One: Who am I?', component: <IntroWhoAmI setIsReflection={setIsReflection} /> },
-      { 
+      {
         title: 'Values',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Values'] = el}
-          id={1001065} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001065}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Expertise',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Expertise'] = el}
-          id={1001066} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001066}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Experiences',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Experiences'] = el}
-          id={1001067} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001067}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Style',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Style'] = el}
-          id={1001068} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001068}
+          setIsReflection={setIsReflection}
+        />
       },
     ],
     two: [
       { title: 'Section Two: What can I do?', component: <SectionTwo setIsReflection={setIsReflection} /> },
-      { 
+      {
         title: 'Teamwork',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Teamwork'] = el}
-          id={1001069} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001069}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Initiative',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Initiative'] = el}
-          id={1001070} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001070}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Methodology',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Methodology'] = el}
-          id={1001071} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001071}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Self-Assessment',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Self-Assessment'] = el}
-          id={1001072} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001072}
+          setIsReflection={setIsReflection}
+        />
       },
     ],
     three: [
       { title: 'Section Three: How do I prove it?', component: <SectionThree setIsReflection={setIsReflection} /> },
-      { 
+      {
         title: 'Outcomes',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Outcomes'] = el}
-          id={1001073} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001073}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Feedback',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Feedback'] = el}
-          id={1001074} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001074}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Iteration',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Iteration'] = el}
-          id={1001075} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001075}
+          setIsReflection={setIsReflection}
+        />
       },
-      { 
+      {
         title: 'Vision',
-        component: <Value 
+        component: <Value
           ref={el => valueRefs.current['Vision'] = el}
-          id={1001076} 
-          setIsReflection={setIsReflection} 
-        /> 
+          id={1001076}
+          setIsReflection={setIsReflection}
+        />
       },
     ],
   };
@@ -177,7 +180,7 @@ const LeadershipJournal = memo(() => {
         }))
       }
     ];
-    
+
     setAllTabs(tabs);
   }, []);
 
@@ -198,12 +201,12 @@ const LeadershipJournal = memo(() => {
       // Helper function to determine the next item that should be marked as "next"
       const updateNextFlags = (options) => {
         let foundNext = false;
-        
+
         return options.map(option => {
           const finished = finishedContent.includes(option.label);
           const isNext = !finished && !foundNext;
           if (isNext) foundNext = true;
-          
+
           return {
             ...option,
             isNext
@@ -224,10 +227,26 @@ const LeadershipJournal = memo(() => {
   const canAccessSection = (index) => {
     if (index === 0) return true;
     if (index === 1) {
-      return finishedContent.includes('Section One: Who am I?');
+      // All of section one must be completed
+      const sectionOneRequired = [
+        'Section One: Who am I?',
+        'Values',
+        'Expertise',
+        'Experiences',
+        'Style'
+      ];
+      return sectionOneRequired.every(item => finishedContent.includes(item));
     }
     if (index === 2) {
-      return finishedContent.includes('Section Two: What can I do?');
+      // All of section two must be completed
+      const sectionTwoRequired = [
+        'Section Two: What can I do?',
+        'Teamwork',
+        'Initiative',
+        'Methodology',
+        'Self-Assessment'
+      ];
+      return sectionTwoRequired.every(item => finishedContent.includes(item));
     }
     return false;
   };
@@ -236,10 +255,10 @@ const LeadershipJournal = memo(() => {
   const handleSaveAndContinue = async () => {
     try {
       setIsSaving(true);
-  
+
       // Get current component ref
       const currentComponent = valueRefs.current[activeTabData.option?.value];
-      
+
       // Handle intro sections differently
       const isIntroSection = [
         'Welcome to the Leadership Journal',
@@ -247,16 +266,15 @@ const LeadershipJournal = memo(() => {
         'Section Two: What can I do?',
         'Section Three: How do I prove it?'
       ].includes(activeTabData.option?.value);
-  
+
       if (isIntroSection) {
         // For intro sections, just move to the next content
         const currentSection = allTabs[activeTabData.activeTab].options;
         const currentOptionIndex = currentSection.findIndex(
           option => option.value === activeTabData.option?.value
         );
-        
+
         if (currentOptionIndex < currentSection.length - 1) {
-          // Move to next option in current section
           setActiveTabData({
             ...activeTabData,
             option: currentSection[currentOptionIndex + 1]
@@ -264,31 +282,34 @@ const LeadershipJournal = memo(() => {
         }
         return;
       }
-  
-      // Regular save and continue logic for reflection sections
+
+      // First save changes if it's a reflection section
       if (currentComponent?.saveChanges) {
         await currentComponent.saveChanges();
       }
-  
-      // Rest of your existing save and continue logic...
+
+      // Fetch updated content after saving
       await dispatch(fetchJournalFinishedContent());
       const { journal: { finishedContent: updatedContent } } = store.getState();
-  
+
+      // Check if current content is completed
+      if (!updatedContent.includes(activeTabData.option?.value)) {
+        setShowLockModal(true);
+        return;
+      }
+
       // Find next content in sections
       const currentSection = allTabs[activeTabData.activeTab].options;
       const currentOptionIndex = currentSection.findIndex(
         option => option.value === activeTabData.option?.value
       );
-      
+
       if (currentOptionIndex < currentSection.length - 1) {
         const nextOption = currentSection[currentOptionIndex + 1];
-        
-        if (updatedContent.includes(activeTabData.option?.value)) {
-          setActiveTabData({
-            ...activeTabData,
-            option: nextOption
-          });
-        }
+        setActiveTabData({
+          ...activeTabData,
+          option: nextOption
+        });
       } else if (activeTabData.activeTab < allTabs.length - 1) {
         if (canAccessSection(activeTabData.activeTab + 1)) {
           setActiveTabData({
@@ -299,28 +320,28 @@ const LeadershipJournal = memo(() => {
           setShowLockModal(true);
         }
       }
-  
+
       // Update isNext flags after content changes
       setAllTabs(prevTabs => {
         const updatedTabs = [...prevTabs];
-        
-        updatedTabs.forEach((tab, index) => {
+
+        updatedTabs.forEach((tab) => {
           let foundNext = false;
           tab.options = tab.options.map(option => {
             const finished = updatedContent.includes(option.label);
             const isNext = !finished && !foundNext;
             if (isNext) foundNext = true;
-            
+
             return {
               ...option,
               isNext
             };
           });
         });
-  
+
         return updatedTabs;
       });
-  
+
     } catch (error) {
       console.error('Error saving:', error);
     } finally {
@@ -334,11 +355,11 @@ const LeadershipJournal = memo(() => {
     if (activeTabData.activeTab === 1 && !finishedContent.includes('Section One: Who am I?')) {
       return true;
     }
-    
+
     if (activeTabData.activeTab === 2 && !finishedContent.includes('Section Two: What can I do?')) {
       return true;
     }
-    
+
     // Check if this specific option should be disabled
     // An option is disabled if it's not in finishedContent and it's not marked as next
     return !finishedContent.includes(option.label) && !option.isNext;
@@ -347,29 +368,15 @@ const LeadershipJournal = memo(() => {
   // Render the appropriate section based on active tab and option
   const renderedSection = useMemo(() => {
     if (allTabs.length === 0) return null;
-    
-    if (!activeTabData.option) {
-      // Render the first component of the active section
-      switch (activeTabData.activeTab) {
-        case 0:
-          return sections.one[0].component;
-        case 1:
-          return sections.two[0].component;
-        case 2:
-          return sections.three[0].component;
-        default:
-          return null;
-      }
-    }
 
     // Find the component that matches the selected option
-    const sectionKey = activeTabData.activeTab === 0 ? 'one' : 
-                       activeTabData.activeTab === 1 ? 'two' : 'three';
-    
+    const sectionKey = activeTabData.activeTab === 0 ? 'one' :
+      activeTabData.activeTab === 1 ? 'two' : 'three';
+
     const selectedSection = sections[sectionKey].find(
-      section => section.title === activeTabData.option.value
+      section => section.title === activeTabData.option?.value
     );
-    
+
     return selectedSection ? selectedSection.component : null;
   }, [activeTabData, allTabs, sections]);
 
@@ -382,6 +389,43 @@ const LeadershipJournal = memo(() => {
       setCurrentTitle(tabTitle);
     }
   }, [activeTabData, allTabs]);
+
+  // Handle tab click
+  const handleTabClick = (index) => {
+    if (!canAccessSection(index)) {
+      setShowLockModal(true);
+      return;
+    }
+
+    let initialOption;
+    switch (index) {
+      case 0:
+        initialOption = {
+          label: 'Welcome to the Leadership Journal',
+          value: 'Welcome to the Leadership Journal'
+        };
+        break;
+      case 1:
+        initialOption = {
+          label: 'Section Two: What can I do?',
+          value: 'Section Two: What can I do?'
+        };
+        break;
+      case 2:
+        initialOption = {
+          label: 'Section Three: How do I prove it?',
+          value: 'Section Three: How do I prove it?'
+        };
+        break;
+      default:
+        initialOption = null;
+    }
+
+    setActiveTabData({
+      activeTab: index,
+      option: initialOption
+    });
+  };
 
   return (
     <div className='container-fluid'>
@@ -415,17 +459,14 @@ const LeadershipJournal = memo(() => {
                 {allTabs.map((tab, index) => (
                   <span
                     key={index}
-                    className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 w-100-mob ${
-                      activeTabData.activeTab === index
+                    className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 w-100-mob ${activeTabData.activeTab === index
                         ? 'active-leadership'
                         : ''
-                    }`}
-                    onClick={() => {
-                      if (!canAccessSection(index)) {
-                        setShowLockModal(true);
-                        return;
-                      }
-                      setActiveTabData({ activeTab: index, option: null });
+                      }`}
+                    onClick={() => handleTabClick(index)}
+                    style={{
+                      color: canAccessSection(index) ? '#000' : '#999',
+                      cursor: canAccessSection(index) ? 'pointer' : 'not-allowed'
                     }}
                   >
                     {tab.title}
@@ -436,32 +477,32 @@ const LeadershipJournal = memo(() => {
                 <div className='search-journals-width w-100-mob'>
                   <SelectCourses
                     selectedCourse={activeTabData}
-                    setSelectedCourse={setActiveTabData} 
+                    setSelectedCourse={setActiveTabData}
                     options={allTabs[activeTabData.activeTab]?.options || []}
                     placeholder={
                       !activeTabData.option ? (
                         allTabs[activeTabData.activeTab]?.title === 'Welcome to the Leadership Journal' ? 'Welcome to the Leadership Journal' :
-                        allTabs[activeTabData.activeTab]?.title === 'What can I do?' ? 'What can I do?' :
-                        allTabs[activeTabData.activeTab]?.title === 'How do I prove it?' ? 'How do I prove it?' :
-                        'Select Journals to View'
+                          allTabs[activeTabData.activeTab]?.title === 'What can I do?' ? 'What can I do?' :
+                            allTabs[activeTabData.activeTab]?.title === 'How do I prove it?' ? 'How do I prove it?' :
+                              'Select Journals to View'
                       ) : currentTitle || 'Select Journals to View'
                     }
                     isDisabled={isOptionDisabled}
                   />
                 </div>
                 <div className='d-flex gap-3 flex-col-mob align-items-end-mob saveContinue-btn'>
-                  {(isReflection || 
+                  {(isReflection ||
                     activeTabData.option?.value === 'Welcome to the Leadership Journal' ||
                     activeTabData.option?.value === 'Section One: Who am I?' ||
                     activeTabData.option?.value === 'Section Two: What can I do?' ||
                     activeTabData.option?.value === 'Section Three: How do I prove it?') && (
-                    <AcademyBtn
-                      title={isReflection ? 'Save and Continue' : 'Continue'}
-                      icon={faArrowRight}
-                      onClick={handleSaveAndContinue}
-                      loading={isSaving}
-                    />
-                  )}
+                      <AcademyBtn
+                        title={isReflection ? 'Save and Continue' : 'Continue'}
+                        icon={faArrowRight}
+                        onClick={handleSaveAndContinue}
+                        loading={isSaving}
+                      />
+                    )}
                 </div>
                 {showLockModal && (
                   <Modal
