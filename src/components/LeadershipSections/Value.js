@@ -180,9 +180,9 @@ const Value = memo(forwardRef(({ id, setIsReflection, onTitleChange }, ref) => {
 
   const noteButtonStyles = {
     position: 'absolute',
-    top: '1rem',
+    bottom: '100px',
     right: '1rem',
-    zIndex: 10
+    zIndex: 99999999
   }
 
   return (
