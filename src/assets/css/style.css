@@ -5383,6 +5383,9 @@ wave > wave:first-child {
 
 
 @media (max-width: 768px) {
+  .save-button{
+    margin-right:2rem!important;
+  }
   .responsive-video-first {
     width: 98%;
     height: 400px;

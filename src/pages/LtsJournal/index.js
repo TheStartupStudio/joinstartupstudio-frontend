@@ -97,7 +97,7 @@ function LtsJournal(props) {
     (state) => state.course
   )
 
-  console.log('Finished Content:', finishedContent);
+  // console.log('Finished Content:', finishedContent);
 
   const levels = [
     {
@@ -1028,6 +1028,10 @@ function LtsJournal(props) {
                           let levelClass = '';
                           if (index === activeLevel) {
                             levelClass = 'active-level-journal';
+                          } else if (index === 1 && finishedContent.includes(58)) {
+                            levelClass = 'accessible-level-journal';
+                          } else if (index === 2 && finishedContent.includes(68)) {
+                            levelClass = 'accessible-level-journal'; 
                           } else if (!isContentAccessible(lessonsByLevel[index]?.[0]?.redirectId)) {
                             levelClass = 'inactive-level-journal';
                           } else {

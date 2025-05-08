@@ -257,7 +257,7 @@ function LtsJournalContent(props) {
               style={{ width: '40px', height: '40px', marginRight: '10px' }}
             />
             <h4 className="page-card__content-title">{journal.title}</h4>
-            {console.log('patrik250', journal)}
+            {/* {console.log('patrik250', journal)} */}
           </div>
           <div className="journal-entries__videos">
             {videos[currentVideoIndex] && (

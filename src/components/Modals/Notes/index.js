@@ -124,7 +124,7 @@ const NotesModal = (props) => {
                   theme='snow'
                   name='textQuillStandart'
                   className='mb-5 w-100 p-0 scroll-add-new-note-modal'
-                  style={{ height: '186px' }}
+                  // style={{ height: '186px' }}
                   onChange={handleQuillInput}
                   modules={quillModules}
                   placeholder={placeholder}

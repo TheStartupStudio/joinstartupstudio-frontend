@@ -235,7 +235,7 @@ const handleChange = (name, value) => {
               theme='snow'
               name='textQuillStandart'
               className='mb-5 w-100 p-0 scroll-add-new-note-popup-modal react-quill'
-              style={{ height: '186px' }}
+              // style={{ height: '186px' }}
               onChange={(e) => handleChange('value', e)}
               modules={quillModules}
               placeholder={'Write here…'}
