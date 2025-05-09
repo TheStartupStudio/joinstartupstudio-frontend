@@ -100,10 +100,40 @@ function LtsJournalReflection(props) {
     });
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      handleSubmit('enter', content);
+  const handleSubmit = async (content) => {
+    if (saving) return;
+    
+    setSaving(true);
+
+    try {
+      if (foulWords) {
+        await FoulWords.register(loggedUser.id, foulWords, JOURNALS);
+        setFoulWords(null);
+      }
+
+      const payload = {
+        content: content,
+        trainingId: props.journal?.id || null
+      };
+
+      // If entry exists, update it. Otherwise create new entry
+      if (props.entry?.id) {
+        await props.saved(payload);
+      } else {
+        await props.saved(payload);
+      }
+
+      setEditing(false);
+      setNotSaved(false);
+      toast.success('Reflection saved successfully!');
+      
+      dispatch(fetchLtsCoursefinishedContent());
+
+    } catch (error) {
+      console.error('Save error:', error);
+      toast.error('Failed to save reflection. Please try again.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -112,22 +142,13 @@ function LtsJournalReflection(props) {
       unblockHandle.current();
     }
 
-
-    // unblockHandle.current = history.block((targetLocation) => {
-    //   if (!showNotSavedModal && notSaved) {
-    //     showModal(targetLocation);
-    //     return false; // Prevent navigation
-    //   }
-    //   return true; // Allow navigation
-    // });
-
     return () => {
       if (unblockHandle.current) {
         unblockHandle.current();
         unblockHandle.current = null;
       }
     };
-  }, [history /*, showNotSavedModal, notSaved*/]);
+  }, [history]);
 
   return (
     <>
@@ -164,7 +185,6 @@ function LtsJournalReflection(props) {
                 theme="snow"
                 value={content}
                 onChange={handleContentChange}
-                onKeyDown={handleKeyDown} // Submit on Enter
                 modules={quillModules}
                 formats={quillFormats}
               />

@@ -914,20 +914,54 @@ function LtsJournal(props) {
 
       const currentPath = history.location.pathname;
       const currentJournalId = parseInt(currentPath.split('/').pop());
-
-      console.log('Current journalId:', currentJournalId);
-      console.log('Current active level:', activeLevel);
-
       const nextLessonId = findNextLesson(currentJournalId);
-      console.log('Next lesson ID:', nextLessonId);
 
       if (nextLessonId) {
-        const nextPath = `/my-course-in-entrepreneurship/journal/${nextLessonId}`;
-        console.log('Navigating to:', nextPath);
+        let nextLesson = null;
+        let nextLevel = activeLevel;
+        
+        const currentLevelLastId = {
+          0: 58,
+          1: 68,
+          2: 126
+        }[activeLevel];
+
+        if (currentJournalId === currentLevelLastId && activeLevel < 2) {
+          nextLevel = activeLevel + 1;
+          setActiveLevel(nextLevel);
+        }
+        
+        if (nextLevel === 2) {
+          for (const section of lessonsByLevel[2]) {
+            const found = section.children?.find(child => child.redirectId === nextLessonId);
+            if (found) {
+              nextLesson = {
+                value: `${section.id}_${found.id}`,
+                label: found.title,
+                redirectId: nextLessonId
+              };
+              break;
+            }
+          }
+        } else {
+          const found = lessonsByLevel[nextLevel]?.find(
+            lesson => lesson.redirectId === nextLessonId
+          );
+          if (found) {
+            nextLesson = {
+              value: found.id,
+              label: found.title,
+              redirectId: nextLessonId
+            };
+          }
+        }
+
+        if (nextLesson) {
+          setSelectedLesson(nextLesson);
+        }
 
         await dispatch(fetchLtsCoursefinishedContent());
-
-        history.push(nextPath);
+        history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
       }
 
     } catch (error) {

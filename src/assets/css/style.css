@@ -6038,6 +6038,7 @@ strong {
   opacity: 1;
   display: flex;
   align-items: center;
+  gap:0.5rem;
 }
 
 .journal-entries__entry-reflections-action:hover {
@@ -6164,7 +6165,7 @@ strong {
 .journal-entries__entry-reflection--new
   + .journal-entries__entry-reflections-actions {
   /* margin-top: -55px; */
-  display: none;
+  /* display: none; */
 }
 
 .journal-entry__parent-title {

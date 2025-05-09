@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
 import { getFormattedDate } from '../../utils/helpers'
+import AddDoc from '../../assets/images/academy-icons/add-doc.png'
 
 const debounce = (func, delay) => {
   let timer
@@ -252,7 +253,7 @@ const EntriesBox = (props) => {
                       })
                     }}
                   >
-                    Add reflection <FontAwesomeIcon icon={faPlus} />
+                    Add new reflection <img src={AddDoc} alt='add-doc' />
                   </a>
                 </div>
               )}

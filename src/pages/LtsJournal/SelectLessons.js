@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 function SelectLessons({
   options,
@@ -12,7 +12,9 @@ function SelectLessons({
   activeLevel
 }) {
   const location = useLocation();
+  const { journalId } = useParams();
   const isRootPath = location.pathname === '/my-course-in-entrepreneurship/journal';
+  const [currentPlaceholder, setCurrentPlaceholder] = useState('');
 
   const getLevelPlaceholder = () => {
     switch (activeLevel) {
@@ -27,6 +29,46 @@ function SelectLessons({
     }
   };
 
+  // Function to find lesson title by redirectId
+  const getLessonTitleByRedirectId = (redirectId) => {
+    if (!redirectId) return null;
+
+    if (activeLevel === 2) {
+      // For Level 3's nested structure
+      for (const section of options) {
+        if (section.children) {
+          const found = section.children.find(child => child.redirectId === redirectId);
+          if (found) return found.label;
+        }
+      }
+    } else {
+      // For Level 1 and 2
+      const found = options.find(option => option.redirectId === redirectId);
+      if (found) return found.label;
+    }
+    return null;
+  };
+
+  // Update placeholder when route/level/course/redirectId changes
+  useEffect(() => {
+    if (isRootPath) {
+      setCurrentPlaceholder(getLevelPlaceholder());
+    } else if (journalId) {
+      const numericId = parseInt(journalId);
+      const lessonTitle = getLessonTitleByRedirectId(numericId);
+      if (lessonTitle) {
+        setCurrentPlaceholder(lessonTitle);
+      } else if (selectedCourse?.label) {
+        setCurrentPlaceholder(selectedCourse.label);
+      } else if (placeholder) {
+        setCurrentPlaceholder(placeholder);
+      } else {
+        setCurrentPlaceholder(getLevelPlaceholder());
+      }
+    }
+  }, [isRootPath, selectedCourse, placeholder, activeLevel, journalId]);
+
+  // Handle saved selection
   useEffect(() => {
     const savedSelection = localStorage.getItem('selectedLesson');
     if (savedSelection && !selectedCourse) {
@@ -34,16 +76,13 @@ function SelectLessons({
         const parsedSelection = JSON.parse(savedSelection);
         if (parsedSelection.activeLevel === activeLevel) {
           setSelectedCourse(parsedSelection.course);
+          setCurrentPlaceholder(parsedSelection.course.label);
         }
       } catch (error) {
         console.error('Error parsing saved selection:', error);
       }
     }
   }, [activeLevel, selectedCourse, setSelectedCourse]);
-
-  const displayPlaceholder = isRootPath || !selectedCourse?.label
-    ? getLevelPlaceholder()
-    : selectedCourse.label;
 
   const handleChange = (selectedOption) => {
     if (selectedOption?.disabled) {
@@ -52,19 +91,21 @@ function SelectLessons({
       return;
     }
     setSelectedCourse(selectedOption);
-    // Save selection to localStorage
-    if (selectedOption) {
-      localStorage.setItem('selectedLesson', JSON.stringify({
-        course: selectedOption,
-        activeLevel: activeLevel
-      }));
-    }
+    setCurrentPlaceholder(selectedOption.label);
+    
+    localStorage.setItem('selectedLesson', JSON.stringify({
+      course: selectedOption,
+      activeLevel: activeLevel
+    }));
   };
 
-  const currentSelection = options?.find(option =>
-    option.redirectId === selectedCourse?.redirectId ||
-    option.value === selectedCourse?.value
-  );
+  const currentSelection = options?.find(option => {
+    if (journalId) {
+      const numericId = parseInt(journalId);
+      return option.redirectId === numericId;
+    }
+    return option.value === selectedCourse?.value;
+  });
 
   const CustomOption = ({ data, innerRef, innerProps }) => (
     <div
@@ -98,7 +139,7 @@ function SelectLessons({
         value={currentSelection || selectedCourse}
         onChange={handleChange}
         isOptionDisabled={(option) => option.disabled}
-        placeholder={displayPlaceholder}
+        placeholder={currentPlaceholder}
         menuPortalTarget={document.body}
         isSearchable={false}
         styles={{
