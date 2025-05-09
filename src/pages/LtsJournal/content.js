@@ -229,6 +229,19 @@ function LtsJournalContent(props) {
     }
   }, [props.noteButtonProps?.journalId]);
 
+  const getContentByVideo = (videoId) => {
+    if (videoId === 140) {
+      return "Section 2: In the second level, you will immerse yourself in the LTS model. People want to work with people they like, respect, and trust. So, you will begin the LTS process by building yourself first. With your digital “I Am” video ready to introduce you to your cohort and the world, it is time to assess your experiences and mindset so far by evaluating yourself according to the LTS model and vet potential partners, thus creating a foundation for a successful startup."; // Content for video 140
+    } else if (props.match.params.journalId === '60') {
+      return journal.content; 
+    } else if (videoId === 727) {
+      return "Section 3: Now that you have a better sense of self and your professional opportunities for collaboration, you can move on to creating the startup, itself. You’re going to be using your own personal experiences and passions to find a problem worth solving and begin to construct the framework of your startup. You’ll engage in industry and market analysis, develop a brand, build a business plan, create a financial framework, and evaluate the sustainability, profitability, and scalability of your solution."; // Content for video 727  
+    } else if (props.match.params.journalId === '70') {
+      return journal.content; 
+    }
+    return journal.content; 
+  };
+
   if (!journal) {
     return null
   }
@@ -237,7 +250,22 @@ function LtsJournalContent(props) {
     journal.videos && journal.videos.constructor === Array
       ? journal.videos
       : [journal.video]
-  ).filter((video) => video && video.id);
+  ).filter((video) => video && video.id)
+  .sort((a, b) => {
+    const { journalId } = props.match.params;
+    
+    if (journalId === '60') {
+      if (a.id === 140) return -1;
+      if (b.id === 140) return 1;
+    }
+    
+    if (journalId === '70') {
+      if (a.id === 727) return -1;
+      if (b.id === 727) return 1;
+    }
+
+    return 0;
+  });
 
   return (
     <>
@@ -257,7 +285,6 @@ function LtsJournalContent(props) {
               style={{ width: '40px', height: '40px', marginRight: '10px' }}
             />
             <h4 className="page-card__content-title">{journal.title}</h4>
-            {/* {console.log('patrik250', journal)} */}
           </div>
           <div className="journal-entries__videos">
             {videos[currentVideoIndex] && (
@@ -320,34 +347,41 @@ function LtsJournalContent(props) {
             />
             <h6>Reflection</h6>
           </div>
-          {journal.entries && journal.entries.length > 0 ? (
-            <div className="col-12">
-              <div className="journal-entries">
-                <EntriesBox
-                  entries={journal.entries}
-                  entryBoxTitle={journal?.title}
-                  journal={journal}
-                  isEditable={true}
-                  isDeletable={true}
-                  userJournalEntries={userJournalEntries}
-                  deleteReflection={(entry, userJournalEntry) =>
-                    deleteReflection(entry, userJournalEntry)
-                  }
-                  updateReflection={(entry, userJournalEntry) =>
-                    updateReflection(entry, userJournalEntry)
-                  }
-                  addReflection={(entry) => addReflection(entry)}
-                  handleShowAddReflection={(reflection) =>
-                    handleShowAddReflection(reflection)
-                  }
-                  showAddReflection={showAddReflection}
-                  isAddReflection={isAddReflection}
-                  onReflectionContentChange={props.onReflectionContentChange}
-                />
+          
+          <div className="journal-content" style={{marginTop:'1rem'}} >
+            {videos[currentVideoIndex] && getContentByVideo(videos[currentVideoIndex].id)}
+          </div>
+
+          {videos[currentVideoIndex]?.id !== 140 && videos[currentVideoIndex]?.id !== 727 && (
+            journal.entries && journal.entries.length > 0 ? (
+              <div className="col-12">
+                <div className="journal-entries">
+                  <EntriesBox
+                    entries={journal.entries}
+                    entryBoxTitle={journal?.title}
+                    journal={journal}
+                    isEditable={true}
+                    isDeletable={true}
+                    userJournalEntries={userJournalEntries}
+                    deleteReflection={(entry, userJournalEntry) =>
+                      deleteReflection(entry, userJournalEntry)
+                    }
+                    updateReflection={(entry, userJournalEntry) =>
+                      updateReflection(entry, userJournalEntry)
+                    }
+                    addReflection={(entry) => addReflection(entry)}
+                    handleShowAddReflection={(reflection) =>
+                      handleShowAddReflection(reflection)
+                    }
+                    showAddReflection={showAddReflection}
+                    isAddReflection={isAddReflection}
+                    onReflectionContentChange={props.onReflectionContentChange}
+                  />
+                </div>
               </div>
-            </div>
-          ) : (
-            <p>No journal entries available.</p>
+            ) : (
+              <p>No journal entries available.</p>
+            )
           )}
         </div>
       </div>

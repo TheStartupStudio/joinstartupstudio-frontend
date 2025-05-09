@@ -86,7 +86,6 @@ function LtsJournalReflection(props) {
   const handleContentChange = (value) => {
     setContent(value);
 
-    // Pass all necessary data to parent
     props.onContentChange?.(value, {
       content: value,
       journalId: props.journal?.id,

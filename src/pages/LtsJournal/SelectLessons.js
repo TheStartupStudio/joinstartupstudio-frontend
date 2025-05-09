@@ -29,12 +29,10 @@ function SelectLessons({
     }
   };
 
-  // Function to find lesson title by redirectId
   const getLessonTitleByRedirectId = (redirectId) => {
     if (!redirectId) return null;
 
     if (activeLevel === 2) {
-      // For Level 3's nested structure
       for (const section of options) {
         if (section.children) {
           const found = section.children.find(child => child.redirectId === redirectId);
@@ -42,14 +40,12 @@ function SelectLessons({
         }
       }
     } else {
-      // For Level 1 and 2
       const found = options.find(option => option.redirectId === redirectId);
       if (found) return found.label;
     }
     return null;
   };
 
-  // Update placeholder when route/level/course/redirectId changes
   useEffect(() => {
     if (isRootPath) {
       setCurrentPlaceholder(getLevelPlaceholder());
@@ -68,7 +64,6 @@ function SelectLessons({
     }
   }, [isRootPath, selectedCourse, placeholder, activeLevel, journalId]);
 
-  // Handle saved selection
   useEffect(() => {
     const savedSelection = localStorage.getItem('selectedLesson');
     if (savedSelection && !selectedCourse) {
