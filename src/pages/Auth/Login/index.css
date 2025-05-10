@@ -441,10 +441,12 @@ body:has(.choose-login_container) section.loginpage-footer-section {
       rgb(19, 112, 242) 20%,
       transparent 40%
     ) !important;
-  min-height: 100vh;
-  height: 100%;
+  /* min-height: 200vh; */
+  /* min-height: 100vh;
+  height: 100%; */
+  min-height: 100dvh;
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
+  /* -webkit-overflow-scrolling: touch; */
   width: 100%;
   position: relative;
 }

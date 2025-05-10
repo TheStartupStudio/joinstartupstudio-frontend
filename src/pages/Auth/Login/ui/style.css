@@ -1,6 +1,6 @@
 .public-login-form {
   /* height: 60vh; */
-  min-height: 60vh;
+  /* min-height: 60vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -77,18 +77,18 @@
 
 @media (max-width: 767px) {
   .public-login-form {
-    height: calc(50vh - 42px) !important;
-    min-height: 50vh !important;
+    /* height: calc(50vh - 42px) !important; */
+    /* min-height: 50vh !important; */
     justify-content: center;
   }
 }
 
 @media (max-width: 570px) {
-  .public-login-form {
+  /* .public-login-form {
     height: 35vh;
     min-height: 35vh;
     justify-content: center;
-  }
+  } */
 
   .public-login-form button {
     font-size: 14px;
@@ -112,7 +112,6 @@
   }
 }
 
-
 @media (max-width: 767px) {
   .login-form-resp {
     width: 90vw !important;
@@ -124,7 +123,6 @@
     height: 50vh !important;
   }
 }
-
 
 /* @media (max-width: 1008px) and (min-width: 768px) {
   .login-form-resp {
@@ -144,7 +142,6 @@
     bottom: 110px;
   }
 }
-
 
 @media (max-width: 767px) {
   .social-media-items {

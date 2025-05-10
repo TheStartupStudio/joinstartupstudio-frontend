@@ -43,7 +43,7 @@ function PortfolioContent({
             <a
               href={link}
               target='blank'
-              className='mb-0 fs-15 blue-color fw-medium'
+              className='mb-0 fs-15 blue-color fw-medium word-break-portfolio'
             >
               {link}
             </a>

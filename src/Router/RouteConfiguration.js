@@ -12,6 +12,7 @@ import ConfirmEmail from '../pages/Register/ConfirmEmail'
 import CheckEmail from '../pages/Register/CheckEmail'
 import CheckSubscription from '../pages/Register/CheckSubscription'
 import CancelSubscription from '../pages/Register/CancelSubscription'
+import AuthSuccess from '../pages/Auth/Social-Login/AuthSuccess'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const Terms = React.lazy(() => import('../pages/Terms'))
@@ -438,6 +439,7 @@ export const publicRoutes = [
   { path: '/my-immersion', component: MyImmersion, exact: false },
   { path: '/verify', component: VerifyEmail, exact: false },
   { path: '/', component: Login, exact: true },
+  { path: '/auth-success', component: AuthSuccess, exact: true },
   { path: '/logout', component: Logout, exact: false },
   { path: '/register', component: Register, exact: true },
   { path: '/check-email', component: CheckEmail, exact: true },
@@ -470,6 +472,7 @@ export const redirects = [
     from: '*',
     to: '/subscribe',
     condition: (user) =>
+      window.location.pathname !== '/auth-success' &&
       user?.user?.stripe_subscription_id === false &&
       user?.user?.is_active === true
   }

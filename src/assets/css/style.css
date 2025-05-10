@@ -214,7 +214,7 @@ nav#sidebar {
   width: 220px;
   top: 0;
   left: 0;
-  z-index: 999;
+  z-index: 1001;
   background: #fff;
   transition: all 0.3s;
   border-right: 1px solid #ebecef;
@@ -799,7 +799,7 @@ a.sidenav.active {
 }
 
 .beyond-your-course-video-thumb-icon svg {
-  width:15px !important;
+  width: 15px !important;
   height: 15px !important;
 }
 
@@ -832,7 +832,7 @@ a.sidenav.active {
 }
 
 #footer {
-  background: #231f20;
+  background: rgb(35, 31, 32) !important;
   padding: 15px;
   /* margin-top: 30px; */
 }
@@ -872,6 +872,7 @@ a.sidenav.active {
   margin: 0;
   list-style: none;
   display: flex;
+  transform: translateY(-5px);
 }
 
 .footer-menu ul li {
@@ -913,7 +914,7 @@ a.sidenav.active {
   letter-spacing: 0px;
   color: #333d3d;
   opacity: 1;
-  margin-bottom:0!important;
+  margin-bottom: 0 !important;
 }
 
 .guidance-link {
@@ -4340,7 +4341,7 @@ wave > wave:first-child {
   -webkit-text-stroke: 0px;
 }
 
-.reset-pass-btn{
+.reset-pass-btn {
   cursor: pointer;
 }
 
@@ -5047,6 +5048,15 @@ wave > wave:first-child {
   background-color: transparent;
 }
 
+.word-break-portfolio {
+  word-break: break-all;
+}
+
+.img-register-login {
+  width: 208px;
+  height: 97px;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;
@@ -5138,6 +5148,11 @@ wave > wave:first-child {
 
   .logo-register {
     margin-left: 1rem;
+  }
+
+  .img-register-login {
+    width: 200px;
+    height: 93.26px;
   }
 }
 
@@ -5364,10 +5379,6 @@ wave > wave:first-child {
   padding-inline: 10rem;
 }
 
-#content {
-  overflow: auto;
-}
-
 @media (max-width: 1190px) {
   .certskills-grid {
     grid-template-columns: 1fr 1fr !important;
@@ -5380,8 +5391,6 @@ wave > wave:first-child {
   }
 }
 
-
-
 @media (max-width: 768px) {
   .responsive-video-first {
     width: 98%;
@@ -5392,7 +5401,7 @@ wave > wave:first-child {
     padding-inline: 1rem;
   }
 
-  .saveContinue-btn{
+  .saveContinue-btn {
     width: 100%;
   }
 }
@@ -5890,6 +5899,11 @@ strong {
 .journal-entries__video-thumbnail-icon--welcome-video svg {
   width: 100% !important;
   height: 100% !important;
+}
+
+.footer-menu img {
+  width: 20px;
+  height: 20px;
 }
 
 @media (max-width: 768px) {
@@ -7055,6 +7069,7 @@ _:future,
 }
 
 .journal-entries__videos .journal-entries__video:has(+ .nav-videos),
-.journal-entries__videos .journal-entries__video--welcome-video:has(+ .nav-videos) {
+.journal-entries__videos
+  .journal-entries__video--welcome-video:has(+ .nav-videos) {
   margin-bottom: 2rem;
 }

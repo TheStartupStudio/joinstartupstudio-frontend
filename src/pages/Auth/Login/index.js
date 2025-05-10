@@ -16,7 +16,7 @@ import FormWrapper from './ui/FormWrapper'
 import { setLoginLoading } from '../../../redux/user/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
-import StartupStudioLogo from '../../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import StartupStudioLogo from '../../../assets/images/academy-icons/SUS OAE Logox800 1.png'
 import facebookLogo from '../../../assets/images/academy-icons/svg/icons8-facebook.svg'
 import googleLogo from '../../../assets/images/academy-icons/svg/icons8-google.svg'
 import microsoftLogo from '../../../assets/images/academy-icons/svg/icons8-microsoft.svg'
@@ -34,6 +34,8 @@ const ChooseLogin = () => {
   const [protectModal, setProtectModal] = useState(false)
 
   const confirmEmail = location?.state?.confirmEmail
+
+  const currentUrl = window.location.href
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -139,9 +141,10 @@ const ChooseLogin = () => {
         <img
           src={StartupStudioLogo}
           alt='course-logo'
-          className='w-200-mob my-3'
+          className='my-3 img-register-login'
         />
       </a>
+
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
         <Col md='10' lg='8' className='main-login-container'>
           <FormWrapper className='login-content-wrapper'>
@@ -252,23 +255,31 @@ const ChooseLogin = () => {
               <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
                 <div className='d-flex gap-3 auth-logos-buttons'>
-                  <button>
+                  <a
+                    href={`${process.env.REACT_APP_SERVER_BASE_URL}auth/google`}
+                    className='cursor-pointer'
+                  >
                     <img className='auth-logos' src={googleLogo} alt='google' />
-                  </button>
-                  <button>
+                  </a>
+                  <a
+                    href={`${
+                      process.env.REACT_APP_SERVER_BASE_URL
+                    }auth/facebook?from=${encodeURIComponent(currentUrl)}`}
+                    className='cursor-pointer'
+                  >
                     <img
                       className='auth-logos'
                       src={facebookLogo}
                       alt='facebook'
                     />
-                  </button>
-                  <button>
+                  </a>
+                  <a className='cursor-pointer'>
                     <img
                       className='auth-logos'
                       src={microsoftLogo}
                       alt='microsoft'
                     />
-                  </button>
+                  </a>
                 </div>
               </div>
               <p className='text-center public-page-text font-12 m-0'>

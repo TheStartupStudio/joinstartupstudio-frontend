@@ -87,6 +87,9 @@ const InstructorSidebar = (props) => {
       })
   }
 
+  const navHeight = props.navHeight
+  console.log('ridon91', navHeight)
+
   return (
     <div
       class={`d-flex flex-column justify-content-between ${props.getOtherNavClass()}`}
@@ -302,13 +305,8 @@ const InstructorSidebar = (props) => {
             isDropdown={false}
           />
         )}
-      </ul>
-      <ul
-        className='list-unstyled components sidebar-menu-item sidebar-menu-list'
-        style={{ marginTop: '-20px' }}
-      >
         <Tooltip text={`${isCollapsed ? 'Open Menu' : 'Close Menu'}`}>
-          <li className='sub-li  d-none-tab'>
+          <li className='sub-li d-none-tab'>
             <button className='sidebar-button' onClick={handleSidebarToggle}>
               <img
                 className='rotated'
@@ -322,7 +320,11 @@ const InstructorSidebar = (props) => {
             </button>
           </li>
         </Tooltip>
-
+      </ul>
+      <ul
+        className='list-unstyled components sidebar-menu-item sidebar-menu-list'
+        style={{ marginTop: '-20px' }}
+      >
         {isCollapsed ? (
           <Tooltip text={'My Account'}>
             <li
@@ -386,7 +388,7 @@ const InstructorSidebar = (props) => {
         )}
 
         <li className='sub-li'>
-          <Link to='dashboard'>
+          <Link to='/dashboard'>
             <div className='d-flex w-100' style={{ alignItems: 'center' }}>
               <Col md='2' className='col-2 icon_container'>
                 <img

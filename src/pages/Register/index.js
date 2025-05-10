@@ -12,7 +12,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-import StartupStudioLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox800 1.png'
 import facebookLogo from '../../assets/images/academy-icons/svg/icons8-facebook.svg'
 import googleLogo from '../../assets/images/academy-icons/svg/icons8-google.svg'
 import microsoftLogo from '../../assets/images/academy-icons/svg/icons8-microsoft.svg'
@@ -24,6 +24,8 @@ function Register() {
   const [errors, setErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  const currentUrl = window.location.origin
 
   const validateForm = () => {
     let newErrors = {}
@@ -113,7 +115,7 @@ function Register() {
         <img
           src={StartupStudioLogo}
           alt='course-logo'
-          className='w-200-mob my-3'
+          className='my-3 img-register-login'
         />
       </a>
 
@@ -398,16 +400,24 @@ function Register() {
               <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
                 <div className='d-flex gap-3 auth-logos-buttons'>
-                  <button className='border-0'>
+                  <a
+                    href={`${process.env.REACT_APP_SERVER_BASE_URL}auth/google`}
+                    className='cursor-pointer'
+                  >
                     <img className='auth-logos' src={googleLogo} alt='google' />
-                  </button>
-                  <button className='border-0'>
+                  </a>
+                  <a
+                    href={`${
+                      process.env.REACT_APP_SERVER_BASE_URL
+                    }auth/facebook?from=${encodeURIComponent(currentUrl)}`}
+                    className='cursor-pointer'
+                  >
                     <img
                       className='auth-logos'
                       src={facebookLogo}
                       alt='facebook'
                     />
-                  </button>
+                  </a>
                   <button className='border-0'>
                     <img
                       className='auth-logos'

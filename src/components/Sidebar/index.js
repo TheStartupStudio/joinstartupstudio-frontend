@@ -77,6 +77,10 @@ function Sidebar(props) {
   const getOtherNavClass = () => {
     if (navHeight > 2100) {
       return 'h-101'
+    } else if (navHeight > 1960) {
+      return 'h-100'
+    } else if (navHeight > 1560) {
+      return 'h-99'
     } else {
       return 'h-95'
     }
@@ -129,6 +133,7 @@ function Sidebar(props) {
             <InstructorSidebar props={props} />
           )} */}
           <InstructorSidebar
+            navHeight={navHeight}
             props={props}
             getOtherNavClass={getOtherNavClass}
           />

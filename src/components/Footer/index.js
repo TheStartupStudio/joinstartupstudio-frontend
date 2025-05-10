@@ -2,10 +2,15 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faVimeo,
-  faLinkedinIn, 
-  faSpotify,
+  faLinkedinIn,
+  faSpotify
 } from '@fortawesome/free-brands-svg-icons'
-import xIconImage from '../../assets/images/X-icon.png' 
+import facebookLogo from '../../assets/images/academy-icons/facebook-logo-white.svg'
+import discordLogo from '../../assets/images/academy-icons/icons8-discord.svg'
+import instaLogo from '../../assets/images/academy-icons/icons8-instagram.svg'
+import linkedinLogo from '../../assets/images/academy-icons/Icon awesome-linkedin.svg'
+import spotifyLogo from '../../assets/images/academy-icons/Icon awesome-spotify.svg'
+import xIconImage from '../../assets/images/X-icon.png'
 
 export default function Footer(props) {
   return (
@@ -18,42 +23,33 @@ export default function Footer(props) {
           </div>
           <div className='col-md-12 col-sm-12 col-lg-4 text-align-center-footer'>
             <a
-              href='https://learntostart.com'
+              href='https://app.learntostart.com'
               rel='noreferrer'
               target='_blank'
               style={{ fontSize: '12px', color: '#fff' }}
             >
-              LEARNTOSTART.COM
+              APP.LEARNTOSTART.COM
             </a>
           </div>
           <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer'>
             <div className='footer-menu'>
               <ul className='mt-1 mt-lg-0'>
-              <li>
+                <li>
                   <a
                     href='https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3'
                     rel='noreferrer'
                     target='_blank'
                   >
-                    <FontAwesomeIcon icon={faSpotify} />
+                    <img src={spotifyLogo} alt='spotify' />
                   </a>
                 </li>
                 <li>
                   <a
-                    href='https://twitter.com/learn2start'
+                    href='https://www.facebook.com/share/18ZBgvn5cw/?mibextid=wwXIfr'
                     rel='noreferrer'
                     target='_blank'
                   >
-                    <img 
-                      src={xIconImage} 
-                      style={{
-                        width: '16px', 
-                        height: '16px',
-                        filter: 'brightness(0) invert(1)', 
-                        verticalAlign: 'baseline' 
-                      }}
-                      alt="X (Twitter)"
-                    />
+                    <img src={facebookLogo} alt='X (Twitter)' />
                   </a>
                 </li>
                 <li>
@@ -62,19 +58,27 @@ export default function Footer(props) {
                     rel='noreferrer'
                     target='_blank'
                   >
-                    <FontAwesomeIcon icon={faLinkedinIn} />
+                    <img src={linkedinLogo} alt='linkedin' />
                   </a>
                 </li>
                 <li>
                   <a
-                    href='https://vimeo.com/showcase/9368302'
+                    href='https://discord.gg/5nd5NMH6'
                     rel='noreferrer'
                     target='_blank'
                   >
-                    <FontAwesomeIcon icon={faVimeo} />
+                    <img src={discordLogo} alt='discord' />
                   </a>
                 </li>
-               
+                <li>
+                  <a
+                    href='https://www.instagram.com/mylearntostart/'
+                    rel='noreferrer'
+                    target='_blank'
+                  >
+                    <img src={instaLogo} alt='Insta' />
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
