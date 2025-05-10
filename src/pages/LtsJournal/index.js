@@ -950,6 +950,29 @@ function LtsJournal(props) {
     }
   };
 
+  const getLessonTitle = (journalId) => {
+    const numericId = parseInt(journalId);
+
+    // For Level 3 (nested structure)
+    if (activeLevel === 2) {
+      for (const section of lessonsByLevel[2]) {
+        const found = section.children?.find(child => child.redirectId === numericId);
+        if (found) return found.title;
+      }
+    }
+
+    // For Level 1 and 2
+    for (let level = 0; level <= 2; level++) {
+      const lessons = lessonsByLevel[level];
+      if (!lessons) continue;
+
+      const found = lessons.find(lesson => lesson.redirectId === numericId);
+      if (found) return found.title;
+    }
+
+    return null;
+  };
+
   const getCurrentLessonTitle = () => {
     if (!journalId) return "Select a Lesson";
 
@@ -1231,21 +1254,21 @@ function LtsJournal(props) {
 
                           return (
                             <LtsJournalContent
-  {...renderProps}
-  contentContainer={contentContainer}
-  backRoute={props.match.url}
-  saved={journalChanged}
-  onReflectionContentChange={handleReflectionContentChange}
-  noteButtonProps={{
-    from: "entrepreneurshipJournal",
-    data: {
-      id: selectedLesson?.redirectId || renderProps.match.params.journalId,
-      title: getCurrentLessonTitle()
-    },
-    createdFrom: getCurrentLessonTitle() || 'Entrepreneurship Journal',
-    journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
-  }}
-/>
+                              {...renderProps}
+                              contentContainer={contentContainer}
+                              backRoute={props.match.url}
+                              saved={journalChanged}
+                              onReflectionContentChange={handleReflectionContentChange}
+                              noteButtonProps={{
+                                from: "entrepreneurshipJournal",
+                                data: {
+                                  id: selectedLesson?.redirectId || renderProps.match.params.journalId,
+                                  title: getLessonTitle(renderProps.match.params.journalId)
+                                },
+                                createdFrom: getLessonTitle(renderProps.match.params.journalId) || 'Entrepreneurship Journal',
+                                journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
+                              }}
+                            />
                           )
                         }}
                       />
