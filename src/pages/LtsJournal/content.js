@@ -243,7 +243,7 @@ function LtsJournalContent(props) {
     <>
       <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
         <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10 }}>
+          <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 999999999 }}>
             <NotesButton 
               key={props.noteButtonProps?.journalId}
               {...props.noteButtonProps} 

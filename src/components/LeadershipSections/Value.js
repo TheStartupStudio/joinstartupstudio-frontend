@@ -122,7 +122,7 @@ const Value = forwardRef((props, ref) => {
 
   const noteButtonStyles = {
     position: 'absolute',
-    bottom: '100px',
+    bottom: '55px !important',
     right: '1rem',
     zIndex: 99999999
   }
