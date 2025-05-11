@@ -239,7 +239,7 @@ function LtsJournalContent(props) {
     } else if (props.match.params.journalId === '70') {
       return journal.content; 
     }
-    return journal.content; 
+    return ; 
   };
 
   if (!journal) {

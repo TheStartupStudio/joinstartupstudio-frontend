@@ -856,7 +856,7 @@ function LtsJournal(props) {
       });
 
       if (emptyReflections.length > 0) {
-        toast.info('Please complete the reflection before continuing.', {
+        toast.success('Please complete the reflection before continuing.', {
           className: 'toastify-success-info'
         });
         setSaving(false);
@@ -864,7 +864,7 @@ function LtsJournal(props) {
       }
 
       if (!hasValidReflection) {
-        toast.info('Please write something on reflection before continuing.', {
+        toast.success('Please write something on reflection before continuing.', {
           className: 'toastify-success-info'
         });
         setSaving(false);
@@ -905,7 +905,7 @@ function LtsJournal(props) {
           className: 'toastify-success-info'
         });
       } else {
-        toast.info('No reflection to save. Please write something before saving.', {
+        toast.success('No reflection to save. Please write something before saving.', {
           className: 'toastify-success-info'
         });
         setSaving(false);

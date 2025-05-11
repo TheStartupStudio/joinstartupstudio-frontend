@@ -114,7 +114,7 @@ export default function BeyondYourCourse() {
                       style={{ width: '36px', height: '36px' }}
                       className="welcome-journey-text__icon"
                     />
-                    <div>
+                    <div style={{textAlign:'start'}}>
                       <h3 className="mb-0">
                         <IntMessages id="beyond_your_course.encouragement_no_videos" />
                       </h3>
