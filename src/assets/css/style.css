@@ -4913,7 +4913,9 @@ wave > wave:first-child {
 .search-journals-width {
   width: 39%;
   position: relative;
+  z-index:10;
 }
+
 
 .search-journals-width .input-container-modal {
   z-index: 100;
