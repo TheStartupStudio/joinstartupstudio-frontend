@@ -92,6 +92,11 @@ function LtsJournal(props) {
     entryId: null,
     foulWords: null
   });
+  const [isIntroVideo, setIsIntroVideo] = useState(false);
+
+  const handleIntroVideoChange = (isIntro) => {
+    setIsIntroVideo(isIntro);
+  };
 
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
@@ -1126,42 +1131,44 @@ function LtsJournal(props) {
                             />
                           </div>
 
-                          <div
-                            className='review-course-btn'
-                            style={{
-                              display: 'inline-block',
-                              borderRadius: '8px',
-                              background:
-                                'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                              padding: '1px',
-                              height: '58px',
-                              boxShadow: '0px 4px 10px 0px #00000040'
-                            }}
-                          >
-                            <button
-                              style={{ padding: '.5rem' }}
-                              className='review-progress-btn'
-                              onClick={isRootPath ? handleContinue : handleSaveAndContinue}
-                              disabled={saving}
+                          {!isIntroVideo && (
+                            <div
+                              className='review-course-btn'
+                              style={{
+                                display: 'inline-block',
+                                borderRadius: '8px',
+                                background:
+                                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                                padding: '1px',
+                                height: '58px',
+                                boxShadow: '0px 4px 10px 0px #00000040'
+                              }}
                             >
-                              {saving ? (
-                                <FontAwesomeIcon icon={faSpinner} spin />
-                              ) : (
-                                <span style={{ display: 'flex', alignItems: 'center',justifyContent:'center', gap: '8px' }}>
-                                  {isRootPath
-                                    ? props.intl.formatMessage({
-                                      id: 'my_journal.continue',
-                                      defaultMessage: 'Continue'
-                                    })
-                                    : props.intl.formatMessage({
-                                      id: 'my_journal.save_and_continue',
-                                      defaultMessage: 'Save and Continue'
-                                    })}
-                                  <FontAwesomeIcon icon={faArrowRight} />
-                                </span>
-                              )}
-                            </button>
-                          </div>
+                              <button
+                                style={{ padding: '.5rem' }}
+                                className='review-progress-btn'
+                                onClick={isRootPath ? handleContinue : handleSaveAndContinue}
+                                disabled={saving}
+                              >
+                                {saving ? (
+                                  <FontAwesomeIcon icon={faSpinner} spin />
+                                ) : (
+                                  <span style={{ display: 'flex', alignItems: 'center',justifyContent:'center', gap: '8px' }}>
+                                    {isRootPath
+                                      ? props.intl.formatMessage({
+                                        id: 'my_journal.continue',
+                                        defaultMessage: 'Continue'
+                                      })
+                                      : props.intl.formatMessage({
+                                        id: 'my_journal.save_and_continue',
+                                        defaultMessage: 'Save and Continue'
+                                      })}
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                                  </span>
+                                )}
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -1270,21 +1277,22 @@ function LtsJournal(props) {
 
                           return (
                             <LtsJournalContent
-  {...renderProps}
-  contentContainer={contentContainer}
-  backRoute={props.match.url}
-  saved={journalChanged}
-  onReflectionContentChange={handleReflectionContentChange}
-  noteButtonProps={{
-    from: "entrepreneurshipJournal",
-    data: {
-      id: selectedLesson?.redirectId || renderProps.match.params.journalId,
-      title: getCurrentLessonTitle()
-    },
-    createdFrom: getCurrentLessonTitle() || 'Entrepreneurship Journal',
-    journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
-  }}
-/>
+                              {...renderProps}
+                              contentContainer={contentContainer}
+                              backRoute={props.match.url}
+                              saved={journalChanged}
+                              onReflectionContentChange={handleReflectionContentChange}
+                              onIntroVideoChange={handleIntroVideoChange}
+                              noteButtonProps={{
+                                from: "entrepreneurshipJournal",
+                                data: {
+                                  id: selectedLesson?.redirectId || renderProps.match.params.journalId,
+                                  title: getCurrentLessonTitle()
+                                },
+                                createdFrom: getCurrentLessonTitle() || 'Entrepreneurship Journal',
+                                journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
+                              }}
+                            />
                           )
                         }}
                       />
