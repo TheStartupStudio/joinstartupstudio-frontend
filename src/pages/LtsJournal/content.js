@@ -268,6 +268,48 @@ function LtsJournalContent(props) {
     }
   }, [currentVideoIndex, videos, props.match.params.journalId]);
 
+  // Reset videos and currentVideoIndex when journal changes
+  useEffect(() => {
+    // Reset state first
+    setCurrentVideoIndex(0);
+    setShowVideo(null);
+    setVideos([]);
+
+    // Then set new videos if available
+    if (journal?.videos || journal?.video) {
+      // Handle both array and single video cases
+      const videoArray = journal.videos?.constructor === Array 
+        ? journal.videos 
+        : journal.video ? [journal.video] : [];
+
+      // Filter out invalid videos and handle special sorting
+      const sortedVideos = videoArray
+        .filter(video => video && video.id)
+        .sort((a, b) => {
+          const { journalId } = props.match.params;
+          
+          // Special sorting for Level 2 intro videos
+          if (journalId === '60') {
+            if (a.id === 140) return -1;
+            if (b.id === 140) return 1;
+          }
+          
+          // Special sorting for Level 3 intro videos  
+          if (journalId === '70') {
+            if (a.id === 727) return -1;
+            if (b.id === 727) return 1;
+          }
+
+          return 0;
+        });
+
+      // Only update videos if we have valid videos to show
+      if (sortedVideos.length > 0) {
+        setVideos(sortedVideos);
+      }
+    }
+  }, [journal, props.match.params.journalId]); // Add journalId to dependencies
+
   const getContentByVideo = (videoId) => {
     // For lesson 60 (Level 2)
     if (videoId === 140) {
@@ -388,42 +430,45 @@ function LtsJournalContent(props) {
             <h6>Reflection</h6>
           </div>
           
-          <div className="journal-content" style={{marginTop:'1rem'}} >
-            {videos[currentVideoIndex] && getContentByVideo(videos[currentVideoIndex].id).content}
-          </div>
+          {videos[currentVideoIndex] && 
+           ((videos[currentVideoIndex].id === 140 && props.match.params.journalId === '60') || 
+            (videos[currentVideoIndex].id === 727 && props.match.params.journalId === '70')) && (
+            <div className="journal-content" style={{marginTop:'1rem'}} >
+              {getContentByVideo(videos[currentVideoIndex].id).content}
+            </div>
+          )}
 
           {videos[currentVideoIndex] && 
            !isIntroVideo && 
            (journal.entries && journal.entries.length > 0 ? (
-              <div className="col-12">
-                <div className="journal-entries">
-                  <EntriesBox
-                    entries={journal.entries}
-                    entryBoxTitle={journal?.title}
-                    journal={journal}
-                    isEditable={true}
-                    isDeletable={true}
-                    userJournalEntries={userJournalEntries}
-                    deleteReflection={(entry, userJournalEntry) =>
-                      deleteReflection(entry, userJournalEntry)
-                    }
-                    updateReflection={(entry, userJournalEntry) =>
-                      updateReflection(entry, userJournalEntry)
-                    }
-                    addReflection={(entry) => addReflection(entry)}
-                    handleShowAddReflection={(reflection) =>
-                      handleShowAddReflection(reflection)
-                    }
-                    showAddReflection={showAddReflection}
-                    isAddReflection={isAddReflection}
-                    onReflectionContentChange={props.onReflectionContentChange}
-                  />
-                </div>
+            <div className="col-12">
+              <div className="journal-entries">
+                <EntriesBox
+                  entries={journal.entries}
+                  entryBoxTitle={journal?.title}
+                  journal={journal}
+                  isEditable={true} 
+                  isDeletable={true}
+                  userJournalEntries={userJournalEntries}
+                  deleteReflection={(entry, userJournalEntry) =>
+                    deleteReflection(entry, userJournalEntry)
+                  }
+                  updateReflection={(entry, userJournalEntry) =>
+                    updateReflection(entry, userJournalEntry)
+                  }
+                  addReflection={(entry) => addReflection(entry)}
+                  handleShowAddReflection={(reflection) =>
+                    handleShowAddReflection(reflection)
+                  }
+                  showAddReflection={showAddReflection}
+                  isAddReflection={isAddReflection}
+                  onReflectionContentChange={props.onReflectionContentChange}
+                />
               </div>
-            ) : (
-              <p>No journal entries available.</p>
-            )
-          )}
+            </div>
+          ) : (
+            <p>No journal entries available.</p>
+          ))}
         </div>
       </div>
 

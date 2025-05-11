@@ -563,6 +563,7 @@ function LtsJournal(props) {
   }
 
   const handleLevelClick = (clickedLevel) => {
+    // First check if level is locked
     if (clickedLevel === 1 && !finishedContent.includes(58)) {
       setLockModalMessage('This lesson is currently locked. You must complete Level 1 before it to gain access to Level 2.');
       setShowLockModal(true);
@@ -575,7 +576,21 @@ function LtsJournal(props) {
       return;
     }
 
+    // If level is accessible, navigate to the first lesson of that level
     setActiveLevel(clickedLevel);
+    
+    // Map of welcome/first lesson IDs for each level
+    const welcomeLessonIds = {
+      0: 51, // Level 1 welcome lesson
+      1: 60, // Level 2 welcome lesson
+      2: 70  // Level 3 welcome lesson
+    };
+
+    // Navigate to the welcome lesson of the clicked level
+    const welcomeLessonId = welcomeLessonIds[clickedLevel];
+    if (welcomeLessonId) {
+      history.push(`/my-course-in-entrepreneurship/journal/${welcomeLessonId}`);
+    }
   };
 
   useEffect(() => {
