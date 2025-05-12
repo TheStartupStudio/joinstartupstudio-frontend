@@ -97,7 +97,7 @@
 }
 
 .accessible-level-journal {
-  color: #231f20 !important; 
+  color: #2d3748 !important; 
   cursor: pointer;
 }
 
@@ -138,6 +138,7 @@
   position: relative;
   display: inline-block;
   width: 500px;
+  z-index: 10;
 }
 
 .search-icon {

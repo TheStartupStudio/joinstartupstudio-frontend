@@ -37,6 +37,8 @@ function LtsJournalContent(props) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [showVideo, setShowVideo] = useState(null);
+  const [isIntroVideo, setIsIntroVideo] = useState(false);
+  const [videos, setVideos] = useState([]);
 
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -229,15 +231,121 @@ function LtsJournalContent(props) {
     }
   }, [props.noteButtonProps?.journalId]);
 
+  useEffect(() => {
+    if (journal?.videos) {
+      const sortedVideos = (journal.videos?.constructor === Array
+        ? journal.videos
+        : [journal.video]
+      ).filter((video) => video && video.id)
+      .sort((a, b) => {
+        const { journalId } = props.match.params;
+        
+        if (journalId === '60') {
+          if (a.id === 140) return -1;
+          if (b.id === 140) return 1;
+        }
+        
+        if (journalId === '70') {
+          if (a.id === 727) return -1;
+          if (b.id === 727) return 1;  
+        }
+
+        return 0;
+      });
+
+      setVideos(sortedVideos);
+    }
+  }, [journal, props.match.params]);
+
+  useEffect(() => {
+    if (videos[currentVideoIndex]) {
+      const currentVideo = videos[currentVideoIndex];
+      const isIntro = (currentVideo.id === 140 && props.match.params.journalId === '60') || 
+                     (currentVideo.id === 727 && props.match.params.journalId === '70');
+      setIsIntroVideo(isIntro);
+      
+      props.onIntroVideoChange?.(isIntro);
+    }
+  }, [currentVideoIndex, videos, props.match.params.journalId]);
+
+  // Reset videos and currentVideoIndex when journal changes
+  useEffect(() => {
+    // Reset state first
+    setCurrentVideoIndex(0);
+    setShowVideo(null);
+    setVideos([]);
+
+    // Then set new videos if available
+    if (journal?.videos || journal?.video) {
+      // Handle both array and single video cases
+      const videoArray = journal.videos?.constructor === Array 
+        ? journal.videos 
+        : journal.video ? [journal.video] : [];
+
+      // Filter out invalid videos and handle special sorting
+      const sortedVideos = videoArray
+        .filter(video => video && video.id)
+        .sort((a, b) => {
+          const { journalId } = props.match.params;
+          
+          // Special sorting for Level 2 intro videos
+          if (journalId === '60') {
+            if (a.id === 140) return -1;
+            if (b.id === 140) return 1;
+          }
+          
+          // Special sorting for Level 3 intro videos  
+          if (journalId === '70') {
+            if (a.id === 727) return -1;
+            if (b.id === 727) return 1;
+          }
+
+          return 0;
+        });
+
+      // Only update videos if we have valid videos to show
+      if (sortedVideos.length > 0) {
+        setVideos(sortedVideos);
+      }
+    }
+  }, [journal, props.match.params.journalId]); // Add journalId to dependencies
+
+  const getContentByVideo = (videoId) => {
+    // For lesson 60 (Level 2)
+    if (videoId === 140) {
+      return { 
+        title: "Welcome to Level 2",
+        content: "Section 2: In the second level, you will immerse yourself in the LTS model. People want to work with people they like, respect, and trust. So, you will begin the LTS process by building yourself first. With your digital \"I Am\" video ready to introduce you to your cohort and the world, it is time to assess your experiences and mindset so far by evaluating yourself according to the LTS model and vet potential partners, thus creating a foundation for a successful startup."
+      };
+    } else if (props.match.params.journalId === '60') {
+      return {
+        title: "The Journey of Entrepreneurship",
+        content: journal.content
+      };
+    }
+    
+    // For lesson 70 (Level 3)  
+    if (videoId === 727) {
+      return {
+        title: "Welcome to Level 3",
+        content: "Section 3: Now that you have a better sense of self and your professional opportunities for collaboration, you can move on to creating the startup, itself. You're going to be using your own personal experiences and passions to find a problem worth solving and begin to construct the framework of your startup. You'll engage in industry and market analysis, develop a brand, build a business plan, create a financial framework, and evaluate the sustainability, profitability, and scalability of your solution."
+      };
+    } else if (props.match.params.journalId === '70') {
+      return {
+        title: "Business Story", 
+        content: journal.content
+      };
+    }
+
+    return {
+      title: journal.title,
+      content: journal.content
+    };
+  };
+
   if (!journal) {
     return null
   }
-
-  let videos = (
-    journal.videos && journal.videos.constructor === Array
-      ? journal.videos
-      : [journal.video]
-  ).filter((video) => video && video.id);
 
   return (
     <>
@@ -256,8 +364,9 @@ function LtsJournalContent(props) {
               alt="circle-icon"
               style={{ width: '40px', height: '40px', marginRight: '10px' }}
             />
-            <h4 className="page-card__content-title">{journal.title}</h4>
-            {console.log('patrik250', journal)}
+            <h4 className="page-card__content-title">
+              {videos[currentVideoIndex] && getContentByVideo(videos[currentVideoIndex].id).title}
+            </h4>
           </div>
           <div className="journal-entries__videos">
             {videos[currentVideoIndex] && (
@@ -320,14 +429,25 @@ function LtsJournalContent(props) {
             />
             <h6>Reflection</h6>
           </div>
-          {journal.entries && journal.entries.length > 0 ? (
+          
+          {videos[currentVideoIndex] && 
+           ((videos[currentVideoIndex].id === 140 && props.match.params.journalId === '60') || 
+            (videos[currentVideoIndex].id === 727 && props.match.params.journalId === '70')) && (
+            <div className="journal-content" style={{marginTop:'1rem'}} >
+              {getContentByVideo(videos[currentVideoIndex].id).content}
+            </div>
+          )}
+
+          {videos[currentVideoIndex] && 
+           !isIntroVideo && 
+           (journal.entries && journal.entries.length > 0 ? (
             <div className="col-12">
               <div className="journal-entries">
                 <EntriesBox
                   entries={journal.entries}
                   entryBoxTitle={journal?.title}
                   journal={journal}
-                  isEditable={true}
+                  isEditable={true} 
                   isDeletable={true}
                   userJournalEntries={userJournalEntries}
                   deleteReflection={(entry, userJournalEntry) =>
@@ -348,7 +468,7 @@ function LtsJournalContent(props) {
             </div>
           ) : (
             <p>No journal entries available.</p>
-          )}
+          ))}
         </div>
       </div>
 

@@ -114,6 +114,7 @@ function Sidebar(props) {
       id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
       style={{
+        // zIndex:'10000',
         width: isCollapsed
           ? windowWidth <= 1024
             ? '0px'

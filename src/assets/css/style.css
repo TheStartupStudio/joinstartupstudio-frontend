@@ -4914,7 +4914,9 @@ wave > wave:first-child {
 .search-journals-width {
   width: 39%;
   position: relative;
+  z-index:10;
 }
+
 
 .search-journals-width .input-container-modal {
   z-index: 100;
@@ -5392,6 +5394,9 @@ wave > wave:first-child {
 }
 
 @media (max-width: 768px) {
+  .save-button{
+    margin-right:2rem!important;
+  }
   .responsive-video-first {
     width: 98%;
     height: 400px;
@@ -6049,6 +6054,7 @@ strong {
   opacity: 1;
   display: flex;
   align-items: center;
+  gap:0.5rem;
 }
 
 .journal-entries__entry-reflections-action:hover {
@@ -6175,7 +6181,7 @@ strong {
 .journal-entries__entry-reflection--new
   + .journal-entries__entry-reflections-actions {
   /* margin-top: -55px; */
-  display: none;
+  /* display: none; */
 }
 
 .journal-entry__parent-title {

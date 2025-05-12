@@ -179,7 +179,7 @@ const EditNote = (props) => {
               theme='snow'
               name='value'
               className='mb-5 w-100 p-0 scroll-add-new-note-modal'
-              style={{ height: '186px' }}
+              // style={{ height: '186px' }}
               value={note}
               onChange={(e) => handleQuillInput(e)}
               modules={quillModules}

@@ -73,6 +73,9 @@
 
 /* Small devices (landscape phones) */
 @media (max-width: 768px) {
+    #main-body{
+        overflow-x:hidden!important;
+    }
     .content-videos-container {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;

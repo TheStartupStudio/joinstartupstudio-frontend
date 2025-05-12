@@ -92,12 +92,17 @@ function LtsJournal(props) {
     entryId: null,
     foulWords: null
   });
+  const [isIntroVideo, setIsIntroVideo] = useState(false);
+
+  const handleIntroVideoChange = (isIntro) => {
+    setIsIntroVideo(isIntro);
+  };
 
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
   )
 
-  console.log('Finished Content:', finishedContent);
+  // console.log('Finished Content:', finishedContent);
 
   const levels = [
     {
@@ -558,6 +563,7 @@ function LtsJournal(props) {
   }
 
   const handleLevelClick = (clickedLevel) => {
+    // First check if level is locked
     if (clickedLevel === 1 && !finishedContent.includes(58)) {
       setLockModalMessage('This lesson is currently locked. You must complete Level 1 before it to gain access to Level 2.');
       setShowLockModal(true);
@@ -570,7 +576,21 @@ function LtsJournal(props) {
       return;
     }
 
+    // If level is accessible, navigate to the first lesson of that level
     setActiveLevel(clickedLevel);
+    
+    // Map of welcome/first lesson IDs for each level
+    const welcomeLessonIds = {
+      0: 51, // Level 1 welcome lesson
+      1: 60, // Level 2 welcome lesson
+      2: 70  // Level 3 welcome lesson
+    };
+
+    // Navigate to the welcome lesson of the clicked level
+    const welcomeLessonId = welcomeLessonIds[clickedLevel];
+    if (welcomeLessonId) {
+      history.push(`/my-course-in-entrepreneurship/journal/${welcomeLessonId}`);
+    }
   };
 
   useEffect(() => {
@@ -856,7 +876,7 @@ function LtsJournal(props) {
       });
 
       if (emptyReflections.length > 0) {
-        toast.info('Please complete the reflection before continuing.', {
+        toast.success('Please complete the reflection before continuing.', {
           className: 'toastify-success-info'
         });
         setSaving(false);
@@ -864,7 +884,7 @@ function LtsJournal(props) {
       }
 
       if (!hasValidReflection) {
-        toast.info('Please write something on reflection before continuing.', {
+        toast.success('Please write something on reflection before continuing.', {
           className: 'toastify-success-info'
         });
         setSaving(false);
@@ -905,7 +925,7 @@ function LtsJournal(props) {
           className: 'toastify-success-info'
         });
       } else {
-        toast.info('No reflection to save. Please write something before saving.', {
+        toast.success('No reflection to save. Please write something before saving.', {
           className: 'toastify-success-info'
         });
         setSaving(false);
@@ -914,20 +934,54 @@ function LtsJournal(props) {
 
       const currentPath = history.location.pathname;
       const currentJournalId = parseInt(currentPath.split('/').pop());
-
-      console.log('Current journalId:', currentJournalId);
-      console.log('Current active level:', activeLevel);
-
       const nextLessonId = findNextLesson(currentJournalId);
-      console.log('Next lesson ID:', nextLessonId);
 
       if (nextLessonId) {
-        const nextPath = `/my-course-in-entrepreneurship/journal/${nextLessonId}`;
-        console.log('Navigating to:', nextPath);
+        let nextLesson = null;
+        let nextLevel = activeLevel;
+        
+        const currentLevelLastId = {
+          0: 58,
+          1: 68,
+          2: 126
+        }[activeLevel];
+
+        if (currentJournalId === currentLevelLastId && activeLevel < 2) {
+          nextLevel = activeLevel + 1;
+          setActiveLevel(nextLevel);
+        }
+        
+        if (nextLevel === 2) {
+          for (const section of lessonsByLevel[2]) {
+            const found = section.children?.find(child => child.redirectId === nextLessonId);
+            if (found) {
+              nextLesson = {
+                value: `${section.id}_${found.id}`,
+                label: found.title,
+                redirectId: nextLessonId
+              };
+              break;
+            }
+          }
+        } else {
+          const found = lessonsByLevel[nextLevel]?.find(
+            lesson => lesson.redirectId === nextLessonId
+          );
+          if (found) {
+            nextLesson = {
+              value: found.id,
+              label: found.title,
+              redirectId: nextLessonId
+            };
+          }
+        }
+
+        if (nextLesson) {
+          setSelectedLesson(nextLesson);
+        }
 
         await dispatch(fetchLtsCoursefinishedContent());
-
-        history.push(nextPath);
+        history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
       }
 
     } catch (error) {
@@ -1051,6 +1105,11 @@ function LtsJournal(props) {
                           let levelClass = '';
                           if (index === activeLevel) {
                             levelClass = 'active-level-journal';
+                          } else if (index === 1 && finishedContent.includes(58)) {
+                            levelClass = 'accessible-level-journal';
+                            
+                          } else if (index === 2 && finishedContent.includes(68)) {
+                            levelClass = 'accessible-level-journal'; 
                           } else if (!isContentAccessible(lessonsByLevel[index]?.[0]?.redirectId)) {
                             levelClass = 'inactive-level-journal';
                           } else {
@@ -1110,42 +1169,44 @@ function LtsJournal(props) {
                             />
                           </div>
 
-                          <div
-                            className='review-course-btn'
-                            style={{
-                              display: 'inline-block',
-                              borderRadius: '8px',
-                              background:
-                                'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                              padding: '1px',
-                              height: '58px',
-                              boxShadow: '0px 4px 10px 0px #00000040'
-                            }}
-                          >
-                            <button
-                              style={{ padding: '.5rem' }}
-                              className='review-progress-btn'
-                              onClick={isRootPath ? handleContinue : handleSaveAndContinue}
-                              disabled={saving}
+                          {!isIntroVideo && (
+                            <div
+                              className='review-course-btn'
+                              style={{
+                                display: 'inline-block',
+                                borderRadius: '8px',
+                                background:
+                                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                                padding: '1px',
+                                height: '58px',
+                                boxShadow: '0px 4px 10px 0px #00000040'
+                              }}
                             >
-                              {saving ? (
-                                <FontAwesomeIcon icon={faSpinner} spin />
-                              ) : (
-                                <span style={{ display: 'flex', alignItems: 'center',justifyContent:'center', gap: '8px' }}>
-                                  {isRootPath
-                                    ? props.intl.formatMessage({
-                                      id: 'my_journal.continue',
-                                      defaultMessage: 'Continue'
-                                    })
-                                    : props.intl.formatMessage({
-                                      id: 'my_journal.save_and_continue',
-                                      defaultMessage: 'Save and Continue'
-                                    })}
-                                  <FontAwesomeIcon icon={faArrowRight} />
-                                </span>
-                              )}
-                            </button>
-                          </div>
+                              <button
+                                style={{ padding: '.5rem' }}
+                                className='review-progress-btn'
+                                onClick={isRootPath ? handleContinue : handleSaveAndContinue}
+                                disabled={saving}
+                              >
+                                {saving ? (
+                                  <FontAwesomeIcon icon={faSpinner} spin />
+                                ) : (
+                                  <span style={{ display: 'flex', alignItems: 'center',justifyContent:'center', gap: '8px' }}>
+                                    {isRootPath
+                                      ? props.intl.formatMessage({
+                                        id: 'my_journal.continue',
+                                        defaultMessage: 'Continue'
+                                      })
+                                      : props.intl.formatMessage({
+                                        id: 'my_journal.save_and_continue',
+                                        defaultMessage: 'Save and Continue'
+                                      })}
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                                  </span>
+                                )}
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -1259,13 +1320,14 @@ function LtsJournal(props) {
                               backRoute={props.match.url}
                               saved={journalChanged}
                               onReflectionContentChange={handleReflectionContentChange}
+                              onIntroVideoChange={handleIntroVideoChange}
                               noteButtonProps={{
                                 from: "entrepreneurshipJournal",
                                 data: {
                                   id: selectedLesson?.redirectId || renderProps.match.params.journalId,
-                                  title: getLessonTitle(renderProps.match.params.journalId)
+                                  title: getCurrentLessonTitle()
                                 },
-                                createdFrom: getLessonTitle(renderProps.match.params.journalId) || 'Entrepreneurship Journal',
+                                createdFrom: getCurrentLessonTitle() || 'Entrepreneurship Journal',
                                 journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
                               }}
                             />
