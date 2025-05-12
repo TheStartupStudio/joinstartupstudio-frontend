@@ -162,6 +162,7 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
         <div key={reflection.id} className='reflection-container mb-4'>
           <ReactQuill
             value={reflection.content}
+            placeholder='Write your reflection...'
             onChange={(value) => handleContentChange(reflection.id, value)}
             className='my-quill-editor'
             modules={{
@@ -176,26 +177,26 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
           />
 
           {showControls && (
-            <div className='d-flex mt-2 justify-content-between reflection-controls'>
+            <div className='d-flex mt-2 justify-content-between reflection-controls gap-2'>
               <div
                 className={`d-flex gap-2 align-items-center ${
                   reflection.id === questionReflections[0].id ? 'visibility-hidden' : ''
                 }`}
               >
                 <p
-                  className='mb-0 fs-15 fw-medium cursor-pointer add-reflection'
+                  className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
                   onClick={() => handleRemoveReflection(reflection.id, reflection.isExisting)}
                 >
-                  Remove the reflection
+                  Remove reflection
                 </p>
                 <img src={AddDoc} alt='add-doc' />
               </div>
               <div className='d-flex gap-2 align-items-center'>
                 <p
-                  className='mb-0 fs-15 fw-medium cursor-pointer add-reflection'
+                  className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
                   onClick={handleAddReflection}
                 >
-                  Add new reflection
+                  Add reflection
                 </p>
                 <img src={AddDoc} alt='add-doc' />
               </div>

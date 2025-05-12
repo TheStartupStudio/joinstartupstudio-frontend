@@ -4,6 +4,9 @@ import AccordionLead from '../../components/LeadershipJournal/AccordionLead'
 import SectionsWrapper from './SectionsWrapper'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 
+import { NotesButton } from '../../components/Notes'
+
+
 function SectionOne({ setIsReflection }) {
   setIsReflection(false)
 
@@ -117,7 +120,7 @@ function SectionOne({ setIsReflection }) {
                 'Group Head of Social Impact and EDIB at Nord Anglia Education'
               }
               videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 1 Welcome - V2.mov'}
-              thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+              thumbnailUrl={"https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/7f7eacb5dc6062f030423b07485c8d75-1747040586324.jpg"}
             />
           </div>
         </div>
@@ -211,6 +214,16 @@ function SectionOne({ setIsReflection }) {
             </div>
           </div>
         </div>
+
+        <NotesButton from="leadershipJournal"
+              data={{
+                id: 1001061,
+                title: 'Welcome to the Leadership Journal'
+              }}
+              createdFrom={'Welcome to the Leadership Journal'}
+              journalId={1001061} 
+        />
+        
       </SectionsWrapper>
     </div>
   )

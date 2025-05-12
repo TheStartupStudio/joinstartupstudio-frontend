@@ -1,5 +1,7 @@
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
+import { NotesButton } from '../../components/Notes'
+
 
 function IntroWhoAmI({ setIsReflection }) {
   setIsReflection(false)
@@ -30,11 +32,19 @@ function IntroWhoAmI({ setIsReflection }) {
             'Group Head of Social Impact and EDIB at Nord Anglia Education'
           }
           videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 2 Section One Who Am I - V2.mov'}
-          thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+          thumbnailUrl={"https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/02fd00cdd211ff6a9d1cef183f6982b0-1747040727899.jpg"}
           showInstructorInfo = {false}
           customTitle="Who am I?"
         />
       </div>
+       <NotesButton from="leadershipJournal"
+                    data={{
+                      id: 1001062,
+                      title: 'Introduction to Who am I?'
+                    }}
+                    createdFrom={'Introduction to Who am I?'}
+                    journalId={1001062} 
+              />
       <SectionsWrapper
         title={'Introduction to Who am I?'}
         paragraphs={paragraphs}

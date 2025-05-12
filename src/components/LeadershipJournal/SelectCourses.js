@@ -1,12 +1,34 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
 import lockSign from '../../assets/images/academy-icons/lock.png'
+import tickSign from '../../assets/images/academy-icons/tick-sign.png'
+import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 
-function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder }) {
+function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder, isDisabled }) {
+  // Process options to add the appropriate icon
+  const processedOptions = options.map(option => {
+    // Clone the option to avoid mutating the original
+    const newOption = { ...option };
+    
+    // Add icon based on status
+    if (isDisabled(option)) {
+      newOption.icon = lockSign;
+      newOption.textColor = 'text-secondary';
+    } else if (option.isNext) {
+      newOption.icon = circleSign;
+      newOption.textColor = 'text-black';
+    } else {
+      newOption.icon = tickSign;
+      newOption.textColor = 'text-black';
+    }
+    
+    return newOption;
+  });
+
   const handleChange = (selectedOption) => {
     if (selectedOption.icon !== lockSign) {
       setSelectedCourse((prev) => ({ ...prev, option: selectedOption }))
-      console.log('Selected Language:', selectedOption.value)
+      console.log('Selected Journal:', selectedOption.value)
     }
   }
 
@@ -18,14 +40,14 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder
     <div
       ref={innerRef}
       {...innerProps}
-      style={{ 
+      style={{
         cursor: data.icon === lockSign ? 'not-allowed' : 'pointer',
         padding: '8px',
         opacity: data.icon === lockSign ? 0.6 : 1
       }}
     >
-      <div className='d-flex align-items-center gap-2 '>
-        <img className='accordion-icons' src={data.icon} alt='tick' />
+      <div className='d-flex align-items-center gap-2'>
+        <img className='accordion-icons' src={data.icon} alt={data.icon === lockSign ? 'lock' : data.icon === circleSign ? 'circle' : 'tick'} />
         <span className={`accordion-content-modal ${data.textColor}`}>
           {data.label}
         </span>
@@ -42,7 +64,7 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder
   return (
     <div>
       <Select
-        options={options}
+        options={processedOptions}
         value={selectedCourse?.option}
         onChange={handleChange}
         isOptionDisabled={isOptionDisabled}

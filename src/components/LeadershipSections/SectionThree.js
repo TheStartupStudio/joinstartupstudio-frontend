@@ -1,5 +1,7 @@
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
+import { NotesButton } from '../../components/Notes'
+
 
 function SectionThree({ setIsReflection }) {
   setIsReflection(false)
@@ -30,11 +32,19 @@ function SectionThree({ setIsReflection }) {
             'Group Head of Social Impact and EDIB at Nord Anglia Education'
           }
           videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 12 Section Three How Can I Prove It - V2.mov'}
-          thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+          thumbnailUrl={'https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/a0392214a623f13d0bf3dfaaf063dcf5-1747042878019.jpg'}
           showInstructorInfo = {false}
           customTitle="How do I prove it?"
         />
       </div>
+      <NotesButton from="leadershipJournal"
+                          data={{
+                            id: 1001064,
+                            title: 'Introduction to How do I prove it?'
+                          }}
+                          createdFrom={'Introduction to How do I prove it?'}
+                          journalId={1001064} 
+                    />
       <SectionsWrapper
         title={'Introduction to How do I prove it?'}
         paragraphs={paragraphs}
