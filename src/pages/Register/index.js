@@ -395,7 +395,7 @@ function Register() {
                   </button>
                 </div>
               </div>
-              <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
+              {/* <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
                 <div className='d-flex gap-3 auth-logos-buttons'>
                   <button className='border-0'>
@@ -416,7 +416,7 @@ function Register() {
                     />
                   </button>
                 </div>
-              </div>
+              </div> */}
               <p className='fs-13 fw-light text-black mb-0'>
                 The security of your information is important.
               </p>

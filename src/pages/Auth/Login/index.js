@@ -249,7 +249,7 @@ const ChooseLogin = () => {
                   <IntlMessages id='login.register_link' />
                 </Link>
               </p>
-              <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
+              {/* <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
                 <div className='d-flex gap-3 auth-logos-buttons'>
                   <button>
@@ -270,7 +270,7 @@ const ChooseLogin = () => {
                     />
                   </button>
                 </div>
-              </div>
+              </div> */}
               <p className='text-center public-page-text font-12 m-0'>
                 <IntlMessages id='login.security' />
               </p>
