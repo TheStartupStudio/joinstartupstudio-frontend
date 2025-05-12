@@ -32,7 +32,7 @@ function IntroWhoAmI({ setIsReflection }) {
             'Group Head of Social Impact and EDIB at Nord Anglia Education'
           }
           videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 2 Section One Who Am I - V2.mov'}
-          thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+          thumbnailUrl={"https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/02fd00cdd211ff6a9d1cef183f6982b0-1747040727899.jpg"}
           showInstructorInfo = {false}
           customTitle="Who am I?"
         />

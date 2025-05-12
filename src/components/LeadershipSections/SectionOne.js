@@ -120,7 +120,7 @@ function SectionOne({ setIsReflection }) {
                 'Group Head of Social Impact and EDIB at Nord Anglia Education'
               }
               videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 1 Welcome - V2.mov'}
-              thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+              thumbnailUrl={"https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/7f7eacb5dc6062f030423b07485c8d75-1747040586324.jpg"}
             />
           </div>
         </div>

@@ -32,7 +32,7 @@ function SectionTwo({ setIsReflection }) {
             'Group Head of Social Impact and EDIB at Nord Anglia Education'
           }
           videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 7 Section Two What Can I Do - V2.mov'}
-          thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+          thumbnailUrl={'https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/c4c3bb86ca9d7fb7262ac58945292cda-1747042396238.jpg'}
           showInstructorInfo = {false}
           customTitle="What can I do?"
         />
