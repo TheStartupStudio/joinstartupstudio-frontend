@@ -230,7 +230,7 @@ function LtsJournal(props) {
         children: [
           {
             id: 'journey31',
-            title: 'The Journey of Entrepreneurship',
+            title: 'Bussines Story',
             status: 'notStarted',
             redirectId: 70
           },
@@ -890,6 +890,8 @@ function LtsJournal(props) {
         setSaving(false);
         return;
       }
+
+      // console.log('patrik894',emptyReflections,hasValidReflection,emptyReflections)
 
       const savePromises = Object.values(reflectionsData).map(async (reflectionData) => {
         const { journalId, journalEntryId, entryId, content } = reflectionData;

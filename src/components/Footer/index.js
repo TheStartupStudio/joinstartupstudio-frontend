@@ -33,7 +33,7 @@ export default function Footer(props) {
           </div>
           <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer'>
             <div className='footer-menu'>
-              <ul className='mt-1 mt-lg-0'>
+              <ul className='mt-2 mt-lg-0'>
                 <li>
                   <a
                     href='https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3'
