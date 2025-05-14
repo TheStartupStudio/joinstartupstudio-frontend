@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
 import { toast } from 'react-toastify'
+import  axiosInstance  from '../../utils/AxiosInstance'
 
 function CheckEmail() {
   const location = useLocation()
@@ -8,10 +9,9 @@ function CheckEmail() {
 
   async function resendEmail(data) {
     try {
-      await axiosInstance.post('/users/resend-email', { email: email })
+      await axiosInstance.post('/auth/resend-email', { email: email })
     } catch (error) {
       toast.error('Failed to resend email')
-      setError('Failed to resend email. Please try again.')
     }
   }
 
