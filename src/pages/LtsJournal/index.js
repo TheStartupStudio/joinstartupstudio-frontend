@@ -93,6 +93,7 @@ function LtsJournal(props) {
     foulWords: null
   });
   const [isIntroVideo, setIsIntroVideo] = useState(false);
+  const [currentPlaceholder, setCurrentPlaceholder] = useState("Select a Lesson");
 
   const handleIntroVideoChange = (isIntro) => {
     setIsIntroVideo(isIntro);
@@ -511,11 +512,9 @@ function LtsJournal(props) {
     if (journalId) {
       const numericId = parseInt(journalId);
 
-      // Find the lesson in the current level
       let foundLesson = null;
 
       if (activeLevel === 2) {
-        // For Level 3's nested structure
         lessonsByLevel[2].some(section => {
           const found = section.children?.find(child => child.redirectId === numericId);
           if (found) {
@@ -562,36 +561,42 @@ function LtsJournal(props) {
     )
   }
 
-  const handleLevelClick = (clickedLevel) => {
-    // First check if level is locked
-    if (clickedLevel === 1 && !finishedContent.includes(58)) {
-      setLockModalMessage('This lesson is currently locked. You must complete Level 1 before it to gain access to Level 2.');
-      setShowLockModal(true);
-      return;
-    }
+const handleLevelClick = (clickedLevel) => {
+  if (clickedLevel === 1 && !finishedContent.includes(58)) {
+    setLockModalMessage('This lesson is currently locked. You must complete Level 1 before it to gain access to Level 2.');
+    setShowLockModal(true);
+    return;
+  }
 
-    if (clickedLevel === 2 && !finishedContent.includes(68)) {
-      setLockModalMessage('This lesson is currently locked. You must complete Level 2 before it to gain access to Level 3.');
-      setShowLockModal(true);
-      return;
-    }
+  if (clickedLevel === 2 && !finishedContent.includes(68)) {
+    setLockModalMessage('This lesson is currently locked. You must complete Level 2 before it to gain access to Level 3.');
+    setShowLockModal(true);
+    return;
+  }
 
-    // If level is accessible, navigate to the first lesson of that level
-    setActiveLevel(clickedLevel);
-    
-    // Map of welcome/first lesson IDs for each level
-    const welcomeLessonIds = {
-      0: 51, // Level 1 welcome lesson
-      1: 60, // Level 2 welcome lesson
-      2: 70  // Level 3 welcome lesson
-    };
+  setActiveLevel(clickedLevel);
 
-    // Navigate to the welcome lesson of the clicked level
-    const welcomeLessonId = welcomeLessonIds[clickedLevel];
-    if (welcomeLessonId) {
-      history.push(`/my-course-in-entrepreneurship/journal/${welcomeLessonId}`);
-    }
+  const levelPlaceholders = {
+    0: "Welcome to Level 1 & The Myths of Entrepreneurship", 
+    1: "Welcome to Level 2 & The Journey of Entrepreneurship",
+    2: "Welcome to Level 3 & Business Story" 
   };
+
+  setSelectedLesson(null); 
+  localStorage.removeItem('selectedLesson'); 
+  setCurrentPlaceholder(levelPlaceholders[clickedLevel]);
+
+  const welcomeLessonIds = {
+    0: 51, 
+    1: 60, 
+    2: 70  
+  };
+
+  const welcomeLessonId = welcomeLessonIds[clickedLevel];
+  if (welcomeLessonId) {
+    history.push(`/my-course-in-entrepreneurship/journal/${welcomeLessonId}`);
+  }
+};
 
   useEffect(() => {
     const matchedVideos = videos.filter(
@@ -1167,7 +1172,8 @@ function LtsJournal(props) {
                               setShowLockModal={setShowLockModal}
                               setLockModalMessage={setLockModalMessage}
                               activeLevel={activeLevel}
-                              placeholder={getCurrentLessonTitle() || levels[activeLevel]?.description}
+                              placeholder={currentPlaceholder} // Pass the current placeholder
+                              setCurrentPlaceholder={setCurrentPlaceholder} // Pass the setter function
                             />
                           </div>
 

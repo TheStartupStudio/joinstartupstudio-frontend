@@ -88,7 +88,7 @@ const InstructorSidebar = (props) => {
   }
 
   const navHeight = props.navHeight
-  console.log('ridon91', navHeight)
+  // console.log('ridon91', navHeight)
 
   return (
     <div

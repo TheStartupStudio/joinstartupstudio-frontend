@@ -105,7 +105,7 @@ function Register() {
       }
     } catch (error) {
       setIsLoading(false)
-      toast.error(error.response?.data?.message || 'Registration failed.')
+      toast.error(error.response?.data?.message || 'Registration failed or this email is already registered.')
     }
   }
 
