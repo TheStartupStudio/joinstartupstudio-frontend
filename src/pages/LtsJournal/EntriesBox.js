@@ -4,6 +4,7 @@ import LtsJournalReflection from './reflection';
 import axiosInstance from '../../utils/AxiosInstance';
 import { getFormattedDate } from '../../utils/helpers';
 import AddDoc from '../../assets/images/academy-icons/add-doc.png';
+import { toast } from 'react-toastify';
 
 const debounce = (func, delay) => {
   let timer;
@@ -19,20 +20,25 @@ const EntriesBox = (props) => {
   const {
     userJournalEntries,
     journal,
-    deleteReflection,
+    deleteReflection: deleteReflectionProp, // Rename prop
     updateReflection,
     addReflection,
     entries,
     isEditable,
     isDeletable,
     accordion,
-    onReflectionContentChange
+    onReflectionContentChange,
+    setUserJournalEntries,
+    dispatch,
+    fetchLtsCoursefinishedContent
   } = props;
 
   const [isSaving, setIsSaving] = useState(false);
   const [isNew, setIsNew] = useState(true);
   const [accordionDates, setAccordionDates] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reflectionToDelete, setReflectionToDelete] = useState(null);
 
   const [newReflectionEntries, setNewReflectionEntries] = useState({});
 
@@ -58,6 +64,38 @@ const EntriesBox = (props) => {
     }
   }, [journal?.id, accordion?.id]);
 
+  const handleDeleteReflection = async (entry, userJournalEntry) => { // Renamed function
+    try {
+      // Delete from API
+      await axiosInstance.delete(
+        `/ltsJournals/${journal?.id}/entries/${entry.id}/userEntries/${userJournalEntry.id}`
+      );
+
+      // Update local state to remove reflection
+      const updatedEntries = userJournalEntries[entry.id].filter(
+        reflection => reflection.id !== userJournalEntry.id
+      );
+
+      if (updatedEntries.length > 0) {
+        // If there are still other reflections, update the array
+        props.updateReflection(entry.id, updatedEntries);
+      } else {
+        // If this was the last reflection, remove the entire entry
+        const newUserJournalEntries = { ...userJournalEntries };
+        delete newUserJournalEntries[entry.id];
+        props.setUserJournalEntries(newUserJournalEntries);
+      }
+
+      toast.success('Reflection deleted successfully');
+      
+      await dispatch(fetchLtsCoursefinishedContent());
+
+    } catch (error) {
+      console.error('Delete reflection error:', error);
+      toast.error('Failed to delete reflection');
+    }
+  };
+
   const handleShowAddReflection = (entryId) => {
     setNewReflectionEntries({
       ...newReflectionEntries,
@@ -69,11 +107,38 @@ const EntriesBox = (props) => {
   };
 
   const handleRemoveNewReflection = (entryId) => {
+    const reflectionToRemove = `${journal?.id}_${entryId}_new`;
+    
+    onReflectionContentChange(null, {
+      content: null,
+      journalId: journal?.id,
+      journalEntryId: entryId,
+      entryId: null,
+      remove: true // Add flag to indicate removal
+    });
+
+    // Clear from local state
     setNewReflectionEntries((prev) => {
       const updated = { ...prev };
       delete updated[entryId];
       return updated;
     });
+  };
+
+  const handleDeleteClick = (entry, reflection) => {
+    setReflectionToDelete({ entry, reflection });
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (reflectionToDelete) {
+      await handleDeleteReflection( // Update function call
+        reflectionToDelete.entry,
+        reflectionToDelete.reflection
+      );
+      setShowDeleteModal(false);
+      setReflectionToDelete(null);
+    }
   };
 
   return entries && entries.length > 0 ? (
@@ -107,7 +172,7 @@ const EntriesBox = (props) => {
                       entry={userJournalEntry}
                       isEditable={isEditable}
                       isDeletable={isDeletable}
-                      deleted={deleteReflection(entry, userJournalEntry)}
+                      onDelete={() => handleDeleteClick(entry, userJournalEntry)} // New delete handler
                       saved={updateReflection(entry, userJournalEntry)}
                       popupContent={null}
                       onContentChange={onReflectionContentChange}
