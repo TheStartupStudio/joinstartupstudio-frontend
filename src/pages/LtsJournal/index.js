@@ -1325,9 +1325,9 @@ function LtsJournal(props) {
                                 from: "entrepreneurshipJournal",
                                 data: {
                                   id: selectedLesson?.redirectId || renderProps.match.params.journalId,
-                                  title: getCurrentLessonTitle()
+                                  title: getLessonTitle(renderProps.match.params.journalId) || 'My Note',
                                 },
-                                createdFrom: getCurrentLessonTitle() || 'Entrepreneurship Journal',
+                                createdFrom: getLessonTitle(renderProps.match.params.journalId) || 'My Note',
                                 journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
                               }}
                             />

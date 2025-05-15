@@ -123,6 +123,23 @@ const EditNote = (props) => {
       })
   }
 
+  const deleteNote = async () => {
+    setLoading(true)
+    try {
+      await axiosInstance.delete(`/notes/${props.data.id}`)
+      toast.success('Note deleted successfully')
+      props.changeState('edit_single_note_modal')
+      // Refresh notes list after deletion
+      if (props.onDelete) {
+        props.onDelete(props.data.id)
+      }
+    } catch (err) {
+      toast.error('Failed to delete note')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <Modal
       show={props.show}
@@ -199,7 +216,16 @@ const EditNote = (props) => {
           className='mt-0 pt-0 border-0 border-none pe-md-5'
         >
           <button
-            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-5'
+            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-5 ms-2'
+            style={{ backgroundColor: '#F2359D' }} // Adding a different color for delete
+            onClick={deleteNote}
+            disabled={loading}
+          >
+            {loading ? 'loading' : 'DELETE NOTE'}
+          </button>
+          
+          <button
+            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-5 ms-2'
             onClick={() => validate()}
           >
             {loading ? 'loading' : 'SAVE & CLOSE'}

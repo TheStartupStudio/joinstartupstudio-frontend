@@ -80,13 +80,14 @@ const CreateNewNote = (props) => {
   const loggedUser = useSelector((state) => state.user.user.user)
   const [editTitle, setEditTitle] = useState(false)
   const titleInputRef = useRef(null)
+  const [noteTitle, setNoteTitle] = useState('')
 
   const validate = () => {
     // Set default title if empty
     if (!note.notesTitle || note.notesTitle.trim() === '') {
       setNote(prev => ({
         ...prev,
-        notesTitle: 'NEW NOTE'
+        notesTitle: 'New Notes'
       }))
     }
 
@@ -131,6 +132,13 @@ const CreateNewNote = (props) => {
         toast.error('An error occurred, please try again')
         setLoading(false)
       })
+  }
+
+  const handleTitleChange = (e) => {
+    setNote(prev => ({
+      ...prev,
+      notesTitle: e.target.value
+    }))
   }
 
 // In createNewNote.js
@@ -217,30 +225,24 @@ const handleChange = (name, value) => {
           // style={{ cursor: 'move' }}
           className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-4 mb-2 d-flex'
         >
-<h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1 d-flex align-items-center'>
-  {editTitle ? (
-    <input
-      ref={titleInputRef}
-      type="text"
-      className="form-control"
-      value={note?.notesTitle || ''}
-      onChange={e => handleChange('notesTitle', e.target.value)}
-      onBlur={() => setEditTitle(false)}
-      onKeyDown={e => {
-        if (e.key === 'Enter') setEditTitle(false)
-      }}
-      style={{ maxWidth: 250, marginRight: 8 }}
-    />
-  ) : (
-    <span>{note?.notesTitle || 'New Note'}</span>
-  )}
-  <FontAwesomeIcon
-    icon={faPencilAlt}
-    style={{ color: '#707070', cursor: 'pointer' }}
-    className='ms-4'
-    onClick={() => setEditTitle(true)}
-  />
-</h3>
+          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
+            <input
+              type="text"
+              value={note.notesTitle || ''}
+              onChange={handleTitleChange}
+              className="note-title-input"
+              style={{
+                border: 'none',
+                background: 'transparent',
+                width: '80%'
+              }}
+            />
+            <FontAwesomeIcon
+              icon={faPencilAlt}
+              style={{ color: '#707070' }}
+              className='ms-4'
+            />
+          </h3>
           <button
             type='button'
             className='btn-close me-1 create-new-note-modal'

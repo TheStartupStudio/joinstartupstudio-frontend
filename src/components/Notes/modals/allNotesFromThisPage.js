@@ -27,15 +27,13 @@ class DraggableModalDialog extends React.Component {
 }
 
 export const AllNotesFromThisPage = (props) => {
-  // const [loading, setLoading] = useState(false)
-
   return (
     <Modal
       show={props.show}
       onHide={props.onHide}
       close={props.closeAddModalSaved}
-      backdrop={false}
-      keyboard={'false'}
+      backdrop={true}
+      keyboard={false}
       style={{ marginTop: '3.9%' }}
       className='notes-modal'
       dialogAs={DraggableModalDialog}
