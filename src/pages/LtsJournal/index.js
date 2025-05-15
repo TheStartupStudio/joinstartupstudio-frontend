@@ -866,6 +866,54 @@ const handleLevelClick = (clickedLevel) => {
     setSaving(true);
 
     try {
+      const currentPath = history.location.pathname;
+      const currentJournalId = parseInt(currentPath.split('/').pop());
+
+      // If lesson is already completed, just navigate to next lesson
+      if (finishedContent.includes(currentJournalId)) {
+        const nextLessonId = findNextLesson(currentJournalId);
+        if (nextLessonId) {
+          // Update UI state if needed
+          let nextLesson = null;
+          let nextLevel = activeLevel;
+          
+          if (activeLevel === 2) {
+            for (const section of lessonsByLevel[2]) {
+              const found = section.children?.find(child => child.redirectId === nextLessonId);
+              if (found) {
+                nextLesson = {
+                  value: `${section.id}_${found.id}`,
+                  label: found.title,
+                  redirectId: nextLessonId
+                };
+                break;
+              }
+            }
+          } else {
+            const found = lessonsByLevel[nextLevel]?.find(
+              lesson => lesson.redirectId === nextLessonId
+            );
+            if (found) {
+              nextLesson = {
+                value: found.id,
+                label: found.title,
+                redirectId: nextLessonId
+              };
+            }
+          }
+
+          if (nextLesson) {
+            setSelectedLesson(nextLesson);
+          }
+
+          await dispatch(fetchLtsCoursefinishedContent());
+          history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
+        }
+        setSaving(false);
+        return;
+      }
+
+      // Original validation and save logic for new/unfinished lessons
       const myTraining = history.location.pathname.includes('my-training');
       let didSave = false;
       let hasValidReflection = false;
@@ -895,8 +943,6 @@ const handleLevelClick = (clickedLevel) => {
         setSaving(false);
         return;
       }
-
-      // console.log('patrik894',emptyReflections,hasValidReflection,emptyReflections)
 
       const savePromises = Object.values(reflectionsData).map(async (reflectionData) => {
         const { journalId, journalEntryId, entryId, content } = reflectionData;
@@ -939,8 +985,6 @@ const handleLevelClick = (clickedLevel) => {
         return;
       }
 
-      const currentPath = history.location.pathname;
-      const currentJournalId = parseInt(currentPath.split('/').pop());
       const nextLessonId = findNextLesson(currentJournalId);
 
       if (nextLessonId) {
