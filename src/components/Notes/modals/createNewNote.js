@@ -72,8 +72,9 @@ const CreateNewNote = (props) => {
 
   const [page, setPage] = useState()
   const [note, setNote] = useState({
-    noteTitle: '',
-    value: ''
+    notesTitle: '',
+    value: '<p></p>',
+    createdFrom: ''
   })
   const [loading, setLoading] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
@@ -121,10 +122,10 @@ const CreateNewNote = (props) => {
       .then((res) => {
         props.updateNotes((old) => [res.data.response, ...old])
         toast.success('Note saved successful')
-        setNote({
-          notesTitle: '',
-          value: '<p></p>'
-        })
+        setNote(prev => ({
+          ...prev,
+          value: '<p></p>' // Only clear the content, keep the title
+        }))
         setLoading(false)
         props.onHide('create_new_note')
       })
@@ -249,7 +250,11 @@ const handleChange = (name, value) => {
             aria-label='Close'
             onClick={() => {
               props.onHide('create_new_note')
-              setNote({})
+              // Don't reset the note completely, just clear the content
+              setNote(prev => ({
+                ...prev,
+                value: '<p></p>'
+              }))
             }}  
           />
         </Modal.Header>
