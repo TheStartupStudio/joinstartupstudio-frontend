@@ -19,7 +19,7 @@ function CancelSubscription() {
           Try Again
         </button>
         <button
-          onClick={() => history.push('/dashboard')}
+          onClick={() => history.push('/https://academy.learntostart.com/')}
           style={styles.secondaryButton}
         >
           Back to Home
