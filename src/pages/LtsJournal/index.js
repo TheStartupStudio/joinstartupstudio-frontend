@@ -176,7 +176,7 @@ function LtsJournal(props) {
     1: [
       {
         id: 'journey',
-        title: 'The Journey of Entrepreneurship',
+        title: 'Welcome to Level 2 & The Journey of Entrepreneurship',
         status: 'notStarted',
         redirectId: 60
       },
@@ -231,7 +231,7 @@ function LtsJournal(props) {
         children: [
           {
             id: 'journey31',
-            title: 'Bussines Story',
+            title: 'Welcome to Level 3 & Bussines Story',
             status: 'notStarted',
             redirectId: 70
           },
@@ -1007,14 +1007,14 @@ const handleSaveAndContinue = async () => {
         setSaving(false);
         return;
       }
-      toast.error('Add at least one reflection');
+      toast.error('Please complete your reflection before continuing.');
       setSaving(false);
       return;
     }
 
     await Promise.all(savePromises);
     setReflectionsData({});
-    toast.success('Reflections saved!');
+    toast.success('Reflections saved successfully!');
     await navigateToNextLesson();
 
   } catch (error) {
