@@ -6119,7 +6119,7 @@ strong {
 }
 
 .journal-entries__entry-reflection-body .ql-toolbar.ql-snow .ql-picker {
-  height: 22px;
+  /* height: 22px; */
   padding: 0;
 }
 
@@ -6128,7 +6128,7 @@ strong {
 }
 
 .journal-entries__entry-reflection-body .ql-toolbar.ql-snow button {
-  height: 22px;
+  /* height: 22px; */
   width: 22px;
 }
 
@@ -6145,7 +6145,7 @@ strong {
   border: 2px solid #d9dadb;
   border-top: none;
   border-radius: 0 0 6px 6px;
-  font: normal normal 300 12px/14px Montserrat;
+  /* font: normal normal 300 12px/14px Montserrat; */
   letter-spacing: 0.48px;
   color: #434b4b;
   min-height: 140px;
@@ -7078,4 +7078,8 @@ _:future,
 .journal-entries__videos
   .journal-entries__video--welcome-video:has(+ .nav-videos) {
   margin-bottom: 2rem;
+}
+
+.journal-entries__entry-reflection-body .ql-toolbar.ql-snow .ql-picker-label {
+  padding-top: 10px;
 }
