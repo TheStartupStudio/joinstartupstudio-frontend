@@ -7083,3 +7083,7 @@ _:future,
 .journal-entries__entry-reflection-body .ql-toolbar.ql-snow .ql-picker-label {
   padding-top: 10px;
 }
+
+.reflection-container .ql-icon-picker {
+  height: auto !important;
+}
