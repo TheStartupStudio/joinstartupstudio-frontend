@@ -822,24 +822,20 @@ const handleLevelClick = (clickedLevel) => {
       return 65;
     }
 
-    // Level transition points with finishedContent check
     if (numericId === 58) {
-      // Last lesson of Level 1 -> First lesson of Level 2
       if (finishedContent.includes(58)) {
-        setActiveLevel(1); // Update level immediately
+        setActiveLevel(1);
         return 60;
       }
     }
 
     if (numericId === 68) {
-      // Last lesson of Level 2 -> First lesson of Level 3
       if (finishedContent.includes(68)) {
-        setActiveLevel(2); // Update level immediately
+        setActiveLevel(2);
         return 70;
       }
     }
 
-    // Regular next lesson logic
     if (activeLevel === 2) {
       const allLessons = lessonsByLevel[2].flatMap(section => 
         section.children || []
@@ -871,25 +867,19 @@ const handleSaveAndContinue = async () => {
     const currentJournalId = parseInt(currentPath.split('/').pop());
     const myTraining = history.location.pathname.includes('my-training');
 
-    // Enhanced findNextLesson with immediate level transition handling
     const findNextLesson = (currentId) => {
       const numericId = parseInt(currentId);
 
-      // Special case transitions
-      if (numericId === 63) return { nextId: 65 }; // Specific lesson skip
+      if (numericId === 63) return { nextId: 65 }; 
 
-      // Level endpoints and their transitions
       const levelTransitions = {
-        58: { nextId: 60, nextLevel: 1 }, // Last of Level 1 → First of Level 2
-        68: { nextId: 70, nextLevel: 2 }  // Last of Level 2 → First of Level 3
+        58: { nextId: 60, nextLevel: 1 }, 
+        68: { nextId: 70, nextLevel: 2 }  
       };
 
-      // Check if current lesson is an endpoint requiring level transition
       if (levelTransitions[numericId]) {
         return levelTransitions[numericId];
       }
-
-      // Regular next lesson within current level
       const currentLevel = activeLevel;
       const lessons = currentLevel === 2 
         ? lessonsByLevel[2].flatMap(section => section.children || [])
@@ -903,24 +893,21 @@ const handleSaveAndContinue = async () => {
         return { nextId: lessons[currentIndex + 1].redirectId };
       }
 
-      return null; // No more lessons
+      return null; 
     };
 
-    // Helper function to resolve lesson title
     const resolveLessonTitle = (lessonId) => {
       switch(lessonId) {
         case 51: return "The Myths of Entrepreneurship";
         case 60: return "The Journey of Entrepreneurship";
         case 70: return "Business Story";
         default:
-          // Check Level 2 sections
           if (activeLevel === 2) {
             for (const section of lessonsByLevel[2]) {
               const found = section.children?.find(child => child.redirectId === lessonId);
               if (found) return found.title;
             }
           }
-          // Check current level
           const found = lessonsByLevel[activeLevel]?.find(
             lesson => lesson.redirectId === lessonId
           );
@@ -928,7 +915,6 @@ const handleSaveAndContinue = async () => {
       }
     };
 
-    // Validate and process reflections
     let hasEmptyReflections = false;
     let savePromises = [];
 
@@ -953,32 +939,26 @@ const handleSaveAndContinue = async () => {
       );
     });
 
-    // Determine next lesson with transition info
     const nextLessonInfo = findNextLesson(currentJournalId);
     const nextLessonId = nextLessonInfo?.nextId;
 
-    // Unified navigation handler
     const navigateToNextLesson = async () => {
       if (!nextLessonId) {
         toast.success('Course completed!');
         return;
       }
 
-      // Update level state if transitioning
       if (nextLessonInfo.nextLevel !== undefined) {
         setActiveLevel(nextLessonInfo.nextLevel);
       }
 
-      // Update UI immediately
       const nextLessonTitle = resolveLessonTitle(nextLessonId);
       setCurrentPlaceholder(nextLessonTitle);
 
-      // Find next lesson details
       const targetLevel = nextLessonInfo.nextLevel ?? activeLevel;
       let nextLesson = null;
 
       if (targetLevel === 2) {
-        // Handle Level 2 section structure
         for (const section of lessonsByLevel[2]) {
           const found = section.children?.find(c => c.redirectId === nextLessonId);
           if (found) {
@@ -991,7 +971,6 @@ const handleSaveAndContinue = async () => {
           }
         }
       } else {
-        // Handle other levels
         const found = lessonsByLevel[targetLevel]?.find(
           l => l.redirectId === nextLessonId
         );
@@ -1005,14 +984,12 @@ const handleSaveAndContinue = async () => {
       }
 
       if (nextLesson) {
-        // Update selection and navigate
         setSelectedLesson(nextLesson);
         await dispatch(fetchLtsCoursefinishedContent());
         history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
       }
     };
 
-    // Validation handling
     if (hasEmptyReflections) {
       if (finishedContent.includes(currentJournalId)) {
         await navigateToNextLesson();
@@ -1035,7 +1012,6 @@ const handleSaveAndContinue = async () => {
       return;
     }
 
-    // Save and proceed
     await Promise.all(savePromises);
     setReflectionsData({});
     toast.success('Reflections saved!');
