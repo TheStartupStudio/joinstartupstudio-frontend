@@ -1,278 +1,253 @@
-import React, { useEffect, useState } from 'react'
-import markdown from './markdown'
-import LtsJournalReflection from './reflection'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import axiosInstance from '../../utils/AxiosInstance'
-import { getFormattedDate } from '../../utils/helpers'
-import AddDoc from '../../assets/images/academy-icons/add-doc.png'
+import React, { useEffect, useState } from 'react';
+import markdown from './markdown';
+import LtsJournalReflection from './reflection';
+import axiosInstance from '../../utils/AxiosInstance';
+import { getFormattedDate } from '../../utils/helpers';
+import AddDoc from '../../assets/images/academy-icons/add-doc.png';
+import { toast } from 'react-toastify';
 
 const debounce = (func, delay) => {
-  let timer
+  let timer;
   return function () {
-    clearTimeout(timer)
+    clearTimeout(timer);
     timer = setTimeout(() => {
-      func.apply(this, arguments)
-    }, delay)
-  }
-}
+      func.apply(this, arguments);
+    }, delay);
+  };
+};
 
 const EntriesBox = (props) => {
   const {
     userJournalEntries,
     journal,
-    deleteReflection,
+    deleteReflection: deleteReflectionProp, // Rename prop
     updateReflection,
     addReflection,
-    handleShowAddReflection,
-    showAddReflection,
     entries,
     isEditable,
     isDeletable,
     accordion,
-    isAddReflection,
-    onReflectionContentChange
-  } = props
+    onReflectionContentChange,
+    setUserJournalEntries,
+    dispatch,
+    fetchLtsCoursefinishedContent
+  } = props;
 
-  const [isSaving, setIsSaving] = useState(false)
-  const [isNew, setIsNew] = useState(true)
-  const currentDate = new Date()
-  const nextDay = new Date(currentDate)
-  nextDay.setDate(currentDate.getDate() + 1)
-  const [accordionDates, setAccordionDates] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false);
+  const [isNew, setIsNew] = useState(true);
+  const [accordionDates, setAccordionDates] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reflectionToDelete, setReflectionToDelete] = useState(null);
+
+  const [newReflectionEntries, setNewReflectionEntries] = useState({});
+
+  useEffect(() => {
+    setNewReflectionEntries({});
+  }, [journal?.id, accordion?.id, entries]);
 
   useEffect(() => {
     if (journal?.id && accordion?.id && journal.id === 1001033) {
-      setLoading(true)
+      setLoading(true);
       axiosInstance
         .get(`/ltsJournals/${journal?.id}/accordionsTable/${accordion?.id}`)
         .then(({ data }) => {
-          setAccordionDates(data.ltsJournalsAccordionsTable)
-          setIsNew(false)
+          setAccordionDates(data.ltsJournalsAccordionsTable);
+          setIsNew(false);
         })
         .catch((error) => {
-          console.error('Error:', error)
+          console.error('Error:', error);
         })
         .finally(() => {
-          setLoading(false)
-        })
+          setLoading(false);
+        });
     }
-  }, [journal?.id, accordion?.id])
+  }, [journal?.id, accordion?.id]);
 
-  const onSave = (values, isNew) => {
-    if (isSaving) {
-      return
+  const handleDeleteReflection = async (entry, userJournalEntry) => { // Renamed function
+    try {
+      // Delete from API
+      await axiosInstance.delete(
+        `/ltsJournals/${journal?.id}/entries/${entry.id}/userEntries/${userJournalEntry.id}`
+      );
+
+      // Update local state to remove reflection
+      const updatedEntries = userJournalEntries[entry.id].filter(
+        reflection => reflection.id !== userJournalEntry.id
+      );
+
+      if (updatedEntries.length > 0) {
+        // If there are still other reflections, update the array
+        props.updateReflection(entry.id, updatedEntries);
+      } else {
+        // If this was the last reflection, remove the entire entry
+        const newUserJournalEntries = { ...userJournalEntries };
+        delete newUserJournalEntries[entry.id];
+        props.setUserJournalEntries(newUserJournalEntries);
+      }
+
+      toast.success('Reflection deleted successfully');
+      
+      await dispatch(fetchLtsCoursefinishedContent());
+
+    } catch (error) {
+      console.error('Delete reflection error:', error);
+      toast.error('Failed to delete reflection');
     }
+  };
 
-    setIsSaving(true)
+  const handleShowAddReflection = (entryId) => {
+    setNewReflectionEntries({
+      ...newReflectionEntries,
+      [entryId]: {
+        id: Date.now(),
+        content: '',
+      },
+    });
+  };
 
-    let data = {
-      startDate: values?.startDate,
-      endDate: values?.endDate
+  const handleRemoveNewReflection = (entryId) => {
+    const reflectionToRemove = `${journal?.id}_${entryId}_new`;
+    
+    onReflectionContentChange(null, {
+      content: null,
+      journalId: journal?.id,
+      journalEntryId: entryId,
+      entryId: null,
+      remove: true // Add flag to indicate removal
+    });
+
+    // Clear from local state
+    setNewReflectionEntries((prev) => {
+      const updated = { ...prev };
+      delete updated[entryId];
+      return updated;
+    });
+  };
+
+  const handleDeleteClick = (entry, reflection) => {
+    setReflectionToDelete({ entry, reflection });
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (reflectionToDelete) {
+      await handleDeleteReflection( // Update function call
+        reflectionToDelete.entry,
+        reflectionToDelete.reflection
+      );
+      setShowDeleteModal(false);
+      setReflectionToDelete(null);
     }
-
-    const axiosMethodUrl = isNew
-      ? axiosInstance.post(`/ltsJournals/accordionsTable/${accordion.id}`, data)
-      : axiosInstance.patch(
-        `/ltsJournals/accordionsTable/${accordionDates.id}`,
-        data
-      )
-
-    axiosMethodUrl
-      .then((res) => {
-        setIsSaving(false)
-      })
-      .catch((error) => {
-        setIsSaving(false)
-      })
-  }
-
-  const debouncedSave = debounce(onSave, 1000)
-
-  const handleDataChanges = (name, value) => {
-    const newDates = { ...accordionDates, [name]: value }
-    setAccordionDates(newDates)
-
-    if (newDates.startDate !== undefined && newDates.endDate !== undefined) {
-      debouncedSave(newDates, isNew)
-    }
-  }
+  };
 
   return entries && entries.length > 0 ? (
     <div>
-      {journal.title === 'MY PROJECT SPRINTS' && loading ? (
-        <div
-          className='d-flex justify-content-center align-items-center'
-          style={{ height: '50px' }}
-        >
-          <span className=' spinner-border-primary spinner-border-sm ' />
-        </div>
-      ) : journal.title === 'MY PROJECT SPRINTS' && !loading ? (
-        <div className='row' style={{ paddingBottom: '1px' }}>
-          <div className='col-6' style={{ paddingRight: 0 }}>
-            <div className='table-reflections__date'>
-              <b>Start date:</b>
-              <div className={` w-100`}>
-                <input
-                  className={`journal_table-input my-1 py-2 px-2 text-dark `}
-                  type={'date'}
-                  style={{
-                    width: '100%'
-                  }}
-                  name={'startDate'}
-                  value={getFormattedDate(
-                    accordionDates?.startDate || currentDate
-                  )}
-                  onChange={(e) => {
-                    const newValue = e.target.value
-                    handleDataChanges('startDate', newValue)
-                  }}
-                  disabled={!props.isEditable}
-                />
-              </div>
-            </div>
-          </div>
-          <div className='col-6' style={{ paddingLeft: 0 }}>
-            <div className='table-reflections__date'>
-              <b>End date:</b>{' '}
-              <div className={` w-100`}>
-                <input
-                  className={`journal_table-input my-1 py-2 px-2 text-dark `}
-                  type={'date'}
-                  style={{
-                    width: '100%'
-                  }}
-                  name={'endDate'}
-                  value={getFormattedDate(accordionDates?.endDate || nextDay)}
-                  onChange={(e) => {
-                    const newValue = e.target.value
-                    handleDataChanges('endDate', newValue)
-                  }}
-                  disabled={!props.isEditable}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {entries &&
-        entries?.map((entry, index) => (
-          <div
-            className='journal-entries__entry'
-            key={entry.id}
-            style={{ marginBottom: 0 }}
-          >
+      {entries.map((entry) => {
+        const hasReflections = userJournalEntries[entry.id] && userJournalEntries[entry.id].length > 0;
+        return (
+          <div className='journal-entries__entry' key={entry.id}>
             {entry.parentTitle && (
               <div className='journal-entry__parent-title'>
                 <h5>{entry.parentTitle}</h5>
               </div>
-            )}{' '}
+            )}
             <h4
-              style={{
-                padding: '12px 40px 12px 12px',
-                // backgroundColor: '#e5e5e5',
-                marginBottom: 0,
-                fontSize: 12,
-                fontWeight: 700
-              }}
-              className={
-                'journal-entries__entry-title' +
-                (entry.title.indexOf('**') !== -1
-                  ? ' journal-entries__entry-title--md'
-                  : '')
-              }
+              style={{ padding: '12px 40px 12px 12px', marginBottom: 0, fontSize: 12, fontWeight: 700 }}
+              className='journal-entries__entry-title'
               dangerouslySetInnerHTML={{
-                __html:
-                  entry.title.indexOf('<h2>') === -1
-                    ? markdown(entry.title)
-                    : entry.title.replace(new RegExp('\r?\n', 'g'), '<br />')
+                __html: entry.title.indexOf('<h2>') === -1 ? markdown(entry.title) : entry.title.replace(new RegExp('\r?\n', 'g'), '<br />')
               }}
             ></h4>
+
             <div className='journal-entries__entry-reflections'>
-              {/* List created reflections */}
-              {userJournalEntries[entry.id] &&
-                userJournalEntries[entry.id].map((userJournalEntry, index) => (
-                  <LtsJournalReflection
-                    key={userJournalEntry.id}
-                    journal={journal}
-                    journalEntry={entry}
-                    userEntry={journal.userEntry}
-                    entry={userJournalEntry}
-                    isEditable={isEditable}
-                    isDeletable={isDeletable}
-                    deleted={deleteReflection(entry, userJournalEntry)}
-                    saved={updateReflection(entry, userJournalEntry)}
-                    popupContent={index === 0 ? entry.popupContent : null}
-                    onContentChange={onReflectionContentChange}
-                  />
+              {/* Existing reflections */}
+              {hasReflections &&
+                userJournalEntries[entry.id].map((userJournalEntry) => (
+                  <div key={userJournalEntry.id}>
+                    <LtsJournalReflection
+                      journal={journal}
+                      journalEntry={entry}
+                      userEntry={journal.userEntry}
+                      entry={userJournalEntry}
+                      isEditable={isEditable}
+                      isDeletable={isDeletable}
+                      onDelete={() => handleDeleteClick(entry, userJournalEntry)} // New delete handler
+                      saved={updateReflection(entry, userJournalEntry)}
+                      popupContent={null}
+                      onContentChange={onReflectionContentChange}
+                    />
+                  </div>
                 ))}
-              {/* Add new reflection */}
-              {(!userJournalEntries[entry.id] ||
-                showAddReflection[entry.id]) && (
+
+              {/* If NO reflections at all, show placeholder editor */}
+              {!hasReflections && (
+                <div className='mt-2'>
                   <LtsJournalReflection
                     journal={journal}
                     journalEntry={entry}
                     userEntry={journal.userEntry}
                     entry={null}
-                    saved={addReflection(entry)}
-                    showCancel={!!userJournalEntries[entry.id]}
-                    isEditable={isEditable}
-                    isDeletable={isDeletable}
-                    popupContent={null}
-                    cancel={(e) => {
-                      handleShowAddReflection({
-                        ...showAddReflection,
-                        [entry.id]: false
-                      })
+                    saved={(content) => {
+                      addReflection(entry)(content);
                     }}
+                    isEditable={isEditable}
+                    isDeletable={false}
                     onContentChange={onReflectionContentChange}
                   />
-                )}
-              {/*Show add new reflection*/}
+                </div>
+              )}
 
-              {/*// temp solution to remove [+] button from some entry boxes*/}
-              {isAddReflection === false ? (
-                <></>
-              ) : (
-                <div
-                  className={`journal-entries__entry-reflections-actions ${userJournalEntries[entry.id] && !showAddReflection[entry.id]
-                    ? 'active'
-                    : ''
-                    }`}
-                >
-                  <a
-                    href
-                    className='journal-entries__entry-reflections-action'
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleShowAddReflection({
-                        ...showAddReflection,
-                        [entry.id]: true
-                      })
+              {/* If explicitly adding a new reflection */}
+              {hasReflections && newReflectionEntries[entry.id] && (
+                <div className='mt-2'>
+                  <LtsJournalReflection
+                    journal={journal}
+                    journalEntry={entry}
+                    userEntry={journal.userEntry}
+                    entry={null}
+                    saved={(content) => {
+                      handleRemoveNewReflection(entry.id);
+                      addReflection(entry)(content);
                     }}
-                  >
-                    Add new reflection <img src={AddDoc} alt='add-doc' />
-                  </a>
+                    isEditable={isEditable}
+                    isDeletable={isDeletable}
+                    onContentChange={onReflectionContentChange}
+                  />
+                </div>
+              )}
+
+              {/* Bottom controls only when reflections exist */}
+              {hasReflections && (
+                <div className='d-flex mt-2 justify-content-end reflection-controls'>
+                  <div className='d-flex gap-2 align-items-center'>
+                    {newReflectionEntries[entry.id] ? (
+                      <p
+                        className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
+                        onClick={() => handleRemoveNewReflection(entry.id)}
+                      >
+                        Remove reflection
+                      </p>
+                    ) : (
+                      <p
+                        className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
+                        onClick={() => handleShowAddReflection(entry.id)}
+                      >
+                        Add new reflection
+                      </p>
+                    )}
+                    <img src={AddDoc} alt={newReflectionEntries[entry.id] ? 'remove-doc' : 'add-doc'} />
+                  </div>
                 </div>
               )}
             </div>
-            {entry.contentAfter && (
-              <div
-                className='page-card__content-description journal-entry__content-after'
-                style={{ marginBottom: '7px ' }}
-                dangerouslySetInnerHTML={{
-                  __html: entry.contentAfter
-                }}
-              ></div>
-            )}
           </div>
-        ))}
+        );
+      })}
     </div>
   ) : (
     <></>
-  )
-}
+  );
+};
 
-export default EntriesBox
+export default EntriesBox;

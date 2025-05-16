@@ -9,25 +9,13 @@ function SelectLessons({
   setShowLockModal,
   setLockModalMessage,
   placeholder,
-  activeLevel
+  activeLevel,
+  setCurrentPlaceholder
 }) {
   const location = useLocation();
   const { journalId } = useParams();
   const isRootPath = location.pathname === '/my-course-in-entrepreneurship/journal';
-  const [currentPlaceholder, setCurrentPlaceholder] = useState('');
-
-  const getLevelPlaceholder = () => {
-    switch (activeLevel) {
-      case 0:
-        return "Welcome to Level 1";
-      case 1:
-        return "Understanding Learn to Start";
-      case 2:
-        return "The Journey of Entrepreneurship";
-      default:
-        return "Select a Lesson";
-    }
-  };
+   const firstLesson = location.pathname === '/my-course-in-entrepreneurship/journal/51';
 
   const getLessonTitleByRedirectId = (redirectId) => {
     if (!redirectId) return null;
@@ -48,21 +36,33 @@ function SelectLessons({
 
   useEffect(() => {
     if (isRootPath) {
-      setCurrentPlaceholder(getLevelPlaceholder());
+      setCurrentPlaceholder("Welcome to Level 1");
+    }else if(firstLesson){
+      setCurrentPlaceholder("The Myths of Entrepreneurship");
     } else if (journalId) {
       const numericId = parseInt(journalId);
-      const lessonTitle = getLessonTitleByRedirectId(numericId);
-      if (lessonTitle) {
-        setCurrentPlaceholder(lessonTitle);
-      } else if (selectedCourse?.label) {
-        setCurrentPlaceholder(selectedCourse.label);
-      } else if (placeholder) {
-        setCurrentPlaceholder(placeholder);
-      } else {
-        setCurrentPlaceholder(getLevelPlaceholder());
+
+      switch (numericId) {
+        case 51:
+          setCurrentPlaceholder("The Myths of Entrepreneurship");
+          break;
+        case 60:
+          setCurrentPlaceholder("The Journey of Entrepreneurship");
+          break;
+        case 70:
+          setCurrentPlaceholder("Business Story");
+          break;
+        default: {
+          const lessonTitle = getLessonTitleByRedirectId(numericId);
+          if (lessonTitle) {
+            setCurrentPlaceholder(lessonTitle);
+          } else {
+            setCurrentPlaceholder(placeholder);
+          }
+        }
       }
     }
-  }, [isRootPath, selectedCourse, placeholder, activeLevel, journalId]);
+  }, [isRootPath, journalId, placeholder, activeLevel, setCurrentPlaceholder]);
 
   useEffect(() => {
     const savedSelection = localStorage.getItem('selectedLesson');
@@ -134,7 +134,7 @@ function SelectLessons({
         value={currentSelection || selectedCourse}
         onChange={handleChange}
         isOptionDisabled={(option) => option.disabled}
-        placeholder={currentPlaceholder}
+        placeholder={placeholder}
         menuPortalTarget={document.body}
         isSearchable={false}
         styles={{

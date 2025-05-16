@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
 import { userLogout } from '../../redux'
+import './index.css'
 
 // const stripePromise = loadStripe(
 //   'pk_test_51R9mFsEAyLMjrgXG6pzfEQNhfYmglxIAcYKkcdAu3CAdv0fZ0AOfxeHeLZWsY1f4hR2GCf43CkqUAOUuLdRHi66p00WaeNlDaf'
@@ -67,10 +68,10 @@ function CheckSubscription() {
             alt='course-logo'
             className='course-logo-image'
           />
-          <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black'>
+          <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black subscription-title'>
             Complete Your Subscription
           </h2>
-          <p className='fs-15 text-black text-center'>
+          <p className='fs-15 text-black text-center subscription-subtitle'>
             Get full access to{' '}
             <strong>
               The Startup Studio Online Course in Entrepreneurship
@@ -78,7 +79,7 @@ function CheckSubscription() {
             .
           </p>
 
-          <h3 className='fs-21 fw-medium mb-1 mt-3 text-black'>
+          <h3 className='fs-21 fw-medium mb-1 mt-3 text-black payment-text'>
             $15.00 / Month – Cancel anytime
           </h3>
 

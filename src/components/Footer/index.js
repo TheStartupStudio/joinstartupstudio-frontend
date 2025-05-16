@@ -19,21 +19,21 @@ export default function Footer(props) {
       <div className='container-fluid'>
         <div className='row mx-md-4 footer-copyright'>
           <div className='col-sm-12 col-lg-4 text-align-left-footer'>
-            <p>© POWERED BY STARTUP STUDIO LLC 2025</p>
+            <p>© POWERED BY LEARN TO START LLC 2025</p>
           </div>
           <div className='col-md-12 col-sm-12 col-lg-4 text-align-center-footer'>
             <a
-              href='https://app.learntostart.com'
+              href='https://learntostart.com'
               rel='noreferrer'
               target='_blank'
               style={{ fontSize: '12px', color: '#fff' }}
             >
-              APP.LEARNTOSTART.COM
+              LEARNTOSTART.COM
             </a>
           </div>
           <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer'>
             <div className='footer-menu'>
-              <ul className='mt-1 mt-lg-0'>
+              <ul className='mt-2 mt-lg-0'>
                 <li>
                   <a
                     href='https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3'
