@@ -861,41 +861,32 @@ const handleLevelClick = (clickedLevel) => {
 const handleSaveAndContinue = async () => {
   if (saving) return;
   setSaving(true);
-
   try {
     const currentPath = history.location.pathname;
     const currentJournalId = parseInt(currentPath.split('/').pop());
     const myTraining = history.location.pathname.includes('my-training');
-
     const findNextLesson = (currentId) => {
       const numericId = parseInt(currentId);
-
-      if (numericId === 63) return { nextId: 65 }; 
-
+      if (numericId === 63) return { nextId: 65 };
       const levelTransitions = {
-        58: { nextId: 60, nextLevel: 1 }, 
-        68: { nextId: 70, nextLevel: 2 }  
+        58: { nextId: 60, nextLevel: 1 },
+        68: { nextId: 70, nextLevel: 2 }
       };
-
       if (levelTransitions[numericId]) {
         return levelTransitions[numericId];
       }
       const currentLevel = activeLevel;
-      const lessons = currentLevel === 2 
+      const lessons = currentLevel === 2
         ? lessonsByLevel[2].flatMap(section => section.children || [])
         : lessonsByLevel[currentLevel] || [];
-
       const currentIndex = lessons.findIndex(
         lesson => lesson.redirectId === numericId
       );
-
       if (currentIndex !== -1 && currentIndex < lessons.length - 1) {
         return { nextId: lessons[currentIndex + 1].redirectId };
       }
-
-      return null; 
+      return null;
     };
-
     const resolveLessonTitle = (lessonId) => {
       switch(lessonId) {
         case 51: return "The Myths of Entrepreneurship";
@@ -914,23 +905,28 @@ const handleSaveAndContinue = async () => {
           return found?.title || '';
       }
     };
-
+    
+    // Fetch the latest finished content data first
+    await dispatch(fetchLtsCoursefinishedContent());
+    const finishedContentResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
+    const finishedContentData = finishedContentResponse.data;
+    const finishedContentList = finishedContentData.finishedContent || [];
+    
+    // Check if the current journal ID is in the finished content list
+    const isJournalCompleted = finishedContentList.includes(currentJournalId);
+    
     let hasEmptyReflections = false;
     let savePromises = [];
-
     Object.entries(reflectionsData).forEach(([key, reflectionData]) => {
       const { content, journalId, journalEntryId, entryId } = reflectionData;
       const isEmpty = !content || content.trim() === '' || content === '<p><br></p>';
-
       if (isEmpty) {
         hasEmptyReflections = true;
         return;
       }
-
       const endpoint = !entryId
         ? `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`
         : `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`;
-
       savePromises.push(
         axiosInstance[!entryId ? 'post' : 'put'](
           endpoint,
@@ -938,26 +934,20 @@ const handleSaveAndContinue = async () => {
         )
       );
     });
-
     const nextLessonInfo = findNextLesson(currentJournalId);
     const nextLessonId = nextLessonInfo?.nextId;
-
     const navigateToNextLesson = async () => {
       if (!nextLessonId) {
         toast.success('Course completed!');
         return;
       }
-
       if (nextLessonInfo.nextLevel !== undefined) {
         setActiveLevel(nextLessonInfo.nextLevel);
       }
-
       const nextLessonTitle = resolveLessonTitle(nextLessonId);
       setCurrentPlaceholder(nextLessonTitle);
-
       const targetLevel = nextLessonInfo.nextLevel ?? activeLevel;
       let nextLesson = null;
-
       if (targetLevel === 2) {
         for (const section of lessonsByLevel[2]) {
           const found = section.children?.find(c => c.redirectId === nextLessonId);
@@ -982,16 +972,16 @@ const handleSaveAndContinue = async () => {
           };
         }
       }
-
       if (nextLesson) {
         setSelectedLesson(nextLesson);
         await dispatch(fetchLtsCoursefinishedContent());
         history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
       }
     };
-
+    
     if (hasEmptyReflections) {
-      if (finishedContent.includes(currentJournalId)) {
+      // If journal is already marked as completed, allow navigation regardless of empty reflections
+      if (isJournalCompleted) {
         await navigateToNextLesson();
         setSaving(false);
         return;
@@ -1000,9 +990,10 @@ const handleSaveAndContinue = async () => {
       setSaving(false);
       return;
     }
-
+    
     if (savePromises.length === 0) {
-      if (finishedContent.includes(currentJournalId)) {
+      // If journal is already marked as completed, allow navigation even without new reflections
+      if (isJournalCompleted) {
         await navigateToNextLesson();
         setSaving(false);
         return;
@@ -1011,12 +1002,22 @@ const handleSaveAndContinue = async () => {
       setSaving(false);
       return;
     }
-
+    
+    // Save all reflections
     await Promise.all(savePromises);
     setReflectionsData({});
     toast.success('Reflections saved successfully!');
-    await navigateToNextLesson();
-
+    
+    // After saving reflections, check again if this journal is now marked as completed
+    await dispatch(fetchLtsCoursefinishedContent());
+    const updatedFinishedResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
+    const updatedFinishedList = updatedFinishedResponse.data.finishedContent || [];
+    
+    if (updatedFinishedList.includes(currentJournalId)) {
+      await navigateToNextLesson();
+    } else {
+      toast.error('Complete all the reflections before continuing.');
+    }
   } catch (error) {
     console.error('Save error:', error);
     toast.error('Save failed. Please try again.');
