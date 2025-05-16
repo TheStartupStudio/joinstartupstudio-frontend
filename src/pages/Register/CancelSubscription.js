@@ -33,15 +33,17 @@ const styles = {
   container: {
     textAlign: 'center',
     marginTop: '80px',
+    marginBottom: '100%',
     padding: '20px'
   },
   title: {
     fontSize: '2.5rem',
-    color: '#cc0000'
+    color: '#51c7df' // Changed from red to brand blue
   },
   message: {
     fontSize: '1.2rem',
-    margin: '20px 0'
+    margin: '20px 0',
+    color: '#333d3d' // Added brand text color
   },
   buttonContainer: {
     marginTop: '30px'
@@ -50,20 +52,24 @@ const styles = {
     padding: '12px 24px',
     marginRight: '10px',
     fontSize: '1rem',
-    backgroundColor: '#007bff',
-    color: '#fff',
+    backgroundColor: '#51c7df', // Changed to brand blue
+    color: '#ffffff',
     border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
+    borderRadius: '10px', // Matching brand style
+    cursor: 'pointer',
+    textTransform: 'uppercase', // Brand button style
+    fontWeight: '600'
   },
   secondaryButton: {
     padding: '12px 24px',
     fontSize: '1rem',
-    backgroundColor: '#6c757d',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
+    backgroundColor: '#a7ca42', // Changed to brand green
+    color: '#ffffff',
+    border: 'none', 
+    borderRadius: '10px',
+    cursor: 'pointer',
+    textTransform: 'uppercase',
+    fontWeight: '600'
   }
 }
 
