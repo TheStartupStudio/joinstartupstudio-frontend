@@ -79,7 +79,7 @@ const CreateNewNote = (props) => {
   const [loading, setLoading] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
-  const [editTitle, setEditTitle] = useState(false)
+  const [isEditingTitle, setIsEditingTitle] = useState(false)
   const titleInputRef = useRef(null)
   const [noteTitle, setNoteTitle] = useState('')
 
@@ -142,6 +142,28 @@ const CreateNewNote = (props) => {
     }))
   }
 
+  const handlePencilClick = () => {
+    setIsEditingTitle(true)
+    setTimeout(() => {
+      if (titleInputRef.current) {
+        titleInputRef.current.focus()
+        titleInputRef.current.select()
+      }
+    }, 0)
+  }
+
+  const handleTitleBlur = () => {
+    setIsEditingTitle(false)
+  }
+
+  const handleTitleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      setIsEditingTitle(false)
+      titleInputRef.current.blur()
+    }
+  }
+
 // In createNewNote.js
 const handleChange = (name, value) => {
   setNote((prevValues) => ({
@@ -168,10 +190,10 @@ const handleChange = (name, value) => {
   }, [window.href])
 
   useEffect(() => {
-    if (editTitle && titleInputRef.current) {
+    if (isEditingTitle && titleInputRef.current) {
       titleInputRef.current.focus()
     }
-  }, [editTitle])
+  }, [isEditingTitle])
 
   useEffect(() => {
     setPage(window.location.pathname.split('/')[1])
@@ -228,20 +250,31 @@ const handleChange = (name, value) => {
         >
           <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
             <input
+              ref={titleInputRef}
               type="text"
               value={note.notesTitle || ''}
               onChange={handleTitleChange}
+              onBlur={handleTitleBlur}
+              onKeyDown={handleTitleKeyDown}
               className="note-title-input"
               style={{
                 border: 'none',
                 background: 'transparent',
-                width: '80%'
+                width: '80%',
+                outline: isEditingTitle ? '1px solid #007bff' : 'none',
+                borderRadius: isEditingTitle ? '3px' : '0',
+                padding: isEditingTitle ? '2px 4px' : '0'
               }}
+              readOnly={!isEditingTitle}
             />
             <FontAwesomeIcon
               icon={faPencilAlt}
-              style={{ color: '#707070' }}
+              style={{ 
+                color: isEditingTitle ? '#007bff' : '#707070',
+                cursor: 'pointer'
+              }}
               className='ms-4'
+              onClick={handlePencilClick}
             />
           </h3>
           <button
