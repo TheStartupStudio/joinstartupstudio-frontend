@@ -64,6 +64,7 @@ const quillFormats = [
 ]
 
 const EditNote = (props) => {
+  const dispatch = useDispatch(); // Add this at the top with other hooks
   const [note, setNote] = useState('')
   const [loading, setLoading] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
@@ -124,21 +125,34 @@ const EditNote = (props) => {
   }
 
   const deleteNote = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await axiosInstance.delete(`/notes/${props.data.id}`)
-      toast.success('Note deleted successfully')
-      props.changeState('edit_single_note_modal')
-      // Refresh notes list after deletion
+      // Delete the note
+      await axiosInstance.delete(`/notes/${props.data.id}`);
+      
+      // Show success message
+      toast.success('Note deleted successfully');
+      
+      // Close the modal
+      props.changeState('edit_single_note_modal');
+      
+      // Refresh notes list
+      const response = await axiosInstance.get('/notes');
+      if (props.updateNotes) {
+        props.updateNotes(response.data);
+      }
+      
+      // If parent component provided onDelete callback
       if (props.onDelete) {
-        props.onDelete(props.data.id)
+        props.onDelete(props.data.id);
       }
     } catch (err) {
-      toast.error('Failed to delete note')
+      console.error('Delete note error:', err);
+      toast.error('Failed to delete note');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Modal
@@ -246,3 +260,4 @@ const EditNote = (props) => {
   )
 }
 export default EditNote
+

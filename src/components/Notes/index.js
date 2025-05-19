@@ -5,7 +5,7 @@ import { SmallPageForNote } from './modals/index'
 import CreateNewNote from './modals/createNewNote.js'
 import { AllNotesFromThisPage } from './modals/allNotesFromThisPage'
 import axiosInstance from '../../utils/AxiosInstance'
-import EditNotes from './modals/editNote'
+import EditNote from './modals/editNote'
 import moment from 'moment'
 import './style/index.css'
 import {
@@ -92,6 +92,11 @@ export const NotesButton = (props) => {
     }
   }
 
+  const handleNoteDeleted = async (deletedNoteId) => {
+    setNotes(prevNotes => prevNotes.filter(note => note.id !== deletedNoteId));
+    await getNotes();
+  };
+
   return (
     <div className='notes-wrapper'>
       <div className='text-end'>
@@ -134,15 +139,17 @@ export const NotesButton = (props) => {
         setNotesDiv={setNotesDiv}
         display={notesDiv}
         changeState={changeState}
-        refreshNotes={getNotes} // Add refresh function
+        refreshNotes={getNotes}
       />
 
-      <EditNotes
+      <EditNote
         show={editNoteModal}
-        from={props.from === 'video' ? 'editFromVideo' : props.from}
+        from={props.from}
         data={dataForEdit}
         updateState={updateState}
         changeState={changeState}
+        updateNotes={setNotes}
+        onDelete={handleNoteDeleted} // Now properly defined
       />
     </div>
   )
