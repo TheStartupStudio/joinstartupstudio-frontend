@@ -28,56 +28,71 @@ export default function BeyondYourCourse() {
     dispatch(getAllPodcast());
   }, [dispatch]);
 
-  const renderGuidanceVideos = () => (
-    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
-      {guidanceVideos?.slice(startVideoIndex, endVideoIndex).map((video, index) => (
-        <Video
-          key={index}
-          id={video.id}
-          thumbnail={video.thumbnail}
-          title={video.title}
-          description={video.description}
-          page={'encouragement'}
-          isMainPage={true}
-          videoData={video}
-        />
-      ))}
-    </div>
-  );
+  const renderGuidanceVideos = () => {
+    if (loading) {
+      return <div className="text-center p-4">Loading...</div>;
+    }
+    return (
+      <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+        {guidanceVideos?.slice(startVideoIndex, endVideoIndex).map((video, index) => (
+          <Video
+            key={index}
+            id={video.id}
+            thumbnail={video.thumbnail}
+            title={video.title}
+            description={video.description}
+            page={'encouragement'}
+            isMainPage={true}
+            videoData={video}
+          />
+        ))}
+      </div>
+    );
+  };
 
-  const renderMasterClassVideos = () => (
-    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
-      {masterclassVideos?.slice(startVideoIndex, endVideoIndex).map((video, index) => (
-        <Video
-          key={index}
-          id={video.id}
-          thumbnail={video.thumbnail}
-          title={video.title}
-          description={video.description}
-          page={'master-classes'}
-          isMainPage={true}
-          videoData={video}
-        />
-      ))}
-    </div>
-  );
+  const renderMasterClassVideos = () => {
+    if (loading) {
+      return <div className="text-center p-4">Loading...</div>;
+    }
+    return (
+      <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+        {masterclassVideos?.slice(startVideoIndex, endVideoIndex).map((video, index) => (
+          <Video
+            key={index}
+            id={video.id}
+            thumbnail={video.thumbnail}
+            title={video.title}
+            description={video.description}
+            page={'master-classes'}
+            isMainPage={true}
+            videoData={video}
+          />
+        ))}
+      </div>
+    );
+  };
 
-  const renderPodcastEpisodes = () => (
-    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
-      {podcasts?.slice(startVideoIndex, endVideoIndex).map((video, index) => (
-        <Video
-          key={index}
-          id={video.id}
-          thumbnail={video.thumbnail || storyInMotionPodcast}
-          title={video.title}
-          description={video.description}
-          page={'podcast'}
-          isMainPage={true}
-          videoData={video}
-        />
-      ))}
-    </div>
-  );
+  const renderPodcastEpisodes = () => {
+    if (loading) {
+      return <div className="text-center p-4">Loading...</div>;
+    }
+    return (
+      <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+        {podcasts?.slice(startVideoIndex, endVideoIndex).map((video, index) => (
+          <Video
+            key={index}
+            id={video.id}
+            thumbnail={video.thumbnail || storyInMotionPodcast}
+            title={video.title}
+            description={video.description}
+            page={'podcast'}
+            isMainPage={true}
+            videoData={video}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <>

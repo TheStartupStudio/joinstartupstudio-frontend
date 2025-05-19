@@ -32,6 +32,7 @@ function StoryInMotion({ intl }) {
   const [filterBy, setFilterBy] = useState(null);
   const location = useLocation();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true);
 
   const filters = [
     { value: 'tl', label: 'Title' },
@@ -45,15 +46,17 @@ function StoryInMotion({ intl }) {
   useEffect(() => {
     const loadInitialData = async () => {
       try {
+        setPageLoading(true); // Set loading state immediately
         await Promise.all([
           dispatch(getGuidanceVideos()),
           dispatch(getMasterclassVideos()),
           dispatch(getAllPodcast())
         ]);
-        setIsInitialLoad(false);
       } catch (error) {
         console.error('Error loading data:', error);
+      } finally {
         setIsInitialLoad(false);
+        setPageLoading(false); // Turn off loading regardless of outcome
       }
     };
 
@@ -186,41 +189,52 @@ function StoryInMotion({ intl }) {
             <div className="d-flex justify-content-between"></div>
 
             <div className="content-videos-container-wrapper">
-              <div className="content-videos-container">
-                {currentPageVideos.map((video, index) => (
-                  <Video
-                    key={index}
-                    id={video.id}
-                    thumbnail={video.thumbnail || storyInMotionPodcast}
-                    title={video.title}
-                    description={video.description}
-                    page={activeLevel === 2 ? 'podcast' : activeLevel === 1 ? 'master-classes' : 'encouragement'}
-                    videoData={video}
-                  />
-                ))}
-              </div>
-
-              {/* Pagination inside the podcast episodes div */}
-              {pageVideos.length > videosPerPage && (
-                <div className="pagination-container" style={{ marginTop: '20px' }}>
-                  <ReactPaginate
-                    previousLabel="<<"
-                    nextLabel=">>"
-                    breakLabel="..."
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={3}
-                    onPageChange={handlePageClick}
-                    containerClassName="pagination custom-pagination"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    activeClassName="active"
-                  />
+              {pageLoading ? (
+                <div className="text-center p-4">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                  <p className="mt-2">Loading videos...</p>
                 </div>
+              ) : (
+                <>
+                  <div className="content-videos-container">
+                    {currentPageVideos.map((video, index) => (
+                      <Video
+                        key={index}
+                        id={video.id}
+                        thumbnail={video.thumbnail || storyInMotionPodcast}
+                        title={video.title}
+                        description={video.description}
+                        page={activeLevel === 2 ? 'podcast' : activeLevel === 1 ? 'master-classes' : 'encouragement'}
+                        videoData={video}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Pagination inside the podcast episodes div */}
+                  {pageVideos.length > videosPerPage && (
+                    <div className="pagination-container" style={{ marginTop: '20px' }}>
+                      <ReactPaginate
+                        previousLabel="<<"
+                        nextLabel=">>"
+                        breakLabel="..."
+                        pageCount={pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        containerClassName="pagination custom-pagination"
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousClassName="page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="page-item"
+                        nextLinkClassName="page-link"
+                        activeClassName="active"
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
