@@ -171,7 +171,7 @@ const EntriesBox = (props) => {
                       entry={userJournalEntry}
                       isEditable={isEditable}
                       isDeletable={isDeletable}
-                      onDelete={() => handleDeleteClick(entry, userJournalEntry)} // New delete handler
+                      onDelete={() => handleDeleteClick(entry, userJournalEntry)}
                       saved={updateReflection(entry, userJournalEntry)}
                       popupContent={null}
                       onContentChange={onReflectionContentChange}

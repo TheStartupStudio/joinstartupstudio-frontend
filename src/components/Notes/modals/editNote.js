@@ -9,7 +9,7 @@ import '../style/index.css'
 import './modal.css'
 import Draggable from 'react-draggable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import axiosInstance from '../../../utils/AxiosInstance'
@@ -213,19 +213,29 @@ const EditNote = (props) => {
         </Modal.Body>{' '}
         <Modal.Footer
           style={{ border: '0px' }}
-          className='mt-0 pt-0 border-0 border-none pe-md-5'
+          className='mt-0 pt-0 border-0 border-none pe-md-5 d-flex justify-content-between align-items-center'
         >
+          {/* Delete icon on the left */}
           <button
-            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-5 ms-2'
-            style={{ backgroundColor: '#F2359D' }} // Adding a different color for delete
+            className='btn btn-link p-0 ms-md-5'
             onClick={deleteNote}
             disabled={loading}
+            style={{ 
+              color: '#dc3545',  // Warning red color
+              textDecoration: 'none'
+            }}
           >
-            {loading ? 'loading' : 'DELETE NOTE'}
+            <FontAwesomeIcon 
+              icon={faExclamationTriangle} 
+              className="me-2" 
+              style={{ fontSize: '1.1rem' }}
+            />
+            {loading ? 'loading' : 'Delete Note'}
           </button>
-          
+
+          {/* Save button remains on right */}
           <button
-            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-5 ms-2'
+            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-5'
             onClick={() => validate()}
           >
             {loading ? 'loading' : 'SAVE & CLOSE'}

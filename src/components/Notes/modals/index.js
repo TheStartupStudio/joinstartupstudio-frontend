@@ -9,7 +9,8 @@ export const SmallPageForNote = (props) => {
       className='firstDiv px-2 py-4 text-center'
       style={{
         transform: 'translate(0px, 0px)',
-        display: props.display ? 'block' : 'none'
+        display: props.display ? 'block' : 'none',
+        overflowY:'scroll'
       }}
     >
       <p
