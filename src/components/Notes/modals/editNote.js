@@ -270,7 +270,7 @@ const EditNote = (props) => {
             onClick={deleteNote}
             disabled={loading}
             style={{ 
-              color: '#dc3545',  // Warning red color
+              color: 'black', 
               textDecoration: 'none'
             }}
           >
