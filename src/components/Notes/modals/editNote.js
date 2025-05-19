@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import IntlMessages from '../../../utils/IntlMessages'
@@ -70,6 +70,8 @@ const EditNote = (props) => {
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
   const [noteTitle, setNoteTitle] = useState('')
+  const [isEditingTitle, setIsEditingTitle] = useState(false)
+  const titleInputRef = useRef(null)
 
   const handleQuillInput = (QuillInput) => {
     setNote(QuillInput)
@@ -83,6 +85,28 @@ const EditNote = (props) => {
 
   const handleTitleChange = (e) => {
     setNoteTitle(e.target.value)
+  }
+
+  const handlePencilClick = () => {
+    setIsEditingTitle(true)
+    setTimeout(() => {
+      if (titleInputRef.current) {
+        titleInputRef.current.focus()
+        titleInputRef.current.select()
+      }
+    }, 0)
+  }
+
+  const handleTitleBlur = () => {
+    setIsEditingTitle(false)
+  }
+
+  const handleTitleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      setIsEditingTitle(false)
+      titleInputRef.current.blur()
+    }
   }
 
   useEffect(() => {
@@ -174,20 +198,31 @@ const EditNote = (props) => {
         >
           <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
             <input
+              ref={titleInputRef}
               type="text"
               value={noteTitle}
               onChange={handleTitleChange}
+              onBlur={handleTitleBlur}
+              onKeyDown={handleTitleKeyDown}
               className="note-title-input"
               style={{
                 border: 'none',
                 background: 'transparent',
-                width: '80%'
+                width: '80%',
+                outline: isEditingTitle ? '1px solid #007bff' : 'none',
+                borderRadius: isEditingTitle ? '3px' : '0',
+                padding: isEditingTitle ? '2px 4px' : '0'
               }}
+              readOnly={!isEditingTitle}
             />
             <FontAwesomeIcon
               icon={faPencilAlt}
-              style={{ color: '#707070' }}
+              style={{ 
+                color: isEditingTitle ? '#007bff' : '#707070',
+                cursor: 'pointer'
+              }}
               className='ms-4'
+              onClick={handlePencilClick}
             />
           </h3>
           <button
@@ -260,4 +295,3 @@ const EditNote = (props) => {
   )
 }
 export default EditNote
-
