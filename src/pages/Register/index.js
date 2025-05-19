@@ -418,13 +418,6 @@ function Register() {
                       alt='facebook'
                     />
                   </a>
-                  <button className='border-0'>
-                    <img
-                      className='auth-logos'
-                      src={microsoftLogo}
-                      alt='microsoft'
-                    />
-                  </button>
                 </div>
               </div>
               <p className='fs-13 fw-light text-black mb-0'>

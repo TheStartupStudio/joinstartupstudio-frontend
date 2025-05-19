@@ -273,13 +273,6 @@ const ChooseLogin = () => {
                       alt='facebook'
                     />
                   </a>
-                  <a className='cursor-pointer'>
-                    <img
-                      className='auth-logos'
-                      src={microsoftLogo}
-                      alt='microsoft'
-                    />
-                  </a>
                 </div>
               </div>
               <p className='text-center public-page-text font-12 m-0'>
