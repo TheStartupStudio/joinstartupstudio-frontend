@@ -161,7 +161,6 @@ const EntriesBox = (props) => {
             ></h4>
 
             <div className='journal-entries__entry-reflections'>
-              {/* Existing reflections */}
               {hasReflections &&
                 userJournalEntries[entry.id].map((userJournalEntry) => (
                   <div key={userJournalEntry.id}>
@@ -217,26 +216,33 @@ const EntriesBox = (props) => {
                 </div>
               )}
 
-              {/* Bottom controls only when reflections exist */}
+              {/* Bottom controls */}
               {hasReflections && (
-                <div className='d-flex mt-2 justify-content-end reflection-controls'>
-                  <div className='d-flex gap-2 align-items-center'>
-                    {newReflectionEntries[entry.id] ? (
-                      <p
-                        className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
-                        onClick={() => handleRemoveNewReflection(entry.id)}
-                      >
-                        Remove reflection
-                      </p>
-                    ) : (
-                      <p
-                        className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
-                        onClick={() => handleShowAddReflection(entry.id)}
-                      >
-                        Add new reflection
-                      </p>
+                <div className='d-flex mt-2 justify-content-between reflection-controls'>
+                  {/* Left side - Remove button (if new reflection exists) */}
+                  <div>
+                    {newReflectionEntries[entry.id] && (
+                      <div className='d-flex gap-2 align-items-center'>
+                        <p
+                          className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
+                          onClick={() => handleRemoveNewReflection(entry.id)}
+                        >
+                          Remove reflection
+                        </p>
+                        <img src={AddDoc} alt='remove-doc' />
+                      </div>
                     )}
-                    <img src={AddDoc} alt={newReflectionEntries[entry.id] ? 'remove-doc' : 'add-doc'} />
+                  </div>
+                  
+                  {/* Right side - Add button (always present) */}
+                  <div className='d-flex gap-2 align-items-center ms-auto'>
+                    <p
+                      className='mb-0 fs-15 fw-medium cursor-pointer add-reflection text-center'
+                      onClick={() => handleShowAddReflection(entry.id)}
+                    >
+                      Add new reflection
+                    </p>
+                    <img src={AddDoc} alt='add-doc' />
                   </div>
                 </div>
               )}
