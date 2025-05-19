@@ -13,6 +13,7 @@ import CheckEmail from '../pages/Register/CheckEmail'
 import CheckSubscription from '../pages/Register/CheckSubscription'
 import CancelSubscription from '../pages/Register/CancelSubscription'
 import AuthSuccess from '../pages/Auth/Social-Login/AuthSuccess'
+import PrivacyPolicy from '../pages/PrivacyPolicy'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const Terms = React.lazy(() => import('../pages/Terms'))
@@ -426,7 +427,6 @@ export const studentRoutes = [
 ]
 
 export const publicRoutes = [
-  // { path: '/', component: WelcomeToCourse, exact: true },
   { path: '/explore-the-platform', component: ExplorePlatform, exact: true },
   { path: '/explore-the-course', component: ExploreCourse, exact: true },
   { path: '/contact', component: ContactUs, exact: true },
@@ -446,6 +446,7 @@ export const publicRoutes = [
   { path: '/trial-ended', component: Resubscribe, exact: true },
   { path: '/subscription-ended', component: Resubscribe, exact: true },
   { path: '/confirm-email', component: ConfirmEmail, exact: true },
+  { path: '/privacy-policy', component: PrivacyPolicy, exact: true },
   {
     path: '/password-change-required',
     component: PasswordChangeRequired,
