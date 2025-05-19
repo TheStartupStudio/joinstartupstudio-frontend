@@ -1,14 +1,17 @@
 import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min'
-import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
+import CourseLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
 import visaLogo from '../../assets/images/academy-icons/visa-logo.png'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import AcademyBtn from '../../components/AcademyBtn'
+import { useState, useEffect } from 'react'
 
 function ConfirmEmail() {
   const searchParams = new URLSearchParams(window.location.search)
   const token = searchParams?.get('token')
+  const email = searchParams?.get('email')
   const history = useHistory()
+  const [loading, setLoading] = useState(false)
 
   async function verifyEmail() {
     await axiosInstance
@@ -22,14 +25,33 @@ function ConfirmEmail() {
       })
   }
 
-  verifyEmail()
+  async function resendEmail() {
+    if (!email) {
+      return toast.error('No email address found')
+    }
+    setLoading(true)
+    try {
+      await axiosInstance.post('/auth/resend-email', { email })
+      toast.success('Verification email sent successfully')
+    } catch (error) {
+      toast.error('Failed to resend email')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      verifyEmail()
+    }
+  }, [token])
 
   return (
     <>
       <div className='d-flex justify-content-center p-5'>
         <div className='d-flex align-items-center flex-column payment-main'>
           <img
-            src={courseLogo}
+            src={CourseLogo}
             alt='course-logo'
             className='course-logo-image'
           />
@@ -48,7 +70,13 @@ function ConfirmEmail() {
             If you still don't see it, please click the button below to resend
             the email.
           </p>
-          <button className='btn btn-primary mt-3'>Resend Email</button>
+          <button 
+            className='resend-btn' 
+            onClick={resendEmail}
+            disabled={loading || !email}
+          >
+            {loading ? 'Sending...' : 'Resend Email'}
+          </button>
         </div>
       </div>
     </>

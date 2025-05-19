@@ -77,8 +77,10 @@ const VerifyEmailByCode = (props) => {
   }
 
   async function resendEmail(data) {
+    console.log('resend email', data)
     try {
-      await axiosInstance.post('/users/resend-email', { email: data })
+      await axiosInstance.post('/auth/resend-email', { email: data })
+      toast.success('Verification email sent successfully')
     } catch (error) {
       toast.error('Failed to resend email')
       setError('Failed to resend email. Please try again.')
