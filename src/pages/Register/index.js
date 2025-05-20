@@ -357,10 +357,19 @@ function Register() {
               </div> */}
             </div>
             <div className='d-flex flex-column align-items-center mt-3'>
-              <p className='text-center fs-13 fw-medium mb-3 blue-color lh-sm'>
-                By creating an account you agree to our
-                <br /> Terms of Service and Privacy Policy
-              </p>
+             <p className='text-center fs-13 fw-medium mb-3 blue-color lh-sm'>
+  By creating an account you agree to our
+  <br />
+  <a
+    href='https://app.learntostart.com/privacy-policy'
+    target='_blank'
+    rel='noopener noreferrer'
+    className='blue-color text-decoration-underline'
+  >
+    Terms of Service and Privacy Policy
+  </a>
+</p>
+
               <div className='mb-3'>
                 <div
                   className='login-button'

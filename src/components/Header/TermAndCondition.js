@@ -51,7 +51,7 @@ const TermAndCondition = (props) => {
               <label className='my-auto' for='flexCheckDefault'>
                 By accepting, you agree to the platform
                 <a
-                  href={'/terms'}
+                  href={'https://app.learntostart.com/terms'}
                   target='_blank'
                   className='public-page-terms-link-modal ms-1'
                   rel='noreferrer'

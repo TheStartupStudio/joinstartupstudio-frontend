@@ -9,6 +9,7 @@ import print from '../../assets/images/academy-icons/print.png'
 import save from '../../assets/images/academy-icons/save.png'
 import signature from '../../assets/images/academy-icons/sign.png'
 import { useDispatch, useSelector } from 'react-redux'
+import './CertificateResponsive.css'
 
 function CertificateModal({ certificate, toggleCertificate, name }) {
   const certificateRef = useRef(null)
@@ -94,9 +95,9 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
             <img
               src={courseLogoXL}
               alt='academy-logo'
-              style={{ width: '250px' }}
+             className='course-logo'
             />
-            <h1 style={{ fontSize: '47px' }}>
+            <h1 className='title-completion'>
               CERTIFICATE OF <br />
               COMPLETION
             </h1>
@@ -108,7 +109,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
             </p>
             <h2
               class='text-center fw-semibold border-bottom-title'
-              style={{ fontSize: '64px' }}
+              className='user-certified'
             >
               {name}
             </h2>

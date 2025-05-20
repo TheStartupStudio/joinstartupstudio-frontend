@@ -1203,7 +1203,7 @@ img.icon-play {
 }
 
 .save-button {
-  padding: 10px 25px;
+  padding: 10px 15px;
   background: #21c5d0;
   color: #fff;
   border-radius: 0px !important;
@@ -4599,7 +4599,6 @@ wave > wave:first-child {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   border-radius: 36px;
 }
-
 .modal-content {
   background-color: #ffffff !important;
 }
@@ -5415,6 +5414,13 @@ wave > wave:first-child {
   .certskills-grid {
     grid-template-columns: 1fr 1fr !important;
   }
+      .certification-paragraph {
+  font-size: 16px!important;
+}
+    .certificate-reason{
+        font-size:16px!important;
+        width:60%;
+    }
 }
 
 @media (max-width: 500px) {

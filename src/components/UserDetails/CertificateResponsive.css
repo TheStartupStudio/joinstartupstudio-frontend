@@ -1,0 +1,23 @@
+.title-completion{
+    font-size:47px;
+}
+.course-logo{
+    width:250px
+}
+.user-certified{
+    font-size:64px;
+}
+
+@media(max-width:570px){
+    .title-completion{
+        font-size:16px!important;
+    }
+    .course-logo{
+    width:150px!important;
+    }
+    .user-certified{
+    font-size:25px;
+    font-weight:bolder;
+    }
+
+}

@@ -31,7 +31,7 @@ export default function Footer(props) {
               LEARNTOSTART.COM
             </a>
           </div>
-          <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer'>
+          <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer' style={{marginTop:'10px'}}>
             <div className='footer-menu'>
               <ul className='mt-2 mt-lg-0'>
                 <li>

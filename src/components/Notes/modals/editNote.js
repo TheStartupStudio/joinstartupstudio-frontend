@@ -284,7 +284,7 @@ const EditNote = (props) => {
 
           {/* Save button remains on right */}
           <button
-            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-5'
+            className='float-end m-0 px-md-5 save-button add-new-note-button-text '
             onClick={() => validate()}
           >
             {loading ? 'loading' : 'SAVE & CLOSE'}
