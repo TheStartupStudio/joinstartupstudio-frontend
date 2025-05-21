@@ -63,7 +63,7 @@ export default function Footer(props) {
                 </li>
                 <li>
                   <a
-                    href='https://discord.gg/5QzzAdTD'
+                    href='https://discord.gg/AVGxnNJrpp'
                     rel='noreferrer'
                     target='_blank'
                   >

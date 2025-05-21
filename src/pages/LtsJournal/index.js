@@ -814,49 +814,62 @@ const handleLevelClick = (clickedLevel) => {
     }));
   };
 
-  const findNextLesson = (currentId) => {
-    const numericId = parseInt(currentId);
+ const findNextLesson = (currentId) => {
+  const numericId = parseInt(currentId);
 
-    // Special case for lesson 63 -> 65 skip
-    if (numericId === 63) {
-      return 65;
-    }
+  if (numericId === 63) {
+    return { nextId: 65 };
+  }
 
-    if (numericId === 58) {
-      if (finishedContent.includes(58)) {
-        setActiveLevel(1);
-        return 60;
-      }
-    }
-
-    if (numericId === 68) {
-      if (finishedContent.includes(68)) {
-        setActiveLevel(2);
-        return 70;
-      }
-    }
-
-    if (activeLevel === 2) {
-      const allLessons = lessonsByLevel[2].flatMap(section => 
-        section.children || []
-      ).filter(lesson => lesson);
-
-      const currentIndex = allLessons.findIndex(lesson => lesson.redirectId === numericId);
-      if (currentIndex !== -1 && currentIndex < allLessons.length - 1) {
-        return allLessons[currentIndex + 1].redirectId;
-      }
-    } else {
-      const currentLevelLessons = lessonsByLevel[activeLevel];
-      const currentIndex = currentLevelLessons.findIndex(lesson => lesson.redirectId === numericId);
-      
-      // If not at the end of the current level
-      if (currentIndex !== -1 && currentIndex < currentLevelLessons.length - 1) {
-        return currentLevelLessons[currentIndex + 1].redirectId;
-      }
-    }
-
-    return null;
+  const levelTransitions = {
+    58: { nextId: 60, nextLevel: 1 },
+    68: { nextId: 70, nextLevel: 2 } 
   };
+
+  if (levelTransitions[numericId]) {
+    if (numericId === 58 && finishedContent.includes(58)) {
+      return levelTransitions[numericId];
+    }
+    if (numericId === 68 && finishedContent.includes(68)) {
+      return levelTransitions[numericId];
+    }
+    return null;
+  }
+
+  if (activeLevel === 2) {
+    const allLessons = lessonsByLevel[2].flatMap(section => 
+      section.children || []
+    ).filter(lesson => lesson);
+
+    const currentIndex = allLessons.findIndex(lesson => 
+      lesson.redirectId === numericId
+    );
+
+    if (currentIndex !== -1 && 
+        currentIndex < allLessons.length - 1 && 
+        finishedContent.includes(numericId)) {
+      return { nextId: allLessons[currentIndex + 1].redirectId };
+    }
+  } else {
+    const currentLevelLessons = lessonsByLevel[activeLevel];
+    const currentIndex = currentLevelLessons.findIndex(
+      lesson => lesson.redirectId === numericId
+    );
+
+    if (currentIndex !== -1 && 
+        currentIndex < currentLevelLessons.length - 1 && 
+        finishedContent.includes(numericId)) {
+      return { nextId: currentLevelLessons[currentIndex + 1].redirectId };
+    }
+  }
+
+  const isLastLevel3Lesson = numericId === 126; 
+  if (isLastLevel3Lesson && finishedContent.includes(126)) {
+    return null; 
+  }
+
+  return { nextId: null, needsCompletion: true };
+};
 
 const handleSaveAndContinue = async () => {
   if (saving) return;
@@ -938,12 +951,18 @@ const handleSaveAndContinue = async () => {
     const nextLessonId = nextLessonInfo?.nextId;
     const navigateToNextLesson = async () => {
       if (!nextLessonId) {
-        toast.success('Course completed!');
+        if (nextLessonInfo && !nextLessonInfo.needsCompletion) {
+          toast.success('Course completed!');
+        } else {
+          toast.error('Please complete the current lesson first');
+        }
         return;
       }
+
       if (nextLessonInfo.nextLevel !== undefined) {
         setActiveLevel(nextLessonInfo.nextLevel);
       }
+      
       const nextLessonTitle = resolveLessonTitle(nextLessonId);
       setCurrentPlaceholder(nextLessonTitle);
       const targetLevel = nextLessonInfo.nextLevel ?? activeLevel;

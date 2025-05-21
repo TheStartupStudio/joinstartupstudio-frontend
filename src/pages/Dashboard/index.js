@@ -85,7 +85,7 @@ function Dashboard() {
       // Get the last completed ID
       const lastCompletedId = Math.max(...finishedContent)
       // Navigate to the next lesson
-      history.push(`/my-course-in-entrepreneurship/journal/${lastCompletedId}`)
+      history.push(`/my-course-in-entrepreneurship/journal/${lastCompletedId+1}`)
     } else {
       // If no lessons completed, start from the first lesson (ID: 51)
       history.push('/my-course-in-entrepreneurship/journal/51')
