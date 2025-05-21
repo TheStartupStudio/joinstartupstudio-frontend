@@ -87,3 +87,47 @@
   color: #fff;
   opacity: 0.5;
 }
+
+.replay-btn {
+  padding: 4px 8px;
+  color: #fff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 1.2rem;
+}
+
+.replay-btn::after {
+  content: "10";
+  position: absolute;
+  font-size: 8px;
+  bottom: 5px;
+  right: -10px;
+  color: #fff;
+  opacity: 0.9;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+.replay-btn:hover {
+  opacity: 0.8;
+}
+
+/* .replay-btn:hover .replay-icon {
+  transform: rotate(-30deg);
+} */
+
+.replay-icon {
+  transition: transform 0.2s ease;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}

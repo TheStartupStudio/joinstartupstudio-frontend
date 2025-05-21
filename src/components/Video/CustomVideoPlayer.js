@@ -4,6 +4,8 @@ import { BsArrowRepeat } from 'react-icons/bs'
 import './VideoPlayer.css'
 import { useDispatch } from 'react-redux'
 import { createWatchedMasterclass } from '../../redux/platformBadges/actions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBackward } from '@fortawesome/free-solid-svg-icons';
 
 const CustomVideoPlayer = ({
   videoUrl,
@@ -136,6 +138,15 @@ const CustomVideoPlayer = ({
     handlePlayPause()
   }
 
+  const handleReplay = () => {
+    if (videoRef.current) {
+      // Go back 10 seconds
+      const newTime = Math.max(0, videoRef.current.currentTime - 10)
+      videoRef.current.currentTime = newTime
+      setCurrentTime(newTime)
+    }
+  }
+
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60)
     const seconds = Math.floor(timeInSeconds % 60)
@@ -166,12 +177,22 @@ const CustomVideoPlayer = ({
       {showControls && (
         <div className="controls-container">
           <div className="w-100 d-flex align-items-center justify-content-between">
-            <div>
+            <div className="d-flex align-items-center gap-2">
               <span>
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
               <button onClick={handlePlayPause}>
                 {isPlaying ? <FaPause /> : <FaPlay />}
+              </button>
+              <button
+                onClick={handleReplay}
+                className="replay-btn"
+                title="Replay last 10 seconds"
+              >
+                <FontAwesomeIcon 
+                  icon={faBackward} 
+                  className="replay-icon"
+                />
               </button>
             </div>
             <button onClick={handleFullScreen}>
