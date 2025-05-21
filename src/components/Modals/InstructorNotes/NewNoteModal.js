@@ -190,6 +190,7 @@ const NewNoteModal = (props) => {
         <button
           className='float-end m-0 px-md-5 save-button add-new-note-button-text ms-1'
           onClick={props.edit ? onEditNote : onSaveNote}
+          style={{marginRight:'1rem'}}
         >
           {loading ? 'loading' : <IntlMessages id='general.save' />}
         </button>

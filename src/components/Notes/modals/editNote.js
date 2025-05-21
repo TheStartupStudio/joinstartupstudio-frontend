@@ -88,13 +88,14 @@ const EditNote = (props) => {
   }
 
   const handlePencilClick = () => {
-    setIsEditingTitle(true)
+    setIsEditingTitle(true);
+    // Force focus after a short delay to ensure input is ready
     setTimeout(() => {
       if (titleInputRef.current) {
-        titleInputRef.current.focus()
-        titleInputRef.current.select()
+        titleInputRef.current.focus();
+        titleInputRef.current.select();
       }
-    }, 0)
+    }, 100);
   }
 
   const handleTitleBlur = () => {
@@ -196,34 +197,48 @@ const EditNote = (props) => {
           style={{ cursor: 'move' }}
           className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-5 mb-2'
         >
-          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
-            <input
-              ref={titleInputRef}
-              type="text"
-              value={noteTitle}
-              onChange={handleTitleChange}
-              onBlur={handleTitleBlur}
-              onKeyDown={handleTitleKeyDown}
-              className="note-title-input"
-              style={{
-                border: 'none',
-                background: 'transparent',
-                width: '80%',
-                outline: isEditingTitle ? '1px solid #007bff' : 'none',
-                borderRadius: isEditingTitle ? '3px' : '0',
-                padding: isEditingTitle ? '2px 4px' : '0'
-              }}
-              readOnly={!isEditingTitle}
-            />
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              style={{ 
-                color: isEditingTitle ? '#007bff' : '#707070',
-                cursor: 'pointer'
-              }}
-              className='ms-4'
+          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1 d-flex align-items-center'>
+            <div className="title-input-container" style={{ flex: 1, position: 'relative' }}>
+              <input
+                ref={titleInputRef}
+                type="text"
+                value={noteTitle}
+                onChange={handleTitleChange}
+                onBlur={handleTitleBlur}
+                onKeyDown={handleTitleKeyDown}
+                className="note-title-input"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  width: '100%',
+                  outline: isEditingTitle ? '1px solid #51c7df' : 'none',
+                  borderRadius: isEditingTitle ? '3px' : '0',
+                  padding: '4px 8px',
+                  fontSize: '16px', // Better for mobile
+                  touchAction: 'manipulation' // Improve touch handling
+                }}
+                readOnly={!isEditingTitle}
+              />
+            </div>
+            <div 
+              className="edit-icon-container"
               onClick={handlePencilClick}
-            />
+              style={{
+                padding: '8px',
+                marginLeft: '8px',
+                cursor: 'pointer',
+                touchAction: 'manipulation'
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                style={{ 
+                  color: isEditingTitle ? '#51c7df' : '#707070',
+                  fontSize: '1.1rem',
+                  transition: 'color 0.2s ease'
+                }}
+              />
+            </div>
           </h3>
           <button
             type='button'
