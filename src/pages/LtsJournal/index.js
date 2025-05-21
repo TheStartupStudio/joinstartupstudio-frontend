@@ -950,23 +950,30 @@ const handleSaveAndContinue = async () => {
     const nextLessonInfo = findNextLesson(currentJournalId);
     const nextLessonId = nextLessonInfo?.nextId;
     const navigateToNextLesson = async () => {
+      const nextLessonInfo = findNextLesson(currentJournalId);
+      const nextLessonId = nextLessonInfo?.nextId;
+
       if (!nextLessonId) {
-        if (nextLessonInfo && !nextLessonInfo.needsCompletion) {
+        if (hasEmptyReflections) {
+          toast.error('Please complete all reflections before continuing');
+        } else if (nextLessonInfo && !nextLessonInfo.needsCompletion) {
           toast.success('Course completed!');
-        } else {
-          toast.error('Please complete the current lesson first');
         }
         return;
       }
 
+      // Handle level transitions
       if (nextLessonInfo.nextLevel !== undefined) {
         setActiveLevel(nextLessonInfo.nextLevel);
       }
       
       const nextLessonTitle = resolveLessonTitle(nextLessonId);
       setCurrentPlaceholder(nextLessonTitle);
+      
+      // Navigate to next lesson
       const targetLevel = nextLessonInfo.nextLevel ?? activeLevel;
       let nextLesson = null;
+
       if (targetLevel === 2) {
         for (const section of lessonsByLevel[2]) {
           const found = section.children?.find(c => c.redirectId === nextLessonId);
@@ -991,8 +998,10 @@ const handleSaveAndContinue = async () => {
           };
         }
       }
+
       if (nextLesson) {
         setSelectedLesson(nextLesson);
+        // Ensure we have latest finishedContent before navigation
         await dispatch(fetchLtsCoursefinishedContent());
         history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
       }
