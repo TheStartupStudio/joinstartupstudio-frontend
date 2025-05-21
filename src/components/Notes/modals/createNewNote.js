@@ -147,7 +147,9 @@ const CreateNewNote = (props) => {
     setTimeout(() => {
       if (titleInputRef.current) {
         titleInputRef.current.focus()
-        titleInputRef.current.select()
+        // Set cursor to end of text
+        const length = titleInputRef.current.value.length;
+        titleInputRef.current.setSelectionRange(length, length);
       }
     }, 0)
   }
@@ -245,50 +247,66 @@ const handleChange = (name, value) => {
         }}
       >
         <Modal.Header
-          // style={{ cursor: 'move' }}
-          className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-4 mb-2 d-flex'
+          style={{ cursor: 'move' }}
+          className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-5 mb-2'
         >
-          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
-            <input
-              ref={titleInputRef}
-              type="text"
-              value={note.notesTitle || ''}
-              onChange={handleTitleChange}
-              onBlur={handleTitleBlur}
-              onKeyDown={handleTitleKeyDown}
-              className="note-title-input"
-              style={{
-                border: 'none',
-                background: 'transparent',
-                width: '80%',
-                outline: isEditingTitle ? '1px solid #007bff' : 'none',
-                borderRadius: isEditingTitle ? '3px' : '0',
-                padding: isEditingTitle ? '2px 4px' : '0'
-              }}
-              readOnly={!isEditingTitle}
-            />
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              style={{ 
-                color: isEditingTitle ? '#007bff' : '#707070',
-                cursor: 'pointer'
-              }}
-              className='ms-4'
+          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1 d-flex align-items-center'>
+            <div className="title-input-container" style={{ flex: 1, position: 'relative' }}>
+              <input
+                ref={titleInputRef}
+                type="text"
+                value={note.notesTitle}
+                onChange={handleTitleChange}
+                onBlur={handleTitleBlur}
+                onKeyDown={handleTitleKeyDown}
+                className="note-title-input"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  width: '100%',
+                  outline: 'none',
+                  padding: '4px 8px',
+                  fontSize: '16px',
+                  touchAction: 'manipulation',
+                  caretColor: isEditingTitle ? '#51c7df' : 'transparent',
+                  boxShadow: isEditingTitle ? '0 0 0 2px #51c7df' : 'none',
+                  borderRadius: '3px',
+                  transition: 'box-shadow 0.2s ease'
+                }}
+                readOnly={!isEditingTitle}
+              />
+            </div>
+            <div 
+              className="edit-icon-container"
               onClick={handlePencilClick}
-            />
+              onTouchStart={handlePencilClick}
+              role="button"
+              tabIndex={0}
+              style={{
+                padding: '8px',
+                marginLeft: '8px',
+                cursor: 'pointer',
+                touchAction: 'none',
+                WebkitTapHighlightColor: 'transparent',
+                userSelect: 'none'
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                style={{ 
+                  color: isEditingTitle ? '#51c7df' : '#707070',
+                  fontSize: '1.1rem',
+                  transition: 'color 0.2s ease',
+                  pointerEvents: 'none'
+                }}
+              />
+            </div>
           </h3>
           <button
             type='button'
-            className='btn-close me-1 create-new-note-modal'
+            className='btn-close me-1'
             aria-label='Close'
-            onClick={() => {
-              props.onHide('create_new_note')
-              // Don't reset the note completely, just clear the content
-              setNote(prev => ({
-                ...prev,
-                value: '<p></p>'
-              }))
-            }}  
+            onClick={() => props.onHide('create_new_note')}
           />
         </Modal.Header>
         <Modal.Body className='mx-md-4 px-md-0 pt-0'>

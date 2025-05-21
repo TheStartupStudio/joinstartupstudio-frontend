@@ -89,13 +89,14 @@ const EditNote = (props) => {
 
   const handlePencilClick = () => {
     setIsEditingTitle(true);
-    // Force focus after a short delay to ensure input is ready
     setTimeout(() => {
       if (titleInputRef.current) {
         titleInputRef.current.focus();
-        titleInputRef.current.select();
+        // Set cursor to end of text
+        const length = titleInputRef.current.value.length;
+        titleInputRef.current.setSelectionRange(length, length);
       }
-    }, 100);
+    }, 0);
   }
 
   const handleTitleBlur = () => {
@@ -211,11 +212,14 @@ const EditNote = (props) => {
                   border: 'none',
                   background: 'transparent',
                   width: '100%',
-                  outline: isEditingTitle ? '1px solid #51c7df' : 'none',
-                  borderRadius: isEditingTitle ? '3px' : '0',
+                  outline: 'none', // Remove default outline
                   padding: '4px 8px',
-                  fontSize: '16px', // Better for mobile
-                  touchAction: 'manipulation' // Improve touch handling
+                  fontSize: '16px',
+                  touchAction: 'manipulation',
+                  caretColor: isEditingTitle ? '#51c7df' : 'transparent', // Show/hide cursor
+                  boxShadow: isEditingTitle ? '0 0 0 2px #51c7df' : 'none', // Blue border when editing
+                  borderRadius: '3px',
+                  transition: 'box-shadow 0.2s ease'
                 }}
                 readOnly={!isEditingTitle}
               />
@@ -223,11 +227,16 @@ const EditNote = (props) => {
             <div 
               className="edit-icon-container"
               onClick={handlePencilClick}
+              onTouchStart={handlePencilClick} // Add touch handler
+              role="button" // Add for accessibility
+              tabIndex={0} // Add for accessibility
               style={{
                 padding: '8px',
                 marginLeft: '8px',
                 cursor: 'pointer',
-                touchAction: 'manipulation'
+                touchAction: 'none', // Change from manipulation to none
+                WebkitTapHighlightColor: 'transparent', // Prevent tap highlight on iOS
+                userSelect: 'none' // Prevent text selection
               }}
             >
               <FontAwesomeIcon
@@ -235,7 +244,8 @@ const EditNote = (props) => {
                 style={{ 
                   color: isEditingTitle ? '#51c7df' : '#707070',
                   fontSize: '1.1rem',
-                  transition: 'color 0.2s ease'
+                  transition: 'color 0.2s ease',
+                  pointerEvents: 'none' // Prevent icon from interfering with touch
                 }}
               />
             </div>
