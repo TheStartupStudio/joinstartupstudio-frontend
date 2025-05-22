@@ -23,10 +23,13 @@ export default function BeyondYourCourse() {
   const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
-    dispatch(getGuidanceVideos());
-    dispatch(getMasterclassVideos());
-    dispatch(getAllPodcast());
-  }, [dispatch]);
+    // Only fetch if we don't have the data
+    if (!guidanceVideos?.length || !masterclassVideos?.length || !podcasts?.length) {
+      dispatch(getGuidanceVideos());
+      dispatch(getMasterclassVideos());
+      dispatch(getAllPodcast());
+    }
+  }, [dispatch, guidanceVideos, masterclassVideos, podcasts]);
 
   const renderGuidanceVideos = () => {
     if (loading) {
@@ -139,7 +142,9 @@ export default function BeyondYourCourse() {
                   <Link
                     className="guidance-link"
                     to={`/story-in-motion/videos?tab=0`}
-                    onClick={() => window.scrollTo({ top: 0 })}
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
                     style={{ marginRight: '1rem' }}
                   >
                     <IntMessages id="general.view_all" />
@@ -165,7 +170,9 @@ export default function BeyondYourCourse() {
                   <Link
                     className="guidance-link"
                     to={`/story-in-motion/videos?tab=1`}
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
                     style={{ marginRight: '1rem' }}
                   >
                     <IntMessages id="general.view_all" />
@@ -191,7 +198,9 @@ export default function BeyondYourCourse() {
                   <Link
                     className="guidance-link"
                     to="/story-in-motion/videos?tab=2"
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
                     style={{ marginRight: '1rem' }}
                   >
                     <IntMessages id="general.view_all" />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactPaginate from 'react-paginate';
 import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
@@ -15,9 +15,10 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
 import '../../pages/BeyondYourCourse/index.css';
-
+ 
 function StoryInMotion({ intl }) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { podcasts, guidanceVideos, masterclassVideos, loading } = useSelector(state => state.podcast);
 
   const [activeLevel, setActiveLevel] = useState(2);
@@ -33,6 +34,7 @@ function StoryInMotion({ intl }) {
   const location = useLocation();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [pageLoading, setPageLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const filters = [
     { value: 'tl', label: 'Title' },
@@ -45,18 +47,20 @@ function StoryInMotion({ intl }) {
 
   useEffect(() => {
     const loadInitialData = async () => {
+      setInitialLoading(true);
       try {
-        setPageLoading(true); // Set loading state immediately
         await Promise.all([
           dispatch(getGuidanceVideos()),
           dispatch(getMasterclassVideos()),
           dispatch(getAllPodcast())
         ]);
+        // Add artificial delay for smoother transition
+        await new Promise(resolve => setTimeout(resolve, 1500));
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
+        setInitialLoading(false);
         setIsInitialLoad(false);
-        setPageLoading(false); // Turn off loading regardless of outcome
       }
     };
 
@@ -97,13 +101,15 @@ function StoryInMotion({ intl }) {
     const tabParam = params.get('tab');
     if (tabParam !== null) {
       setActiveLevel(parseInt(tabParam));
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
-  }, [location]);
+  }, [location.search]);
 
   const handleLevelChange = (index) => {
-    setActiveLevel(index); // Update the active tab
-    const newUrl = `${window.location.pathname}?tab=${index}`;
-    window.history.pushState({}, '', newUrl);
+    setActiveLevel(index);
+    const newUrl = `/story-in-motion/videos?tab=${index}`;
+    history.push(newUrl);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleSearch = (keyword) => {
@@ -189,7 +195,7 @@ function StoryInMotion({ intl }) {
             <div className="d-flex justify-content-between"></div>
 
             <div className="content-videos-container-wrapper">
-              {pageLoading ? (
+              {initialLoading ? (
                 <div className="text-center p-4">
                   <div className="spinner-border text-primary" role="status">
                     <span className="visually-hidden">Loading...</span>

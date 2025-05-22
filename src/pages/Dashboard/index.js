@@ -35,6 +35,8 @@ function Dashboard() {
   const { finishedContent, levelProgress, loading, totalProgress } =
     useSelector((state) => state.course)
 
+  const { podcasts, guidanceVideos, masterclassVideos } = useSelector(state => state.podcast)
+
   useImpersonation(originalToken)
 
   useEffect(() => {
@@ -43,12 +45,13 @@ function Dashboard() {
     dispatch(fetchLtsCoursefinishedContent())
     dispatch(changeSidebarState(false))
 
-    //load to master classes videos on first sight
-
-    dispatch(getGuidanceVideos()),
-    dispatch(getMasterclassVideos()),
-    dispatch(getAllPodcast())
-  }, [dispatch])
+    // Only fetch if we don't already have the data
+    if (!guidanceVideos?.length || !masterclassVideos?.length || !podcasts?.length) {
+      dispatch(getGuidanceVideos())
+      dispatch(getMasterclassVideos())
+      dispatch(getAllPodcast())
+    }
+  }, [dispatch, guidanceVideos, masterclassVideos, podcasts])
 
   function getFormattedDate() {
     const today = new Date()

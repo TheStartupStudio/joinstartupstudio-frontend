@@ -316,7 +316,7 @@
     .card-group-beyond-your-course {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 2rem;
         justify-content: center;
         width: 100%;
     }
@@ -984,4 +984,14 @@
     font-size: 0.9rem;
     color: #666;
     margin: 5px 0;
+}
+
+.scroll-wrapper {
+  scroll-behavior: smooth;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.page-padding {
+  scroll-margin-top: 0;
 }
