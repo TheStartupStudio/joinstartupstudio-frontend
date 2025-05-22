@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactPaginate from 'react-paginate';
@@ -36,6 +36,8 @@ function StoryInMotion({ intl }) {
   const [pageLoading, setPageLoading] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
 
+  const titleRef = useRef(null);
+
   const filters = [
     { value: 'tl', label: 'Title' },
     { value: 'dt', label: 'Date' },
@@ -44,6 +46,10 @@ function StoryInMotion({ intl }) {
   const handleFilter = (selectedFilter) => {
     setFilterBy(selectedFilter);
   };
+
+  useEffect(() => {
+    titleRef.current?.scrollIntoView({ behavior: 'instant' });
+}, [isInitialLoad]);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -66,6 +72,17 @@ function StoryInMotion({ intl }) {
 
     loadInitialData();
   }, [dispatch]);
+
+useEffect(() => {
+  console.log('Im on top')
+  if (location.pathname === '/story-in-motion/videos') {
+     console.log('Im in')
+    window.scrollTo({
+      top: -50,
+      behavior: 'instant'
+    });
+  }
+}, [location.pathname, location.search]);
 
   useEffect(() => {
     if (!loading && !isInitialLoad) {
@@ -146,7 +163,8 @@ function StoryInMotion({ intl }) {
 
   return (
     <div id="main-body">
-      <div>
+      <div ref={titleRef}></div>
+    <div>
         <div>
           <div className="page-padding">
             <img
