@@ -79,81 +79,81 @@ function Dashboard() {
     setSelectedLanguage(selectedOption)
     console.log('Selected Language:', selectedOption.value)
   }
+const handleContinueCourse = async () => {
+  try {
+    await dispatch(fetchLtsCoursefinishedContent());
 
-  const handleContinueCourse = async () => {
-    try {
-      await dispatch(fetchLtsCoursefinishedContent());
-      
-      if (finishedContent && finishedContent.length > 0) {
-        const lastCompletedId = Math.max(...finishedContent);
-        let nextId = lastCompletedId + 1;
-        let targetLevel;
-        let lessonTitle;
+    if (finishedContent && finishedContent.length > 0) {
+      const lastCompletedId = Math.max(...finishedContent);
+      let nextId = lastCompletedId;
+      let targetLevel;
+      let lessonTitle;
 
-        // Special transitions 
-        if (lastCompletedId === 58) {
-          targetLevel = 1;
-          nextId = 60;
-          lessonTitle = "The Journey of Entrepreneurship";
-        } else if (lastCompletedId === 68) {
-          targetLevel = 2;
-          nextId = 70;
-          lessonTitle = "Business Story";
-        } else if (lastCompletedId === 63) {
-          targetLevel = 1;
-          nextId = 65;
-          lessonTitle = "Test Metrics of LTS";
-        } else {
-          // Find next available lesson
-          nextId = Math.min(...finishedContent.map(id => id + 1));
-          
-          // Determine level based on next lesson ID
-          if (nextId >= 70) {
-            targetLevel = 2; // Level 3
-          } else if (nextId >= 60) {
-            targetLevel = 1; // Level 2
-          } else {
-            targetLevel = 0; // Level 1
-          }
-        }
-
-        // Store complete state information
-        localStorage.setItem('selectedLesson', JSON.stringify({
-          activeLevel: targetLevel,
-          nextId: nextId,
-          lessonTitle: lessonTitle || "Select a Lesson",
-          currentPlaceholder: lessonTitle || "Select a Lesson"
-        }));
-
-        // Navigate with state
-        history.push({
-          pathname: `/my-course-in-entrepreneurship/journal/${nextId}`,
-          state: { 
-            activeLevel: targetLevel,
-            currentPlaceholder: lessonTitle
-          }
-        });
-
+      // Special transitions 
+      if (lastCompletedId === 58) {
+        targetLevel = 1;
+        nextId = 60;
+        lessonTitle = "The Journey of Entrepreneurship";
+      } else if (lastCompletedId === 68) {
+        targetLevel = 2;
+        nextId = 70;
+        lessonTitle = "Business Story";
+      } else if (lastCompletedId === 63) {
+        targetLevel = 1;
+        nextId = 65;
+        lessonTitle = "Test Metrics of LTS";
       } else {
-        localStorage.setItem('selectedLesson', JSON.stringify({
-          activeLevel: 0,
-          nextId: 51,
-          lessonTitle: "The Myths of Entrepreneurship",
-          currentPlaceholder: "The Myths of Entrepreneurship"
-        }));
+        // Find next available lesson
+        nextId = Math.min(...finishedContent.map(id => id + 1));
 
-        history.push({
-          pathname: '/my-course-in-entrepreneurship/journal/51',
-          state: { 
-            activeLevel: 0,
-            currentPlaceholder: "The Myths of Entrepreneurship"
-          }
-        });
+        // Determine level based on next lesson ID
+        if (nextId >= 70) {
+          targetLevel = 2; // Level 3
+        } else if (nextId >= 60) {
+          targetLevel = 1; // Level 2
+        } else {
+          targetLevel = 0; // Level 1
+        }
       }
-    } catch (error) {
-      console.error('Navigation error:', error);
+
+      // Store complete state information (still keeping the logic)
+      localStorage.setItem('selectedLesson', JSON.stringify({
+        activeLevel: targetLevel,
+        nextId: nextId,
+        lessonTitle: lessonTitle || "Select a Lesson",
+        currentPlaceholder: lessonTitle || "Select a Lesson"
+      }));
+
+    } else {
+      localStorage.setItem('selectedLesson', JSON.stringify({
+        activeLevel: 0,
+        nextId: 51,
+        lessonTitle: "The Myths of Entrepreneurship",
+        currentPlaceholder: "The Myths of Entrepreneurship"
+      }));
     }
+
+    // FINAL OVERRIDE: Always redirect to lesson 51
+    localStorage.setItem('selectedLesson', JSON.stringify({
+      activeLevel: 0,
+      nextId: 51,
+      lessonTitle: "The Myths of Entrepreneurship",
+      currentPlaceholder: "The Myths of Entrepreneurship"
+    }));
+
+    history.push({
+      pathname: '/my-course-in-entrepreneurship/journal/51',
+      state: { 
+        activeLevel: 0,
+        currentPlaceholder: "The Myths of Entrepreneurship"
+      }
+    });
+
+  } catch (error) {
+    console.error('Navigation error:', error);
   }
+}
+
 
   return (
     <div className='container-fluid'>
