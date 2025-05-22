@@ -35,6 +35,7 @@ function StoryInMotion({ intl }) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [pageLoading, setPageLoading] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [forcePage, setForcePage] = useState(0); // Add this state
 
   const titleRef = useRef(null);
 
@@ -86,21 +87,28 @@ useEffect(() => {
 
   useEffect(() => {
     if (!loading && !isInitialLoad) {
+      let newVideos = [];
       switch (activeLevel) {
         case 0:
-          setPageVideos(guidanceVideos);
+          newVideos = guidanceVideos;
           break;
         case 1:
-          setPageVideos(masterclassVideos);
+          newVideos = masterclassVideos;
           break;
         case 2:
-          setPageVideos(podcasts);
+          newVideos = podcasts;
           break;
         default:
           break;
       }
+      setPageVideos(newVideos);
+      // Reset to first page of new content
+      const firstPageVideos = newVideos.slice(0, videosPerPage);
+      setCurrentPageVideos(firstPageVideos);
+      setPageCount(Math.ceil(newVideos.length / videosPerPage));
+      setItemOffset(0);
     }
-  }, [activeLevel, loading, isInitialLoad, guidanceVideos, masterclassVideos, podcasts]);
+  }, [activeLevel, loading, isInitialLoad, guidanceVideos, masterclassVideos, podcasts, videosPerPage]);
 
   useEffect(() => {
     const endOffset = itemOffset + videosPerPage;
@@ -124,6 +132,13 @@ useEffect(() => {
 
   const handleLevelChange = (index) => {
     setActiveLevel(index);
+    // Reset pagination
+    setItemOffset(0); 
+    setCurrentPageVideos([]); 
+    setPageCount(0); 
+    setForcePage(0); // Reset to first page
+    
+    // Update URL and scroll to top
     const newUrl = `/story-in-motion/videos?tab=${index}`;
     history.push(newUrl);
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -255,6 +270,7 @@ useEffect(() => {
                         nextClassName="page-item"
                         nextLinkClassName="page-link"
                         activeClassName="active"
+                        forcePage={forcePage} // Add this prop
                       />
                     </div>
                   )}
