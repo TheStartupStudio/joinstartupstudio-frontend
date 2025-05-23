@@ -19,6 +19,7 @@ const CustomVideoPlayer = ({
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [showControls, setShowControls] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const videoContainerRef = useRef(null)
   const videoRef = useRef(null)
   const hideControlsTimeoutRef = useRef(null)
@@ -156,6 +157,17 @@ const CustomVideoPlayer = ({
     )}`
   }
 
+  const handleLoadedData = () => {
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    videoRef.current?.addEventListener('loadeddata', handleLoadedData);
+    return () => {
+      videoRef.current?.removeEventListener('loadeddata', handleLoadedData);
+    };
+  }, []);
+
   return (
     <div
       className={`video-player ${
@@ -164,12 +176,34 @@ const CustomVideoPlayer = ({
       ref={videoContainerRef}
       onClick={handleVideoClick}
     >
+      {isLoading && (
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: '#000000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2,
+            borderRadius: '25px'
+          }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
       <video
-      style={{borderRadius:'25px'}}
+        style={{borderRadius:'25px'}}
         ref={videoRef}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setPlayVideo(false)}
+        onLoadedData={handleLoadedData}
       >
         <source src={videoUrl} type="video/mp4" />
       </video>
