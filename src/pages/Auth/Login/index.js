@@ -278,7 +278,7 @@ const ChooseLogin = () => {
                     href={`${process.env.REACT_APP_SERVER_BASE_URL}auth/microsoft`}
                     className='cursor-pointer'
                   >
-                    <img className='auth-logos' src={googleLogo} alt='google' />
+                    <img className='auth-logos' src={microsoftLogo} alt='microsoft' />
                   </a>
                 </div>
               </div>
