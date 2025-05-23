@@ -273,6 +273,13 @@ const ChooseLogin = () => {
                       alt='facebook'
                     />
                   </a>
+
+                   <a
+                    href={`${process.env.REACT_APP_SERVER_BASE_URL}auth/microsoft`}
+                    className='cursor-pointer'
+                  >
+                    <img className='auth-logos' src={googleLogo} alt='google' />
+                  </a>
                 </div>
               </div>
               <p className='text-center public-page-text font-12 m-0'>
