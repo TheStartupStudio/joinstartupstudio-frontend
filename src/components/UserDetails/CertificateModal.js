@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
@@ -14,12 +14,40 @@ import './CertificateResponsive.css'
 function CertificateModal({ certificate, toggleCertificate, name }) {
   const certificateRef = useRef(null)
   const dispatch = useDispatch()
+  const [completionDate, setCompletionDate] = useState('')
 
   const { finishedContent, levelProgress, loading, totalProgress } = useSelector(
     (state) => state.course
   );
 
   const isCompleted = totalProgress === 100;
+
+  useEffect(() => {
+    if (totalProgress === 100) {
+      const date = new Date();
+      const formattedDate = formatCompletionDate(date);
+      setCompletionDate(formattedDate);
+    }
+  }, [totalProgress]);
+
+  const formatCompletionDate = (date) => {
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    
+    // Add ordinal suffix to day
+    const ordinal = (day) => {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd'; 
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+
+    return `on the ${day}${ordinal(day)} of ${month}, ${year}`;
+  };
 
   const handleSave = () => {
     if (!isCompleted) return;
@@ -121,7 +149,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
               <br /> Course in Entrepreneurship & Innovation
             </p>
             <p class='text-center certification-paragraph mb-0 fw-medium mt-2 text-black'>
-              on the 23rd of October, 2025.
+              {completionDate || 'Course not completed'}
             </p>
             <div className='position-relative'>
               <img

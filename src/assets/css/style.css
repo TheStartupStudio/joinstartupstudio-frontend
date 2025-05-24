@@ -4307,6 +4307,19 @@ wave > wave:first-child {
   margin-bottom: 0;
 }
 
+.social-icon {
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(118%) contrast(119%);
+}
+.user-bio {
+  max-width: 100%;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .user-bio {
+    font-size: 13px;
+  }
+}
 .my-details-header {
   transform: translateY(5px);
 }

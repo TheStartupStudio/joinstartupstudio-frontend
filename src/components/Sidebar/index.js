@@ -62,7 +62,7 @@ function Sidebar(props) {
 
   const getNavClass = () => {
     if (navHeight > 2100) {
-      return 'h-107'
+      return ''
     } else if (navHeight > 830) {
       return 'h-98'
     } else if (navHeight > 1350) {

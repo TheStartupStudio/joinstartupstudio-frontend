@@ -360,14 +360,24 @@ function Register() {
              <p className='text-center fs-13 fw-medium mb-3 blue-color lh-sm'>
   By creating an account you agree to our
   <br />
-  <a
-    href='https://app.learntostart.com/privacy-policy'
-    target='_blank'
-    rel='noopener noreferrer'
-    className='blue-color text-decoration-underline'
-  >
-    Terms of Service and Privacy Policy
-  </a>
+<a
+  href="https://app.learntostart.com/terms"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="blue-color text-decoration-underline"
+>
+  Terms of Service
+</a>
+<span> and </span>
+<a
+  href="https://app.learntostart.com/privacy-policy"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="blue-color text-decoration-underline"
+>
+  Privacy Policy
+</a>
+
 </p>
 
               <div className='mb-3'>

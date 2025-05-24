@@ -118,6 +118,20 @@
   border-radius: 2px;
 }
 
+.replay-btn:last-of-type::after {
+  content: "10";
+  position: absolute;
+  font-size: 8px;
+  bottom: 5px;
+  right: -10px;
+  color: #fff;
+  opacity: 0.9;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
 .replay-btn:hover {
   opacity: 0.8;
 }

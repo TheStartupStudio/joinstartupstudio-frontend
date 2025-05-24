@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { toast } from 'react-toastify' // Add this import
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
@@ -13,6 +14,7 @@ import ShareLink from '../../assets/images/academy-icons/svg/share-link.svg'
 import SharePortfolioModal from './SharePortfolioModal'
 import Tooltip from './Tooltip'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
+import axiosInstance from '../../utils/AxiosInstance'
 
 function AboutMe({ user }) {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -23,6 +25,7 @@ function AboutMe({ user }) {
   const [content, setContent] = useState('')
   const [isPublishedVisible, setIsPublishedVisible] = useState(false)
   const [sharePortfolio, setSharePortfolio] = useState(false)
+  const [isPublishing, setIsPublishing] = useState(false)
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -48,9 +51,58 @@ function AboutMe({ user }) {
       : `https://${url}`
   }
 
-  const fullText = `${user?.bio}`
+  const fullText = user?.bio || '' // Add default empty string
 
   const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
+
+  // Get initial publish state
+  useEffect(() => {
+    const getPublishState = async () => {
+      try {
+        const response = await axiosInstance.get('/portfolio')
+        setIsPublishedVisible(response.data.is_published)
+      } catch (error) {
+        console.error('Error fetching portfolio status:', error)
+      }
+    }
+    getPublishState()
+  }, [])
+
+  const handlePublishPortfolio = async () => {
+    setIsPublishing(true)
+    try {
+      await axiosInstance.put('/portfolio', {
+        is_published: !isPublishedVisible
+      })
+      
+      setIsPublishedVisible(prev => !prev)
+      toast.success(isPublishedVisible ? 
+        'Portfolio unpublished successfully' : 
+        'Portfolio published successfully!')
+      
+      // If publishing, show share modal
+      if (!isPublishedVisible) {
+        setSharePortfolio(true)
+      }
+    } catch (error) {
+      toast.error('Error updating portfolio status')
+      console.error('Error:', error)
+    } finally {
+      setIsPublishing(false)
+    }
+  }
+
+  // Update click handler for publish/unpublish
+  const handleVisibilityClick = () => {
+    handlePublishPortfolio()
+  }
+
+  // Update click handler for share
+  const handleShareClick = () => {
+    const portfolioUrl = `${window.location.origin}/public-portfolio/${user.username}`
+    setContent(portfolioUrl)
+    setSharePortfolio(true)
+  }
 
   return (
     <>
@@ -76,9 +128,9 @@ function AboutMe({ user }) {
                     <Tooltip text={'Click to unpublish'}>
                       <p
                         className='mb-0 fs-15 fw-medium portfolio-u text-black'
-                        onClick={() => setIsPublishedVisible((prev) => !prev)}
+                        onClick={handleVisibilityClick}
                       >
-                        Portfolio published
+                        {isPublishing ? 'Updating...' : 'Portfolio published'}
                       </p>
                     </Tooltip>
                   </div>
@@ -87,7 +139,7 @@ function AboutMe({ user }) {
                     <Tooltip text={'Click to get link'}>
                       <p
                         className='mb-0 fs-15 fw-medium portfolio-u  text-black'
-                        onClick={() => setSharePortfolio((prev) => !prev)}
+                        onClick={handleShareClick}
                       >
                         Share link to portfolio
                       </p>
@@ -97,12 +149,12 @@ function AboutMe({ user }) {
               ) : (
                 <div
                   className='d-flex gap-2 align-items-center cursor-pointer'
-                  onClick={() => setIsPublishedVisible((prev) => !prev)}
+                  onClick={handleVisibilityClick}
                 >
                   <img src={internet} alt='internet' />
                   <Tooltip text={'Click to publish'}>
                     <p className='mb-0 fs-15 fw-medium portfolio-u'>
-                      Portfolio unpublished
+                      {isPublishing ? 'Publishing...' : 'Portfolio unpublished'}
                     </p>
                   </Tooltip>
                 </div>
@@ -164,28 +216,30 @@ function AboutMe({ user }) {
                 />
               )}
             </div>
-            <p
-              className={`mt-3 fs-15 fw-light text-black text-break ${
-                isExpanded && 'width-50 w-100-mob'
-              }`}
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: isExpanded
-                    ? fullText
-                    : `${shortText} ${fullText.length > 200 ? '...' : ''}`
-                }}
-              />
+            {fullText && ( // Only render if there's content
+              <p
+                className={`mt-3 fs-15 fw-light text-black text-break ${
+                  isExpanded && 'width-50 w-100-mob'
+                }`}
+              >
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: isExpanded
+                      ? fullText
+                      : `${shortText}${fullText.length > 200 ? '...' : ''}`
+                  }}
+                />
 
-              {fullText.length > 200 && (
-                <span
-                  className='blue-color ml-2 fw-medium cursor-pointer'
-                  onClick={() => setIsExpanded(!isExpanded)}
-                >
-                  {isExpanded ? 'Read Less' : 'Read More'}
-                </span>
-              )}
-            </p>
+                {fullText.length > 200 && (
+                  <span
+                    className='blue-color ml-2 fw-medium cursor-pointer'
+                    onClick={() => setIsExpanded(!isExpanded)}
+                  >
+                    {isExpanded ? 'Read Less' : 'Read More'}
+                  </span>
+                )}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -207,6 +261,11 @@ function AboutMe({ user }) {
       <CancelRenewalModal
         canceledRenewal={canceledRenewal}
         setCanceledRenewal={setCanceledRenewal}
+      />
+      <SharePortfolioModal 
+        sharePortfolio={sharePortfolio} 
+        setSharePortfolio={setSharePortfolio}
+        portfolioUrl={content}
       />
     </>
   )

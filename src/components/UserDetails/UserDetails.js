@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import tickLogo from '../../assets/images/academy-icons/blue-tick.png'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
+import instagramLogo from '../../assets/images/academy-icons/instagram.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
@@ -50,6 +51,11 @@ function UserDetails({ profilePic, userName, userProffesion }) {
 
   const { user } = useSelector((state) => state.user.user)
 
+  const stripHtmlTags = (html) => {
+    if (!html) return ''
+    return html.replace(/<\/?[^>]+(>|$)/g, '')
+  }
+
   return (
     <>
       <div
@@ -96,6 +102,16 @@ function UserDetails({ profilePic, userName, userProffesion }) {
                   }
                 />
               )}
+               {user.social_links.instagram && (
+                <img
+                  className='cursor-pointer social-icon'
+                  src={instagramLogo}
+                  alt='instagram'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.instagram), '_blank')
+                  }
+                />
+              )}
 
               {user.social_links.twitter && (
                 <img
@@ -108,6 +124,23 @@ function UserDetails({ profilePic, userName, userProffesion }) {
                 />
               )}
             </div>
+            {user.bio && (
+              <div
+                className="mt-2"
+                style={{ 
+                  fontSize: '14px',
+                  color: '#666',
+                  marginBottom: 0,
+                  display: '-webkit-box',
+                  WebkitLineClamp: '2',
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {stripHtmlTags(user.bio)}
+              </div>
+            )}
           </div>
         </div>
         <div
