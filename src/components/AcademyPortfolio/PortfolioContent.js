@@ -17,6 +17,17 @@ function PortfolioContent({
   const [isExpanded, setIsExpanded] = useState(false)
 
   const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
+
+  // Add this helper function at the top of the component
+  const truncateUrl = (url, maxLength = 50) => {
+    if (!url) return ''
+    if (url.length <= maxLength) return url
+
+    const start = url.substring(0, maxLength / 2)
+    const end = url.substring(url.length - 20)
+    return `${start}...${end}`
+  }
+
   return (
     <>
       <div className='d-flex gap-4 flex-col-mob'>
@@ -44,8 +55,9 @@ function PortfolioContent({
               href={link}
               target='blank'
               className='mb-0 fs-15 blue-color fw-medium word-break-portfolio'
+              title={link} // Show full URL on hover
             >
-              {link}
+              {truncateUrl(link)}
             </a>
           </div>
           <p

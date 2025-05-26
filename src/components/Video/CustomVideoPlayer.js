@@ -5,7 +5,7 @@ import './VideoPlayer.css'
 import { useDispatch } from 'react-redux'
 import { createWatchedMasterclass } from '../../redux/platformBadges/actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBackward } from '@fortawesome/free-solid-svg-icons';
+import { faBackward, faForward } from '@fortawesome/free-solid-svg-icons';
 
 const CustomVideoPlayer = ({
   videoUrl,
@@ -148,6 +148,15 @@ const CustomVideoPlayer = ({
     }
   }
 
+  const handleForward = () => {
+    if (videoRef.current) {
+      // Go forward 10 seconds
+      const newTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 10);
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60)
     const seconds = Math.floor(timeInSeconds % 60)
@@ -225,6 +234,16 @@ const CustomVideoPlayer = ({
               >
                 <FontAwesomeIcon 
                   icon={faBackward} 
+                  className="replay-icon"
+                />
+              </button>
+              <button
+                onClick={handleForward}
+                className="replay-btn"
+                title="Forward 10 seconds"
+              >
+                <FontAwesomeIcon 
+                  icon={faForward} 
                   className="replay-icon"
                 />
               </button>

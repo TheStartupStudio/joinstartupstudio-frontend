@@ -2,27 +2,33 @@ import { Button, Modal, ModalBody } from 'reactstrap'
 import ShareModal from '../../assets/images/academy-icons/svg/share-link-modal.svg'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
-function SharePortfolioModal({ sharePortfolio, setSharePortfolio }) {
+function SharePortfolioModal({ sharePortfolio, setSharePortfolio, portfolioUrl }) {
   const [copied, setCopied] = useState(false)
-  const shareLink = 'https://mystartupschool.com/aereno123290fnd-123njosa'
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(shareLink).then(() => {
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(portfolioUrl)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000) // Reset copied message after 2 seconds
-    })
-    setSharePortfolio((prev) => !prev)
+      toast.success('Link copied to clipboard!')
+      setTimeout(() => setCopied(false), 2000)
+      setSharePortfolio(false)
+    } catch (err) {
+      toast.error('Failed to copy link')
+      console.error('Copy failed:', err)
+    }
   }
+
   return (
     <>
       <Modal
         isOpen={sharePortfolio}
-        toggle={() => setSharePortfolio((prev) => !prev)}
+        toggle={() => setSharePortfolio(false)}
       >
         <span
-          className=' cursor-pointer'
-          onClick={() => setSharePortfolio((prev) => !prev)}
+          className='cursor-pointer'
+          onClick={() => setSharePortfolio(false)}
           style={{ zIndex: '1' }}
         >
           <img className='left-arrow-modal' src={leftArrow} alt='left' />
@@ -42,11 +48,26 @@ function SharePortfolioModal({ sharePortfolio, setSharePortfolio }) {
             portfolio is published.
           </p>
           <p className='mt-5 text-black fs-20 text-center fw-medium'>
-            {shareLink}
+            <a 
+              href={portfolioUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{
+                color: '#51c7df',
+                textDecoration: 'none',
+                wordBreak: 'break-all'
+              }}
+            >
+              {portfolioUrl}
+            </a>
           </p>
           <div className='d-flex gap-3 justify-content-center mt-5 mb-3'>
-            <Button color='info' className='sub-close-btn' onClick={handleCopy}>
-              COPY LINK
+            <Button
+              color='info'
+              className='sub-close-btn'
+              onClick={handleCopy}
+            >
+              {copied ? 'COPIED!' : 'COPY LINK'}
             </Button>
           </div>
         </ModalBody>
