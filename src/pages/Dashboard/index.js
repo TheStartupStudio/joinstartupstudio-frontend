@@ -35,7 +35,6 @@ function Dashboard() {
   const { finishedContent, levelProgress, loading, totalProgress } =
     useSelector((state) => state.course)
 
-  const { podcasts, guidanceVideos, masterclassVideos } = useSelector(state => state.podcast)
 
   useImpersonation(originalToken)
 
@@ -46,12 +45,7 @@ function Dashboard() {
     dispatch(changeSidebarState(false))
 
     // Only fetch if we don't already have the data
-    if (!guidanceVideos?.length || !masterclassVideos?.length || !podcasts?.length) {
-      dispatch(getGuidanceVideos())
-      dispatch(getMasterclassVideos())
-      dispatch(getAllPodcast())
-    }
-  }, [dispatch, guidanceVideos, masterclassVideos, podcasts])
+  }, [dispatch])
 
   function getFormattedDate() {
     const today = new Date()

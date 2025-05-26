@@ -119,6 +119,7 @@ useEffect(() => {
   const handlePageClick = (event) => {
     const newOffset = (event.selected * videosPerPage) % pageVideos.length;
     setItemOffset(newOffset);
+    titleRef.current?.scrollIntoView({ behavior: 'instant' });
   };
 
   useEffect(() => {
