@@ -75,9 +75,7 @@ function StoryInMotion({ intl }) {
   }, [dispatch]);
 
 useEffect(() => {
-  console.log('Im on top')
   if (location.pathname === '/story-in-motion/videos') {
-     console.log('Im in')
     window.scrollTo({
       top: -50,
       behavior: 'instant'
