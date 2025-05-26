@@ -80,7 +80,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
           <div className='academy-profile-info'>
             <h3>{user.name}</h3>
             <p>{user.profession}</p>
-            <div className='d-flex gap-2'>
+            <div className='d-flex gap-2' style={{height:'16px'}}>
               {user.social_links.linkedIn && (
                 <img
                   className='cursor-pointer'
