@@ -199,16 +199,34 @@ label:focus,
   display: inline-block;
 }
 
-nav#sidebar {
+/* nav#sidebar {
   position: absolute;
   height: 100%;
   border-radius: 10px;
   -webkit-box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
   box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
   background: rgba(255, 255, 255, 0.2);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px)!important;
+  backdrop-filter: blur(10px)!important;
+} */
+nav#sidebar {
+  position: absolute;
+  height: 100%;
+  border-radius: 10px;
+  -webkit-box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
+
+  background: white;
 }
+
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  nav#sidebar {
+    background: rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+}
+
 
 #sidebar {
   width: 220px;

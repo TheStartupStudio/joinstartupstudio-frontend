@@ -161,7 +161,7 @@ function MyCourseEntrepreneurship() {
                     {data.type === 'entrepreneurs' && (
                       <div className="entrepreneurs row">
                         {LtsCourseIntro['entrepeneurs'].map((entData, entIndex) => (
-                          <div className="entrepreneurs__item col-12 col-md-6" key={entIndex}>
+                          <div className="entrepreneurs__item col-12 col-md-6 tablet-view" key={entIndex}>
                             <div className="entrepreneurs__item-inner">
                               <h3 className="entrepreneurs__item-title">{entData.name}</h3>
                               <div className="entrepreneurs__item-position">{entData.position}</div>

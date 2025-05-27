@@ -323,6 +323,15 @@
   }
 
 }
+@media (min-width: 795px) and (max-width: 812px) {
+  .tablet-view {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .gradient-background-course {
+    height:100vh!important
+  }
+}
 
 /* Responsive adjustments */
 @media (max-width: 769px) {
