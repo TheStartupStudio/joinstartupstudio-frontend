@@ -507,6 +507,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 @media (max-width: 1024px) {
   .welcome-content .login-title {
     font-size: 40px !important;
+    margin-top: 40px;
   }
 
   .login-form-container {
@@ -518,7 +519,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   }
 
   .login-content-wrapper {
-    padding: 0;
+    padding: 2rem;
     margin: 1.5rem;
   }
 }
