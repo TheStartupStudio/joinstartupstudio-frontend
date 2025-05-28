@@ -122,7 +122,7 @@ const PeerPortfolio2024 = React.lazy(() =>
 )
 
 const PublicPortfolio2024 = React.lazy(() =>
-  import('../pages/Portfolio2024/publicPortfolio')
+  import('../pages/NewPortfolio/index')
 )
 
 const StudentPortfolio2024 = React.lazy(() =>

@@ -1,0 +1,29 @@
+.mentor-card {
+  background: linear-gradient(rgb(228, 233, 244), rgb(255, 255, 255));
+  border-radius: 30px;
+
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  position: relative;
+  min-width: 95% !important;
+  height: 350px;
+  }
+  
+
+  .mentor-image-container {
+
+    height: 175px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 30px 30px 0 0;
+  }
+
+  .mentor-image-container img{
+
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    object-fit: cover;
+  }
