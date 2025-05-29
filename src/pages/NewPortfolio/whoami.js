@@ -980,12 +980,9 @@ const WhoAmI = (props) => {
                           .trim()}
                       </div>
                       <div style={{ fontSize: '13px' }}>
-                        {props?.myRelationships?.[field].replace(
-                          /<[^>]*>/g,
-                          ''
-                        ) ||
-                          '' ||
-                          'Not specified'}
+                        {props?.myRelationships?.[field] 
+                          ? props.myRelationships[field].replace(/<[^>]*>/g, '')
+                          : 'Not specified'}
                       </div>
                     </div>
                   )
