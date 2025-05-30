@@ -261,6 +261,7 @@ import {
   updateMarketProjectAPI,
   deleteMarketProjectAPI
 } from './Service'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import { toast } from 'react-toastify'
 
 export const getPublicPortfolio = () => async (dispatch) => {
@@ -441,7 +442,25 @@ export const getUserBasicInfo = () => async (dispatch) => {
   dispatch({ type: GET_BASIC_USER_INFO })
   try {
     const response = await getUserBasicDataAPI()
-    dispatch(getUserBasicDataSuccess(response?.data))
+    // dispatch(getUserBasicDataSuccess(response?.data ))
+
+    dispatch(getUserBasicDataSuccess({
+    "id": 4,
+    "userId": 128,
+    "thumbnailUrl": "https://demo-startupstudio-drive.s3.amazonaws.com/users/128/b2a816e8b564ca6618fb10a6d870d8e9-1748304012319.png",
+    "videoUrl": "https://www.youtube.com/watch?v=tpodNruOVoI",
+    "valueProposition": "<p>loorem ipsum dolore sit ae</p>",
+    "story": "<p><span style=\"color: rgb(100, 107, 107);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span><span style=\"color: rgb(100, 107, 107); background-color: rgb(255, 255, 255);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation sadasdullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span></p>",
+    "userImageUrl": blankProfile,
+    "userTitle": "Student",
+    "name": "Testing ",
+    "organization": "Organization",
+    "socialMediaLinks": {
+        "linkedIn": "/testing",
+        "instagram": "/test"
+    },
+    "primaryInterest": "test 1"
+}))
   } catch (e) {
     dispatch(getUserBasicDataError(e))
   }
