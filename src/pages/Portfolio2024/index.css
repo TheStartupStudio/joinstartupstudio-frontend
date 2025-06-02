@@ -109,9 +109,10 @@
 .portfolio-container {
   background: #f8f7f7 0% 0% no-repeat padding-box;
   opacity: 1;
-  padding: 75px 55px;
+  padding: 20px 20px;
   position: relative;
   margin-right: 40px;
+  background: linear-gradient(180deg, rgba(228, 233, 244, 1) 0%, rgba(251, 251, 253, 1) 50%);
 }
 
 .portfolio-container.portfolio_edit-mode {
@@ -553,9 +554,12 @@
 
 .section-description-container {
   display: flex;
-  padding: 5px 35px;
+  padding: 15px 25px;
   gap: 20px;
   align-items: baseline;
+  background-color: white;
+  border-radius: 30px;
+  box-shadow: 0px 5px 10px rgb(216, 216, 216);
 }
 
 /*.user-image-box {*/
@@ -753,6 +757,10 @@
   width: max-content;
 }
 
+.portfolio-section-title .section-title{
+  font-weight:500;
+}
+
 .portfolio-main-wrapper {
   display: flex;
   flex-direction: column;
@@ -821,6 +829,10 @@
 
 .yespadding-caro {
   padding: 0px 20px !important;
+}
+
+.portf-section-maintitle {
+  display: flex
 }
 
 @media (max-width: 621px) {

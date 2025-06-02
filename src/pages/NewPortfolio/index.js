@@ -53,10 +53,10 @@ const Portfolio = (props) => {
     const userBasicInfo = {
     "id": 4,
     "userId": 128,
-    "thumbnailUrl": "https://demo-startupstudio-drive.s3.amazonaws.com/users/128/b2a816e8b564ca6618fb10a6d870d8e9-1748304012319.png",
-    "videoUrl": "https://www.youtube.com/watch?v=tpodNruOVoI",
-    "valueProposition": "<p>loorem ipsum dolore sit ae</p>",
-    "story": "<p><span style=\"color: rgb(100, 107, 107);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span><span style=\"color: rgb(100, 107, 107); background-color: rgb(255, 255, 255);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation sadasdullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span></p>",
+     "thumbnailUrl": "https://imgs.search.brave.com/38IO7tZqTz6u3VDGFzE2Gg2bfshvjexjv4LUIGdV2h8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YXZlcnkuY29tL2Js/b2cvd3AtY29udGVu/dC91cGxvYWRzLzIw/MjEvMDMvYmxvZy1o/ZXJvLWJlc3RpbWFn/ZXJlc291cmNlcy0z/MDAweDExMzQtMS1z/Y2FsZWQuanBn",
+    "videoUrl": "https://www.youtube.com/watch?v=iL87nv4pQsk",
+    "valueProposition": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</p>",
+    "story": "<p><span style=\"color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span><span style=\"color: rgb(100, 107, 107); background-color: rgb(255, 255, 255);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation sadasdullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span></p>",
     "userImageUrl": blankProfile,
     "userTitle": "Student",
     "name": "Testing ",
@@ -66,7 +66,7 @@ const Portfolio = (props) => {
         "instagram": "/test",
         "facebook": "/test"
     },
-    "primaryInterest": "test 1"
+    "primaryInterest": "Lorem ipsum dolor sit amet."
 }
 
   // const { myRelationships } = useSelector((state) => state.portfolio.whoSection)
@@ -435,10 +435,10 @@ const communityInvolvements = [
             sectionDescription={
               'LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
             }
-            userBasicInfo={userBasicInfo?.data}
-            myRelationships={myRelationships?.data}
-            myFailures={myFailures?.data}
-            myMentors={myMentors?.data}
+            userBasicInfo={userBasicInfo}
+            myRelationships={myRelationships}
+            myFailures={myFailures}
+            myMentors={myMentors}
           />
         )
     }

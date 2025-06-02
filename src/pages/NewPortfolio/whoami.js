@@ -416,9 +416,9 @@ const WhoAmI = (props) => {
       </div>
 
       <div className='whoami-container'>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '40px' }}>
           {/* My Details Card */}
-          <div style={{ width: '48%' }}>
+          <div style={{ width: '100%', marginBottom:'20px' }}>
             {/* Always show MainCard */}
             <MainCard
               title={'My Details'}
@@ -428,7 +428,7 @@ const WhoAmI = (props) => {
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'space-between',
+                  gap: '20px',
                   alignItems: 'center',
                   marginBottom: '30px'
                 }}
@@ -455,7 +455,7 @@ const WhoAmI = (props) => {
                 <div style={{ textAlign: 'left', width: '70%' }}>
                   <p
                     style={{
-                      fontSize: '30px',
+                      fontSize: '25px',
                       fontWeight: '800',
                       color: 'black',
                       padding: '0',
@@ -488,29 +488,29 @@ const WhoAmI = (props) => {
               </div>
 
               <div>
-                <div>My Primary Interest</div>
-                <div style={{ fontSize: '13px', color: 'grey' }}>
+                <div style={{fontWeight: '600', marginBottom: '5px'}}>My Primary Interest</div>
+                <div style={{ fontSize: '16px', color: 'rgb(54, 54, 54)' }}>
                   {props?.userBasicInfo?.primaryInterest || 'Not specified'}
                 </div>
               </div>
 
               <div style={{ marginTop: '10px' }}>
-                <div>My Value Proposition</div>
-                <div style={{ fontSize: '13px', color: 'grey' }}>
+                <div style={{fontWeight:'600', marginBottom: '5px'}}>My Value Proposition</div>
+                <div style={{ fontSize: '16px', color: 'rgb(54, 54, 54)' }}>
                   {showMoreValueProp
                     ? valueProposition || 'Not specified'
-                    : (valueProposition || 'Not specified').slice(0, 150)}
+                    : (valueProposition || 'Not specified').slice(0, 250)}
                   {valueProposition && valueProposition.length > 150 && (
                     <span
                       onClick={() => setShowMoreValueProp(!showMoreValueProp)}
                       style={{
-                        color: 'blue',
+                        color: 'rgb(0, 218, 218)',
                         cursor: 'pointer',
                         marginLeft: '5px',
                         fontWeight: '500'
                       }}
                     >
-                      {showMoreValueProp ? ' Show less' : '... Show more'}
+                      {showMoreValueProp ? ' Read Less' : '... Read More'}
                     </span>
                   )}
                 </div>
@@ -716,7 +716,7 @@ const WhoAmI = (props) => {
 
           {/* My Personal Brand Story Card */}
 
-          <div style={{ width: '48%' }}>
+          <div style={{ width: '100%', marginBottom:'20px' }}>
             {isEditingVideo ? (
               <EditCard
                 title={'Edit My Personal Brand Story'}
@@ -780,11 +780,9 @@ const WhoAmI = (props) => {
                         onClick={toggleVideoVisibility}
                         style={{
                           position: 'relative',
-                          width: '100%',
-                          height: '250px',
                           cursor: 'pointer',
                           overflow: 'hidden',
-                          marginBottom: '10px'
+                          width: '100%',
                         }}
                       >
                         <img
@@ -887,17 +885,17 @@ const WhoAmI = (props) => {
             onClick={handleEditStory}
           >
             <div style={{ position: 'relative' }}>
-              <div style={{ fontSize: '13px', color: 'grey' }}>
+              <div style={{ fontSize: '15px', color: 'black' }}>
                 {showMoreMyStory
                   ? isEditingStory
                     ? editedStory
                     : myStory
-                  : (isEditingStory ? editedStory : myStory).slice(0, 500)}
-                {(isEditingStory ? editedStory : myStory).length > 500 && (
+                  : (isEditingStory ? editedStory : myStory).slice(0, 630)}
+                {(isEditingStory ? editedStory : myStory).length > 6300 && (
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
-                      color: 'blue',
+                      color: 'rgb(0, 218, 218)',
                       cursor: 'pointer',
                       marginLeft: '5px',
                       fontWeight: '500'
@@ -963,29 +961,29 @@ const WhoAmI = (props) => {
           >
             <div style={{ position: 'relative' }}>
               <div className='my-relationships-container'>
-                {['teamRole', 'collaborationStyle', 'leadershipPhilosophy'].map(
-                  (field) => (
-                    <div key={field} className='my-relationships-card'>
-                      <div
-                        style={{
-                          fontSize: '13px',
-                          fontWeight: '600',
-                          marginBottom: '6px',
-                          textAlign: 'center'
-                        }}
-                      >
-                        {field
-                          .toUpperCase()
-                          .replace(/([A-Z])/g, ' $1')
-                          .trim()}
+                {['TEAM ROLE', 'COLLABORATION STYLE', 'LEADERSHIP PHILOSOPHY'].map(
+                  (displayTitle, index) => {
+                    const field = ['teamRole', 'collaborationStyle', 'leadershipPhilosophy'][index];
+                    return (
+                      <div key={field} className='my-relationships-card'>
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            marginBottom: '6px',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {displayTitle}
+                        </div>
+                        <div style={{ fontSize: '15px' }}>
+                          {props?.myRelationships?.[field] 
+                            ? props.myRelationships[field].replace(/<[^>]*>/g, '')
+                            : 'Not specified'}
+                        </div>
                       </div>
-                      <div style={{ fontSize: '13px' }}>
-                        {props?.myRelationships?.[field] 
-                          ? props.myRelationships[field].replace(/<[^>]*>/g, '')
-                          : 'Not specified'}
-                      </div>
-                    </div>
-                  )
+                    );
+                  }
                 )}
               </div>
             </div>
@@ -1104,7 +1102,10 @@ const WhoAmI = (props) => {
                                       height: '250px',
                                       cursor: 'pointer',
                                       overflow: 'hidden',
-                                      marginBottom: '10px'
+                                      marginBottom: '10px',
+                                      boxShadow: '0px 5px 15px rgb(211, 211, 211)',
+                                      padding:'20px',
+                                      borderRadius: '15px'
                                     }}
                                   >
                                     {itemThumbnailUrl ? (
@@ -1220,20 +1221,19 @@ const WhoAmI = (props) => {
                             className='my-failure-text-div'
                           >
                             <div
-                              style={{ width: '100%', margin: '15px' }}
+                              style={{ width: '100%', marginLeft: '15px' }}
                               className='my-relationships-card'
                             >
                               <div
                                 style={{
-                                  fontSize: '13px',
+                                  fontSize: '12px',
                                   fontWeight: '600',
                                   marginBottom: '6px',
-                                  textAlign: 'center'
                                 }}
                               >
                                 MY FAILURE
                               </div>
-                              <div style={{ fontSize: '13px' }}>
+                              <div style={{ fontSize: '15px' }}>
                                 {itemFailure}
                               </div>
                             </div>
@@ -1244,15 +1244,14 @@ const WhoAmI = (props) => {
                             >
                               <div
                                 style={{
-                                  fontSize: '13px',
+                                  fontSize: '12px',
                                   fontWeight: '600',
                                   marginBottom: '6px',
-                                  textAlign: 'center'
                                 }}
                               >
                                 MY PIVOT
                               </div>
-                              <div style={{ fontSize: '13px' }}>
+                              <div style={{ fontSize: '15px' }}>
                                 {itemPivot}
                               </div>
                             </div>
@@ -1263,15 +1262,14 @@ const WhoAmI = (props) => {
                             >
                               <div
                                 style={{
-                                  fontSize: '13px',
+                                  fontSize: '12px',
                                   fontWeight: '600',
                                   marginBottom: '6px',
-                                  textAlign: 'center'
                                 }}
                               >
                                 MY OUTCOMES
                               </div>
-                              <div style={{ fontSize: '13px' }}>
+                              <div style={{ fontSize: '15px' }}>
                                 {itemOutcomes}
                               </div>
                             </div>

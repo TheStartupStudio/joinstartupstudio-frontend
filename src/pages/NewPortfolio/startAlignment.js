@@ -642,7 +642,7 @@ function StartAlignment(props) {
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
-                      color: 'blue',
+                      color: 'rgb(0, 218, 218)',
                       cursor: 'pointer',
                       marginLeft: '5px',
                       fontWeight: '500'
@@ -964,7 +964,7 @@ function StartAlignment(props) {
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
-                      color: 'blue',
+                      color: ' rgb(0, 218, 218)',
                       cursor: 'pointer',
                       marginLeft: '5px',
                       fontWeight: '500'

@@ -14,7 +14,7 @@
 .carousel-slide-item {
     flex: 0 0 auto;
     box-sizing: border-box;
-    /* padding: 0px 20px; */
+    padding: 0px 20px;
     display: flex;
     justify-content: center;
 

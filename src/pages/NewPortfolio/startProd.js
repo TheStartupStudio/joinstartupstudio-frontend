@@ -36,33 +36,57 @@ function StartProd(props) {
   const accordionRefs = useRef([])
 
   useEffect(() => {
-    const fetchProductivityData = async () => {
-      try {
-        setIsLoading(true)
-        const response = await axiosInstance.get(
-          '/hsPortfolio/user-start-productivity'
-        )
-        const data = response.data['0'] || {
-          problem: '',
-          problem_solving: '',
-          solution: '',
-          solution_solved: '',
-          metrix_1: '',
-          metrix_2: '',
-          metrix_3: '',
-          metrix_1_explanation: '',
-          metrix_2_explanation: '',
-          metrix_3_explanation: ''
-        }
-        setProductivityData(data)
-      } catch (err) {
-        setError(err.message || 'Failed to fetch productivity data')
-      } finally {
-        setIsLoading(false)
-      }
-    }
+    // const fetchProductivityData = async () => {
+    //   try {
+    //     setIsLoading(true)
+    //     const response = await axiosInstance.get(
+    //       '/hsPortfolio/user-start-productivity'
+    //     )
+    //     const data = response.data['0'] || {
+    //       problem: '',
+    //       problem_solving: '',
+    //       solution: '',
+    //       solution_solved: '',
+    //       metrix_1: '',
+    //       metrix_2: '',
+    //       metrix_3: '',
+    //       metrix_1_explanation: '',
+    //       metrix_2_explanation: '',
+    //       metrix_3_explanation: ''
+    //     }
+    //     setProductivityData(data)
+    //   } catch (err) {
+    //     setError(err.message || 'Failed to fetch productivity data')
+    //   } finally {
+    //     setIsLoading(false)
+    //   }
+    // }
 
-    fetchProductivityData()
+    // fetchProductivityData()
+
+    const data = 
+      {
+        "id": 1,
+        "user_id": 128,
+        "probem": null,
+        "problem_solving": "<p><span style=\"color: rgb(206, 145, 120);\">wwwwwwww</span></p>",
+        "solution": "ttestss",
+        "solution_solved": "<p>asdasdasdas</p>",
+        "metrix_1": "tes",
+        "metrix_2": "tes",
+        "metrix_3": "tes",
+        "metrix_1_explanation": "<p>testetetasdads</p>",
+        "metrix_2_explanation": "<p>dasdasdasd</p>",
+        "metrix_3_explanation": "<p>asdasdasdas</p>",
+        "created_at": "2025-05-01T08:22:24.000Z",
+        "updated_at": "2025-05-01T08:35:11.000Z"
+      }
+
+    setProductivityData(data)
+
+    setIsLoading(false)
+
+
   }, [])
 
   useEffect(() => {
@@ -236,7 +260,7 @@ function StartProd(props) {
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
-                      color: 'blue',
+                      color: 'rgb(0, 218, 218)',
                       cursor: 'pointer',
                       marginLeft: '5px',
                       fontWeight: '500'
@@ -258,7 +282,7 @@ function StartProd(props) {
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
-                      color: 'blue',
+                      color: 'rgb(0, 218, 218)',
                       cursor: 'pointer',
                       marginLeft: '5px',
                       fontWeight: '500'
@@ -344,7 +368,7 @@ function StartProd(props) {
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
-                      color: 'blue',
+                      color: 'rgb(0, 218, 218)',
                       cursor: 'pointer',
                       marginLeft: '5px',
                       fontWeight: '500'
@@ -368,7 +392,7 @@ function StartProd(props) {
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
-                      color: 'blue',
+                      color: 'rgb(0, 218, 218)',
                       cursor: 'pointer',
                       marginLeft: '5px',
                       fontWeight: '500'
