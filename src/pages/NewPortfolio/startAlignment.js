@@ -46,39 +46,66 @@ function StartAlignment(props) {
   const accordionRefs = useRef([])
 
   useEffect(() => {
-    const fetchAlignmentData = async () => {
-      try {
-        setIsLoading(true)
-        const response = await axiosInstance.get(
-          '/hsPortfolio/user-start-alignment'
-        )
-        const data = response.data['0'] || {
-          value_1: '',
-          value_2: '',
-          value_3: '',
-          value_1_explanation: '',
-          value_2_explanation: '',
-          value_3_explanation: '',
-          passion: '',
-          connected_interest_1: '',
-          connected_interest_2: '',
-          explanation: '',
-          leadership: '',
-          collaboration: '',
-          feedback: '',
-          opportunities: '',
-          environment: '',
-          definition_of_success: ''
-        }
-        setAlignmentData(data)
-      } catch (err) {
-        setError(err.message || 'Failed to fetch alignment data')
-      } finally {
-        setIsLoading(false)
-      }
-    }
+    // const fetchAlignmentData = async () => {
+    //   try {
+    //     setIsLoading(true)
+    //     const response = await axiosInstance.get(
+    //       '/hsPortfolio/user-start-alignment'
+    //     )
+    //     const data = response.data['0'] || {
+    //       value_1: '',
+    //       value_2: '',
+    //       value_3: '',
+    //       value_1_explanation: '',
+    //       value_2_explanation: '',
+    //       value_3_explanation: '',
+    //       passion: '',
+    //       connected_interest_1: '',
+    //       connected_interest_2: '',
+    //       explanation: '',
+    //       leadership: '',
+    //       collaboration: '',
+    //       feedback: '',
+    //       opportunities: '',
+    //       environment: '',
+    //       definition_of_success: ''
+    //     }
+    //     setAlignmentData(data)
+    //   } catch (err) {
+    //     setError(err.message || 'Failed to fetch alignment data')
+    //   } finally {
+    //     setIsLoading(false)
+    //   }
+    // }
 
-    fetchAlignmentData()
+    // fetchAlignmentData()
+
+
+      const data = {
+        id: 3,
+        user_id: 128,
+        value_1: "test",
+        value_2: "test", 
+        value_3: "test",
+        passion: "test ",
+        connected_interest_1: "test ",
+        connected_interest_2: "ttest ",
+        explanation: "<p><span style=\"color: rgb(212, 212, 212);\"> </span><span style=\"color: rgb(156, 220, 254);\">onCancel</span><span style=\"color: rgb(212, 212, 212);\">=</span><span style=\"color: rgb(86, 156, 214);\">{</span><span style=\"color: rgb(220, 220, 170);\">handleCancelEdit</span><span style=\"color: rgb(86, 156, 214);\">}&nbsp;</span><span style=\"color: rgb(212, 212, 212);\"> </span></p>",
+        leadership: "<h4>Instructions:111</h4>",
+        collaboration: "<h4>Instructions:</h4>",
+        feedback: "<h4>Instructions:</h4>",
+        opportunities: "<h4>Instructions:</h4>",
+        environment: "<h4>Instructions:</h4>",
+        definition_of_success: "<p>test succes1</p>",
+        value_1_explanation: "<p>aking and you practice them daily. Once you have identified your&nbsp;</p>",
+        value_2_explanation: "<p>aking and you practice them daily. Once you have identified your 3</p>",
+        value_3_explanation: "<p>aking and you practice them daily. Once you have identified your 3 values, explain what</p>",
+        created_at: "2025-05-01T06:45:10.000Z",
+        updated_at: "2025-05-27T00:18:06.000Z"
+      }
+        setAlignmentData(data)
+
+        setIsLoading(false)
   }, [])
 
   useEffect(() => {

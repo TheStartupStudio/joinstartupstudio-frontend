@@ -28,7 +28,7 @@ const HowDoIProveIt = (props) => {
   const [editMode, setEditMode] = useState('add')
   const [selectedItem, setSelectedItem] = useState(null)
   const [errors, setErrors] = useState({})
-  const [communityInvolvements, setCommunityInvolvements] = useState([])
+  const [communityInvolvements, setCommunityInvolvements] = useState(props.communityInvolvements)
 
   const [educationForm, setEducationForm] = useState({
     school_name: '',
@@ -52,7 +52,9 @@ const HowDoIProveIt = (props) => {
     network_of_mentors: ''
   })
 
-  const [workExperiences, setWorkExperiences] = useState([])
+  console.log(props)
+
+  const [workExperiences, setWorkExperiences] = useState(props.workExprience)
   const [showWorkModal, setShowWorkModal] = useState(false)
 
   const [workForm, setWorkForm] = useState({
@@ -66,36 +68,36 @@ const HowDoIProveIt = (props) => {
     network_of_mentors: ''
   })
 
-  useEffect(() => {
-    const fetchWorkExperience = async () => {
-      try {
-        const response = await axiosInstance.get(
-          '/hsPortfolio/user-work-experience'
-        )
-        setWorkExperiences(response.data)
-      } catch (error) {
-        console.error('Failed to fetch work experience', error)
-      }
-    }
+  // useEffect(() => {
+  //   const fetchWorkExperience = async () => {
+  //     try {
+  //       const response = await axiosInstance.get(
+  //         '/hsPortfolio/user-work-experience'
+  //       )
+  //       setWorkExperiences(response.data)
+  //     } catch (error) {
+  //       console.error('Failed to fetch work experience', error)
+  //     }
+  //   }
 
-    fetchWorkExperience()
-  }, [])
+  //   fetchWorkExperience()
+  // }, [])
 
   // Fetch community involvement data
-  useEffect(() => {
-    const fetchCommunityInvolvement = async () => {
-      try {
-        const response = await axiosInstance.get(
-          '/hsPortfolio/user-comunity-involvement'
-        )
-        setCommunityInvolvements(response.data)
-      } catch (error) {
-        console.error('Failed to fetch community involvement', error)
-      }
-    }
+  // useEffect(() => {
+  //   const fetchCommunityInvolvement = async () => {
+  //     try {
+  //       const response = await axiosInstance.get(
+  //         '/hsPortfolio/user-comunity-involvement'
+  //       )
+  //       setCommunityInvolvements(response.data)
+  //     } catch (error) {
+  //       console.error('Failed to fetch community involvement', error)
+  //     }
+  //   }
 
-    fetchCommunityInvolvement()
-  }, [])
+  //   fetchCommunityInvolvement()
+  // }, [])
 
   const handleEducationInputChange = (field, value) => {
     setEducationForm((prev) => ({ ...prev, [field]: value }))

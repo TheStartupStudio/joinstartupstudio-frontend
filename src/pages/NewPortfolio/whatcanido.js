@@ -212,7 +212,7 @@ const WhatCanIDo = ({
 
     try {
       setIsSaving(true)
-      const parentProject = myProjects.data.find((proj) =>
+      const parentProject = myProjects.find((proj) =>
         proj.children.some((child) => child.id === editData.id)
       )
 
@@ -249,7 +249,7 @@ const WhatCanIDo = ({
     } finally {
       setIsSaving(false)
     }
-  }, [editData, editedContent, evidences, myProjects.data])
+  }, [editData, editedContent, evidences, myProjects])
   // Render project cards
   const renderProjectCards = useCallback((project) => {
     const renderChildCard = (child, title, icon) => (
@@ -361,9 +361,9 @@ const WhatCanIDo = ({
       </div>
 
       <div className='whatcanido-container'>
-        {myProjects?.data?.length > 0 ? (
+        {myProjects?.length > 0 ? (
           <CarouselComponent
-            data={myProjects.data}
+            data={myProjects}
             renderItems={renderProjectCards}
           />
         ) : (
