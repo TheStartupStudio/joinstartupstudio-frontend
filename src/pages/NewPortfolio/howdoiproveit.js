@@ -415,6 +415,17 @@ const HowDoIProveIt = (props) => {
     }
   }
 
+  // Add this state to manage expanded sections
+  const [expandedSections, setExpandedSections] = useState({})
+
+  // Add this function to toggle sections
+  const toggleSection = (itemId, section) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [`${itemId}-${section}`]: !prev[`${itemId}-${section}`]
+    }))
+  }
+
   return (
     <div>
       <div className='section-description-container'>
@@ -453,13 +464,8 @@ const HowDoIProveIt = (props) => {
                     multi={true}
                   >
                     <div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', gap: '7px' }}>
                           <div
                             style={{
                               width: '100px',
@@ -481,71 +487,139 @@ const HowDoIProveIt = (props) => {
                           <div style={{ marginLeft: '20px' }}>
                             <p
                               style={{
-                                fontSize: '20px',
+                                fontSize: '18px',
                                 color: 'black',
-                                fontWeight: '600'
+                                fontWeight: '600',
+                                marginBottom: '5px'
                               }}
                             >
                               {item.school_name}
                             </p>
-                            <p>{item.date_started}</p>
+                            <p
+                              style={{
+                                fontSize: '16px',
+                                color: 'black',
+                                fontWeight: '600',
+                                marginBottom: '5px'
+                              }}
+                            >{item.date_started}</p>
                           </div>
                         </div>
 
                         <div style={{ width: '50%' }}>
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%'
-                            }}
-                          >
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>SKILLS DEVELOPED</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.skills_developed?.replace(/<[^>]*>/g, '') ||
-                                ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.skills_developed?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-skills`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'skills')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-skills`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
 
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%',
-                              marginTop: '10px'
-                            }}
-                          >
-                            <div>OPPURTUNITIES EXPRIENCED</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.opportunities_experienced?.replace(
-                                /<[^>]*>/g,
-                                ''
-                              ) || ''}
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
+                            <div>OPPORTUNITIES EXPRIENCED</div>
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.opportunities_experienced?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-opportunities`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'opportunities')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-opportunities`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%',
-                              marginTop: '10px'
-                            }}
-                          >
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>NETWORK OF MENTORS</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.network_of_mentors?.replace(
-                                /<[^>]*>/g,
-                                ''
-                              ) || ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.network_of_mentors?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-mentors`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'mentors')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-mentors`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
                         </div>
@@ -576,110 +650,160 @@ const HowDoIProveIt = (props) => {
                     multi={true}
                   >
                     <div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <div>
-                          {item.organization_logo && (
-                            <div
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', gap: '7px' }}>
+                          <div style={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '50%',
+                            overflow: 'hidden'
+                          }}>
+                            <img
+                              src={item.organization_logo}
+                              alt='Organization'
                               style={{
-                                width: '100px',
-                                height: '100px',
-                                borderRadius: '50%',
-                                overflow: 'hidden'
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover'
                               }}
-                            >
-                              <img
-                                src={item.organization_logo}
-                                alt='Organization'
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'cover'
-                                }}
-                              />
-                            </div>
-                          )}
+                            />
+                          </div>
                           <div style={{ marginLeft: '20px' }}>
-                            <p
-                              style={{
-                                fontSize: '20px',
-                                color: 'black',
-                                fontWeight: '600'
-                              }}
-                            >
+                            <p style={{
+                              fontSize: '18px',
+                              color: 'black',
+                              fontWeight: '600',
+                              marginBottom: '5px'
+                            }}>
                               {item.organization_name}
                             </p>
-                            <p>
-                              {item.date_started &&
-                                new Date(
-                                  item.date_started
-                                ).toLocaleDateString()}
-                              {item.date_ended &&
-                                ` - ${new Date(
-                                  item.date_ended
-                                ).toLocaleDateString()}`}
+                            <p style={{
+                              fontSize: '16px',
+                              color: 'black',
+                              fontWeight: '600',
+                              marginBottom: '5px'
+                            }}>
+                              {item.date_started && new Date(item.date_started).toLocaleDateString()}
+                              {item.date_ended && ` - ${new Date(item.date_ended).toLocaleDateString()}`}
                             </p>
                           </div>
                         </div>
 
                         <div style={{ width: '50%' }}>
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%'
-                            }}
-                          >
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>SKILLS DEVELOPED</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.skills_developed?.replace(/<[^>]*>/g, '') ||
-                                ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.skills_developed?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-skills`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'skills')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-skills`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
 
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%',
-                              marginTop: '10px'
-                            }}
-                          >
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>OPPORTUNITIES EXPERIENCED</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.opportunities_experienced?.replace(
-                                /<[^>]*>/g,
-                                ''
-                              ) || ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.opportunities_experienced?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-opportunities`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'opportunities')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-opportunities`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%',
-                              marginTop: '10px'
-                            }}
-                          >
+
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>NETWORK OF MENTORS</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.network_of_mentors?.replace(
-                                /<[^>]*>/g,
-                                ''
-                              ) || ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.network_of_mentors?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-mentors`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'mentors')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-mentors`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
                         </div>
@@ -710,110 +834,166 @@ const HowDoIProveIt = (props) => {
                     multi={true}
                   >
                     <div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <div>
-                          {item.organization_logo && (
-                            <div
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', gap: '7px' }}>
+                          <div
+                            style={{
+                              width: '100px',
+                              height: '100px',
+                              borderRadius: '50%',
+                              overflow: 'hidden'
+                            }}
+                          >
+                            <img
+                              src={item.organization_logo}
+                              alt='Organization'
                               style={{
-                                width: '100px',
-                                height: '100px',
-                                borderRadius: '50%',
-                                overflow: 'hidden'
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover'
                               }}
-                            >
-                              <img
-                                src={item.organization_logo}
-                                alt='Organization'
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'cover'
-                                }}
-                              />
-                            </div>
-                          )}
+                            />
+                          </div>
                           <div style={{ marginLeft: '20px' }}>
                             <p
                               style={{
-                                fontSize: '20px',
+                                fontSize: '18px',
                                 color: 'black',
-                                fontWeight: '600'
+                                fontWeight: '600',
+                                marginBottom: '5px'
                               }}
                             >
                               {item.organization_name}
                             </p>
-                            <p>
-                              {item.date_started &&
-                                new Date(
-                                  item.date_started
-                                ).toLocaleDateString()}
-                              {item.date_ended &&
-                                ` - ${new Date(
-                                  item.date_ended
-                                ).toLocaleDateString()}`}
+                            <p
+                              style={{
+                                fontSize: '16px',
+                                color: 'black',
+                                fontWeight: '600',
+                                marginBottom: '5px'
+                              }}
+                            >
+                              {item.date_started && new Date(item.date_started).toLocaleDateString()}
+                              {item.date_ended && ` - ${new Date(item.date_ended).toLocaleDateString()}`}
                             </p>
                           </div>
                         </div>
 
                         <div style={{ width: '50%' }}>
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%'
-                            }}
-                          >
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>SKILLS DEVELOPED</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.skills_developed?.replace(/<[^>]*>/g, '') ||
-                                ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.skills_developed?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-skills`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'skills')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-skills`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
 
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%',
-                              marginTop: '10px'
-                            }}
-                          >
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>OPPORTUNITIES EXPERIENCED</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.opportunities_experienced?.replace(
-                                /<[^>]*>/g,
-                                ''
-                              ) || ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.opportunities_experienced?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-opportunities`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'opportunities')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-opportunities`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
-                          <div
-                            style={{
-                              padding: '15px',
-                              boxShadow: '0px 3px 14px #00000029',
-                              borderRadius: '14px',
-                              width: '100%',
-                              marginTop: '10px'
-                            }}
-                          >
+
+                          <div style={{
+                            padding: '15px',
+                            boxShadow: '0px 3px 14px #00000029',
+                            borderRadius: '14px',
+                            width: '100%',
+                            marginTop: '10px'
+                          }}>
                             <div>NETWORK OF MENTORS</div>
-                            <div
-                              style={{ fontSize: '12px', marginTop: '10px' }}
-                            >
-                              {item.network_of_mentors?.replace(
-                                /<[^>]*>/g,
-                                ''
-                              ) || ''}
+                            <div style={{ fontSize: '16px', marginTop: '10px' }}>
+                              {(() => {
+                                const text = item.network_of_mentors?.replace(/<[^>]*>/g, '').trim() || ''
+                                const isExpanded = expandedSections[`${item.id}-mentors`]
+                                const shouldTruncate = text.length > 150
+
+                                return (
+                                  <>
+                                    {isExpanded ? text : text.slice(0, 150)}
+                                    {shouldTruncate && (
+                                      <span
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          toggleSection(item.id, 'mentors')
+                                        }}
+                                        style={{
+                                          color: 'rgb(0, 218, 218)',
+                                          cursor: 'pointer',
+                                          marginLeft: '5px',
+                                          fontWeight: '500'
+                                        }}
+                                      >
+                                        {expandedSections[`${item.id}-mentors`] ? ' Read Less' : '... Read More'}
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </div>
                           </div>
                         </div>
