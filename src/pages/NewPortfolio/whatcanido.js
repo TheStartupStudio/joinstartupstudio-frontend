@@ -42,7 +42,8 @@ const WhatCanIDo = ({
       rotate: 0
     })
   )
-
+  // Add this state to manage expanded states
+const [expandedContents, setExpandedContents] = useState({});
   // Initialize evidences when entering edit mode
   useEffect(() => {
     if (editMode && editData) {
@@ -264,7 +265,7 @@ const WhatCanIDo = ({
         }}
       >
         <div
-          style={{ fontWeight: '600', fontSize: '14px', marginBottom: '10px' }}
+          style={{ fontWeight: '600', fontSize: '16px', marginBottom: '10px' }}
         >
           {title === 'LEARN'
             ? 'Problem Identification'
@@ -272,9 +273,48 @@ const WhatCanIDo = ({
             ? 'My Solution'
             : 'Brand Story'}
         </div>
-        <div style={{ fontSize: '12px' }}>
-          {child?.editorContent?.replace(/<[^>]*>/g, '') || ''}
-        </div>
+<div style={{ fontSize: '16px' }}>
+  {(() => {
+    // Get clean text without HTML tags
+    const plainText = child?.editorContent?.replace(/<[^>]*>/g, '').trim();
+    
+    // If no text, return empty
+    if (!plainText) return '';
+    
+    // Check if text needs to be truncated
+    const shouldTruncate = plainText.length > 350;
+    
+    // If expanded show full text, otherwise show truncated
+    const displayText = expandedContents[child.id] 
+      ? plainText 
+      : plainText.slice(0, 350);
+
+    return (
+      <>
+        {displayText}
+        {shouldTruncate && (
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpandedContents(prev => ({
+                ...prev,
+                [child.id]: !prev[child.id]
+              }));
+            }}
+            style={{
+              color: 'rgb(0, 218, 218)',
+              cursor: 'pointer',
+              marginLeft: '5px', 
+              fontWeight: '500'
+            }}
+          >
+            {expandedContents[child.id] ? ' Read Less' : '... Read More'}
+          </span>
+        )}
+      </>
+    );
+  })()}
+</div>
         <div
           style={{
             display: 'grid',
@@ -296,7 +336,9 @@ const WhatCanIDo = ({
     return (
       <MultiCard
         title={project.title || ''}
-        icon={myFailures}
+        titleComponent={({ children }) => (
+    <h2 className="title-text-center">{children}</h2>
+  )}
         onClick={() => {
           setAddMode(true)
           setEditData(project)

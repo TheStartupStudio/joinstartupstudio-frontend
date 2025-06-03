@@ -97,6 +97,15 @@
   font-weight: 600;
 }
 
+.title-text-center{
+  width:100%;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: black;
+  margin-top: 40px;
+}
+
 .value-subheader {
   font-size: 0.95rem;
   font-weight: 500;

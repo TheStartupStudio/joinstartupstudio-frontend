@@ -1,24 +1,44 @@
 import React from 'react'
-import './index.css' // We'll create this CSS file
+import './index.css'
 import { FaPencilAlt, FaCheck, FaEye, FaPlus } from 'react-icons/fa'
 import nothingAdded from '../../../assets/images/nothing-added.svg'
 
-const MultiCard = ({ children, onEdit, title, icon, onClick }) => {
+const MultiCard = ({ 
+  children, 
+  onEdit, 
+  title, 
+  icon, 
+  onClick, 
+  titleComponent: TitleComponent, // New prop for custom title component
+  titleClassName = 'cover-title', // Default class for title
+  titleStyle = {} // Default style for title
+}) => {
   return (
     <div className='profile-card'>
       <div className='profile-card-header'>
-        <div style={{ display: 'flex' }} className='title-div'>
-          <div className='icon-wrapper'>
-            <img
-              src={icon}
-              style={{ cursor: 'pointer' }}
-              title={'instructor icon'}
-              height={20}
-              width={20}
-              alt='instructor icon'
-            />
-          </div>
-          <span className='cover-title'>{title}</span>
+        <div style={{ display: 'flex', width:'100%' }} className='title-div'>
+          {icon && (
+            <div className='icon-wrapper'>
+              <img
+                src={icon}
+                style={{ cursor: 'pointer' }}
+                title={'instructor icon'}
+                height={20}
+                width={20}
+                alt='instructor icon'
+              />
+            </div>
+          )}
+          {TitleComponent ? (
+            <TitleComponent>{title}</TitleComponent>
+          ) : (
+            <span 
+              className={titleClassName}
+              style={titleStyle}
+            >
+              {title}
+            </span>
+          )}
         </div>
         <div
           className='portfolio-actions'
@@ -29,18 +49,11 @@ const MultiCard = ({ children, onEdit, title, icon, onClick }) => {
         >
           <FaPlus
             className={'action-box pencil-icon'}
-            onClick={onClick} // Switch to edit mode
+            onClick={onClick}
             style={{ cursor: 'pointer', background: 'transparent' }}
             title='Edit Experience'
           />
         </div>
-        {/* {onEdit && (
-          <button className='edit-button' onClick={onEdit}>
-            <span role='img' aria-label='edit'>
-              ✏️
-            </span>
-          </button>
-        )} */}
       </div>
 
       <div className='profile-card-content'>
