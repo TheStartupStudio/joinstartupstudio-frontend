@@ -84,22 +84,22 @@ function StartAlignment(props) {
       const data = {
         id: 3,
         user_id: 128,
-        value_1: "test",
-        value_2: "test", 
-        value_3: "test",
-        passion: "test ",
-        connected_interest_1: "test ",
-        connected_interest_2: "ttest ",
-        explanation: "<p><span style=\"color: rgb(212, 212, 212);\"> </span><span style=\"color: rgb(156, 220, 254);\">onCancel</span><span style=\"color: rgb(212, 212, 212);\">=</span><span style=\"color: rgb(86, 156, 214);\">{</span><span style=\"color: rgb(220, 220, 170);\">handleCancelEdit</span><span style=\"color: rgb(86, 156, 214);\">}&nbsp;</span><span style=\"color: rgb(212, 212, 212);\"> </span></p>",
-        leadership: "<h4>Instructions:111</h4>",
-        collaboration: "<h4>Instructions:</h4>",
-        feedback: "<h4>Instructions:</h4>",
-        opportunities: "<h4>Instructions:</h4>",
-        environment: "<h4>Instructions:</h4>",
-        definition_of_success: "<p>test succes1</p>",
-        value_1_explanation: "<p>aking and you practice them daily. Once you have identified your&nbsp;</p>",
-        value_2_explanation: "<p>aking and you practice them daily. Once you have identified your 3</p>",
-        value_3_explanation: "<p>aking and you practice them daily. Once you have identified your 3 values, explain what</p>",
+        value_1: "Honasty",
+        value_2: "Passion", 
+        value_3: "Integrity",
+        passion: "Design ",
+        connected_interest_1: "Technology ",
+        connected_interest_2: "Art ",
+        explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
+        leadership: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
+        collaboration: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
+        feedback: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
+        opportunities: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
+        environment: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
+        definition_of_success: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
+        value_1_explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
+        value_2_explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
+        value_3_explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
         created_at: "2025-05-01T06:45:10.000Z",
         updated_at: "2025-05-27T00:18:06.000Z"
       }
@@ -156,147 +156,147 @@ function StartAlignment(props) {
   }
 
   const handleSaveValues = async () => {
-    try {
-      setIsLoading(true)
-      const payload = {
-        value_1: alignmentData.value_1,
-        value_2: alignmentData.value_2,
-        value_3: alignmentData.value_3,
-        value_1_explanation: alignmentData.value_1_explanation,
-        value_2_explanation: alignmentData.value_2_explanation,
-        value_3_explanation: alignmentData.value_3_explanation
-      }
+    // try {
+    //   setIsLoading(true)
+    //   const payload = {
+    //     value_1: alignmentData.value_1,
+    //     value_2: alignmentData.value_2,
+    //     value_3: alignmentData.value_3,
+    //     value_1_explanation: alignmentData.value_1_explanation,
+    //     value_2_explanation: alignmentData.value_2_explanation,
+    //     value_3_explanation: alignmentData.value_3_explanation
+    //   }
 
-      let response
-      if (alignmentData.id) {
-        response = await axiosInstance.put(
-          `/hsPortfolio/start-alignment/${alignmentData.id}`,
-          payload
-        )
-      } else {
-        response = await axiosInstance.post(
-          `/hsPortfolio/start-alignment`,
-          payload
-        )
-      }
+    //   let response
+    //   if (alignmentData.id) {
+    //     response = await axiosInstance.put(
+    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
+    //       payload
+    //     )
+    //   } else {
+    //     response = await axiosInstance.post(
+    //       `/hsPortfolio/start-alignment`,
+    //       payload
+    //     )
+    //   }
 
-      // Merge the existing data with the updated values
-      setAlignmentData((prev) => ({
-        ...prev,
-        ...response.data['0']
-      }))
-      setEditValuesMode(false)
-    } catch (err) {
-      setError(err.message || 'Failed to save values')
-    } finally {
-      setIsLoading(false)
-    }
+    //   // Merge the existing data with the updated values
+    //   setAlignmentData((prev) => ({
+    //     ...prev,
+    //     ...response.data['0']
+    //   }))
+    //   setEditValuesMode(false)
+    // } catch (err) {
+    //   setError(err.message || 'Failed to save values')
+    // } finally {
+    //   setIsLoading(false)
+    // }
   }
 
   const handleSavePassion = async () => {
-    try {
-      setIsLoading(true)
-      const payload = {
-        passion: alignmentData.passion,
-        connected_interest_1: alignmentData.connected_interest_1,
-        connected_interest_2: alignmentData.connected_interest_2,
-        explanation: alignmentData.explanation
-      }
+    // try {
+    //   setIsLoading(true)
+    //   const payload = {
+    //     passion: alignmentData.passion,
+    //     connected_interest_1: alignmentData.connected_interest_1,
+    //     connected_interest_2: alignmentData.connected_interest_2,
+    //     explanation: alignmentData.explanation
+    //   }
 
-      let response
-      if (alignmentData.id) {
-        response = await axiosInstance.put(
-          `/hsPortfolio/start-alignment/${alignmentData.id}`,
-          payload
-        )
-      } else {
-        response = await axiosInstance.post(
-          `/hsPortfolio/start-alignment`,
-          payload
-        )
-      }
+    //   let response
+    //   if (alignmentData.id) {
+    //     response = await axiosInstance.put(
+    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
+    //       payload
+    //     )
+    //   } else {
+    //     response = await axiosInstance.post(
+    //       `/hsPortfolio/start-alignment`,
+    //       payload
+    //     )
+    //   }
 
-      // Merge the existing data with the updated values
-      setAlignmentData((prev) => ({
-        ...prev,
-        ...response.data['0']
-      }))
-      setEditPassionMode(false)
-    } catch (err) {
-      setError(err.message || 'Failed to save passion')
-    } finally {
-      setIsLoading(false)
-    }
+    //   // Merge the existing data with the updated values
+    //   setAlignmentData((prev) => ({
+    //     ...prev,
+    //     ...response.data['0']
+    //   }))
+    //   setEditPassionMode(false)
+    // } catch (err) {
+    //   setError(err.message || 'Failed to save passion')
+    // } finally {
+    //   setIsLoading(false)
+    // }
   }
 
   const handleSaveWorkCulture = async () => {
-    try {
-      setIsLoading(true)
-      const payload = {
-        leadership: alignmentData.leadership,
-        collaboration: alignmentData.collaboration,
-        feedback: alignmentData.feedback,
-        opportunities: alignmentData.opportunities,
-        environment: alignmentData.environment
-      }
+    // try {
+    //   setIsLoading(true)
+    //   const payload = {
+    //     leadership: alignmentData.leadership,
+    //     collaboration: alignmentData.collaboration,
+    //     feedback: alignmentData.feedback,
+    //     opportunities: alignmentData.opportunities,
+    //     environment: alignmentData.environment
+    //   }
 
-      let response
-      if (alignmentData.id) {
-        response = await axiosInstance.put(
-          `/hsPortfolio/start-alignment/${alignmentData.id}`,
-          payload
-        )
-      } else {
-        response = await axiosInstance.post(
-          `/hsPortfolio/start-alignment`,
-          payload
-        )
-      }
+    //   let response
+    //   if (alignmentData.id) {
+    //     response = await axiosInstance.put(
+    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
+    //       payload
+    //     )
+    //   } else {
+    //     response = await axiosInstance.post(
+    //       `/hsPortfolio/start-alignment`,
+    //       payload
+    //     )
+    //   }
 
-      // Merge the existing data with the updated values
-      setAlignmentData((prev) => ({
-        ...prev,
-        ...response.data['0']
-      }))
-      setEditWorkCultureMode(false)
-    } catch (err) {
-      setError(err.message || 'Failed to save work culture')
-    } finally {
-      setIsLoading(false)
-    }
+    //   // Merge the existing data with the updated values
+    //   setAlignmentData((prev) => ({
+    //     ...prev,
+    //     ...response.data['0']
+    //   }))
+    //   setEditWorkCultureMode(false)
+    // } catch (err) {
+    //   setError(err.message || 'Failed to save work culture')
+    // } finally {
+    //   setIsLoading(false)
+    // }
   }
 
   const handleSaveSuccess = async () => {
-    try {
-      setIsLoading(true)
-      const payload = {
-        definition_of_success: alignmentData.definition_of_success
-      }
+    // try {
+    //   setIsLoading(true)
+    //   const payload = {
+    //     definition_of_success: alignmentData.definition_of_success
+    //   }
 
-      let response
-      if (alignmentData.id) {
-        response = await axiosInstance.put(
-          `/hsPortfolio/start-alignment/${alignmentData.id}`,
-          payload
-        )
-      } else {
-        response = await axiosInstance.post(
-          `/hsPortfolio/start-alignment`,
-          payload
-        )
-      }
+    //   let response
+    //   if (alignmentData.id) {
+    //     response = await axiosInstance.put(
+    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
+    //       payload
+    //     )
+    //   } else {
+    //     response = await axiosInstance.post(
+    //       `/hsPortfolio/start-alignment`,
+    //       payload
+    //     )
+    //   }
 
-      // Merge the existing data with the updated values
-      setAlignmentData((prev) => ({
-        ...prev,
-        ...response.data['0']
-      }))
-      setEditSuccessMode(false)
-    } catch (err) {
-      setError(err.message || 'Failed to save success definition')
-    } finally {
-      setIsLoading(false)
-    }
+    //   // Merge the existing data with the updated values
+    //   setAlignmentData((prev) => ({
+    //     ...prev,
+    //     ...response.data['0']
+    //   }))
+    //   setEditSuccessMode(false)
+    // } catch (err) {
+    //   setError(err.message || 'Failed to save success definition')
+    // } finally {
+    //   setIsLoading(false)
+    // }
   }
 
   const handleCancelEdit = () => {
@@ -345,7 +345,7 @@ function StartAlignment(props) {
               style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
             >
               {alignmentData.value_1 && (
-                <div style={{ fontSize: '13px', color: 'grey' }}>
+                <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
                   <h4 className='value-header'>VALUE 1:</h4>
                   <h5 className='value-subheader'>{alignmentData.value_1}</h5>
                   {showMoreMyStory
@@ -358,13 +358,13 @@ function StartAlignment(props) {
                           /<[^>]*>/g,
                           ''
                         ) || ''
-                      ).slice(0, 250)}
+                      ).slice(0, 150)}
                   {alignmentData.value_1_explanation &&
-                    alignmentData.value_1_explanation.length > 250 && (
+                    alignmentData.value_1_explanation.length > 150 && (
                       <span
                         onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                         style={{
-                          color: 'blue',
+                          color: 'rgb(0, 218, 218)',
                           cursor: 'pointer',
                           marginLeft: '5px',
                           fontWeight: '500'
@@ -376,7 +376,7 @@ function StartAlignment(props) {
                 </div>
               )}
               {alignmentData.value_2 && (
-                <div style={{ fontSize: '13px', color: 'grey' }}>
+                <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
                   <h4 className='value-header'>VALUE 2:</h4>
                   <h5 className='value-subheader'>{alignmentData.value_2}</h5>
                   {showMoreMyStory
@@ -389,13 +389,13 @@ function StartAlignment(props) {
                           /<[^>]*>/g,
                           ''
                         ) || ''
-                      ).slice(0, 250)}
+                      ).slice(0, 150)}
                   {alignmentData.value_2_explanation &&
-                    alignmentData.value_2_explanation.length > 250 && (
+                    alignmentData.value_2_explanation.length > 150 && (
                       <span
                         onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                         style={{
-                          color: 'blue',
+                          color: 'rgb(0, 218, 218)',
                           cursor: 'pointer',
                           marginLeft: '5px',
                           fontWeight: '500'
@@ -407,7 +407,7 @@ function StartAlignment(props) {
                 </div>
               )}
               {alignmentData.value_3 && (
-                <div style={{ fontSize: '13px', color: 'grey' }}>
+                <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
                   <h4 className='value-header'>VALUE 3:</h4>
                   <h5 className='value-subheader'>{alignmentData.value_3}</h5>
                   {showMoreMyStory
@@ -420,13 +420,13 @@ function StartAlignment(props) {
                           /<[^>]*>/g,
                           ''
                         ) || ''
-                      ).slice(0, 250)}
+                      ).slice(0, 150)}
                   {alignmentData.value_3_explanation &&
-                    alignmentData.value_3_explanation.length > 250 && (
+                    alignmentData.value_3_explanation.length > 150 && (
                       <span
                         onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                         style={{
-                          color: 'blue',
+                          color: 'rgb(0, 218, 218)',
                           cursor: 'pointer',
                           marginLeft: '5px',
                           fontWeight: '500'
@@ -610,17 +610,17 @@ function StartAlignment(props) {
               className='d-grid gap-3'
               style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
             >
-              <div style={{ fontSize: '13px', color: 'grey' }}>
+<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
                 <h4 className='value-header'>PASSION:</h4>
                 <h5 className='value-subheader'>{alignmentData.passion}</h5>
               </div>
-              <div style={{ fontSize: '13px', color: 'grey' }}>
+<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
                 <h4 className='value-header'>CONNECTED INTEREST 1:</h4>
                 <h5 className='value-subheader'>
                   {alignmentData.connected_interest_1}
                 </h5>
               </div>
-              <div style={{ fontSize: '13px', color: 'grey' }}>
+<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
                 <h4 className='value-header'>CONNECTED INTEREST 2:</h4>
                 <h5 className='value-subheader'>
                   {alignmentData.connected_interest_2}
@@ -628,7 +628,7 @@ function StartAlignment(props) {
               </div>
             </div>
 
-            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
+<div style={{ fontSize: '16px', marginTop: '10px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
               <h5 className='value-subheader'>Explanation</h5>
               {showMoreMyStory
                 ? alignmentData.explanation.replace(/<[^>]*>/g, '') || ''
@@ -638,7 +638,7 @@ function StartAlignment(props) {
                     ''
                   ).slice(0, 600)}
               {alignmentData.explanation &&
-                alignmentData.explanation.length > 250 && (
+                alignmentData.explanation.length > 350 && (
                   <span
                     onClick={() => setShowMoreMyStory(!showMoreMyStory)}
                     style={{
@@ -952,7 +952,7 @@ function StartAlignment(props) {
           onClick={handleSuccessCardClick}
         >
           <div style={{ position: 'relative' }}>
-            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
+<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
               <h5 className='value-subheader'>Definition of Success:</h5>
               {showMoreMyStory
                 ? alignmentData?.definition_of_success?.replace(/<[^>]*>/g, '')

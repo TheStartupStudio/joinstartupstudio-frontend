@@ -107,8 +107,8 @@
 }
 
 .value-subheader {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .button-accordion {
@@ -127,7 +127,7 @@
 }
 
 .accordion-body h4 {
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .progress-details-accordion {
