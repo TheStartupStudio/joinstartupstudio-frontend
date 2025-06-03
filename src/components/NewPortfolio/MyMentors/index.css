@@ -1,16 +1,17 @@
 .mentor-card {
   background: linear-gradient(rgb(228, 233, 244), rgb(255, 255, 255));
   border-radius: 30px;
-
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
   color: #333;
   position: relative;
   min-width: 95% !important;
-  height: 350px;
+
   }
   
+  .mentor-card-div {
+    color:black;
+  }
 
   .mentor-image-container {
 
@@ -26,4 +27,5 @@
     width: 100%;
     overflow: hidden;
     object-fit: cover;
+    border-radius: 35px 35px 0 0;
   }

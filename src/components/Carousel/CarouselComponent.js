@@ -95,7 +95,7 @@ const CarouselComponent = ({
       </div>
 
       {displayIndicators && (
-        <div className='d-flex mt-4 gap-4 justify-content-center'>
+        <div className='d-flex mt-4 gap-4 justify-content-center mt-5'>
           <FontAwesomeIcon
             icon={faChevronLeft}
             className='carousel-indicator-button me-4'

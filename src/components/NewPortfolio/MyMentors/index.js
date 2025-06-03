@@ -1,7 +1,11 @@
-import React from 'react'
-import './index.css' // We'll create this CSS file
+import React, { useState } from 'react'
+import './index.css'
 import { FaPencilAlt, FaCheck, FaEye } from 'react-icons/fa'
-const MentorCard = ({ children, onEdit, title, mentor, onClick, width }) => {
+
+const MentorCard = ({ children, onEdit, title, mentor, onClick, width, isExpanded, onToggleExpand }) => {
+  const description = mentor?.mentorDescription?.replace(/<[^>]*>/g, '') || '';
+  const shouldShowButton = description.length > 80;
+
   return (
     <div style={{ width: width }} className='mentor-card'>
       <div className='mentor-card-div'>
@@ -12,7 +16,7 @@ const MentorCard = ({ children, onEdit, title, mentor, onClick, width }) => {
             alt='mentor image'
           />
         </div>
-        <div className='mentor-info-container'>
+        <div className='mentor-info-container' style={{ padding: '15px' }}>
           <p
             style={{
               fontWeight: '600',
@@ -25,51 +29,55 @@ const MentorCard = ({ children, onEdit, title, mentor, onClick, width }) => {
           </p>
 
           <p
-            style={{ fontSize: '8px', marginBottom: '5px' }}
+            style={{ fontSize: '12px', marginBottom: '5px', fontWeight: '300', color: 'black' }}
             className='mentor-name'
           >
             {mentor.mentorRole}
           </p>
           <p
-            style={{ fontSize: '8px', marginBottom: '5px' }}
+            style={{ fontSize: '12px', marginBottom: '5px', fontWeight: '400', color: 'black' }}
             className='mentor-name'
           >
             {mentor?.mentorCompany}
           </p>
-          <p
-            style={{ fontSize: '8px', marginBottom: '5px' }}
+          <div
+            style={{ fontSize: '12px', marginBottom: '5px', fontWeight: '400', color: 'black', textAlign: 'left' }}
             className='mentor-name'
           >
-            {mentor?.mentorDescription?.replace(/<[^>]*>/g, '') || ''}
-          </p>
+            {isExpanded ? description : description.slice(0, 80)}
+            {shouldShowButton && (
+              <span
+                onClick={() => onToggleExpand()}
+                style={{
+                  color: 'rgb(0, 218, 218)',
+                  cursor: 'pointer',
+                  marginLeft: '5px',
+                  fontWeight: '500'
+                }}
+              >
+                {isExpanded ? ' Read Less' : '... Read More'}
+              </span>
+            )}
+          </div>
         </div>
         <div
           className='portfolio-actions'
           style={{
             borderTopRightRadius: '36px',
-            background:
-              ' linear-gradient(rgb(228, 233, 244), rgb(255, 255, 255))'
+            background: 'linear-gradient(rgb(228, 233, 244), rgb(255, 255, 255))'
           }}
         >
           <FaPencilAlt
             className={'action-box pencil-icon'}
-            onClick={onClick} // Switch to edit mode
+            onClick={onClick}
             style={{ cursor: 'pointer' }}
             title='Edit Experience'
           />
         </div>
-        {/* {onEdit && (
-          <button className='edit-button' onClick={onEdit}>
-            <span role='img' aria-label='edit'>
-              ✏️
-            </span>
-          </button>
-        )} */}
       </div>
-
       <div className='profile-card-content'>{children}</div>
     </div>
-  )
-}
+  );
+};
 
-export default MentorCard
+export default MentorCard;

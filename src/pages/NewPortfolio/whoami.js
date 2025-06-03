@@ -287,6 +287,8 @@ const WhoAmI = (props) => {
     category: 'my-mentors'
   })
 
+  const [expandedCards, setExpandedCards] = useState(false);
+
   const handleEditMentor = (mentor) => {
     setEditingMentorId(mentor.id)
     setEditedMentor({
@@ -393,6 +395,9 @@ const WhoAmI = (props) => {
     props?.userBasicInfo?.primaryInterest ||
     props?.userBasicInfo?.valueProposition ||
     props?.userBasicInfo?.id
+
+  // Add this to your state declarations at the top
+  const [expandedFailures, setExpandedFailures] = useState({});
 
   return (
     <div>
@@ -1088,7 +1093,7 @@ const WhoAmI = (props) => {
                         >
                           {/* Left side - Video */}
                           <div
-                            style={{ minWidth: '48%' }}
+                            style={{ minWidth: '48%', aspectRatio: '16/9', }}
                             className='my-failure-video-div'
                           >
                             {itemVideoUrl ? (
@@ -1099,12 +1104,11 @@ const WhoAmI = (props) => {
                                     style={{
                                       position: 'relative',
                                       width: '100%',
-                                      height: '250px',
                                       cursor: 'pointer',
                                       overflow: 'hidden',
                                       marginBottom: '10px',
                                       boxShadow: '0px 5px 15px rgb(211, 211, 211)',
-                                      padding:'20px',
+                                      padding:'25px',
                                       borderRadius: '15px'
                                     }}
                                   >
@@ -1115,7 +1119,8 @@ const WhoAmI = (props) => {
                                         style={{
                                           width: '100%',
                                           height: '100%',
-                                          objectFit: 'cover'
+                                          objectFit: 'cover',
+                                          aspectRatio: '16/9',
                                         }}
                                       />
                                     ) : (
@@ -1220,57 +1225,84 @@ const WhoAmI = (props) => {
                             style={{ minWidth: '48%' }}
                             className='my-failure-text-div'
                           >
-                            <div
-                              style={{ width: '100%', marginLeft: '15px' }}
-                              className='my-relationships-card'
-                            >
-                              <div
-                                style={{
-                                  fontSize: '12px',
-                                  fontWeight: '600',
-                                  marginBottom: '6px',
-                                }}
-                              >
+                            <div style={{ width: '100%', marginLeft: '15px' }} className='my-relationships-card'>
+                              <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
                                 MY FAILURE
                               </div>
                               <div style={{ fontSize: '15px' }}>
-                                {itemFailure}
+                                {expandedFailures[`failure-${index}`] 
+                                  ? itemFailure 
+                                  : itemFailure.slice(0, 225)}
+                                {itemFailure.length > 225 && (
+                                  <span
+                                    onClick={() => setExpandedFailures(prev => ({
+                                      ...prev,
+                                      [`failure-${index}`]: !prev[`failure-${index}`]
+                                    }))}
+                                    style={{
+                                      color: 'rgb(0, 218, 218)',
+                                      cursor: 'pointer',
+                                      marginLeft: '5px',
+                                      fontWeight: '500'
+                                    }}
+                                  >
+                                    {expandedFailures[`failure-${index}`] ? ' Read Less' : '... Read More'}
+                                  </span>
+                                )}
                               </div>
                             </div>
 
-                            <div
-                              style={{ width: '100%', margin: '15px' }}
-                              className='my-relationships-card'
-                            >
-                              <div
-                                style={{
-                                  fontSize: '12px',
-                                  fontWeight: '600',
-                                  marginBottom: '6px',
-                                }}
-                              >
+                            <div style={{ width: '100%', margin: '15px' }} className='my-relationships-card'>
+                              <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
                                 MY PIVOT
                               </div>
                               <div style={{ fontSize: '15px' }}>
-                                {itemPivot}
+                                {expandedFailures[`pivot-${index}`] 
+                                  ? itemPivot 
+                                  : itemPivot.slice(0, 225)}
+                                {itemPivot.length > 225 && (
+                                  <span
+                                    onClick={() => setExpandedFailures(prev => ({
+                                      ...prev,
+                                      [`pivot-${index}`]: !prev[`pivot-${index}`]
+                                    }))}
+                                    style={{
+                                      color: 'rgb(0, 218, 218)',
+                                      cursor: 'pointer',
+                                      marginLeft: '5px',
+                                      fontWeight: '500'
+                                    }}
+                                  >
+                                    {expandedFailures[`pivot-${index}`] ? ' Read Less' : '... Read More'}
+                                  </span>
+                                )}
                               </div>
                             </div>
 
-                            <div
-                              style={{ width: '100%', margin: '15px' }}
-                              className='my-relationships-card'
-                            >
-                              <div
-                                style={{
-                                  fontSize: '12px',
-                                  fontWeight: '600',
-                                  marginBottom: '6px',
-                                }}
-                              >
+                            <div style={{ width: '100%', margin: '15px' }} className='my-relationships-card'>
+                              <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
                                 MY OUTCOMES
                               </div>
                               <div style={{ fontSize: '15px' }}>
-                                {itemOutcomes}
+                                {expandedFailures[`outcomes-${index}`] 
+                                  ? itemOutcomes 
+                                  : itemOutcomes.slice(0, 225)}
+                                {itemOutcomes.length > 225 && (
+                                  <span
+                                    onClick={() => setExpandedFailures(prev => ({
+                                      ...prev,
+                                      [`outcomes-${index}`]: !prev[`outcomes-${index}`]
+                                    }))}
+                                    style={{
+                                      color: 'rgb(0, 218, 218)',
+                                      cursor: 'pointer',
+                                      marginLeft: '5px',
+                                      fontWeight: '500'
+                                    }}
+                                  >
+                                    {expandedFailures[`outcomes-${index}`] ? ' Read Less' : '... Read More'}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -1446,6 +1478,8 @@ const WhoAmI = (props) => {
                     mentor={item}
                     onClick={() => handleEditMentor(item)}
                     width={'95%'}
+                    isExpanded={expandedCards}
+                    onToggleExpand={() => setExpandedCards(!expandedCards)}
                   />
                 )}
               />
