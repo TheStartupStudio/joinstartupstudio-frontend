@@ -140,3 +140,31 @@
   border-radius: 10px;
   padding: 1rem;
 }
+
+.portfolio-productivity-card{
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.portfolio-productivity-card img{
+  object-fit: cover;
+  border-radius: 30px 30px 0 0;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+
+.portfolio-productivity-card .title{
+  font-size: 1rem;
+  font-weight: 600;
+  color: black;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}

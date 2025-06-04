@@ -249,48 +249,44 @@ function StartProd(props) {
           icon={questionMark}
           onClick={() => setEditProblemMode(true)}
         >
-          <div style={{ position: 'relative' }}>
-            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
-              <h5 className='value-subheader'>The Problem</h5>
-              {showMoreMyStory
-                ? productivityData.problem
-                : (productivityData.problem || '').slice(0, 250)}
-              {productivityData.problem &&
-                productivityData.problem.length > 250 && (
-                  <span
-                    onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                    style={{
-                      color: 'rgb(0, 218, 218)',
-                      cursor: 'pointer',
-                      marginLeft: '5px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    {showMoreMyStory ? ' Show less' : '... Show more'}
-                  </span>
-                )}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '1fr 1fr 1fr', 
+            gap: '30px',
+            padding: '20px 0'
+          }}>
+            {/* The Problem Column */}
+            <div className="portfolio-productivity-card" >
+              
+                <img 
+                  src={'https://imgs.search.brave.com/zs0VPjbB8dBTv7b3zxrWNLYv-jhXXpbcpySxc_gBVLg/rs:fit:860:0:0:0/g:ce/aHR0cDovL3d3dy5z/aW1wbHlidXNpbmVz/cy5jby51ay93cC1j/b250ZW50L3VwbG9h/ZHMvc2l0ZXMvMy8y/MDI0LzA1L2VkaXRp/bmctaW1hZ2VzLWZv/ci1idXNpbmVzcy1t/YXJrZXRpbmcuanBn/P3c9ODE1'} 
+                  alt="Problem" 
+                />
+              <h5 className="title">
+                THE PROBLEM
+              </h5>
             </div>
-          </div>
-          <div style={{ position: 'relative' }}>
-            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
-              <h5 className='value-subheader'>Why It's Worth Solving</h5>
-              {showMoreMyStory
-                ? productivityData.problem_solving
-                : (productivityData.problem_solving || '').slice(0, 250)}
-              {productivityData.problem_solving &&
-                productivityData.problem_solving.length > 250 && (
-                  <span
-                    onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                    style={{
-                      color: 'rgb(0, 218, 218)',
-                      cursor: 'pointer',
-                      marginLeft: '5px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    {showMoreMyStory ? ' Show less' : '... Show more'}
-                  </span>
-                )}
+
+            {/* Why It's Worth Solving Column */}
+            <div className="portfolio-productivity-card" >
+                <img 
+                  src={'https://imgs.search.brave.com/zs0VPjbB8dBTv7b3zxrWNLYv-jhXXpbcpySxc_gBVLg/rs:fit:860:0:0:0/g:ce/aHR0cDovL3d3dy5z/aW1wbHlidXNpbmVz/cy5jby51ay93cC1j/b250ZW50L3VwbG9h/ZHMvc2l0ZXMvMy8y/MDI0LzA1L2VkaXRp/bmctaW1hZ2VzLWZv/ci1idXNpbmVzcy1t/YXJrZXRpbmcuanBn/P3c9ODE1'} 
+                  alt="Worth Solving" 
+                />
+              <h5 className="title">
+                WHY IT'S WORTH SOLVING
+              </h5>
+            </div>
+
+            {/* Executed Solution Column */}
+            <div className="portfolio-productivity-card" >
+                <img 
+                  src={'https://imgs.search.brave.com/zs0VPjbB8dBTv7b3zxrWNLYv-jhXXpbcpySxc_gBVLg/rs:fit:860:0:0:0/g:ce/aHR0cDovL3d3dy5z/aW1wbHlidXNpbmVz/cy5jby51ay93cC1j/b250ZW50L3VwbG9h/ZHMvc2l0ZXMvMy8y/MDI0LzA1L2VkaXRp/bmctaW1hZ2VzLWZv/ci1idXNpbmVzcy1t/YXJrZXRpbmcuanBn/P3c9ODE1'} 
+                  alt="Solution" 
+                />
+              <h5 className="title">
+                EXECUTED SOLUTION
+              </h5>
             </div>
           </div>
         </MainCard>
@@ -350,74 +346,76 @@ function StartProd(props) {
         </EditCard>
       )}
 
-      {/* Executed Solution Card */}
-      {hasSolutionData ? (
+
+
+
+
+      {/* Problem Worth Solving Card */}
+      {hasProblemData ? (
         <MainCard
-          title={'Executed Solution'}
-          icon={lightBulb}
-          onClick={() => setEditSolutionMode(true)}
+          title={'Metrics'}
+          icon={graphUp}
+          onClick={() => setEditProblemMode(true)}
         >
-          <div style={{ position: 'relative' }}>
-            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
-              <h5 className='value-subheader'>My Solution</h5>
-              {showMoreMyStory
-                ? productivityData.solution
-                : (productivityData.solution || '').slice(0, 250)}
-              {productivityData.solution &&
-                productivityData.solution.length > 250 && (
-                  <span
-                    onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                    style={{
-                      color: 'rgb(0, 218, 218)',
-                      cursor: 'pointer',
-                      marginLeft: '5px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    {showMoreMyStory ? ' Show less' : '... Show more'}
-                  </span>
-                )}
-            </div>
-          </div>
-          <div style={{ position: 'relative' }}>
-            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
-              <h5 className='value-subheader'>
-                How My Solution Solved The Problem
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '1fr 1fr 1fr', 
+            gap: '30px',
+            padding: '20px 0'
+          }}>
+            {/* The Problem Column */}
+            <div className="portfolio-productivity-card" >
+              
+                <img 
+                  src={'https://imgs.search.brave.com/zs0VPjbB8dBTv7b3zxrWNLYv-jhXXpbcpySxc_gBVLg/rs:fit:860:0:0:0/g:ce/aHR0cDovL3d3dy5z/aW1wbHlidXNpbmVz/cy5jby51ay93cC1j/b250ZW50L3VwbG9h/ZHMvc2l0ZXMvMy8y/MDI0LzA1L2VkaXRp/bmctaW1hZ2VzLWZv/ci1idXNpbmVzcy1t/YXJrZXRpbmcuanBn/P3c9ODE1'} 
+                  alt="Problem" 
+                />
+              <h5 className="title">
+                THE PROBLEM
               </h5>
-              {showMoreMyStory
-                ? productivityData.solution_solved
-                : (productivityData.solution_solved || '').slice(0, 250)}
-              {productivityData.solution_solved &&
-                productivityData.solution_solved.length > 250 && (
-                  <span
-                    onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                    style={{
-                      color: 'rgb(0, 218, 218)',
-                      cursor: 'pointer',
-                      marginLeft: '5px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    {showMoreMyStory ? ' Show less' : '... Show more'}
-                  </span>
-                )}
+            </div>
+
+            {/* Why It's Worth Solving Column */}
+            <div className="portfolio-productivity-card" >
+                <img 
+                  src={'https://imgs.search.brave.com/zs0VPjbB8dBTv7b3zxrWNLYv-jhXXpbcpySxc_gBVLg/rs:fit:860:0:0:0/g:ce/aHR0cDovL3d3dy5z/aW1wbHlidXNpbmVz/cy5jby51ay93cC1j/b250ZW50L3VwbG9h/ZHMvc2l0ZXMvMy8y/MDI0LzA1L2VkaXRp/bmctaW1hZ2VzLWZv/ci1idXNpbmVzcy1t/YXJrZXRpbmcuanBn/P3c9ODE1'} 
+                  alt="Worth Solving" 
+                />
+              <h5 className="title">
+                WHY IT'S WORTH SOLVING
+              </h5>
+            </div>
+
+            {/* Executed Solution Column */}
+            <div className="portfolio-productivity-card" >
+                <img 
+                  src={'https://imgs.search.brave.com/zs0VPjbB8dBTv7b3zxrWNLYv-jhXXpbcpySxc_gBVLg/rs:fit:860:0:0:0/g:ce/aHR0cDovL3d3dy5z/aW1wbHlidXNpbmVz/cy5jby51ay93cC1j/b250ZW50L3VwbG9h/ZHMvc2l0ZXMvMy8y/MDI0LzA1L2VkaXRp/bmctaW1hZ2VzLWZv/ci1idXNpbmVzcy1t/YXJrZXRpbmcuanBn/P3c9ODE1'} 
+                  alt="Solution" 
+                />
+              <h5 className="title">
+                EXECUTED SOLUTION
+              </h5>
             </div>
           </div>
         </MainCard>
       ) : (
         <MainCard
-          title={'Executed Solution'}
-          icon={lightBulb}
-          onClick={() => setEditSolutionMode(true)}
+          title={'Problem Worth Solving'}
+          icon={questionMark}
+          onClick={() => setEditProblemMode(true)}
         />
       )}
 
-      {/* Edit Solution Card */}
-      {editSolutionMode && (
+      {/* Edit Problem Card */}
+      {editProblemMode && (
         <EditCard
-          title={hasSolutionData ? 'Edit Solution' : 'Add Solution'}
-          icon={lightBulb}
-          handleSubmit={handleSaveSolution}
+          title={
+            hasProblemData
+              ? 'Edit Problem Worth Solving'
+              : 'Add Problem Worth Solving'
+          }
+          icon={questionMark}
+          handleSubmit={handleSaveProblem}
           toggle={handleCancelEdit}
         >
           <div>
@@ -425,239 +423,32 @@ function StartProd(props) {
               Instructions:
             </div>
             <div style={{ marginTop: '15px', fontSize: '14px' }}>
-              Describe the solution you executed and explain how it solved the
-              problem.
+              Identify the problem you solved for, then explain why it is worth
+              solving.
             </div>
             <div className='mt-4'>
-              <label>My Solution:</label>
-              <input
-                className='form-control'
-                value={productivityData.solution || ''}
-                onChange={(e) => handleFormChange('solution', e.target.value)}
-                style={{
-                  border: 'none',
-                  width: '100%',
-                  fontSize: '0.875rem',
-                  color: 'black',
-                  background: 'transparent',
-                  boxShadow: '0px 3px 14px #00000029',
-                  marginBottom: '15px'
-                }}
-              />
-            </div>
-            <div className='mt-4'>
-              <label>How My Solution Solved The Problem:</label>
+              <label>The Problem:</label>
               <ReactQuill
-                value={productivityData.solution_solved || ''}
-                onChange={(content) =>
-                  handleFormChange('solution_solved', content)
-                }
+                value={productivityData.problem || ''}
+                onChange={(content) => handleFormChange('problem', content)}
                 style={{
                   boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
                   borderRadius: '15px'
                 }}
               />
             </div>
-          </div>
-        </EditCard>
-      )}
-
-      {/* Metrics Card */}
-      {hasMetricsData ? (
-        <MainCard
-          title={'Metrics'}
-          icon={graphUp}
-          onClick={() => setEditMetricsMode(true)}
-        >
-          <div style={{ position: 'relative' }}>
-            <div
-              className='d-grid gap-3'
-              style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
-            >
-              <div style={{ fontSize: '13px', color: 'grey' }}>
-                <h4 className='value-header'>METRIC 1:</h4>
-                <h5 className='value-subheader'>{productivityData.metrix_1}</h5>
-                <h4 className='value-header mt-3'>Explanation of Results:</h4>
-                {showMoreMyStory
-                  ? productivityData.metrix_1_explanation
-                  : (productivityData.metrix_1_explanation || '').slice(0, 250)}
-                {productivityData.metrix_1_explanation &&
-                  productivityData.metrix_1_explanation.length > 250 && (
-                    <span
-                      onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                      style={{
-                        color: 'blue',
-                        cursor: 'pointer',
-                        marginLeft: '5px',
-                        fontWeight: '500'
-                      }}
-                    >
-                      {showMoreMyStory ? ' Show less' : '... Show more'}
-                    </span>
-                  )}
-              </div>
-              <div style={{ fontSize: '13px', color: 'grey' }}>
-                <h4 className='value-header'>METRIC 2:</h4>
-                <h5 className='value-subheader'>{productivityData.metrix_2}</h5>
-                <h4 className='value-header mt-3'>Explanation of Results:</h4>
-                {showMoreMyStory
-                  ? productivityData.metrix_2_explanation
-                  : (productivityData.metrix_2_explanation || '').slice(0, 250)}
-                {productivityData.metrix_2_explanation &&
-                  productivityData.metrix_2_explanation.length > 250 && (
-                    <span
-                      onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                      style={{
-                        color: 'blue',
-                        cursor: 'pointer',
-                        marginLeft: '5px',
-                        fontWeight: '500'
-                      }}
-                    >
-                      {showMoreMyStory ? ' Show less' : '... Show more'}
-                    </span>
-                  )}
-              </div>
-              <div style={{ fontSize: '13px', color: 'grey' }}>
-                <h4 className='value-header'>METRIC 3:</h4>
-                <h5 className='value-subheader'>{productivityData.metrix_3}</h5>
-                <h4 className='value-header mt-3'>Explanation of Results:</h4>
-                {showMoreMyStory
-                  ? productivityData.metrix_3_explanation
-                  : (productivityData.metrix_3_explanation || '').slice(0, 250)}
-                {productivityData.metrix_3_explanation &&
-                  productivityData.metrix_3_explanation.length > 250 && (
-                    <span
-                      onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                      style={{
-                        color: 'blue',
-                        cursor: 'pointer',
-                        marginLeft: '5px',
-                        fontWeight: '500'
-                      }}
-                    >
-                      {showMoreMyStory ? ' Show less' : '... Show more'}
-                    </span>
-                  )}
-              </div>
-            </div>
-          </div>
-        </MainCard>
-      ) : (
-        <MainCard
-          title={'Metrics'}
-          icon={graphUp}
-          onClick={() => setEditMetricsMode(true)}
-        />
-      )}
-
-      {/* Edit Metrics Card */}
-      {editMetricsMode && (
-        <EditCard
-          title={hasMetricsData ? 'Edit Metrics' : 'Add Metrics'}
-          icon={graphUp}
-          handleSubmit={handleSaveMetrics}
-          toggle={handleCancelEdit}
-        >
-          <div>
-            <div style={{ marginTop: '30px', fontWeight: '600' }}>
-              Instructions:
-            </div>
-            <div style={{ marginTop: '15px', fontSize: '14px' }}>
-              Provide metrics that demonstrate the impact of your solution and
-              explain the results.
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                gap: '20px'
-              }}
-            >
-              <div style={{ flex: 1 }}>
-                <label>Metric 1:</label>
-                <input
-                  className='form-control'
-                  value={productivityData.metrix_1 || ''}
-                  onChange={(e) => handleFormChange('metrix_1', e.target.value)}
-                  style={{
-                    border: 'none',
-                    width: '100%',
-                    fontSize: '0.875rem',
-                    color: 'black',
-                    background: 'transparent',
-                    boxShadow: '0px 3px 14px #00000029',
-                    marginBottom: '15px'
-                  }}
-                />
-                <label>Explanation:</label>
-                <ReactQuill
-                  value={productivityData.metrix_1_explanation || ''}
-                  onChange={(content) =>
-                    handleFormChange('metrix_1_explanation', content)
-                  }
-                  style={{
-                    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
-                    borderRadius: '15px'
-                  }}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label>Metric 2:</label>
-                <input
-                  className='form-control'
-                  value={productivityData.metrix_2 || ''}
-                  onChange={(e) => handleFormChange('metrix_2', e.target.value)}
-                  style={{
-                    border: 'none',
-                    width: '100%',
-                    fontSize: '0.875rem',
-                    color: 'black',
-                    background: 'transparent',
-                    boxShadow: '0px 3px 14px #00000029',
-                    marginBottom: '15px'
-                  }}
-                />
-                <label>Explanation:</label>
-                <ReactQuill
-                  value={productivityData.metrix_2_explanation || ''}
-                  onChange={(content) =>
-                    handleFormChange('metrix_2_explanation', content)
-                  }
-                  style={{
-                    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
-                    borderRadius: '15px'
-                  }}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label>Metric 3:</label>
-                <input
-                  className='form-control'
-                  value={productivityData.metrix_3 || ''}
-                  onChange={(e) => handleFormChange('metrix_3', e.target.value)}
-                  style={{
-                    border: 'none',
-                    width: '100%',
-                    fontSize: '0.875rem',
-                    color: 'black',
-                    background: 'transparent',
-                    boxShadow: '0px 3px 14px #00000029',
-                    marginBottom: '15px'
-                  }}
-                />
-                <label>Explanation:</label>
-                <ReactQuill
-                  value={productivityData.metrix_3_explanation || ''}
-                  onChange={(content) =>
-                    handleFormChange('metrix_3_explanation', content)
-                  }
-                  style={{
-                    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
-                    borderRadius: '15px'
-                  }}
-                />
-              </div>
+            <div className='mt-4'>
+              <label>Why It's Worth Solving:</label>
+              <ReactQuill
+                value={productivityData.problem_solving || ''}
+                onChange={(content) =>
+                  handleFormChange('problem_solving', content)
+                }
+                style={{
+                  boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
+                  borderRadius: '15px'
+                }}
+              />
             </div>
           </div>
         </EditCard>
