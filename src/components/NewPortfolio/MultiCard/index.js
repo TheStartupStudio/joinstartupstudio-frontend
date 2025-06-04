@@ -40,20 +40,6 @@ const MultiCard = ({
             </span>
           )}
         </div>
-        <div
-          className='portfolio-actions'
-          style={{
-            borderTopRightRadius: '26px',
-            background: 'transparent'
-          }}
-        >
-          <FaPlus
-            className={'action-box pencil-icon'}
-            onClick={onClick}
-            style={{ cursor: 'pointer', background: 'transparent' }}
-            title='Edit Experience'
-          />
-        </div>
       </div>
 
       <div className='profile-card-content'>

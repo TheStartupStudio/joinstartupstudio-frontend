@@ -56,3 +56,8 @@
     border: 1px solid #707070;
     cursor: unset;
 }
+
+.my-mentors-card{
+    padding: 0px !important;
+    border-radius: 5px !important;
+}

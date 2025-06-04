@@ -421,7 +421,7 @@ const WhoAmI = (props) => {
       </div>
 
       <div className='whoami-container'>
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '40px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '40px' }} className='whoami-personal-details'>
           {/* My Details Card */}
           <div style={{ width: '100%', marginBottom:'20px' }}>
             {/* Always show MainCard */}
@@ -1471,6 +1471,7 @@ const WhoAmI = (props) => {
           >
             {props?.myMentors?.length > 0 ? (
               <CarouselComponent
+                className='my-mentors-card'
                 data={props?.myMentors}
                 itemsToShow={3}
                 renderItems={(item, index) => (

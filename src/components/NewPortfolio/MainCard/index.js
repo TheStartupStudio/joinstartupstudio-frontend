@@ -34,22 +34,7 @@ const MainCard = ({
 
           <span className='cover-title'>{title}</span>
         </div>
-        <div
-          className='portfolio-actions'
-          style={{
-            borderTopRightRadius: '26px',
-            background: 'transparent'
-          }}
-        >
-          <img
-            src={penIcon}
-            alt='pen-icon'
-            className={'action-box pencil-icon'}
-            onClick={onClick}
-            style={{ cursor: 'pointer', background: 'transparent' }}
-            title='Edit Experience'
-          />
-        </div>
+
         {/* {onEdit && (
           <button className='edit-button' onClick={onEdit}>
             <span role='img' aria-label='edit'>

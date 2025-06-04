@@ -60,20 +60,6 @@ const MentorCard = ({ children, onEdit, title, mentor, onClick, width, isExpande
             )}
           </div>
         </div>
-        <div
-          className='portfolio-actions'
-          style={{
-            borderTopRightRadius: '36px',
-            background: 'linear-gradient(rgb(228, 233, 244), rgb(255, 255, 255))'
-          }}
-        >
-          <FaPencilAlt
-            className={'action-box pencil-icon'}
-            onClick={onClick}
-            style={{ cursor: 'pointer' }}
-            title='Edit Experience'
-          />
-        </div>
       </div>
       <div className='profile-card-content'>{children}</div>
     </div>
