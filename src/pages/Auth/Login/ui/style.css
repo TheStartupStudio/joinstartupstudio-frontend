@@ -2,7 +2,7 @@
   /* height: 60vh; */
   /* min-height: 60vh; */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   background-color: transparent;
@@ -80,6 +80,7 @@
     /* height: calc(50vh - 42px) !important; */
     /* min-height: 50vh !important; */
     justify-content: center;
+    flex-direction: column;
   }
 }
 

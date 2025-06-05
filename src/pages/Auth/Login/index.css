@@ -614,6 +614,16 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   transition: all 0.3s ease;
 }
 
+.login-btn.loading {
+  background-color: white !important;
+  opacity: 1 !important;
+  cursor: not-allowed;
+}
+
+.login-btn.loading:hover {
+  background-color: white !important;
+}
+
 .login-btn:active {
   background-color: white !important;
   color: #333 !important;
@@ -626,7 +636,11 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   border: 0.2em solid #333;
   border-right-color: transparent !important;
   border-radius: 50%;
-  animation: spinner-border 0.75s linear infinite;
+  animation: spinner-border .75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
 }
 
 .forgot-password-container {
@@ -736,7 +750,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 }
 
 
-.auth-success-container{
+/* .auth-success-container{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -750,4 +764,4 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 .auth-success-container img{
   width: 200px;
   object-fit: contain;
-}
+} */

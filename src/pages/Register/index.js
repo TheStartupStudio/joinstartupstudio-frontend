@@ -389,8 +389,7 @@ function Register() {
                     justifyContent: 'center',
                     width: '150px',
                     borderRadius: '8px',
-                    background:
-                      'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                    background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
                     padding: '2px',
                     height: '58px',
                     boxShadow: '0px 4px 10px 0px #00000040'
@@ -398,14 +397,25 @@ function Register() {
                 >
                   <button
                     type='submit'
-                    className='w-100 register-btn'
+                    className={`w-100 register-btn ${isLoading ? 'loading' : ''}`}
                     disabled={isLoading}
                     onClick={handleSubmit}
                   >
                     {isLoading ? (
-                      <span className='spinner-border spinner-border-sm' />
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        <span 
+                          className='spinner-border spinner-border-sm' 
+                          style={{
+                            width: '1.2rem',
+                            height: '1.2rem',
+                            borderColor: '#51C7DF',
+                            borderRightColor: 'transparent'
+                          }}
+                        />
+                        <span style={{ color: '#51C7DF' }}>Loading...</span>
+                      </div>
                     ) : (
-                      <span className='d-flex align-items-center justify-content-center text-black'>
+                      <span className='d-flex align-items-center justify-content-center'>
                         Register
                         <FontAwesomeIcon
                           icon={faArrowRight}
