@@ -10,6 +10,7 @@ import discordLogo from '../../assets/images/academy-icons/icons8-discord.svg'
 import instaLogo from '../../assets/images/academy-icons/icons8-instagram.svg'
 import linkedinLogo from '../../assets/images/academy-icons/Icon awesome-linkedin.svg'
 import spotifyLogo from '../../assets/images/academy-icons/Icon awesome-spotify.svg'
+import tiktokLogo from '../../assets/images/academy-icons/icons-tiktok.svg'
 import xIconImage from '../../assets/images/X-icon.png'
 
 export default function Footer(props) {
@@ -54,7 +55,7 @@ export default function Footer(props) {
                 </li>
                 <li>
                   <a
-                    href='https://www.linkedin.com/company/learntostart/'
+                    href='https://www.linkedin.com/company/lts-startup-studio'
                     rel='noreferrer'
                     target='_blank'
                   >
@@ -77,6 +78,15 @@ export default function Footer(props) {
                     target='_blank'
                   >
                     <img src={instaLogo} alt='Insta' />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href='https://www.tiktok.com/thestartupstudio/'
+                    rel='noreferrer'
+                    target='_blank'
+                  >
+                    <img src={tiktokLogo} alt='Tiktok' />
                   </a>
                 </li>
               </ul>
