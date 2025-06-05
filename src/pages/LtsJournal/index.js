@@ -231,7 +231,7 @@ function LtsJournal(props) {
         children: [
           {
             id: 'journey31',
-            title: 'Welcome to Level 3 & Bussines Story',
+            title: 'Welcome to Level 3 & Business Story',
             status: 'notStarted',
             redirectId: 70
           },
