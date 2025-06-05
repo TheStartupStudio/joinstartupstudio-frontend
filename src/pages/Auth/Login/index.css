@@ -734,3 +734,20 @@ body:has(.choose-login_container) section.loginpage-footer-section {
     flex: 0 1 500px;
   }
 }
+
+
+.auth-success-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap:20px;
+  background: linear-gradient(180deg, #ffffff 0%, rgb(255 228 248) 0%, rgb(255 255 255) 100%) !important;
+}
+
+
+.auth-success-container img{
+  width: 200px;
+  object-fit: contain;
+}

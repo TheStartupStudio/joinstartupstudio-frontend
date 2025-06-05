@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { useDispatch } from 'react-redux'
 import { userLogin } from '../../../redux' // adjust path as needed
+import '../Login/index.css' // Import your CSS for styling
+import logo from '../../../../public/academy-logo.png' // Replace with your logo path
 
 function AuthSuccess() {
   const history = useHistory()
@@ -39,7 +41,12 @@ function AuthSuccess() {
   }, [history, dispatch])
 
   return (
-    <div>
+    <div className="auth-success-container">
+      <img
+        src={logo}
+        alt="Success"
+      />
+
       <h2>Logging in...</h2>
     </div>
   )
