@@ -197,9 +197,70 @@
   margin-bottom: 10px;
 }
 
+.wcid-image-component{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:10px;
+}
+
+.text-content-container{
+  width: 50%;
+}
+
+
+.start-alignment-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+}
+
+.start-prod-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px 0px;
+}
+
 @media screen and (max-width: 1028px) {
 .whoami-personal-details{
   display: flex;
+  flex-direction: column;
+}
+
+.wcid-image-component{
+  grid-template-columns: 1fr;
+}
+
+.hdipi-skills-container{
+  flex-direction: column;
+}
+
+.text-content-container{
+  width: 100%;
+}
+
+.my-relationships-container {
+  flex-direction: column;
+  gap: 15px;
+}
+
+.my-relationships-card{
+  width: 100%;
+}
+
+.start-alignment-container{
+  grid-template-columns: 1fr;
+}
+
+.start-prod-container{
+  grid-template-columns: 1fr;
+}
+
+.start-competitiveness-container{
+  grid-template-columns: 1fr;
+}
+
+.portfolio-navbar {
   flex-direction: column;
 }
   

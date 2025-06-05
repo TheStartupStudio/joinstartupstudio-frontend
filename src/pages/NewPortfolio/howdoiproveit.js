@@ -464,7 +464,7 @@ const HowDoIProveIt = (props) => {
                     multi={true}
                   >
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }} className="hdipi-skills-container">
                         <div style={{ display: 'flex', gap: '7px' }}>
                           <div
                             style={{
@@ -506,7 +506,7 @@ const HowDoIProveIt = (props) => {
                           </div>
                         </div>
 
-                        <div style={{ width: '50%' }}>
+                        <div className="text-content-container">
                           <div style={{
                             padding: '15px',
                             boxShadow: '0px 3px 14px #00000029',
@@ -650,7 +650,7 @@ const HowDoIProveIt = (props) => {
                     multi={true}
                   >
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }} className="hdipi-skills-container">
                         <div style={{ display: 'flex', gap: '7px' }}>
                           <div style={{
                             width: '100px',
@@ -689,7 +689,7 @@ const HowDoIProveIt = (props) => {
                           </div>
                         </div>
 
-                        <div style={{ width: '50%' }}>
+                        <div className="text-content-container">
                           <div style={{
                             padding: '15px',
                             boxShadow: '0px 3px 14px #00000029',
@@ -834,7 +834,7 @@ const HowDoIProveIt = (props) => {
                     multi={true}
                   >
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }} className="hdipi-skills-container">
                         <div style={{ display: 'flex', gap: '7px' }}>
                           <div
                             style={{
@@ -879,7 +879,7 @@ const HowDoIProveIt = (props) => {
                           </div>
                         </div>
 
-                        <div style={{ width: '50%' }}>
+                        <div className="text-content-container">
                           <div style={{
                             padding: '15px',
                             boxShadow: '0px 3px 14px #00000029',

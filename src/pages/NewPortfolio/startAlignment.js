@@ -341,8 +341,7 @@ function StartAlignment(props) {
         >
           <div style={{ position: 'relative' }}>
             <div
-              className='d-grid gap-3'
-              style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
+              className='start-alignment-container'
             >
               {alignmentData.value_1 && (
                 <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
@@ -607,8 +606,7 @@ function StartAlignment(props) {
         >
           <div style={{ position: 'relative' }}>
             <div
-              className='d-grid gap-3'
-              style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
+              className='start-alignment-container'
             >
 <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
                 <h4 className='value-header'>PASSION:</h4>

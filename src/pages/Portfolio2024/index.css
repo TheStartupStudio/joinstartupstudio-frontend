@@ -1282,7 +1282,8 @@
 @media (max-width: 1248px) {
   .section-description-container {
     flex-direction: column;
-    padding: 0 !important;
+    padding: 10 !important;
+    align-items: center;
   }
 
   .triangle-icon-parent {

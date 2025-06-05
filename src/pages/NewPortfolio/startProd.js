@@ -249,12 +249,9 @@ function StartProd(props) {
           icon={questionMark}
           onClick={() => setEditProblemMode(true)}
         >
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr 1fr', 
-            gap: '30px',
-            padding: '20px 0'
-          }}>
+          <div
+            className="start-prod-container"
+          >
             {/* The Problem Column */}
             <div className="portfolio-productivity-card" >
               
@@ -357,12 +354,7 @@ function StartProd(props) {
           icon={graphUp}
           onClick={() => setEditProblemMode(true)}
         >
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr 1fr', 
-            gap: '30px',
-            padding: '20px 0'
-          }}>
+          <div className="start-prod-container">
             {/* The Problem Column */}
             <div className="portfolio-productivity-card" >
               

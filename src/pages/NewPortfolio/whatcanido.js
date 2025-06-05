@@ -316,11 +316,7 @@ const [expandedContents, setExpandedContents] = useState({});
   })()}
 </div>
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr',
-            gap: '10px'
-          }}
+          className='wcid-image-component'
         >
           {child.evidences?.map((evidence, idx) => (
             <WhatCanIDoCard

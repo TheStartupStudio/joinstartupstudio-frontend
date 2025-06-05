@@ -421,7 +421,7 @@ const WhoAmI = (props) => {
       </div>
 
       <div className='whoami-container'>
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '40px' }} className='whoami-personal-details'>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '40px', gap:'15px' }} className='whoami-personal-details'>
           {/* My Details Card */}
           <div style={{ width: '100%', marginBottom:'20px' }}>
             {/* Always show MainCard */}
@@ -1090,6 +1090,7 @@ const WhoAmI = (props) => {
                             display: 'flex',
                             justifyContent: 'space-between'
                           }}
+                          className='whoami-personal-details'
                         >
                           {/* Left side - Video */}
                           <div
@@ -1225,7 +1226,7 @@ const WhoAmI = (props) => {
                             style={{ minWidth: '48%' }}
                             className='my-failure-text-div'
                           >
-                            <div style={{ width: '100%', marginLeft: '15px' }} className='my-relationships-card'>
+                            <div style={{ width: '100%' }} className='my-relationships-card'>
                               <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
                                 MY FAILURE
                               </div>
@@ -1252,7 +1253,7 @@ const WhoAmI = (props) => {
                               </div>
                             </div>
 
-                            <div style={{ width: '100%', margin: '15px' }} className='my-relationships-card'>
+                            <div style={{ width: '100%' }} className='my-relationships-card'>
                               <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
                                 MY PIVOT
                               </div>
@@ -1279,7 +1280,7 @@ const WhoAmI = (props) => {
                               </div>
                             </div>
 
-                            <div style={{ width: '100%', margin: '15px' }} className='my-relationships-card'>
+                            <div style={{ width: '100%' }} className='my-relationships-card'>
                               <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
                                 MY OUTCOMES
                               </div>
