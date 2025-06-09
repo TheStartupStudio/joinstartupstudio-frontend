@@ -8,18 +8,20 @@ function PortfolioWrapper({ img, title, children, setOpenNew }) {
         <h4 className='fs-14 fw-medium my-details-header text-black'>
           {title}
         </h4>
-        <span
-          className='cursor-pointer'
-          style={{ zIndex: '1' }}
-          onClick={() => setOpenNew((prev) => !prev)}
-        >
-          <img
-            className='left-arrow-modal object-scale-down'
-            src={plusIcon}
-            alt='pen-icon'
-            style={{ width: '24px' }}
-          />
-        </span>
+        {setOpenNew && (
+          <span
+            className='cursor-pointer'
+            style={{ zIndex: '1' }}
+            onClick={() => setOpenNew((prev) => !prev)}
+          >
+            <img
+              className='left-arrow-modal object-scale-down'
+              src={plusIcon}
+              alt='pen-icon'
+              style={{ width: '24px' }}
+            />
+          </span>
+        )}
       </div>
       <div className='mt-5 fs-18 fw-light text-black'>{children}</div>
     </div>

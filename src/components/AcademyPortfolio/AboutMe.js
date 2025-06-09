@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify' // Add this import
+import { useSelector } from 'react-redux'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
@@ -16,7 +17,7 @@ import Tooltip from './Tooltip'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import axiosInstance from '../../utils/AxiosInstance'
 
-function AboutMe({ user }) {
+function AboutMe({ user, portfolioData }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [modal, setModal] = useState(false)
   const [subsbsciptionModal, setSubscriptionModal] = useState(false)
@@ -26,6 +27,10 @@ function AboutMe({ user }) {
   const [isPublishedVisible, setIsPublishedVisible] = useState(false)
   const [sharePortfolio, setSharePortfolio] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
+
+  // Add new state to track if viewing own portfolio
+  const [isOwnPortfolio, setIsOwnPortfolio] = useState(false)
+  const { user: currentUser } = useSelector((state) => state.user.user)
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -51,22 +56,28 @@ function AboutMe({ user }) {
       : `https://${url}`
   }
 
-  const fullText = user?.bio || '' // Add default empty string
-
-  const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
-
   // Get initial publish state
   useEffect(() => {
-    const getPublishState = async () => {
-      try {
-        const response = await axiosInstance.get('/portfolio')
-        setIsPublishedVisible(response.data.is_published)
-      } catch (error) {
-        console.error('Error fetching portfolio status:', error)
+    if (portfolioData) {
+      setIsPublishedVisible(portfolioData.is_published)
+    } else {
+      // Fallback to fetching portfolio state if no data provided
+      const getPublishState = async () => {
+        try {
+          const response = await axiosInstance.get('/portfolio')
+          setIsPublishedVisible(response.data.is_published)
+        } catch (error) {
+          console.error('Error fetching portfolio status:', error)
+        }
       }
+      getPublishState()
     }
-    getPublishState()
-  }, [])
+  }, [portfolioData])
+
+  // Check if viewing own portfolio
+  useEffect(() => {
+    setIsOwnPortfolio(currentUser?.username === user?.username)
+  }, [currentUser?.username, user?.username])
 
   const handlePublishPortfolio = async () => {
     setIsPublishing(true)
@@ -99,7 +110,7 @@ function AboutMe({ user }) {
 
   // Update click handler for share
   const handleShareClick = () => {
-    const portfolioUrl = `${window.location.origin}/public-portfolio/${user.username}`
+    const portfolioUrl = portfolioData?.url || `${window.location.origin}/public-portfolio/${user.username}`
     setContent(portfolioUrl)
     setSharePortfolio(true)
   }
@@ -112,64 +123,66 @@ function AboutMe({ user }) {
             <img src={userIcon} alt='user' />
             <h4 className='fs-14 my-details-header text-black'>About Me</h4>
           </div>
-          <div>
-            <div
-              className='d-flex gap-4 align-items-center'
-              style={{ marginRight: '5rem' }}
-            >
-              {isPublishedVisible ? (
-                <>
-                  <div className='d-flex gap-2 align-items-center cursor-pointer'>
-                    <img
-                      src={internet}
-                      alt='internet'
-                      className='internet-class'
-                    />
-                    <Tooltip text={'Click to unpublish'}>
-                      <p
-                        className='mb-0 fs-15 fw-medium portfolio-u text-black'
-                        onClick={handleVisibilityClick}
-                      >
-                        {isPublishing ? 'Updating...' : 'Portfolio published'}
+          {isOwnPortfolio && ( // Only show controls if own portfolio
+            <div>
+              <div
+                className='d-flex gap-4 align-items-center'
+                style={{ marginRight: '5rem' }}
+              >
+                {isPublishedVisible ? (
+                  <>
+                    <div className='d-flex gap-2 align-items-center cursor-pointer'>
+                      <img
+                        src={internet}
+                        alt='internet'
+                        className='internet-class'
+                      />
+                      <Tooltip text={'Click to unpublish'}>
+                        <p
+                          className='mb-0 fs-15 fw-medium portfolio-u text-black'
+                          onClick={handleVisibilityClick}
+                        >
+                          {isPublishing ? 'Updating...' : 'Portfolio published'}
+                        </p>
+                      </Tooltip>
+                    </div>
+                    <div className='d-flex gap-2 align-items-center cursor-pointer'>
+                      <img src={ShareLink} alt='sharelink' />
+                      <Tooltip text={'Click to get link'}>
+                        <p
+                          className='mb-0 fs-15 fw-medium portfolio-u  text-black'
+                          onClick={handleShareClick}
+                        >
+                          Share link to portfolio
+                        </p>
+                      </Tooltip>
+                    </div>
+                  </>
+                ) : (
+                  <div
+                    className='d-flex gap-2 align-items-center cursor-pointer'
+                    onClick={handleVisibilityClick}
+                  >
+                    <img src={internet} alt='internet' />
+                    <Tooltip text={'Click to publish'}>
+                      <p className='mb-0 fs-15 fw-medium portfolio-u'>
+                        {isPublishing ? 'Publishing...' : 'Portfolio unpublished'}
                       </p>
                     </Tooltip>
                   </div>
-                  <div className='d-flex gap-2 align-items-center cursor-pointer'>
-                    <img src={ShareLink} alt='sharelink' />
-                    <Tooltip text={'Click to get link'}>
-                      <p
-                        className='mb-0 fs-15 fw-medium portfolio-u  text-black'
-                        onClick={handleShareClick}
-                      >
-                        Share link to portfolio
-                      </p>
-                    </Tooltip>
-                  </div>
-                </>
-              ) : (
-                <div
-                  className='d-flex gap-2 align-items-center cursor-pointer'
-                  onClick={handleVisibilityClick}
-                >
-                  <img src={internet} alt='internet' />
-                  <Tooltip text={'Click to publish'}>
-                    <p className='mb-0 fs-15 fw-medium portfolio-u'>
-                      {isPublishing ? 'Publishing...' : 'Portfolio unpublished'}
-                    </p>
-                  </Tooltip>
-                </div>
-              )}
+                )}
+              </div>
+              <span className='cursor-pointer' style={{ zIndex: '1' }}>
+                <img
+                  className='left-arrow-modal cursor-pointer'
+                  src={penIcon}
+                  alt='pen-icon'
+                  style={{ width: '24px' }}
+                  onClick={toggle}
+                />
+              </span>
             </div>
-            <span className='cursor-pointer' style={{ zIndex: '1' }}>
-              <img
-                className='left-arrow-modal cursor-pointer'
-                src={penIcon}
-                alt='pen-icon'
-                style={{ width: '24px' }}
-                onClick={toggle}
-              />
-            </span>
-          </div>
+          )}
         </div>
         <div className='d-flex gap-4 flex-col-mob'>
           <img
@@ -183,7 +196,7 @@ function AboutMe({ user }) {
               {user?.profession}
             </p>
             <div className='d-flex gap-2'>
-              {user.social_links.linkedIn && (
+              {user?.social_links?.linkedIn && (
                 <img
                   className='cursor-pointer'
                   src={linkedinLogo}
@@ -216,21 +229,19 @@ function AboutMe({ user }) {
                 />
               )}
             </div>
-            {fullText && ( // Only render if there's content
-              <p
-                className={`mt-3 fs-15 fw-light text-black text-break ${
-                  isExpanded && 'width-50 w-100-mob'
-                }`}
-              >
+            {user?.bio && (
+              <p className={`mt-3 fs-15 fw-light text-black text-break ${
+                isExpanded && 'width-50 w-100-mob'
+              }`}>
                 <div
                   dangerouslySetInnerHTML={{
                     __html: isExpanded
-                      ? fullText
-                      : `${shortText}${fullText.length > 200 ? '...' : ''}`
+                      ? user.bio
+                      : `${user.bio.length > 200 ? user.bio.slice(0, 200) + '...' : user.bio}`
                   }}
                 />
 
-                {fullText.length > 200 && (
+                {user.bio.length > 200 && (
                   <span
                     className='blue-color ml-2 fw-medium cursor-pointer'
                     onClick={() => setIsExpanded(!isExpanded)}

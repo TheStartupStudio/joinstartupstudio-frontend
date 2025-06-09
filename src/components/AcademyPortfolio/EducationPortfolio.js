@@ -1,29 +1,33 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMyEducations } from '../../redux/portfolio/Actions'
 import educationIcon from '../../assets/images/academy-icons/svg/education&ac.svg'
-import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
 import PortfolioContent from './PortfolioContent'
 import PortfolioWrapper from './PortfolioWrapper'
 import EditEduction from './EditEduction'
 import NewEducation from './NewEducation'
-import { useDispatch, useSelector } from 'react-redux'
-import { getMyEducations } from '../../redux/portfolio/Actions'
 import educationLogo from '../../assets/images/education-logo.png'
 
-function EducationPortfolio() {
+function EducationPortfolio({ educationData = [], isUserPortfolio }) {
   const [isOpen, setIsOpen] = useState(false)
   const [openNewEducation, setOpenNewEducation] = useState(false)
   const [selectedEducation, setSelectedEducation] = useState(null)
-
-  const educationData = useSelector(
-    (state) => state.portfolio.howSection.myAlignments.educations.data
-  )
   const dispatch = useDispatch()
 
+  const stateEducationData = useSelector(
+    (state) => state.portfolio?.howSection?.myAlignments?.educations?.data || []
+  )
+
+  const displayData = isUserPortfolio ? stateEducationData : educationData
+
   useEffect(() => {
-    dispatch(getMyEducations())
-  }, [dispatch])
+    if (isUserPortfolio) {
+      dispatch(getMyEducations())
+    }
+  }, [dispatch, isUserPortfolio])
 
   const handleEdit = (education) => {
+    if (!isUserPortfolio) return
     setSelectedEducation(education)
     setIsOpen(true)
   }
@@ -33,9 +37,9 @@ function EducationPortfolio() {
       <PortfolioWrapper
         img={educationIcon}
         title={'Education & Accomplishments'}
-        setOpenNew={setOpenNewEducation}
+        setOpenNew={isUserPortfolio ? setOpenNewEducation : null}
       >
-        {educationData.map((education) => (
+        {displayData.map((education) => (
           <PortfolioContent
             key={education.id}
             setIsOpen={() => handleEdit(education)}
@@ -59,15 +63,20 @@ function EducationPortfolio() {
             }
             link={education.website || null}
             fullText={education.description || null}
+            isUserPortfolio={isUserPortfolio}
           />
         ))}
       </PortfolioWrapper>
-      <EditEduction
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        educationData={selectedEducation}
-      />
-      <NewEducation isOpen={openNewEducation} setIsOpen={setOpenNewEducation} />
+      {isUserPortfolio && (
+        <>
+          <EditEduction
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            educationData={selectedEducation}
+          />
+          <NewEducation isOpen={openNewEducation} setIsOpen={setOpenNewEducation} />
+        </>
+      )}
     </>
   )
 }

@@ -10,27 +10,28 @@ import { getMarketProjects } from '../../redux/portfolio/Actions'
 import { toast } from 'react-toastify'
 import projectDefault from '../../assets/images/project-logo.jpeg'
 
-function MarketProjects() {
+function MarketProjects({ projectsData = [], isUserPortfolio }) {
   const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(false)
   const [openNew, setOpenNew] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
 
-  const {
-    data: projects,
-    loading,
-    error
-  } = useSelector((state) => state.portfolio?.marketProjects || {})
+  const stateProjectsData = useSelector(
+    (state) => state.portfolio?.marketProjects?.data || []
+  )
+
+
+  const displayData = isUserPortfolio ? stateProjectsData : projectsData
+
 
   useEffect(() => {
-    dispatch(getMarketProjects())
-  }, [dispatch])
-
-  if (error) {
-    return <div>Error loading projects: {error}</div>
-  }
+    if (isUserPortfolio) {
+      dispatch(getMarketProjects())
+    }
+  }, [dispatch, isUserPortfolio])
 
   const handleEdit = (project) => {
+    if (!isUserPortfolio) return
     setSelectedProject(project)
     setIsOpen(true)
   }
@@ -40,37 +41,39 @@ function MarketProjects() {
       <PortfolioWrapper
         img={courseLogo}
         title={'Market-Ready Projects'}
-        setOpenNew={setOpenNew}
+        setOpenNew={isUserPortfolio ? setOpenNew : null}
       >
         <div
           className='d-grid grid-col-3 grid-col-1-mob'
           style={{ gap: '5rem' }}
         >
-          {projects?.map((project, index) => (
+          {displayData?.map((project, index) => (
             <MarketCard
               key={project.id || index}
               imgSrc={project.coverUrl || projectDefault}
               title={project.title}
               description={project.description}
               url={project.contentUrl}
-              uploaded={new Date(project.createdAt).toLocaleDateString(
-                'en-US',
-                {
-                  month: 'long',
-                  year: 'numeric'
-                }
-              )}
+              uploaded={new Date(project.createdAt).toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
+              })}
               setIsOpen={() => handleEdit(project)}
+              isUserPortfolio={isUserPortfolio}
             />
           ))}
         </div>
       </PortfolioWrapper>
-      <NewProject isOpen={openNew} setIsOpen={setOpenNew} />
-      <EditProject
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        projectData={selectedProject}
-      />
+      {isUserPortfolio && (
+        <>
+          <NewProject isOpen={openNew} setIsOpen={setOpenNew} />
+          <EditProject
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            projectData={selectedProject}
+          />
+        </>
+      )}
     </>
   )
 }

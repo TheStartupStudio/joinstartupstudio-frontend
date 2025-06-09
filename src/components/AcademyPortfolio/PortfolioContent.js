@@ -12,7 +12,7 @@ function PortfolioContent({
   institution,
   duration,
   setIsOpen,
-  setOpenNew
+  isUserPortfolio
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -39,13 +39,15 @@ function PortfolioContent({
         <div className='text-black flex-grow-1'>
           <div className='d-flex justify-content-between align-items-center'>
             <h4 className='mb-0 fs-21 fw-medium'>{title}</h4>
-            <img
-              src={penIcon}
-              className='cursor-pointer'
-              alt='pen-icon'
-              style={{ width: '20px' }}
-              onClick={() => setIsOpen((prev) => !prev)}
-            />
+            {isUserPortfolio && (
+              <img
+                src={penIcon}
+                className='cursor-pointer'
+                alt='pen-icon'
+                style={{ width: '20px' }}
+                onClick={() => setIsOpen((prev) => !prev)}
+              />
+            )}
           </div>
           <p className='mb-0 fs-15 fw-medium'>{institution}</p>
           <p className='mb-0 fs-15 fw-medium'>{duration}</p>

@@ -9,22 +9,28 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getMyWorkExperiences } from '../../redux/portfolio/Actions'
 import experienceDefault from '../../assets/images/experience-logo.jpg'
 
-function ExperiencePortfolio() {
+function ExperiencePortfolio({ experienceData = [], isUserPortfolio }) {
   const [isOpen, setIsOpen] = useState(false)
   const [openNew, setOpenNew] = useState(false)
   const [selectedExperience, setSelectedExperience] = useState(null)
-
-  const experienceData = useSelector(
-    (state) =>
-      state.portfolio.howSection?.myProductivity?.workExperiences?.data || []
-  )
   const dispatch = useDispatch()
 
+  // Fix the selector to get work experiences from the correct path in state
+  const stateExperienceData = useSelector(
+    (state) => state.portfolio?.howSection?.myProductivity?.workExperiences?.data || []
+  )
+
+  // Use the correct data source based on isUserPortfolio
+  const displayData = isUserPortfolio ? stateExperienceData : experienceData
+
   useEffect(() => {
-    dispatch(getMyWorkExperiences())
-  }, [dispatch])
+    if (isUserPortfolio) {
+      dispatch(getMyWorkExperiences())
+    }
+  }, [dispatch, isUserPortfolio])
 
   const handleEdit = (experience) => {
+    if (!isUserPortfolio) return
     setSelectedExperience(experience)
     setIsOpen(true)
   }
@@ -34,9 +40,9 @@ function ExperiencePortfolio() {
       <PortfolioWrapper
         img={experienceIcon}
         title={'Experience'}
-        setOpenNew={setOpenNew}
+        setOpenNew={isUserPortfolio ? setOpenNew : null}
       >
-        {experienceData.map((experience) => (
+        {displayData.map((experience) => (
           <PortfolioContent
             key={experience.id}
             setIsOpen={() => handleEdit(experience)}
@@ -45,14 +51,13 @@ function ExperiencePortfolio() {
             institution={experience.location || ''}
             duration={
               experience.startDate
-                ? `${new Date(experience.startDate).toLocaleDateString(
-                    'en-US',
-                    { month: 'long', year: 'numeric' }
-                  )} - ${
+                ? `${new Date(experience.startDate).toLocaleDateString('en-US', {
+                    month: 'long',
+                    year: 'numeric'
+                  })} - ${
                     experience.currentPosition
                       ? 'Present'
-                      : new Date(experience.endDate).toLocaleDateString(
-                          'en-US',
+                      : new Date(experience.endDate).toLocaleDateString('en-US', 
                           { month: 'long', year: 'numeric' }
                         )
                   }`
@@ -60,15 +65,20 @@ function ExperiencePortfolio() {
             }
             link={experience.website || ''}
             fullText={experience.description || ''}
+            isUserPortfolio={isUserPortfolio}
           />
         ))}
       </PortfolioWrapper>
-      <EditExperience
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        experienceData={selectedExperience}
-      />
-      <NewExperience isOpen={openNew} setIsOpen={setOpenNew} />
+      {isUserPortfolio && (
+        <>
+          <EditExperience
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            experienceData={selectedExperience}
+          />
+          <NewExperience isOpen={openNew} setIsOpen={setOpenNew} />
+        </>
+      )}
     </>
   )
 }

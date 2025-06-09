@@ -1551,6 +1551,7 @@ export const getMyWorkExperiences = () => async (dispatch) => {
   dispatch({ type: GET_MY_WORK_EXPERIENCES })
   try {
     const response = await getWorkExperiencesAPI()
+    console.log(response.data)
     dispatch(getMyWorkExperiencesSuccess(response.data))
   } catch (e) {
     dispatch(getMyWorkExperiencesError(e))
