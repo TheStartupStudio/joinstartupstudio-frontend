@@ -56,12 +56,12 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
       : `https://${url}`
   }
 
-  // Get initial publish state
+  // Get initial publish state and update when portfolioData changes
   useEffect(() => {
-    if (portfolioData) {
+    if (portfolioData?.is_published !== undefined) {
       setIsPublishedVisible(portfolioData.is_published)
-    } else {
-      // Fallback to fetching portfolio state if no data provided
+    } else if (isOwnPortfolio) {
+      // Only fetch if viewing own portfolio and no data provided
       const getPublishState = async () => {
         try {
           const response = await axiosInstance.get('/portfolio')
@@ -72,7 +72,7 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
       }
       getPublishState()
     }
-  }, [portfolioData])
+  }, [portfolioData, isOwnPortfolio])
 
   // Check if viewing own portfolio
   useEffect(() => {
