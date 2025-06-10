@@ -10,39 +10,38 @@ import { useDispatch, useSelector } from 'react-redux'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import axiosInstance from '../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
+import AcademyBtn from '../../components/AcademyBtn'
+import StartupStudioLogo from './../../../public/academy-logo.png'
 
 function AcademyPortfolio() {
   const [activeTab, setActiveTab] = useState(0)
   const [publicPortfolio, setPublicPortfolio] = useState(null)
   const dispatch = useDispatch()
   const { username } = useParams()
-  const history = useHistory() 
-  const { user } = useSelector((state) => state.user.user)
+  const history = useHistory()
+  
+  const user = useSelector((state) => state.user?.user?.user) || null
+  const isPublicRoute = window.location.pathname.startsWith('/public-portfolio')
 
-
-  const isUserPortfolio = window.location.pathname.startsWith('/my-portfolio')
-
-  const tabs = ['Education', 'Experience', 'Market-Ready Projects']
-
-
+  // Only redirect if user is viewing their own portfolio and is authenticated
   useEffect(() => {
-    if (username === user?.username) {
-      history.push('/my-portfolio') 
+    if (user && username === user?.username) {
+      history.push('/my-portfolio')
       return
     }
   }, [username, user?.username, history])
-
 
   useEffect(() => {
     const fetchPublicPortfolio = async () => {
       try {
         const response = await axiosInstance.get(
-          `/hsPortfolio/public-portfolio/${username}`
+          `/public-portfolio/${username}`
         )
 
         const transformedUser = {
           ...response.data.user,
-          username: username, 
+          username: username,
           social_links: {
             ...response.data.user.social_links,
           }
@@ -53,17 +52,23 @@ function AcademyPortfolio() {
         })
       } catch (error) {
         console.error('Error fetching public portfolio:', error)
-        history.push('/my-portfolio') 
+        // Show error toast
+        toast.error("Portfolio not found")
+        // Redirect to home page
+        history.push('/')
       }
     }
 
-    if (username && username !== user?.username) {
+    // Allow fetching public portfolio even when user is not logged in
+    if (username && (isPublicRoute || username !== user?.username)) {
       fetchPublicPortfolio()
     }
-  }, [username, user?.username])
+  }, [username, user?.username, history])
 
+  const isUserPortfolio = window.location.pathname.startsWith('/my-portfolio')
 
-  const isPublicView = !window.location.pathname.startsWith('/public-portfolio')
+  const tabs = ['Education', 'Experience', 'Market-Ready Projects']
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -82,29 +87,50 @@ function AcademyPortfolio() {
     <div className='container-fluid'>
       <div className='row'>
         <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
-          <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
-            <div>
+          <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab gap-3'>
+            <div className='d-flex align-items-center gap-3'>
+               {!user && (
+              <a href='https://academy.learntostart.com/'>
+                      <img
+                        src={StartupStudioLogo}
+                        alt='course-logo'
+                        className='img-login-portfolio'
+                      />
+                    </a>
+              )}
+              <div className='d-flex flex-column gap-1'>
               <h3 className='page-title bold-page-title text-black mb-0'>
                 <IntlMessages id='portfolio.header' />
               </h3>
               <p className='fs-13 fw-light text-black'>
                 <IntlMessages id='portfolio.content' />
               </p>
+              </div>
             </div>
 
-            {/* <SelectLanguage /> */}
+            <div>
+              {!user && (
+                <AcademyBtn 
+                  title='Login'
+                  onClick = {() => history.push('/')}
+                />
+              )}
+            </div>
+
           </div>
-          <img
-            src={MenuIcon}
-            alt='menu'
-            className='menu-icon-cie self-start-tab cursor-pointer'
-            onClick={() => dispatch(toggleCollapse())}
-          />
+          {user && (
+            <img
+              src={MenuIcon}
+              alt='menu'
+              className='menu-icon-cie self-start-tab cursor-pointer'
+              onClick={() => dispatch(toggleCollapse())}
+            />
+          )}
         </div>
         <div className='academy-dashboard-layout lead-class mb-5 bck-dashboard'>
           <AboutMe 
-            user={publicPortfolio?.user || user} 
-            portfolioData={publicPortfolio?.portfolio}
+            user={publicPortfolio?.user || user || {}} // Provide empty object as fallback
+            portfolioData={publicPortfolio?.portfolio || {}} // Provide empty object as fallback
           />
 
           <div className='course-experts d-flex justify-content-between mt-5 flex-col-mob align-items-center-mob'>

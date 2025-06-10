@@ -474,12 +474,19 @@ export const redirects = [
   { from: '/register', to: '/dashboard' },
   { from: '/ims-login', to: '/dashboard' },
   { from: '/', to: '/dashboard', exact: true },
+  // Only redirect to subscribe if user exists but doesn't have subscription
   {
     from: '*',
     to: '/subscribe',
     condition: (user) =>
       window.location.pathname !== '/auth-success' &&
-      user?.user?.stripe_subscription_id === false &&
-      user?.user?.is_active === true
+      user?.user?.is_active === true &&
+      !user?.user?.stripe_subscription_id
+  },
+  // Default catch-all redirect to home
+  {
+    from: '*',
+    to: '/',
+    exact: false
   }
 ]

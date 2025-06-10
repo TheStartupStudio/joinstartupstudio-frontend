@@ -36,7 +36,10 @@ function Layout({ children }) {
         </BloorBackgroundWrapper>
       )}
       {originalToken && <ImpersonationNavbar originalToken={originalToken} />}
-      <div className='wrapper' style={originalToken && { marginTop: '32px' }}>
+      <div
+        className='wrapper d-flex flex-column min-vh-100'
+        style={originalToken && { marginTop: '32px' }}
+      >
         {!(
           location.pathname === '/subscribe' || location.pathname === '/payment'
         ) && (
@@ -48,20 +51,19 @@ function Layout({ children }) {
         )}
         <div
           id='content'
-          className={
+          className={`${
             location.pathname === '/subscribe' ||
             location.pathanme === '/payment'
               ? ''
               : 'auth-content'
-          }
-          // className='w-100'
+          } flex-grow-1 d-flex flex-column`}
         >
           {sideBarState ? (
             <div className='backdrop' onClick={toggleBackdrop}></div>
           ) : null}
           <Header handleSideBar={setSideBarVisible} />
-          {children}
-          <div className='mobile-footer'>
+          <main className='flex-grow-1'>{children}</main>
+          <div className='d-block d-md-none'>
             <Footer />
           </div>
         </div>
@@ -71,7 +73,7 @@ function Layout({ children }) {
         position='bottom-left'
         autoClose={5000}
       />
-      <div className='desktop-footer'>
+      <div className='d-none d-md-block'>
         <Footer />
       </div>
     </React.Fragment>

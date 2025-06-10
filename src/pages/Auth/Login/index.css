@@ -765,3 +765,10 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   width: 200px;
   object-fit: contain;
 }
+
+.img-login-portfolio{
+  width: 70px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}

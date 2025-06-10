@@ -32,7 +32,11 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
   const [loading, setLoading] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [resetPasswordDisabled, setResetPasswordDisabled] = useState(false)
-  const { user } = useSelector((state) => state.user.user)
+  
+  // Add null check for user state
+  const userState = useSelector((state) => state.user?.user) || {}
+  const user = userState?.user || {}
+  
   const [changedUser, setChangedUser] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -40,6 +44,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     profession: user?.profession || '',
     profile_image: user?.profile_image || ''
   })
+
   const [changedMedias, setChangedMedias] = useState({
     facebook: user?.social_links?.facebook || '',
     twitter: user?.social_links?.twitter || '',

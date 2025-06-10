@@ -15,13 +15,17 @@ function SubscriptionModal({
   const [invoices, setInvoices] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const user = useSelector((state) => state.user.user.user)
+  // Add null check for user
+  const userState = useSelector((state) => state.user?.user) || {}
+  const user = userState?.user || {}
 
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
+        if (!user?.customerId) return
+
         const response = await axiosInstance.get(
-          `/course-subscription/invoices/${user?.customerId}`
+          `/course-subscription/invoices/${user.customerId}`
         )
         setInvoices(response.data)
       } catch (error) {
@@ -31,7 +35,7 @@ function SubscriptionModal({
       }
     }
 
-    if (user?.customerId) fetchInvoices()
+    fetchInvoices()
   }, [user?.customerId])
 
   return (

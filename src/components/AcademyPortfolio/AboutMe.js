@@ -17,7 +17,7 @@ import Tooltip from './Tooltip'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import axiosInstance from '../../utils/AxiosInstance'
 
-function AboutMe({ user, portfolioData }) {
+function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objects
   const [isExpanded, setIsExpanded] = useState(false)
   const [modal, setModal] = useState(false)
   const [subsbsciptionModal, setSubscriptionModal] = useState(false)
@@ -30,7 +30,7 @@ function AboutMe({ user, portfolioData }) {
 
   // Add new state to track if viewing own portfolio
   const [isOwnPortfolio, setIsOwnPortfolio] = useState(false)
-  const { user: currentUser } = useSelector((state) => state.user.user)
+  const currentUser = useSelector((state) => state.user?.user?.user) || {}
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -207,7 +207,7 @@ function AboutMe({ user, portfolioData }) {
                 />
               )}
 
-              {user.social_links.facebook && (
+              {user?.social_links?.facebook && (
                 <img
                   className='cursor-pointer'
                   src={facebookLogo}
@@ -218,7 +218,7 @@ function AboutMe({ user, portfolioData }) {
                 />
               )}
 
-              {user.social_links.twitter && (
+              {user?.social_links?.twitter && (
                 <img
                   className='cursor-pointer'
                   src={twitterLogo}

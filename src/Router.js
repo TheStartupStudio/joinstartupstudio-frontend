@@ -65,12 +65,14 @@ function Router(props) {
               <Switch>
                 {renderRoutes(roleRoutes())}
                 {redirects.map((redirect) => (
-                  <Redirect
-                    key={redirect.from}
-                    from={redirect.from}
-                    to={redirect.to}
-                    exact={redirect.exact || false}
-                  />
+                  (!redirect.condition || redirect.condition(user)) && (
+                    <Redirect
+                      key={redirect.from}
+                      from={redirect.from}
+                      to={redirect.to}
+                      exact={redirect.exact || false}
+                    />
+                  )
                 ))}
                 <Route component={NotFound} />
               </Switch>
@@ -80,12 +82,14 @@ function Router(props) {
               <Switch>
                 {renderRoutes(publicRoutes)}
                 {redirects.map((redirect) => (
-                  <Redirect
-                    key={redirect.from}
-                    from={redirect.from}
-                    to={redirect.to}
-                    exact={redirect.exact || false}
-                  />
+                  (!redirect.condition || redirect.condition(user)) && (
+                    <Redirect
+                      key={redirect.from}
+                      from={redirect.from}
+                      to={redirect.to}
+                      exact={redirect.exact || false}
+                    />
+                  )
                 ))}
                 <Route component={NotFound} />
               </Switch>
