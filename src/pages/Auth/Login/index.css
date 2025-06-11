@@ -750,7 +750,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 }
 
 
-.auth-success-container{
+/* .auth-success-container{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -771,4 +771,4 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   height: 100%;
   object-fit: cover;
   border-radius: 10px;
-}
+} */

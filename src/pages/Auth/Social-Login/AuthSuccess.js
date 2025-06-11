@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { useDispatch } from 'react-redux'
-import { userLogin } from '../../../redux' // adjust path as needed
-import '../Login/index.css' // Import your CSS for styling
-import logo from '../../../../public/academy-logo.png' // Replace with your logo path
+import { userLogin } from '../../../redux'
+import logo from '../../../../public/academy-logo.png'
 
 function AuthSuccess() {
   const history = useHistory()
@@ -18,8 +17,7 @@ function AuthSuccess() {
       localStorage.setItem('access_token', accessToken)
       localStorage.setItem('refresh_token', refreshToken)
 
-      // Dispatch login action to populate Redux state
-      dispatch(userLogin()) // You might need to pass token or email if required
+      dispatch(userLogin())
         .then((res) => {
           if (res === 'passwordResetRequired') {
             history.push('/password-change-required')
@@ -40,11 +38,22 @@ function AuthSuccess() {
     }
   }, [history, dispatch])
 
+
+
   return (
-    <div className="auth-success-container">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      gap: '20px',
+      background: 'linear-gradient(180deg, #ffffff 0%, rgb(255 228 248) 0%, rgb(255 255 255) 100%) !important'
+    }}>
       <img
         src={logo}
         alt="Success"
+        style={{ width:'200px', objectFit: 'contain' }}
       />
 
       <h2>Logging in...</h2>
