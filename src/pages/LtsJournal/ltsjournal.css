@@ -19,12 +19,12 @@
       rgba(234, 249, 251, 1) 50%,
       rgba(255, 255, 255, 1) 90%) !important;
   min-height: auto;
-  height: 100vh;
+  /* height: 100vh; */
   position: relative;
   box-shadow: -1px -9px 6px -2px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   /* margin-bottom: 2rem; */
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 
 .container-width {
