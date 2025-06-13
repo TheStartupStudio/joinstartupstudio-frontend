@@ -94,7 +94,7 @@ function AcademyPortfolio() {
                       <img
                         src={StartupStudioLogo}
                         alt='course-logo'
-                        className='img-login-portfolio'
+                        style={{ width: '80px', objectFit: 'contain' }}
                       />
                     </a>
               )}
