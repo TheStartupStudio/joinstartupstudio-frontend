@@ -81,70 +81,52 @@ const handleContinueCourse = async () => {
     await dispatch(fetchLtsCoursefinishedContent());
 
     if (finishedContent && finishedContent.length > 0) {
+      // Get last completed lesson ID
       const lastCompletedId = Math.max(...finishedContent);
-      let nextId = lastCompletedId;
+      
+      // Determine level based on last completed ID
       let targetLevel;
-      let lessonTitle;
-
-      // Special transitions 
-      if (lastCompletedId === 58) {
-        targetLevel = 1;
-        nextId = 60;
-        lessonTitle = "The Journey of Entrepreneurship";
-      } else if (lastCompletedId === 68) {
-        targetLevel = 2;
-        nextId = 70;
-        lessonTitle = "Business Story";
-      } else if (lastCompletedId === 63) {
-        targetLevel = 1;
-        nextId = 65;
-        lessonTitle = "Test Metrics of LTS";
+      if (lastCompletedId >= 70) {
+        targetLevel = 2; // Level 3
+      } else if (lastCompletedId >= 60) {
+        targetLevel = 1; // Level 2  
       } else {
-        // Find next available lesson
-        nextId = Math.min(...finishedContent.map(id => id + 1));
-
-        // Determine level based on next lesson ID
-        if (nextId >= 70) {
-          targetLevel = 2; // Level 3
-        } else if (nextId >= 60) {
-          targetLevel = 1; // Level 2
-        } else {
-          targetLevel = 0; // Level 1
-        }
+        targetLevel = 0; // Level 1
       }
 
-      // Store complete state information (still keeping the logic)
+      // Store state information
       localStorage.setItem('selectedLesson', JSON.stringify({
         activeLevel: targetLevel,
-        nextId: nextId,
-        lessonTitle: lessonTitle || "Select a Lesson",
-        currentPlaceholder: lessonTitle || "Select a Lesson"
+        nextId: lastCompletedId,
+        lessonTitle: "Continue where you left off",
+        currentPlaceholder: "Continue where you left off"
       }));
 
+      // Navigate to the last completed lesson
+      history.push({
+        pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
+        state: { 
+          activeLevel: targetLevel,
+          currentPlaceholder: "Continue where you left off"
+        }
+      });
     } else {
+      // If no lessons completed, start from the beginning
       localStorage.setItem('selectedLesson', JSON.stringify({
         activeLevel: 0,
         nextId: 51,
         lessonTitle: "The Myths of Entrepreneurship",
         currentPlaceholder: "The Myths of Entrepreneurship"
       }));
+
+      history.push({
+        pathname: '/my-course-in-entrepreneurship/journal/51',
+        state: { 
+          activeLevel: 0,
+          currentPlaceholder: "The Myths of Entrepreneurship"
+        }
+      });
     }
-
-    // FINAL OVERRIDE: Always redirect to lesson 51
-    localStorage.setItem('selectedLesson', JSON.stringify({
-      activeLevel: 0,
-      nextId: 51,
-      lessonTitle: "The Myths of Entrepreneurship",
-      currentPlaceholder: "The Myths of Entrepreneurship"
-    }));
-
-    history.push({
-      pathname: '/my-course-in-entrepreneurship/journal/51',
-      state: { 
-        activeLevel: 0,
-        currentPlaceholder: "The Myths of Entrepreneurship"
-      }
-    });
 
   } catch (error) {
     console.error('Navigation error:', error);
