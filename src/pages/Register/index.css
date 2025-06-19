@@ -54,3 +54,71 @@
     padding:1rem 1.2rem!important;
   }
 }
+
+.subscription-plans {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.plan-option {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  width: 250px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.plan-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.plan-option.selected {
+  border: 2px solid #51c7df;
+  background-color: #f8fbff;
+}
+
+.plan-option h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.plan-option .price {
+  font-size: 24px;
+  color: #51c7df;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.plan-option .commitment {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.plan-option .total {
+  color: #333;
+  font-weight: 500;
+}
+
+.subscription-status {
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem auto;
+  max-width: 600px;
+}
+
+.status-active {
+  color: #51c7df;
+  font-weight: bold;
+}
+
+.subscription-status p {
+  margin: 0;
+  padding: 10px;
+  border-radius: 4px;
+  background: #f8f9fa;
+}

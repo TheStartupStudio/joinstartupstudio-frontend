@@ -94,6 +94,9 @@ function LtsJournal(props) {
   });
   const [isIntroVideo, setIsIntroVideo] = useState(false);
   const [currentPlaceholder, setCurrentPlaceholder] = useState("Select a Lesson");
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const user = useSelector((state) => state.user.user); // Add this line
+  const [subscriptionModalparagraph, setSubscriptionModalparagraph] = useState('');
 
   const handleIntroVideoChange = (isIntro) => {
     setIsIntroVideo(isIntro);
@@ -562,6 +565,22 @@ function LtsJournal(props) {
   }
 
 const handleLevelClick = (clickedLevel) => {
+  // First level is always accessible
+  if (clickedLevel === 0) {
+    setActiveLevel(clickedLevel);
+    setCurrentPlaceholder("Welcome to Level 1 & The Myths of Entrepreneurship");
+    history.push('/my-course-in-entrepreneurship/journal/51');
+    return;
+  }
+
+  // Check subscription for levels beyond level 1
+  if (!user?.user?.stripe_subscription_id) {
+    setSubscriptionModalparagraph(null)
+    setShowSubscriptionModal(true);
+    return;
+  }
+
+  // Existing level completion checks
   if (clickedLevel === 1 && !finishedContent.includes(58)) {
     setLockModalMessage('This lesson is currently locked. You must complete Level 1 before it to gain access to Level 2.');
     setShowLockModal(true);
@@ -880,6 +899,13 @@ const handleSaveAndContinue = async () => {
     const myTraining = history.location.pathname.includes('my-training');
     const findNextLesson = (currentId) => {
       const numericId = parseInt(currentId);
+      if (!user?.user?.stripe_subscription_id && currentJournalId >= 58) {
+      setSubscriptionModalparagraph('Congratulations you have finished Level 1. This content only available to subscribed users. Subscribe now to access all levels and features.')
+      setShowSubscriptionModal(true);
+      setSaving(false);
+      return;
+    }
+    
       if (numericId === 63) return { nextId: 65 };
       const levelTransitions = {
         58: { nextId: 60, nextLevel: 1 },
@@ -1520,6 +1546,53 @@ const handleSaveAndContinue = async () => {
 
             <div className='mt-5'>
               <p className='text-secondary text-center'>{lockModalMessage}</p>
+            </div>
+          </ModalBody>
+        </Modal>
+      )}
+
+      {showSubscriptionModal && (
+        <Modal
+          isOpen={showSubscriptionModal}
+          toggle={() => setShowSubscriptionModal(false)}
+          className='certificate-modal'
+        >
+          <span
+            className='cursor-pointer'
+            onClick={() => setShowSubscriptionModal(false)}
+            style={{ zIndex: '1' }}
+          >
+            <img className='left-arrow-modal' src={leftArrow} alt='left' />
+          </span>
+          <ModalBody>
+            <img src={lockSign} alt='lock' className='mb-3' />
+            <div className='d-flex justify-content-between align-items-center'>
+              <h3 className='fs-14' style={{ marginBottom: '0' }}>
+                Premium Content Locked
+              </h3>
+            </div>
+
+            <div className='mt-5'>
+              <p className='text-secondary text-center'>
+                {subscriptionModalparagraph || 'This content is only available to subscribed users. Subscribe now to access all levels and features.'}
+              </p>
+              <div className='text-center mt-4'>
+                <button
+                  className='btn btn-primary'
+                  onClick={() => {
+                    history.push('/subscribe');
+                    setShowSubscriptionModal(false);
+                  }}
+                  style={{
+                    background: 'linear-gradient(to right, #FF3399, #51C7DF)',
+                    border: 'none',
+                    padding: '10px 30px',
+                    borderRadius: '5px'
+                  }}
+                >
+                  Subscribe Now
+                </button>
+              </div>
             </div>
           </ModalBody>
         </Modal>

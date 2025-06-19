@@ -41,7 +41,7 @@ function Layout({ children }) {
         style={originalToken && { marginTop: '32px' }}
       >
         {!(
-          location.pathname === '/subscribe' || location.pathname === '/payment'
+           location.pathname === '/payment'
         ) && (
           <Sidebar
             handleSideBar={setSideBarVisible}

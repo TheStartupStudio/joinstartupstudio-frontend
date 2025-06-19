@@ -8,23 +8,25 @@ function CancelSubModal({
   toggleCancelModal,
   toggleCancelRenewal
 }) {
-  const handleCancelSubscription = async () => {
-    try {
-      const response = await axiosInstance.post(
-        '/course-subscription/cancel-subscription',
-        {}
-      )
+const handleCancelSubscription = async () => {
+  try {
+    const response = await axiosInstance.post(
+      '/course-subscription/cancel-subscription'
+    )
 
-      if (response.status === 200) {
-        toggleCancelRenewal()
-      }
-    } catch (error) {
-      console.error('Error canceling subscription:', error)
-      alert(
-        'Something went wrong while canceling the subscription. Please try again.'
-      )
+    if (response.status === 200) {
+      // Show success message to user
+      alert(response.data.message)
+      toggleCancelRenewal()
     }
+  } catch (error) {
+    console.error('Error canceling subscription:', error)
+    alert(
+      error.response?.data?.error || 
+      'Something went wrong while canceling the subscription. Please try again.'
+    )
   }
+}
 
   return (
     <Modal

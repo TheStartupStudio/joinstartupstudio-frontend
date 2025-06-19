@@ -18,6 +18,10 @@ import ReSigninModal from './pages/Auth/Login/ReSigninModal'
 import CheckSubscription from './pages/Register/CheckSubscription'
 import CancelSubscription from './pages/Register/CancelSubscription'
 import Payment from './pages/Register/Payment'
+import Dashboard from './pages/Dashboard'
+import LtsJournal from './pages/LtsJournal'
+import AcademyPortfolio from './pages/Academy-Portfolio/index'
+import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -32,7 +36,20 @@ function Router(props) {
       return [
         { path: '/subscribe', component: CheckSubscription, exact: true },
         { path: '/cancel-payment', component: CancelSubscription, exact: true },
-        { path: '/payment', component: Payment, exact: true }
+        { path: '/payment', component: Payment, exact: true },
+        {path: '/dashboard', component: Dashboard, exact: true},
+        {path: '/course', component: Dashboard, exact: true},
+         {
+            path: '/my-course-in-entrepreneurship/journal',
+            component: LtsJournal,
+            props: { category: 'entrepreneurship' }
+          },
+          // { path: '/my-portfolio', component: AcademyPortfolio, exact: true },
+          {
+              path: '/public-portfolio/:username',
+              component: PublicPortfolio2024,
+              exact: true
+            },
       ]
     }
 
