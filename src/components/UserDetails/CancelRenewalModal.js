@@ -40,7 +40,7 @@ function CancelRenewalModal({ canceledRenewal, setCanceledRenewal }) {
           <p className='mb-0 fs-15 fw-medium'>Subscription Cancelled</p>
         </div>
         <p className='mt-5 text-center fw-medium'>
-          Your subscription has been canceled and you will no longer be billed.
+          Your subscription has been canceled.
           You will have access to the platform until the end of your billing
           period.
         </p>
