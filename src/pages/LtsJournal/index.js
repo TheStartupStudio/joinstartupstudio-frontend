@@ -1572,7 +1572,7 @@ function LtsJournal(props) {
               </h3>
             </div>
 
-            <div className='mt-5 d-'>
+            <div className='mt-5 d-flex flex-column align-items-center'>
               <p className='text-secondary text-center'>
                 {subscriptionModalparagraph || 'This content is only available to subscribed users. Subscribe now to access all levels and features.'}
               </p>
