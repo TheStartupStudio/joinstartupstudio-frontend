@@ -18,12 +18,12 @@ function CancelSubscription() {
         >
           Try Again
         </button>
-       <button
-  onClick={() => (window.location.href = 'https://academy.learntostart.com/')}
-  style={styles.secondaryButton}
->
-  Back to Home
-</button>
+        <button
+          onClick={() => history.push('/')}
+          style={styles.secondaryButton}
+        >
+          Back to Dashboard
+        </button>
 
       </div>
     </div>
@@ -66,7 +66,7 @@ const styles = {
     fontSize: '1rem',
     backgroundColor: '#a7ca42', // Changed to brand green
     color: '#ffffff',
-    border: 'none', 
+    border: 'none',
     borderRadius: '10px',
     cursor: 'pointer',
     textTransform: 'uppercase',
