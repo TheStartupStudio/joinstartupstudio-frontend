@@ -1410,6 +1410,39 @@ function LtsJournal(props) {
                         }}
                       />
                     </Switch>
+
+                    {!isIntroVideo && (
+                      <div className='d-flex justify-content-end mt-4 mb-4'>
+                        <div
+                          className='progress-details'
+                          
+                        >
+                          <button
+                            style={{ padding: '.5rem',background:'inherit',border:'none',marginRight:'2rem' }}
+                            className='progress-details'
+                            onClick={isRootPath ? handleContinue : handleSaveAndContinue}
+                            disabled={saving}
+                          >
+                            {saving ? (
+                              <FontAwesomeIcon icon={faSpinner} spin />
+                            ) : (
+                              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                {isRootPath
+                                  ? props.intl.formatMessage({
+                                    id: 'my_journal.continue',
+                                    defaultMessage: 'Continue'
+                                  })
+                                  : props.intl.formatMessage({
+                                    id: 'my_journal.save_and_continue',
+                                    defaultMessage: 'Save and Continue'
+                                  })}
+                                <FontAwesomeIcon icon={faArrowRight} />
+                              </span>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className='page-card__sidebar col-lg-4 col-md-5'>

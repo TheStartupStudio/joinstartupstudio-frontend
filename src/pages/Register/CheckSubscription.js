@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
 import { userLogout } from '../../redux'
 import './index.css'
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 
 // const stripePromise = loadStripe(
 //   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
@@ -21,8 +23,8 @@ function CheckSubscription() {
 
   const planDetails = {
   monthly: {
-    price: '9.99',
-    total: '119.88', // 9.99 * 12
+    price: '10.00',
+    total: '10.00', // 9.99 * 12
     period: 'month',
     priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID,
     commitment: '12 months'
@@ -89,9 +91,15 @@ function CheckSubscription() {
           Log Out
         </button>
       </div> */}
+      <img
+            src={MenuIcon}
+            alt='menu'
+            className='menu-icon-cie self-start-tab cursor-pointer menu-icon-right'
+            onClick={() => dispatch(toggleCollapse())}
+          />
 
       <div className='d-flex justify-content-center p-5'>
-        <div className='d-flex align-items-center flex-column payment-main'>
+        <div className='d-flex align-items-center flex-column payment-main bck-gradient'>
           <img
             src={courseLogo}
             alt='course-logo'
@@ -99,7 +107,7 @@ function CheckSubscription() {
           />
           
           <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black subscription-title'>
-            Choose Your Subscription Plan
+            Choose Your Subscription 
           </h2>
 
           <div className='subscription-plans mt-4'>
@@ -107,7 +115,7 @@ function CheckSubscription() {
               className={`plan-option ${selectedPlan === 'monthly' ? 'selected' : ''}`}
               onClick={() => setSelectedPlan('monthly')}
             >
-              <h3>Monthly Plan</h3>
+              <h5>Monthly Plan</h5>
               <p className='price'>${planDetails.monthly.price}/month</p>
               <p className='commitment'>12-month commitment</p>
             </div>
@@ -116,7 +124,7 @@ function CheckSubscription() {
               className={`plan-option ${selectedPlan === 'annual' ? 'selected' : ''}`}
               onClick={() => setSelectedPlan('annual')}
             >
-              <h3>Annual Plan</h3>
+              <h5>Annual Plan</h5>
               <p className='price'>${planDetails.annual.price}/year</p>
               <p className='commitment'>Pay once for full year</p>
             </div>

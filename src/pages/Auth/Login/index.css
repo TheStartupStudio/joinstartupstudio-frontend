@@ -381,6 +381,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   }
 }
 
+
 @media (max-width: 458px) {
   .choose-login_container
     .m-0.p-0.align-items-center.center-content.justify-evenly.row {

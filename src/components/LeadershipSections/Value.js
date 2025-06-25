@@ -68,7 +68,6 @@ const Value = forwardRef((props, ref) => {
                   order: data.order
                 }
               )
-              toast.success('Answer submitted successfully!')
               return postResponse
             } catch (postError) {
               if (postError.response?.status === 400 || data.isExisting) {
@@ -79,7 +78,6 @@ const Value = forwardRef((props, ref) => {
                     order: data.order
                   }
                 )
-                toast.success('Changes saved successfully!')
                 return putResponse
               }
               throw postError
@@ -90,7 +88,7 @@ const Value = forwardRef((props, ref) => {
         await Promise.all(savePromises)
         setPendingChanges({})
         await refreshData()
-        
+        toast.success('Reflections submitted successfully!')
         return true
       } catch (error) {
         console.error('Error saving reflections:', error)

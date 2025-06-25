@@ -17,7 +17,7 @@ import Value from '../../components/LeadershipSections/Value'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import IntlMessages from '../../utils/IntlMessages'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight,faSpinner } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
@@ -481,13 +481,14 @@ const LeadershipJournal = memo(() => {
                     activeTabData.option?.value === 'Section One: Who am I?' ||
                     activeTabData.option?.value === 'Section Two: What can I do?' ||
                     activeTabData.option?.value === 'Section Three: How do I prove it?') && (
-                      <AcademyBtn
-                        title={isReflection ? 'Save and Continue' : 'Continue'}
-                        icon={faArrowRight}
-                        onClick={handleSaveAndContinue}
-                        loading={isSaving}
-                      />
-                    )}
+       <AcademyBtn
+  title={isReflection ? 'Save and Continue' : 'Continue'}
+  icon={isSaving ? faSpinner : faArrowRight}
+  onClick={handleSaveAndContinue}
+  disabled={isSaving}
+  loading={isSaving}
+  spin={isSaving}
+/>               )}
                 </div>
                 {showLockModal && (
                   <Modal

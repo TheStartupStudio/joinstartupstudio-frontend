@@ -108,14 +108,14 @@ function AcademyPortfolio() {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               {!user && (
                 <AcademyBtn 
                   title='Login'
                   onClick = {() => history.push('/')}
                 />
               )}
-            </div>
+            </div> */}
 
           </div>
           {user && (

@@ -20,6 +20,7 @@ import CancelSubscription from './pages/Register/CancelSubscription'
 import Payment from './pages/Register/Payment'
 import Dashboard from './pages/Dashboard'
 import LtsJournal from './pages/LtsJournal'
+import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
 import AcademyPortfolio from './pages/Academy-Portfolio/index'
 import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
 
@@ -43,6 +44,10 @@ function Router(props) {
             path: '/my-course-in-entrepreneurship/journal',
             component: LtsJournal,
             props: { category: 'entrepreneurship' }
+          },   {
+            path: '/my-course-in-entrepreneurship',
+            component: MyCourseEntrepreneurship,
+            exact: true
           },
           // { path: '/my-portfolio', component: AcademyPortfolio, exact: true },
           {

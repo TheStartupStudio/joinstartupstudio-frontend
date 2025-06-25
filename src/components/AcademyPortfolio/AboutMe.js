@@ -187,7 +187,7 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
         <div className='d-flex gap-4 flex-col-mob'>
           <img
             className='profile-dashboard-academy align-self-start'
-            src={user.profileImage ? user.profileImage : blankProfile}
+            src={user.profile_image ? user.profile_image : blankProfile}
             alt='profile'
           />
           <div className='academy-profile-info'>

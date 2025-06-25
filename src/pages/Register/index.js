@@ -415,7 +415,8 @@ function Register() {
                         <span style={{ color: '#51C7DF' }}>Loading...</span>
                       </div>
                     ) : (
-                      <span className='d-flex align-items-center justify-content-center'>
+                      <span className='d-flex align-items-center justify-content-center'
+                      style={{color: '#51C7DF'}}>
                         Register
                         <FontAwesomeIcon
                           icon={faArrowRight}
@@ -446,6 +447,12 @@ function Register() {
                       src={facebookLogo}
                       alt='facebook'
                     />
+                  </a>
+                  <a
+                    href={`${process.env.REACT_APP_SERVER_BASE_URL}auth/microsoft`}
+                    className='cursor-pointer'
+                  >
+                    <img className='auth-logos' src={microsoftLogo} alt='microsoft' />
                   </a>
                 </div>
               </div>

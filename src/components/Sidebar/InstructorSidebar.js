@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -33,6 +33,8 @@ const InstructorSidebar = (props) => {
   const [cancelSubModal, setCancelSubModal] = useState(false)
   const [canceledRenewal, setCanceledRenewal] = useState(false)
   const [certificate, setCertificate] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(false)
+  const hoverTimeout = useRef(null)
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -66,6 +68,37 @@ const InstructorSidebar = (props) => {
     return () => clearTimeout(timer)
   }, [isCollapsed])
 
+  useEffect(() => {
+    const checkTouch = () => {
+      setIsTouchDevice(
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia('(pointer: coarse)').matches
+      )
+    }
+    checkTouch()
+    window.addEventListener('resize', checkTouch)
+    return () => window.removeEventListener('resize', checkTouch)
+  }, [])
+
+  const handleMouseEnter = () => {
+    if (isTouchDevice) return
+    clearTimeout(hoverTimeout.current)
+    if (isCollapsed) {
+      dispatch(toggleCollapse(false))
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (isTouchDevice) return
+    clearTimeout(hoverTimeout.current)
+    hoverTimeout.current = setTimeout(() => {
+      if (!isCollapsed) {
+        dispatch(toggleCollapse(true))
+      }
+    }, 100) // Debounce to avoid flicker
+  }
+
   const handleSidebarToggle = () => {
     dispatch(toggleCollapse())
   }
@@ -92,7 +125,9 @@ const InstructorSidebar = (props) => {
 
   return (
     <div
-      class={`d-flex flex-column justify-content-between ${props.getOtherNavClass()}`}
+      className={`d-flex flex-column justify-content-between ${props.getOtherNavClass()}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
@@ -305,21 +340,6 @@ const InstructorSidebar = (props) => {
             isDropdown={false}
           />
         )}
-        <Tooltip text={`${isCollapsed ? 'Open Menu' : 'Close Menu'}`}>
-          <li className='sub-li d-none-tab'>
-            <button className='sidebar-button' onClick={handleSidebarToggle}>
-              <img
-                className='rotated'
-                src={ExpandLogo}
-                alt='Expand'
-                style={{
-                  transform: isCollapsed && 'rotate(0deg)',
-                  marginLeft: '4px'
-                }}
-              />
-            </button>
-          </li>
-        </Tooltip>
       </ul>
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'

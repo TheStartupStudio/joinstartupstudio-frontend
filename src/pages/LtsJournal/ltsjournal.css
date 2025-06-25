@@ -13,6 +13,13 @@
   word-break: break-word;
 }
 
+.progress-details {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  color: #51c7df;
+}
+
 .gradient-background-journal {
   background: linear-gradient(90deg,
       rgba(255, 255, 255, 1) 10%,

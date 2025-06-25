@@ -4783,11 +4783,11 @@ wave > wave:first-child {
 .payment-main {
   border-radius: 24px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  padding: 3rem 7rem;
+  padding: 3rem 5rem;
 }
 
 .payment-section {
-  background-color: #ffffff;
+  background-color: inherit;
   padding: 1.5rem 2.5rem;
   border-radius: 24px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

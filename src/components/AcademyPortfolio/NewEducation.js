@@ -305,6 +305,9 @@ function NewEducation({ isOpen, setIsOpen }) {
                       enabled: false
                     }
                   ]}
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />
@@ -351,6 +354,9 @@ function NewEducation({ isOpen, setIsOpen }) {
                       enabled: false
                     }
                   ]}
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />
