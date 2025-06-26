@@ -3,18 +3,18 @@
   "name": "Learn to Start",
   "icons": [
     {
-      "src": "favicon.png",
+      "src": "/favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/png"
     },
     {
-      "src": "academy-logo-192.png",
+      "src": "/academy-logo-192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "academy-logo-512.png",
+      "src": "/academy-logo-192.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
