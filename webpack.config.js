@@ -13,7 +13,9 @@ module.exports = {
   },
   mode: 'production',
   devServer: {
-    static: './dist',
+    static: {
+      directory: path.join(__dirname, 'public') // <-- This serves public/ at root
+    },
     open: true,
     hot: true,
     historyApiFallback: true
