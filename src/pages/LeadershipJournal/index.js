@@ -17,13 +17,14 @@ import Value from '../../components/LeadershipSections/Value'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import IntlMessages from '../../utils/IntlMessages'
-import { faArrowRight,faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import store from '../../redux/store'
 import { ModalBody, Modal } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const LeadershipJournal = memo(() => {
   const [isReflection, setIsReflection] = useState(false)
@@ -255,9 +256,9 @@ const LeadershipJournal = memo(() => {
   const handleSaveAndContinue = async () => {
     try {
       setIsSaving(true);
-  
+
       const currentComponent = valueRefs.current[activeTabData.option?.value];
-  
+
       // Check if this is an intro section
       const isIntroSection = [
         'Welcome to the Leadership Journal',
@@ -265,14 +266,14 @@ const LeadershipJournal = memo(() => {
         'Section Two: What can I do?',
         'Section Three: How do I prove it?'
       ].includes(activeTabData.option?.value);
-  
+
       if (isIntroSection) {
         // Handle intro sections as before...
         const currentSection = allTabs[activeTabData.activeTab].options;
         const currentOptionIndex = currentSection.findIndex(
           option => option.value === activeTabData.option?.value
         );
-  
+
         if (currentOptionIndex < currentSection.length - 1) {
           setActiveTabData({
             ...activeTabData,
@@ -281,34 +282,34 @@ const LeadershipJournal = memo(() => {
         }
         return;
       }
-  
+
       // Save changes if it's a reflection section
       if (currentComponent?.saveChanges) {
         await currentComponent.saveChanges();
       }
-  
+
       // Fetch updated content
       await dispatch(fetchJournalFinishedContent());
       const { journal: { finishedContent: updatedContent } } = store.getState();
-  
+
       // Check if current content is completed
       if (!updatedContent.includes(activeTabData.option?.value)) {
         setShowLockModal(true);
         return;
       }
-  
+
       // Special handling for Vision section
       if (activeTabData.option?.value === 'Vision' && updatedContent.includes('Vision')) {
         window.location.href = '/leadership-journal';
         return;
       }
-  
+
       // Rest of the function remains the same...
       const currentSection = allTabs[activeTabData.activeTab].options;
       const currentOptionIndex = currentSection.findIndex(
         option => option.value === activeTabData.option?.value
       );
-  
+
       if (currentOptionIndex < currentSection.length - 1) {
         const nextOption = currentSection[currentOptionIndex + 1];
         setActiveTabData({
@@ -325,7 +326,7 @@ const LeadershipJournal = memo(() => {
           setShowLockModal(true);
         }
       }
-  
+
       // Update isNext flags...
     } catch (error) {
       console.error('Error saving:', error);
@@ -445,8 +446,8 @@ const LeadershipJournal = memo(() => {
                   <span
                     key={index}
                     className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 w-100-mob ${activeTabData.activeTab === index
-                        ? 'active-leadership'
-                        : ''
+                      ? 'active-leadership'
+                      : ''
                       }`}
                     onClick={() => handleTabClick(index)}
                     style={{
@@ -481,14 +482,14 @@ const LeadershipJournal = memo(() => {
                     activeTabData.option?.value === 'Section One: Who am I?' ||
                     activeTabData.option?.value === 'Section Two: What can I do?' ||
                     activeTabData.option?.value === 'Section Three: How do I prove it?') && (
-       <AcademyBtn
-  title={isReflection ? 'Save and Continue' : 'Continue'}
-  icon={isSaving ? faSpinner : faArrowRight}
-  onClick={handleSaveAndContinue}
-  disabled={isSaving}
-  loading={isSaving}
-  spin={isSaving}
-/>               )}
+                      <AcademyBtn
+                        title={isReflection ? 'Save and Continue' : 'Continue'}
+                        icon={isSaving ? faSpinner : faArrowRight}
+                        onClick={handleSaveAndContinue}
+                        disabled={isSaving}
+                        loading={isSaving}
+                        spin={isSaving}
+                      />)}
                 </div>
                 {showLockModal && (
                   <Modal
@@ -520,6 +521,31 @@ const LeadershipJournal = memo(() => {
               </div>
               <div className='leadership-btn-section'>
                 <div className='d-flex mt-4 gap-5'>{renderedSection}</div>
+              </div>
+
+              <div className='d-flex justify-content-end mt-4 mb-4'>
+                <div
+                  className='progress-details'
+
+                >
+                  <button
+                    style={{ padding: '.5rem', background: 'inherit', border: 'none', marginRight: '2rem' }}
+                    className='progress-details'
+                    onClick={handleSaveAndContinue}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? (
+                      <FontAwesomeIcon icon={faSpinner} spin />
+                    ) : (
+                      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                        {isReflection
+                          ? 'Save and Continue'
+                          : 'Continue'}
+                        <FontAwesomeIcon icon={faArrowRight} />
+                      </span>
+                    )}
+                  </button>
+                </div>
               </div>
             </>
           )}

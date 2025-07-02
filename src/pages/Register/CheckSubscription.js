@@ -1,6 +1,6 @@
 import { loadStripe } from '@stripe/stripe-js'
 import { useState, useEffect } from 'react'
-import courseLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import courseLogo from '../../assets/images/academy-icons/svg/AIE Logo 3x.png'
 import AcademyBtn from '../../components/AcademyBtn'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
