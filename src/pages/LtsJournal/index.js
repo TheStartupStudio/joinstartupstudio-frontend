@@ -910,7 +910,6 @@ const handleSaveAndContinue = async () => {
         return;
       }
 
-      console.log('Finding next lesson for:', numericId);
 
       // Handle special case for lesson 63 -> 65
       if (numericId === 63) return { nextId: 65 };
@@ -951,23 +950,19 @@ const handleSaveAndContinue = async () => {
         }
       }
 
-      console.log('Current lesson found in level:', currentLevel);
 
       // Get lessons for the determined level
       const lessons = currentLevel === 2
         ? lessonsByLevel[2].flatMap(section => section.children || [])
         : lessonsByLevel[currentLevel] || [];
 
-      console.log('Lessons for level:', lessons.length);
 
       // Find current lesson index
       const currentIndex = lessons.findIndex(lesson => lesson.redirectId === numericId);
-      console.log('Current index:', currentIndex, 'Total lessons:', lessons.length);
 
       // If lesson found and not the last one, return next lesson
       if (currentIndex !== -1 && currentIndex < lessons.length - 1) {
         const nextLesson = lessons[currentIndex + 1];
-        console.log('Next lesson:', nextLesson.redirectId);
         return { nextId: nextLesson.redirectId };
       }
 
