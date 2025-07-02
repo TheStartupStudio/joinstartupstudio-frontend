@@ -79,33 +79,36 @@ function Dashboard() {
 const handleContinueCourse = async () => {
   try {
     await dispatch(fetchLtsCoursefinishedContent());
-
+    
     if (finishedContent && finishedContent.length > 0) {
       // Get last completed lesson ID
       const lastCompletedId = Math.max(...finishedContent);
       
-      // Determine level based on last completed ID
+      // Find the NEXT lesson after the last completed one
+      let nextLessonId = lastCompletedId;
       let targetLevel;
+      
+      // Determine level and next lesson
       if (lastCompletedId >= 70) {
         targetLevel = 2; // Level 3
       } else if (lastCompletedId >= 60) {
-        targetLevel = 1; // Level 2  
+        targetLevel = 1; // Level 2
       } else {
         targetLevel = 0; // Level 1
       }
-
-      // Store state information
+      
+      // Store state information with the last completed lesson (not next)
       localStorage.setItem('selectedLesson', JSON.stringify({
         activeLevel: targetLevel,
         nextId: lastCompletedId,
         lessonTitle: "Continue where you left off",
         currentPlaceholder: "Continue where you left off"
       }));
-
+      
       // Navigate to the last completed lesson
       history.push({
         pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
-        state: { 
+        state: {
           activeLevel: targetLevel,
           currentPlaceholder: "Continue where you left off"
         }
@@ -118,16 +121,15 @@ const handleContinueCourse = async () => {
         lessonTitle: "The Myths of Entrepreneurship",
         currentPlaceholder: "The Myths of Entrepreneurship"
       }));
-
+      
       history.push({
         pathname: '/my-course-in-entrepreneurship/journal/51',
-        state: { 
+        state: {
           activeLevel: 0,
           currentPlaceholder: "The Myths of Entrepreneurship"
         }
       });
     }
-
   } catch (error) {
     console.error('Navigation error:', error);
   }

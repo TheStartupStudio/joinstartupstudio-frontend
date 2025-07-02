@@ -890,195 +890,277 @@ function LtsJournal(props) {
     return { nextId: null, needsCompletion: true };
   };
 
-  const handleSaveAndContinue = async () => {
-    if (saving) return;
-    setSaving(true);
-    try {
-      const currentPath = history.location.pathname;
-      const currentJournalId = parseInt(currentPath.split('/').pop());
-      const myTraining = history.location.pathname.includes('my-training');
-      const findNextLesson = (currentId) => {
-        const numericId = parseInt(currentId);
-        if (!user?.user?.stripe_subscription_id && currentJournalId >= 58) {
-          setSubscriptionModalparagraph('Congratulations you have finished Level 1. This content only available to subscribed users. Subscribe now to access all levels and features.')
-          setShowSubscriptionModal(true);
-          setSaving(false);
-          return;
-        }
+const handleSaveAndContinue = async () => {
+  if (saving) return;
+  setSaving(true);
+  
+  try {
+    const currentPath = history.location.pathname;
+    const currentJournalId = parseInt(currentPath.split('/').pop());
+    const myTraining = history.location.pathname.includes('my-training');
+    
+    const findNextLesson = (currentId) => {
+      const numericId = parseInt(currentId);
+      
+      // Check subscription for content beyond level 1
+      if (!user?.user?.stripe_subscription_id && numericId >= 58) {
+        setSubscriptionModalparagraph('Congratulations you have finished Level 1. This content only available to subscribed users. Subscribe now to access all levels and features.')
+        setShowSubscriptionModal(true);
+        setSaving(false);
+        return;
+      }
 
-        if (numericId === 63) return { nextId: 65 };
-        const levelTransitions = {
-          58: { nextId: 60, nextLevel: 1 },
-          68: { nextId: 70, nextLevel: 2 }
-        };
-        if (levelTransitions[numericId]) {
-          return levelTransitions[numericId];
-        }
-        const currentLevel = activeLevel;
-        const lessons = currentLevel === 2
-          ? lessonsByLevel[2].flatMap(section => section.children || [])
-          : lessonsByLevel[currentLevel] || [];
-        const currentIndex = lessons.findIndex(
-          lesson => lesson.redirectId === numericId
-        );
-        if (currentIndex !== -1 && currentIndex < lessons.length - 1) {
-          return { nextId: lessons[currentIndex + 1].redirectId };
-        }
-        return null;
+      console.log('Finding next lesson for:', numericId);
+
+      // Handle special case for lesson 63 -> 65
+      if (numericId === 63) return { nextId: 65 };
+      
+      // Handle level transitions
+      const levelTransitions = {
+        58: { nextId: 60, nextLevel: 1 },
+        68: { nextId: 70, nextLevel: 2 }
       };
-      const resolveLessonTitle = (lessonId) => {
-        switch (lessonId) {
-          case 51: return "The Myths of Entrepreneurship";
-          case 60: return "The Journey of Entrepreneurship";
-          case 70: return "Business Story";
-          default:
-            if (activeLevel === 2) {
-              for (const section of lessonsByLevel[2]) {
-                const found = section.children?.find(child => child.redirectId === lessonId);
-                if (found) return found.title;
-              }
-            }
-            const found = lessonsByLevel[activeLevel]?.find(
-              lesson => lesson.redirectId === lessonId
-            );
-            return found?.title || '';
-        }
-      };
+      
+      if (levelTransitions[numericId]) {
+        return levelTransitions[numericId];
+      }
 
-      // Fetch the latest finished content data first
-      await dispatch(fetchLtsCoursefinishedContent());
-      const finishedContentResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
-      const finishedContentData = finishedContentResponse.data;
-      const finishedContentList = finishedContentData.finishedContent || [];
-
-      // Check if the current journal ID is in the finished content list
-      const isJournalCompleted = finishedContentList.includes(currentJournalId);
-
-      let hasEmptyReflections = false;
-      let savePromises = [];
-      Object.entries(reflectionsData).forEach(([key, reflectionData]) => {
-        const { content, journalId, journalEntryId, entryId } = reflectionData;
-        const isEmpty = !content || content.trim() === '' || content === '<p><br></p>';
-        if (isEmpty) {
-          hasEmptyReflections = true;
-          return;
-        }
-        const endpoint = !entryId
-          ? `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`
-          : `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`;
-        savePromises.push(
-          axiosInstance[!entryId ? 'post' : 'put'](
-            endpoint,
-            { content, trainingId: myTraining ? journalId : null }
-          )
-        );
-      });
-      const nextLessonInfo = findNextLesson(currentJournalId);
-      const nextLessonId = nextLessonInfo?.nextId;
-      const navigateToNextLesson = async () => {
-        const nextLessonInfo = findNextLesson(currentJournalId);
-        const nextLessonId = nextLessonInfo?.nextId;
-
-        if (!nextLessonId) {
-          if (hasEmptyReflections) {
-            toast.error('Please complete all reflections before continuing');
-          } else if (nextLessonInfo && !nextLessonInfo.needsCompletion) {
-            toast.success('Course completed!');
-          }
-          return;
-        }
-
-        // Handle level transitions
-        if (nextLessonInfo.nextLevel !== undefined) {
-          setActiveLevel(nextLessonInfo.nextLevel);
-        }
-
-        const nextLessonTitle = resolveLessonTitle(nextLessonId);
-        setCurrentPlaceholder(nextLessonTitle);
-
-        // Navigate to next lesson
-        const targetLevel = nextLessonInfo.nextLevel ?? activeLevel;
-        let nextLesson = null;
-
-        if (targetLevel === 2) {
-          for (const section of lessonsByLevel[2]) {
-            const found = section.children?.find(c => c.redirectId === nextLessonId);
-            if (found) {
-              nextLesson = {
-                value: `${section.id}_${found.id}`,
-                label: found.title,
-                redirectId: nextLessonId
-              };
-              break;
-            }
+      // Find which level the current lesson belongs to
+      let currentLevel = activeLevel;
+      let foundInLevel = false;
+      
+      // Check each level to find where the current lesson belongs
+      for (let level = 0; level <= 2; level++) {
+        if (level === 2) {
+          // Level 3 has nested structure
+          const allLevel3Lessons = lessonsByLevel[2].flatMap(section => section.children || []);
+          const foundInLevel3 = allLevel3Lessons.find(lesson => lesson.redirectId === numericId);
+          if (foundInLevel3) {
+            currentLevel = 2;
+            foundInLevel = true;
+            break;
           }
         } else {
-          const found = lessonsByLevel[targetLevel]?.find(
-            l => l.redirectId === nextLessonId
-          );
+          // Level 1 and 2 have flat structure
+          const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.redirectId === numericId);
+          if (foundInCurrentLevel) {
+            currentLevel = level;
+            foundInLevel = true;
+            break;
+          }
+        }
+      }
+
+      console.log('Current lesson found in level:', currentLevel);
+
+      // Get lessons for the determined level
+      const lessons = currentLevel === 2
+        ? lessonsByLevel[2].flatMap(section => section.children || [])
+        : lessonsByLevel[currentLevel] || [];
+
+      console.log('Lessons for level:', lessons.length);
+
+      // Find current lesson index
+      const currentIndex = lessons.findIndex(lesson => lesson.redirectId === numericId);
+      console.log('Current index:', currentIndex, 'Total lessons:', lessons.length);
+
+      // If lesson found and not the last one, return next lesson
+      if (currentIndex !== -1 && currentIndex < lessons.length - 1) {
+        const nextLesson = lessons[currentIndex + 1];
+        console.log('Next lesson:', nextLesson.redirectId);
+        return { nextId: nextLesson.redirectId };
+      }
+
+      // If it's the last lesson of the course
+      if (numericId === 126) {
+        return null; // Course completed
+      }
+
+      return null;
+    };
+
+    const resolveLessonTitle = (lessonId) => {
+      switch (lessonId) {
+        case 51: return "The Myths of Entrepreneurship";
+        case 60: return "The Journey of Entrepreneurship";
+        case 70: return "Business Story";
+        default:
+          // Check level 3 first
+          for (const section of lessonsByLevel[2] || []) {
+            const found = section.children?.find(child => child.redirectId === lessonId);
+            if (found) return found.title;
+          }
+          
+          // Check other levels
+          for (let level = 0; level <= 1; level++) {
+            const found = lessonsByLevel[level]?.find(lesson => lesson.redirectId === lessonId);
+            if (found) return found.title;
+          }
+          
+          return '';
+      }
+    };
+
+    // Fetch the latest finished content data first
+    await dispatch(fetchLtsCoursefinishedContent());
+    const finishedContentResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
+    const finishedContentData = finishedContentResponse.data;
+    const finishedContentList = finishedContentData.finishedContent || [];
+
+    // Check if the current journal ID is in the finished content list
+    const isJournalCompleted = finishedContentList.includes(currentJournalId);
+
+    let hasEmptyReflections = false;
+    let savePromises = [];
+    
+    Object.entries(reflectionsData).forEach(([key, reflectionData]) => {
+      const { content, journalId, journalEntryId, entryId } = reflectionData;
+      const isEmpty = !content || content.trim() === '' || content === '<p><br></p>';
+      if (isEmpty) {
+        hasEmptyReflections = true;
+        return;
+      }
+      const endpoint = !entryId
+        ? `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`
+        : `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`;
+      savePromises.push(
+        axiosInstance[!entryId ? 'post' : 'put'](
+          endpoint,
+          { content, trainingId: myTraining ? journalId : null }
+        )
+      );
+    });
+
+    const navigateToNextLesson = async () => {
+      const nextLessonInfo = findNextLesson(currentJournalId);
+      const nextLessonId = nextLessonInfo?.nextId;
+
+      if (!nextLessonId) {
+        if (hasEmptyReflections) {
+          toast.error('Please complete all reflections before continuing');
+        } else if (nextLessonInfo === null) {
+          toast.success('Course completed!');
+        }
+        return;
+      }
+
+      // Handle level transitions
+      if (nextLessonInfo.nextLevel !== undefined) {
+        setActiveLevel(nextLessonInfo.nextLevel);
+      }
+
+      const nextLessonTitle = resolveLessonTitle(nextLessonId);
+      setCurrentPlaceholder(nextLessonTitle);
+
+      // Navigate to next lesson
+      const targetLevel = nextLessonInfo.nextLevel !== undefined ? nextLessonInfo.nextLevel : activeLevel;
+      let nextLesson = null;
+
+      if (targetLevel === 2) {
+        for (const section of lessonsByLevel[2]) {
+          const found = section.children?.find(c => c.redirectId === nextLessonId);
           if (found) {
             nextLesson = {
-              value: found.id,
+              value: `${section.id}_${found.id}`,
               label: found.title,
               redirectId: nextLessonId
             };
+            break;
           }
         }
-
-        if (nextLesson) {
-          setSelectedLesson(nextLesson);
-          // Ensure we have latest finishedContent before navigation
-          await dispatch(fetchLtsCoursefinishedContent());
-          history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
-        }
-      };
-
-      if (hasEmptyReflections) {
-        // If journal is already marked as completed, allow navigation regardless of empty reflections
-        if (isJournalCompleted) {
-          await navigateToNextLesson();
-          setSaving(false);
-          return;
-        }
-        toast.error('Complete all reflections before continuing');
-        setSaving(false);
-        return;
-      }
-
-      if (savePromises.length === 0) {
-        // If journal is already marked as completed, allow navigation even without new reflections
-        if (isJournalCompleted) {
-          await navigateToNextLesson();
-          setSaving(false);
-          return;
-        }
-        toast.error('Please complete your reflection before continuing.');
-        setSaving(false);
-        return;
-      }
-
-      // Save all reflections
-      await Promise.all(savePromises);
-      setReflectionsData({});
-      toast.success('Reflections saved successfully!');
-
-      // After saving reflections, check again if this journal is now marked as completed
-      await dispatch(fetchLtsCoursefinishedContent());
-      const updatedFinishedResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
-      const updatedFinishedList = updatedFinishedResponse.data.finishedContent || [];
-
-      if (updatedFinishedList.includes(currentJournalId)) {
-        await navigateToNextLesson();
       } else {
-        toast.error('Complete all the reflections before continuing.');
+        const found = lessonsByLevel[targetLevel]?.find(
+          l => l.redirectId === nextLessonId
+        );
+        if (found) {
+          nextLesson = {
+            value: found.id,
+            label: found.title,
+            redirectId: nextLessonId
+          };
+        }
       }
-    } catch (error) {
-      console.error('Save error:', error);
-      toast.error('Save failed. Please try again.');
-    } finally {
+
+      if (nextLesson) {
+        setSelectedLesson(nextLesson);
+        // Ensure we have latest finishedContent before navigation
+        await dispatch(fetchLtsCoursefinishedContent());
+        history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
+      }
+    };
+
+    if (hasEmptyReflections) {
+      // If journal is already marked as completed, allow navigation regardless of empty reflections
+      if (isJournalCompleted) {
+        await navigateToNextLesson();
+        setSaving(false);
+        return;
+      }
+      toast.error('Complete all reflections before continuing');
       setSaving(false);
+      return;
     }
-  };
+
+    if (savePromises.length === 0) {
+      // If journal is already marked as completed, allow navigation even without new reflections
+      if (isJournalCompleted) {
+        await navigateToNextLesson();
+        setSaving(false);
+        return;
+      }
+      toast.error('Please complete your reflection before continuing.');
+      setSaving(false);
+      return;
+    }
+
+    // Save all reflections
+    await Promise.all(savePromises);
+    setReflectionsData({});
+    toast.success('Reflections saved successfully!');
+
+    // After saving reflections, check again if this journal is now marked as completed
+    await dispatch(fetchLtsCoursefinishedContent());
+    const updatedFinishedResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
+    const updatedFinishedList = updatedFinishedResponse.data.finishedContent || [];
+
+    if (updatedFinishedList.includes(currentJournalId)) {
+      await navigateToNextLesson();
+    } else {
+      toast.error('Complete all the reflections before continuing.');
+    }
+  } catch (error) {
+    console.error('Save error:', error);
+    toast.error('Save failed. Please try again.');
+  } finally {
+    setSaving(false);
+  }
+};
+
+
+// Add this useEffect to handle navigation from dashboard
+useEffect(() => {
+  // Check if we're coming from dashboard with stored state
+  const storedLesson = localStorage.getItem('selectedLesson');
+  if (storedLesson && location.state) {
+    try {
+      const lessonData = JSON.parse(storedLesson);
+      const { activeLevel: storedLevel, currentPlaceholder } = lessonData;
+      
+      if (storedLevel !== undefined && storedLevel !== activeLevel) {
+        setActiveLevel(storedLevel);
+      }
+      
+      if (currentPlaceholder) {
+        setCurrentPlaceholder(currentPlaceholder);
+      }
+      
+      // Clear the stored lesson after using it
+      localStorage.removeItem('selectedLesson');
+    } catch (error) {
+      console.error('Error parsing stored lesson:', error);
+    }
+  }
+}, [location.state, journalId]);
 
   const getLessonTitle = (journalId) => {
     const numericId = parseInt(journalId);
