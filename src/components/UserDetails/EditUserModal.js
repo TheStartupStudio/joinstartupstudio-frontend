@@ -169,6 +169,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       }
 
       toast.success(<IntlMessages id='alert.my_account.success_change' />)
+      console.log('social links:', params.social_links)
       dispatch(editSocialMedia(params.social_links))
     } catch (err) {
       toast.error(<IntlMessages id='alerts.something_went_wrong' />)

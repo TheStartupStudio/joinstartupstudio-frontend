@@ -216,30 +216,48 @@ const userReducer = (state = initialState, action) => {
       }
 
     case EDIT_SOCIAL_MEDIA: {
-      const userObject = {
-        token: localStorage.getItem('access_token'),
-        user: {
-          ...state.user.user,
-          social_links: payload
-        }
-      }
-      localStorage.setItem('user', JSON.stringify(userObject))
-
-      return state
+  const userObject = {
+    token: localStorage.getItem('access_token'),
+    user: {
+      ...state.user.user,
+      social_links: payload
     }
+  }
+  localStorage.setItem('user', JSON.stringify(userObject))
+
+  return {
+    ...state,
+    user: {
+      ...state.user,
+      user: {
+        ...state.user.user,
+        social_links: payload
+      }
+    }
+  }
+}
 
     case UPDATE_USER_TNC: {
-      const userObject = {
-        token: localStorage.getItem('access_token'),
-        user: {
-          ...state.user.user,
-          TnC: true
-        }
-      }
-      localStorage.setItem('user', JSON.stringify(userObject))
-
-      return state
+  const userObject = {
+    token: localStorage.getItem('access_token'),
+    user: {
+      ...state.user.user,
+      TnC: true
     }
+  }
+  localStorage.setItem('user', JSON.stringify(userObject))
+
+  return {
+    ...state,
+    user: {
+      ...state.user,
+      user: {
+        ...state.user.user,
+        TnC: true
+      }
+    }
+  }
+}
 
     default:
       return state
