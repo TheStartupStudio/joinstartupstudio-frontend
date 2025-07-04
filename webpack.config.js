@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack')
 const DotenvWebpackPlugin = require('dotenv-webpack') // Replace dotenv with dotenv-webpack
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
@@ -98,7 +99,10 @@ module.exports = {
       //   removeRedundantAttributes: true
       // }
     }),
-    new DotenvWebpackPlugin() // Load environment variables via dotenv-webpack
+    new DotenvWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [{ from: 'public/manifest.json', to: 'manifest.json' }]
+    })
   ],
   optimization: {
     splitChunks: {
