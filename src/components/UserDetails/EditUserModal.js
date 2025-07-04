@@ -74,7 +74,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     if (!file) return false
 
     const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
-    const maxSize = 1 * 1024 * 1024
+    const maxSize = 10 * 1024 * 1024
     console.log('file:', file)
     if (!validTypes.includes(file.type)) {
       toast.error('Only PNG, JPG, or JPEG files are allowed.')
