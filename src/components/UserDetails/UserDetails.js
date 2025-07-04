@@ -20,6 +20,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
   const [cancelSubModal, setCancelSubModal] = useState(false)
   const [canceledRenewal, setCanceledRenewal] = useState(false)
   const [certificate, setCertificate] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -59,8 +60,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
   return (
     <>
       <div
-        className='d-grid academy-dashboard-card'
-        style={{ gridTemplateRows: '1fr 1fr 1fr' }}
+        className='d-grid academy-dashboard-card dashboard-user-details'
       >
         <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4'>
           <div className='d-flex gap-3 align-items-center'>
@@ -71,7 +71,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
             <img src={penIcon} alt='edit' />
           </button>
         </div>
-        <div className='d-flex gap-4 align-items-center'>
+        <div className='d-flex gap-4 user-details'>
           <img
             className='profile-dashboard-academy'
             src={user.profileImage ? user.profileImage : blankProfile}
@@ -131,14 +131,27 @@ function UserDetails({ profilePic, userName, userProffesion }) {
                   fontSize: '14px',
                   color: '#666',
                   marginBottom: 0,
-                  display: '-webkit-box',
-                  WebkitLineClamp: '2',
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  // Remove line clamp for expand/collapse
+                  overflow: 'visible',
+                  textOverflow: 'unset',
+                  display: 'block'
                 }}
               >
-                {stripHtmlTags(user.bio)}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: isExpanded
+                      ? stripHtmlTags(user.bio)
+                      : `${stripHtmlTags(user.bio).length > 180 ? stripHtmlTags(user.bio).slice(0, 180) + '...' : stripHtmlTags(user.bio)}`
+                  }}
+                />
+                {stripHtmlTags(user.bio).length > 180 && (
+                  <span
+                    className='blue-color ml-2 fw-medium cursor-pointer'
+                    onClick={() => setIsExpanded(!isExpanded)}
+                  >
+                    {isExpanded ? 'Read Less' : 'Read More'}
+                  </span>
+                )}
               </div>
             )}
           </div>

@@ -3,6 +3,7 @@ import { toast } from 'react-toastify' // Add this import
 import { useSelector } from 'react-redux'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
+import instagramLogo from '../../assets/images/academy-icons/instagram.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
@@ -195,40 +196,50 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
             <p className='text-black fs-15 fw-medium lh-sm mb-3'>
               {user?.profession}
             </p>
-            <div className='d-flex gap-2'>
-              {user?.social_links?.linkedIn && (
-                <img
-                  className='cursor-pointer'
-                  src={linkedinLogo}
-                  alt='linkedin'
-                  onClick={() =>
-                    window.open(formatURL(user.social_links.linkedIn), '_blank')
-                  }
-                />
-              )}
-
-              {user?.social_links?.facebook && (
-                <img
-                  className='cursor-pointer'
-                  src={facebookLogo}
-                  alt='facebook'
-                  onClick={() =>
-                    window.open(formatURL(user.social_links.facebook), '_blank')
-                  }
-                />
-              )}
-
-              {user?.social_links?.twitter && (
-                <img
-                  className='cursor-pointer'
-                  src={twitterLogo}
-                  alt='twitter'
-                  onClick={() =>
-                    window.open(formatURL(user.social_links.twitter), '_blank')
-                  }
-                />
-              )}
-            </div>
+            <div className='d-flex gap-2' style={{height:'16px'}}>
+                          {user.social_links.linkedIn && (
+                            <img
+                              className='cursor-pointer'
+                              src={linkedinLogo}
+                              alt='linkedin'
+                              onClick={() =>
+                                window.open(formatURL(user.social_links.linkedIn), '_blank')
+                              }
+                            />
+                          )}
+            
+                          {user.social_links.facebook && (
+                            <img
+                              className='cursor-pointer'
+                              src={facebookLogo}
+                              alt='facebook'
+                              onClick={() =>
+                                window.open(formatURL(user.social_links.facebook), '_blank')
+                              }
+                            />
+                          )}
+                           {user.social_links.instagram && (
+                            <img
+                              className='cursor-pointer social-icon'
+                              src={instagramLogo}
+                              alt='instagram'
+                              onClick={() =>
+                                window.open(formatURL(user.social_links.instagram), '_blank')
+                              }
+                            />
+                          )}
+            
+                          {user.social_links.twitter && (
+                            <img
+                              className='cursor-pointer'
+                              src={twitterLogo}
+                              alt='twitter'
+                              onClick={() =>
+                                window.open(formatURL(user.social_links.twitter), '_blank')
+                              }
+                            />
+                          )}
+                        </div>
             {user?.bio && (
               <p className={`mt-3 fs-15 fw-light text-black text-break ${
                 isExpanded && 'width-50 w-100-mob'

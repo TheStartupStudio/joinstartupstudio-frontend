@@ -4320,6 +4320,7 @@ wave > wave:first-child {
   height: 6rem;
   border-radius: 50%;
   object-fit: cover;
+  aspect-ratio: 1 / 1;
 }
 
 .view-certificate {
@@ -4368,6 +4369,7 @@ wave > wave:first-child {
   padding-inline: 1.5rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   border-radius: 20px;
+  gap: 20px;
 }
 
 .progress-details {
@@ -4380,6 +4382,7 @@ wave > wave:first-child {
 .academy-dashboard-bottom {
   grid-column: span 2;
   padding-block: 0.9rem;
+  margin-bottom: 30px;
 }
 
 .continue-course-btn {
@@ -5111,6 +5114,10 @@ wave > wave:first-child {
   height: 97px;
 }
 
+.progress-dashboard-card{
+  max-height: 350px;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;
@@ -5433,6 +5440,11 @@ wave > wave:first-child {
   padding-inline: 10rem;
 }
 
+.dashboard-user-details{
+  grid-template-rows: auto 1fr auto;
+  gap: 50px;
+}
+
 @media (max-width: 1190px) {
   .certskills-grid {
     grid-template-columns: 1fr 1fr !important;
@@ -5446,6 +5458,24 @@ wave > wave:first-child {
 }
 
 @media (max-width: 768px) {
+  .progress-dashboard-card{
+  max-height: none;
+}
+  .dashboard-user-details{
+    grid-template-rows: auto 1fr auto;
+}
+
+.dashboard-user-details .user-details {
+    flex-direction: column;
+    align-items: start;
+}
+
+.dashboard-user-details .academy-profile-info{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
   .save-button{
     margin-right:2rem!important;
   }

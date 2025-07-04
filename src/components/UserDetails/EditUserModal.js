@@ -74,7 +74,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     if (!file) return false
 
     const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
-    const maxSize = 1 * 1024 * 1024
+    const maxSize = 10 * 1024 * 1024
     console.log('file:', file)
     if (!validTypes.includes(file.type)) {
       toast.error('Only PNG, JPG, or JPEG files are allowed.')
@@ -169,6 +169,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       }
 
       toast.success(<IntlMessages id='alert.my_account.success_change' />)
+      console.log('social links:', params.social_links)
       dispatch(editSocialMedia(params.social_links))
     } catch (err) {
       toast.error(<IntlMessages id='alerts.something_went_wrong' />)

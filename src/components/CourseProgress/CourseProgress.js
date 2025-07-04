@@ -401,7 +401,7 @@ function CourseProgress() {
 
   return (
     <>
-      <div className='d-grid academy-dashboard-card grid-row-1-2 grid-row-none-mob'>
+      <div className='d-grid academy-dashboard-card grid-row-none-mob progress-dashboard-card '>
         <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 gap-2'>
           <div className='d-flex gap-3 align-items-center'>
             <img src={courseLogo} alt='course' />
