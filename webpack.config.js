@@ -101,7 +101,10 @@ module.exports = {
     }),
     new DotenvWebpackPlugin(),
     new CopyWebpackPlugin({
-      patterns: [{ from: 'public/manifest.json', to: 'manifest.json' }]
+      patterns: [
+        { from: 'public/manifest.json', to: 'manifest.json' },
+        { from: 'public/academy-phone-*.png', to: '[name][ext]' }
+      ]
     })
   ],
   optimization: {
