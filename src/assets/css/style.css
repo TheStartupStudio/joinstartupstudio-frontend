@@ -4341,7 +4341,11 @@ wave > wave:first-child {
 }
 
 .social-icon {
-  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(118%) contrast(119%);
+  /* filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(118%) contrast(119%); */
+  width: 24px;
+  height: 24px;
+  position: relative;
+  top: -4px;
 }
 .user-bio {
   max-width: 100%;
