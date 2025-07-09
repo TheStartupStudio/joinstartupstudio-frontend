@@ -1,11 +1,78 @@
 .title-completion{
     font-size:47px;
 }
+
+.certificate-wrapper {
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.25rem;
+}
+
+.certificate-header{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.certificate-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.certification-paragraph {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+    font-weight: medium;
+    color: #000;
+}
+
 .course-logo{
     width:250px
 }
 .user-certified{
     font-size:64px;
+              border-bottom: 3px solid #000 !important;
+              padding-bottom: 0.5rem !important;
+              font-weight: bold;
+}
+
+.certificate-reason {
+  font-size: 32px;
+  line-height: 1.15;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.certification-signature{
+    position: relative;
+}
+
+.signature-border {
+  padding-inline: 5rem;
+  margin-top: 0.5rem;
+}
+
+            .horizontal-line-sign {
+              bottom: 0 !important;
+              left: 0 !important;
+              right: 0 !important;
+              margin: 0 !important;
+              border: 1px solid #000 !important;
+            }
+
+
+.signature-border-bottom {
+  border-bottom: 1px solid #aeaeae;
+  width: 100%;
+  bottom: -7px;
+  position: absolute;
 }
 
 @media(max-width:770px){
@@ -15,9 +82,26 @@
     .course-logo{
     width:150px!important;
     }
+          .certification-paragraph {
+  font-size: 16px!important;
+}
     .user-certified{
     font-size:25px;
-    font-weight:bolder;
+    font-weight:bold;
     }
+
+        .certificate-reason{
+        font-size:16px!important;
+        width:60%;
+    }
+
+    .signature-border {
+  padding-inline: 0.5rem;
+}
+
+  .signature-border-bottom{
+    width: 100%;
+    align-self: center;
+  }
 
 }

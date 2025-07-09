@@ -4650,37 +4650,14 @@ wave > wave:first-child {
   position: relative;
 }
 
-.certificate-wrapper {
-  padding: 2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  border-radius: 36px;
-}
 .modal-content {
   background-color: #ffffff !important;
 }
 
-.certification-paragraph {
-  font-size: 20px;
-}
-
-.certificate-reason {
-  font-size: 32px;
-  line-height: 1.15;
-}
 
 .border-bottom-title {
   border-bottom: 1px solid #aeaeae;
   padding-inline: 3rem;
-}
-
-.signature-border {
-  padding-inline: 5rem;
-}
-
-.signature-border-bottom {
-  border-bottom: 1px solid #aeaeae;
-  width: 100%;
-  bottom: -7px;
 }
 
 .progress-details-accordion {
@@ -5497,27 +5474,12 @@ wave > wave:first-child {
   .saveContinue-btn {
     width: 100%;
   }
-  .signature-border-bottom{
-    width: 100%;
-    align-self: center;
-  }
-
-  .signature-border {
-    padding-inline: 0.5rem;
-  }
 }
 
 @media (max-width: 600px) {
   .certskills-grid {
     grid-template-columns: 1fr 1fr !important;
   }
-      .certification-paragraph {
-  font-size: 16px!important;
-}
-    .certificate-reason{
-        font-size:16px!important;
-        width:60%;
-    }
 }
 
 @media (max-width: 500px) {

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import courseLogoXL from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import courseLogoXL from '../../assets/images/academy-icons/SUS OAE Logox800 1.png'
 import courseLogo from '../../assets/images/academy-icons/course-progress.png'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import print from '../../assets/images/academy-icons/print.png'
@@ -49,31 +49,340 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
     return `on the ${day}${ordinal(day)} of ${month}, ${year}`;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!isCompleted) return;
     
-    html2canvas(certificateRef.current, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF('l', 'mm', 'a4')
-      const pageWidth = 297
-      const pageHeight = 210
-      const imgWidth = pageWidth - 20
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-      let position = (pageHeight - imgHeight) / 2
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight)
-      pdf.save('certificate.pdf')
-    })
+    // Create an invisible iframe for PDF generation (same as print approach)
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.left = '-9999px';
+    iframe.style.top = '-9999px';
+    iframe.style.width = '1200px';
+    iframe.style.height = '800px';
+    document.body.appendChild(iframe);
+    
+    const certificateHTML = certificateRef.current.outerHTML;
+    
+    iframe.contentDocument.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Certificate</title>
+          <style>
+            * {
+              box-sizing: border-box;
+            }
+            
+            body {
+              margin: 0;
+              padding: 20px;
+              background: white;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+              width: 1200px;
+            }
+            
+            .certificate-wrapper {
+              width: 1200px !important;
+              max-width: none !important;
+              min-width: 1200px !important;
+              transform: none !important;
+              background: white;
+              padding: 2rem !important;
+              box-sizing: border-box;
+              margin: 0 auto;
+              border-radius: 36px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+            
+            .certificate-header {
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+              justify-content: center;
+              width: 100%;
+            }
+            
+            .certificate-body {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+            
+            .course-logo {
+              width: 250px !important;
+              height: auto !important;
+            }
+            
+            .title-completion {
+              font-size: 47px !important;
+              font-weight: bold !important;
+              color: #000 !important;
+              line-height: 1.1 !important;
+              margin: 0 !important;
+              text-align: center !important;
+            }
+            
+            .certification-paragraph {
+              font-size: 20px !important;
+              text-align: center !important;
+              margin-top: 1rem !important;
+              margin-bottom: 0.25rem !important;
+              font-weight: 500 !important;
+              color: #000 !important;
+            }
+            
+            .user-certified {
+              font-size: 64px !important;
+              border-bottom: 3px solid #000 !important;
+              padding-bottom: 0.5rem !important;
+              font-weight: bold !important;
+              margin: 1.5rem 0 !important;
+              text-align: center !important;
+            }
+            
+            .certificate-reason {
+              font-size: 32px !important;
+              line-height: 1.15 !important;
+              margin: 1rem 0 !important;
+              text-align: center !important;
+              width: auto !important;
+            }
+            
+            .certification-signature {
+              position: relative;
+            }
+            
+            .signature-border {
+              padding-inline: 5rem !important;
+              margin-top: 0.5rem !important;
+              width: auto !important;
+            }
+            
+            .horizontal-line-sign {
+              bottom: 0 !important;
+              left: 0 !important;
+              right: 0 !important;
+              margin: 0 !important;
+              border: 1px solid #000 !important;
+            }
+            
+            .signature-border-bottom {
+              border-bottom: 1px solid #aeaeae;
+              width: 100%;
+              bottom: -7px;
+              position: absolute;
+            }
+          </style>
+        </head>
+        <body>
+          ${certificateHTML}
+        </body>
+      </html>
+    `);
+    
+    iframe.contentDocument.close();
+    
+    // Wait for content to load
+    iframe.onload = async () => {
+      try {
+        // Wait a bit more for images and fonts to load
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const iframeBody = iframe.contentDocument.body;
+        
+        const canvas = await html2canvas(iframeBody, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          width: 1200,
+          height: iframeBody.scrollHeight,
+          scrollX: 0,
+          scrollY: 0,
+          logging: false,
+          foreignObjectRendering: false,
+          imageTimeout: 15000
+        });
+        
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        const pdf = new jsPDF('l', 'mm', 'a4');
+        const pageWidth = 297;
+        const pageHeight = 210;
+        const imgWidth = pageWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const position = Math.max((pageHeight - imgHeight) / 2, 10);
+        
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        pdf.save('certificate.pdf');
+        
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      } finally {
+        // Clean up iframe
+        document.body.removeChild(iframe);
+      }
+    };
   }
 
   const handlePrint = () => {
     if (!isCompleted) return;
 
-    const printContent = certificateRef.current.innerHTML
-    const originalContent = document.body.innerHTML
-    document.body.innerHTML = printContent
-    window.print()
-    document.body.innerHTML = originalContent
-    window.location.reload()
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    const certificateHTML = certificateRef.current.outerHTML;
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Certificate</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            * {
+              box-sizing: border-box;
+            }
+            
+            body {
+              margin: 0;
+              padding: 20px;
+              background: white;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+              min-height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .certificate-wrapper {
+              width: 1200px !important;
+              max-width: none !important;
+              min-width: 1200px !important;
+              transform: none !important;
+              page-break-inside: avoid;
+              background: white;
+              padding: 2rem !important;
+              box-sizing: border-box;
+              margin: 0 auto;
+              border-radius: 36px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .certificate-header {
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+              justify-content: center;
+              width: 100%;
+            }
+            
+            .certificate-body {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+            
+            .course-logo {
+              width: 250px !important;
+              height: auto !important;
+            }
+            
+            .title-completion {
+              font-size: 47px !important;
+              font-weight: bold !important;
+              color: #000 !important;
+              line-height: 1.1 !important;
+              margin: 0 !important;
+            }
+            
+            .certification-paragraph {
+              font-size: 20px !important;
+              text-align: center !important;
+              margin-top: 1rem !important;
+              margin-bottom: 0.25rem !important;
+              font-weight: 500 !important;
+              color: #000 !important;
+            }
+            
+            .user-certified {
+              font-size: 64px !important;
+              border-bottom: 3px solid #000 !important;
+              padding-bottom: 0.5rem !important;
+              font-weight: bold !important;
+              margin: 1.5rem 0 !important;
+              text-align: center !important;
+            }
+            
+            .certificate-reason {
+              font-size: 32px !important;
+              line-height: 1.15 !important;
+              margin: 1rem 0 !important;
+              text-align: center !important;
+              width: auto !important;
+            }
+            
+            .certification-signature {
+              position: relative;
+            }
+            
+            .signature-border {
+              padding-inline: 5rem !important;
+              margin-top: 0.5rem !important;
+              width: auto !important;
+            }
+            
+            .horizontal-line-sign {
+              bottom: 0 !important;
+              left: 0 !important;
+              right: 0 !important;
+              margin: 0 !important;
+              border: 1px solid #000 !important;
+            }
+            
+            .signature-border-bottom {
+              border-bottom: 1px solid #aeaeae;
+              width: 100%;
+              bottom: -7px;
+              position: absolute;
+            }
+            
+            @page {
+              size: A4 landscape;
+              margin: 0;
+            }
+            
+            @media print {
+              body {
+                padding: 0;
+              }
+              .certificate-wrapper {
+                width: 100% !important;
+                min-width: auto !important;
+                max-width: 100% !important;
+                padding: 40px !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${certificateHTML}
+        </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    
+    // Wait for content to load then print
+    printWindow.onload = () => {
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 1000);
+    };
   }
 
   return (
@@ -116,10 +425,10 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
           </div>
         </div>
         <div
-          className={`d-flex flex-column align-items-center mt-5 certificate-wrapper ${!isCompleted ? 'certificate-blur' : ''}`}
+          className={`certificate-wrapper ${!isCompleted ? 'certificate-blur' : ''}`}
           ref={certificateRef}
         >
-          <div className='d-flex gap-3 align-items-center'>
+          <div className='certificate-header'>
             <img
               src={courseLogoXL}
               alt='academy-logo'
@@ -131,38 +440,37 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
             </h1>
           </div>
 
-          <div className='d-flex flex-column align-items-center'>
-            <p class='text-center certification-paragraph mt-5 mb-1 fw-medium text-black'>
+          <div className='certificate-body'>
+            <p className='certification-paragraph'>
               This is to certify that
             </p>
             <h2
-              class='text-center fw-semibold border-bottom-title'
               className='user-certified'
             >
               {name}
             </h2>
-            <p class='text-center certification-paragraph mb-0 fw-medium mt-1 text-black'>
-              has succesfully completed
+            <p className='certification-paragraph'>
+              has successfully completed
             </p>
-            <p class='text-center mb-0 fw-medium certificate-reason mt-2 text-black'>
-              The Startup Studio’s
+            <p className='certificate-reason'>
+              The Startup Studio's
               <br /> Course in Entrepreneurship & Innovation
             </p>
-            <p class='text-center certification-paragraph mb-0 fw-medium mt-2 text-black'>
+            <p className='certification-paragraph '>
               {completionDate || 'Course not completed'}
             </p>
-            <div className='position-relative'>
+            <div className='certification-signature'>
               <img
-                className='mt-2 signature-border'
+                className='signature-border'
                 src={signature}
                 alt='signature'
               />
-              <hr className='position-absolute horizontal-line-sign signature-border-bottom' />
+              <hr className='horizontal-line-sign signature-border-bottom' />
             </div>
-            <p class='text-center certification-paragraph mb-0 fw-medium mt-2 text-black'>
+            <p className='certification-paragraph'>
               Anastasia Hall
             </p>
-            <p class='text-center certification-paragraph mb-0 fw-medium text-black'>
+            <p className='certification-paragraph'>
               Director of Human Development
             </p>
           </div>
