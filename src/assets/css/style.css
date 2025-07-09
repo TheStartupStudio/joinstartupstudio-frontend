@@ -5445,6 +5445,18 @@ wave > wave:first-child {
   gap: 50px;
 }
 
+.dashboard-user-details .academy-profile-info{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.certificate-signature-data{
+  display: flex;
+  align-items: center;
+  
+}
+
 @media (max-width: 1190px) {
   .certskills-grid {
     grid-template-columns: 1fr 1fr !important;
@@ -5470,12 +5482,6 @@ wave > wave:first-child {
     align-items: start;
 }
 
-.dashboard-user-details .academy-profile-info{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
   .save-button{
     margin-right:2rem!important;
   }
@@ -5490,6 +5496,14 @@ wave > wave:first-child {
 
   .saveContinue-btn {
     width: 100%;
+  }
+  .signature-border-bottom{
+    width: 100%;
+    align-self: center;
+  }
+
+  .signature-border {
+    padding-inline: 0.5rem;
   }
 }
 

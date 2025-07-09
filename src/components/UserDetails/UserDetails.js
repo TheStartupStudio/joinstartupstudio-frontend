@@ -126,30 +126,29 @@ function UserDetails({ profilePic, userName, userProffesion }) {
             </div>
             {user.bio && (
               <div
-                className="mt-2"
+                className="mt-2 d-inline"
                 style={{ 
                   fontSize: '14px',
                   color: '#666',
                   marginBottom: 0,
-                  // Remove line clamp for expand/collapse
                   overflow: 'visible',
-                  textOverflow: 'unset',
-                  display: 'block'
+                  textOverflow: 'unset'
                 }}
               >
-                <div
+                <span
                   dangerouslySetInnerHTML={{
                     __html: isExpanded
                       ? stripHtmlTags(user.bio)
-                      : `${stripHtmlTags(user.bio).length > 180 ? stripHtmlTags(user.bio).slice(0, 180) + '...' : stripHtmlTags(user.bio)}`
+                      : `${stripHtmlTags(user.bio).length > 180 ? stripHtmlTags(user.bio).slice(0, 180) : stripHtmlTags(user.bio)}`
                   }}
                 />
                 {stripHtmlTags(user.bio).length > 180 && (
                   <span
-                    className='blue-color ml-2 fw-medium cursor-pointer'
+                    className='blue-color fw-medium cursor-pointer'
+                    style={{ marginLeft: '4px' }}
                     onClick={() => setIsExpanded(!isExpanded)}
                   >
-                    {isExpanded ? 'Read Less' : 'Read More'}
+                    {isExpanded ? '...Read Less' : '...Read More'}
                   </span>
                 )}
               </div>

@@ -8,7 +8,7 @@
     font-size:64px;
 }
 
-@media(max-width:570px){
+@media(max-width:770px){
     .title-completion{
         font-size:16px!important;
     }
