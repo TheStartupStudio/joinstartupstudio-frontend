@@ -176,11 +176,9 @@ function MyCourseEntrepreneurship() {
                                     height="100%"
                                     url={entData.video_url}
                                     controls
-                                    playing={playingVideoIndex === entIndex}
                                     preload="metadata"
                                     light={entData.thumbnail}
                                     config={{ file: { attributes: { controlsList: 'nodownload' } } }}
-                                    onPause={() => setPlayingVideoIndex(null)}
                                   />
                                 </div>
                               </div>
@@ -206,11 +204,9 @@ function MyCourseEntrepreneurship() {
                                     height="100%"
                                     url={entData.url}
                                     controls
-                                    playing={playingKeyPointIndex === entIndex}
                                     preload="metadata"
                                     light={entData.thumbnail}
                                     config={{ file: { attributes: { controlsList: 'nodownload' } } }}
-                                    onPause={() => setPlayingKeyPointIndex(null)}
                                   />
                                 </div>
                               </div>

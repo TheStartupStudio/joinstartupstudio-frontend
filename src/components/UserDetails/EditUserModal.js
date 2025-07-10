@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,15 +27,24 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { validateEmail } from '../../utils/helpers'
 import IntlMessages from '../../utils/IntlMessages'
 import ModalInput from '../ModalInput/ModalInput'
+import ImageCropper from '../ImageCropper'
+import AvatarEditor from 'react-avatar-editor'
+import { setImageCropperData, setCroppedImage } from '../../redux'
 
 function EditUserModal({ isOpen, toggle, subToggle }) {
   const [loading, setLoading] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [resetPasswordDisabled, setResetPasswordDisabled] = useState(false)
-  
+  const [showCropper, setShowCropper] = useState(false)
+  const [editorImage, setEditorImage] = useState(null)
+  const [scale, setScale] = useState(1)
+  const [rotate, setRotate] = useState(0)
+  const editorRef = React.useRef(null)
+
   // Add null check for user state
   const userState = useSelector((state) => state.user?.user) || {}
   const user = userState?.user || {}
+  const general = useSelector((state) => state.general)
   
   const [changedUser, setChangedUser] = useState({
     name: user?.name || '',
@@ -55,12 +64,14 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
 
   const dispatch = useDispatch()
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0]
-    if (validateFile(selectedFile)) {
-      setImageFile(selectedFile)
-    }
+const handleFileChange = (event) => {
+  const selectedFile = event.target.files[0];
+  if (validateFile(selectedFile)) {
+    setEditorImage(selectedFile);
+    dispatch(setImageCropperData(true)); // triggers cropper
   }
+};
+
 
   const handleDrop = (event) => {
     event.preventDefault()
@@ -81,7 +92,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       return false
     }
     if (file.size > maxSize) {
-      toast.error('File size must be under 2MB.')
+      toast.error('Image file size is to large.')
       return false
     }
     return true
@@ -232,6 +243,37 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     }
   }
 
+  // After cropping, set the cropped image as imageFile
+  useEffect(() => {
+    if (general.croppedImage) {
+      setImageFile(general.croppedImage)
+      setShowCropper(false)
+      dispatch(setCroppedImage(null))
+      dispatch(setImageCropperData(null))
+    }
+  }, [general.croppedImage])
+
+  // Show cropper only when imageCropperData is set
+  useEffect(() => {
+    if (general.imageCropperData) {
+      setShowCropper(true)
+    }
+  }, [general.imageCropperData])
+
+  const handleCropSave = () => {
+    if (editorRef.current) {
+      const canvas = editorRef.current.getImageScaledToCanvas()
+      canvas.toBlob((blob) => {
+        const file = new File([blob], editorImage.name || 'avatar.png', { type: 'image/png' })
+        setImageFile(file)
+        setShowCropper(false)
+        setEditorImage(null)
+        setScale(1)
+        setRotate(0)
+      }, 'image/png')
+    }
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle}>
@@ -296,78 +338,66 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
               <div>
                 <h4 className='fs-15'>Headshot</h4>
                 <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
-                  {changedUser.profile_image ? (
-                    <>
-                      <img
-                        className='trash-icon align-self-end cursor-pointer'
-                        src={trashIcon}
-                        alt='trash'
-                        onClick={() =>
-                          setChangedUser({ ...changedUser, profile_image: '' })
-                        }
-                      />
-                      <img
-                        className='rounded-circle profile-container-pic'
-                        src={user?.profileImage}
-                        alt='profile'
-                      />
-                    </>
-                  ) : (
-                    <div className='container d-flex justify-content-center align-items-center'>
-                      <div
-                        className='upload-box text-center cursor-pointer'
-                        onClick={() =>
-                          document.getElementById('fileInput').click()
-                        }
-                        onDrop={handleDrop}
-                        onDragOver={(e) => e.preventDefault()}
-                      >
-                        <input
-                          type='file'
-                          id='fileInput'
-                          className='d-none'
-                          accept='image/png, image/jpeg, image/jpg'
-                          onChange={handleFileChange}
-                        />
-                        <div className='upload-area'>
-                          {imageFile ? (
-                            <img
-                              src={URL.createObjectURL(imageFile)}
-                              alt='Uploaded Preview'
-                              className='uploaded-image'
-                              style={{
-                                width: '100px',
-                                height: '100px',
-                                objectFit: 'cover'
-                              }}
-                            />
-                          ) : (
-                            <>
-                              <img
-                                src={uploadImage}
-                                alt='Upload Icon'
-                                className='upload-icon'
-                              />
-                              <p className='upload-text'>
-                                <span className='fw-medium'>
-                                  Click to upload
-                                </span>
-                                <br />
-                                <span className='text-secondary'>
-                                  or drag and drop
-                                </span>
-                              </p>
-                              <p className='fs-14'>
-                                Only png, jpg, or jpeg file format supported
-                                (max. 2Mb)
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+  {(imageFile || changedUser.profile_image) ? (
+    <>
+      <img
+        className='trash-icon align-self-end cursor-pointer'
+        src={trashIcon}
+        alt='trash'
+        onClick={() => {
+          setChangedUser({ ...changedUser, profile_image: '' });
+          setImageFile(null);
+        }}
+      />
+      <img
+        className='rounded-circle profile-container-pic'
+        src={
+          imageFile
+            ? URL.createObjectURL(imageFile)
+            : changedUser.profile_image
+        }
+        alt='profile'
+        style={{
+          width: '100px',
+          height: '100px',
+          objectFit: 'cover',
+          borderRadius: '50%'
+        }}
+      />
+    </>
+  ) : (
+    <div
+      className='upload-box text-center cursor-pointer'
+      onClick={() => document.getElementById('fileInput').click()}
+      onDrop={handleDrop}
+      onDragOver={(e) => e.preventDefault()}
+    >
+      <input
+        type='file'
+        id='fileInput'
+        className='d-none'
+        accept='image/png, image/jpeg, image/jpg'
+        onChange={handleFileChange}
+      />
+      <div className='upload-area'>
+        <img
+          src={uploadImage}
+          alt='Upload Icon'
+          className='upload-icon'
+        />
+        <p className='upload-text'>
+          <span className='fw-medium'>Click to upload</span>
+          <br />
+          <span className='text-secondary'>or drag and drop</span>
+        </p>
+        <p className='fs-14'>
+          Only png, jpg, or jpeg file format supported (max. 10Mb)
+        </p>
+      </div>
+    </div>
+  )}
+</div>
+
               </div>
             </div>
 
@@ -480,6 +510,78 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
               </div>
             </div>
           </form>
+
+          {showCropper && (
+  <div className="cropper-modal" style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    zIndex: 9999,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }}>
+    <div style={{
+      backgroundColor: '#fff',
+      padding: '24px',
+      borderRadius: '8px',
+      textAlign: 'center',
+      maxWidth: '90%',
+      width: '360px'
+    }}>
+      <h4>Crop Your Profile Picture</h4>
+      <AvatarEditor
+        ref={editorRef}
+        image={editorImage}
+        width={200}
+        height={200}
+        border={50}
+        borderRadius={100}
+        color={[255, 255, 255, 0.8]}
+        scale={scale}
+        rotate={rotate}
+        style={{ backgroundColor: '#f5f5f5' }}
+      />
+      <div className='mt-3 d-flex'>
+        <label>
+          Zoom:
+          <input
+            type="range"
+            min="1"
+            max="3"
+            step="0.01"
+            value={scale}
+            onChange={e => setScale(parseFloat(e.target.value))}
+          />
+        </label>
+        <label >
+        Rotate:
+        <input
+          type="range"
+          min="0"
+          max="180"
+          step="1"
+          value={rotate}
+          onChange={e => setRotate(parseInt(e.target.value, 10))}
+        />
+      </label>
+      </div>
+      <div className='mt-3 d-flex justify-content-center gap-3'>
+        <Button onClick={handleCropSave} color="primary">Save</Button>
+        <Button onClick={() => {
+          setShowCropper(false);
+          setEditorImage(null);
+          setScale(1);
+          setRotate(0);
+        }} color="secondary">Cancel</Button>
+      </div>
+    </div>
+  </div>
+)}
+
         </ModalBody>
       </Modal>
     </>

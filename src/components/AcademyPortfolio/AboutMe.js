@@ -3,7 +3,7 @@ import { toast } from 'react-toastify' // Add this import
 import { useSelector } from 'react-redux'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
-import instagramLogo from '../../assets/images/academy-icons/instagram.png'
+import instagramLogo from '../../assets/images/academy-icons/svg/instagram-svgrepo-com.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'

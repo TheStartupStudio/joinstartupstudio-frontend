@@ -52,30 +52,7 @@ function YourInstructor({
                 <p className='text-black fs-15 fw-medium lh-sm mb-3'>
                   {userProffesion}
                 </p>
-                <div className='d-flex gap-2'>
-                  <img
-                    className='cursor-pointer'
-                    src={linkedinLogo}
-                    alt='linkedin'
-                    onClick={() =>
-                      window.open('https://www.linkedin.com/', '_blank')
-                    }
-                  />
-                  <img
-                    className='cursor-pointer'
-                    src={facebookLogo}
-                    alt='facebook'
-                    onClick={() =>
-                      window.open('https://www.facebook.com/', '_blank')
-                    }
-                  />
-                  <img
-                    className='cursor-pointer'
-                    src={twitterLogo}
-                    alt='twitter'
-                    onClick={() => window.open('https://www.x.com/', '_blank')}
-                  />
-                </div>
+
               </div>
             </div>
           </>
