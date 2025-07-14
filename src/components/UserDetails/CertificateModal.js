@@ -160,23 +160,29 @@ const handlePrint = async () => {
           </h3>
           <div className='d-flex gap-3'>
             <div className='d-flex gap-2 align-items-center'>
-              <img src={save} alt='save' style={{ opacity: isCompleted ? 1 : 0.5 }} />
+              <img src={save} alt='save' style={{ opacity: isCompleted && !isGenerating ? 1 : 0.5 }} />
               <span
-                className={`hover-certificate ${isCompleted ? 'cursor-pointer' : 'text-muted'}`}
-                onClick={handleSave}
-                style={{ opacity: isCompleted ? 1 : 0.5 }}
+                className={`hover-certificate ${isCompleted && !isGenerating ? 'cursor-pointer' : 'text-muted'}`}
+                onClick={isCompleted && !isGenerating ? handleSave : undefined}
+                style={{
+                  opacity: isCompleted && !isGenerating ? 1 : 0.5,
+                  pointerEvents: isCompleted && !isGenerating ? 'auto' : 'none'
+                }}
               >
-                Save
+                  Save
               </span>
             </div>
             <div className='d-flex gap-2 align-items-center'>
-              <img src={print} alt='print' style={{ opacity: isCompleted ? 1 : 0.5 }} />
+              <img src={print} alt='print' style={{ opacity: isCompleted && !isGenerating ? 1 : 0.5 }} />
               <span
-                className={`hover-certificate ${isCompleted ? 'cursor-pointer' : 'text-muted'}`}
-                onClick={handlePrint}
-                style={{ opacity: isCompleted ? 1 : 0.5 }}
+                className={`hover-certificate ${isCompleted && !isGenerating ? 'cursor-pointer' : 'text-muted'}`}
+                onClick={isCompleted && !isGenerating ? handlePrint : undefined}
+                style={{
+                  opacity: isCompleted && !isGenerating ? 1 : 0.5,
+                  pointerEvents: isCompleted && !isGenerating ? 'auto' : 'none'
+                }}
               >
-                Print
+                  Print
               </span>
             </div>
           </div>
