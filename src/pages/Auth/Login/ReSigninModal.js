@@ -35,6 +35,7 @@ const ReSigninModal = ({ show }) => {
       onHide={handleAuthModalClose}
       size='SM'
       centered
+      style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center' }}
     >
       <Modal.Header className='position-relative p-3 d-flex justify-content-center'>
         <Modal.Title
@@ -57,7 +58,7 @@ const ReSigninModal = ({ show }) => {
           <h6 className='text-warning'>Session Expired</h6>
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className='d-flex flex-column justify-content-center'>
+      <Modal.Body className='d-flex flex-column justify-content-center' style={{ width: '100%' }}>
         <p className='text-center'>You need to log in again to continue.</p>
         <LtsButton
           text={'Go to Login'}

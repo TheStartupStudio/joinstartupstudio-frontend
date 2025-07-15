@@ -107,7 +107,7 @@ const handlePrint = async () => {
       const url = URL.createObjectURL(blob);
       
       // Open in new tab/window
-      const printWindow = window.open(url, '_blank', 'width=device-width,height=device-height');
+      const printWindow = window.open(url, '_blank', 'width=1200,height=900');
       
       if (!printWindow) {
         // If popup was blocked, try alternative method

@@ -17,6 +17,7 @@ import SharePortfolioModal from './SharePortfolioModal'
 import Tooltip from './Tooltip'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import axiosInstance from '../../utils/AxiosInstance'
+import website from '../../assets/images/academy-icons/svg/site-svgrepo-com.svg'
 
 function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objects
   const [isExpanded, setIsExpanded] = useState(false)
@@ -239,6 +240,16 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
                               }
                             />
                           )}
+                          {user.social_links.website && (
+                <img
+                  className='cursor-pointer social-icon'
+                  src={website}
+                  alt='website'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.website), '_blank')
+                  }
+                />
+              )}
                         </div>
             {user?.bio && (
               <p className={`mt-3 fs-15 fw-light text-black text-break ${
