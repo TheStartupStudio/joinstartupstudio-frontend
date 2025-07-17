@@ -6,6 +6,7 @@ import instagramLogo from '../../assets/images/academy-icons/svg/instagram-svgre
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
+import website from '../../assets/images/academy-icons/svg/site-svgrepo-com.svg'
 import CancelRenewalModal from './CancelRenewalModal'
 import CancelSubModal from './CancelSubModal'
 import CertificateModal from './CertificateModal'
@@ -102,7 +103,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
                   }
                 />
               )}
-               {user.social_links.instagram && (
+              {user.social_links.instagram && (
                 <img
                   className='cursor-pointer social-icon'
                   src={instagramLogo}
@@ -120,6 +121,17 @@ function UserDetails({ profilePic, userName, userProffesion }) {
                   alt='twitter'
                   onClick={() =>
                     window.open(formatURL(user.social_links.twitter), '_blank')
+                  }
+                />
+              )}
+
+              {user.social_links.website && (
+                <img
+                  className='cursor-pointer social-icon'
+                  src={website}
+                  alt='website'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.website), '_blank')
                   }
                 />
               )}
