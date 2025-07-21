@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactPlayer from 'react-player'
 import AccordionLead from '../../components/LeadershipJournal/AccordionLead'
 import SectionsWrapper from './SectionsWrapper'
@@ -8,7 +8,10 @@ import { NotesButton } from '../../components/Notes'
 
 
 function SectionOne({ setIsReflection }) {
-  setIsReflection(false)
+  // Move the setIsReflection call to useEffect to avoid calling it during render
+  useEffect(() => {
+    setIsReflection(false)
+  }, [setIsReflection])
 
   const [openAccordion, setOpenAccordion] = useState(null)
 

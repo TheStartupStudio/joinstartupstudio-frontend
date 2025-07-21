@@ -38,14 +38,14 @@ const StudentOfInstructors = (props) => {
   const loggedUser = useSelector((state) => state.user.user.user)
   const { handleSubmit } = useForm()
 
-  const getData = async () => {
-    await axiosInstance.get('/studentsInstructorss/init').then((res) => {
-      setUniversities(res.data)
-    })
-    await axiosInstance.get('/dashboard').then((res) => {
-      setDashboardData(res.data)
-    })
-  }
+  // const getData = async () => {
+  //   await axiosInstance.get('/studentsInstructorss/init').then((res) => {
+  //     setUniversities(res.data)
+  //   })
+  //   await axiosInstance.get('/dashboard').then((res) => {
+  //     setDashboardData(res.data)
+  //   })
+  // }
 
   const submit = async () => {
     setLoading(true)
@@ -63,11 +63,11 @@ const StudentOfInstructors = (props) => {
       })
   }
 
-  useEffect(() => {
-    if (props.allow) {
-      getData()
-    }
-  }, [props.allow])
+  // useEffect(() => {
+  //   if (props.allow) {
+  //     getData()
+  //   }
+  // }, [props.allow])
 
   const changeDashboard = (value) => {
     axiosInstance

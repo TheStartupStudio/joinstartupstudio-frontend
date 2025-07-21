@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import courseLogo from '../../assets/images/academy-icons/course-progress.png'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
@@ -491,14 +491,14 @@ function CourseProgress() {
                     />
                   </div>
                   <div className='d-flex flex-column gap-3'>
-                    {lessonsByLevel[0].map((lesson) => {
+                    {lessonsByLevel[0].map((lesson, index) => {
                       const status = getCourseStatus(lesson.redirectId)
                       return status === 'done' ? (
-                        <ProgressDone title={lesson.title} />
+                        <ProgressDone key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
                       ) : status === 'inProgress' ? (
-                        <InProggresCourse title={lesson.title} />
+                        <InProggresCourse key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
                       ) : (
-                        <CourseNotStarted title={lesson.title} />
+                        <CourseNotStarted key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
                       )
                     })}
                   </div>
@@ -534,14 +534,14 @@ function CourseProgress() {
                     />
                   </div>
                   <div className='d-flex flex-column gap-3'>
-                    {lessonsByLevel[1].map((lesson) => {
+                    {lessonsByLevel[1].map((lesson, index) => {
                       const status = getCourseStatus(lesson.redirectId)
                       return status === 'done' ? (
-                        <ProgressDone title={lesson.title} />
+                        <ProgressDone key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
                       ) : status === 'inProgress' ? (
-                        <InProggresCourse title={lesson.title} />
+                        <InProggresCourse key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
                       ) : (
-                        <CourseNotStarted title={lesson.title} />
+                        <CourseNotStarted key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
                       )
                     })}
                   </div>
@@ -577,20 +577,20 @@ function CourseProgress() {
                     />
                   </div>
                   <div className='d-flex flex-column gap-3 text-black'>
-                    {lessonsByLevel[2].map((section) => (
-                      <>
+                    {lessonsByLevel[2].map((section, sectionIndex) => (
+                      <React.Fragment key={`section-${section.id}-${sectionIndex}`}>
                         <p className='mb-0'>{section.title}</p>
-                        {section.children.map((lesson) => {
+                        {section.children.map((lesson, lessonIndex) => {
                           const status = getCourseStatus(lesson.redirectId)
                           return status === 'done' ? (
-                            <ProgressDone title={lesson.title} />
+                            <ProgressDone key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
                           ) : status === 'inProgress' ? (
-                            <InProggresCourse title={lesson.title} />
+                            <InProggresCourse key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
                           ) : (
-                            <CourseNotStarted title={lesson.title} />
+                            <CourseNotStarted key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
                           )
                         })}
-                      </>
+                      </React.Fragment>
                     ))}
                   </div>
                 </div>

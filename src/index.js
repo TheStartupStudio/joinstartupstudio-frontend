@@ -13,6 +13,16 @@ import './assets/css/ltsUiItems.css'
 
 const { PUBLIC_URL } = process.env
 
+// Suppress ResizeObserver loop errors globally
+const resizeObserverErrorHandler = (e) => {
+  if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
+    // This error is harmless and can be safely ignored
+    e.stopImmediatePropagation()
+  }
+}
+
+window.addEventListener('error', resizeObserverErrorHandler)
+
 Amplify.configure({
   Auth: {
     region: process.env.REACT_APP_CLIENT_BASE_URL.includes('dev')
