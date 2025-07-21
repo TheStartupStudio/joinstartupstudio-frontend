@@ -25,22 +25,6 @@ function App({ basename }) {
     }
   }, [])
 
-  useEffect(() => {
-    // Suppress ResizeObserver loop errors
-    const resizeObserverErrorHandler = (e) => {
-      if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
-        // This error is harmless and can be safely ignored
-        e.stopImmediatePropagation()
-      }
-    }
-
-    window.addEventListener('error', resizeObserverErrorHandler)
-
-    return () => {
-      window.removeEventListener('error', resizeObserverErrorHandler)
-    }
-  }, [])
-
   return (
     <React.Suspense fallback={''}>
       <Router basename={basename}>

@@ -23,7 +23,6 @@ function Sidebar(props) {
 
   const navRef = useRef(null)
   const [navHeight, setNavHeight] = useState(0)
-  const resizeTimeoutRef = useRef(null)
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,23 +34,10 @@ function Sidebar(props) {
   }, [])
 
   useEffect(() => {
-    // Debounced ResizeObserver to prevent infinite loops
-    const observer = new ResizeObserver((entries) => {
-      // Clear any existing timeout
-      if (resizeTimeoutRef.current) {
-        clearTimeout(resizeTimeoutRef.current)
+    const observer = new ResizeObserver(() => {
+      if (navRef.current) {
+        setNavHeight(navRef.current.offsetHeight)
       }
-
-      // Debounce the height update to prevent loops
-      resizeTimeoutRef.current = setTimeout(() => {
-        if (navRef.current) {
-          const newHeight = navRef.current.offsetHeight
-          // Only update if the height actually changed significantly
-          if (Math.abs(newHeight - navHeight) > 1) {
-            setNavHeight(newHeight)
-          }
-        }
-      }, 100) // 100ms debounce
     })
 
     // Observe the nav element for height changes
@@ -60,17 +46,11 @@ function Sidebar(props) {
     }
 
     return () => {
-      // Cleanup timeout
-      if (resizeTimeoutRef.current) {
-        clearTimeout(resizeTimeoutRef.current)
-      }
-      // Cleanup observer
       if (navRef.current) {
         observer.unobserve(navRef.current)
       }
-      observer.disconnect()
     }
-  }, [navHeight])
+  }, [])
 
   const getClass = () => {
     if (navHeight > 2100) {
@@ -163,5 +143,4 @@ function Sidebar(props) {
     </nav>
   )
 }
-
 export default Sidebar
