@@ -1,0 +1,344 @@
+.leaderboard-container {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 100%;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.leaderboard-title-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.leaderboard-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #e5e7eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaderboard-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #1f2937;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.go-to-leaderboard-btn {
+  background: none;
+  border: none;
+  color: #4fc3f7;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.go-to-leaderboard-btn:hover {
+  background: #f0f9ff;
+  color: #0ea5e9;
+}
+
+.arrow {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.go-to-leaderboard-btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+.leaderboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap:5px;
+  padding: 16px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.leaderboard-item.top-rank {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.leaderboard-item.top-rank:nth-child(1) {
+  border-color: #ffd700;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+}
+
+.leaderboard-item.top-rank:nth-child(2) {
+  border-color: #c0c0c0;
+  box-shadow: 0 4px 20px rgba(192, 192, 192, 0.2);
+}
+
+.leaderboard-item.top-rank:nth-child(3) {
+  border-color: #cd7f32;
+  box-shadow: 0 4px 20px rgba(205, 127, 50, 0.2);
+}
+
+.leaderboard-item.other-rank {
+  background: #fafbfc;
+  border: 1px solid #e5e7eb;
+}
+
+.leaderboard-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.rank-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.rank-medal {
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #64748b;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.user-avatar-container {
+  flex-shrink: 0;
+}
+
+.user-avatar-bg {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.user-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f2937;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.badge-icon-board{
+  width: 10px;
+  height: 10px;
+  color: white;
+}
+
+.trophy-white {
+  filter: brightness(0) invert(1);
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.5px;
+  font-family: 'Montserrat', sans-serif;
+  /* Default background - will be overridden by inline styles */
+  background: linear-gradient(98deg, rgba(153, 204, 51, 0.50) 17.18%, var(--COLORS-Green, #99CC33) 82.5%);
+}
+
+.user-badge.master-entrepreneur {
+  background: linear-gradient(98deg, rgba(81, 199, 223, 0.50) 17.18%, #51C7DF 82.5%);
+}
+
+.user-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 8px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.location-icon {
+  font-size: 10px;
+}
+
+.user-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.stat-item {
+  font-size: 11px;
+  color: #6b7280;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.user-points {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.points-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.points-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .leaderboard-container {
+    padding: 16px;
+  }
+  
+  .leaderboard-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .go-to-leaderboard-btn {
+    align-self: flex-end;
+  }
+  
+  .leaderboard-item {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .rank-container {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .rank-medal {
+    font-size: 24px;
+  }
+  
+  .user-avatar-bg {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .user-name {
+    font-size: 14px;
+  }
+  
+  .user-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+  
+  .user-stats {
+    gap: 12px;
+  }
+  
+  .points-value {
+    font-size: 20px;
+  }
+  
+}
+
+/* Animation for leaderboard items */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.leaderboard-item {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.leaderboard-item:nth-child(1) { animation-delay: 0.1s; }
+.leaderboard-item:nth-child(2) { animation-delay: 0.2s; }
+.leaderboard-item:nth-child(3) { animation-delay: 0.3s; }
+.leaderboard-item:nth-child(4) { animation-delay: 0.4s; }
+.leaderboard-item:nth-child(5) { animation-delay: 0.5s; }

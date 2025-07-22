@@ -4305,7 +4305,7 @@ wave > wave:first-child {
 }
 
 .academy-dashboard-layout {
-  grid-template-columns: 3fr 4fr;
+  grid-template-columns: 4fr 3fr;
   padding-inline: 40px;
   padding-top: 20px;
   gap: 2.5rem;
@@ -4386,7 +4386,7 @@ wave > wave:first-child {
 .academy-dashboard-bottom {
   grid-column: span 2;
   padding-block: 0.9rem;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
 }
 
 .continue-course-btn {
@@ -5095,9 +5095,9 @@ wave > wave:first-child {
   height: 97px;
 }
 
-.progress-dashboard-card{
+/* .progress-dashboard-card{
   max-height: 350px;
-}
+} */
 
 @media (max-width: 1024px) {
   .my-notes-content {
@@ -6958,6 +6958,12 @@ ul.sidebar-menu-item .collapse a:hover {
   text-align: left;
   /*letter-spacing: 0.52px;*/
   color: #333d3d;
+}
+
+.dashboard-user-details-grid{
+  display: grid;
+  gap: 20px;
+  grid-column: 1 / -1;
 }
 
 @media (max-width: 1024px) {
