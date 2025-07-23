@@ -4,6 +4,7 @@ import leaderboardStar from '../../assets/images/academy-icons/svg/leaderboard-s
 import trophy from '../../assets/images/academy-icons/svg/fluent-mdl2_trophy-2.svg'
 import medal from '../../assets/images/academy-icons/svg/lucide_medal.svg'
 import mapPin from '../../assets/images/academy-icons/svg/map-pin.svg'
+import award from '../../assets/images/academy-icons/svg/lucide_award.svg'
 
 const LeaderBoard = () => {
   // Dummy leaderboard data
@@ -72,7 +73,7 @@ const LeaderBoard = () => {
     const icons = {
       1: <img src={trophy} alt="Gold Trophy" />,
       2: <img src={medal} alt="Silver Medal" />,
-      3: <img src={trophy} alt="Bronze Award" />
+      3: <img src={award} alt="Bronze Award" />
     }
     return icons[rank] || `#${rank}`
   }
@@ -113,60 +114,59 @@ const LeaderBoard = () => {
 
       <div className="leaderboard-content">
         {leaderboardData.map((user, index) => (
-          <div key={user.id} className={`leaderboard-item ${getRankClass(user.rank)}`}>
-            <div className="responsive-header-board">
-
-            <div className="rank-container">
-              {user.rank <= 3 ? (
-                <div className="rank-medal">
-                  {getRankIcon(user.rank)}
+          <div key={user.id} className={`leaderboard-item-wrapper ${getRankClass(user.rank)}`}>
+            <div className={`leaderboard-item ${getRankClass(user.rank)}`}>
+              <div className="responsive-header-board">
+                <div className="rank-container">
+                  {user.rank <= 3 ? (
+                    <div className="rank-medal">
+                      {getRankIcon(user.rank)}
+                    </div>
+                  ) : (
+                    <div className="rank-number">#{user.rank}</div>
+                  )}
                 </div>
-              ) : (
-                <div className="rank-number">#{user.rank}</div>
-              )}
-            </div>
-            
-            <div className="user-avatar-container">
-              <div 
-                className="user-avatar-bg"
-              >
-                <img 
-                  src={user.avatar} 
-                  alt={user.name}
-                  className="user-avatar"
-                />
-              </div>
-            </div>
-            </div>
-            
-            <div className="user-info">
-              <div className="user-header">
-                <h4 className="user-name">{user.name}</h4>
-                <span 
-                  className="user-badge"
-                  style={{ background: getBadgeBackground(user.badge) }}
-                >
-                  {getBadgeIcon(user.badge)}
-                  {user.badge}
-                </span>
-              </div>
-
-              <div className="user-board-details">
-                <div className="user-location">
-                <span className="location-icon"><img src={mapPin} alt="Location Icon" /></span>
-                {user.location}
+                
+                <div className="user-avatar-container">
+                  <div className="user-avatar-bg">
+                    <img 
+                      src={user.avatar} 
+                      alt={user.name}
+                      className="user-avatar"
+                    />
+                  </div>
+                </div>
               </div>
               
-              <div className="user-stats">
-                <span className="stat-item"><span style={{color: '#51C7DF'}}> {user.reflections} </span> Reflections</span>
-                <span className="stat-item"><span style={{color: '#99CC33'}}> {user.videos} </span> Videos</span>
-              </div>
+              <div className="user-info">
+                <div className="user-header">
+                  <h4 className="user-name">{user.name}</h4>
+                  <span 
+                    className="user-badge"
+                    style={{ background: getBadgeBackground(user.badge) }}
+                  >
+                    {getBadgeIcon(user.badge)}
+                    {user.badge}
+                  </span>
                 </div>
-            </div>
-            
-            <div className="user-points">
-              <div className="points-value">{user.points}</div>
-              <div className="points-label">points</div>
+
+                <div className="user-board-details">
+                  <div className="user-location">
+                    <span className="location-icon"><img src={mapPin} alt="Location Icon" /></span>
+                    {user.location}
+                  </div>
+                  
+                  <div className="user-stats">
+                    <span className="stat-item"><span style={{color: '#51C7DF'}}> {user.reflections} </span> Reflections</span>
+                    <span className="stat-item"><span style={{color: '#99CC33'}}> {user.videos} </span> Videos</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="user-points">
+                <div className="points-value">{user.points}</div>
+                <div className="points-label">points</div>
+              </div>
             </div>
           </div>
         ))}

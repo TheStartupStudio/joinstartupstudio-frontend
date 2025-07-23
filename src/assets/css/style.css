@@ -5097,9 +5097,9 @@ wave > wave:first-child {
   height: 97px;
 }
 
-/* .progress-dashboard-card{
+.progress-dashboard-card{
   max-height: 350px;
-} */
+}
 
 @media (max-width: 1135px) {
   .my-notes-content {

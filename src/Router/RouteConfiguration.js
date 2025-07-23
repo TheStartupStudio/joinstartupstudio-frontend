@@ -170,6 +170,10 @@ const AcademyPortfolio = React.lazy(() =>
   import('../pages/Academy-Portfolio/index')
 )
 
+const LeaderBoardPage = React.lazy(() =>
+  import('../pages/LeaderBoardPage/index')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   // { path: '/user-management', component: UserManagement },
@@ -216,6 +220,7 @@ export const mutualRoutes = [
   { path: '/my-account', component: MyAccount, exact: true },
   { path: '/logout', component: Logout },
   { path: '/leadership-journal', component: LeadershipJournal, exact: true },
+  { path: '/leader-board', component: LeaderBoardPage, exact: true },
   {
     path: '/iamr',
     component: IamrCertificationSystem,
