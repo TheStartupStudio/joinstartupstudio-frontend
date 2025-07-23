@@ -2,7 +2,7 @@
   display: flex;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   body {
     height: unset !important;
   }

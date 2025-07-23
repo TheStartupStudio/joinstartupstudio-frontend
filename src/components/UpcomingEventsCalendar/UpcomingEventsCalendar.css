@@ -244,6 +244,13 @@
   
 }
 
+@media (max-width: 500px) {
+    .calendar-display{
+    flex-direction: column;
+    
+  }
+}
+
 /* Animation for calendar transitions */
 @keyframes slideIn {
   from {

@@ -113,7 +113,7 @@
   text-transform: uppercase;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   .preview-portfolio-container .page-border {
     min-height: 0vw;
   }

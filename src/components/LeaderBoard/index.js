@@ -3,6 +3,7 @@ import './LeaderBoard.css'
 import leaderboardStar from '../../assets/images/academy-icons/svg/leaderboard-star.svg'
 import trophy from '../../assets/images/academy-icons/svg/fluent-mdl2_trophy-2.svg'
 import medal from '../../assets/images/academy-icons/svg/lucide_medal.svg'
+import mapPin from '../../assets/images/academy-icons/svg/map-pin.svg'
 
 const LeaderBoard = () => {
   // Dummy leaderboard data
@@ -113,6 +114,8 @@ const LeaderBoard = () => {
       <div className="leaderboard-content">
         {leaderboardData.map((user, index) => (
           <div key={user.id} className={`leaderboard-item ${getRankClass(user.rank)}`}>
+            <div className="responsive-header-board">
+
             <div className="rank-container">
               {user.rank <= 3 ? (
                 <div className="rank-medal">
@@ -126,7 +129,6 @@ const LeaderBoard = () => {
             <div className="user-avatar-container">
               <div 
                 className="user-avatar-bg"
-                style={{ backgroundColor: user.iconBg }}
               >
                 <img 
                   src={user.avatar} 
@@ -134,6 +136,7 @@ const LeaderBoard = () => {
                   className="user-avatar"
                 />
               </div>
+            </div>
             </div>
             
             <div className="user-info">
@@ -147,16 +150,18 @@ const LeaderBoard = () => {
                   {user.badge}
                 </span>
               </div>
-              
-              <div className="user-location">
-                <span className="location-icon">📍</span>
+
+              <div className="user-board-details">
+                <div className="user-location">
+                <span className="location-icon"><img src={mapPin} alt="Location Icon" /></span>
                 {user.location}
               </div>
               
               <div className="user-stats">
-                <span className="stat-item">{user.reflections} Reflections</span>
-                <span className="stat-item">{user.videos} Videos</span>
+                <span className="stat-item"><span style={{color: '#51C7DF'}}> {user.reflections} </span> Reflections</span>
+                <span className="stat-item"><span style={{color: '#99CC33'}}> {user.videos} </span> Videos</span>
               </div>
+                </div>
             </div>
             
             <div className="user-points">

@@ -186,7 +186,7 @@
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
     .videos-container {
         padding: 15px;
         margin: 15px 5px;
@@ -212,7 +212,7 @@
 }
 
 /* Tablet styles */
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
     .videos-container {
         padding: 15px;
         margin: 15px 5px;
@@ -582,7 +582,7 @@
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
     .course-level {
         padding: .5rem 3rem;
     }
@@ -902,7 +902,7 @@
     color: rgb(0, 0, 0);
   }
 /* Responsive styles */
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
     .level-navigation {
         flex-direction: column;
         height: auto;

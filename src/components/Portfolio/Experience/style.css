@@ -261,7 +261,7 @@ input[type='month']::-webkit-calendar-picker-indicator {
   width: 25px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   #current_position {
     padding-left: 0px !important;
     margin-left: 0px !important;

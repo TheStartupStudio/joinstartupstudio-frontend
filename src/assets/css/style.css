@@ -4305,10 +4305,12 @@ wave > wave:first-child {
 }
 
 .academy-dashboard-layout {
-  grid-template-columns: 4fr 3fr;
+  display: grid;
+  grid-template-columns: minmax(200px, 5fr) minmax(250px, 4fr);
   padding-inline: 40px;
   padding-top: 20px;
   gap: 2.5rem;
+  padding-bottom: 20px;
 }
 
 .grid-row-1-2 {
@@ -5099,7 +5101,7 @@ wave > wave:first-child {
   max-height: 350px;
 } */
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   .my-notes-content {
     padding: 10px;
   }
@@ -6966,7 +6968,7 @@ ul.sidebar-menu-item .collapse a:hover {
   grid-column: 1 / -1;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   .accordion-content {
     padding: 20px 30px;
   }

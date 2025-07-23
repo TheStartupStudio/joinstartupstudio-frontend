@@ -169,7 +169,7 @@
 }
 
 /* Responsive styles */
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   .videos-container {
     padding: 15px;
     margin: 40px 5px;
@@ -401,7 +401,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   .course-level {
     padding: 0.5rem 3rem;
   }
@@ -690,7 +690,7 @@
   border-radius: 8px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1135px) {
   .level-navigation {
     flex-direction: column;
     height: auto;
