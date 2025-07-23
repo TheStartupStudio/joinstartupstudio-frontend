@@ -79,7 +79,7 @@ const LeaderBoardPage = () => {
       name: 'Emma Rodrigues',
       location: 'San Francisco, USA',
       badge: 'Excellence Award',
-      points: 885,
+      points: 600,
       reflections: 19,
       videos: 9,
       avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
@@ -247,49 +247,62 @@ const LeaderBoardPage = () => {
           {/* Leaderboard List */}
           <div className="leaderboard-list-section">
             {leaderboardData.map((user, index) => (
-              <div key={user.id} className={`leaderboard-page-item ${getRankClass(user.rank)} ${index < 3 ? 'top-three' : ''}`}>
-                <div className="rank-section">
+          <div key={user.id} className={`leaderboard-item-wrapper ${getRankClass(user.rank)}`}>
+            <div className={`leaderboard-item ${getRankClass(user.rank)}`}>
+              <div className="responsive-header-board">
+                <div className="rank-container">
                   {user.rank <= 3 ? (
-                    <div className="rank-medal-container">
+                    <div className="rank-medal">
                       {getRankIcon(user.rank)}
                     </div>
                   ) : (
-                    <div className="rank-number-container">
-                      <span className="rank-number">#{user.rank}</span>
-                    </div>
+                    <div className="rank-number">#{user.rank}</div>
                   )}
                 </div>
-
-                <div className="user-avatar-section">
-                  <img src={user.avatar} alt={user.name} className="user-avatar-page" />
+                
+                <div className="user-avatar-container">
+                  <div className="user-avatar-bg">
+                    <img 
+                      src={user.avatar} 
+                      alt={user.name}
+                      className="user-avatar"
+                    />
+                  </div>
                 </div>
-
-                <div className="user-details-section">
-                  <h4 className="user-name-page">{user.name}</h4>
-                  <span className="user-badge-page" style={{ background: getBadgeBackground(user.badge) }}>
+              </div>
+              
+              <div className="user-info">
+                <div className="user-header">
+                  <h4 className="user-name">{user.name}</h4>
+                  <span 
+                    className="user-badge"
+                    style={{ background: getBadgeBackground(user.badge) }}
+                  >
                     {getBadgeIcon(user.badge)}
                     {user.badge}
                   </span>
-                  <div className="user-location-page">
-                    <img src={mapPin} alt="Location" className="location-icon-page" />
-                    {user.location}
-                  </div>
-                  <div className="user-stats-page">
-                    <span className="stat-item-page">
-                      <span style={{ color: '#51C7DF' }}>{user.reflections}</span> Reflections
-                    </span>
-                    <span className="stat-item-page">
-                      <span style={{ color: '#99CC33' }}>{user.videos}</span> Videos
-                    </span>
-                  </div>
                 </div>
 
-                <div className="points-section">
-                  <div className="points-value-page">{user.points}</div>
-                  <div className="points-label-page">points</div>
+                <div className="user-board-details">
+                  <div className="user-location">
+                    <span className="location-icon"><img src={mapPin} alt="Location Icon" /></span>
+                    {user.location}
+                  </div>
+                  
+                  <div className="user-stats">
+                    <span className="stat-item"><span style={{color: '#51C7DF'}}> {user.reflections} </span> Reflections</span>
+                    <span className="stat-item"><span style={{color: '#99CC33'}}> {user.videos} </span> Videos</span>
+                  </div>
                 </div>
               </div>
-            ))}
+              
+              <div className="user-points">
+                <div className="points-value">{user.points}</div>
+                <div className="points-label">points</div>
+              </div>
+            </div>
+          </div>
+        ))}
           </div>
         </div>
 

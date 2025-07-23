@@ -6,6 +6,7 @@ import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.
 import partyPopper from '../../assets/images/academy-icons/svg/Party Popper.svg'
 import loudSpeaker from '../../assets/images/academy-icons/svg/Loudspeaker.svg'
 import pin from '../../assets/images/academy-icons/svg/pin.svg'
+import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 
 const ForumSection = () => {
   // Function to get the appropriate icon based on category
@@ -86,12 +87,15 @@ const ForumSection = () => {
       <div className="forum-header">
         <div className="forum-title-container">
           <div className="forum-icon"><img src={mentorship} alt="Mentorship Icon" /></div>
-          <h3 className="forum-title">Startup Forum</h3>
-        </div>
-        <button className="go-to-forum-btn">
-          Go to Forum
-          <span className="arrow">→</span>
-        </button>
+
+         <h4 className='fs-9 my-details-header'>Startup Forum</h4>
+          </div>
+          <div
+            className='progress-details cursor-pointer'
+          >
+            <span>Go to Forum</span>
+            <img src={rightArrow} alt='right-arr' />
+          </div>
       </div>
 
       <div className="forum-content">

@@ -5,6 +5,8 @@ import trophy from '../../assets/images/academy-icons/svg/fluent-mdl2_trophy-2.s
 import medal from '../../assets/images/academy-icons/svg/lucide_medal.svg'
 import mapPin from '../../assets/images/academy-icons/svg/map-pin.svg'
 import award from '../../assets/images/academy-icons/svg/lucide_award.svg'
+import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
+
 
 const LeaderBoard = () => {
   // Dummy leaderboard data
@@ -104,12 +106,16 @@ const LeaderBoard = () => {
       <div className="leaderboard-header">
         <div className="leaderboard-title-container">
           <div className="leaderboard-icon"><img src={leaderboardStar} alt="Leaderboard Star" /></div>
-          <h3 className="leaderboard-title">Leader Board</h3>
+           <h4 className='fs-9 my-details-header'>Leader Board</h4>
         </div>
-        <button className="go-to-leaderboard-btn">
-          Go to Leader Board
-          <span className="arrow">→</span>
-        </button>
+
+        <div
+            className='progress-details cursor-pointer'
+            onClick={() => window.location.href = '/leader-board'}
+          >
+            <span>Go to Leader Board</span>
+            <img src={rightArrow} alt='right-arr' />
+          </div>
       </div>
 
       <div className="leaderboard-content">
