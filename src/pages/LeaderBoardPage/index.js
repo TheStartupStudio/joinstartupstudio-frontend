@@ -178,7 +178,7 @@ const LeaderBoardPage = () => {
     if (badgeType === 'Master Entrepreneur') {
       return <img src={trophy} alt="Badge Icon" className="badge-icon-board trophy-white" />
     } else if (badgeType === 'Rising Star') {
-      return <img src={leaderboardStar} alt="Badge Icon" className="badge-icon-board trophy-white" />
+      return <img src={star} alt="Badge Icon" className="badge-icon-board trophy-white" />
     } else {
       return <img src={medal} alt="Badge Icon" className="badge-icon-board trophy-white" />
     }
