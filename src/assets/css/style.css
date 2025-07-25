@@ -4304,13 +4304,21 @@ wave > wave:first-child {
   object-fit: contain;
 }
 
-.academy-dashboard-layout {
+.academy-new-dashboard-layout {
   display: grid;
   grid-template-columns: minmax(200px, 5fr) minmax(250px, 4fr);
   padding-inline: 40px;
   padding-top: 20px;
   gap: 2.5rem;
   padding-bottom: 20px;
+}
+
+
+.academy-dashboard-layout {
+  grid-template-columns: 3fr 4fr;
+  padding-inline: 40px;
+  padding-top: 20px;
+  gap: 2.5rem;
 }
 
 .grid-row-1-2 {

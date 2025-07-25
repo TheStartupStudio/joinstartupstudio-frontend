@@ -159,15 +159,15 @@ const handleContinueCourse = async () => {
           />
         </div>
 
-        <div className='d-grid academy-dashboard-layout bck-dashboard'>
+        <div className='d-grid academy-new-dashboard-layout bck-dashboard'>
 
-          <div className='dashboard-user-details-grid'>
+          {/* <div className='dashboard-user-details-grid'>
             <UserDetails
               profilePic={profilePic}
               userName={'Kenia Anders'}
               userProffesion={'Graphic Designer'}
             />
-          </div>
+          </div> */}
 
           <CourseProgress />
 
