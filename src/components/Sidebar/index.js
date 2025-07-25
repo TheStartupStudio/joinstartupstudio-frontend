@@ -116,10 +116,10 @@ function Sidebar(props) {
       style={{
         // zIndex:'10000',
         width: isCollapsed
-          ? windowWidth <= 1024
+          ? windowWidth <= 1135
             ? '0px'
             : '75px'
-          : windowWidth <= 1024
+          : windowWidth <= 1135
           ? '100%'
           : '220px',
         borderRadius: isCollapsed && '0px'

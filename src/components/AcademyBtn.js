@@ -26,15 +26,19 @@ function AcademyBtn({ title, icon, onClick, disabled, loading, spin = false, but
         }}
       >
         {loading ? (
-          <FontAwesomeIcon 
-            icon={icon} 
-            spin={spin} 
-            style={{ fontSize: '1.25rem' }} 
-          />
+          // Only render icon if it exists
+          icon && (
+            <FontAwesomeIcon 
+              icon={icon} 
+              spin={spin} 
+              style={{ fontSize: '1.25rem' }} 
+            />
+          )
         ) : (
           <>
             {title}
-            <FontAwesomeIcon icon={icon} className="ms-2" />
+            {/* Only render icon if it exists */}
+            {icon && <FontAwesomeIcon icon={icon} className="ms-2" />}
           </>
         )}
       </button>

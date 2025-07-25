@@ -170,6 +170,18 @@ const AcademyPortfolio = React.lazy(() =>
   import('../pages/Academy-Portfolio/index')
 )
 
+const LeaderBoardPage = React.lazy(() =>
+  import('../pages/LeaderBoardPage/index')
+)
+
+const StartupForumPage = React.lazy(() =>
+  import('../pages/StartupForumPage/index')
+)
+
+const StartupForumComments = React.lazy(() =>
+  import('../pages/StartupForumPage/CommentSection')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   // { path: '/user-management', component: UserManagement },
@@ -216,6 +228,15 @@ export const mutualRoutes = [
   { path: '/my-account', component: MyAccount, exact: true },
   { path: '/logout', component: Logout },
   { path: '/leadership-journal', component: LeadershipJournal, exact: true },
+  { path: '/leader-board', component: LeaderBoardPage, exact: true },
+  { path: '/startup-forum', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/following', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/introductions', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/announcements', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/celebrations', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/ideas-feedback', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/misc-topics', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/:id', component: StartupForumComments, exact: true },
   {
     path: '/iamr',
     component: IamrCertificationSystem,

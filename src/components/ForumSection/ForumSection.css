@@ -1,0 +1,239 @@
+.forum-section {
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 100%;
+  height: fit-content;
+}
+
+.forum-section .forum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+}
+
+.forum-section .forum-title-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.forum-section .forum-icon {
+  background-color: #E2E6EC;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.forum-section .forum-title {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #1f2937;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.forum-section .go-to-forum-btn {
+  background: none;
+  border: none;
+  color: #4fc3f7;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.forum-section .go-to-forum-btn:hover {
+  background: #f0f9ff;
+  color: #0ea5e9;
+}
+
+.forum-section .arrow {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.forum-section .go-to-forum-btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+.forum-section .forum-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+
+
+
+
+
+
+
+
+.forum-section .forum-post {
+  display: flex;
+  gap: 16px;
+  padding: 16px 25px 16px 30px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.forum-section .forum-post:hover {
+  background: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.forum-section .post-avatar-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.forum-section .post-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+  padding: 3px;
+}
+
+.forum-section .new-indicator {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 25px;
+  height: 25px;
+  background: #51C7DF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.forum-section .post-content {
+  flex: 1;
+  width: 0;
+}
+
+.forum-section .post-header {
+  position: absolute;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  top: -10px;
+  right: 40px;
+  background-color: white;
+  border-radius: 4px;
+  width:150px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.forum-section .post-category {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 0px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.forum-section .category-icon {
+  width: 16px;
+  height: 16px;
+  /* filter: brightness(0) invert(1); Makes the icon white to match the text */
+}
+
+.forum-section .post-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 5px 0 8px 0;
+  line-height: 1.4;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.forum-section .post-description {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+  font-family: 'Montserrat', sans-serif;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+
+
+
+
+
+
+/* Responsive design */
+
+@media (max-width: 768px) {
+  
+  .forum-section .go-to-forum-btn {
+    align-self: flex-end;
+  }
+
+  .forum-section .forum-post {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .forum-section .post-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .forum-section .post-title {
+    font-size: 15px;
+  }
+
+  .forum-section .post-description {
+    font-size: 13px;
+  }
+
+  .forum-section .post-header {
+    top: -10px;
+    right: 15px;
+  }
+}
+
+/* Animation for new posts */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.forum-post {
+  animation: slideIn 0.3s ease-out;
+}

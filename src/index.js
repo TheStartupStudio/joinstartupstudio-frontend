@@ -13,6 +13,55 @@ import './assets/css/ltsUiItems.css'
 
 const { PUBLIC_URL } = process.env
 
+// Enhanced ResizeObserver error suppression - place this at the very top
+const suppressResizeObserverErrors = () => {
+  // Override console.error to filter ResizeObserver errors
+  const originalError = console.error;
+  console.error = function(...args) {
+    if (args[0] && typeof args[0] === 'string' && 
+        args[0].includes('ResizeObserver loop completed with undelivered notifications')) {
+      return;
+    }
+    originalError.apply(console, args);
+  };
+
+  // Handle window errors
+  window.addEventListener('error', (event) => {
+    if (event.message && event.message.includes('ResizeObserver loop completed with undelivered notifications')) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+      return false;
+    }
+  });
+
+  // Handle unhandled promise rejections
+  window.addEventListener('unhandledrejection', (event) => {
+    if (event.reason && event.reason.message && 
+        event.reason.message.includes('ResizeObserver loop completed with undelivered notifications')) {
+      event.preventDefault();
+    }
+  });
+
+  // Override ResizeObserver constructor
+  const OriginalResizeObserver = window.ResizeObserver;
+  window.ResizeObserver = class extends OriginalResizeObserver {
+    constructor(callback) {
+      super((entries, observer) => {
+        try {
+          callback(entries, observer);
+        } catch (error) {
+          if (!error.message.includes('ResizeObserver loop completed with undelivered notifications')) {
+            throw error;
+          }
+        }
+      });
+    }
+  };
+};
+
+// Call immediately
+suppressResizeObserverErrors();
+
 Amplify.configure({
   Auth: {
     region: process.env.REACT_APP_CLIENT_BASE_URL.includes('dev')

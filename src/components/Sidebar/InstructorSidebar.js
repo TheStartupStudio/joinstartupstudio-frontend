@@ -16,7 +16,7 @@ import { setGeneralLoading } from '../../redux/general/Actions'
 import { collapseTrue, toggleCollapse } from '../../redux/sidebar/Actions'
 import SidebarItem from './SidebarItem'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
-import Tooltip from '../AcademyPortfolio/Tooltip'
+// import Tooltip from '../AcademyPortfolio/Tooltip'
 import CancelRenewalModal from '../UserDetails/CancelRenewalModal'
 import CancelSubModal from '../UserDetails/CancelSubModal'
 import CertificateModal from '../UserDetails/CertificateModal'
@@ -134,7 +134,7 @@ const InstructorSidebar = (props) => {
         id='side-menu-main'
       >
         {isCollapsed ? (
-          <Tooltip text={'Dashboard'}>
+          // <Tooltip text={'Dashboard'}>
             <SidebarItem
               onClick={() => {
                 dispatch(setAccordionToggled(false))
@@ -148,7 +148,7 @@ const InstructorSidebar = (props) => {
               title={isTextVisible && !isCollapsed && 'Dashboard'}
               isDropdown={false}
             />
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <SidebarItem
             onClick={() => {
@@ -166,7 +166,7 @@ const InstructorSidebar = (props) => {
         )}
 
         {isCollapsed ? (
-          <Tooltip text={'Intro to Course'}>
+          // <Tooltip text={'Intro to Course'}>
             <SidebarItem
               onClick={() => {
                 dispatch(setAccordionToggled(false))
@@ -182,7 +182,7 @@ const InstructorSidebar = (props) => {
               title={isTextVisible && !isCollapsed && 'Intro to course'}
               isDropdown={false}
             />
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <SidebarItem
             onClick={() => {
@@ -202,7 +202,7 @@ const InstructorSidebar = (props) => {
         )}
 
         {isCollapsed ? (
-          <Tooltip text={'Course In Entrepreneurship'}>
+          // <Tooltip text={'Course In Entrepreneurship'}>
             <SidebarItem
               onClick={() => {
                 dispatch(setAccordionToggled(false))
@@ -222,7 +222,7 @@ const InstructorSidebar = (props) => {
               }
               isDropdown={false}
             />
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <SidebarItem
             onClick={() => {
@@ -246,7 +246,7 @@ const InstructorSidebar = (props) => {
         )}
 
         {isCollapsed ? (
-          <Tooltip text={'Master Classes'}>
+          // <Tooltip text={'Master Classes'}>
             <SidebarItem
               onClick={() => {
                 dispatch(setAccordionToggled(false))
@@ -260,7 +260,7 @@ const InstructorSidebar = (props) => {
               title={isTextVisible && !isCollapsed && 'Master classes'}
               isDropdown={false}
             />
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <SidebarItem
             onClick={() => {
@@ -278,7 +278,7 @@ const InstructorSidebar = (props) => {
         )}
 
         {isCollapsed ? (
-          <Tooltip text={'Leadership Journal'}>
+          // <Tooltip text={'Leadership Journal'}>
             <SidebarItem
               onClick={() => {
                 dispatch(setAccordionToggled(false))
@@ -292,7 +292,7 @@ const InstructorSidebar = (props) => {
               title={isTextVisible && !isCollapsed && 'Leadership journal'}
               isDropdown={false}
             />
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <SidebarItem
             onClick={() => {
@@ -310,7 +310,7 @@ const InstructorSidebar = (props) => {
         )}
 
         {isCollapsed ? (
-          <Tooltip text={'My Portfolio'}>
+          // <Tooltip text={'My Portfolio'}>
             <SidebarItem
               onClick={() => {
                 dispatch(setAccordionToggled(false))
@@ -324,7 +324,7 @@ const InstructorSidebar = (props) => {
               title={isTextVisible && !isCollapsed && 'My portfolio'}
               isDropdown={false}
             />
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <SidebarItem
             onClick={() => {
@@ -346,7 +346,7 @@ const InstructorSidebar = (props) => {
         style={{ marginTop: '-20px' }}
       >
         {isCollapsed ? (
-          <Tooltip text={'My Account'}>
+          // <Tooltip text={'My Account'}>
             <li
               className='sub-li'
               onClick={() => {
@@ -375,7 +375,7 @@ const InstructorSidebar = (props) => {
                 </div>
               </div>
             </li>
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <li
             className='sub-li'
@@ -430,7 +430,7 @@ const InstructorSidebar = (props) => {
           </Link>
         </li>
         {isCollapsed ? (
-          <Tooltip text={'Log Out'}>
+          // <Tooltip text={'Log Out'}>
             <li className='sub-li' onClick={handleLogout}>
               <div className='logout-button'>
                 <div className='d-flex w-100' style={{ alignItems: 'center' }}>
@@ -447,7 +447,7 @@ const InstructorSidebar = (props) => {
                 </div>
               </div>
             </li>
-          </Tooltip>
+          // </Tooltip>
         ) : (
           <li className='sub-li' onClick={handleLogout}>
             <div className='logout-button'>

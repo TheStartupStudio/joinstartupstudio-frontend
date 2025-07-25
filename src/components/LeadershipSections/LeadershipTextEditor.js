@@ -27,6 +27,7 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
         if (error instanceof Error && !error.message.includes('loop completed with undelivered notifications')) {
           throw error
         }
+        // Silently ignore ResizeObserver loop errors
       }
     }
 

@@ -19,7 +19,34 @@ module.exports = {
     },
     open: true,
     hot: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    client: {
+      overlay: {
+        errors: (error) => {
+          // Suppress ResizeObserver errors with multiple variations
+          const message = error.message || '';
+          const stack = error.stack || '';
+          
+          if (
+            message.includes('ResizeObserver loop completed with undelivered notifications') ||
+            message.includes('ResizeObserver loop limit exceeded') ||
+            stack.includes('ResizeObserver') ||
+            message.includes('webpack-dev-server/client/overlay.js')
+          ) {
+            return false;
+          }
+          return true;
+        },
+        warnings: false,
+        runtimeErrors: (error) => {
+          const message = error.message || '';
+          if (message.includes('ResizeObserver loop completed with undelivered notifications')) {
+            return false;
+          }
+          return true;
+        },
+      },
+    },
   },
   module: {
     rules: [
@@ -42,19 +69,6 @@ module.exports = {
           }
         ]
       },
-      // {
-      //   test: /\.(png|jpe?g|gif|svg)$/i,
-      //   use: [
-      //     {
-      //       loader: 'file-loader',
-      //       options: {
-      //         name: '[name].[contenthash].[ext]',
-      //         outputPath: 'assets/images',
-      //         publicPath: '/assets/images'
-      //       }
-      //     }
-      //   ]
-      // },
       {
         test: /\.(jpg|jpeg|png|svg|gif|woff|woff2|ttf|eot|otf)$/i,
         type: 'asset/resource'
@@ -63,10 +77,6 @@ module.exports = {
         test: /\.(mp4|webm|mov)$/i,
         type: 'asset/resource'
       },
-      // {
-      //   test: /\.csv$/,
-      //   use: 'csv-loader'
-      // }
       {
         test: /\.csv$/,
         type: 'asset/resource',
@@ -93,11 +103,6 @@ module.exports = {
       template: './public/index.html',
       favicon: './public/favicon.png',
       minify: false
-      // minify: {
-      //   collapseWhitespace: true,
-      //   removeComments: true,
-      //   removeRedundantAttributes: true
-      // }
     }),
     new DotenvWebpackPlugin(),
     new CopyWebpackPlugin({
