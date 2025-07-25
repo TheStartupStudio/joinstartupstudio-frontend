@@ -178,6 +178,10 @@ const StartupForumPage = React.lazy(() =>
   import('../pages/StartupForumPage/index')
 )
 
+const StartupForumComments = React.lazy(() =>
+  import('../pages/StartupForumPage/CommentSection')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   // { path: '/user-management', component: UserManagement },
@@ -232,6 +236,7 @@ export const mutualRoutes = [
   { path: '/startup-forum/celebrations', component: StartupForumPage, exact: true },
   { path: '/startup-forum/ideas-feedback', component: StartupForumPage, exact: true },
   { path: '/startup-forum/misc-topics', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/:id', component: StartupForumComments, exact: true },
   {
     path: '/iamr',
     component: IamrCertificationSystem,

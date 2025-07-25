@@ -302,7 +302,9 @@ const StartupForumPage = () => {
             {/* Forum Posts */}
             <div className="forum-posts-section">
               {forumData.map((post, index) => (
-                <div key={post.id} className="forum-post">
+                <div key={post.id} className="forum-post"
+                  onClick={ () => history.push(`/startup-forum/1`) }
+                >
                   <div className="post-avatar-container">
                     <img
                       src={post.author.avatar}

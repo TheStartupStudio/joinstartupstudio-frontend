@@ -352,3 +352,51 @@
 .category-item.active span {
   color: #51C7DF !important;
 }
+
+
+.forum-post-main {
+  display: flex;
+  gap: 16px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.forum-posts-comment-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+/* Add visual connection lines for nested comments */
+.nested-comment-container {
+  position: relative;
+}
+
+.nested-comment-container::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #e5e7eb;
+}
+
+/* Responsive adjustments for nested comments */
+@media (max-width: 768px) {
+  .forum-posts-comment-section > div {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  
+  .forum-posts-comment-section > div > div {
+    margin-left: 10px !important;
+    width: 95% !important;
+  }
+  
+  .forum-posts-comment-section > div > div > div {
+    margin-left: 20px !important;
+    width: 90% !important;
+  }
+}
