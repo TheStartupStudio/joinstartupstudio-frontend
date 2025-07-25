@@ -36,7 +36,7 @@ const CommentSection = () => {
       id: 1,
       category: 'Introductions',
       isNew: true,
-      title: 'Introduce Yourself!',
+      title: 'Started small but looking to grow big',
       description: 'Hey everyone! New member here. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus...',
       author: {
         name: 'cassiewallace',
@@ -61,7 +61,7 @@ const CommentSection = () => {
       id: 2,
       category: 'Announcements',
       isOwn: true,
-      title: 'You can now message using the new forum!',
+      title: 'Started small but looking to grow big',
       description: 'Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas lacuis massa nisl malesuada lacinia int...',
       author: {
         name: 'Emma',
@@ -71,7 +71,7 @@ const CommentSection = () => {
       replies: [
         {
           id: 4,
-          title: 'Great feature!',
+      title: 'Started small but looking to grow big',
           description: 'This is really helpful for our community discussions.',
           author: {
             name: 'Garry',
@@ -81,7 +81,7 @@ const CommentSection = () => {
           replies: [
             {
               id: 5,
-              title: 'I agree completely!',
+      title: 'Started small but looking to grow big',
               description: 'Yes, this will make communication so much better.',
               author: {
                 name: 'Emma',
@@ -97,7 +97,7 @@ const CommentSection = () => {
     {
       id: 3,
       category: 'Celebrations',
-      title: 'Another great discussion!',
+      title: 'Started small but looking to grow big',
       description: 'Looking forward to more conversations like this.',
       author: {
         name: 'John',
@@ -186,7 +186,11 @@ const CommentSection = () => {
             </div>
 
             <div className="post-content">
-              <h4 className="post-title">{comment.title}</h4>
+              <div className='d-flex align-items-center gap-1'>
+                <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(100%) saturate(0%)', width: '16px', height: '16px' }} />
+                <h4 style={{ color: 'gray', fontSize: '16px', margin: 0, lineHeight: 'unset' }}>{comment.title}</h4>
+              </div>
+              
               <p className="post-description">{comment.description}</p>
             </div>
           </div>
@@ -273,7 +277,7 @@ const CommentSection = () => {
             <div className="forum-posts-comment-section">
               {/* Original Post */}
               {forumData.map((post, index) => (
-                <div style={{ border: '1px solid #D9D9D9', padding: '16px 25px 16px 30px', borderRadius: '8px', marginBottom: '20px' }} key={index}>
+                <div style={{ border: '1px solid #D9D9D9', padding: '16px 25px 16px 30px', borderRadius: '8px', marginBottom: '20px', width: '100%' }} key={index}>
                   <div key={post.id} className="forum-post-main">
                     <div className="post-avatar-container">
                       <img
