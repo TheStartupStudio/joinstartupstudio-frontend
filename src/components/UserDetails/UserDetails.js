@@ -151,10 +151,10 @@ function UserDetails({ profilePic, userName, userProffesion }) {
                   dangerouslySetInnerHTML={{
                     __html: isExpanded
                       ? stripHtmlTags(user.bio)
-                      : `${stripHtmlTags(user.bio).length > 180 ? stripHtmlTags(user.bio).slice(0, 180) : stripHtmlTags(user.bio)}`
+                      : `${stripHtmlTags(user.bio).length > 300 ? stripHtmlTags(user.bio).slice(0, 300) : stripHtmlTags(user.bio)}`
                   }}
                 />
-                {stripHtmlTags(user.bio).length > 180 && (
+                {stripHtmlTags(user.bio).length > 300 && (
                   <span
                     className='blue-color fw-medium cursor-pointer'
                     style={{ marginLeft: '4px' }}

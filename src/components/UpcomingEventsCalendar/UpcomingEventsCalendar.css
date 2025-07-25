@@ -37,6 +37,7 @@
   margin-bottom: 20px;
   border: 1px solid #e2e8f0;
   flex: 1;
+  max-width: 250px;
 }
 
 .calendar-navigation {
@@ -240,6 +241,10 @@
   
   .calendar-day {
     font-size: 12px;
+  }
+
+  .calendar-container{
+    max-width: none;
   }
   
 }

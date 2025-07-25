@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import './LeaderBoardPage.css'
 import IntlMessages from '../../utils/IntlMessages'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { useDispatch } from 'react-redux'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 
 import leaderboardStar from '../../assets/images/academy-icons/svg/leaderboard-star.svg'
 import trophy from '../../assets/images/academy-icons/svg/fluent-mdl2_trophy-2.svg'
@@ -15,6 +17,7 @@ import star from '../../assets/images/academy-icons/svg/star.svg'
 
 const LeaderBoardPage = () => {
   const [activeFilter, setActiveFilter] = useState('Top Points')
+  const dispatch = useDispatch()
 
   // Extended leaderboard data
   const leaderboardData = [

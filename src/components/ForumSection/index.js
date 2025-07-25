@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import './ForumSection.css'
 import mentorship from '../../assets/images/academy-icons/svg/icon.core-mentorship-icon.svg'
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
@@ -9,6 +10,7 @@ import pin from '../../assets/images/academy-icons/svg/pin.svg'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 
 const ForumSection = () => {
+    const history = useHistory()
   // Function to get the appropriate icon based on category
   const getCategoryIcon = (category) => {
     switch (category) {
@@ -92,6 +94,7 @@ const ForumSection = () => {
           </div>
           <div
             className='progress-details cursor-pointer'
+            onClick={() => history.push('/startup-forum')}  
           >
             <span>Go to Forum</span>
             <img src={rightArrow} alt='right-arr' />
