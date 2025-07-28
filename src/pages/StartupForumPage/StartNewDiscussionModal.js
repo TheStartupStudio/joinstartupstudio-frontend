@@ -321,7 +321,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex gap-3 mt-4" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="d-flex gap-3 mt-4" style={{ alignItems: 'center', justifyContent: editingPost ? 'space-between' : 'end' }}>
 
             {editingPost && (
                 <div 
