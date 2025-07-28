@@ -247,7 +247,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
                   style={{
                     width: '16px',
                     height: '16px',
-                    filter: formData.selectedCategory === category.name ? 'brightness(0) invert(1)' : 'none'
                   }}
                 />
                 {category.name}
