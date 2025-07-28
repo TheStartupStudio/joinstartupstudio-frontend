@@ -5,14 +5,14 @@
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.calendar-header {
+.upcoming-events-calendar .calendar-header {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
   gap: 1rem;
 }
 
-.calendar-icon {
+.upcoming-events-calendar .calendar-icon {
     display: flex;
   align-items: center;
     justify-content: center;
@@ -22,7 +22,7 @@
   background-color: #E2E6EC;
 }
 
-.calendar-header h3 {
+.upcoming-events-calendar .calendar-header h3 {
   font-size: 0.9rem;
   /* font-weight: 600; */
   margin: 0;
@@ -30,7 +30,7 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.calendar-container {
+.upcoming-events-calendar .calendar-container {
   background: #f8fafc;
   border-radius: 12px;
   padding: 16px;
@@ -40,14 +40,14 @@
   max-width: 250px;
 }
 
-.calendar-navigation {
+.upcoming-events-calendar .calendar-navigation {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
 }
 
-.nav-button {
+.upcoming-events-calendar .nav-button {
   background: none;
   border: none;
   font-size: 18px;
@@ -58,30 +58,30 @@
   transition: all 0.2s ease;
 }
 
-.nav-button:hover {
+.upcoming-events-calendar .nav-button:hover {
   background: #e2e8f0;
   color: #334155;
 }
 
-.month-year {
+.upcoming-events-calendar .month-year {
   font-weight: 600;
   font-size: 16px;
   color: #1e293b;
   font-family: 'Montserrat', sans-serif;
 }
 
-.calendar-grid {
+.upcoming-events-calendar .calendar-grid {
   width: 100%;
 }
 
-.days-header {
+.upcoming-events-calendar .days-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
   margin-bottom: 8px;
 }
 
-.day-header {
+.upcoming-events-calendar .day-header {
   text-align: center;
   font-size: 12px;
   font-weight: 600;
@@ -90,18 +90,18 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.calendar-display{
+.upcoming-events-calendar .calendar-display{
     display: flex;
     gap: 16px;
 }
 
-.days-grid {
+.upcoming-events-calendar .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
 }
 
-.calendar-day {
+.upcoming-events-calendar .calendar-day {
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -115,28 +115,28 @@
   color: #334155;
 }
 
-.calendar-day:hover {
+.upcoming-events-calendar .calendar-day:hover {
   background: #e2e8f0;
   transform: scale(1.05);
 }
 
-.calendar-day.other-month {
+.upcoming-events-calendar .calendar-day.other-month {
   color: #cbd5e1;
 }
 
-.calendar-day.today {
+.upcoming-events-calendar .calendar-day.today {
   background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
   color: white;
   /* font-weight: 700; */
   box-shadow: 0 4px 12px rgba(79, 195, 247, 0.3);
 }
 
-.calendar-day.has-event {
+.upcoming-events-calendar .calendar-day.has-event {
   background: rgb(236, 236, 236);
   color: black;
 }
 
-.calendar-day.has-event.today {
+.upcoming-events-calendar .calendar-day.has-event.today {
   background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
   color: white;
 }
@@ -157,11 +157,11 @@
   box-shadow: 0 0 0 5px #4fc3f7;
 } */
 
-.events-section{
+.upcoming-events-calendar .events-section{
     flex: 1;
 }
 
-.events-title {
+.upcoming-events-calendar .events-title {
   font-size: 12px;
   font-weight: 700;
   color: #64748b;
@@ -171,19 +171,19 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.events-list {
+.upcoming-events-calendar .events-list {
   display: flex;
   flex-direction: column;
 }
 
-.event-item {
+.upcoming-events-calendar .event-item {
   display: flex;
   align-items: flex-start;
   gap: 8px;
   padding: 8px 0;
 }
 
-.event-bullet {
+.upcoming-events-calendar .event-bullet {
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -191,12 +191,12 @@
   margin-top: 6px;
 }
 
-.event-details {
+.upcoming-events-calendar .event-details {
   flex: 1;
   min-width: 0;
 }
 
-.event-date {
+.upcoming-events-calendar .event-date {
   font-size: 12px;
   font-weight: 700;
   color: #1e293b;
@@ -204,31 +204,31 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.event-info {
+.upcoming-events-calendar .event-info {
   font-size: 12px;
   color: #64748b;
   line-height: 1.4;
   font-family: 'Montserrat', sans-serif;
 }
 
-.event-title {
+.upcoming-events-calendar .event-title {
   color: #334155;
   font-weight: 500;
 }
 
-.event-link {
+.upcoming-events-calendar .event-link {
   color: #4fc3f7;
   cursor: pointer;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
-.event-link:hover {
+.upcoming-events-calendar .event-link:hover {
   color: #0ea5e9;
   text-decoration: underline;
 }
 
-.no-events {
+.upcoming-events-calendar .no-events {
   font-size: 12px;
   color: #94a3b8;
   text-align: center;
@@ -239,18 +239,18 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   
-  .calendar-day {
+  .upcoming-events-calendar .calendar-day {
     font-size: 12px;
   }
 
-  .calendar-container{
+  .upcoming-events-calendar .calendar-container{
     max-width: none;
   }
   
 }
 
 @media (max-width: 500px) {
-    .calendar-display{
+    .upcoming-events-calendar .calendar-display{
     flex-direction: column;
     
   }
@@ -268,6 +268,6 @@
   }
 }
 
-.days-grid {
+.upcoming-events-calendar .days-grid {
   animation: slideIn 0.3s ease-out;
 }
