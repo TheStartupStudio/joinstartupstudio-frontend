@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuoteLeft, faLink } from '@fortawesome/free-solid-svg-icons'
@@ -15,7 +15,7 @@ import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
 import { faPencilAlt, triangle} from '@fortawesome/free-solid-svg-icons'
 
-const StartNewDiscussionModal = ({ show, onHide }) => {
+const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
   
@@ -52,6 +52,24 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
       icon: speechBalloon
     }
   ]
+
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (editingPost) {
+      setFormData({
+        subject: editingPost.title || '',
+        message: editingPost.description || '',
+        selectedCategory: editingPost.category || ''
+      })
+    } else {
+      // Reset form for new discussion
+      setFormData({
+        subject: '',
+        message: '',
+        selectedCategory: ''
+      })
+    }
+  }, [editingPost])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -94,15 +112,20 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
 
     try {
       // Here you would typically send the data to your backend
-      console.log('New discussion:', formData)
+      if (editingPost) {
+        console.log('Updating discussion:', { ...formData, id: editingPost.id })
+        toast.success('Discussion updated successfully!')
+      } else {
+        console.log('Creating new discussion:', formData)
+        toast.success('Discussion created successfully!')
+      }
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
       
-      toast.success('Discussion created successfully!')
       handleCancel()
     } catch (error) {
-      console.error('Error creating discussion:', error)
+      console.error('Error saving discussion:', error)
       toast.error('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
@@ -163,9 +186,9 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
               fontSize: '15px'
             }}
           >
-           <img src={messageText} alt="Message Icon" style={{ width: '20px', height: '20px' }} />
+            <FontAwesomeIcon icon={faQuoteLeft} />
           </div>
-          Start New Discussion
+          {editingPost ? 'Edit Discussion' : 'Start New Discussion'}
         </Modal.Title>
         
       </Modal.Header>
@@ -173,6 +196,9 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
       <Modal.Body className="pb-4">
         {/* Category Selection */}
         <div className="mb-3">
+          <label className="form-label mb-3" style={{ fontWeight: '600', fontSize: '14px' }}>
+            Choose a category:
+          </label>
           <div className="d-flex flex-wrap gap-3">
             {categories.map((category) => (
               <div
@@ -202,6 +228,7 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
                   style={{
                     width: '16px',
                     height: '16px',
+                    filter: formData.selectedCategory === category.name ? 'brightness(0) invert(1)' : 'none'
                   }}
                 />
                 {category.name}
@@ -217,6 +244,9 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
 
         {/* Subject Line */}
         <div className="mb-3">
+          <label className="form-label mb-2" style={{ fontWeight: '600', fontSize: '14px' }}>
+            Subject Line:
+          </label>
           <div 
             className="d-flex align-items-center gap-2"
             style={{
@@ -241,7 +271,7 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
               }}
             />
             <FontAwesomeIcon 
-              icon={faPencilAlt} 
+              icon={faLink} 
               style={{ color: '#666', cursor: 'pointer', fontSize: '14px' }} 
             />
           </div>
@@ -254,6 +284,9 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
 
         {/* Message Editor - Using ReactQuill like EditUserModal */}
         <div className="mb-4">
+          <label className="form-label mb-2" style={{ fontWeight: '600', fontSize: '14px' }}>
+            Message:
+          </label>
           <ReactQuill
             value={formData.message}
             onChange={handleMessageChange}
@@ -284,8 +317,11 @@ const StartNewDiscussionModal = ({ show, onHide }) => {
                   onClick={handleSubmit}
                   disabled={loading}
                 >
-                  {loading ? '...' : 'SAVE'}
-                </button>
+                  {loading ? (
+              <span className="spinner-border spinner-border-sm me-2" />
+            ) : null}
+            {loading ? (editingPost ? 'UPDATING...' : 'SUBMITTING...') : (editingPost ? 'UPDATE' : 'SUBMIT')}
+            </button>
         </div>
       </Modal.Body>
     </Modal>

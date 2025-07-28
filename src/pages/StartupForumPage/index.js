@@ -18,6 +18,7 @@ import chatBubble from '../../assets/images/academy-icons/svg/chat-bubble-empty.
 import threeDots from '../../assets/images/academy-icons/svg/more-horiz.svg'
 import star from '../../assets/images/academy-icons/svg/star.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
+import editIcon from '../../assets/images/academy-icons/svg/pen-icon.svg' // Add this import
 import AcademyBtn from '../../components/AcademyBtn'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
 
@@ -28,11 +29,29 @@ const StartupForumPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
-  const [showDiscussionModal, setShowDiscussionModal] = useState(true)
+  const [showDiscussionModal, setShowDiscussionModal] = useState(false) // Changed to false
+  const [editingPost, setEditingPost] = useState(null) // Add state for editing post
 
   // Add function to toggle modal
   const toggleDiscussionModal = () => {
     setShowDiscussionModal(prev => !prev)
+    // Clear editing post when closing modal
+    if (showDiscussionModal) {
+      setEditingPost(null)
+    }
+  }
+
+  // Add function to handle edit post
+  const handleEditPost = (post, event) => {
+    event.stopPropagation() // Prevent forum post click
+    setEditingPost(post)
+    setShowDiscussionModal(true)
+  }
+
+  // Add function to handle new discussion
+  const handleNewDiscussion = () => {
+    setEditingPost(null)
+    setShowDiscussionModal(true)
   }
 
   // Function to get the current category from URL
@@ -199,7 +218,8 @@ const StartupForumPage = () => {
         'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
         'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
         'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        ]
+        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
+      ]
     },
     {
       id: 4,
@@ -364,19 +384,14 @@ const StartupForumPage = () => {
                         className="participant-avatar"
                       />
                     ))}
-                    {post.participants.length > 4 && (
-                      <div className="participant-more"><img src={threeDots} alt="More Participants" /></div>
-                    )}
+                      <div className="participant-more" onClick={(e) => handleEditPost(post, e)}><img src={threeDots} alt="More Participants" /></div>
 
                   </div>
                    <div className="post-comments-count">
                       <img src={chatBubble} alt="Comments Icon" className="comments-icon" />
                       <span className="post-date-paragraph">{post.comments} comments</span>
                     </div>
-
-                </div>
-
-
+                  </div>
                 </div>
               ))}
             </div>
@@ -388,7 +403,7 @@ const StartupForumPage = () => {
               <div className="categories-list">
                 <AcademyBtn
                   title={'Start New Discussion'}
-                  onClick={toggleDiscussionModal}
+                  onClick={handleNewDiscussion}
                 />
                 
                 {categories.map((category, index) => (
@@ -419,6 +434,7 @@ const StartupForumPage = () => {
       <StartNewDiscussionModal 
         show={showDiscussionModal}
         onHide={toggleDiscussionModal}
+        editingPost={editingPost}
       />
     </>
   )
