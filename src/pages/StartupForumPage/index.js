@@ -417,8 +417,8 @@ const StartupForumPage = () => {
 
       {/* Start New Discussion Modal */}
       <StartNewDiscussionModal 
-        isOpen={showDiscussionModal}
-        toggle={toggleDiscussionModal}
+        show={showDiscussionModal}
+        onHide={toggleDiscussionModal}
       />
     </>
   )

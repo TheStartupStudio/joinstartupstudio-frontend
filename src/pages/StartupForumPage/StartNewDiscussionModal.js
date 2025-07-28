@@ -1,200 +1,293 @@
 import React, { useState } from 'react'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { Modal, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBold, faItalic, faQuoteLeft, faAlignLeft, faAlignCenter, faAlignRight, faListUl, faListOl, faImage, faLink } from '@fortawesome/free-solid-svg-icons'
+import { faQuoteLeft, faLink } from '@fortawesome/free-solid-svg-icons'
+import { toast } from 'react-toastify'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
-const StartNewDiscussionModal = ({ isOpen, toggle }) => {
-  const [subject, setSubject] = useState('')
-  const [message, setMessage] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('')
+// Import category icons
+import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
+import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
+import partyPopper from '../../assets/images/academy-icons/svg/Party Popper.svg'
+import loudSpeaker from '../../assets/images/academy-icons/svg/Loudspeaker.svg'
+import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
+import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
+import { faPencilAlt, triangle} from '@fortawesome/free-solid-svg-icons'
+
+const StartNewDiscussionModal = ({ show, onHide }) => {
+  const [loading, setLoading] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  
+  const [formData, setFormData] = useState({
+    subject: '',
+    message: '',
+    selectedCategory: ''
+  })
 
   const categories = [
-    'Introductions',
-    'Announcements', 
-    'Celebrations',
-    'Ideas & Feedback',
-    'Misc. Topics'
+    {
+      name: 'Introductions',
+      color: '#FF6B6B',
+      icon: wavingHand
+    },
+    {
+      name: 'Announcements',
+      color: '#4ECDC4',
+      icon: loudSpeaker
+    },
+    {
+      name: 'Celebrations',
+      color: '#45B7D1',
+      icon: partyPopper
+    },
+    {
+      name: 'Ideas & Feedback',
+      color: '#96CEB4',
+      icon: lightBulb
+    },
+    {
+      name: 'Misc. Topics',
+      color: '#FFEAA7',
+      icon: speechBalloon
+    }
   ]
 
-  const handleSubmit = () => {
-    if (!subject.trim() || !message.trim() || !selectedCategory) {
-      alert('Please fill in all fields')
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
+  const handleCategorySelect = (categoryName) => {
+    setFormData(prevState => ({
+      ...prevState,
+      selectedCategory: categoryName
+    }))
+  }
+
+  const handleMessageChange = (content) => {
+    setFormData(prevState => ({
+      ...prevState,
+      message: content
+    }))
+  }
+
+  const validateForm = () => {
+    if (!formData.subject.trim() || !formData.message.trim() || !formData.selectedCategory) {
+      return false
+    }
+    return true
+  }
+
+  const handleSubmit = async () => {
+    setFormSubmitted(true)
+    
+    if (!validateForm()) {
+      toast.error('Please fill in all fields')
       return
     }
 
-    // Here you would typically send the data to your backend
-    console.log('New discussion:', { subject, message, selectedCategory })
-    
-    // Reset form and close modal
-    setSubject('')
-    setMessage('')
-    setSelectedCategory('')
-    toggle()
+    setLoading(true)
+
+    try {
+      // Here you would typically send the data to your backend
+      console.log('New discussion:', formData)
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      toast.success('Discussion created successfully!')
+      handleCancel()
+    } catch (error) {
+      console.error('Error creating discussion:', error)
+      toast.error('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleCancel = () => {
-    setSubject('')
-    setMessage('')
-    setSelectedCategory('')
-    toggle()
+    setFormData({
+      subject: '',
+      message: '',
+      selectedCategory: ''
+    })
+    setFormSubmitted(false)
+    setLoading(false)
+    onHide()
   }
+
+  const isFormEmpty = !formData.subject.trim() && !formData.message.trim() && !formData.selectedCategory
+
+  // ReactQuill modules configuration (same as EditUserModal)
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ align: [] }],
+      ['link', 'image']
+    ]
+  }
+
+  const quillFormats = [
+    'header', 'bold', 'italic', 'underline',
+    'list', 'bullet', 'align', 'link', 'image'
+  ]
 
   return (
     <Modal 
-      isOpen={isOpen} 
-      toggle={toggle} 
+      show={show} 
+      onHide={handleCancel}
       className="start-discussion-modal"
       size="lg"
-      style={{ maxWidth: '800px' }}
+      centered
+      backdrop="static"
+      keyboard={false}
     >
-      <ModalHeader className="border-0 pb-0">
-        <div className="d-flex align-items-center gap-3">
+      <Modal.Header className="p-4">
+        <Modal.Title 
+          className="d-flex gap-3"
+          style={{ fontSize: '16px', flexDirection: 'column', fontWeight: '600 !important' }}
+        >
           <div 
-            className="d-flex align-items-center justify-content-center"
+            className="d-flex align-items-center justify-content-center me-3"
             style={{
-              width: '48px',
-              height: '48px',
-              backgroundColor: '#f0f0f0',
-              borderRadius: '12px'
+              width: '36px',
+              height: '36px',
+              backgroundColor: '#C8CDD880',
+              borderRadius: '50%',
+              fontSize: '15px'
             }}
           >
-            <FontAwesomeIcon icon={faQuoteLeft} style={{ fontSize: '20px', color: '#666' }} />
+           <img src={messageText} alt="Message Icon" style={{ width: '20px', height: '20px' }} />
           </div>
-          <h3 className="mb-0" style={{ fontSize: '24px', fontWeight: '600' }}>
-            Start New Discussion
-          </h3>
-        </div>
-      </ModalHeader>
+          Start New Discussion
+        </Modal.Title>
+        
+      </Modal.Header>
       
-      <ModalBody className="pt-4">
+      <Modal.Body className="pb-4">
         {/* Category Selection */}
-        <div className="mb-4">
-          <label className="form-label fw-semibold mb-2">Select Category</label>
-          <select
-            className="form-select"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            style={{
-              border: '1px solid #e0e0e0',
-              borderRadius: '8px',
-              padding: '12px',
-              fontSize: '14px'
-            }}
-          >
-            <option value="">Choose a category...</option>
+        <div className="mb-3">
+          <div className="d-flex flex-wrap gap-3">
             {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
+              <div
+                key={category.name}
+                className={`category-selection-btn ${formData.selectedCategory === category.name ? 'selected' : ''}`}
+                onClick={() => handleCategorySelect(category.name)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  border: formData.selectedCategory === category.name ? `2px solid ${category.color}` : '2px solid #e0e0e0',
+                  backgroundColor: formData.selectedCategory === category.name ? category.color : 'white',
+                  color: formData.selectedCategory === category.name ? 'white' : '#333',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  boxShadow: formData.selectedCategory === category.name ? '0 4px 12px rgba(0, 0, 0, 0.15)' : '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  transform: formData.selectedCategory === category.name ? 'translateY(-1px)' : 'none'
+                }}
+              >
+                <img
+                  src={category.icon}
+                  alt={category.name}
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                  }}
+                />
+                {category.name}
+              </div>
             ))}
-          </select>
+          </div>
+          {formSubmitted && !formData.selectedCategory && (
+            <div className="text-danger mt-2" style={{ fontSize: '12px' }}>
+              Please select a category
+            </div>
+          )}
         </div>
 
         {/* Subject Line */}
-        <div className="mb-4">
+        <div className="mb-3">
           <div 
-            className="d-flex align-items-center gap-2 p-3"
+            className="d-flex align-items-center gap-2"
             style={{
-              border: '1px solid #e0e0e0',
-              borderRadius: '8px',
+              boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+              borderRadius: '12px',
+              padding: '12px',
               backgroundColor: 'white'
             }}
           >
             <input
               type="text"
+              name="subject"
               placeholder="Add a subject line"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              value={formData.subject}
+              onChange={handleChange}
               className="flex-grow-1"
               style={{
                 border: 'none',
                 backgroundColor: 'transparent',
                 outline: 'none',
-                fontSize: '16px'
+                fontSize: '14px'
               }}
             />
-            <FontAwesomeIcon icon={faLink} style={{ color: '#666', cursor: 'pointer' }} />
+            <FontAwesomeIcon 
+              icon={faPencilAlt} 
+              style={{ color: '#666', cursor: 'pointer', fontSize: '14px' }} 
+            />
           </div>
+          {formSubmitted && !formData.subject.trim() && (
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              Please enter a subject line
+            </div>
+          )}
         </div>
 
-        {/* Message Editor */}
+        {/* Message Editor - Using ReactQuill like EditUserModal */}
         <div className="mb-4">
-          <div style={{ border: '1px solid #e0e0e0', borderRadius: '8px' }}>
-            {/* Toolbar */}
-            <div 
-              className="d-flex align-items-center gap-3 p-3 border-bottom"
-              style={{ backgroundColor: '#fafafa' }}
-            >
-              <FontAwesomeIcon icon={faBold} style={{ cursor: 'pointer', color: '#666' }} />
-              <FontAwesomeIcon icon={faItalic} style={{ cursor: 'pointer', color: '#666' }} />
-              <FontAwesomeIcon icon={faQuoteLeft} style={{ cursor: 'pointer', color: '#666' }} />
-              <div style={{ width: '1px', height: '20px', backgroundColor: '#ddd' }}></div>
-              <FontAwesomeIcon icon={faAlignLeft} style={{ cursor: 'pointer', color: '#666' }} />
-              <FontAwesomeIcon icon={faAlignCenter} style={{ cursor: 'pointer', color: '#666' }} />
-              <FontAwesomeIcon icon={faAlignRight} style={{ cursor: 'pointer', color: '#666' }} />
-              <div style={{ width: '1px', height: '20px', backgroundColor: '#ddd' }}></div>
-              <FontAwesomeIcon icon={faListUl} style={{ cursor: 'pointer', color: '#666' }} />
-              <FontAwesomeIcon icon={faListOl} style={{ cursor: 'pointer', color: '#666' }} />
-              <div style={{ width: '1px', height: '20px', backgroundColor: '#ddd' }}></div>
-              <FontAwesomeIcon icon={faImage} style={{ cursor: 'pointer', color: '#666' }} />
-              <FontAwesomeIcon icon={faLink} style={{ cursor: 'pointer', color: '#666' }} />
+          <ReactQuill
+            value={formData.message}
+            onChange={handleMessageChange}
+            className='text-black'
+            placeholder="Add your message..."
+            modules={quillModules}
+            formats={quillFormats}
+            style={{
+              boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+              borderRadius: '12px',
+              minHeight: '200px'
+            }}
+          />
+          {formSubmitted && !formData.message.trim() && (
+            <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
+              Please enter a message
             </div>
-
-            {/* Text Area */}
-            <textarea
-              placeholder="Add your message..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              rows={8}
-              className="w-100 p-3"
-              style={{
-                border: 'none',
-                outline: 'none',
-                resize: 'vertical',
-                fontSize: '16px',
-                backgroundColor: 'white',
-                borderRadius: '0 0 8px 8px'
-              }}
-            />
-          </div>
+          )}
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex justify-content-end gap-3">
+        <div className="d-flex justify-content-end gap-3 mt-4">
+          <Button className='close-btn w-full-900' onClick={handleCancel}>
+                            CANCEL
+                          </Button>
           <button
-            type="button"
-            onClick={handleCancel}
-            className="px-4 py-2"
-            style={{
-              backgroundColor: '#e9ecef',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: '#495057',
-              cursor: 'pointer'
-            }}
-          >
-            CANCEL
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="px-4 py-2"
-            style={{
-              backgroundColor: '#51C7DF',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: 'white',
-              cursor: 'pointer'
-            }}
-          >
-            SUBMIT
-          </button>
+                  className='modal-save-btn w-full-900'
+                  onClick={handleSubmit}
+                  disabled={loading}
+                >
+                  {loading ? '...' : 'SAVE'}
+                </button>
         </div>
-      </ModalBody>
+      </Modal.Body>
     </Modal>
   )
 }
