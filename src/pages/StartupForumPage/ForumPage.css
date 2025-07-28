@@ -432,7 +432,7 @@
   border-bottom: none;
 }
 
- .start-discussion-modal .ql-editor{
+ .start-discussion-modal .ql-editor, .add-comment-modal .ql-editor {
   max-height: 300px;
   word-break: break-word;
     overflow-wrap: break-word;
@@ -441,3 +441,50 @@
     letter-spacing: 1px;
     min-height: unset;
  }
+
+
+ /* ...existing code... */
+
+/* Add Comment Modal Styles */
+.add-comment-modal .modal-content {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+.add-comment-modal .modal-header {
+  border-bottom: none;
+}
+
+.add-comment-modal .add-comment-quill .ql-editor {
+  min-height: 150px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.add-comment-modal .add-comment-quill .ql-toolbar {
+  border-top: 1px solid #E9ECEF;
+  border-left: 1px solid #E9ECEF;
+  border-right: 1px solid #E9ECEF;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+
+.add-comment-modal .add-comment-quill .ql-container {
+  border-left: 1px solid #E9ECEF;
+  border-right: 1px solid #E9ECEF;
+  border-bottom: 1px solid #E9ECEF;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.add-comment-modal .modal-body{
+  padding: 0;
+}
+
+.add-comment-modal .modal-content{
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  padding: 40px 30px;
+}

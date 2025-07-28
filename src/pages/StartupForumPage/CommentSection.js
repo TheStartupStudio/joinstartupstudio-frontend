@@ -22,6 +22,7 @@ import star from '../../assets/images/academy-icons/svg/star.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
 import AcademyBtn from '../../components/AcademyBtn'
+import AddCommentModal from './AddCommentModal'
 
 const CommentSection = () => {
   const dispatch = useDispatch()
@@ -30,6 +31,8 @@ const CommentSection = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
+  const [showAddCommentModal, setShowAddCommentModal] = useState(false)
+  const [editingComment, setEditingComment] = useState(null) // Add state for editing comment
 
   const forumData = [
     {
@@ -145,6 +148,27 @@ const CommentSection = () => {
     return Math.max(baseWidth - (nestingLevel * reductionPerLevel), 60) // Minimum 60% width
   }
 
+  const toggleAddCommentModal = () => {
+    setShowAddCommentModal(prev => !prev)
+    // Clear editing comment when closing modal
+    if (showAddCommentModal) {
+      setEditingComment(null)
+    }
+  }
+
+  // Add function to handle edit comment
+  const handleEditComment = (comment, event) => {
+    event.stopPropagation() // Prevent any parent click handlers
+    setEditingComment(comment)
+    setShowAddCommentModal(true)
+  }
+
+  // Add function to handle new comment
+  const handleNewComment = () => {
+    setEditingComment(null)
+    setShowAddCommentModal(true)
+  }
+
   // Function to render comments recursively
   const renderComment = (comment, nestingLevel = 1) => {
     const width = getCommentWidth(nestingLevel)
@@ -202,7 +226,7 @@ const CommentSection = () => {
                   <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
                   <span style={{ fontWeight: '600', color: 'black' }}>Delete comment</span>
                 </div>
-                <div className='d-flex align-items-center gap-2 cursor-pointer'>
+                <div className='d-flex align-items-center gap-2 cursor-pointer' onClick={(e) => handleEditComment(comment, e)}>
                   <FontAwesomeIcon icon={faPencilAlt} style={{ color: 'black', width: '16px', height: '16px' }} />
                   <span style={{ fontWeight: '600', color: 'black' }}>Edit comment</span>
                 </div>
@@ -248,7 +272,6 @@ const CommentSection = () => {
         return speechBalloon
     }
   }
-
 
   return (
     <>
@@ -346,6 +369,7 @@ const CommentSection = () => {
               <div className="categories-list">
                 <AcademyBtn
                   title={'ADD REPLY'}
+                  onClick={handleNewComment}
                 />
 
                 {categories.map((category, index) => (
@@ -371,6 +395,14 @@ const CommentSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Add Comment Modal */}
+      <AddCommentModal 
+        show={showAddCommentModal}
+        onHide={toggleAddCommentModal}
+        originalPost={forumData[0]} // Pass the original post data
+        editingComment={editingComment} // Pass the editing comment
+      />
     </>
   )
 }
