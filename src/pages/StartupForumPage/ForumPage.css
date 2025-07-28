@@ -392,3 +392,39 @@
     width: 90% !important;
   }
 }
+
+/* Add to your ForumPage.css */
+
+.forum-page .start-discussion-modal .modal-content {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+.forum-page .start-discussion-modal .modal-header {
+  padding: 24px 24px 0 24px;
+}
+
+.forum-page .start-discussion-modal .modal-body {
+  padding: 0 24px 24px 24px;
+}
+
+.forum-page .start-discussion-modal .form-select:focus,
+.forum-page .start-discussion-modal input:focus,
+.forum-page .start-discussion-modal textarea:focus {
+  border-color: #51C7DF;
+  box-shadow: 0 0 0 0.2rem rgba(81, 199, 223, 0.25);
+}
+
+.forum-page .start-discussion-modal button:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+.forum-page .start-discussion-modal button:hover[style*="background-color: #51C7DF"] {
+  background-color: #45b8d1 !important;
+}
+
+.forum-page .start-discussion-modal button:hover[style*="background-color: #e9ecef"] {
+  background-color: #dee2e6 !important;
+}

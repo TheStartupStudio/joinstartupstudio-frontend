@@ -2306,7 +2306,7 @@ link a:hover {
 
 .notes-search-box input.form-control,
 .connections-search {
-  /* padding: 2px 0px; */
+  padding: 2px 0px;
   background: transparent;
 }
 

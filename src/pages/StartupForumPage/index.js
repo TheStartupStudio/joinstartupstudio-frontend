@@ -19,6 +19,7 @@ import threeDots from '../../assets/images/academy-icons/svg/more-horiz.svg'
 import star from '../../assets/images/academy-icons/svg/star.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import AcademyBtn from '../../components/AcademyBtn'
+import StartNewDiscussionModal from './StartNewDiscussionModal'
 
 const StartupForumPage = () => {
   const dispatch = useDispatch()
@@ -27,6 +28,12 @@ const StartupForumPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
+  const [showDiscussionModal, setShowDiscussionModal] = useState(true)
+
+  // Add function to toggle modal
+  const toggleDiscussionModal = () => {
+    setShowDiscussionModal(prev => !prev)
+  }
 
   // Function to get the current category from URL
   const getCurrentCategoryFromUrl = () => {
@@ -381,6 +388,7 @@ const StartupForumPage = () => {
               <div className="categories-list">
                 <AcademyBtn
                   title={'Start New Discussion'}
+                  onClick={toggleDiscussionModal}
                 />
                 
                 {categories.map((category, index) => (
@@ -406,6 +414,12 @@ const StartupForumPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Start New Discussion Modal */}
+      <StartNewDiscussionModal 
+        isOpen={showDiscussionModal}
+        toggle={toggleDiscussionModal}
+      />
     </>
   )
 }
