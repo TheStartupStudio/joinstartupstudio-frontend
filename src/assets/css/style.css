@@ -5154,6 +5154,13 @@ wave > wave:first-child {
     padding-inline: 1rem;
   }
 
+
+  .academy-new-dashboard-layout{
+    display: flex !important;
+    flex-direction: column;
+    padding-inline: 1rem;
+  }
+
   .mb-1rem-tab {
     margin-bottom: 1rem;
   }
