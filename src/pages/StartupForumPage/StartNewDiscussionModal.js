@@ -13,11 +13,13 @@ import partyPopper from '../../assets/images/academy-icons/svg/Party Popper.svg'
 import loudSpeaker from '../../assets/images/academy-icons/svg/Loudspeaker.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
-import { faPencilAlt, triangle} from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt, triangle, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons'
 
 const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
   
   const [formData, setFormData] = useState({
     subject: '',
@@ -143,6 +145,26 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
     onHide()
   }
 
+    const handleDelete = async () => {
+    setLoading(true)
+    try {
+      // Here you would typically send the delete request to your backend
+      console.log('Deleting discussion:', editingPost.id)
+      toast.success('Discussion deleted successfully!')
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      handleCancel()
+    } catch (error) {
+      console.error('Error deleting discussion:', error)
+      toast.error('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+      setShowDeleteConfirm(false)
+    }
+  }
+
   const isFormEmpty = !formData.subject.trim() && !formData.message.trim() && !formData.selectedCategory
 
   // ReactQuill modules configuration (same as EditUserModal)
@@ -186,7 +208,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
               fontSize: '15px'
             }}
           >
-            <FontAwesomeIcon icon={faQuoteLeft} />
+            <img src={messageText} alt="Discussion Icon" style={{ width: '20px', height: '20px' }} />
           </div>
           {editingPost ? 'Edit Discussion' : 'Start New Discussion'}
         </Modal.Title>
@@ -196,9 +218,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
       <Modal.Body className="pb-4">
         {/* Category Selection */}
         <div className="mb-3">
-          <label className="form-label mb-3" style={{ fontWeight: '600', fontSize: '14px' }}>
-            Choose a category:
-          </label>
           <div className="d-flex flex-wrap gap-3">
             {categories.map((category) => (
               <div
@@ -244,9 +263,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
 
         {/* Subject Line */}
         <div className="mb-3">
-          <label className="form-label mb-2" style={{ fontWeight: '600', fontSize: '14px' }}>
-            Subject Line:
-          </label>
           <div 
             className="d-flex align-items-center gap-2"
             style={{
@@ -271,8 +287,8 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
               }}
             />
             <FontAwesomeIcon 
-              icon={faLink} 
-              style={{ color: '#666', cursor: 'pointer', fontSize: '14px' }} 
+              icon={faPencilAlt} 
+              style={{ color: 'black', cursor: 'pointer', fontSize: '14px' }} 
             />
           </div>
           {formSubmitted && !formData.subject.trim() && (
@@ -284,9 +300,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
 
         {/* Message Editor - Using ReactQuill like EditUserModal */}
         <div className="mb-4">
-          <label className="form-label mb-2" style={{ fontWeight: '600', fontSize: '14px' }}>
-            Message:
-          </label>
           <ReactQuill
             value={formData.message}
             onChange={handleMessageChange}
@@ -308,7 +321,26 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex justify-content-end gap-3 mt-4">
+        <div className="d-flex gap-3 mt-4" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+
+            {editingPost && (
+                <div 
+                onClick={() => setShowDeleteConfirm(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  }}>
+                    <FontAwesomeIcon icon={faExclamationTriangle} />
+                    Delete discussion
+                </div>   
+            )}
+
+            <div className='d-flex gap-3 align-items-center'>
+
           <Button className='close-btn w-full-900' onClick={handleCancel}>
                             CANCEL
                           </Button>
@@ -322,6 +354,8 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
             ) : null}
             {loading ? (editingPost ? 'UPDATING...' : 'SUBMITTING...') : (editingPost ? 'UPDATE' : 'SUBMIT')}
             </button>
+
+                        </div>
         </div>
       </Modal.Body>
     </Modal>

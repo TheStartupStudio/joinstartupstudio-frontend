@@ -431,3 +431,13 @@
  .start-discussion-modal .modal-header {
   border-bottom: none;
 }
+
+ .start-discussion-modal .ql-editor{
+  max-height: 300px;
+  word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    font-weight: 300;
+    letter-spacing: 1px;
+    min-height: unset;
+ }
