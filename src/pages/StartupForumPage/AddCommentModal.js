@@ -238,7 +238,7 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex gap-3 mt-4" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="d-flex gap-3 mt-4 modal-btn-container" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           {editingComment && (
             <div 
               onClick={() => setShowDeleteConfirm(true)}
@@ -290,65 +290,6 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment }) => {
           </div>
         </div>
       </Modal.Body>
-
-      {/* Delete Confirmation Modal */}
-      {/* {showDeleteConfirm && (
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999
-          }}
-          onClick={() => setShowDeleteConfirm(false)}
-        >
-          <div 
-            style={{
-              backgroundColor: 'white',
-              padding: '30px',
-              borderRadius: '12px',
-              maxWidth: '400px',
-              textAlign: 'center'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <FontAwesomeIcon 
-              icon={faExclamationTriangle} 
-              style={{ fontSize: '24px', color: '#FF3399', marginBottom: '16px' }}
-            />
-            <h5 style={{ marginBottom: '16px' }}>Delete Comment?</h5>
-            <p style={{ marginBottom: '24px', color: '#666' }}>
-              Are you sure you want to delete this comment? This action cannot be undone.
-            </p>
-            <div className="d-flex gap-3 justify-content-center">
-              <Button 
-                variant="secondary" 
-                onClick={() => setShowDeleteConfirm(false)}
-                disabled={loading}
-              >
-                CANCEL
-              </Button>
-              <Button 
-                variant="danger" 
-                onClick={handleDelete}
-                disabled={loading}
-                style={{ backgroundColor: '#FF3399', borderColor: '#FF3399' }}
-              >
-                {loading ? (
-                  <span className="spinner-border spinner-border-sm me-2" />
-                ) : null}
-                {loading ? 'DELETING...' : 'DELETE'}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </Modal>
   )
 }

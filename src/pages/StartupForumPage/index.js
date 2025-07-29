@@ -29,8 +29,9 @@ const StartupForumPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
-  const [showDiscussionModal, setShowDiscussionModal] = useState(false) // Changed to false
-  const [editingPost, setEditingPost] = useState(null) // Add state for editing post
+  const [showDiscussionModal, setShowDiscussionModal] = useState(false)
+  const [editingPost, setEditingPost] = useState(null)
+  const [isSearchFocused, setIsSearchFocused] = useState(false) // Add this state
 
   // Add function to toggle modal
   const toggleDiscussionModal = () => {
@@ -292,12 +293,24 @@ const StartupForumPage = () => {
             <div className="forum-controls">
               <div className="search-section">
                 <div className="search-box">
-                  <img src={searchIcon} alt="Search" className="forum-search-icon" />
+                  <img 
+                    src={searchIcon} 
+                    alt="Search" 
+                    className="forum-search-icon"
+                    style={{
+                      filter: isSearchFocused 
+                        ? 'brightness(0) saturate(100%) invert(47%) sepia(68%) saturate(478%) hue-rotate(166deg) brightness(94%) contrast(89%)'
+                        : 'none',
+                      transition: 'filter 0.2s ease'
+                    }}
+                  />
                   <input
                     type="text"
                     placeholder="Search discussions"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setIsSearchFocused(false)}
                     className="search-input"
                   />
                 </div>
@@ -440,4 +453,4 @@ const StartupForumPage = () => {
   )
 }
 
-export default StartupForumPage;
+export default StartupForumPage

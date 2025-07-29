@@ -176,15 +176,9 @@ const CommentSection = () => {
     return (
       <div className='d-flex flex-column align-items-end w-100' key={comment.id}>
         <div 
-          className="d-flex flex-column"
+          className="d-flex flex-column main-comment-card-container"
           style={{ 
-            border: '1px solid #D9D9D9', 
-            padding: '16px 25px 16px 30px', 
-            borderRadius: '8px', 
-            width: `${width}%`,
-            marginLeft: nestingLevel > 1 ? '20px' : '0',
-            marginBottom: '5px',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
+            width: `${width}%`
           }}
         >
           <div className="forum-post-main">
@@ -300,7 +294,7 @@ const CommentSection = () => {
             <div className="forum-posts-comment-section">
               {/* Original Post */}
               {forumData.map((post, index) => (
-                <div style={{ border: '1px solid #D9D9D9', padding: '16px 25px 16px 30px', borderRadius: '8px', marginBottom: '20px', width: '100%' }} key={index}>
+                <div className="main-comment-card-container" style={{ width: '100%' }} key={index}>
                   <div key={post.id} className="forum-post-main">
                     <div className="post-avatar-container">
                       <img

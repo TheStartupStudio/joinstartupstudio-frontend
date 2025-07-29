@@ -320,7 +320,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex gap-3 mt-4" style={{ alignItems: 'center', justifyContent: editingPost ? 'space-between' : 'end' }}>
+        <div className="d-flex gap-3 mt-4 modal-btn-container" style={{ alignItems: 'center', justifyContent: editingPost ? 'space-between' : 'end' }}>
 
             {editingPost && (
                 <div 
@@ -338,7 +338,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost }) => {
                 </div>   
             )}
 
-            <div className='d-flex gap-3 align-items-center'>
+            <div className='d-flex gap-3 align-items-center modal-btn-container'>
 
           <Button className='close-btn w-full-900' onClick={handleCancel}>
                             CANCEL
