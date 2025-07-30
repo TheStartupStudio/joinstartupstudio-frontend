@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import './ForumPage.css'
 import IntlMessages from '../../utils/IntlMessages'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { useDispatch } from 'react-redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import axiosInstance from '../../utils/AxiosInstance'
 
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
@@ -18,7 +20,7 @@ import chatBubble from '../../assets/images/academy-icons/svg/chat-bubble-empty.
 import threeDots from '../../assets/images/academy-icons/svg/more-horiz.svg'
 import star from '../../assets/images/academy-icons/svg/star.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
-import editIcon from '../../assets/images/academy-icons/svg/pen-icon.svg' // Add this import
+import editIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import AcademyBtn from '../../components/AcademyBtn'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
 
@@ -26,36 +28,110 @@ const StartupForumPage = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
+  
+  const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
+  
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
   const [showDiscussionModal, setShowDiscussionModal] = useState(false)
   const [editingPost, setEditingPost] = useState(null)
-  const [isSearchFocused, setIsSearchFocused] = useState(false) // Add this state
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  
+  const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
 
-  // Add function to toggle modal
+  const [forumData, setForumData] = useState([])
+
   const toggleDiscussionModal = () => {
     setShowDiscussionModal(prev => !prev)
-    // Clear editing post when closing modal
     if (showDiscussionModal) {
       setEditingPost(null)
     }
   }
 
-  // Add function to handle edit post
   const handleEditPost = (post, event) => {
-    event.stopPropagation() // Prevent forum post click
+    event.stopPropagation() 
     setEditingPost(post)
     setShowDiscussionModal(true)
   }
 
-  // Add function to handle new discussion
+  const fetchForumData = async (page = 1, category = null, search = null, sort = 'created_at', order = 'DESC') => {
+    setLoading(true)
+    try {
+      const params = {
+        page,
+        limit: 3,
+        sort,
+        order
+      }
+
+      if (search && search.trim()) {
+        params.search = search.trim()
+      }
+
+      let endpoint = '/forum'
+      
+      if (category && category !== 'All Discussions' && category !== 'Following') {
+        const categoryMapping = {
+          'Introductions': 'introductions',
+          'Announcements': 'announcements',
+          'Celebrations': 'celebrations',
+          'Ideas & Feedback': 'ideas-feedback',
+          'Misc. Topics': 'misc-topics'
+        }
+        
+        const urlCategory = categoryMapping[category]
+        if (urlCategory) {
+          endpoint = `/forum/${urlCategory}`
+        }
+      }
+
+      const response = await axiosInstance.get(endpoint, { params })
+      
+      if (response.data) {
+        setForumData(response.data.discussions)
+        setTotalCount(response.data.totalCount)
+        setCurrentPage(response.data.currentPage)
+        setTotalPages(response.data.totalPages)
+      }
+    } catch (error) {
+      console.error('Error fetching forum data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const category = getCurrentCategoryFromUrl()
+    setSelectedCategory(category)
+    fetchForumData(1, category, null, 'created_at', 'DESC')
+  }, [])
+
+  const handleDiscussionSuccess = (discussion, action = 'create') => {
+    if (action === 'delete') {
+      setForumData(prevData => prevData.filter(post => post.id !== editingPost?.id))
+    } else if (action === 'create') {
+      fetchForumData(currentPage, selectedCategory, searchTerm)
+    } else {
+      setForumData(prevData => 
+        prevData.map(post => 
+          post.id === discussion.id ? { ...post, ...discussion } : post
+        )
+      )
+    }
+    
+    setEditingPost(null)
+    setShowDiscussionModal(false)
+  }
+
   const handleNewDiscussion = () => {
     setEditingPost(null)
     setShowDiscussionModal(true)
   }
 
-  // Function to get the current category from URL
   const getCurrentCategoryFromUrl = () => {
     const path = location.pathname.toLowerCase()
     
@@ -68,16 +144,13 @@ const StartupForumPage = () => {
     return 'All Discussions'
   }
 
-  // Set active category based on current URL
   useEffect(() => {
     setSelectedCategory(getCurrentCategoryFromUrl())
   }, [location.pathname])
 
-  // Function to handle category navigation
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)
     
-    // Navigate to corresponding page
     switch (category) {
       case 'All Discussions':
         history.push('/startup-forum')
@@ -105,7 +178,6 @@ const StartupForumPage = () => {
     }
   }
 
-  // Function to get header content based on URL
   const getHeaderContent = () => {
     const path = location.pathname.toLowerCase()
     
@@ -140,13 +212,11 @@ const StartupForumPage = () => {
         description: 'Ask questions and chat about other course or entrepreneurship topics.'
       }
     }
-    // Return null if no specific category is matched
     return null
   }
 
   const headerContent = getHeaderContent()
 
-  // Function to get the appropriate icon based on category
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'Introductions':
@@ -161,99 +231,6 @@ const StartupForumPage = () => {
         return speechBalloon
     }
   }
-
-  // Extended forum data
-  const forumData = [
-    {
-      id: 1,
-      category: 'Introductions',
-      isNew: true,
-      title: 'Introduce Yourself!',
-      description: 'Hey everyone! New member here. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus...',
-      author: {
-        name: 'cassiewallace',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      date: '12/23/2025',
-      comments: 25,
-      participants: [
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      
-      ]
-    },
-    {
-      id: 2,
-      category: 'Announcements',
-      isNew: true,
-      title: 'You can now message using the new forum!',
-      description: 'Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas lacuis massa nisl malesuada lacinia int...',
-      author: {
-        name: 'cassiewallace',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      date: '12/23/2025',
-      comments: 25,
-      participants: [
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-      ]
-    },
-    {
-      id: 3,
-      category: 'Celebrations',
-      title: 'Just launched my new product!',
-      description: 'Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas lacuis massa nisl malesuada lacinia int...',
-      author: {
-        name: 'cassiewallace',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      date: '12/23/2025',
-      comments: 25,
-      participants: [
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-      ]
-    },
-    {
-      id: 4,
-      category: 'Ideas & Feedback',
-      title: 'Idea for new business - need feedback',
-      description: 'Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas lacuis massa nisl malesuada lacinia int...',
-      author: {
-        name: 'cassiewallace',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      date: '12/23/2025',
-      comments: 25,
-      participants: [
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-      ]
-    },
-    {
-      id: 5,
-      category: 'Misc. Topics',
-      title: 'Anyone in the Dallas area want to meet up?',
-      description: 'Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas lacuis massa nisl malesuada lacinia int...',
-      author: {
-        name: 'cassiewallace',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      date: '12/23/2025',
-      comments: 25,
-      participants: [
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      ]
-    }
-  ]
 
   const categories = [
     'All Discussions',
@@ -341,73 +318,116 @@ const StartupForumPage = () => {
 
             {/* Forum Posts */}
             <div className="forum-posts-section">
-              {forumData.map((post, index) => (
-                <div key={post.id} className="forum-post"
-                  onClick={ () => history.push(`/startup-forum/1`) }
-                >
-                  <div className="post-avatar-container">
-                    <img
-                      src={post.author.avatar}
-                      alt={post.author.name}
-                      className="post-avatar"
-                    />
-                    {post.isNew && <div className="new-indicator"><img src={pin} alt="Pin Icon" /></div>}
-                  </div>
-
-                  <div className="post-content">
-                    <div className="post-header">
-                      <span
-                        className="post-category"
-                        style={{ backgroundColor: post.categoryColor }}
-                      >
-                        <img
-                          src={getCategoryIcon(post.category)}
-                          alt={post.category}
-                          className="category-icon"
-                        />
-                        {post.category}
-                      </span>
-                    </div>
-
-                    <h4 className="post-title">{post.title}</h4>
-
-                    <div className='d-flex gap-3 align-items-center'>
-                      <div className='d-flex align-items-center gap-2 justify-content-center'>
-                        <img src={message} alt="Message Icon" />
-                        <p className='mb-0 pb-0 post-date-paragraph'>Posted: <span>12/23/2025</span></p>
-                      </div>
-                      <div className='d-flex align-items-center gap-2 justify-content-center'>
-                        <img src={reply} alt="Reply Icon" />
-                        <p className='mb-0 pb-0 post-date-paragraph'>Latest reply from <span>@cassiewallace</span></p>
-                      </div>
-                    </div>
-
-                    <p className="post-description">{post.description}</p>
-                  </div>
-
-
-                <div className='d-flex flex-column gap-2 justify-content-end'>
-
-                  <div className="post-right-section">
-                    {post.participants.slice(0, 4).map((participant, idx) => (
-                      <img
-                        key={idx}
-                        src={participant}
-                        alt="participant"
-                        className="participant-avatar"
-                      />
-                    ))}
-                      <div className="participant-more" onClick={(e) => handleEditPost(post, e)}><img src={threeDots} alt="More Participants" /></div>
-
-                  </div>
-                   <div className="post-comments-count">
-                      <img src={chatBubble} alt="Comments Icon" className="comments-icon" />
-                      <span className="post-date-paragraph">{post.comments} comments</span>
-                    </div>
+              {loading ? (
+                <div className="text-center py-4">
+                  <div className="spinner-border" role="status">
                   </div>
                 </div>
-              ))}
+              ) : forumData.length === 0 ? (
+                <div className="text-center py-4">
+                  <p>No discussions found.</p>
+                </div>
+              ) : (
+                forumData.map((post, index) => {
+                  
+                  return (
+                    <div key={post.id} className="forum-post"
+                      onClick={() => history.push(`/startup-forum/${post.id}`)}
+                    >
+                      <div className="post-avatar-container">
+                        <img
+                          src={post.author.avatar || 'https://via.placeholder.com/40'}
+                          alt={post.author.name}
+                          className="post-avatar"
+                        />
+                        {post.isNew && <div className="new-indicator"><img src={pin} alt="Pin Icon" /></div>}
+                      </div>
+
+                      <div className="post-content">
+                        <div className="post-header">
+                          <span
+                            className="post-category"
+                            style={{ backgroundColor: post.categoryColor }}
+                          >
+                            <img
+                              src={getCategoryIcon(post.category)}
+                              alt={post.category}
+                              className="category-icon"
+                            />
+                            {post.category}
+                          </span>
+                        </div>
+
+                        <h4 className="post-title">{post.title}</h4>
+
+                        <div className='d-flex gap-3 align-items-center'>
+                          <div className='d-flex align-items-center gap-2 justify-content-center'>
+                            <img src={message} alt="Message Icon" />
+                            <p className='mb-0 pb-0 post-date-paragraph'>Posted: <span>{post.date}</span></p>
+                          </div>
+                          <div className='d-flex align-items-center gap-2 justify-content-center'>
+                            <img src={reply} alt="Reply Icon" />
+                            <p className='mb-0 pb-0 post-date-paragraph'>Latest reply from <span>@{post.author.name}</span></p>
+                          </div>
+                        </div>
+
+                        <p className="post-description">{post.description}</p>
+                      </div>
+
+                      <div className='d-flex flex-column gap-2 justify-content-end'>
+                        <div className="post-right-section">
+                          {post.participants && post.participants.slice(0, 4).map((participant, idx) => (
+                            <img
+                              key={idx}
+                              src={participant}
+                              alt="participant"
+                              className="participant-avatar"
+                            />
+                          ))}
+                          {/* Only show edit button if current user is the author - with better checking */}
+                          {currentUser && 
+                           post.author && 
+                           currentUser.id && 
+                           post.author.id && 
+                           parseInt(currentUser.id) === parseInt(post.author.id) && (
+                            <div className="participant-more" onClick={(e) => handleEditPost(post, e)}>
+                              <img src={threeDots} alt="More Options" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="post-comments-count">
+                          <img src={chatBubble} alt="Comments Icon" className="comments-icon" />
+                          <span className="post-date-paragraph">{post.comments} comments</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })
+              )}
             </div>
+
+            {/* Add pagination if needed */}
+            {totalPages > 1 && (
+              <div className="forum-pagination d-flex justify-content-center mt-4">
+                <button 
+                  className="btn btn-outline-primary me-2"
+                  disabled={currentPage === 1}
+                  onClick={() => fetchForumData(currentPage - 1, selectedCategory, searchTerm)}
+                >
+                  Previous
+                </button>
+                <span className="align-self-center mx-2">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button 
+                  className="btn btn-outline-primary ms-2"
+                  disabled={currentPage === totalPages}
+                  onClick={() => fetchForumData(currentPage + 1, selectedCategory, searchTerm)}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -448,6 +468,7 @@ const StartupForumPage = () => {
         show={showDiscussionModal}
         onHide={toggleDiscussionModal}
         editingPost={editingPost}
+        onSuccess={handleDiscussionSuccess}
       />
     </>
   )
