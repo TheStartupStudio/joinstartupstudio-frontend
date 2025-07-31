@@ -5,11 +5,13 @@ import { faBold, faItalic, faQuoteLeft, faAlignLeft, faAlignCenter, faAlignRight
 import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-
-// Import icons
+import axiosInstance from '../../utils/AxiosInstance'
 import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
+import reply from '../../assets/images/academy-icons/svg/reply.svg'
+import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
 
-const AddCommentModal = ({ show, onHide, originalPost, editingComment }) => {
+
+const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess, parentReplyId = null, parentComment = null }) => {
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -18,14 +20,12 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment }) => {
     message: ''
   })
 
-  // Pre-fill form when editing
   useEffect(() => {
     if (editingComment) {
       setFormData({
-        message: editingComment.description || ''
+        message: editingComment.content || ''
       })
     } else {
-      // Reset form for new comment
       setFormData({
         message: ''
       })
@@ -57,57 +57,81 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment }) => {
     setLoading(true)
 
     try {
-      // Here you would typically send the data to your backend
+      const payload = {
+        content: formData.message.trim(),
+        parent_reply_id: parentReplyId
+      }
+
+      let response
       if (editingComment) {
-        console.log('Updating comment:', { ...formData, id: editingComment.id })
+        response = await axiosInstance.put(`/forum/replies/${editingComment.id}`, {
+          content: formData.message.trim()
+        })
         toast.success('Comment updated successfully!')
       } else {
-        console.log('Creating new reply:', formData)
+        response = await axiosInstance.post(`/forum/discussion/${originalPost.id}/replies`, payload)
         toast.success('Reply added successfully!')
       }
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Call onSuccess callback FIRST
+      if (onSuccess) {
+        onSuccess(response?.data, editingComment ? 'update' : 'create')
+      }
       
-      handleCancel()
+      // Then immediately close modal using setTimeout to ensure state updates
+      setTimeout(() => {
+        onHide()
+      }, 100)
+      
     } catch (error) {
       console.error('Error saving reply:', error)
-      toast.error('Something went wrong. Please try again.')
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Something went wrong. Please try again.'
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
   }
 
   const handleCancel = () => {
-    setFormData({
-      message: ''
-    })
+    // Reset all states
+    setFormData({ message: '' })
     setFormSubmitted(false)
     setLoading(false)
+    setShowDeleteConfirm(false)
     onHide()
   }
 
   const handleDelete = async () => {
+    if (!editingComment) return
+    
     setLoading(true)
     try {
-      // Here you would typically send the delete request to your backend
-      console.log('Deleting comment:', editingComment.id)
+      await axiosInstance.delete(`/forum/replies/${editingComment.id}`)
       toast.success('Comment deleted successfully!')
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Call onSuccess callback FIRST
+      if (onSuccess) {
+        onSuccess(null, 'delete')
+      }
       
-      handleCancel()
+      // Close delete confirmation immediately
+      setShowDeleteConfirm(false)
+      
+      // Then close main modal using setTimeout
+      setTimeout(() => {
+        onHide()
+      }, 100)
+      
     } catch (error) {
       console.error('Error deleting comment:', error)
-      toast.error('Something went wrong. Please try again.')
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Something went wrong. Please try again.'
+      toast.error(errorMessage)
+      setShowDeleteConfirm(false)
     } finally {
       setLoading(false)
-      setShowDeleteConfirm(false)
     }
   }
 
-  // ReactQuill modules configuration
   const quillModules = {
     toolbar: [
       ['bold', 'italic', 'blockquote'],
@@ -123,174 +147,294 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment }) => {
   ]
 
   return (
-    <Modal 
-      show={show} 
-      onHide={handleCancel}
-      className="add-comment-modal"
-      size="lg"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header className="p-4 border-0 mb-3">
-        <Modal.Title 
-          className="d-flex gap-3"
-          style={{ fontSize: '16px', fontWeight: '600', color: '#333', flexDirection: 'column' }}
+    <>
+      <Modal 
+        show={show} 
+        onHide={handleCancel}
+        className="add-comment-modal"
+        size="lg"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header className="p-4 border-0 mb-3">
+          <Modal.Title 
+            className="d-flex gap-3"
+            style={{ fontSize: '16px', fontWeight: '600', color: '#333', flexDirection: 'column' }}
+          >
+            <div 
+              className="d-flex align-items-center justify-content-center"
+              style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: '#E8F4FD',
+                borderRadius: '50%'
+              }}
+            >
+              <img src={messageText} alt="Comment Icon" style={{ width: '20px', height: '20px' }} />
+            </div>
+            {editingComment ? 'Edit Comment' : parentComment ? 'Reply to Comment' : 'Add Comment'}
+          </Modal.Title>
+        </Modal.Header>
+        
+        <Modal.Body className="pb-4">
+          {!editingComment && !parentComment && originalPost && (
+            <div className="mb-4 p-3" style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E9ECEF' }}>
+              <div className="d-flex align-items-start gap-3">
+                <img
+                  src={originalPost.author.avatar}
+                  alt={originalPost.author.name}
+                  style={{
+                    width: '55px',
+                    height: '55px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    padding: '2px',
+                    border: '1px solid #E9ECEF'
+                  }}
+                />
+                <div className="flex-grow-1">
+                  <h6 className="mb-1" style={{ fontWeight: '600', color: '#333', fontSize: '20px' }}>
+                    {originalPost.title}
+                  </h6>
+                  <p className="mb-0" style={{ fontSize: '15px', color: '#666', lineHeight: '1.4' }}>
+                    {originalPost.description && originalPost.description.length > 200 
+                      ? `${originalPost.description.substring(0, 200)}...` 
+                      : originalPost.description
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!editingComment && parentComment && (
+            <div className="mb-4 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #E9ECEF', borderLeft: '4px solid #52C7DE' }}>
+              <div className="d-flex align-items-start gap-3">
+                <img
+                  src={parentComment.author.avatar || 'https://via.placeholder.com/40'}
+                  alt={parentComment.author.name}
+                  style={{
+                    width: '45px',
+                    height: '45px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    padding: '2px',
+                    border: '1px solid #E9ECEF'
+                  }}
+                />
+                <div className="flex-grow-1">
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(100%) saturate(0%)', width: '14px', height: '14px' }} />
+                    <h6 className="mb-0" style={{ fontWeight: '600', color: '#666', fontSize: '14px' }}>
+                      Replying to @{parentComment.author.name}
+                    </h6>
+                  </div>
+                  <p className="mb-0" style={{ fontSize: '14px', color: '#666', lineHeight: '1.4' }}>
+                    {parentComment.content && parentComment.content.length > 150 
+                      ? `${parentComment.content.substring(0, 150)}...` 
+                      : parentComment.content
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {editingComment && (
+            <div className="mb-4 p-3" style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E9ECEF' }}>
+              <div className="d-flex align-items-start gap-3">
+                <img
+                  src={editingComment.author.avatar}
+                  alt={editingComment.author.name}
+                  style={{
+                    width: '55px',
+                    height: '55px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    padding: '2px',
+                    border: '1px solid #E9ECEF'
+                  }}
+                />
+                <div className="flex-grow-1">
+                  <h6 className="mb-1" style={{ fontWeight: '600', color: '#333', fontSize: '16px' }}>
+                    Editing your comment
+                  </h6>
+                  <p className="mb-0" style={{ fontSize: '14px', color: '#666', lineHeight: '1.4' }}>
+                    Original: {editingComment.content && editingComment.content.length > 150 
+                      ? `${editingComment.content.substring(0, 150)}...` 
+                      : editingComment.content
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mb-4">
+            <ReactQuill
+              value={formData.message}
+              onChange={handleMessageChange}
+              className='text-black add-comment-quill'
+              placeholder={
+                editingComment 
+                  ? "Edit your comment..." 
+                  : parentComment 
+                    ? `Reply to @${parentComment.author.name}...`
+                    : "Add your reply..."
+              }
+              modules={quillModules}
+              formats={quillFormats}
+              style={{
+                borderRadius: '8px',
+                minHeight: '200px',
+                border: '1px solid #E9ECEF'
+              }}
+            />
+            {formSubmitted && !formData.message.trim() && (
+              <div className="text-danger mt-2" style={{ fontSize: '12px' }}>
+                Please enter a reply
+              </div>
+            )}
+          </div>
+
+          <div className="d-flex gap-3 mt-4 modal-btn-container" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            {editingComment && (
+              <div 
+                onClick={() => setShowDeleteConfirm(true)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  color: 'black'
+                }}
+              >
+                <FontAwesomeIcon icon={faExclamationTriangle} />
+                Delete comment
+              </div>   
+            )}
+
+            <div className='d-flex gap-3 align-items-center' style={{ marginLeft: 'auto' }}>
+              <Button 
+                variant="outline-secondary"
+                onClick={handleCancel}
+                disabled={loading}
+                style={{
+                  padding: '12px 24px',
+                  fontWeight: '600',
+                  borderRadius: '6px'
+                }}
+              >
+                CANCEL
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={loading}
+                style={{
+                  padding: '12px 24px',
+                  fontWeight: '600',
+                  borderRadius: '6px',
+                  backgroundColor: '#52C7DE',
+                  border: 'none',
+                  color: 'white'
+                }}
+              >
+                {loading ? (
+                  <span className="spinner-border spinner-border-sm me-2" />
+                ) : null}
+                {loading ? (editingComment ? 'UPDATING...' : 'SUBMITTING...') : (editingComment ? 'UPDATE' : 'SUBMIT')}
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      {showDeleteConfirm && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999
+          }}
+          onClick={() => setShowDeleteConfirm(false)}
         >
           <div 
-            className="d-flex align-items-center justify-content-center"
             style={{
-              width: '40px',
-              height: '40px',
-              backgroundColor: '#E8F4FD',
-              borderRadius: '50%'
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'white',
+              padding: '30px',
+              borderRadius: '24px',
+              textAlign: 'center',
+              width: '100%',
+              maxWidth: '748px'
             }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <img src={messageText} alt="Comment Icon" style={{ width: '20px', height: '20px' }} />
-          </div>
-          {editingComment ? 'Edit Comment' : 'Add Comment'}
-        </Modal.Title>
-      </Modal.Header>
-      
-      <Modal.Body className="pb-4">
-        {/* Original Post Display - Only show when adding new comment */}
-        {!editingComment && originalPost && (
-          <div className="mb-4 p-3" style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E9ECEF' }}>
-            <div className="d-flex align-items-start gap-3">
-              <img
-                src={originalPost.author.avatar}
-                alt={originalPost.author.name}
-                style={{
-                  width: '55px',
-                  height: '55px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  padding: '2px',
-                  border: '1px solid #E9ECEF'
-                }}
-              />
-              <div className="flex-grow-1">
-                <h6 className="mb-1" style={{ fontWeight: '600', color: '#333', fontSize: '20px' }}>
-                  {originalPost.title}
-                </h6>
-                <p className="mb-0" style={{ fontSize: '15px', color: '#666', lineHeight: '1.4' }}>
-                  {originalPost.description.length > 200 
-                    ? `${originalPost.description.substring(0, 200)}...` 
-                    : originalPost.description
-                  }
-                </p>
+
+            <div className="w-100 text-start">
+              <div style={{padding: '5px', borderRadius: '50%', backgroundColor: '#E2E6EC', width: '36px', height:'36px', display:'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
               </div>
+              <h5 style={{ margin: '16px 0px', fontSize:'15px' }}>Delete Comment?</h5>
             </div>
-          </div>
-        )}
-
-        {/* Editing Comment Display - Only show when editing */}
-        {editingComment && (
-          <div className="mb-4 p-3" style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E9ECEF' }}>
-            <div className="d-flex align-items-start gap-3">
-              <img
-                src={editingComment.author.avatar}
-                alt={editingComment.author.name}
-                style={{
-                  width: '55px',
-                  height: '55px',
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  padding: '2px',
-                  border: '1px solid #E9ECEF'
+            <p style={{ margin: '30px 0px 55px 0px' }}>
+              Are you sure you want to delete this comment?
+            </p>
+            <div className="d-flex gap-5 justify-content-center">
+              <Button  
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={loading}
+                style={{ 
+                  width: '100%',
+                  backgroundColor: '#DEE1E6', 
+                  boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)', 
+                  padding: '12px 12px',
+                  maxWidth: '250px',
+                  borderRadius: '8px',
+                  fontSize:'17px',
+                  fontWeight: '600',
+                  color:'black',
+                  border:'none'
                 }}
-              />
-              <div className="flex-grow-1">
-                <h6 className="mb-1" style={{ fontWeight: '600', color: '#333', fontSize: '16px' }}>
-                  Editing your comment
-                </h6>
-                <p className="mb-0" style={{ fontSize: '14px', color: '#666', lineHeight: '1.4' }}>
-                  Original: {editingComment.description.length > 150 
-                    ? `${editingComment.description.substring(0, 150)}...` 
-                    : editingComment.description
-                  }
-                </p>
-              </div>
+              >
+                NO, TAKE ME BACK
+              </Button>
+              <Button 
+                variant="danger" 
+                onClick={handleDelete}
+                disabled={loading}
+                style={{ 
+                  width: '100%',
+                  backgroundColor: '#FF3399', 
+                  boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)', 
+                  padding: '12px',
+                  maxWidth: '250px',
+                  borderRadius: '8px',
+                  fontSize:'17px',
+                  fontWeight: '600'
+                }}
+              >
+                {loading ? (
+                  <span className="spinner-border spinner-border-sm me-2" />
+                ) : null}
+                {loading ? 'DELETING...' : 'DELETE COMMENT'}
+              </Button>
             </div>
-          </div>
-        )}
-
-        {/* Message Editor */}
-        <div className="mb-4">
-          <ReactQuill
-            value={formData.message}
-            onChange={handleMessageChange}
-            className='text-black add-comment-quill'
-            placeholder={editingComment ? "Edit your comment..." : "Add your reply..."}
-            modules={quillModules}
-            formats={quillFormats}
-            style={{
-              borderRadius: '8px',
-              minHeight: '200px',
-              border: '1px solid #E9ECEF'
-            }}
-          />
-          {formSubmitted && !formData.message.trim() && (
-            <div className="text-danger mt-2" style={{ fontSize: '12px' }}>
-              Please enter a reply
-            </div>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="d-flex gap-3 mt-4 modal-btn-container" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          {editingComment && (
-            <div 
-              onClick={() => setShowDeleteConfirm(true)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontWeight: '600',
-                fontSize: '14px',
-                cursor: 'pointer',
-                color: 'black'
-              }}
-            >
-              <FontAwesomeIcon icon={faExclamationTriangle} />
-              Delete comment
-            </div>   
-          )}
-
-          <div className='d-flex gap-3 align-items-center' style={{ marginLeft: 'auto' }}>
-            <Button 
-              variant="outline-secondary"
-              onClick={handleCancel}
-              disabled={loading}
-              style={{
-                padding: '12px 24px',
-                fontWeight: '600',
-                borderRadius: '6px'
-              }}
-            >
-              CANCEL
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              disabled={loading}
-              style={{
-                padding: '12px 24px',
-                fontWeight: '600',
-                borderRadius: '6px',
-                backgroundColor: '#52C7DE',
-                border: 'none',
-                color: 'white'
-              }}
-            >
-              {loading ? (
-                <span className="spinner-border spinner-border-sm me-2" />
-              ) : null}
-              {loading ? (editingComment ? 'UPDATING...' : 'SUBMITTING...') : (editingComment ? 'UPDATE' : 'SUBMIT')}
-            </Button>
           </div>
         </div>
-      </Modal.Body>
-    </Modal>
+      )}
+    </>
   )
 }
 

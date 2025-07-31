@@ -7,7 +7,6 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import axiosInstance from '../../utils/AxiosInstance'
 
-// Import category icons
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
 import partyPopper from '../../assets/images/academy-icons/svg/Party Popper.svg'
@@ -24,11 +23,10 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     title: '',
     description: '',
     content: '',
-    category: '', // Changed from category_id to category
+    category: '', 
     selectedCategory: ''
   })
 
-  // Categories with their display information (no IDs needed)
   const categories = [
     {
       name: 'Introductions',
@@ -57,18 +55,16 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     }
   ]
 
-  // Pre-fill form when editing
   useEffect(() => {
     if (editingPost) {
       setFormData({
         title: editingPost.title || '',
         description: editingPost.description || '',
         content: editingPost.content || editingPost.description || '',
-        category: editingPost.category || '', // Use category name directly
+        category: editingPost.category || '', 
         selectedCategory: editingPost.category || ''
       })
     } else {
-      // Reset form for new discussion
       setFormData({
         title: '',
         description: '',
@@ -84,7 +80,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     setFormData(prevState => ({
       ...prevState,
       [name]: value,
-      // If title changes, also update description for backward compatibility
       ...(name === 'title' && { description: value })
     }))
   }
@@ -93,7 +88,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     setFormData(prevState => ({
       ...prevState,
       selectedCategory: categoryName,
-      category: categoryName // Set the actual category name
+      category: categoryName
     }))
   }
 
@@ -101,7 +96,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     setFormData(prevState => ({
       ...prevState,
       content: content,
-      // Also update description if content is being used as the main text
       description: prevState.description || content
     }))
   }
@@ -132,11 +126,9 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
 
       let response
       if (editingPost) {
-        // Update existing discussion - use the correct endpoint
         response = await axiosInstance.put(`/forum/${editingPost.id}`, payload)
         toast.success('Discussion updated successfully!')
       } else {
-        // Create new discussion
         response = await axiosInstance.post('/forum', {
           ...payload,
           description: formData.description.trim() || formData.title.trim(),
@@ -145,7 +137,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
         toast.success('Discussion created successfully!')
       }
 
-      // Call onSuccess callback to refresh the discussions list
       if (onSuccess) {
         onSuccess(response.data)
       }
@@ -177,11 +168,9 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
   const handleDelete = async () => {
     setLoading(true)
     try {
-      // Use the correct delete endpoint
       await axiosInstance.delete(`/forum/${editingPost.id}`)
       toast.success('Discussion deleted successfully!')
       
-      // Call onSuccess callback to refresh the discussions list
       if (onSuccess) {
         onSuccess(null, 'delete')
       }
@@ -197,7 +186,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     }
   }
 
-  // ReactQuill modules configuration
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -290,7 +278,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
             )}
           </div>
 
-          {/* Subject Line */}
           <div className="mb-3">
             <div 
               className="d-flex align-items-center gap-2"
@@ -327,7 +314,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
             )}
           </div>
 
-          {/* Message Editor */}
           <div className="mb-4">
             <ReactQuill
               value={formData.content}
@@ -349,7 +335,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
             )}
           </div>
 
-          {/* Action Buttons */}
           <div className="d-flex gap-3 mt-4 modal-btn-container" style={{ alignItems: 'center', justifyContent: editingPost ? 'space-between' : 'end' }}>
             {editingPost && (
               <div 
@@ -388,7 +373,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
         </Modal.Body>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div 
           style={{

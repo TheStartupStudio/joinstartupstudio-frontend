@@ -332,7 +332,24 @@ const StartupForumPage = () => {
                   
                   return (
                     <div key={post.id} className="forum-post"
-                      onClick={() => history.push(`/startup-forum/${post.id}`)}
+                      onClick={() => {
+                        history.push(`/startup-forum/${post.id}`, {
+                          discussionData: {
+                            id: post.id,
+                            category: post.category,
+                            isNew: post.isNew,
+                            title: post.title,
+                            description: post.description,
+                            author: {
+                              name: post.author.name,
+                              avatar: post.author.avatar
+                            },
+                            date: post.date,
+                            comments: post.comments,
+                            participants: post.participants || []
+                          }
+                        })
+                      }}
                     >
                       <div className="post-avatar-container">
                         <img
@@ -384,7 +401,6 @@ const StartupForumPage = () => {
                               className="participant-avatar"
                             />
                           ))}
-                          {/* Only show edit button if current user is the author - with better checking */}
                           {currentUser && 
                            post.author && 
                            currentUser.id && 
