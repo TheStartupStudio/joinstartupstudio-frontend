@@ -291,9 +291,18 @@
   line-height: 1.5;
   font-family: 'Montserrat', sans-serif;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.forum-page .comment-description{
+  display: block;
+}
+
+
+.forum-page .post-description img{
+  width: 100%;
 }
 
 .forum-page .post-right-section{

@@ -3,7 +3,7 @@ import { useLocation, useHistory, useParams } from 'react-router-dom'
 import './ForumPage.css'
 import IntlMessages from '../../utils/IntlMessages'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, triangle} from '@fortawesome/free-solid-svg-icons'
@@ -24,6 +24,7 @@ import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
 import AcademyBtn from '../../components/AcademyBtn'
 import AddCommentModal from './AddCommentModal'
+import StartNewDiscussionModal from './StartNewDiscussionModal'
 
 const ForumPostSkeleton = () => {
   return (
@@ -189,11 +190,16 @@ const CommentSection = () => {
   const history = useHistory()
   const { id } = useParams()
   
+  const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
+  
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
   const [showAddCommentModal, setShowAddCommentModal] = useState(false)
   const [editingComment, setEditingComment] = useState(null)
+  
+  const [showDiscussionModal, setShowDiscussionModal] = useState(false)
+  const [editingPost, setEditingPost] = useState(null)
   
   const [loading, setLoading] = useState(true)
   const [forumData, setForumData] = useState([])
@@ -210,27 +216,32 @@ const CommentSection = () => {
     
     setLoading(true)
     try {
-      if (!location.state?.discussionData) {
-        const response = await axiosInstance.get(`/forum/discussion/${id}`)
-        
-        if (response.data) {
-          const formattedData = {
-            id: response.data.id,
-            category: response.data.category,
-            isNew: response.data.is_new,
-            title: response.data.title,
-            description: response.data.description || response.data.content,
-            author: {
-              name: response.data.author?.username || response.data.author?.name,
-              avatar: response.data.author?.profile_image || 'https://via.placeholder.com/40'
-            },
-            date: new Date(response.data.created_at).toLocaleDateString('en-US'),
-            comments: response.data.reply_count || 0,
-            participants: []
-          }
-          
-          setForumData([formattedData])
+      const response = await axiosInstance.get(`/forum/discussion/${id}`)
+      
+      if (response.data) {
+        // The API now returns the exact format we need
+        const formattedData = {
+          id: response.data.id,
+          category: response.data.category,
+          isNew: response.data.isNew,
+          title: response.data.title,
+          description: response.data.description,
+          content: response.data.content, // Full content for single discussion view
+          author: {
+            id: response.data.author?.id,
+            name: response.data.author?.name,
+            avatar: response.data.author?.avatar || 'https://via.placeholder.com/40'
+          },
+          date: response.data.date,
+          comments: response.data.comments || 0,
+          participants: response.data.participants || [],
+          viewCount: response.data.viewCount,
+          isPinned: response.data.isPinned,
+          lastReplyAt: response.data.lastReplyAt,
+          lastReplyUser: response.data.lastReplyUser
         }
+        
+        setForumData([formattedData])
       }
     } catch (error) {
       console.error('Error fetching discussion:', error)
@@ -241,7 +252,7 @@ const CommentSection = () => {
   }
 
   fetchDiscussionData()
-}, [id, history, location.state])
+}, [id, history])
 
   useEffect(() => {
     if (location.state?.discussionData) {
@@ -427,7 +438,20 @@ const CommentSection = () => {
                 </h4>
               </div>
               
-              <p className="post-description">{comment.content}</p>
+              {/* Use dangerouslySetInnerHTML for comment content as well */}
+              <div 
+                className="post-description comment-description"
+                  style={{
+                  wordBreak: 'break-word',
+                  overflowWrap: 'anywhere',
+                  whiteSpace: 'normal',
+                  hyphens: 'auto',
+                  maxWidth: '100%'
+                }}
+                dangerouslySetInnerHTML={{ 
+                  __html: comment.content 
+                }}
+              />
             </div>
           </div>
 
@@ -489,6 +513,52 @@ const CommentSection = () => {
     }
   }
 
+  const handleEditPost = (post, event) => {
+    event.stopPropagation()
+    setEditingPost(post)
+    setShowDiscussionModal(true)
+  }
+
+  const toggleDiscussionModal = () => {
+    setShowDiscussionModal(prev => !prev)
+    if (showDiscussionModal) {
+      setEditingPost(null)
+    }
+  }
+
+  const handleDiscussionSuccess = (discussion, action = 'update') => {
+    if (action === 'delete') {
+      history.push('/startup-forum')
+    } else if (action === 'update') {
+      // Update with the new API format while preserving existing data
+      setForumData(prevData => 
+        prevData.map(post => 
+          post.id === discussion.id 
+            ? { 
+                ...post, 
+                title: discussion.title || post.title,
+                description: discussion.description || post.description,
+                content: discussion.content || post.content,
+                category: discussion.category || post.category,
+                // Preserve other fields from the original API response
+                author: post.author, // Keep original author data
+                date: post.date, // Keep original date
+                comments: post.comments, // Keep original comment count
+                participants: post.participants, // Keep original participants
+                viewCount: post.viewCount,
+                isPinned: post.isPinned,
+                lastReplyAt: post.lastReplyAt,
+                lastReplyUser: post.lastReplyUser
+              } 
+            : post
+        )
+      )
+    }
+    
+    setEditingPost(null)
+    setShowDiscussionModal(false)
+  }
+
   return (
     <>
       <SkeletonStyles />
@@ -544,10 +614,23 @@ const CommentSection = () => {
 
                       <div className="post-content">
                         <h4 className="post-title">{post.title}</h4>
-                        <p className="post-description">{post.description}</p>
+                        {/* Use dangerouslySetInnerHTML to render HTML content properly */}
+                        <div 
+                          className="post-description comment-description"
+                          style={{
+                          wordBreak: 'break-word',
+                          overflowWrap: 'anywhere',
+                          whiteSpace: 'normal',
+                          hyphens: 'auto',
+                          maxWidth: '100%'
+                          }}
+                          dangerouslySetInnerHTML={{ 
+                            __html: post.content || post.description 
+                          }}
+                        />
                       </div>
 
-                      <div className='d-flex flex-column gap-2 justify-content-end'>
+                      <div className='d-flex flex-column gap-2'>
                         <div className='post-comments-count'>
                           <img src={star} alt="Star Icon" style={{ filter: 'brightness(0) saturate(100%)', width: '16px', height: '16px' }} />
                           <span className="post-date-paragraph">Follow discussions</span>
@@ -562,8 +645,21 @@ const CommentSection = () => {
                               className="participant-avatar"
                             />
                           ))}
-                          {post.participants && post.participants.length > 4 && (
-                            <div className="participant-more"><img src={threeDots} alt="More Participants" /></div>
+                          {/* Show edit option if user is the post author */}
+                          {currentUser && 
+                           post.author && 
+                           currentUser.id && 
+                           post.author.id && 
+                           parseInt(currentUser.id) === parseInt(post.author.id) ? (
+                            <div className="participant-more" onClick={(e) => handleEditPost(post, e)}>
+                              <img src={threeDots} alt="Edit Post" />
+                            </div>
+                          ) : (
+                            post.participants && post.participants.length > 4 && (
+                              <div className="participant-more">
+                                <img src={threeDots} alt="More Participants" />
+                              </div>
+                            )
                           )}
                         </div>
                         
@@ -571,6 +667,14 @@ const CommentSection = () => {
                           <img src={chatBubble} alt="Comments Icon" className="comments-icon" />
                           <span className="post-date-paragraph">{post.comments} comments</span>
                         </div>
+                        
+                        
+                        {post.isPinned && (
+                          <div className="post-comments-count">
+                            <img src={pin} alt="Pinned Icon" style={{ width: '16px', height: '16px' }} />
+                            <span className="post-date-paragraph">Pinned</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -661,6 +765,13 @@ const CommentSection = () => {
         onSuccess={handleReplySuccess}
         parentReplyId={parentReplyId}
         parentComment={parentComment}
+      />
+
+      <StartNewDiscussionModal 
+        show={showDiscussionModal}
+        onHide={toggleDiscussionModal}
+        editingPost={editingPost}
+        onSuccess={handleDiscussionSuccess}
       />
     </>
   )

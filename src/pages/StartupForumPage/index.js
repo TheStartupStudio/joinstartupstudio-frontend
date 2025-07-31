@@ -63,7 +63,7 @@ const StartupForumPage = () => {
     try {
       const params = {
         page,
-        limit: 3,
+        limit: 10,
         sort,
         order
       }
@@ -333,22 +333,7 @@ const StartupForumPage = () => {
                   return (
                     <div key={post.id} className="forum-post"
                       onClick={() => {
-                        history.push(`/startup-forum/${post.id}`, {
-                          discussionData: {
-                            id: post.id,
-                            category: post.category,
-                            isNew: post.isNew,
-                            title: post.title,
-                            description: post.description,
-                            author: {
-                              name: post.author.name,
-                              avatar: post.author.avatar
-                            },
-                            date: post.date,
-                            comments: post.comments,
-                            participants: post.participants || []
-                          }
-                        })
+                        history.push(`/startup-forum/${post.id}`)
                       }}
                     >
                       <div className="post-avatar-container">
@@ -388,7 +373,20 @@ const StartupForumPage = () => {
                           </div>
                         </div>
 
-                        <p className="post-description">{post.description}</p>
+
+                        <div 
+                          className="post-description"
+                          style={{
+                            wordBreak: 'break-word',
+                            overflowWrap: 'anywhere',
+                            whiteSpace: 'normal',
+                            hyphens: 'auto',
+                            maxWidth: '100%'
+                          }}
+                          dangerouslySetInnerHTML={{ 
+                            __html: post.description 
+                          }}
+                        />
                       </div>
 
                       <div className='d-flex flex-column gap-2 justify-content-end'>

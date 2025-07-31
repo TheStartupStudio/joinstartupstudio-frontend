@@ -197,12 +197,24 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
                   <h6 className="mb-1" style={{ fontWeight: '600', color: '#333', fontSize: '20px' }}>
                     {originalPost.title}
                   </h6>
-                  <p className="mb-0" style={{ fontSize: '15px', color: '#666', lineHeight: '1.4' }}>
-                    {originalPost.description && originalPost.description.length > 200 
-                      ? `${originalPost.description.substring(0, 200)}...` 
-                      : originalPost.description
-                    }
-                  </p>
+                  <div 
+                    className="mb-0" 
+                    style={{ 
+                      fontSize: '15px', 
+                      color: '#666', 
+                      lineHeight: '1.4',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'anywhere',
+                      whiteSpace: 'normal',
+                      hyphens: 'auto',
+                      maxWidth: '100%'
+                    }}
+                    dangerouslySetInnerHTML={{ 
+                      __html: originalPost.content && originalPost.content.length > 200 
+                        ? `${originalPost.content.substring(0, 200)}...` 
+                        : originalPost.content
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -230,12 +242,24 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
                       Replying to @{parentComment.author.name}
                     </h6>
                   </div>
-                  <p className="mb-0" style={{ fontSize: '14px', color: '#666', lineHeight: '1.4' }}>
-                    {parentComment.content && parentComment.content.length > 150 
-                      ? `${parentComment.content.substring(0, 150)}...` 
-                      : parentComment.content
-                    }
-                  </p>
+                  <div 
+                    className="mb-0" 
+                    style={{ 
+                      fontSize: '14px', 
+                      color: '#666', 
+                      lineHeight: '1.4',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'anywhere',
+                      whiteSpace: 'normal',
+                      hyphens: 'auto',
+                      maxWidth: '100%'
+                    }}
+                    dangerouslySetInnerHTML={{ 
+                      __html: parentComment.content && parentComment.content.length > 150 
+                        ? `${parentComment.content.substring(0, 150)}...` 
+                        : parentComment.content
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -260,12 +284,28 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
                   <h6 className="mb-1" style={{ fontWeight: '600', color: '#333', fontSize: '16px' }}>
                     Editing your comment
                   </h6>
-                  <p className="mb-0" style={{ fontSize: '14px', color: '#666', lineHeight: '1.4' }}>
-                    Original: {editingComment.content && editingComment.content.length > 150 
-                      ? `${editingComment.content.substring(0, 150)}...` 
-                      : editingComment.content
-                    }
-                  </p>
+                  <div className="d-flex align-items-start gap-2">
+                    <span style={{ fontSize: '14px', color: '#666', fontWeight: '500' }}>Original:</span>
+                    <div 
+                      className="mb-0" 
+                      style={{ 
+                        fontSize: '14px', 
+                        color: '#666', 
+                        lineHeight: '1.4',
+                        wordBreak: 'break-word',
+                        overflowWrap: 'anywhere',
+                        whiteSpace: 'normal',
+                        hyphens: 'auto',
+                        maxWidth: '100%',
+                        flex: 1
+                      }}
+                      dangerouslySetInnerHTML={{ 
+                        __html: editingComment.content && editingComment.content.length > 150 
+                          ? `${editingComment.content.substring(0, 150)}...` 
+                          : editingComment.content
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
