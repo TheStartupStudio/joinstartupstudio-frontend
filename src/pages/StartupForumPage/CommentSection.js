@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { useLocation, useHistory, useParams } from 'react-router-dom'
 import './ForumPage.css'
 import IntlMessages from '../../utils/IntlMessages'
@@ -8,6 +8,7 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, triangle} from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
@@ -209,50 +210,56 @@ const CommentSection = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [parentReplyId, setParentReplyId] = useState(null)
   const [parentComment, setParentComment] = useState(null) 
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
+  const headerRef = useRef(null)
 
   useEffect(() => {
     const fetchDiscussionData = async () => {
       if (!id) return
-    
-    setLoading(true)
-    try {
-      const response = await axiosInstance.get(`/forum/discussion/${id}`)
-      
-      if (response.data) {
-        // The API now returns the exact format we need
-        const formattedData = {
-          id: response.data.id,
-          category: response.data.category,
-          isNew: response.data.isNew,
-          title: response.data.title,
-          description: response.data.description,
-          content: response.data.content, // Full content for single discussion view
-          author: {
-            id: response.data.author?.id,
-            name: response.data.author?.name,
-            avatar: response.data.author?.avatar || 'https://via.placeholder.com/40'
-          },
-          date: response.data.date,
-          comments: response.data.comments || 0,
-          participants: response.data.participants || [],
-          viewCount: response.data.viewCount,
-          isPinned: response.data.isPinned,
-          lastReplyAt: response.data.lastReplyAt,
-          lastReplyUser: response.data.lastReplyUser
-        }
-        
-        setForumData([formattedData])
-      }
-    } catch (error) {
-      console.error('Error fetching discussion:', error)
-      history.push('/startup-forum')
-    } finally {
-      setLoading(false)
-    }
-  }
 
-  fetchDiscussionData()
-}, [id, history])
+      setLoading(true)
+      try {
+        const response = await axiosInstance.get(`/forum/discussion/${id}`)
+        if (response.data) {
+          // The API now returns the exact format we need
+          const formattedData = {
+            id: response.data.id,
+            category: response.data.category,
+            isNew: response.data.isNew,
+            title: response.data.title,
+            description: response.data.description,
+            content: response.data.content, // Full content for single discussion view
+            author: {
+              id: response.data.author?.id,
+              name: response.data.author?.name,
+              avatar: response.data.author?.avatar || 'https://via.placeholder.com/40'
+            },
+            date: response.data.date,
+            comments: response.data.comments || 0,
+            participants: response.data.participants || [],
+            viewCount: response.data.viewCount,
+            isPinned: response.data.isPinned,
+            lastReplyAt: response.data.lastReplyAt,
+            lastReplyUser: response.data.lastReplyUser
+          }
+          
+          setForumData([formattedData])
+          // Use ref to scroll to header after data is set
+          setTimeout(() => {
+            headerRef.current?.scrollIntoView({ behavior: 'instant' })
+          }, 0)
+        }
+      } catch (error) {
+        console.error('Error fetching discussion:', error)
+        history.push('/startup-forum')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDiscussionData()
+  }, [id, history])
 
   useEffect(() => {
     if (location.state?.discussionData) {
@@ -291,7 +298,46 @@ const CommentSection = () => {
     }
   }, [loading, forumData])
 
-  
+  const checkFollowStatus = async (discussionId) => {
+    try {
+      const response = await axiosInstance.get(`/forum/discussion/${discussionId}/follow-status`)
+      setIsFollowing(response.data.isFollowing)
+    } catch (error) {
+      console.error('Error checking follow status:', error)
+    }
+  }
+
+  const handleFollowDiscussion = async () => {
+    if (!forumData.length || followLoading) return
+    
+    setFollowLoading(true)
+    try {
+      const discussionId = forumData[0].id
+      
+      if (isFollowing) {
+        // Unfollow
+        await axiosInstance.delete(`/forum/discussion/${discussionId}/follow`)
+        setIsFollowing(false)
+        toast.success('Successfully unfollowed discussion')
+      } else {
+        // Follow
+        await axiosInstance.post(`/forum/discussion/${discussionId}/follow`)
+        setIsFollowing(true)
+        toast.success('Successfully followed discussion')
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 'Something went wrong'
+      toast.error(errorMessage)
+    } finally {
+      setFollowLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (forumData.length > 0) {
+      checkFollowStatus(forumData[0].id)
+    }
+  }, [forumData])
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)
@@ -562,7 +608,7 @@ const CommentSection = () => {
   return (
     <>
       <SkeletonStyles />
-      <div className='d-flex space-between align-items-center'>
+      <div ref={headerRef} className='d-flex space-between align-items-center'>
         <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
              <div>
@@ -609,7 +655,15 @@ const CommentSection = () => {
                           alt={post.author.name}
                           className="post-avatar"
                         />
-                        {post.isNew && <div className="new-indicator"><img src={pin} alt="Pin Icon" /></div>}
+                        {currentUser && 
+                         post.author && 
+                         currentUser.id && 
+                         post.author.id && 
+                         parseInt(currentUser.id) === parseInt(post.author.id) && (
+                          <div className="new-indicator">
+                            <img src={star} alt="Your Post" style={{ width: '16px', height: '16px', filter: 'invert(1) brightness(1000%)' }} />
+                          </div>
+                        )}
                       </div>
 
                       <div className="post-content">
@@ -631,9 +685,36 @@ const CommentSection = () => {
                       </div>
 
                       <div className='d-flex flex-column gap-2'>
-                        <div className='post-comments-count'>
-                          <img src={star} alt="Star Icon" style={{ filter: 'brightness(0) saturate(100%)', width: '16px', height: '16px' }} />
-                          <span className="post-date-paragraph">Follow discussions</span>
+                        <div 
+                          className='post-comments-count cursor-pointer'
+                          onClick={handleFollowDiscussion}
+                          style={{ 
+                            opacity: followLoading ? 0.6 : 1,
+                            pointerEvents: followLoading ? 'none' : 'auto'
+                          }}
+                        >
+                          <img 
+                            src={star} 
+                            alt="Star Icon" 
+                            style={{ 
+                              filter: isFollowing 
+                                ? 'brightness(0) saturate(100%) invert(47%) sepia(68%) saturate(478%) hue-rotate(166deg) brightness(94%) contrast(89%)' // Blue filter
+                                : 'brightness(0) saturate(100%)', // Default black
+                              width: '16px', 
+                              height: '16px' 
+                            }} 
+                          />
+                          <span 
+                            className="post-date-paragraph"
+                            style={{ 
+                              color: isFollowing ? '#52C7DE' : 'inherit' // Blue color when following
+                            }}
+                          >
+                            {followLoading 
+                              ? (isFollowing ? 'Unfollowing...' : 'Following...')
+                              : (isFollowing ? 'Following discussion' : 'Follow discussion')
+                            }
+                          </span>
                         </div>
 
                         <div className="post-right-section">
@@ -669,12 +750,12 @@ const CommentSection = () => {
                         </div>
                         
                         
-                        {post.isPinned && (
+                        {/* {post.isPinned && (
                           <div className="post-comments-count">
                             <img src={pin} alt="Pinned Icon" style={{ width: '16px', height: '16px' }} />
                             <span className="post-date-paragraph">Pinned</span>
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
 

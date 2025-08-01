@@ -13,6 +13,8 @@ import partyPopper from '../../assets/images/academy-icons/svg/Party Popper.svg'
 import loudSpeaker from '../../assets/images/academy-icons/svg/Loudspeaker.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
+import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
+
 
 const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
   const [loading, setLoading] = useState(false)
@@ -391,40 +393,64 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
         >
           <div 
             style={{
+              display: 'flex',
+              flexDirection: 'column',
               backgroundColor: 'white',
               padding: '30px',
-              borderRadius: '12px',
-              maxWidth: '400px',
-              textAlign: 'center'
+              borderRadius: '24px',
+              textAlign: 'center',
+              width: '100%',
+              maxWidth: '748px'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <FontAwesomeIcon 
-              icon={faExclamationTriangle} 
-              style={{ fontSize: '24px', color: '#FF3399', marginBottom: '16px' }}
-            />
-            <h5 style={{ marginBottom: '16px' }}>Delete Discussion?</h5>
-            <p style={{ marginBottom: '24px', color: '#666' }}>
+            <div className="w-100 text-start">
+              <div style={{padding: '5px', borderRadius: '50%', backgroundColor: '#E2E6EC', width: '36px', height:'36px', display:'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
+              </div>
+              <h5 style={{ margin: '16px 0px', fontSize:'15px' }}>Delete Discussion?</h5>
+            </div>
+            <p style={{ margin: '30px 0px 55px 0px' }}>
               Are you sure you want to delete this discussion? This action cannot be undone.
             </p>
-            <div className="d-flex gap-3 justify-content-center">
-              <Button 
-                variant="secondary" 
+            <div className="d-flex gap-5 justify-content-center">
+              <Button  
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={loading}
+                style={{ 
+                  width: '100%',
+                  backgroundColor: '#DEE1E6', 
+                  boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)', 
+                  padding: '12px 12px',
+                  maxWidth: '250px',
+                  borderRadius: '8px',
+                  fontSize:'17px',
+                  fontWeight: '600',
+                  color:'black',
+                  border:'none'
+                }}
               >
-                CANCEL
+                NO, TAKE ME BACK
               </Button>
               <Button 
                 variant="danger" 
                 onClick={handleDelete}
                 disabled={loading}
-                style={{ backgroundColor: '#FF3399', borderColor: '#FF3399' }}
+                style={{ 
+                  width: '100%',
+                  backgroundColor: '#FF3399', 
+                  boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)', 
+                  padding: '12px',
+                  maxWidth: '250px',
+                  borderRadius: '8px',
+                  fontSize:'17px',
+                  fontWeight: '600'
+                }}
               >
                 {loading ? (
                   <span className="spinner-border spinner-border-sm me-2" />
                 ) : null}
-                {loading ? 'DELETING...' : 'DELETE'}
+                {loading ? 'DELETING...' : 'DELETE DISCUSSION'}
               </Button>
             </div>
           </div>

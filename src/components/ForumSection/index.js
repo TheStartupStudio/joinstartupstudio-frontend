@@ -100,7 +100,7 @@ const ForumSection = () => {
                   alt={post.author.name}
                   className="post-avatar"
                 />
-                {post.isNew && <div className="new-indicator"><img src={pin} alt="Pin Icon" /></div>}
+                {/* {post.isNew && <div className="new-indicator"><img src={pin} alt="Pin Icon" /></div>} */}
               </div>
               
               <div className="post-content">

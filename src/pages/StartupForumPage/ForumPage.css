@@ -300,11 +300,6 @@
   display: block;
 }
 
-
-.forum-page .post-description img{
-  width: 100%;
-}
-
 .forum-page .post-right-section{
   display: flex;
   align-items: center;
@@ -328,11 +323,11 @@
   margin-left: 0;
 }
 
-.forum-page .participant-avatar:hover {
+/* .forum-page .participant-avatar:hover {
   z-index: 10;
   transform: scale(1.1);
   transition: all 0.2s ease;
-}
+} */
 
 .forum-page .participant-more {
   width: 42px;
@@ -348,6 +343,13 @@
   color: #6b7280;
   margin-left: -17px;
   z-index: 1;
+  cursor: pointer;
+}
+
+.forum-page .participant-more:hover {
+  z-index: 10;
+  transform: scale(1.1);
+  transition: all 0.2s ease;
 }
 
 .forum-page .post-comments-count{
@@ -360,6 +362,20 @@
   font-size: 12px;
   font-weight: 600;
   font-family: 'Montserrat', sans-serif;
+}
+
+/* Add these styles to your CSS file */
+.post-comments-count.cursor-pointer {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.post-comments-count.cursor-pointer:hover {
+  opacity: 0.8;
+}
+
+.post-comments-count.cursor-pointer:hover .post-date-paragraph {
+  text-decoration: underline;
 }
 
 .forum-page .category-item img{
@@ -410,6 +426,10 @@
   background-color: #e5e7eb;
 }
 
+.forum-page .post-description p{
+  margin-bottom: 0;
+}
+
 /* Responsive adjustments for nested comments */
 @media (max-width: 768px) {
   .forum-page .forum-posts-comment-section > div {
@@ -432,6 +452,10 @@
   gap: 16px;
   border-radius: 12px;
   position: relative;
+}
+
+.forum-page .post-description img{
+  width: 100%;
 }
 }
 

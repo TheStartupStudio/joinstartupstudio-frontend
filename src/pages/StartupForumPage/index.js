@@ -74,13 +74,14 @@ const StartupForumPage = () => {
 
       let endpoint = '/forum'
       
-      if (category && category !== 'All Discussions' && category !== 'Following') {
+      if (category && category !== 'All Discussions') {
         const categoryMapping = {
           'Introductions': 'introductions',
           'Announcements': 'announcements',
           'Celebrations': 'celebrations',
           'Ideas & Feedback': 'ideas-feedback',
-          'Misc. Topics': 'misc-topics'
+          'Misc. Topics': 'misc-topics',
+          'Following' : 'following'
         }
         
         const urlCategory = categoryMapping[category]
@@ -342,7 +343,16 @@ const StartupForumPage = () => {
                           alt={post.author.name}
                           className="post-avatar"
                         />
-                        {post.isNew && <div className="new-indicator"><img src={pin} alt="Pin Icon" /></div>}
+                        {/* Show star indicator if user owns the post */}
+                        {currentUser && 
+                         post.author && 
+                         currentUser.id && 
+                         post.author.id && 
+                         parseInt(currentUser.id) === parseInt(post.author.id) && (
+                          <div className="new-indicator">
+                            <img src={star} alt="Your Post" style={{ width: '16px', height: '16px', filter: 'invert(1) brightness(1000%)' }} />
+                          </div>
+                        )}
                       </div>
 
                       <div className="post-content">
@@ -369,7 +379,9 @@ const StartupForumPage = () => {
                           </div>
                           <div className='d-flex align-items-center gap-2 justify-content-center'>
                             <img src={reply} alt="Reply Icon" />
-                            <p className='mb-0 pb-0 post-date-paragraph'>Latest reply from <span>@{post.author.name}</span></p>
+                            <p className='mb-0 pb-0 post-date-paragraph'>
+                              Latest reply from <span>@{post.latestReplyFrom}</span>
+                            </p>
                           </div>
                         </div>
 
