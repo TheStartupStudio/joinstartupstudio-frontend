@@ -64,15 +64,6 @@ export default function Footer(props) {
                 </li>
                 <li>
                   <a
-                    href='https://discord.gg/gRxhq7ZE'
-                    rel='noreferrer'
-                    target='_blank'
-                  >
-                    <img src={discordLogo} alt='discord' />
-                  </a>
-                </li>
-                <li>
-                  <a
                     href='https://www.instagram.com/thestartupstudio/'
                     rel='noreferrer'
                     target='_blank'

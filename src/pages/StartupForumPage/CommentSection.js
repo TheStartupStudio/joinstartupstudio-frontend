@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation, useHistory } from 'react-router-dom'
+import React, { useRef, useEffect, useState } from 'react'
+import { useLocation, useHistory, useParams } from 'react-router-dom'
 import './ForumPage.css'
 import IntlMessages from '../../utils/IntlMessages'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, triangle} from '@fortawesome/free-solid-svg-icons'
+import axiosInstance from '../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
@@ -23,97 +25,323 @@ import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
 import AcademyBtn from '../../components/AcademyBtn'
 import AddCommentModal from './AddCommentModal'
+import StartNewDiscussionModal from './StartNewDiscussionModal'
+
+const ForumPostSkeleton = () => {
+  return (
+    <div className="main-comment-card-container" style={{ width: '100%' }}>
+      <div className="forum-post-main">
+        <div className="post-avatar-container">
+          <div 
+            className="skeleton-avatar"
+            style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              backgroundColor: '#e5e7eb',
+              animation: 'skeleton-loading 1.5s infinite ease-in-out'
+            }}
+          />
+        </div>
+
+        <div className="post-content" style={{ flex: 1 }}>
+          <div 
+            className="skeleton-title"
+            style={{
+              height: '24px',
+              backgroundColor: '#e5e7eb',
+              borderRadius: '4px',
+              marginBottom: '12px',
+              width: '70%',
+              animation: 'skeleton-loading 1.5s infinite ease-in-out'
+            }}
+          />
+          
+          <div 
+            className="skeleton-description"
+            style={{
+              height: '16px',
+              backgroundColor: '#e5e7eb',
+              borderRadius: '4px',
+              marginBottom: '8px',
+              width: '100%',
+              animation: 'skeleton-loading 1.5s infinite ease-in-out'
+            }}
+          />
+          <div 
+            className="skeleton-description"
+            style={{
+              height: '16px',
+              backgroundColor: '#e5e7eb',
+              borderRadius: '4px',
+              marginBottom: '8px',
+              width: '85%',
+              animation: 'skeleton-loading 1.5s infinite ease-in-out'
+            }}
+          />
+        </div>
+
+        <div className='d-flex flex-column gap-2 justify-content-end'>
+          <div className='d-flex align-items-center justify-content-end gap-2'>
+            <div 
+              style={{
+                width: '16px',
+                height: '16px',
+                backgroundColor: '#e5e7eb',
+                borderRadius: '2px',
+                animation: 'skeleton-loading 1.5s infinite ease-in-out'
+              }}
+            />
+            <div 
+              style={{
+                width: '120px',
+                height: '14px',
+                backgroundColor: '#e5e7eb',
+                borderRadius: '4px',
+                animation: 'skeleton-loading 1.5s infinite ease-in-out'
+              }}
+            />
+          </div>
+
+          <div className="post-right-section">
+            {[1, 2, 3].map((_, idx) => (
+              <div
+                key={idx}
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  backgroundColor: '#e5e7eb',
+                  marginLeft: idx > 0 ? '-15px' : '0',
+                  border: '3px solid white',
+                  animation: 'skeleton-loading 1.5s infinite ease-in-out'
+                }}
+              />
+            ))}
+          </div>
+          
+          <div className='d-flex align-items-center justify-content-end gap-2'>
+            <div 
+              style={{
+                width: '16px',
+                height: '16px',
+                backgroundColor: '#e5e7eb',
+                borderRadius: '2px',
+                animation: 'skeleton-loading 1.5s infinite ease-in-out'
+              }}
+            />
+            <div 
+              style={{
+                width: '80px',
+                height: '14px',
+                backgroundColor: '#e5e7eb',
+                borderRadius: '4px',
+                animation: 'skeleton-loading 1.5s infinite ease-in-out'
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className='d-flex align-items-center justify-content-end gap-2 mt-3'>
+        <div 
+          style={{
+            width: '20px',
+            height: '20px',
+            backgroundColor: '#e5e7eb',
+            borderRadius: '2px',
+            animation: 'skeleton-loading 1.5s infinite ease-in-out'
+          }}
+        />
+        <div 
+          style={{
+            width: '100px',
+            height: '16px',
+            backgroundColor: '#e5e7eb',
+            borderRadius: '4px',
+            animation: 'skeleton-loading 1.5s infinite ease-in-out'
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+const SkeletonStyles = () => (
+  <style>
+    {`
+      @keyframes skeleton-loading {
+        0% {
+          background-color: #e5e7eb;
+        }
+        50% {
+          background-color: #f3f4f6;
+        }
+        100% {
+          background-color: #e5e7eb;
+        }
+      }
+    `}
+  </style>
+)
 
 const CommentSection = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
+  const { id } = useParams()
+  
+  const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
+  
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
   const [showAddCommentModal, setShowAddCommentModal] = useState(false)
-  const [editingComment, setEditingComment] = useState(null) // Add state for editing comment
+  const [editingComment, setEditingComment] = useState(null)
+  
+  const [showDiscussionModal, setShowDiscussionModal] = useState(false)
+  const [editingPost, setEditingPost] = useState(null)
+  
+  const [loading, setLoading] = useState(true)
+  const [forumData, setForumData] = useState([])
+  const [repliesData, setRepliesData] = useState([])
+  const [repliesLoading, setRepliesLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [parentReplyId, setParentReplyId] = useState(null)
+  const [parentComment, setParentComment] = useState(null) 
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
+  const headerRef = useRef(null)
 
-  const forumData = [
-    {
-      id: 1,
-      category: 'Introductions',
-      isNew: true,
-      title: 'Started small but looking to grow big',
-      description: 'Hey everyone! New member here. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus...',
-      author: {
-        name: 'cassiewallace',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      date: '12/23/2025',
-      comments: 25,
-      participants: [
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ',
-        'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
+  useEffect(() => {
+    const fetchDiscussionData = async () => {
+      if (!id) return
 
-      ]
-    }
-  ]
-
-  // Updated repliesData with nested structure
-  const repliesData = [
-    {
-      id: 2,
-      category: 'Announcements',
-      isOwn: true,
-      title: 'Started small but looking to grow big',
-      description: 'Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas lacuis massa nisl malesuada lacinia int...',
-      author: {
-        name: 'Emma',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      nestingLevel: 1,
-      replies: [
-        {
-          id: 4,
-      title: 'Started small but looking to grow big',
-          description: 'This is really helpful for our community discussions.',
-          author: {
-            name: 'Garry',
-            avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-          },
-          nestingLevel: 2,
-          replies: [
-            {
-              id: 5,
-      title: 'Started small but looking to grow big',
-              description: 'Yes, this will make communication so much better.',
-              author: {
-                name: 'Emma',
-                avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-              },
-              nestingLevel: 3,
-              isOwn: true
-            }
-          ]
+      setLoading(true)
+      try {
+        const response = await axiosInstance.get(`/forum/discussion/${id}`)
+        if (response.data) {
+          // The API now returns the exact format we need
+          const formattedData = {
+            id: response.data.id,
+            category: response.data.category,
+            isNew: response.data.isNew,
+            title: response.data.title,
+            description: response.data.description,
+            content: response.data.content, // Full content for single discussion view
+            author: {
+              id: response.data.author?.id,
+              name: response.data.author?.name,
+              avatar: response.data.author?.avatar || 'https://via.placeholder.com/40'
+            },
+            date: response.data.date,
+            comments: response.data.comments || 0,
+            participants: response.data.participants || [],
+            viewCount: response.data.viewCount,
+            isPinned: response.data.isPinned,
+            lastReplyAt: response.data.lastReplyAt,
+            lastReplyUser: response.data.lastReplyUser
+          }
+          
+          setForumData([formattedData])
+          // Use ref to scroll to header after data is set
+          setTimeout(() => {
+            headerRef.current?.scrollIntoView({ behavior: 'instant' })
+          }, 0)
         }
-      ]
-    },
-    {
-      id: 3,
-      category: 'Celebrations',
-      title: 'Started small but looking to grow big',
-      description: 'Looking forward to more conversations like this.',
-      author: {
-        name: 'John',
-        avatar: 'https://imgs.search.brave.com/dybKygqTKstercZqjtGWGYIT7XeGZqyueoBc2tC0KkM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEy/OTYzODYwOC9waG90/by9zbWlsaW5nLWJ1/c2luZXNzd29tYW4t/bG9va2luZy1hdC1j/YW1lcmEtd2ViY2Ft/LW1ha2UtY29uZmVy/ZW5jZS1idXNpbmVz/cy1jYWxsLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1OSDRa/UXZkeTdFOEduZW4y/MWU1MHpnS2piWnpn/TnlnbnJWekNJMEUz/dTlvPQ'
-      },
-      nestingLevel: 1
+      } catch (error) {
+        console.error('Error fetching discussion:', error)
+        history.push('/startup-forum')
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
 
-    const handleCategoryClick = (category) => {
+    fetchDiscussionData()
+  }, [id, history])
+
+  useEffect(() => {
+    if (location.state?.discussionData) {
+      setForumData([location.state.discussionData])
+      setLoading(false)
+    }
+  }, [location.state])
+
+  const fetchReplies = async (page = 1) => {
+    if (!forumData.length || !forumData[0].id) return
+    
+    setRepliesLoading(true)
+    try {
+      const response = await axiosInstance.get(`/forum/discussion/${forumData[0].id}/replies`, {
+        params: {
+          page,
+          limit: 10
+        }
+      })
+      
+      if (response.data) {
+        setRepliesData(response.data.replies)
+        setCurrentPage(response.data.currentPage)
+        setTotalPages(response.data.totalPages)
+      }
+    } catch (error) {
+      console.error('Error fetching replies:', error)
+    } finally {
+      setRepliesLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!loading && forumData.length > 0) {
+      fetchReplies()
+    }
+  }, [loading, forumData])
+
+  const checkFollowStatus = async (discussionId) => {
+    try {
+      const response = await axiosInstance.get(`/forum/discussion/${discussionId}/follow-status`)
+      setIsFollowing(response.data.isFollowing)
+    } catch (error) {
+      console.error('Error checking follow status:', error)
+    }
+  }
+
+  const handleFollowDiscussion = async () => {
+    if (!forumData.length || followLoading) return
+    
+    setFollowLoading(true)
+    try {
+      const discussionId = forumData[0].id
+      
+      if (isFollowing) {
+        // Unfollow
+        await axiosInstance.delete(`/forum/discussion/${discussionId}/follow`)
+        setIsFollowing(false)
+        toast.success('Successfully unfollowed discussion')
+      } else {
+        // Follow
+        await axiosInstance.post(`/forum/discussion/${discussionId}/follow`)
+        setIsFollowing(true)
+        toast.success('Successfully followed discussion')
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 'Something went wrong'
+      toast.error(errorMessage)
+    } finally {
+      setFollowLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (forumData.length > 0) {
+      checkFollowStatus(forumData[0].id)
+    }
+  }, [forumData])
+
+  const handleCategoryClick = (category) => {
     setSelectedCategory(category)
     
-    // Navigate to corresponding page
     switch (category) {
       case 'All Discussions':
         history.push('/startup-forum')
@@ -141,56 +369,94 @@ const CommentSection = () => {
     }
   }
 
-  // Function to calculate width based on nesting level
   const getCommentWidth = (nestingLevel) => {
     const baseWidth = 100
     const reductionPerLevel = 10
-    return Math.max(baseWidth - (nestingLevel * reductionPerLevel), 60) // Minimum 60% width
+    return Math.max(baseWidth - (nestingLevel * reductionPerLevel), 60)
   }
 
   const toggleAddCommentModal = () => {
-    setShowAddCommentModal(prev => !prev)
-    // Clear editing comment when closing modal
     if (showAddCommentModal) {
       setEditingComment(null)
+      setParentReplyId(null)
+      setParentComment(null)
+      setShowAddCommentModal(false)
+    } else {
+      setShowAddCommentModal(true)
     }
   }
 
-  // Add function to handle edit comment
-  const handleEditComment = (comment, event) => {
-    event.stopPropagation() // Prevent any parent click handlers
-    setEditingComment(comment)
+  const handleNewComment = () => {
+    setEditingComment(null)
+    setParentReplyId(null)
+    setParentComment(null)
     setShowAddCommentModal(true)
   }
 
-  // Add function to handle new comment
-  const handleNewComment = () => {
+  const handleEditComment = (comment, event) => {
+    event.stopPropagation()
+    setEditingComment(comment)
+    setParentReplyId(null)
+    setParentComment(null)
+    setShowAddCommentModal(true)
+  }
+
+  const handleDeleteComment = (comment, event) => {
+    event.stopPropagation()
+    setEditingComment(comment)
+    setParentComment(null)
+    setParentReplyId(null)
+    setShowAddCommentModal(true)
+  }
+
+  const handleReplyToComment = (comment, event) => {
+    event.stopPropagation()
+    setParentReplyId(comment.id)
+    setParentComment(comment)
     setEditingComment(null)
     setShowAddCommentModal(true)
   }
 
-  // Function to render comments recursively
-  const renderComment = (comment, nestingLevel = 1) => {
-    const width = getCommentWidth(nestingLevel)
+  const handleReplySuccess = (reply, action = 'create') => {
+    if (action === 'delete') {
+      fetchReplies(currentPage)
+      if (forumData.length > 0) {
+        const updatedForumData = [...forumData]
+        updatedForumData[0].comments = Math.max((updatedForumData[0].comments || 0) - 1, 0)
+        setForumData(updatedForumData)
+      }
+    } else if (action === 'create') {
+      fetchReplies(currentPage)
+      if (forumData.length > 0) {
+        const updatedForumData = [...forumData]
+        updatedForumData[0].comments = (updatedForumData[0].comments || 0) + 1
+        setForumData(updatedForumData)
+      }
+    } else if (action === 'update') {
+      fetchReplies(currentPage)
+    }
+    
+    setShowAddCommentModal(false)
+    setEditingComment(null)
+    setParentReplyId(null)
+    setParentComment(null)
+  }
+
+  const renderComment = (comment) => {
+    const width = getCommentWidth(comment.nestingLevel)
     
     return (
       <div className='d-flex flex-column align-items-end w-100' key={comment.id}>
         <div 
-          className="d-flex flex-column"
+          className="d-flex flex-column main-comment-card-container"
           style={{ 
-            border: '1px solid #D9D9D9', 
-            padding: '16px 25px 16px 30px', 
-            borderRadius: '8px', 
-            width: `${width}%`,
-            marginLeft: nestingLevel > 1 ? '20px' : '0',
-            marginBottom: '5px',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)'
+            width: `${width}%`
           }}
         >
           <div className="forum-post-main">
             <div className="post-avatar-container">
               <img
-                src={comment.author.avatar}
+                src={comment.author.avatar || 'https://via.placeholder.com/40'}
                 alt={comment.author.name}
                 className="post-avatar"
               />
@@ -212,17 +478,36 @@ const CommentSection = () => {
             <div className="post-content">
               <div className='d-flex align-items-center gap-1'>
                 <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(100%) saturate(0%)', width: '16px', height: '16px' }} />
-                <h4 style={{ color: 'gray', fontSize: '16px', margin: 0, lineHeight: 'unset' }}>{comment.title}</h4>
+                <h4 style={{ color: 'gray', fontSize: '16px', margin: 0, lineHeight: 'unset' }}>
+                  Reply by @{comment.author.name}
+                  {comment.isEdited && <span style={{ fontSize: '12px', color: '#999', marginLeft: '8px' }}>(edited)</span>}
+                </h4>
               </div>
               
-              <p className="post-description">{comment.description}</p>
+              {/* Use dangerouslySetInnerHTML for comment content as well */}
+              <div 
+                className="post-description comment-description"
+                  style={{
+                  wordBreak: 'break-word',
+                  overflowWrap: 'anywhere',
+                  whiteSpace: 'normal',
+                  hyphens: 'auto',
+                  maxWidth: '100%'
+                }}
+                dangerouslySetInnerHTML={{ 
+                  __html: comment.content 
+                }}
+              />
             </div>
           </div>
 
           <div className='d-flex align-items-center justify-content-end gap-2 mt-3'>
             {comment.isOwn ? (
               <div className='d-flex align-items-center gap-4 cursor-pointer'>
-                <div className='d-flex align-items-center gap-2 cursor-pointer'>
+                <div 
+                  className='d-flex align-items-center gap-2 cursor-pointer'
+                  onClick={(e) => handleDeleteComment(comment, e)}
+                >
                   <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
                   <span style={{ fontWeight: '600', color: 'black' }}>Delete comment</span>
                 </div>
@@ -232,17 +517,18 @@ const CommentSection = () => {
                 </div>
               </div>
             ) : (
-              <>
-                <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(0) saturate(100%)', width: '20px', height: '20px' }} />
-                <span style={{ fontWeight: '600', color: 'black' }}>Reply to comment</span>
-              </>
+              comment.nestingLevel < 5 && (
+                <div className='d-flex align-items-center gap-2 cursor-pointer' onClick={(e) => handleReplyToComment(comment, e)}>
+                  <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(0) saturate(100%)', width: '20px', height: '20px' }} />
+                  <span style={{ fontWeight: '600', color: 'black' }}>Reply to comment</span>
+                </div>
+              )
             )}
           </div>
         </div>
 
-        {/* Render nested replies */}
-        {comment.replies && comment.replies.map(reply => 
-          renderComment(reply, nestingLevel + 1)
+        {comment.replies && comment.replies.length > 0 && comment.replies.map(nestedReply => 
+          renderComment(nestedReply)
         )}
       </div>
     )
@@ -273,9 +559,56 @@ const CommentSection = () => {
     }
   }
 
+  const handleEditPost = (post, event) => {
+    event.stopPropagation()
+    setEditingPost(post)
+    setShowDiscussionModal(true)
+  }
+
+  const toggleDiscussionModal = () => {
+    setShowDiscussionModal(prev => !prev)
+    if (showDiscussionModal) {
+      setEditingPost(null)
+    }
+  }
+
+  const handleDiscussionSuccess = (discussion, action = 'update') => {
+    if (action === 'delete') {
+      history.push('/startup-forum')
+    } else if (action === 'update') {
+      // Update with the new API format while preserving existing data
+      setForumData(prevData => 
+        prevData.map(post => 
+          post.id === discussion.id 
+            ? { 
+                ...post, 
+                title: discussion.title || post.title,
+                description: discussion.description || post.description,
+                content: discussion.content || post.content,
+                category: discussion.category || post.category,
+                // Preserve other fields from the original API response
+                author: post.author, // Keep original author data
+                date: post.date, // Keep original date
+                comments: post.comments, // Keep original comment count
+                participants: post.participants, // Keep original participants
+                viewCount: post.viewCount,
+                isPinned: post.isPinned,
+                lastReplyAt: post.lastReplyAt,
+                lastReplyUser: post.lastReplyUser
+              } 
+            : post
+        )
+      )
+    }
+    
+    setEditingPost(null)
+    setShowDiscussionModal(false)
+  }
+
   return (
     <>
-      <div className='d-flex space-between align-items-center'>
+      <SkeletonStyles />
+      <div ref={headerRef} className='d-flex space-between align-items-center'>
         <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
              <div>
@@ -298,68 +631,176 @@ const CommentSection = () => {
 
             {/* Forum Posts */}
             <div className="forum-posts-comment-section">
-              {/* Original Post */}
-              {forumData.map((post, index) => (
-                <div style={{ border: '1px solid #D9D9D9', padding: '16px 25px 16px 30px', borderRadius: '8px', marginBottom: '20px', width: '100%' }} key={index}>
-                  <div key={post.id} className="forum-post-main">
-                    <div className="post-avatar-container">
-                      <img
-                        src={post.author.avatar}
-                        alt={post.author.name}
-                        className="post-avatar"
-                      />
-                      {post.isNew && <div className="new-indicator"><img src={pin} alt="Pin Icon" /></div>}
-                    </div>
-
-                    <div className="post-content">
-
-
-                      <h4 className="post-title">{post.title}</h4>
-
-                      <p className="post-description">{post.description}</p>
-                    </div>
-
-
-                    <div className='d-flex flex-column gap-2 justify-content-end'>
-
-                      <div className='post-comments-count'>
-                        <img src={star} alt="Star Icon" style={{ filter: 'brightness(0) saturate(100%)', width: '16px', height: '16px' }} />
-                        <span className="post-date-paragraph">Follow discussions</span>
-                      </div>
-
-                      <div className="post-right-section">
-                        {post.participants.slice(0, 4).map((participant, idx) => (
-                          <img
-                            key={idx}
-                            src={participant}
-                            alt="participant"
-                            className="participant-avatar"
-                          />
-                        ))}
-                        {post.participants.length > 4 && (
-                          <div className="participant-more"><img src={threeDots} alt="More Participants" /></div>
-                        )}
-
-                      </div>
-                      <div className="post-comments-count">
-                        <img src={chatBubble} alt="Comments Icon" className="comments-icon" />
-                        <span className="post-date-paragraph">{post.comments} comments</span>
-                      </div>
-
-                    </div>
-
-
-                  </div>
-
-                  <div className='d-flex align-items-center justify-content-end gap-2 mt-3'>
-                    <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(0) saturate(100%)', width: '20px', height: '20px' }} />
-                    <span style={{ fontWeight: '600', color: 'black' }}>Reply to post</span>
-                  </div>
+              {/* Show skeleton while loading */}
+              {loading ? (
+                <ForumPostSkeleton />
+              ) : !forumData.length ? (
+                <div className="text-center py-4">
+                  <p>Discussion not found.</p>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={() => history.push('/startup-forum')}
+                  >
+                    Back to Forum
+                  </button>
                 </div>
-              ))}
+              ) : (
+                /* Original Post - Now using dynamic data */
+                forumData.map((post, index) => (
+                  <div className="main-comment-card-container" style={{ width: '100%' }} key={index}>
+                    <div key={post.id} className="forum-post-main">
+                      <div className="post-avatar-container">
+                        <img
+                          src={post.author.avatar}
+                          alt={post.author.name}
+                          className="post-avatar"
+                        />
+                        {currentUser && 
+                         post.author && 
+                         currentUser.id && 
+                         post.author.id && 
+                         parseInt(currentUser.id) === parseInt(post.author.id) && (
+                          <div className="new-indicator">
+                            <img src={star} alt="Your Post" style={{ width: '16px', height: '16px', filter: 'invert(1) brightness(1000%)' }} />
+                          </div>
+                        )}
+                      </div>
 
-              {/* Nested Comments */}
-              {repliesData.map(comment => renderComment(comment))}
+                      <div className="post-content">
+                        <h4 className="post-title">{post.title}</h4>
+                        {/* Use dangerouslySetInnerHTML to render HTML content properly */}
+                        <div 
+                          className="post-description comment-description"
+                          style={{
+                          wordBreak: 'break-word',
+                          overflowWrap: 'anywhere',
+                          whiteSpace: 'normal',
+                          hyphens: 'auto',
+                          maxWidth: '100%'
+                          }}
+                          dangerouslySetInnerHTML={{ 
+                            __html: post.content || post.description 
+                          }}
+                        />
+                      </div>
+
+                      <div className='d-flex flex-column gap-2'>
+                        <div 
+                          className='post-comments-count cursor-pointer'
+                          onClick={handleFollowDiscussion}
+                          style={{ 
+                            opacity: followLoading ? 0.6 : 1,
+                            pointerEvents: followLoading ? 'none' : 'auto'
+                          }}
+                        >
+                          <img 
+                            src={star} 
+                            alt="Star Icon" 
+                            style={{ 
+                              filter: isFollowing 
+                                ? 'brightness(0) saturate(100%) invert(47%) sepia(68%) saturate(478%) hue-rotate(166deg) brightness(94%) contrast(89%)' // Blue filter
+                                : 'brightness(0) saturate(100%)', // Default black
+                              width: '16px', 
+                              height: '16px' 
+                            }} 
+                          />
+                          <span 
+                            className="post-date-paragraph"
+                            style={{ 
+                              color: isFollowing ? '#52C7DE' : 'inherit' // Blue color when following
+                            }}
+                          >
+                            {followLoading 
+                              ? (isFollowing ? 'Unfollowing...' : 'Following...')
+                              : (isFollowing ? 'Following discussion' : 'Follow discussion')
+                            }
+                          </span>
+                        </div>
+
+                        <div className="post-right-section">
+                          {post.participants && post.participants.slice(0, 4).map((participant, idx) => (
+                            <img
+                              key={idx}
+                              src={participant}
+                              alt="participant"
+                              className="participant-avatar"
+                            />
+                          ))}
+                          {/* Show edit option if user is the post author */}
+                          {currentUser && 
+                           post.author && 
+                           currentUser.id && 
+                           post.author.id && 
+                           parseInt(currentUser.id) === parseInt(post.author.id) ? (
+                            <div className="participant-more" onClick={(e) => handleEditPost(post, e)}>
+                              <img src={threeDots} alt="Edit Post" />
+                            </div>
+                          ) : (
+                            post.participants && post.participants.length > 4 && (
+                              <div className="participant-more">
+                                <img src={threeDots} alt="More Participants" />
+                              </div>
+                            )
+                          )}
+                        </div>
+                        
+                        <div className="post-comments-count">
+                          <img src={chatBubble} alt="Comments Icon" className="comments-icon" />
+                          <span className="post-date-paragraph">{post.comments} comments</span>
+                        </div>
+                        
+                        
+                        {/* {post.isPinned && (
+                          <div className="post-comments-count">
+                            <img src={pin} alt="Pinned Icon" style={{ width: '16px', height: '16px' }} />
+                            <span className="post-date-paragraph">Pinned</span>
+                          </div>
+                        )} */}
+                      </div>
+                    </div>
+
+                    <div className='d-flex align-items-center justify-content-end gap-2 mt-3 cursor-pointer' onClick={handleNewComment}>
+                      <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(0) saturate(100%)', width: '20px', height: '20px' }} />
+                      <span style={{ fontWeight: '600', color: 'black' }}>Reply to post</span>
+                    </div>
+                  </div>
+                ))
+              )}
+
+              {/* Only show comments if not loading and we have forum data */}
+              {!loading && forumData.length > 0 && (
+                <div className="replies-section" style={{width: '100%'}}>
+                  {repliesLoading ? (
+                        <span className="sr-only">Loading replies...</span>
+                  ) : (
+                    /* Nested Comments */
+                    repliesData.map(comment => renderComment(comment))
+                  )}
+                  
+                  {/* Pagination for replies */}
+                  {totalPages > 1 && (
+                    <div className="forum-pagination d-flex justify-content-center mt-4">
+                      <button 
+                        className="btn btn-outline-primary me-2"
+                        disabled={currentPage === 1}
+                        onClick={() => fetchReplies(currentPage - 1)}
+                      >
+                        Previous
+                      </button>
+                      <span className="align-self-center mx-2">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <button 
+                        className="btn btn-outline-primary ms-2"
+                        disabled={currentPage === totalPages}
+                        onClick={() => fetchReplies(currentPage + 1)}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -396,12 +837,22 @@ const CommentSection = () => {
         </div>
       </div>
 
-      {/* Add Comment Modal */}
+
       <AddCommentModal 
         show={showAddCommentModal}
         onHide={toggleAddCommentModal}
-        originalPost={forumData[0]} // Pass the original post data
-        editingComment={editingComment} // Pass the editing comment
+        originalPost={forumData[0]}
+        editingComment={editingComment}
+        onSuccess={handleReplySuccess}
+        parentReplyId={parentReplyId}
+        parentComment={parentComment}
+      />
+
+      <StartNewDiscussionModal 
+        show={showDiscussionModal}
+        onHide={toggleDiscussionModal}
+        editingPost={editingPost}
+        onSuccess={handleDiscussionSuccess}
       />
     </>
   )

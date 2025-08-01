@@ -51,6 +51,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     email: user?.email || '',
     bio: user?.bio || '',
     profession: user?.profession || '',
+    address: user?.address || '',
     profile_image: user?.profile_image || ''
   })
 
@@ -139,6 +140,7 @@ const handleFileChange = (event) => {
         name: changedUser.name,
         bio: changedUser.bio,
         profession: changedUser.profession,
+        address: changedUser.address,
         social_links: changedMedias,
         profile_image: profileImageUrl,
         language: changedUser.language,
@@ -332,6 +334,19 @@ const handleFileChange = (event) => {
                       })
                     }
                     name='occupation'
+                  />
+                  <ModalInput
+                    id={'address'}
+                    labelTitle={'Address EX: San Francisco, USA'}
+                    imgSrc={penIcon}
+                    value={changedUser.address}
+                    onChange={(e) =>
+                      setChangedUser({
+                        ...changedUser,
+                        address: e.target.value
+                      })
+                    }
+                    name='address'
                   />
                 </div>
               </div>
