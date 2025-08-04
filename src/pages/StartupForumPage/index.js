@@ -28,22 +28,24 @@ const StartupForumPage = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
-  
+
   const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
-  
+
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedFilter, setSelectedFilter] = useState('Latest First')
+  const [selectedFilter, setSelectedFilter] = useState('Latest')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
   const [showDiscussionModal, setShowDiscussionModal] = useState(false)
   const [editingPost, setEditingPost] = useState(null)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
-  
+
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
 
   const [forumData, setForumData] = useState([])
+  const [isFetching, setIsFetching] = useState(false)
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
 
   const toggleDiscussionModal = () => {
     setShowDiscussionModal(prev => !prev)
@@ -53,27 +55,42 @@ const StartupForumPage = () => {
   }
 
   const handleEditPost = (post, event) => {
-    event.stopPropagation() 
+    event.stopPropagation()
     setEditingPost(post)
     setShowDiscussionModal(true)
   }
 
-  const fetchForumData = async (page = 1, category = null, search = null, sort = 'created_at', order = 'DESC') => {
+  const fetchForumData = async (page = 1, category = null, search = null, filter = 'Latest') => {
+    if (isFetching) return
+    
+    setIsFetching(true)
     setLoading(true)
+    
     try {
-      const params = {
-        page,
-        limit: 10,
-        sort,
-        order
-      }
+      const filterMapping = {
+  'Latest': 'Latest',
+  'Oldest': 'Oldest', 
+  'Most Comments': 'Most Comments',
+  'My posts': 'My posts',
+  'Alphabetical': 'Alphabetical'
+}
+
+      const mappedFilter = filterMapping[filter] || 'Latest'
+
+const params = {
+  page,
+  limit: 10,
+  filter: mappedFilter
+}
+
 
       if (search && search.trim()) {
         params.search = search.trim()
       }
 
       let endpoint = '/forum'
-      
+
+
       if (category && category !== 'All Discussions') {
         const categoryMapping = {
           'Introductions': 'introductions',
@@ -81,9 +98,9 @@ const StartupForumPage = () => {
           'Celebrations': 'celebrations',
           'Ideas & Feedback': 'ideas-feedback',
           'Misc. Topics': 'misc-topics',
-          'Following' : 'following'
+          'Following': 'following'
         }
-        
+
         const urlCategory = categoryMapping[category]
         if (urlCategory) {
           endpoint = `/forum/${urlCategory}`
@@ -91,7 +108,7 @@ const StartupForumPage = () => {
       }
 
       const response = await axiosInstance.get(endpoint, { params })
-      
+
       if (response.data) {
         setForumData(response.data.discussions)
         setTotalCount(response.data.totalCount)
@@ -100,30 +117,61 @@ const StartupForumPage = () => {
       }
     } catch (error) {
       console.error('Error fetching forum data:', error)
+      if (category === 'Following') {
+        setForumData([])
+        setTotalCount(0)
+        setCurrentPage(1)
+        setTotalPages(1)
+      }
     } finally {
       setLoading(false)
+      setIsFetching(false)
     }
   }
 
-  useEffect(() => {
-    const category = getCurrentCategoryFromUrl()
+
+useEffect(() => {
+  const category = getCurrentCategoryFromUrl()
+  setSelectedCategory(category)
+}, [])
+
+useEffect(() => {
+  const category = getCurrentCategoryFromUrl()
+  if (category !== selectedCategory) {
     setSelectedCategory(category)
-    fetchForumData(1, category, null, 'created_at', 'DESC')
-  }, [])
+    setSearchTerm('') 
+    setCurrentPage(1)
+  }
+}, [location.pathname])
+
+useEffect(() => {
+  if (!selectedCategory) return
+
+  const delayedFetch = setTimeout(() => {
+    const pageToFetch = searchTerm || selectedFilter !== 'Latest' ? 1 : currentPage
+    if (pageToFetch !== currentPage && (searchTerm || selectedFilter !== 'Latest')) {
+      setCurrentPage(1)
+    }
+    
+    fetchForumData(pageToFetch, selectedCategory, searchTerm, selectedFilter)
+  }, searchTerm ? 700 : 0)
+
+  return () => clearTimeout(delayedFetch)
+}, [selectedCategory, searchTerm, selectedFilter, currentPage]) 
 
   const handleDiscussionSuccess = (discussion, action = 'create') => {
     if (action === 'delete') {
       setForumData(prevData => prevData.filter(post => post.id !== editingPost?.id))
     } else if (action === 'create') {
-      fetchForumData(currentPage, selectedCategory, searchTerm)
+      fetchForumData(currentPage, selectedCategory, searchTerm, selectedFilter)
     } else {
-      setForumData(prevData => 
-        prevData.map(post => 
+      setForumData(prevData =>
+        prevData.map(post =>
           post.id === discussion.id ? { ...post, ...discussion } : post
         )
       )
     }
-    
+
     setEditingPost(null)
     setShowDiscussionModal(false)
   }
@@ -135,7 +183,7 @@ const StartupForumPage = () => {
 
   const getCurrentCategoryFromUrl = () => {
     const path = location.pathname.toLowerCase()
-    
+
     if (path.includes('introductions')) return 'Introductions'
     if (path.includes('announcements')) return 'Announcements'
     if (path.includes('celebrations')) return 'Celebrations'
@@ -145,13 +193,13 @@ const StartupForumPage = () => {
     return 'All Discussions'
   }
 
-  useEffect(() => {
-    setSelectedCategory(getCurrentCategoryFromUrl())
-  }, [location.pathname])
-
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category)
+    if (category === selectedCategory) return
     
+    setSelectedCategory(category)
+    setSearchTerm('') 
+    setCurrentPage(1) 
+
     switch (category) {
       case 'All Discussions':
         history.push('/startup-forum')
@@ -181,7 +229,7 @@ const StartupForumPage = () => {
 
   const getHeaderContent = () => {
     const path = location.pathname.toLowerCase()
-    
+
     if (path.includes('introductions')) {
       return {
         icon: wavingHand,
@@ -243,7 +291,33 @@ const StartupForumPage = () => {
     'Misc. Topics'
   ]
 
-  const filterOptions = ['Latest First', 'Oldest First', 'Most Comments']
+const filterOptions = [
+  { value: 'My posts', label: 'My posts' },
+  { value: 'Alphabetical', label: 'Alphabetical' },
+  { value: 'Latest', label: 'Latest' },
+  { value: 'Oldest', label: 'Oldest' },
+]
+
+  const handleFilterChange = (newFilter) => {
+    setSelectedFilter(newFilter)
+  }
+  
+  // Add this useEffect to handle clicking outside
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (!event.target.closest('.custom-filter-dropdown-container')) {
+      setIsFilterDropdownOpen(false)
+    }
+  }
+
+  if (isFilterDropdownOpen) {
+    document.addEventListener('mousedown', handleClickOutside)
+  }
+
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside)
+  }
+}, [isFilterDropdownOpen])
 
   return (
     <>
@@ -271,12 +345,12 @@ const StartupForumPage = () => {
             <div className="forum-controls">
               <div className="search-section">
                 <div className="search-box">
-                  <img 
-                    src={searchIcon} 
-                    alt="Search" 
+                  <img
+                    src={searchIcon}
+                    alt="Search"
                     className="forum-search-icon"
                     style={{
-                      filter: isSearchFocused 
+                      filter: isSearchFocused
                         ? 'brightness(0) saturate(100%) invert(47%) sepia(68%) saturate(478%) hue-rotate(166deg) brightness(94%) contrast(89%)'
                         : 'none',
                       transition: 'filter 0.2s ease'
@@ -284,7 +358,11 @@ const StartupForumPage = () => {
                   />
                   <input
                     type="text"
-                    placeholder="Search discussions"
+                    placeholder={
+                      selectedCategory === 'Following'
+                        ? "Search followed discussions"
+                        : "Search discussions"
+                    }
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={() => setIsSearchFocused(true)}
@@ -292,17 +370,137 @@ const StartupForumPage = () => {
                     className="search-input"
                   />
                 </div>
-                <select
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)}
-                  className="filter-dropdown"
-                >
-                  {filterOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                {/* Custom Filter Dropdown */}
+<div className="custom-filter-dropdown-container" style={{ position: 'relative' }}>
+  <div 
+    className="filter-dropdown-trigger"
+    onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '12px 15px',
+      borderRadius: '8px',
+      backgroundColor: 'white',
+      cursor: 'pointer',
+      minWidth: '150px',
+      fontSize: '15px',
+      height: '100%',
+    lineHeight: '20px',
+    // height: 100% !important;
+    // max-height: 250px !important;
+    boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+    }}
+  >
+    <span>{filterOptions.find(opt => opt.value === selectedFilter)?.label || 'Select Filter'}</span>
+    <svg 
+      width="12" 
+      height="12" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      style={{ 
+        transform: isFilterDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+        transition: 'transform 0.2s ease'
+      }}
+    >
+      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </div>
+
+  {isFilterDropdownOpen && (
+    <div 
+      className="filter-dropdown-menu"
+      style={{
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        zIndex: 1000,
+        marginTop: '4px'
+      }}
+    >
+      {filterOptions.map((option, index) => (
+  <div
+    key={option.value}
+    className="filter-dropdown-item"
+    onClick={() => {
+      handleFilterChange(option.value)
+      setIsFilterDropdownOpen(false)
+    }}
+    style={{
+      padding: '6px 16px',
+      cursor: 'pointer',
+      fontSize: '14px',
+      backgroundColor: 'white',
+      fontWeight: selectedFilter === option.value ? '600' : '400',
+      color: selectedFilter === option.value ? '#52C7DE' : 'black',
+      borderRadius: index === 0 ? '8px 8px 0 0' : index === filterOptions.length - 1 ? '0 0 8px 8px' : '0',
+      transition: 'background-color 0.2s ease',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px'
+    }}
+    onMouseEnter={(e) => {
+      if (selectedFilter !== option.value) {
+        e.target.style.backgroundColor = '#f8f9fa'
+      }
+    }}
+    onMouseLeave={(e) => {
+      if (selectedFilter !== option.value) {
+        e.target.style.backgroundColor = 'white'
+      }
+    }}
+  >
+    {option.label}
+    {option.value === 'Latest' && (
+  <span style={{ marginLeft: 8, display: 'flex', alignItems: 'center' }}>
+    {/* Up arrow SVG */}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+    >
+      <path
+        d="M10.208 15.4167V5M10.208 5L15.208 10M10.208 5L5.20801 10"
+        stroke={selectedFilter === 'Latest' ? '#52C7DE' : 'black'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </span>
+)}
+{option.value === 'Oldest' && (
+  <span style={{ marginLeft: 8, display: 'flex', alignItems: 'center' }}>
+    {/* Down arrow SVG */}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+    >
+      <path
+        d="M10.208 4.58333V15M10.208 15L5.20801 10M10.208 15L15.208 10"
+        stroke={selectedFilter === 'Oldest' ? '#52C7DE' : 'black'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  </span>
+)}
+  </div>
+))}
+    </div>
+  )}
+</div>
               </div>
             </div>
 
@@ -330,7 +528,7 @@ const StartupForumPage = () => {
                 </div>
               ) : (
                 forumData.map((post, index) => {
-                  
+
                   return (
                     <div key={post.id} className="forum-post"
                       onClick={() => {
@@ -344,15 +542,15 @@ const StartupForumPage = () => {
                           className="post-avatar"
                         />
                         {/* Show star indicator if user owns the post */}
-                        {currentUser && 
-                         post.author && 
-                         currentUser.id && 
-                         post.author.id && 
-                         parseInt(currentUser.id) === parseInt(post.author.id) && (
-                          <div className="new-indicator">
-                            <img src={star} alt="Your Post" style={{ width: '16px', height: '16px', filter: 'invert(1) brightness(1000%)' }} />
-                          </div>
-                        )}
+                        {currentUser &&
+                          post.author &&
+                          currentUser.id &&
+                          post.author.id &&
+                          parseInt(currentUser.id) === parseInt(post.author.id) && (
+                            <div className="new-indicator">
+                              <img src={star} alt="Your Post" style={{ width: '16px', height: '16px', filter: 'invert(1) brightness(1000%)' }} />
+                            </div>
+                          )}
                       </div>
 
                       <div className="post-content">
@@ -386,7 +584,7 @@ const StartupForumPage = () => {
                         </div>
 
 
-                        <div 
+                        <div
                           className="post-description"
                           style={{
                             wordBreak: 'break-word',
@@ -395,8 +593,8 @@ const StartupForumPage = () => {
                             hyphens: 'auto',
                             maxWidth: '100%'
                           }}
-                          dangerouslySetInnerHTML={{ 
-                            __html: post.description 
+                          dangerouslySetInnerHTML={{
+                            __html: post.description
                           }}
                         />
                       </div>
@@ -411,15 +609,15 @@ const StartupForumPage = () => {
                               className="participant-avatar"
                             />
                           ))}
-                          {currentUser && 
-                           post.author && 
-                           currentUser.id && 
-                           post.author.id && 
-                           parseInt(currentUser.id) === parseInt(post.author.id) && (
-                            <div className="participant-more" onClick={(e) => handleEditPost(post, e)}>
-                              <img src={threeDots} alt="More Options" />
-                            </div>
-                          )}
+                          {currentUser &&
+                            post.author &&
+                            currentUser.id &&
+                            post.author.id &&
+                            parseInt(currentUser.id) === parseInt(post.author.id) && (
+                              <div className="participant-more" onClick={(e) => handleEditPost(post, e)}>
+                                <img src={threeDots} alt="More Options" />
+                              </div>
+                            )}
                         </div>
                         <div className="post-comments-count">
                           <img src={chatBubble} alt="Comments Icon" className="comments-icon" />
@@ -435,20 +633,28 @@ const StartupForumPage = () => {
             {/* Add pagination if needed */}
             {totalPages > 1 && (
               <div className="forum-pagination d-flex justify-content-center mt-4">
-                <button 
+                <button
                   className="btn btn-outline-primary me-2"
                   disabled={currentPage === 1}
-                  onClick={() => fetchForumData(currentPage - 1, selectedCategory, searchTerm)}
+                  onClick={() => {
+                    const newPage = currentPage - 1
+                    setCurrentPage(newPage)
+                    fetchForumData(newPage, selectedCategory, searchTerm, selectedFilter)
+                  }}
                 >
                   Previous
                 </button>
                 <span className="align-self-center mx-2">
                   Page {currentPage} of {totalPages}
                 </span>
-                <button 
+                <button
                   className="btn btn-outline-primary ms-2"
                   disabled={currentPage === totalPages}
-                  onClick={() => fetchForumData(currentPage + 1, selectedCategory, searchTerm)}
+                  onClick={() => {
+                    const newPage = currentPage + 1
+                    setCurrentPage(newPage)
+                    fetchForumData(newPage, selectedCategory, searchTerm, selectedFilter)
+                  }}
                 >
                   Next
                 </button>
@@ -464,7 +670,7 @@ const StartupForumPage = () => {
                   title={'Start New Discussion'}
                   onClick={handleNewDiscussion}
                 />
-                
+
                 {categories.map((category, index) => (
                   <div key={category}>
                     <div
@@ -490,7 +696,7 @@ const StartupForumPage = () => {
       </div>
 
       {/* Start New Discussion Modal */}
-      <StartNewDiscussionModal 
+      <StartNewDiscussionModal
         show={showDiscussionModal}
         onHide={toggleDiscussionModal}
         editingPost={editingPost}
