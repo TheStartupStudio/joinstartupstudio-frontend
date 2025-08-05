@@ -72,6 +72,9 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
         response = await axiosInstance.post(`/forum/discussion/${originalPost.id}/replies`, payload)
         toast.success('Reply added successfully!')
       }
+
+      setFormData({ message: '' })
+      setFormSubmitted(false)
       
       // Call onSuccess callback FIRST
       if (onSuccess) {
@@ -108,6 +111,9 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
     try {
       await axiosInstance.delete(`/forum/replies/${editingComment.id}`)
       toast.success('Comment deleted successfully!')
+
+      setFormData({ message: '' })
+      setFormSubmitted(false)
       
       // Call onSuccess callback FIRST
       if (onSuccess) {
@@ -433,7 +439,11 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
             </p>
             <div className="d-flex gap-5 justify-content-center">
               <Button  
-                onClick={() => setShowDeleteConfirm(false)}
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  setFormData({ message: '' })
+                  setFormSubmitted(false)
+                }}
                 disabled={loading}
                 style={{ 
                   width: '100%',
