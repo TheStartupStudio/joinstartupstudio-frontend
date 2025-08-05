@@ -578,7 +578,7 @@ useEffect(() => {
                           <div className='d-flex align-items-center gap-2 justify-content-center'>
                             <img src={reply} alt="Reply Icon" />
                             <p className='mb-0 pb-0 post-date-paragraph'>
-                              Latest reply from <span>@{post.latestReplyFrom}</span>
+                              Latest reply from <span>{post.latestReplyFrom}</span>
                             </p>
                           </div>
                         </div>

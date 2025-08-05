@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, triangle} from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import { Button } from 'react-bootstrap'
 
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
@@ -212,6 +213,9 @@ const CommentSection = () => {
   const [parentComment, setParentComment] = useState(null) 
   const [isFollowing, setIsFollowing] = useState(false)
   const [followLoading, setFollowLoading] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [commentToDelete, setCommentToDelete] = useState(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const headerRef = useRef(null)
 
   useEffect(() => {
@@ -371,8 +375,8 @@ const CommentSection = () => {
 
   const getCommentWidth = (nestingLevel) => {
     const baseWidth = 100
-    const reductionPerLevel = 10
-    return Math.max(baseWidth - (nestingLevel * reductionPerLevel), 60)
+    const reductionPerLevel = 5
+    return Math.max(baseWidth - (nestingLevel * reductionPerLevel), 30)
   }
 
   const toggleAddCommentModal = () => {
@@ -403,10 +407,8 @@ const CommentSection = () => {
 
   const handleDeleteComment = (comment, event) => {
     event.stopPropagation()
-    setEditingComment(comment)
-    setParentComment(null)
-    setParentReplyId(null)
-    setShowAddCommentModal(true)
+    setCommentToDelete(comment)
+    setShowDeleteConfirm(true)
   }
 
   const handleReplyToComment = (comment, event) => {
@@ -416,6 +418,35 @@ const CommentSection = () => {
     setEditingComment(null)
     setShowAddCommentModal(true)
   }
+
+  const handleConfirmDelete = async () => {
+  if (!commentToDelete) return
+  
+  setDeleteLoading(true)
+  try {
+    await axiosInstance.delete(`/forum/replies/${commentToDelete.id}`)
+    toast.success('Comment deleted successfully!')
+    
+    // Refresh replies and update comment count
+    fetchReplies(currentPage)
+    if (forumData.length > 0) {
+      const updatedForumData = [...forumData]
+      updatedForumData[0].comments = Math.max((updatedForumData[0].comments || 0) - 1, 0)
+      setForumData(updatedForumData)
+    }
+    
+    // Close modal
+    setShowDeleteConfirm(false)
+    setCommentToDelete(null)
+    
+  } catch (error) {
+    console.error('Error deleting comment:', error)
+    const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Something went wrong. Please try again.'
+    toast.error(errorMessage)
+  } finally {
+    setDeleteLoading(false)
+  }
+}
 
   const handleReplySuccess = (reply, action = 'create') => {
     if (action === 'delete') {
@@ -479,7 +510,7 @@ const CommentSection = () => {
               <div className='d-flex align-items-center gap-1'>
                 <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(100%) saturate(0%)', width: '16px', height: '16px' }} />
                 <h4 style={{ color: 'gray', fontSize: '16px', margin: 0, lineHeight: 'unset' }}>
-                  Reply by @{comment.author.name}
+                  Reply by {comment.author.name}
                   {comment.isEdited && <span style={{ fontSize: '12px', color: '#999', marginLeft: '8px' }}>(edited)</span>}
                 </h4>
               </div>
@@ -503,7 +534,7 @@ const CommentSection = () => {
 
           <div className='d-flex align-items-center justify-content-end gap-2 mt-3'>
             {comment.isOwn ? (
-              <div className='d-flex align-items-center gap-4 cursor-pointer'>
+              <div className='d-flex align-items-center gap-4 cursor-pointer delete-edit-btn-container'>
                 <div 
                   className='d-flex align-items-center gap-2 cursor-pointer'
                   onClick={(e) => handleDeleteComment(comment, e)}
@@ -854,6 +885,91 @@ const CommentSection = () => {
         editingPost={editingPost}
         onSuccess={handleDiscussionSuccess}
       />
+
+      {showDeleteConfirm && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999
+          }}
+          onClick={() => {
+            setShowDeleteConfirm(false)
+            setCommentToDelete(null)
+          }}
+        >
+          <div 
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'white',
+              padding: '30px',
+              borderRadius: '24px',
+              textAlign: 'center',
+              width: '100%',
+              maxWidth: '748px'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-100 text-start">
+              <div style={{padding: '5px', borderRadius: '50%', backgroundColor: '#E2E6EC', width: '36px', height:'36px', display:'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
+              </div>
+              <h5 style={{ margin: '16px 0px', fontSize:'15px' }}>Delete Comment?</h5>
+            </div>
+            <p style={{ margin: '30px 0px 55px 0px' }}>
+              Are you sure you want to delete this comment?
+            </p>
+            <div className="d-flex gap-5 justify-content-center">
+              <Button  
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  setCommentToDelete(null)
+                }}
+                disabled={deleteLoading}
+                style={{ 
+                                  width: '100%',
+                                  backgroundColor: '#DEE1E6', 
+                                  boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)', 
+                                  padding: '12px 12px',
+                                  maxWidth: '250px',
+                                  borderRadius: '8px',
+                                  fontSize:'17px',
+                                  fontWeight: '600',
+                                  color:'black',
+                                  border:'none'
+                                }}
+                              >
+                                NO, TAKE ME BACK
+                              </Button>
+              <Button  
+                onClick={handleConfirmDelete}
+                disabled={deleteLoading}
+                style={{ 
+                                  width: '100%',
+                                  backgroundColor: '#FF3399', 
+                                  boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)', 
+                                  padding: '12px',
+                                  maxWidth: '250px',
+                                  borderRadius: '8px',
+                                  fontSize:'17px',
+                                  fontWeight: '600',
+                                  border: 'none'
+                                }}
+              >
+                {deleteLoading ? 'Deleting...' : 'Delete'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
