@@ -1015,6 +1015,8 @@ const handleSaveAndContinue = async () => {
         hasEmptyReflections = true;
         return;
       }
+
+      console.log( `Saving reflection for journalId: ${journalId}, journalEntryId: ${journalEntryId}, entryId: ${entryId}`);
       const endpoint = !entryId
         ? `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`
         : `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`;

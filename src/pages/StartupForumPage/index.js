@@ -54,6 +54,11 @@ const StartupForumPage = () => {
     }
   }
 
+  const closeDiscussionModal = () => {
+    setShowDiscussionModal(false)
+    setEditingPost(null)
+  }
+
   const handleEditPost = (post, event) => {
     event.stopPropagation()
     setEditingPost(post)
@@ -698,7 +703,7 @@ useEffect(() => {
       {/* Start New Discussion Modal */}
       <StartNewDiscussionModal
         show={showDiscussionModal}
-        onHide={toggleDiscussionModal}
+        onHide={closeDiscussionModal}
         editingPost={editingPost}
         onSuccess={handleDiscussionSuccess}
       />
