@@ -145,6 +145,18 @@ export default function VideoView(props) {
                     by <IntlMessages id={props.description} />
                   </p>
                 )}
+                {videoData?.type === 'live-qa' && (
+                  <p
+                    className='card-text'
+                    style={{
+                      textAlign: 'center',
+                      fontSize: '13px',
+                      color: '#666'
+                    }}
+                  >
+                    {props.description}
+                  </p>
+                )}
               </>
             </div>
           </Link>
