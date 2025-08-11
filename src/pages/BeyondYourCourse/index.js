@@ -13,6 +13,7 @@ import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.pn
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import './index.css';
+import LiveQA from '../../assets/images/LiveQ&A.jpg'
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch();
@@ -89,6 +90,69 @@ export default function BeyondYourCourse() {
             title={video.title}
             description={video.description}
             page={'podcast'}
+            isMainPage={true}
+            videoData={video}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const renderLiveQAVideos = () => {
+    // Dummy data for Live Q&A videos with dates
+    const liveQAVideos = [
+      {
+        id: 'liveqa-1',
+        title: 'Live Q&A Session #1',
+        description: 'December 12, 2024',
+        thumbnail: LiveQA,
+        createdAt: '2024-01-15T10:00:00.000Z', // January 15, 2024
+        type: 'live-qa' // Add type to enable description display
+      },
+      {
+        id: 'liveqa-2', 
+        title: 'Live Q&A Session #2',
+        description: 'December 17, 2024',
+        thumbnail: LiveQA,
+        createdAt: '2024-02-20T14:30:00.000Z', // February 20, 2024
+        type: 'live-qa'
+      },
+      {
+        id: 'liveqa-3',
+        title: 'Live Q&A Session #3', 
+        description: 'January 04, 2025',
+        thumbnail: LiveQA,
+        createdAt: '2024-03-10T16:00:00.000Z', // March 10, 2024
+        type: 'live-qa'
+      },
+      {
+        id: 'liveqa-4',
+        title: 'Live Q&A Session #4',
+        description: 'January 13, 2025',
+        thumbnail: LiveQA,
+        createdAt: '2024-04-05T11:15:00.000Z', // April 5, 2024
+        type: 'live-qa'
+      },
+      {
+        id: 'liveqa-5',
+        title: 'Live Q&A Session #5',
+        description: 'January 25, 2025',
+        thumbnail: LiveQA,
+        createdAt: '2024-05-12T13:45:00.000Z', // May 12, 2024
+        type: 'live-qa'
+      }
+    ];
+
+    return (
+      <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+        {liveQAVideos.map((video, index) => (
+          <Video
+            key={index}
+            id={video.id}
+            thumbnail={video.thumbnail}
+            title={video.title}
+            description={video.description}
+            page={'live-qa'}
             isMainPage={true}
             videoData={video}
           />
@@ -212,6 +276,38 @@ export default function BeyondYourCourse() {
                   </Link>
                 </div>
                 {renderPodcastEpisodes()}
+              </div>
+
+              <div className="videos-container">
+                <div className="guidance-videos-top mb-3 guidance-encouragement-page-titles">
+                  <div className="title-container">
+                    <img
+                      src={masterIcon}
+                      alt="logo"
+                      style={{ width: '36px', height: '36px' }}
+                      className="welcome-journey-text__icon"
+                    />
+                    <h3>
+                      Live Q&A Webinars
+                    </h3>
+                  </div>
+                  <Link
+                    className="guidance-link"
+                    to="/beyond-your-course"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                    }}
+                    style={{ marginRight: '1rem' }}
+                  >
+                    <IntMessages id="general.view_all" />
+                    <img
+                      src={rightArrow}
+                      style={{ marginLeft: '10px', marginBottom: '3px' }}
+                      alt="View All"
+                    />
+                  </Link>
+                </div>
+                {renderLiveQAVideos()}
               </div>
             </div>
           </div>

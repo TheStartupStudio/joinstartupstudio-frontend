@@ -363,7 +363,7 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
               </div>   
             )}
 
-            <div className='d-flex gap-3 align-items-center' style={{ marginLeft: 'auto' }}>
+            <div className='d-flex gap-3 align-items-center'>
               <Button 
                 variant="outline-secondary"
                 onClick={handleCancel}
@@ -423,8 +423,10 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
               borderRadius: '24px',
               textAlign: 'center',
               width: '100%',
-              maxWidth: '748px'
+              maxWidth: '748px',
+              margin: '0px 15px',
             }}
+            className="delete-new-discussion-modal"
             onClick={(e) => e.stopPropagation()}
           >
 
@@ -437,7 +439,7 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
             <p style={{ margin: '30px 0px 55px 0px' }}>
               Are you sure you want to delete this comment?
             </p>
-            <div className="d-flex gap-5 justify-content-center">
+            <div className="d-flex gap-5 justify-content-center align-items-center modal-btn-container">
               <Button  
                 onClick={() => {
                   setShowDeleteConfirm(false)

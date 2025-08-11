@@ -914,8 +914,10 @@ const CommentSection = () => {
               borderRadius: '24px',
               textAlign: 'center',
               width: '100%',
-              maxWidth: '748px'
+              maxWidth: '748px',
+              margin: '0px 15px',
             }}
+            className="delete-new-discussion-modal"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-100 text-start">
@@ -927,7 +929,7 @@ const CommentSection = () => {
             <p style={{ margin: '30px 0px 55px 0px' }}>
               Are you sure you want to delete this comment?
             </p>
-            <div className="d-flex gap-5 justify-content-center">
+            <div className="d-flex gap-5 justify-content-center align-items-center modal-btn-container">
               <Button  
                 onClick={() => {
                   setShowDeleteConfirm(false)

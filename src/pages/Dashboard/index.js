@@ -21,10 +21,6 @@ import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
-import UpcomingEventsCalendar from '../../components/UpcomingEventsCalendar'
-import ForumSection from '../../components/ForumSection'
-import LeaderBoard from '../../components/LeaderBoard'
-
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -160,18 +156,13 @@ const handleContinueCourse = async () => {
         </div>
 
         <div className='d-grid academy-new-dashboard-layout bck-dashboard'>
-
-          {/* <div className='dashboard-user-details-grid'>
-            <UserDetails
-              profilePic={profilePic}
-              userName={'Kenia Anders'}
-              userProffesion={'Graphic Designer'}
-            />
-          </div> */}
+          <UserDetails
+            profilePic={profilePic}
+            userName={'Kenia Anders'}
+            userProffesion={'Graphic Designer'}
+          />
 
           <CourseProgress />
-
-          <UpcomingEventsCalendar />
 
           <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between flex-col-mob mb-1rem-tab gap-1rem-mob '>
             <div className='d-flex align-items-center gap-3 flex-col-mob'>
@@ -199,10 +190,6 @@ const handleContinueCourse = async () => {
               onClick={handleContinueCourse}
             />
           </div>
-
-          <ForumSection />
-
-          <LeaderBoard />
         </div>
       </div>
     </div>

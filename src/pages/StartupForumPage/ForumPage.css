@@ -590,4 +590,16 @@
   display: flex;
   flex-direction: column;
  }
+
+
+ .add-comment-modal .modal-btn-container {
+  display: flex;
+  flex-direction: column;
+ }
+
+ .delete-new-discussion-modal .modal-btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px !important;
+ }
 }
