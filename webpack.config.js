@@ -100,10 +100,10 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      favicon: './public/favicon.png',
+      favicon: './public/favicon.ico',
       minify: false
     }),
-    new DotenvWebpackPlugin() // Load environment variables via dotenv-webpack
+    new DotenvWebpackPlugin()
   ],
   optimization: {
     splitChunks: {
