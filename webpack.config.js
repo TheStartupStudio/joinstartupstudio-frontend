@@ -24,29 +24,35 @@ module.exports = {
       overlay: {
         errors: (error) => {
           // Suppress ResizeObserver errors with multiple variations
-          const message = error.message || '';
-          const stack = error.stack || '';
-          
+          const message = error.message || ''
+          const stack = error.stack || ''
+
           if (
-            message.includes('ResizeObserver loop completed with undelivered notifications') ||
+            message.includes(
+              'ResizeObserver loop completed with undelivered notifications'
+            ) ||
             message.includes('ResizeObserver loop limit exceeded') ||
             stack.includes('ResizeObserver') ||
             message.includes('webpack-dev-server/client/overlay.js')
           ) {
-            return false;
+            return false
           }
-          return true;
+          return true
         },
         warnings: false,
         runtimeErrors: (error) => {
-          const message = error.message || '';
-          if (message.includes('ResizeObserver loop completed with undelivered notifications')) {
-            return false;
+          const message = error.message || ''
+          if (
+            message.includes(
+              'ResizeObserver loop completed with undelivered notifications'
+            )
+          ) {
+            return false
           }
-          return true;
-        },
-      },
-    },
+          return true
+        }
+      }
+    }
   },
   module: {
     rules: [
@@ -101,7 +107,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      favicon: './public/favicon.png',
+      favicon: './public/favicon.ico',
       minify: false
     }),
     new DotenvWebpackPlugin(),
