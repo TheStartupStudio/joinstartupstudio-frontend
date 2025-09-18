@@ -6,9 +6,10 @@ import ExpandLogo from '../../assets/images/academy-icons/fast-arrow-right.png'
 import LogOutIcon from '../../assets/images/academy-icons/svg/LogOut.svg'
 import CoursEnIcon from '../../assets/images/academy-icons/svg/course-in-e.svg'
 import DashIcon from '../../assets/images/academy-icons/svg/dashboard.svg'
+import AdminDashIcon from '../../assets/images/academy-icons/svg/dashboard.svg' // You'll need to add this
 import IntroToIcon from '../../assets/images/academy-icons/svg/intro-to-course.svg'
-import LeadershipIcon from '../../assets/images/academy-icons/svg/leadership-journal.svg'
 import MasterIcon from '../../assets/images/academy-icons/svg/master-classes.svg'
+import LeadershipIcon from '../../assets/images/academy-icons/svg/leadership-journal.svg'
 import PortfolioIcon from '../../assets/images/academy-icons/svg/my-portfolio.svg'
 import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
 import { setAccordionToggled, userLogout } from '../../redux'
@@ -23,6 +24,69 @@ import CertificateModal from '../UserDetails/CertificateModal'
 import EditUserModal from '../UserDetails/EditUserModal'
 import SubscriptionModal from '../UserDetails//SubscriptionModal'
 
+const SIDEBAR_MENU_ITEMS = [
+  // Role 3 for admin
+  // Role 2 for instructor
+  // Role 1 for student
+  // 'all' for all roles
+  {
+    id: 'dashboard',
+    title: 'Dashboard',
+    srcImage: DashIcon,
+    to: '/dashboard',
+    roles: ['all'],
+    className: (pathname) => pathname.includes('dashboard') && !pathname.includes('admin-dashboard') ? 'active' : ''
+  },
+  {
+    id: 'admin-dashboard',
+    title: 'Admin Dashboard',
+    srcImage: AdminDashIcon,
+    to: '/admin-dashboard',
+    roles: [3],
+    className: (pathname) => pathname.includes('admin-dashboard') ? 'active' : ''
+  },
+  {
+    id: 'intro-course',
+    title: 'Intro to course',
+    srcImage: IntroToIcon,
+    to: '/my-course-in-entrepreneurship',
+    roles: ['all'],
+    className: (pathname) => pathname === '/my-course-in-entrepreneurship' ? 'active' : ''
+  },
+  {
+    id: 'course-entrepreneurship',
+    title: 'Course in enterpreneurship',
+    srcImage: CoursEnIcon,
+    to: '/my-course-in-entrepreneurship/journal',
+    roles: ['all'],
+    className: (pathname) => pathname.includes('my-course-in-entrepreneurship/journal') ? 'active' : ''
+  },
+  {
+    id: 'master-classes',
+    title: 'Master classes',
+    srcImage: MasterIcon,
+    to: '/beyond-your-course',
+    roles: ['all'],
+    className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
+  },
+  {
+    id: 'leadership-journal',
+    title: 'Leadership journal',
+    srcImage: LeadershipIcon,
+    to: '/leadership-journal',
+    roles: ['all'],
+    className: (pathname) => pathname.includes('leadership-journal') ? 'active' : ''
+  },
+  {
+    id: 'my-portfolio',
+    title: 'My portfolio',
+    srcImage: PortfolioIcon,
+    to: '/my-portfolio',
+    roles: ['all'],
+    className: (pathname) => pathname.includes('my-portfolio') ? 'active' : ''
+  }
+]
+
 const InstructorSidebar = (props) => {
   const [isTextVisible, setIsTextVisible] = useState(true)
   const dispatch = useDispatch()
@@ -35,6 +99,19 @@ const InstructorSidebar = (props) => {
   const [certificate, setCertificate] = useState(false)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
   const hoverTimeout = useRef(null)
+
+  // Function to check if user has permission to see menu item
+  const hasPermission = (itemRoles, userRoleId) => {
+    if (itemRoles.includes('all')) return true
+    return itemRoles.includes(userRoleId)
+  }
+
+  // Filter menu items based on user role
+  const getVisibleMenuItems = () => {
+    const userRoleId = user?.role_id || 1 // Default to student (1) if no role
+
+    return SIDEBAR_MENU_ITEMS.filter(item => hasPermission(item.roles, userRoleId))
+  }
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -96,7 +173,7 @@ const InstructorSidebar = (props) => {
       if (!isCollapsed) {
         dispatch(toggleCollapse(true))
       }
-    }, 100) // Debounce to avoid flicker
+    }, 100)
   }
 
   const handleSidebarToggle = () => {
@@ -108,7 +185,6 @@ const InstructorSidebar = (props) => {
     await dispatch(userLogout())
       .then(() => {
         localStorage.clear()
-        // history.push('/')
         window.location.href = '/'
       })
       .catch((error) => {
@@ -121,7 +197,6 @@ const InstructorSidebar = (props) => {
   }
 
   const navHeight = props.navHeight
-  // console.log('ridon91', navHeight)
 
   return (
     <div
@@ -133,279 +208,54 @@ const InstructorSidebar = (props) => {
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
         id='side-menu-main'
       >
-        {isCollapsed ? (
-          // <Tooltip text={'Dashboard'}>
-            <SidebarItem
-              onClick={() => {
-                dispatch(setAccordionToggled(false))
-                props.props.hideHeaderIcons()
-              }}
-              to={'/dashboard'}
-              className={`${
-                location.pathname.includes('dashboard') ? 'active' : ''
-              }`}
-              srcImage={DashIcon}
-              title={isTextVisible && !isCollapsed && 'Dashboard'}
-              isDropdown={false}
-            />
-          // </Tooltip>
-        ) : (
+        {getVisibleMenuItems().map((item) => (
           <SidebarItem
+            key={item.id}
             onClick={() => {
               dispatch(setAccordionToggled(false))
               props.props.hideHeaderIcons()
             }}
-            to={'/dashboard'}
-            className={`${
-              location.pathname.includes('dashboard') ? 'active' : ''
-            }`}
-            srcImage={DashIcon}
-            title={isTextVisible && !isCollapsed && 'Dashboard'}
+            to={item.to}
+            className={typeof item.className === 'function' ? item.className(location.pathname) : item.className}
+            srcImage={item.srcImage}
+            title={isTextVisible && !isCollapsed && item.title}
             isDropdown={false}
           />
-        )}
-
-        {isCollapsed ? (
-          // <Tooltip text={'Intro to Course'}>
-            <SidebarItem
-              onClick={() => {
-                dispatch(setAccordionToggled(false))
-                props.props.hideHeaderIcons()
-              }}
-              to={'/my-course-in-entrepreneurship'}
-              className={`${
-                location.pathname === '/my-course-in-entrepreneurship'
-                  ? 'active'
-                  : ''
-              }`}
-              srcImage={IntroToIcon}
-              title={isTextVisible && !isCollapsed && 'Intro to course'}
-              isDropdown={false}
-            />
-          // </Tooltip>
-        ) : (
-          <SidebarItem
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              props.props.hideHeaderIcons()
-            }}
-            to={'/my-course-in-entrepreneurship'}
-            className={`${
-              location.pathname === '/my-course-in-entrepreneurship'
-                ? 'active'
-                : ''
-            }`}
-            srcImage={IntroToIcon}
-            title={isTextVisible && !isCollapsed && 'Intro to course'}
-            isDropdown={false}
-          />
-        )}
-
-        {isCollapsed ? (
-          // <Tooltip text={'Course In Entrepreneurship'}>
-            <SidebarItem
-              onClick={() => {
-                dispatch(setAccordionToggled(false))
-                props.props.hideHeaderIcons()
-              }}
-              to={'/my-course-in-entrepreneurship/journal'}
-              className={`${
-                location.pathname.includes(
-                  'my-course-in-entrepreneurship/journal'
-                )
-                  ? 'active'
-                  : ''
-              }`}
-              srcImage={CoursEnIcon}
-              title={
-                isTextVisible && !isCollapsed && 'Course in enterpreneurship'
-              }
-              isDropdown={false}
-            />
-          // </Tooltip>
-        ) : (
-          <SidebarItem
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              props.props.hideHeaderIcons()
-            }}
-            to={'/my-course-in-entrepreneurship/journal'}
-            className={`${
-              location.pathname.includes(
-                'my-course-in-entrepreneurship/journal'
-              )
-                ? 'active'
-                : ''
-            }`}
-            srcImage={CoursEnIcon}
-            title={
-              isTextVisible && !isCollapsed && 'Course in enterpreneurship'
-            }
-            isDropdown={false}
-          />
-        )}
-
-        {isCollapsed ? (
-          // <Tooltip text={'Master Classes'}>
-            <SidebarItem
-              onClick={() => {
-                dispatch(setAccordionToggled(false))
-                props.props.hideHeaderIcons()
-              }}
-              to={'/beyond-your-course'}
-              className={`${
-                location.pathname.includes('beyond-your-course') ? 'active' : ''
-              }`}
-              srcImage={MasterIcon}
-              title={isTextVisible && !isCollapsed && 'Master classes'}
-              isDropdown={false}
-            />
-          // </Tooltip>
-        ) : (
-          <SidebarItem
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              props.props.hideHeaderIcons()
-            }}
-            to={'/beyond-your-course'}
-            className={`${
-              location.pathname.includes('beyond-your-course') ? 'active' : ''
-            }`}
-            srcImage={MasterIcon}
-            title={isTextVisible && !isCollapsed && 'Master classes'}
-            isDropdown={false}
-          />
-        )}
-
-        {isCollapsed ? (
-          // <Tooltip text={'Leadership Journal'}>
-            <SidebarItem
-              onClick={() => {
-                dispatch(setAccordionToggled(false))
-                props.props.hideHeaderIcons()
-              }}
-              to={'/leadership-journal'}
-              className={`${
-                location.pathname.includes('leadership-journal') ? 'active' : ''
-              }`}
-              srcImage={LeadershipIcon}
-              title={isTextVisible && !isCollapsed && 'Leadership journal'}
-              isDropdown={false}
-            />
-          // </Tooltip>
-        ) : (
-          <SidebarItem
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              props.props.hideHeaderIcons()
-            }}
-            to={'/leadership-journal'}
-            className={`${
-              location.pathname.includes('leadership-journal') ? 'active' : ''
-            }`}
-            srcImage={LeadershipIcon}
-            title={isTextVisible && !isCollapsed && 'Leadership journal'}
-            isDropdown={false}
-          />
-        )}
-
-        {isCollapsed ? (
-          // <Tooltip text={'My Portfolio'}>
-            <SidebarItem
-              onClick={() => {
-                dispatch(setAccordionToggled(false))
-                props.props.hideHeaderIcons()
-              }}
-              to={'/my-portfolio'}
-              className={`${
-                location.pathname.includes('my-portfolio') ? 'active' : ''
-              }`}
-              srcImage={PortfolioIcon}
-              title={isTextVisible && !isCollapsed && 'My portfolio'}
-              isDropdown={false}
-            />
-          // </Tooltip>
-        ) : (
-          <SidebarItem
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              props.props.hideHeaderIcons()
-            }}
-            to={'/my-portfolio'}
-            className={`${
-              location.pathname.includes('my-portfolio') ? 'active' : ''
-            }`}
-            srcImage={PortfolioIcon}
-            title={isTextVisible && !isCollapsed && 'My portfolio'}
-            isDropdown={false}
-          />
-        )}
+        ))}
       </ul>
+      
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
         style={{ marginTop: '-20px' }}
       >
-        {isCollapsed ? (
-          // <Tooltip text={'My Account'}>
-            <li
-              className='sub-li'
-              onClick={() => {
-                dispatch(setAccordionToggled(false))
-                dispatch(collapseTrue())
-                props.props.hideHeaderIcons()
-                toggle()
-              }}
-            >
-              <div className='logout-button'>
-                <div className='d-flex w-100' style={{ alignItems: 'center' }}>
-                  <Col md='2' className='col-2 icon_container'>
-                    <img
-                      src={SettingsIcon}
-                      alt='Icon'
-                      style={{
-                        width: '26px',
-                        marginLeft: '3px',
-                        objectFit: 'cover'
-                      }}
-                    />
-                  </Col>
-                  {isTextVisible && !isCollapsed && (
-                    <div className='flex-grow-1 ms-1 mb-1'>MY ACCOUNT</div>
-                  )}
-                </div>
-              </div>
-            </li>
-          // </Tooltip>
-        ) : (
-          <li
-            className='sub-li'
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              dispatch(collapseTrue())
-              props.props.hideHeaderIcons()
-              toggle()
-            }}
-          >
-            <div className='logout-button'>
-              <div className='d-flex w-100' style={{ alignItems: 'center' }}>
-                <Col md='2' className='col-2 icon_container'>
-                  <img
-                    src={SettingsIcon}
-                    alt='Icon'
-                    style={{
-                      width: '26px',
-                      marginLeft: '3px',
-                      objectFit: 'cover'
-                    }}
-                  />
-                </Col>
-                {isTextVisible && !isCollapsed && (
-                  <div className='flex-grow-1 ms-1 mb-1'>MY ACCOUNT</div>
-                )}
-              </div>
+        <li
+          className='sub-li'
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            dispatch(collapseTrue())
+            props.props.hideHeaderIcons()
+            toggle()
+          }}
+        >
+          <div className='logout-button'>
+            <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+              <Col md='2' className='col-2 icon_container'>
+                <img
+                  src={SettingsIcon}
+                  alt='Icon'
+                  style={{
+                    width: '26px',
+                    marginLeft: '3px',
+                    objectFit: 'cover'
+                  }}
+                />
+              </Col>
+              {isTextVisible && !isCollapsed && (
+                <div className='flex-grow-1 ms-1 mb-1'>MY ACCOUNT</div>
+              )}
             </div>
-          </li>
-        )}
+          </div>
+        </li>
 
         <li className='sub-li'>
           <Link to='/dashboard'>
@@ -429,52 +279,31 @@ const InstructorSidebar = (props) => {
             </div>
           </Link>
         </li>
-        {isCollapsed ? (
-          // <Tooltip text={'Log Out'}>
-            <li className='sub-li' onClick={handleLogout}>
-              <div className='logout-button'>
-                <div className='d-flex w-100' style={{ alignItems: 'center' }}>
-                  <Col md='2' className='col-2 icon_container'>
-                    <img
-                      src={LogOutIcon}
-                      alt='Icon'
-                      style={{ width: '26px', marginLeft: '3px' }}
-                    />
-                  </Col>
-                  {isTextVisible && !isCollapsed && (
-                    <div className='flex-grow-1 ms-1 mb-1'>LOG OUT</div>
-                  )}
-                </div>
-              </div>
-            </li>
-          // </Tooltip>
-        ) : (
-          <li className='sub-li' onClick={handleLogout}>
-            <div className='logout-button'>
-              <div className='d-flex w-100' style={{ alignItems: 'center' }}>
-                <Col md='2' className='col-2 icon_container'>
-                  <img
-                    src={LogOutIcon}
-                    alt='Icon'
-                    style={{ width: '26px', marginLeft: '3px' }}
-                  />
-                </Col>
-                {isTextVisible && !isCollapsed && (
-                  <div className='flex-grow-1 ms-1 mb-1'>LOG OUT</div>
-                )}
-              </div>
-            </div>
-          </li>
-        )}
-      </ul>
-      <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
+        <li className='sub-li' onClick={handleLogout}>
+          <div className='logout-button'>
+            <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+              <Col md='2' className='col-2 icon_container'>
+                <img
+                  src={LogOutIcon}
+                  alt='Icon'
+                  style={{ width: '26px', marginLeft: '3px' }}
+                />
+              </Col>
+              {isTextVisible && !isCollapsed && (
+                <div className='flex-grow-1 ms-1 mb-1'>LOG OUT</div>
+              )}
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
       <SubscriptionModal
         subsbsciptionModal={subsbsciptionModal}
         setSubscriptionModal={setSubscriptionModal}
         toggleCancelModal={toggleCancelModal}
       />
-
       <CancelSubModal
         cancelSubModal={cancelSubModal}
         setCancelSubModal={setCancelSubModal}
