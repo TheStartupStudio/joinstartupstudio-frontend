@@ -2,6 +2,9 @@
   padding: 24px;
   background-color: #f8fafc;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px
 }
 
 .admin-info-container {
@@ -59,7 +62,6 @@
     font-size: 21px;
 }
 
-
 .admin-info-container .info-box div{
     background-color: #F0F2F6;
     display: flex;
@@ -69,4 +71,93 @@
     text-align: center;
     width: 100%;
     border-radius: 8px;
+}
+
+.chart-container {
+  width: 100% !important;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.chart-container > div {
+  width: 100% !important;
+}
+
+.chart-container .chartjs-render-monitor {
+  width: 100% !important;
+}
+
+.chart-responsive-container {
+  width: 100% !important;
+  height: 350px;
+}
+
+.chart-responsive-wrapper {
+  height: 280px;
+  width: 100% !important;
+}
+
+@media (min-width: 1200px) {
+  .chart-responsive-container {
+    height: 400px;
+  }
+  
+  .chart-responsive-wrapper {
+    height: 320px;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  .chart-responsive-container {
+    height: 320px;
+  }
+  
+  .chart-responsive-wrapper {
+    height: 250px;
+  }
+}
+
+@media (max-width: 767px) {
+  .chart-responsive-container {
+    height: 280px;
+  }
+  
+  .chart-responsive-wrapper {
+    height: 220px;
+  }
+  
+  .d-flex.gap-4.flex-wrap {
+    flex-direction: column !important;
+  }
+  
+  .d-flex.gap-4.flex-wrap > div {
+    flex: none !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-responsive-container {
+    height: 250px;
+  }
+  
+  .chart-responsive-wrapper {
+    height: 200px;
+  }
+  
+  .admin-info-container {
+    padding: 10px;
+  }
+  
+  h4 {
+    font-size: 14px !important;
+  }
 }
