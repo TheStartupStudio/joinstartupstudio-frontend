@@ -182,9 +182,17 @@ const StartupForumComments = React.lazy(() =>
   import('../pages/StartupForumPage/CommentSection')
 )
 
+const AdminDashboardPage = React.lazy(() =>
+  import('../pages/AdminDashboard')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
-  // { path: '/user-management', component: UserManagement },
+  {
+    path: '/admin-dashboard',
+    component: AdminDashboardPage,
+    breadcrumb: 'Admin Dashboard'
+  },
   {
     path: '/my-school/:page?',
     component: MySchoolContainer,
