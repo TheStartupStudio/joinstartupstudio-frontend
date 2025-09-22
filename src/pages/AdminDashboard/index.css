@@ -161,3 +161,25 @@
     font-size: 14px !important;
   }
 }
+
+/* Scrollbar styling for gender chart only */
+@media (max-width: 1000px) {
+  .chart-container::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+  }
+
+  .chart-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 10px;
+  }
+
+  .chart-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+
+  .chart-container::-webkit-scrollbar-thumb:hover {
+    background: #999;
+  }
+}
