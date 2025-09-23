@@ -43,7 +43,7 @@ const UserManagement = () => {
   // Modal states
   const [showAddOrganizationModal, setShowAddOrganizationModal] = useState(false)
   const [selectedOrganization, setSelectedOrganization] = useState(null)
-  const [modalMode, setModalMode] = useState('add') // 'add' or 'edit'
+  const [modalMode, setModalMode] = useState('add') // 'add', 'edit', or 'view'
 
   const organizationsData = [
     {
@@ -215,7 +215,7 @@ const UserManagement = () => {
         console.log('Edit learner:', item.id)
         break
       case 'view-organization':
-        console.log('View organization:', item.id)
+        handleViewOrganization(item)
         break
       case 'edit-organization':
         handleEditOrganization(item)
@@ -238,6 +238,12 @@ const UserManagement = () => {
       default:
         break
     }
+  }
+
+  const handleViewOrganization = (organization) => {
+    setSelectedOrganization(organization)
+    setModalMode('view')
+    setShowAddOrganizationModal(true)
   }
 
   const handleEditOrganization = (organization) => {

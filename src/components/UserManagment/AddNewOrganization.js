@@ -215,6 +215,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   }
 
   const isEditMode = mode === 'edit'
+  const isViewMode = mode === 'view'
+  const isReadOnly = isViewMode
 
   return (
     <Modal
@@ -233,7 +235,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
            <img src={newCity} />
           </div>
           <h3 className="modal-title">
-            {isEditMode ? 'Edit Organization' : 'Add New Organization'}
+            {isViewMode ? 'View Organization' : isEditMode ? 'Edit Organization' : 'Add New Organization'}
           </h3>
         </div>
 
@@ -244,30 +246,32 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             <span>Organization Details</span>
           </div>
           
-          <div className="input-group" onClick={() => handleInputFocus('organizationName')}>
+          <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('organizationName')}>
             <input
               type="text"
               value={formData.organizationName}
-              onChange={(e) => handleInputChange('organizationName', e.target.value)}
+              onChange={(e) => !isReadOnly && handleInputChange('organizationName', e.target.value)}
               className="form-input"
               placeholder=" "
               id="organizationName"
+              disabled={isReadOnly}
             />
             <label className="input-label" htmlFor="organizationName">Organization Name</label>
-            <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+            {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
           </div>
 
-          <div className="input-group" onClick={() => handleInputFocus('organizationAddress')}>
+          <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('organizationAddress')}>
             <input
               type="text"
               value={formData.organizationAddress}
-              onChange={(e) => handleInputChange('organizationAddress', e.target.value)}
+              onChange={(e) => !isReadOnly && handleInputChange('organizationAddress', e.target.value)}
               className="form-input"
               placeholder=" "
               id="organizationAddress"
+              disabled={isReadOnly}
             />
             <label className="input-label" htmlFor="organizationAddress">Address</label>
-            <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+            {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
           </div>
         </div>
 
@@ -278,30 +282,32 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             <span>Administrator Details</span>
           </div>
           
-          <div className="input-group" onClick={() => handleInputFocus('administratorName')}>
+          <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('administratorName')}>
             <input
               type="text"
               value={formData.administratorName}
-              onChange={(e) => handleInputChange('administratorName', e.target.value)}
+              onChange={(e) => !isReadOnly && handleInputChange('administratorName', e.target.value)}
               className="form-input"
               placeholder=" "
               id="administratorName"
+              disabled={isReadOnly}
             />
             <label className="input-label" htmlFor="administratorName">Administrator Name</label>
-            <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+            {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
           </div>
 
-          <div className="input-group" onClick={() => handleInputFocus('administratorEmail')}>
+          <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('administratorEmail')}>
             <input
               type="email"
               value={formData.administratorEmail}
-              onChange={(e) => handleInputChange('administratorEmail', e.target.value)}
+              onChange={(e) => !isReadOnly && handleInputChange('administratorEmail', e.target.value)}
               className="form-input"
               placeholder=" "
               id="administratorEmail"
+              disabled={isReadOnly}
             />
             <label className="input-label" htmlFor="administratorEmail">Administrator Email</label>
-            <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+            {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
           </div>
         </div>
 
@@ -312,17 +318,18 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             <span>Domain Details</span>
           </div>
           
-          <div className="input-group" onClick={() => handleInputFocus('domainURL')}>
+          <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('domainURL')}>
             <input
               type="text"
               value={formData.domainURL}
-              onChange={(e) => handleInputChange('domainURL', e.target.value)}
+              onChange={(e) => !isReadOnly && handleInputChange('domainURL', e.target.value)}
               className="form-input"
               placeholder=" "
               id="domainURL"
+              disabled={isReadOnly}
             />
             <label className="input-label" htmlFor="domainURL">Domain URL</label>
-            <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+            {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
           </div>
         </div>
 
@@ -336,24 +343,26 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           {formData.pricingTiers.map((tier, index) => (
             <div key={index} className="pricing-tier">
               <div className="pricing-inputs">
-                <div className="input-group pricing-amount" onClick={() => handleInputFocus(`pricingAmount-${index}`)}>
+                <div className="input-group pricing-amount" onClick={() => !isReadOnly && handleInputFocus(`pricingAmount-${index}`)}>
                   <input
                     type="text"
                     value={tier.amount}
-                    onChange={(e) => handlePricingChange(index, 'amount', e.target.value)}
+                    onChange={(e) => !isReadOnly && handlePricingChange(index, 'amount', e.target.value)}
                     className="form-input"
                     placeholder=" "
                     id={`pricingAmount-${index}`}
+                    disabled={isReadOnly}
                   />
                   <label className="input-label" htmlFor={`pricingAmount-${index}`}>Price</label>
-                  <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+                  {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
                 </div>
 
                 <div className="frequency-dropdown">
                   <select
                     value={tier.frequency}
-                    onChange={(e) => handlePricingChange(index, 'frequency', e.target.value)}
+                    onChange={(e) => !isReadOnly && handlePricingChange(index, 'frequency', e.target.value)}
                     className="frequency-select"
+                    disabled={isReadOnly}
                   >
                     {frequencyOptions.map(option => (
                       <option key={option.value} value={option.value}>
@@ -364,7 +373,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                 </div>
               </div>
               
-              {formData.pricingTiers.length > 1 && (
+              {!isReadOnly && formData.pricingTiers.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removePricingTier(index)}
@@ -377,14 +386,16 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             </div>
           ))}
 
-          <button
-            type="button"
-            onClick={addNewPricingTier}
-            className="add-pricing-tier-btn"
-          >
-            <FontAwesomeIcon icon={faPlus} />
-            Add new pricing tier
-          </button>
+          {!isReadOnly && (
+            <button
+              type="button"
+              onClick={addNewPricingTier}
+              className="add-pricing-tier-btn"
+            >
+              <FontAwesomeIcon icon={faPlus} />
+              Add new pricing tier
+            </button>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -395,20 +406,22 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             onClick={handleClose}
             disabled={loading}
           >
-            CANCEL
+            {isViewMode ? 'CLOSE' : 'CANCEL'}
           </button>
-          <button
-            type="button"
-            className="add-btn"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="spinner-border spinner-border-sm" />
-            ) : (
-              isEditMode ? 'SAVE CHANGES' : 'ADD ORGANIZATION'
-            )}
-          </button>
+          {!isViewMode && (
+            <button
+              type="button"
+              className="add-btn"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="spinner-border spinner-border-sm" />
+              ) : (
+                isEditMode ? 'SAVE CHANGES' : 'ADD ORGANIZATION'
+              )}
+            </button>
+          )}
         </div>
       </div>
     </Modal>
