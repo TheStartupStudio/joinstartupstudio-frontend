@@ -1,10 +1,37 @@
-.data-table-container {
+tbody{
   overflow-x: auto;
+}
+
+.data-table-container {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
 }
 
 .data-table {
   width: 100%;
+  min-width: 1000px;
   border-collapse: collapse;
+  display: table;
+}
+
+.data-table thead {
+  display: table-header-group;
+  background: #f8fafc;
+  position: sticky;
+  top: 0;
+  z-index: 11;
+}
+
+.data-table tbody {
+  display: table-row-group;
+}
+
+.data-table thead tr,
+.data-table tbody tr {
+  display: table-row;
 }
 
 .data-table th {
@@ -17,6 +44,9 @@
   letter-spacing: 0.5px;
   border: none;
   border-bottom: 1px solid rgb(227, 229, 233);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .data-table td {
@@ -166,8 +196,43 @@
   color: #374151;
 }
 
+/* Dropdown positioning - ensure it appears on top */
+.more-actions-dropdown-menu {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+.filter-dropdown-menu {
+  z-index: 9998 !important;
+}
+
+/* Custom scrollbar for table container */
+.data-table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.data-table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.data-table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.data-table-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.data-table-container::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  
   .data-table {
     font-size: 12px;
   }
@@ -179,6 +244,7 @@
 }
 
 @media (max-width: 480px) {
+  
   .data-table th,
   .data-table td {
     padding: 8px 12px;

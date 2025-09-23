@@ -26,23 +26,25 @@ import DataTable from '../../components/DataTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import groupAdd from '../../assets/images/academy-icons/svg/user-group-add.svg'
 import userPlus from '../../assets/images/academy-icons/svg/Icon_User_Add_Alt.svg'
-
 import userDeactivate from '../../assets/images/academy-icons/svg/Icon_User_de.svg'
 import warningTriangle from '../../assets/images/academy-icons/svg/warning-triangle.svg'
 import userPassword from '../../assets/images/academy-icons/svg/Icon_User_Pass.svg'
 import download from '../../assets/images/academy-icons/svg/download.svg'
-
-
+import AddNewOrganization from '../../components/UserManagment/AddNewOrganization'
 
 const UserManagement = () => {
   const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState('Organizations')
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [showAddDropdown, setShowAddDropdown] = useState(false) // Changed from true to false
+  const [showAddDropdown, setShowAddDropdown] = useState(false) 
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
+  
+  // Modal states
+  const [showAddOrganizationModal, setShowAddOrganizationModal] = useState(false)
+  const [selectedOrganization, setSelectedOrganization] = useState(null)
+  const [modalMode, setModalMode] = useState('add') // 'add' or 'edit'
 
-  // Dummy data for organizations
   const organizationsData = [
     {
       id: 1,
@@ -64,10 +66,30 @@ const UserManagement = () => {
       domain: 'organization.aie.com',
       totalUsers: 24,
       monthlyFee: '$15 / user / mo'
+    },
+    {
+      id: 4,
+      name: 'Organization Name',
+      domain: 'organization.aie.com',
+      totalUsers: 24,
+      monthlyFee: '$15 / user / mo'
+    },
+    {
+      id: 5,
+      name: 'Organization Name',
+      domain: 'organization.aie.com',
+      totalUsers: 24,
+      monthlyFee: '$15 / user / mo'
+    },
+    {
+      id: 6,
+      name: 'Organization Name',
+      domain: 'organization.aie.com',
+      totalUsers: 24,
+      monthlyFee: '$15 / user / mo'
     }
   ]
 
-  // Dummy data for users
   const usersData = [
     {
       id: 1,
@@ -180,38 +202,71 @@ const UserManagement = () => {
     console.log(`${actionType} action for:`, item)
     
     switch (actionType) {
+      case 'view-learners':
+        console.log('View organization learners:', item.id)
+        break
+      case 'add-learners':
+        console.log('Add learners to organization:', item.id)
+        break
       case 'view':
-        if (activeTab === 'Organizations') {
-          console.log('View organization learners:', item.id)
-        } else {
-          console.log('View learner details:', item.id)
-        }
+        console.log('View learner details:', item.id)
         break
       case 'edit':
-        if (activeTab === 'Organizations') {
-          console.log('Edit organization:', item.id)
-        } else {
-          console.log('Edit learner:', item.id)
-        }
+        console.log('Edit learner:', item.id)
         break
-      case 'more':
-        console.log('More actions for:', item.id)
+      case 'view-organization':
+        console.log('View organization:', item.id)
+        break
+      case 'edit-organization':
+        handleEditOrganization(item)
+        break
+      case 'deactivate-organization':
+        console.log('Deactivate organization:', item.id)
+        break
+      case 'delete-organization':
+        console.log('Delete organization:', item.id)
+        break
+      case 'export-organization':
+        console.log('Export organization data:', item.id)
+        break
+      case 'deactivate-learner':
+        console.log('Deactivate learner:', item.id)
+        break
+      case 'delete-learner':
+        console.log('Delete learner:', item.id)
         break
       default:
         break
     }
   }
 
-  // Functions for organization actions
+  const handleEditOrganization = (organization) => {
+    setSelectedOrganization(organization)
+    setModalMode('edit')
+    setShowAddOrganizationModal(true)
+  }
+
+  const handleAddOrganization = () => {
+    setSelectedOrganization(null)
+    setModalMode('add')
+    setShowAddOrganizationModal(true)
+  }
+
+  const handleModalSuccess = () => {
+    // Refresh your organizations data here
+    console.log('Organization saved successfully, refreshing data...')
+    // You would typically fetch the updated data from your API here
+    // fetchOrganizations()
+  }
+
   function addSingleOrganization() {
-    console.log('Add Single Organization')
+    handleAddOrganization()
   }
 
   function bulkAddOrganizations() {
     console.log('Bulk Add Organizations')
   }
 
-  // Functions for user actions
   function addSingleUser() {
     console.log('Add Single User')
   }
@@ -220,7 +275,6 @@ const UserManagement = () => {
     console.log('Bulk Add Users')
   }
 
-  // Options for organizations
   const optionsOrganizations = [
     {
       name: 'Add Single Organization',
@@ -234,7 +288,6 @@ const UserManagement = () => {
     }
   ]
 
-  // Options for users
   const optionsUsers = [
     {
       name: 'Add Single User',
@@ -249,7 +302,6 @@ const UserManagement = () => {
     }
   ]
 
-  // Functions for bulk organization actions
   function deactivateOrganizations() {
     console.log('Deactivate Organizations')
   }
@@ -262,7 +314,6 @@ const UserManagement = () => {
     console.log('Export Organizations')
   }
 
-  // Functions for bulk user actions
   function resetPasswords() {
     console.log('Reset Passwords')
   }
@@ -279,7 +330,6 @@ const UserManagement = () => {
     console.log('Export Users')
   }
 
-  // Bulk options for organizations
   const bulkOptionsOrganizations = [
     {
       name: 'Deactivate Organizations',
@@ -298,7 +348,6 @@ const UserManagement = () => {
     }
   ]
 
-  // Bulk options for users
   const bulkOptionsUsers = [
     {
       name: 'Reset Passwords',
@@ -537,6 +586,15 @@ const UserManagement = () => {
           </button>
         </div>
       </div>
+
+      {/* Add New Organization Modal */}
+      <AddNewOrganization
+        show={showAddOrganizationModal}
+        onHide={() => setShowAddOrganizationModal(false)}
+        onSuccess={handleModalSuccess}
+        mode={modalMode}
+        organizationData={selectedOrganization}
+      />
     </div>
   )
 }
