@@ -21,8 +21,17 @@ import groupIcon from '../../assets/images/group.png'
 import totalEntrolledIcon from '../../assets/images/Total Enrolled Learners Icon.png'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import AcademyBtn from '../../components/AcademyBtn'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faEye, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import DataTable from '../../components/DataTable'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import groupAdd from '../../assets/images/academy-icons/svg/user-group-add.svg'
+import userPlus from '../../assets/images/academy-icons/svg/Icon_User_Add_Alt.svg'
+
+import userDeactivate from '../../assets/images/academy-icons/svg/Icon_User_de.svg'
+import warningTriangle from '../../assets/images/academy-icons/svg/warning-triangle.svg'
+import userPassword from '../../assets/images/academy-icons/svg/Icon_User_Pass.svg'
+import download from '../../assets/images/academy-icons/svg/download.svg'
+
 
 
 const UserManagement = () => {
@@ -30,6 +39,8 @@ const UserManagement = () => {
   const [activeTab, setActiveTab] = useState('Organizations')
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [showAddDropdown, setShowAddDropdown] = useState(false) // Changed from true to false
+  const [showBulkDropdown, setShowBulkDropdown] = useState(false)
 
   // Dummy data for organizations
   const organizationsData = [
@@ -191,8 +202,130 @@ const UserManagement = () => {
     }
   }
 
+  // Functions for organization actions
+  function addSingleOrganization() {
+    console.log('Add Single Organization')
+  }
+
+  function bulkAddOrganizations() {
+    console.log('Bulk Add Organizations')
+  }
+
+  // Functions for user actions
+  function addSingleUser() {
+    console.log('Add Single User')
+  }
+
+  function bulkAddUsers() {
+    console.log('Bulk Add Users')
+  }
+
+  // Options for organizations
+  const optionsOrganizations = [
+    {
+      name: 'Add Single Organization',
+      action: () => addSingleOrganization(),
+      icon: <img src={userPlus} alt="user add" className="admin-icons-dropdown" />
+    },
+    {
+      name: 'Bulk Add Organizations',
+      action: () => bulkAddOrganizations(),
+      icon: <img src={groupAdd} alt="group add" className="admin-icons-dropdown" />
+    }
+  ]
+
+  // Options for users
+  const optionsUsers = [
+    {
+      name: 'Add Single User',
+      action: () => addSingleUser(),
+      icon: <img src={userPlus} alt="user add" className="admin-icons-dropdown" />
+
+    },
+    {
+      name: 'Bulk Add Users',
+      action: () => bulkAddUsers(),
+      icon: <img src={groupAdd} alt="group add" className="admin-icons-dropdown" />
+    }
+  ]
+
+  // Functions for bulk organization actions
+  function deactivateOrganizations() {
+    console.log('Deactivate Organizations')
+  }
+
+  function deleteOrganizations() {
+    console.log('Delete Organizations')
+  }
+
+  function exportOrganizations() {
+    console.log('Export Organizations')
+  }
+
+  // Functions for bulk user actions
+  function resetPasswords() {
+    console.log('Reset Passwords')
+  }
+
+  function deactivateUsers() {
+    console.log('Deactivate Users')
+  }
+
+  function deleteUsers() {
+    console.log('Delete Users')
+  }
+
+  function exportUsers() {
+    console.log('Export Users')
+  }
+
+  // Bulk options for organizations
+  const bulkOptionsOrganizations = [
+    {
+      name: 'Deactivate Organizations',
+      action: () => deactivateOrganizations(),
+      icons: <img src={userDeactivate} alt="user deactivate" className="admin-icons-dropdown" />
+    },
+    {
+      name: 'Delete Organizations',
+      action: () => deleteOrganizations(),
+      icons: <img src={warningTriangle} alt="warning" className="admin-icons-dropdown" />
+    },
+    {
+      name: 'Export Organizations',
+      action: () => exportOrganizations(),
+      icons: <img src={download} alt="download" className="admin-icons-dropdown" />
+    }
+  ]
+
+  // Bulk options for users
+  const bulkOptionsUsers = [
+    {
+      name: 'Reset Passwords',
+      action: () => resetPasswords(),
+      icons: <img src={userPassword} alt="user password" className="admin-icons-dropdown" />
+    },
+    {
+      name: 'Deactivate Users',
+      action: () => deactivateUsers(),
+      icons: <img src={userDeactivate} alt="user deactivate" className="admin-icons-dropdown" />
+    },
+    {
+      name: 'Delete Users',
+      action: () => deleteUsers(),
+      icons: <img src={warningTriangle} alt="warning" className="admin-icons-dropdown" />
+    },
+    {
+      name: 'Export Users',
+      action: () => exportUsers(),
+      icons: <img src={download} alt="download" className="admin-icons-dropdown" />
+    }
+  ]
+
   const currentData = activeTab === 'Organizations' ? organizationsData : usersData
   const currentColumns = activeTab === 'Organizations' ? organizationsColumns : usersColumns
+  const currentOptions = activeTab === 'Organizations' ? optionsOrganizations : optionsUsers
+  const currentBulkOptions = activeTab === 'Organizations' ? bulkOptionsOrganizations : bulkOptionsUsers
 
   return (
     <div>
@@ -249,15 +382,118 @@ const UserManagement = () => {
           </div>
 
           <div className="actions-container">
-            <AcademyBtn
-              title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
-              icon={faPlus}
-            />
-            <div className="bulk-actions">
-              <span>BULK ACTIONS</span>
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+              <div>
+                <AcademyBtn
+                  title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
+                  icon={faPlus}
+                  onClick={() => {
+                    setShowAddDropdown(!showAddDropdown)
+                    setShowBulkDropdown(false)
+                  }}
+                />
+              </div>
+
+              {showAddDropdown && (
+                <div 
+                  className="dropdown-menu"
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    background: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    zIndex: 9999,
+                    marginTop: '4px',
+                    display: 'block'
+                  }}
+                >
+                  {currentOptions.map((option, index) => (
+                    <div 
+                      key={index}
+                      className="dropdown-item"
+                      style={{
+                        padding: '14px 12px',
+                        color: 'black',
+                        fontFamily: 'Montserrat',
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                      onClick={() => {
+                        option.action()
+                        setShowAddDropdown(false)
+                      }}
+                    >
+                      {option.icon}
+                      {option.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+              <div 
+                className="bulk-actions"
+                onClick={() => {
+                  setShowBulkDropdown(!showBulkDropdown)
+                  setShowAddDropdown(false)
+                }}
+              >
+                <span>BULK ACTIONS</span>
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+
+              {showBulkDropdown && (
+                <div 
+                  className="dropdown-menu"
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    background: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    zIndex: 9999,
+                    marginTop: '4px',
+                    display: 'block'
+                  }}
+                >
+                  {currentBulkOptions.map((option, index) => (
+                    <div 
+                      key={index}
+                      className="dropdown-item"
+                      style={{
+                        padding: '14px 12px',
+                        color: 'black',
+                        fontFamily: 'Montserrat',
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                      onClick={() => {
+                        option.action()
+                        setShowBulkDropdown(false)
+                      }}
+                    >
+                      {option.icons}
+                      {option.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -270,6 +506,7 @@ const UserManagement = () => {
             searchQuery={searchQuery}
             onRowAction={handleRowAction}
             showCheckbox={true}
+            activeTab={activeTab}
           />
         </div>
 
