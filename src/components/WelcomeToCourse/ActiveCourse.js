@@ -32,7 +32,7 @@ function ActiveCourse() {
 
       `,
       video:
-        'https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Introducing the Entrepreneurs - Gary Conroy.mov',
+        'https://learntostart-launch-dev.s3.amazonaws.com/Journal/MentorshipJournal/e1dd0f0135613cd6ad050c855879b831-1744631097950.mp4',
       image: GaryPicture
     },
     'Leadership Journal': {
