@@ -33,6 +33,27 @@ ChartJS.register(
 const AdminDashboard = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+
+
+  const formatRevenue = (amount) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount)
+}
   const [dashboardData, setDashboardData] = useState({
     paidUsers: 764,
     totalRevenue: 310982,
@@ -356,7 +377,7 @@ const AdminDashboard = () => {
             <div className="info-box">
               <img src={dollarIcon} alt="Total Revenue Icon" className="info-icon" />
               <p>Total Revenue</p>
-              <h3>${dashboardData.totalRevenue}</h3>
+              <h3>{formatRevenue(dashboardData.totalRevenue)}</h3>
             </div>
           </div>
 
@@ -416,17 +437,36 @@ const AdminDashboard = () => {
               padding: '20px',
               flex: 1,
               borderRadius: '20px',
-              minWidth: '400px'
+              minWidth: '600px'
             }}>
               <h4 style={{ marginBottom: '20px', fontSize: '16px' }}>
                 Gender Distribution by Year
               </h4>
-              <div className="chart-container" style={{ width: '100%', height: '350px' }}>
-                <div style={{ height: '280px' }}>
+              <div 
+                className="chart-container" 
+                style={{ 
+                  width: '100%', 
+                  height: '350px',
+                  overflowX: windowWidth <= 1000 ? 'auto' : 'hidden',
+                  overflowY: 'hidden',
+                  WebkitOverflowScrolling: 'touch'
+                }}
+              >
+                <div style={{ 
+                  height: '280px',
+                  minWidth: windowWidth <= 1000 ? '700px' : 'auto',
+                  width: '100%'
+                }}>
                   <Bar 
                     data={genderChartData} 
-                    options={chartOptions} 
+                    options={{
+                      ...chartOptions,
+                      responsive: windowWidth <= 1000 ? false : true,
+                      maintainAspectRatio: false
+                    }} 
                     plugins={[dataLabelsPlugin]}
+                    width={windowWidth <= 1000 ? 700 : undefined}
+                    height={280}
                   />
                 </div>
               </div>
@@ -438,7 +478,7 @@ const AdminDashboard = () => {
               padding: '20px',
               flex: 1,
               borderRadius: '20px',
-                minWidth: '400px'
+                minWidth: '600px'
 
             }}>
               <h4 style={{ marginBottom: '20px', fontSize: '16px' }}>

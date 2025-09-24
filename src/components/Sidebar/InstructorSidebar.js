@@ -12,6 +12,7 @@ import MasterIcon from '../../assets/images/academy-icons/svg/master-classes.svg
 import LeadershipIcon from '../../assets/images/academy-icons/svg/leadership-journal.svg'
 import PortfolioIcon from '../../assets/images/academy-icons/svg/my-portfolio.svg'
 import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
+import groupIcon from '../../assets/images/group.png'
 import { setAccordionToggled, userLogout } from '../../redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
 import { collapseTrue, toggleCollapse } from '../../redux/sidebar/Actions'
@@ -44,6 +45,14 @@ const SIDEBAR_MENU_ITEMS = [
     to: '/admin-dashboard',
     roles: [3],
     className: (pathname) => pathname.includes('admin-dashboard') ? 'active' : ''
+  },
+  {
+    id: 'user-managment',
+    title: 'User Managment',
+    srcImage: groupIcon,
+    to: '/user-managment',
+    roles: [3],
+    className: (pathname) => pathname.includes('user-managment') ? 'active' : ''
   },
   {
     id: 'intro-course',

@@ -1,0 +1,235 @@
+tbody{
+  overflow-x: auto;
+}
+
+.data-table-container {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.data-table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: collapse;
+  display: table;
+}
+
+.data-table thead {
+  display: table-header-group;
+  background: #f8fafc;
+  position: sticky;
+  top: 0;
+  z-index: 11;
+}
+
+.data-table tbody {
+  display: table-row-group;
+}
+
+.data-table thead tr,
+.data-table tbody tr {
+  display: table-row;
+}
+
+.data-table th {
+  background: #f8fafc;
+  padding: 8px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+  letter-spacing: 0.5px;
+  border: none;
+  border-bottom: 1px solid rgb(227, 229, 233);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.data-table td {
+  padding: 8px 16px;
+  border: none;
+  border-bottom: 1px solid rgb(227, 229, 233);
+}
+
+.data-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.header-with-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+}
+
+.header-icons {
+  display: flex;
+  gap: 4px;
+}
+
+.checkbox-column {
+  width: 50px;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.organization-info, .learner-info {
+  display: flex;
+  gap: 12px;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.organization-details, .learner-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.organization-name, .learner-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.organization-domain, .learner-email {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.learner-organization {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.users-count, .fee-amount, .reflections-count, .total-paid {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 500;
+}
+
+.level-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 90px;
+  border: 1px solid transparent;
+  color: black;
+}
+
+.level-l1 {
+  border: 1px solid #9C3;
+  background: rgba(153, 204, 51, 0.10);
+}
+
+.level-l2 {
+  background: rgba(81, 199, 223, 0.10);
+  border-color: #51C7DF;
+}
+
+.level-l3 {
+  border: 1px solid #F39;
+  background: rgba(255, 51, 153, 0.10);
+}
+
+.actions-column {
+  font-family: Montserrat;
+  font-size: 15px !important;
+  font-style: normal;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: white;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.more-actions-btn {
+  padding: 6px 8px;
+  color: #6b7280;
+}
+
+/* Dropdown positioning - ensure it appears on top */
+.more-actions-dropdown-menu {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+.filter-dropdown-menu {
+  z-index: 9998 !important;
+}
+
+/* Custom scrollbar for table container */
+.data-table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.data-table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.data-table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.data-table-container::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  
+  .data-table {
+    font-size: 12px;
+  }
+
+  .action-btn {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  
+  .data-table th,
+  .data-table td {
+    padding: 8px 12px;
+  }
+}

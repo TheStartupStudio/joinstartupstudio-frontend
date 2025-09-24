@@ -283,7 +283,7 @@ const handleFileChange = (event) => {
           <img src={userIcon} alt='user' className='mb-3' />
           <div className='d-flex justify-content-between align-items-center'>
             <h3 className='fs-14' style={{ marginBottom: '0' }}>
-              Edit Personal Details
+                {user?.role_id === 3 ? 'Edit Admin Details' : 'Edit Personal Details'}
             </h3>
             <div 
   className={`d-flex gap-2 reset-pass-btn ${resetPasswordDisabled ? 'disabled' : ''}`} 

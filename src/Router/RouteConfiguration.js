@@ -186,12 +186,21 @@ const AdminDashboardPage = React.lazy(() =>
   import('../pages/AdminDashboard')
 )
 
+const UserManagmentPage = React.lazy(()=>
+  import('../pages/UserManagment')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   {
     path: '/admin-dashboard',
     component: AdminDashboardPage,
     breadcrumb: 'Admin Dashboard'
+  },
+  {
+    path: '/user-managment',
+    component: UserManagmentPage,
+    breadcrumb: 'User Managment'
   },
   {
     path: '/my-school/:page?',
