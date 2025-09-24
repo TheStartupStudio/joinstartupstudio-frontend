@@ -284,3 +284,12 @@
     font-size: 16px;
   }
 }
+
+
+.full-width-btn {
+  width: 100%;
+}
+
+.full-width-btn > * {
+  width: 100% !important;
+}

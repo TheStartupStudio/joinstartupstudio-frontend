@@ -178,22 +178,9 @@ tbody{
   transition: all 0.2s ease;
 }
 
-.action-btn:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
-}
-
-.edit-btn:hover {
-  background: #ecfdf5;
-}
-
 .more-actions-btn {
   padding: 6px 8px;
   color: #6b7280;
-}
-
-.more-actions-btn:hover {
-  color: #374151;
 }
 
 /* Dropdown positioning - ensure it appears on top */
@@ -220,10 +207,6 @@ tbody{
 .data-table-container::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 4px;
-}
-
-.data-table-container::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
 }
 
 .data-table-container::-webkit-scrollbar-corner {

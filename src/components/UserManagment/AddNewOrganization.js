@@ -7,6 +7,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import './AddNewOrganization.css'
 import newCity from '../../assets/images/academy-icons/svg/city.svg'
 import spark from '../../assets/images/academy-icons/svg/spark.svg'
+import AcademyBtn from '../AcademyBtn'
 
 // Dummy data for testing edit mode
 const DUMMY_ORGANIZATION_DATA = {
@@ -50,22 +51,18 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     { value: 'one-time', label: 'One-time' }
   ]
 
-  // Initialize form data when in edit mode
+  // Initialize form data when in edit or view mode
   useEffect(() => {
-    if (mode === 'edit') {
-      // Use dummy data for edit mode or passed organizationData
-      const dataToUse = organizationData || DUMMY_ORGANIZATION_DATA
-      
+    if (mode === 'edit' || mode === 'view') {
+      // Always use dummy data for edit and view modes, ignore organizationData props
       setFormData({
-        id: dataToUse.id,
-        organizationName: dataToUse.organizationName || dataToUse.name || '',
-        organizationAddress: dataToUse.organizationAddress || dataToUse.address || '',
-        administratorName: dataToUse.administratorName || '',
-        administratorEmail: dataToUse.administratorEmail || dataToUse.email || '',
-        domainURL: dataToUse.domainURL || dataToUse.domain || '',
-        pricingTiers: dataToUse.pricingTiers && dataToUse.pricingTiers.length > 0 
-          ? dataToUse.pricingTiers 
-          : [{ amount: '', frequency: 'monthly' }]
+        id: DUMMY_ORGANIZATION_DATA.id,
+        organizationName: DUMMY_ORGANIZATION_DATA.organizationName,
+        organizationAddress: DUMMY_ORGANIZATION_DATA.organizationAddress,
+        administratorName: DUMMY_ORGANIZATION_DATA.administratorName,
+        administratorEmail: DUMMY_ORGANIZATION_DATA.administratorEmail,
+        domainURL: DUMMY_ORGANIZATION_DATA.domainURL,
+        pricingTiers: DUMMY_ORGANIZATION_DATA.pricingTiers
       })
     } else {
       // Reset form for add mode
@@ -83,7 +80,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
         ]
       })
     }
-  }, [mode, organizationData, show])
+  }, [mode, show])
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -400,27 +397,36 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
 
         {/* Action Buttons */}
         <div className="modal-actions">
-          <button
-            type="button"
-            className="cancel-btn"
-            onClick={handleClose}
-            disabled={loading}
-          >
-            {isViewMode ? 'CLOSE' : 'CANCEL'}
-          </button>
-          {!isViewMode && (
-            <button
-              type="button"
-              className="add-btn"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="spinner-border spinner-border-sm" />
-              ) : (
-                isEditMode ? 'SAVE CHANGES' : 'ADD ORGANIZATION'
-              )}
-            </button>
+          {isViewMode ? (
+            <div className="full-width-btn">
+              <AcademyBtn 
+                title="View Organization Learners"
+                onClick={handleClose}
+              />
+            </div>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="cancel-btn"
+                onClick={handleClose}
+                disabled={loading}
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                className="add-btn"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="spinner-border spinner-border-sm" />
+                ) : (
+                  isEditMode ? 'SAVE CHANGES' : 'ADD ORGANIZATION'
+                )}
+              </button>
+            </>
           )}
         </div>
       </div>
