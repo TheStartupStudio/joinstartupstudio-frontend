@@ -111,13 +111,19 @@ function Register() {
 
   return (
     <>
-      <a href='https://academy.learntostart.com/' className='logo-register'>
-        <img
-          src={StartupStudioLogo}
-          alt='course-logo'
-          className='my-3 img-register-login'
-        />
-      </a>
+      <div className='d-flex align-items-center ps-sm-5 justify-content-center flex-wrap justify-content-sm-between gap-3'>
+              <a href='https://academy.learntostart.com/'>
+                <img
+                  src={StartupStudioLogo}
+                  alt='course-logo'
+                  className='my-3 img-register-login'
+                />
+              </a>
+              <div className="d-flex gap-4 text-black pe-sm-5" style={{ fontSize: '0.8125rem' }}>
+                <a href='https://academy.learntostart.com/' className="text-decoration-none text-black">HOME</a>
+                <a href='https://academy.learntostart.com/contact.html' className="text-decoration-none text-black">CONTACT US</a>
+              </div>
+            </div>
 
       <main className='register-main'>
         <section className='px-5 pb-5 p-t-5 register-section'>

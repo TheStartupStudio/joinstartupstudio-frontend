@@ -137,13 +137,20 @@ const ChooseLogin = () => {
 
   return (
     <div className='container-fluid md-px-5 ps-md-5 choose-login_container-academy gradient-background'>
-      <a href='https://academy.learntostart.com/'>
-        <img
-          src={StartupStudioLogo}
-          alt='course-logo'
-          className='my-3 img-register-login'
-        />
-      </a>
+
+      <div className='d-flex align-items-center justify-content-center flex-wrap justify-content-sm-between gap-3'>
+        <a href='https://academy.learntostart.com/'>
+          <img
+            src={StartupStudioLogo}
+            alt='course-logo'
+            className='my-3 img-register-login'
+          />
+        </a>
+        <div className="d-flex gap-4 text-black pe-md-5" style={{ fontSize: '0.8125rem' }}>
+          <a href='https://academy.learntostart.com/' className="text-decoration-none text-black">HOME</a>
+          <a href='https://academy.learntostart.com/contact.html' className="text-decoration-none text-black">CONTACT US</a>
+        </div>
+      </div>
 
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
         <Col md='10' lg='8' className='main-login-container'>
