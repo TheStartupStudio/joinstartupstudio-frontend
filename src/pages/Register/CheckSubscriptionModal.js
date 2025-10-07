@@ -14,15 +14,15 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
 
   const planDetails = {
     monthly: {
-      price: '10.00',
-      total: '10.00',
+      price: '9.99',
+      total: '9.99',
       period: 'month',
       priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID || 'price_1RbgyFRsRTWEGaApy1Fql4H8',
       commitment: '12 months'
     },
     annual: {
-      price: '110.00',
-      total: '110.00',
+      price: '99.00',
+      total: '99.00',
       period: 'year',
       priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID || 'price_1RbgyFRsRTWEGaApHmVwRUj3',
       commitment: 'year'
