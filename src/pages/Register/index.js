@@ -16,15 +16,53 @@ import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox80
 import facebookLogo from '../../assets/images/academy-icons/svg/icons8-facebook.svg'
 import googleLogo from '../../assets/images/academy-icons/svg/icons8-google.svg'
 import microsoftLogo from '../../assets/images/academy-icons/svg/icons8-microsoft.svg'
+import { loadStripe } from '@stripe/stripe-js'
+import { 
+  Elements, 
+  CardNumberElement, 
+  CardExpiryElement, 
+  CardCvcElement, 
+  useStripe, 
+  useElements 
+} from '@stripe/react-stripe-js'
+import CheckSubscriptionModal from './CheckSubscriptionModal'
 
-function Register() {
+// Initialize Stripe
+const stripePromise = loadStripe(
+  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+)
+
+// Update the card element options for individual fields
+const CARD_ELEMENT_OPTIONS = {
+  style: {
+    base: {
+      color: '#333',
+      fontFamily: 'inherit',
+      fontSmoothing: 'antialiased',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#9ca3af',
+      },
+    },
+    invalid: {
+      color: '#ef4444',
+      iconColor: '#ef4444',
+    },
+  },
+  hidePostalCode: true,
+}
+
+// Registration Form Component (inside Elements wrapper)
+function RegistrationForm() {
+  const stripe = useStripe()
+  const elements = useElements()
   const [protectModal, setProtectModal] = useState(false)
+  const [showCheckSubscription, setShowCheckSubscription] = useState(false)
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
   const currentUrl = window.location.origin
 
   const validateForm = () => {
@@ -49,6 +87,23 @@ function Register() {
       newErrors.confirmPassword = 'Passwords do not match.'
     }
 
+    // Validate required billing fields
+    if (!formData.address.trim()) {
+      newErrors.address = 'Address is required.'
+    }
+    if (!formData.city.trim()) {
+      newErrors.city = 'City is required.'
+    }
+    if (!formData.state.trim()) {
+      newErrors.state = 'State is required.'
+    }
+    // if (!formData.zipCode.trim()) {
+    //   newErrors.zipCode = 'Zip Code is required.'
+    // }
+    if (!formData.nameOn.trim()) {
+      newErrors.nameOn = 'Name on Credit Card is required.'
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -56,17 +111,14 @@ function Register() {
   const [formData, setFormData] = useState({
     fullName: '',
     emailAddress: '',
-    password: ''
-    // confirmPassword: ''
-    // address: '',
-    // city: '',
-    // state: '',
-    // zipCode: '',
-    // nameOn: '',
-    // cardNo: '',
-    // exp: '',
-    // cvc: '',
-    // zipC: ''
+    password: '',
+    confirmPassword: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    nameOn: '',
+    zipC: '' // Add this for the card zip code
   })
 
   const handleInputChange = (e) => {
@@ -79,33 +131,70 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
     if (!validateForm()) return
+    
+    if (!stripe || !elements) {
+      toast.error('Stripe has not loaded yet. Please try again.')
+      return
+    }
+
+    const cardNumberElement = elements.getElement(CardNumberElement)
+    if (!cardNumberElement) {
+      toast.error('Card information is required.')
+      return
+    }
+
     setIsLoading(true)
+
     try {
-      const response = await axiosInstance.post('/auth/register', {
-        name: formData.fullName,
-        email: formData.emailAddress,
-        password: formData.password
-        // confirmPassword: formData.confirmPassword
-        // address: formData.address,
-        // city: formData.city,
-        // state: formData.state,
-        // zipCode: formData.zipCode,
-        // nameOn: formData.nameOn,
-        // cardNo: formData.cardNo,
-        // exp: formData.exp,
-        // cvc: formData.cvc,
-        // zipC: formData.zipC
+      // Step 1: Create payment method
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardNumberElement,
+        billing_details: {
+          name: formData.nameOn,
+          email: formData.emailAddress,
+          address: {
+            line1: formData.address,
+            city: formData.city,
+            state: formData.state,
+            postal_code: formData.zipC, // Use only zipC now
+          },
+        },
       })
 
-      setIsLoading(false)
-      if (response.status === 200) {
-        toast.success('Registration successful!')
-        history.push('/check-email', { email: formData.emailAddress })
+      if (error) {
+        console.error('Payment method creation error:', error)
+        toast.error(error.message)
+        setIsLoading(false)
+        return
       }
+
+      // Step 2: Store registration data temporarily
+      const registrationData = {
+        name: formData.fullName,
+        email: formData.emailAddress,
+        password: formData.password,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipC, // Use zipC as the zipCode for backend
+        nameOnCard: formData.nameOn,
+        paymentMethodId: paymentMethod.id,
+      }
+
+      sessionStorage.setItem('registrationData', JSON.stringify(registrationData))
+      
+      setIsLoading(false)
+      
+      // Step 3: Show subscription modal instead of redirect
+      setShowCheckSubscription(true)
+      
     } catch (error) {
       setIsLoading(false)
-      toast.error(error.response?.data?.message || 'Registration failed or this email is already registered.')
+      console.error('Registration error:', error)
+      toast.error('Something went wrong. Please try again.')
     }
   }
 
@@ -129,26 +218,27 @@ function Register() {
         <section className='px-5 pb-5 p-t-5 register-section'>
           <h1 className='text-center fs-48 fw-light'>
             {/* $15 per month subscription */}
-            Register
+            Start your free trial today
           </h1>
           <form className='mt-4-4' onSubmit={handleSubmit} autoComplete='off'>
             <div
               className='d-grid gap-4'
-              // style={{ gridTemplateColumns: '4fr auto 2fr' }}
+              style={{ gridTemplateColumns: '4fr auto 2fr' }}
             >
               <div>
+                {/* Account Information Section */}
                 <div>
                   <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
                     Account Information
                   </p>
                   <div className='d-grid gap-3 grid-col-2 grid-col-1-mob'>
+                    {/* Full Name */}
                     <div className='relative'>
                       <ModalInput
                         id={'fullName'}
                         labelTitle={'Full Name'}
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        imgSrc={penIcon}
                       />
                       {errors.fullName && (
                         <p className='invalid-feedback d-block position-absolute fs-10'>
@@ -157,13 +247,13 @@ function Register() {
                       )}
                     </div>
 
+                    {/* Email */}
                     <div className='relative'>
                       <ModalInput
                         id={'emailAddress'}
                         labelTitle={'Email Address'}
                         value={formData.emailAddress}
                         onChange={handleInputChange}
-                        imgSrc={penIcon}
                         autoComplete={'new-email'}
                       />
                       {errors.emailAddress && (
@@ -172,6 +262,8 @@ function Register() {
                         </p>
                       )}
                     </div>
+
+                    {/* Password */}
                     <div className='relative'>
                       <div className='relative w-100 d-flex justify-content-between input-container-modal'>
                         <input
@@ -207,6 +299,8 @@ function Register() {
                         </p>
                       )}
                     </div>
+
+                    {/* Confirm Password */}
                     <div className='relative'>
                       <div className='relative w-100 d-flex justify-content-between input-container-modal'>
                         <input
@@ -253,138 +347,190 @@ function Register() {
                     </div>
                   </div>
                 </div>
-                {/* <div className='mt-5'>
+
+                {/* Billing Address Section */}
+                <div className='mt-5'>
                   <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
                     Billing Address
                   </p>
                   <div className='d-flex flex-column gap-3'>
-                    <ModalInput
-                      id={'address'}
-                      labelTitle={'Address'}
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      imgSrc={penIcon}
-                    />
+                    <div className='relative'>
+                      <ModalInput
+                        id={'address'}
+                        labelTitle={'Address'}
+                        value={formData.address}
+                        onChange={handleInputChange}
+                      />
+                      {errors.address && (
+                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                          {errors.address}
+                        </p>
+                      )}
+                    </div>
                     <div
                       className='d-grid gap-3'
-                      style={{ gridTemplateColumns: '3fr 1fr 2fr' }}
+                      style={{ gridTemplateColumns: '1fr 1fr' }}
                     >
-                      <ModalInput
-                        id={'city'}
-                        labelTitle={'City'}
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
-                      />
-                      <ModalInput
-                        id={'state'}
-                        labelTitle={'State'}
-                        value={formData.state}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
-                      />
-                      <ModalInput
-                        id={'zipCode'}
-                        labelTitle={'Zip Code'}
-                        value={formData.zipCode}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
-                      />
+                      <div className='relative'>
+                        <ModalInput
+                          id={'city'}
+                          labelTitle={'City'}
+                          value={formData.city}
+                          onChange={handleInputChange}
+                        />
+                        {errors.city && (
+                          <p className='invalid-feedback d-block position-absolute fs-10'>
+                            {errors.city}
+                          </p>
+                        )}
+                      </div>
+                      <div className='relative'>
+                        <ModalInput
+                          id={'state'}
+                          labelTitle={'State'}
+                          value={formData.state}
+                          onChange={handleInputChange}
+                        />
+                        {errors.state && (
+                          <p className='invalid-feedback d-block position-absolute fs-10'>
+                            {errors.state}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div> */}
+                </div>
               </div>
+              
               <hr
                 style={{
-                  height: '100%'
-                  // borderLeft: '1px solid rgb(165 167 169)'
+                  borderLeft: '1px solid rgb(165 167 169)',
                 }}
               />
-              {/* <div>
+              
+              <div>
+                {/* Payment Information Section */}
                 <div>
                   <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
                     Payment Information
                   </p>
-                  <ModalInput
-                    id={'nameOn'}
-                    labelTitle={'Name on Credit Card'}
-                    value={formData.nameOn}
-                    onChange={handleInputChange}
-                    imgSrc={penIcon}
-                  />
+                  <div className='relative'>
+                    <ModalInput
+                      id={'nameOn'}
+                      labelTitle={'Name on Credit Card'}
+                      value={formData.nameOn}
+                      onChange={handleInputChange}
+                    />
+                    {errors.nameOn && (
+                      <p className='invalid-feedback d-block position-absolute fs-10'>
+                        {errors.nameOn}
+                      </p>
+                    )}
+                  </div>
                 </div>
+
+                {/* Card Information Section */}
                 <div className='mt-3'>
                   <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
                     Card Information
                   </p>
-                  <div className='d-flex flex-column gap-3'>
-                    <ModalInput
-                      id={'cardNo'}
-                      labelTitle={'Card Number'}
-                      value={formData.cardNo}
-                      onChange={handleInputChange}
-                      imgSrc={penIcon}
-                    />
-                    <div
-                      className='d-grid gap-3'
-                      style={{ gridTemplateColumns: '2fr 1fr 2fr' }}
-                    >
-                      <ModalInput
-                        id={'exp'}
-                        labelTitle={'Expiration'}
-                        value={formData.exp}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
-                      />
-                      <ModalInput
-                        id={'cvc'}
-                        labelTitle={'CVC'}
-                        value={formData.cvc}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
-                      />
-                      <ModalInput
-                        id={'zipC'}
-                        labelTitle={'Zip Code'}
-                        value={formData.zipC}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
+                  
+                  {/* Card Number Field */}
+                  <div className='relative mb-3'>
+                    <div className='stripe-card-wrapper' style={{
+                      borderRadius: '12px',
+                        border: 'none',
+                        padding: '1rem 0.625rem 0.625rem',
+                        boxShadow: '0px 3px 6px #00000029',
+                        background:' #ffffff'
+                    }}>
+                      <CardNumberElement 
+                        options={{
+                          ...CARD_ELEMENT_OPTIONS,
+                          placeholder: 'Card Number'
+                        }} 
                       />
                     </div>
                   </div>
 
+                  {/* Row with Expiry, CVC, and Zip Code */}
+                  <div className='d-grid gap-1' style={{ gridTemplateColumns: '2fr 80px 2fr' }}>
+                    {/* Expiration */}
+                    <div className='relative'>
+                      <div className='stripe-card-wrapper' style={{
+                        borderRadius: '12px',
+                        border: 'none',
+                        padding: '1rem 0.625rem 0.625rem',
+                        boxShadow: '0px 3px 6px #00000029',
+                        background:' #ffffff',
+                        height: '47px',
+                      }}>
+                        <CardExpiryElement 
+                          options={{
+                            ...CARD_ELEMENT_OPTIONS,
+                            placeholder: 'MM/YY'
+                          }} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* CVC */}
+                    <div className='relative'>
+                      <div className='stripe-card-wrapper' style={{
+                        borderRadius: '12px',
+                        border: 'none',
+                        padding: '1rem 0.625rem 0.625rem',
+                        boxShadow: '0px 3px 6px #00000029',
+                        background:' #ffffff',
+                        height: '47px',
+                      }}>
+                        <CardCvcElement 
+                          options={{
+                            ...CARD_ELEMENT_OPTIONS,
+                            placeholder: 'CVC'
+                          }} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* Zip Code - Regular Input */}
+                    <div className='relative'>
+                      <ModalInput
+                        id={'zipC'}
+                        labelTitle={'Zip Code'}
+                        value={formData.zipC || ''}
+                        onChange={handleInputChange}
+                      />
+                      {errors.zipC && (
+                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                          {errors.zipC}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
                   <p className='fs-13 fw-light text-black mt-3'>
-                    Your card will be charged $15 per month until you cancel.
-                    You may cancel at any time by going to your account settings
-                    page. Cancellation must be submitted at least 48 hours prior
-                    to renewal.
+                    After your 14-day free trial, your card will be charged based on the plan you choose. 
+                    You may cancel at any time by going to your account settings page. 
+                    Cancellation must be submitted at least 48 hours prior to renewal.
                   </p>
                 </div>
-              </div> */}
+              </div>
             </div>
-            <div className='d-flex flex-column align-items-center mt-3'>
-             <p className='text-center fs-13 fw-medium mb-3 blue-color lh-sm'>
-  By creating an account you agree to our
-  <br />
-<a
-  href="https://app.learntostart.com/terms"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="blue-color text-decoration-underline"
->
-  Terms of Service
-</a>
-<span> and </span>
-<a
-  href="https://app.learntostart.com/privacy-policy"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="blue-color text-decoration-underline"
->
-  Privacy Policy
-</a>
 
-</p>
+            {/* Bottom Section */}
+            <div className='d-flex flex-column align-items-center mt-3'>
+              <p className='text-center fs-13 fw-medium mb-3 blue-color lh-sm'>
+                By creating an account you agree to our
+                <br />
+                <a href="https://app.learntostart.com/terms" target="_blank" rel="noopener noreferrer" className="blue-color text-decoration-underline">
+                  Terms of Service
+                </a>
+                <span> and </span>
+                <a href="https://app.learntostart.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="blue-color text-decoration-underline">
+                  Privacy Policy
+                </a>
+              </p>
 
               <div className='mb-3'>
                 <div
@@ -393,19 +539,18 @@ function Register() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '150px',
                     borderRadius: '8px',
                     background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
                     padding: '2px',
                     height: '58px',
-                    boxShadow: '0px 4px 10px 0px #00000040'
+                    boxShadow: '0px 4px 10px 0px #00000040',
+                    width: '18.125rem'
                   }}
                 >
                   <button
                     type='submit'
                     className={`w-100 register-btn ${isLoading ? 'loading' : ''}`}
-                    disabled={isLoading}
-                    onClick={handleSubmit}
+                    disabled={isLoading || !stripe}
                   >
                     {isLoading ? (
                       <div className="d-flex align-items-center justify-content-center gap-2">
@@ -418,21 +563,18 @@ function Register() {
                             borderRightColor: 'transparent'
                           }}
                         />
-                        <span style={{ color: '#51C7DF' }}>Loading...</span>
+                        <span style={{ color: '#51C7DF' }}>Processing...</span>
                       </div>
                     ) : (
-                      <span className='d-flex align-items-center justify-content-center'
-                      style={{color: '#51C7DF'}}>
-                        Register
-                        <FontAwesomeIcon
-                          icon={faArrowRight}
-                          className='ms-2 fw-bold'
-                        />
+                      <span className='d-flex align-items-center justify-content-center gap-2' style={{fontWeight: 'bold'}}>
+                        Select Your Plan
+                        <FontAwesomeIcon icon={faArrowRight} className='ms-2 fw-bold' />
                       </span>
                     )}
                   </button>
                 </div>
               </div>
+
               <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
                 <div className='d-flex gap-3 auth-logos-buttons'>
@@ -483,8 +625,22 @@ function Register() {
           </Link>
         </section>
         <HowWeProtect isOpen={protectModal} setIsOpen={setProtectModal} />
+        <CheckSubscriptionModal 
+          show={showCheckSubscription}
+          onHide={() => setShowCheckSubscription(false)}
+          registrationData={JSON.parse(sessionStorage.getItem('registrationData') || '{}')}
+        />
       </main>
     </>
+  )
+}
+
+// Main Register Component (wrapper with Elements provider)
+function Register() {
+  return (
+    <Elements stripe={stripePromise}>
+      <RegistrationForm />
+    </Elements>
   )
 }
 

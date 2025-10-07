@@ -1,5 +1,6 @@
 import { loadStripe } from '@stripe/stripe-js'
 import { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import courseLogo from '../../assets/images/academy-icons/svg/AIE Logo 3x.png'
 import AcademyBtn from '../../components/AcademyBtn'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -11,57 +12,99 @@ import './index.css'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 
-// const stripePromise = loadStripe(
-//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-// )
-const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+const stripePromise = loadStripe(
+  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+)
 
 function CheckSubscription() {
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState('monthly') // monthly or annual
+  const [selectedPlan, setSelectedPlan] = useState('monthly')
+  const [registrationData, setRegistrationData] = useState(null)
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const planDetails = {
-  monthly: {
-    price: '10.00',
-    total: '10.00', // 9.99 * 12
-    period: 'month',
-    priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID,
-    commitment: '12 months'
-  },
-  annual: {
-    price: '110.00',
-    total: '110.00',
-    period: 'year',
-    priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID,
-    commitment: 'year'
+    monthly: {
+      price: '10.00',
+      total: '10.00',
+      period: 'month',
+      priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID,
+      commitment: '12 months'
+    },
+    annual: {
+      price: '110.00',
+      total: '110.00',
+      period: 'year',
+      priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID,
+      commitment: 'year'
+    }
   }
-}
+
+  useEffect(() => {
+    // Get registration data from sessionStorage
+    const storedData = sessionStorage.getItem('registrationData')
+    if (!storedData) {
+      // If no registration data, redirect back to register
+      history.push('/register')
+      return
+    }
+    setRegistrationData(JSON.parse(storedData))
+  }, [history])
 
   const handleClick = async () => {
-    setIsLoading(true)
-    console.log('ardi 39,', selectedPlan)
-    try {
-      const response = await axiosInstance.post(
-        '/course-subscription/create-checkout-session',
-        {
-          planType: selectedPlan
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+    if (!registrationData) {
+      toast.error('Registration data not found. Please start over.')
+      history.push('/register')
+      return
+    }
 
-      const { sessionId } = response.data
-      const stripe = await stripePromise
-      await stripe.redirectToCheckout({ sessionId })
+    setIsLoading(true)
+
+    try {
+      // Step 1: Register the user first
+      const registrationResponse = await axiosInstance.post('/auth/register', {
+        ...registrationData,
+        selectedPlan: selectedPlan,
+        priceId: planDetails[selectedPlan].priceId
+      })
+
+      if (registrationResponse.status === 200 || registrationResponse.status === 201) {
+        // Step 2: Create checkout session with the registered user
+        const checkoutResponse = await axiosInstance.post(
+          '/course-subscription/create-checkout-session',
+          {
+            planType: selectedPlan,
+            paymentMethodId: registrationData.paymentMethodId,
+            email: registrationData.email
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+
+        const { sessionId } = checkoutResponse.data
+        const stripe = await stripePromise
+        
+        // Clear stored registration data
+        sessionStorage.removeItem('registrationData')
+        
+        // Redirect to Stripe checkout
+        await stripe.redirectToCheckout({ sessionId })
+      }
     } catch (err) {
       console.error('Checkout error:', err)
-      const errorMessage =
-        err.response?.data?.error || 'Something went wrong during checkout'
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.error || 
+                          'Something went wrong during checkout'
       toast.error(errorMessage)
+      
+      // If registration failed, redirect back to register
+      if (err.response?.status === 400 || err.response?.status === 409) {
+        sessionStorage.removeItem('registrationData')
+        history.push('/register')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -72,7 +115,7 @@ function CheckSubscription() {
     await dispatch(userLogout())
       .then(() => {
         localStorage.clear()
-        // history.push('/')
+        sessionStorage.clear()
         window.location.href = '/'
       })
       .catch((error) => {
@@ -84,19 +127,18 @@ function CheckSubscription() {
       })
   }
 
+  if (!registrationData) {
+    return <div>Loading...</div>
+  }
+
   return (
     <>
-      {/* <div className='d-flex justify-content-end m-3'>
-        <button onClick={handleLogout} className='log-out-btn-sub'>
-          Log Out
-        </button>
-      </div> */}
       <img
-            src={MenuIcon}
-            alt='menu'
-            className='menu-icon-cie self-start-tab cursor-pointer menu-icon-right'
-            onClick={() => dispatch(toggleCollapse())}
-          />
+        src={MenuIcon}
+        alt='menu'
+        className='menu-icon-cie self-start-tab cursor-pointer menu-icon-right'
+        onClick={() => dispatch(toggleCollapse())}
+      />
 
       <div className='d-flex justify-content-center p-5'>
         <div className='d-flex align-items-center flex-column payment-main bck-gradient'>
@@ -148,7 +190,7 @@ function CheckSubscription() {
 
           <AcademyBtn
             disabled={isLoading}
-            title={`${isLoading ? '...' : 'Subscribe Now'}`}
+            title={`${isLoading ? 'Processing...' : 'Subscribe Now'}`}
             onClick={handleClick}
           />
 
@@ -156,6 +198,21 @@ function CheckSubscription() {
             Secure payment powered by Stripe. You can cancel your subscription
             at any time.
           </p>
+
+          <div className='mt-3 text-center'>
+            <p className='text-black fs-13 mb-1'>
+              Registering as: <strong>{registrationData?.email}</strong>
+            </p>
+            <button 
+              onClick={() => {
+                sessionStorage.removeItem('registrationData')
+                history.push('/register')
+              }}
+              className='text-blue-500 fs-13 bg-transparent border-0 text-decoration-underline'
+            >
+              Change registration details
+            </button>
+          </div>
 
           <div>
             <p className='text-center text-black text-uppercase fs-13 fw-medium mb-0 mt-5'>
@@ -168,41 +225,6 @@ function CheckSubscription() {
         </div>
       </div>
     </>
-  )
-}
-
-// Add SubscriptionStatus component in the same file
-const SubscriptionStatus = () => {
-  const [status, setStatus] = useState(null)
-
-  useEffect(() => {
-    const checkStatus = async () => {
-      try {
-        const response = await axiosInstance.get('/course-subscription/status')
-        setStatus(response.data)
-      } catch (error) {
-        console.error('Error fetching subscription status:', error)
-      }
-    }
-    checkStatus()
-  }, [])
-
-  if (!status) return null
-
-  return (
-    <div className="subscription-status">
-      {status.isActive ? (
-        <div className="status-active">
-          {status.status === 'canceling' ? (
-            <p>Your subscription will end in {status.remainingDays} days</p>
-          ) : (
-            <p>Your subscription is active</p>
-          )}
-        </div>
-      ) : (
-        <p>Your subscription has ended</p>
-      )}
-    </div>
   )
 }
 
