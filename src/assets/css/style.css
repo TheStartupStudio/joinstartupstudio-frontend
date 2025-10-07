@@ -7179,3 +7179,219 @@ _:future,
 .reflection-container .ql-icon-picker {
   height: auto !important;
 }
+
+
+
+/* Header Styles */
+.header-login .py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.header-login .px-5 {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.header-login .d-flex {
+  display: flex;
+}
+
+.header-login .justify-content-between {
+  justify-content: space-between;
+}
+
+.header-login .align-items-start {
+  align-items: flex-start;
+}
+
+.header-login .px-1-mob {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Image Styles */
+.header-login .cursor-pointer {
+  cursor: pointer;
+}
+
+.header-login .w-200-mob {
+  width: 200px;
+}
+
+.header-login .img-register-login {
+  width: 208px;
+  height: 97px;
+}
+
+/* Navigation Styles */
+.header-login .mt-4 {
+  margin-top: 1.5rem;
+}
+
+.header-login .list-unstyled {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.header-login .gap-2-2 {
+  gap: 0.5rem;
+}
+
+.header-login #navList {
+  display: flex;
+}
+
+.header-login .fs-13 {
+  font-size: 0.8125rem;
+}
+
+.header-login .fw-medium {
+  font-weight: 500;
+}
+
+.header-login .text-decoration-none {
+  text-decoration: none;
+}
+
+.header-login .text-black {
+  color: #000;
+}
+
+/* Hamburger Menu Styles */
+.header-login .hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  z-index: 1000;
+  position: relative;
+}
+
+.header-login .hamburger .bar {
+  width: 25px;
+  height: 3px;
+  margin: 2.5px 0;
+  background-color: white;
+}
+
+.header-login .background-black {
+  background-color: black !important;
+}
+
+/* Close Button Styles */
+.header-login .d-none {
+  display: none;
+}
+
+.header-login .pos-abs {
+  position: absolute;
+}
+
+.header-login .right-5 {
+  right: 5%;
+}
+
+/* Mobile Navigation Styles */
+.header-login body.nav-open {
+  overflow: hidden;
+}
+
+.header-login nav.active {
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-top: 0 !important;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+  z-index: 1000;
+}
+
+.header-login nav.active ul {
+  display: flex;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header-login .px-1-mob {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .header-login #navList {
+    display: none;
+    flex-direction: column;
+    padding: 1rem 0;
+    z-index: 100;
+    height: 100vh;
+    margin-top: 3rem;
+    width: 100%;
+  }
+
+  .header-login #navList li a,
+  .header-login #navList li span {
+    font-size: 18px;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    color: black;
+    width: 100%;
+    display: inline-block;
+  }
+
+  .header-login .hamburger {
+    display: flex;
+  }
+
+  .header-login nav.active ul {
+    display: flex;
+  }
+
+  .header-login .w-200-mob {
+    width: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-login .px-5 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Additional utility classes if needed */
+.header-login .fw-light {
+  font-weight: 300;
+}
+
+.header-login .fw-bold {
+  font-weight: 700;
+}
+
+.header-login .text-center {
+  text-align: center;
+}
+
+.header-login .mb-0 {
+  margin-bottom: 0;
+}
+
+.header-login .mt-2 {
+  margin-top: 0.5rem;
+}
+
+.header-login .mt-3 {
+  margin-top: 1rem;
+}
+
+.header-login .fs-15 {
+  font-size: 0.9375rem;
+}
+
+.header-login .fs-18 {
+  font-size: 1.125rem;
+}

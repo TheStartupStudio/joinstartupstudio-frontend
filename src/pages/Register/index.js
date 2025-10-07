@@ -26,6 +26,7 @@ import {
   useElements 
 } from '@stripe/react-stripe-js'
 import CheckSubscriptionModal from './CheckSubscriptionModal'
+import closeBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
 
 // Initialize Stripe
 const stripePromise = loadStripe(
@@ -198,21 +199,87 @@ function RegistrationForm() {
     }
   }
 
+
+  const toggleMenu = () => {
+    const navbar = document.querySelector("nav");
+    const navList = document.getElementById("navList");
+    const body = document.querySelector("body");
+    const hamburger = document.getElementById("hamburger");
+    const close = document.getElementById("close");
+
+    navbar.classList.toggle("active");
+    if (navList.style.display === "flex") {
+      navList.style.display = "";
+      hamburger.classList.remove("d-none");
+      close.classList.add("d-none");
+    } else {
+      navList.style.display = "flex";
+      hamburger.classList.add("d-none");
+      close.classList.remove("d-none");
+    }
+    body.classList.toggle("nav-open");
+  };
+
+  // Handle window resize
+  React.useEffect(() => {
+    const handleResize = () => {
+      const navList = document.getElementById("navList");
+      if (window.innerWidth > 768) {
+        if (navList) navList.style.display = "";
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
-      <div className='d-flex align-items-center ps-sm-5 justify-content-center flex-wrap justify-content-sm-between gap-3'>
-              <a href='https://academy.learntostart.com/'>
-                <img
-                  src={StartupStudioLogo}
-                  alt='course-logo'
-                  className='my-3 img-register-login'
-                />
-              </a>
-              <div className="d-flex gap-4 text-black pe-sm-5" style={{ fontSize: '0.8125rem' }}>
-                <a href='https://academy.learntostart.com/' className="text-decoration-none text-black">HOME</a>
-                <a href='https://academy.learntostart.com/contact.html' className="text-decoration-none text-black">CONTACT US</a>
+
+    <div className="header-login">
+            <header className="py-4 px-5 d-flex justify-content-between align-items-start px-1-mob">
+            <img
+              className="cursor-pointer w-200-mob img-register-login"
+              src={StartupStudioLogo}
+              alt="course logo"
+              onClick={() => window.location.href = '/'}
+            />
+      
+            <nav className="mt-4">
+              <ul className="list-unstyled gap-2-2" id="navList">
+                <li>
+                  <a
+                    className="fs-13 fw-medium text-decoration-none text-black"
+                    href="https://academy.learntostart.com/"
+                  >
+                    HOME
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="fs-13 fw-medium text-decoration-none text-black"
+                    href="https://academy.learntostart.com/contact.html"
+                  >
+                    CONTACT US
+                  </a>
+                </li>
+              </ul>
+              <div className="hamburger" id="hamburger" onClick={toggleMenu}>
+                <span className="bar background-black"></span>
+                <span className="bar background-black"></span>
+                <span className="bar background-black"></span>
               </div>
-            </div>
+              <img
+                className="d-none pos-abs right-5"
+                id="close"
+                onClick={toggleMenu}
+                src={closeBtn}
+                alt="Close"
+                  style={{ filter: 'brightness(0) invert(1)', cursor: 'pointer' }}
+              />
+            </nav>
+          </header>
+          </div>
 
       <main className='register-main'>
         <section className='px-5 pb-5 p-t-5 register-section'>
