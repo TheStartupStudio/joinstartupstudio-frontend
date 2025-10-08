@@ -227,7 +227,7 @@ cursor: pointer;
 }
 
 .payment-main.bck-gradient {
-  background: linear-gradient(to bottom, #e4e9f4, #ffffff) !important;
+  background-color: white !important;
   border-radius: 1.5rem;
   padding: 40px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);

@@ -12,9 +12,12 @@ import './index.css'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 
-const stripePromise = loadStripe(
-  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-)
+// const stripePromise = loadStripe(
+//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+// )
+
+
+const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
 
 function CheckSubscription() {
   const [isLoading, setIsLoading] = useState(false)
@@ -32,8 +35,8 @@ function CheckSubscription() {
       commitment: '12 months'
     },
     annual: {
-      price: '110.00',
-      total: '110.00',
+      price: '99.00',
+      total: '99.00',
       period: 'year',
       priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID,
       commitment: 'year'

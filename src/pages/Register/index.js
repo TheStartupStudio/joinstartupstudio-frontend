@@ -1,5 +1,5 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import AcademyBtn from '../../components/AcademyBtn'
@@ -29,9 +29,11 @@ import CheckSubscriptionModal from './CheckSubscriptionModal'
 import closeBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
 
 // Initialize Stripe
-const stripePromise = loadStripe(
-  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-)
+// const stripePromise = loadStripe(
+//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+// )
+
+const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
 
 // Update the card element options for individual fields
 const CARD_ELEMENT_OPTIONS = {
@@ -65,6 +67,8 @@ function RegistrationForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const currentUrl = window.location.origin
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
   const validateForm = () => {
     let newErrors = {}
@@ -221,17 +225,14 @@ function RegistrationForm() {
   };
 
   // Handle window resize
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
-      const navList = document.getElementById("navList");
-      if (window.innerWidth > 768) {
-        if (navList) navList.style.display = "";
-      }
-    };
+      setWindowWidth(window.innerWidth)
+    }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <>
@@ -289,9 +290,11 @@ function RegistrationForm() {
           </h1>
           <form className='mt-4-4' onSubmit={handleSubmit} autoComplete='off'>
             <div
-              className='d-grid gap-4'
-              style={{ gridTemplateColumns: '4fr auto 2fr' }}
-            >
+    className='d-grid gap-4'
+    style={{ 
+      gridTemplateColumns: windowWidth <= 768 ? '1fr' : '4fr auto 2fr' 
+    }}
+  >
               <div>
                 {/* Account Information Section */}
                 <div>
@@ -642,7 +645,7 @@ function RegistrationForm() {
                 </div>
               </div>
 
-              <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
+              {/* <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
                 <div className='d-flex gap-3 auth-logos-buttons'>
                   <a
@@ -670,7 +673,7 @@ function RegistrationForm() {
                     <img className='auth-logos' src={microsoftLogo} alt='microsoft' />
                   </a>
                 </div>
-              </div>
+              </div> */}
               <p className='fs-13 fw-light text-black mb-0'>
                 The security of your information is important.
               </p>
