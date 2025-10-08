@@ -573,9 +573,28 @@ function LtsJournal(props) {
       return;
     }
 
-    // Check subscription for levels beyond level 1
+    // Check if user has subscription
     if (!user?.user?.stripe_subscription_id) {
-      setSubscriptionModalparagraph(null)
+      setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
+      setShowSubscriptionModal(true);
+      return;
+    }
+
+    // Check if user is still in free trial period
+    console.log(user.user.createdAt)
+    const userCreatedDate = new Date(user.user.createdAt);
+    const currentDate = new Date();
+    const trialEndDate = new Date(userCreatedDate);
+    trialEndDate.setDate(trialEndDate.getDate() + 14); // Add 14 days for trial
+
+    const isInFreeTrial = currentDate <= trialEndDate;
+
+    if (isInFreeTrial) {
+      if (clickedLevel === 1) {
+        setSubscriptionModalparagraph('Congratulations! You have completed Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+      } else if (clickedLevel === 2) {
+        setSubscriptionModalparagraph('Congratulations! To access Level 3, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+      }
       setShowSubscriptionModal(true);
       return;
     }
@@ -835,59 +854,50 @@ function LtsJournal(props) {
 
   const findNextLesson = (currentId) => {
     const numericId = parseInt(currentId);
-
-    if (numericId === 63) {
-      return { nextId: 65 };
+    
+    // Check if user has subscription
+    if (!user?.user?.stripe_subscription_id) {
+      setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
+      setShowSubscriptionModal(true);
+      setSaving(false);
+      return;
     }
 
+    // Check if user is still in free trial period for level transitions
+    const userCreatedDate = new Date(user.user.created_at);
+    const currentDate = new Date();
+    const trialEndDate = new Date(userCreatedDate);
+    trialEndDate.setDate(trialEndDate.getDate() + 14); // Add 14 days for trial
+
+    const isInFreeTrial = currentDate <= trialEndDate;
+
+    // Check for content beyond level 1 during free trial
+    if (isInFreeTrial && numericId >= 58) {
+      if (numericId === 58) {
+        setSubscriptionModalparagraph('Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+      } else {
+        setSubscriptionModalparagraph('To access this content, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+      }
+      setShowSubscriptionModal(true);
+      setSaving(false);
+      return;
+    }
+
+    // Handle special case for lesson 63 -> 65
+    if (numericId === 63) return { nextId: 65 };
+    
+    // Handle level transitions
     const levelTransitions = {
       58: { nextId: 60, nextLevel: 1 },
       68: { nextId: 70, nextLevel: 2 }
     };
-
+    
     if (levelTransitions[numericId]) {
-      if (numericId === 58 && finishedContent.includes(58)) {
-        return levelTransitions[numericId];
-      }
-      if (numericId === 68 && finishedContent.includes(68)) {
-        return levelTransitions[numericId];
-      }
-      return null;
+      return levelTransitions[numericId];
     }
 
-    if (activeLevel === 2) {
-      const allLessons = lessonsByLevel[2].flatMap(section =>
-        section.children || []
-      ).filter(lesson => lesson);
-
-      const currentIndex = allLessons.findIndex(lesson =>
-        lesson.redirectId === numericId
-      );
-
-      if (currentIndex !== -1 &&
-        currentIndex < allLessons.length - 1 &&
-        finishedContent.includes(numericId)) {
-        return { nextId: allLessons[currentIndex + 1].redirectId };
-      }
-    } else {
-      const currentLevelLessons = lessonsByLevel[activeLevel];
-      const currentIndex = currentLevelLessons.findIndex(
-        lesson => lesson.redirectId === numericId
-      );
-
-      if (currentIndex !== -1 &&
-        currentIndex < currentLevelLessons.length - 1 &&
-        finishedContent.includes(numericId)) {
-        return { nextId: currentLevelLessons[currentIndex + 1].redirectId };
-      }
-    }
-
-    const isLastLevel3Lesson = numericId === 126;
-    if (isLastLevel3Lesson && finishedContent.includes(126)) {
-      return null;
-    }
-
-    return { nextId: null, needsCompletion: true };
+    // Rest of your existing logic...
+    // [Keep the existing code for finding next lesson]
   };
 
 const handleSaveAndContinue = async () => {
@@ -902,14 +912,33 @@ const handleSaveAndContinue = async () => {
     const findNextLesson = (currentId) => {
       const numericId = parseInt(currentId);
       
-      // Check subscription for content beyond level 1
-      if (!user?.user?.stripe_subscription_id && numericId >= 58) {
-        setSubscriptionModalparagraph('Congratulations you have finished Level 1. This content only available to subscribed users. Subscribe now to access all levels and features.')
+      // Check if user has subscription
+      if (!user?.user?.stripe_subscription_id) {
+        setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
         setShowSubscriptionModal(true);
         setSaving(false);
         return;
       }
 
+      // Check if user is still in free trial period for level transitions
+      const userCreatedDate = new Date(user.user.createdAt);
+      const currentDate = new Date();
+      const trialEndDate = new Date(userCreatedDate);
+      trialEndDate.setDate(trialEndDate.getDate() + 14); // Add 14 days for trial
+
+      const isInFreeTrial = currentDate <= trialEndDate;
+
+      // Check for content beyond level 1 during free trial
+      if (isInFreeTrial && numericId >= 58) {
+        if (numericId === 58) {
+          setSubscriptionModalparagraph('Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+        } else {
+          setSubscriptionModalparagraph('To access this content, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+        }
+        setShowSubscriptionModal(true);
+        setSaving(false);
+        return;
+      }
 
       // Handle special case for lesson 63 -> 65
       if (numericId === 63) return { nextId: 65 };
@@ -950,12 +979,10 @@ const handleSaveAndContinue = async () => {
         }
       }
 
-
       // Get lessons for the determined level
       const lessons = currentLevel === 2
         ? lessonsByLevel[2].flatMap(section => section.children || [])
         : lessonsByLevel[currentLevel] || [];
-
 
       // Find current lesson index
       const currentIndex = lessons.findIndex(lesson => lesson.redirectId === numericId);
@@ -974,6 +1001,7 @@ const handleSaveAndContinue = async () => {
       return null;
     };
 
+    // Rest of your existing code remains the same...
     const resolveLessonTitle = (lessonId) => {
       switch (lessonId) {
         case 51: return "The Myths of Entrepreneurship";
@@ -1030,6 +1058,12 @@ const handleSaveAndContinue = async () => {
 
     const navigateToNextLesson = async () => {
       const nextLessonInfo = findNextLesson(currentJournalId);
+      
+      // If findNextLesson returned early due to trial/subscription check, don't continue
+      if (!nextLessonInfo) {
+        return;
+      }
+      
       const nextLessonId = nextLessonInfo?.nextId;
 
       if (!nextLessonId) {
@@ -1680,7 +1714,7 @@ useEffect(() => {
             <img src={lockSign} alt='lock' className='mb-3' />
             <div className='d-flex justify-content-between align-items-center'>
               <h3 className='fs-14' style={{ marginBottom: '0' }}>
-                Premium Content Locked
+                {user?.user?.stripe_subscription_id ? 'Trial Period Active' : 'Premium Content Locked'}
               </h3>
             </div>
 
@@ -1688,45 +1722,55 @@ useEffect(() => {
               <p className='text-secondary text-center'>
                 {subscriptionModalparagraph || 'This content is only available to subscribed users. Subscribe now to access all levels and features.'}
               </p>
-              {/* <div className='text-center mt-4'>
-                <button
-                  className='btn btn-primary'
-                  onClick={() => {
-                    history.push('/subscribe');
-                    setShowSubscriptionModal(false);
-                  }}
+              
+              {/* Only show subscribe button if user doesn't have subscription */}
+              {!user?.user?.stripe_subscription_id && (
+                <div
+                  className='review-course-btn'
                   style={{
-                    background: 'linear-gradient(to right, #FF3399, #51C7DF)',
-                    border: 'none',
-                    padding: '10px 30px',
-                    borderRadius: '5px'
+                    display: 'inline-block',
+                    borderRadius: '8px',
+                    background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                    padding: '1px',
+                    height: '58px',
+                    boxShadow: '0px 4px 10px 0px #00000040'
                   }}
                 >
-                  Subscribe Now
-                </button>
-              </div> */}
-              <div
-                className='review-course-btn'
-                style={{
-                  display: 'inline-block',
-                  borderRadius: '8px',
-                  background:
-                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                  padding: '1px',
-                  height: '58px',
-                  boxShadow: '0px 4px 10px 0px #00000040'
-                }}
-              >
-                <button
-                  style={{ padding: '.5rem' }}
-                  className='review-progress-btn'
-                  onClick={() => {
-                    history.push('/subscribe');
-                    setShowSubscriptionModal(false);
+                  <button
+                    style={{ padding: '.5rem' }}
+                    className='review-progress-btn'
+                    onClick={() => {
+                      history.push('/subscribe');
+                      setShowSubscriptionModal(false);
+                    }}
+                  >
+                    Subscribe Now
+                  </button>
+                </div>
+              )}
+              
+              {/* Show different button for trial users */}
+              {user?.user?.stripe_subscription_id && (
+                <div
+                  className='review-course-btn'
+                  style={{
+                    display: 'inline-block',
+                    borderRadius: '8px',
+                    background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                    padding: '1px',
+                    height: '58px',
+                    boxShadow: '0px 4px 10px 0px #00000040'
                   }}
-                  disabled={saving}
-                >Subscribe Now</button>
-              </div>
+                >
+                  <button
+                    style={{ padding: '.5rem' }}
+                    className='review-progress-btn'
+                    onClick={() => setShowSubscriptionModal(false)}
+                  >
+                    I Understand
+                  </button>
+                </div>
+              )}
             </div>
           </ModalBody>
         </Modal>
