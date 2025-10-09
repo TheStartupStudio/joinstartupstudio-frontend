@@ -17,14 +17,14 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
       price: '9.99',
       total: '9.99',
       period: 'month',
-      priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID || 'price_1RbgyFRsRTWEGaApy1Fql4H8',
+      priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID || 'price_1RbhmbE4OMqDE3oQyb89B1dy',
       commitment: '12 months'
     },
     annual: {
       price: '99.00',
       total: '99.00',
       period: 'year',
-      priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID || 'price_1RbgyFRsRTWEGaApHmVwRUj3',
+      priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID || 'price_1SFxTOE4OMqDE3oQ4QJgzMBZ',
       commitment: 'year'
     }
   }
@@ -82,17 +82,6 @@ const handleSubscription = async () => {
       <Modal.Body>
               <div className='d-flex justify-content-center p-sm-5 positon-relative'>
 
-                <div style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000000}}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="610" height="767" viewBox="0 0 610 767" fill="none">
-                  <path d="M610 288.48C610 552.547 473.447 766.616 305 766.616C136.553 766.616 0 552.547 0 288.48C0 24.4126 144.446 -5.38379 312.893 -5.38379C481.34 -5.38379 610 24.4126 610 288.48Z" fill="url(#paint0_radial_3290_19282)" fill-opacity="0.2"/>
-                  <defs>
-                  <radialGradient id="paint0_radial_3290_19282" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(305 288.48) rotate(90) scale(478.136 305)">
-                  <stop offset="0.375" stop-color="#51C7DF"/>
-                  <stop offset="1" stop-color="white" stop-opacity="0"/>
-                  </radialGradient>
-                  </defs>
-                  </svg>
-                </div>
                 <div className='d-flex align-items-center flex-column payment-main bck-gradient position-relative'>
 
                   <div className="subscription-close" onClick={onHide} style={{ cursor: 'pointer' }}>
@@ -157,6 +146,26 @@ const handleSubscription = async () => {
                     Review our Terms of Use for more details.
                   </p>
         
+                </div>
+
+
+                <div style={{
+  position: 'absolute', 
+  top: '50%', 
+  left: '50%', 
+  transform: 'translate(-50%, -50%)', 
+  zIndex: -1,  // Changed from 1000000 to -1
+  pointerEvents: 'none' // Add this to ensure it doesn't block interactions
+}}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="610" height="767" viewBox="0 0 610 767" fill="none">
+                    <path d="M610 288.48C610 552.547 473.447 766.616 305 766.616C136.553 766.616 0 552.547 0 288.48C0 24.4126 144.446 -5.38379 312.893 -5.38379C481.34 -5.38379 610 24.4126 610 288.48Z" fill="url(#paint0_radial_3290_19282)" fill-opacity="0.2"/>
+                    <defs>
+                      <radialGradient id="paint0_radial_3290_19282" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(305 288.48) rotate(90) scale(478.136 305)">
+                        <stop offset="0.375" stopColor="#51C7DF"/>
+                        <stop offset="1" stopColor="white" stopOpacity="0"/>
+                      </radialGradient>
+                    </defs>
+                  </svg>
                 </div>
               </div>
       </Modal.Body>
