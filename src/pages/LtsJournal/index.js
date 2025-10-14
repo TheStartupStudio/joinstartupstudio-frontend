@@ -573,45 +573,40 @@ function LtsJournal(props) {
       return;
     }
 
-    // Check if user has subscription
-    if (!user?.user?.stripe_subscription_id) {
+    // Check if user has subscription OR is exempt
+    if (!user?.user?.stripe_subscription_id && !user?.user?.subscription_exempt) {
       setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
       setShowSubscriptionModal(true);
       return;
     }
 
-    // Check if user is still in free trial period
-    console.log(user.user.createdAt)
-    const userCreatedDate = new Date(user.user.createdAt);
-    const currentDate = new Date();
-    const trialEndDate = new Date(userCreatedDate);
-    trialEndDate.setDate(trialEndDate.getDate() + 14); // Add 14 days for trial
+    // Check if user is still in free trial period (exempt users skip this check)
+    const isInTrial = !user?.user?.subscription_exempt && isUserInFreeTrial(user.user.createdAt);
 
-    const isInFreeTrial = currentDate <= trialEndDate;
-
-    if (isInFreeTrial) {
+    if (isInTrial) {
       if (clickedLevel === 1) {
-        setSubscriptionModalparagraph('Congratulations! You have completed Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+        setSubscriptionModalparagraph('To access Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
       } else if (clickedLevel === 2) {
-        setSubscriptionModalparagraph('Congratulations! To access Level 3, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
+        setSubscriptionModalparagraph('To access Level 3, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
       }
       setShowSubscriptionModal(true);
       return;
     }
 
-    // Existing level completion checks
+    // Check level completion requirements (for paid users/exempt users after trial)
     if (clickedLevel === 1 && !finishedContent.includes(58)) {
-      setLockModalMessage('This lesson is currently locked. You must complete Level 1 before it to gain access to Level 2.');
+      setLockModalMessage('This lesson is currently locked. You must complete Level 1 (Task #2: Create your I Am Video) before you can access Level 2.');
       setShowLockModal(true);
       return;
     }
 
     if (clickedLevel === 2 && !finishedContent.includes(68)) {
-      setLockModalMessage('This lesson is currently locked. You must complete Level 2 before it to gain access to Level 3.');
+      setLockModalMessage('This lesson is currently locked. You must complete Level 2 (Task #2: Build Your Team and Find Your Mentor) before you can access Level 3.');
       setShowLockModal(true);
       return;
     }
 
+    // If all checks pass, set the active level
     setActiveLevel(clickedLevel);
 
     const levelPlaceholders = {
@@ -864,12 +859,7 @@ function LtsJournal(props) {
     }
 
     // Check if user is still in free trial period for level transitions
-    const userCreatedDate = new Date(user.user.created_at);
-    const currentDate = new Date();
-    const trialEndDate = new Date(userCreatedDate);
-    trialEndDate.setDate(trialEndDate.getDate() + 14); // Add 14 days for trial
-
-    const isInFreeTrial = currentDate <= trialEndDate;
+    const isInFreeTrial = isUserInFreeTrial(user.user.createdAt);
 
     // Check for content beyond level 1 during free trial
     if (isInFreeTrial && numericId >= 58) {
@@ -881,6 +871,25 @@ function LtsJournal(props) {
       setShowSubscriptionModal(true);
       setSaving(false);
       return;
+    }
+
+    // For paid users, check level completion
+    if (!isInFreeTrial) {
+      // Trying to access Level 2 without completing Level 1
+      if (numericId >= 60 && numericId < 70 && !finishedContent.includes(58)) {
+        setLockModalMessage('You must complete Level 1 before accessing Level 2.');
+        setShowLockModal(true);
+        setSaving(false);
+        return;
+      }
+      
+      // Trying to access Level 3 without completing Level 2
+      if (numericId >= 70 && !finishedContent.includes(68)) {
+        setLockModalMessage('You must complete Level 2 before accessing Level 3.');
+        setShowLockModal(true);
+        setSaving(false);
+        return;
+      }
     }
 
     // Handle special case for lesson 63 -> 65
@@ -896,8 +905,46 @@ function LtsJournal(props) {
       return levelTransitions[numericId];
     }
 
-    // Rest of your existing logic...
-    // [Keep the existing code for finding next lesson]
+    // Find which level the current lesson belongs to
+    let currentLevel = activeLevel;
+    
+    for (let level = 0; level <= 2; level++) {
+      if (level === 2) {
+        const allLevel3Lessons = lessonsByLevel[2].flatMap(section => section.children || []);
+        const foundInLevel3 = allLevel3Lessons.find(lesson => lesson.redirectId === numericId);
+        if (foundInLevel3) {
+          currentLevel = 2;
+          break;
+        }
+      } else {
+        const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.redirectId === numericId);
+        if (foundInCurrentLevel) {
+          currentLevel = level;
+          break;
+        }
+      }
+    }
+
+    // Get lessons for the determined level
+    const lessons = currentLevel === 2
+      ? lessonsByLevel[2].flatMap(section => section.children || [])
+      : lessonsByLevel[currentLevel] || [];
+
+    // Find current lesson index
+    const currentIndex = lessons.findIndex(lesson => lesson.redirectId === numericId);
+
+    // If lesson found and not the last one, return next lesson
+    if (currentIndex !== -1 && currentIndex < lessons.length - 1) {
+      const nextLesson = lessons[currentIndex + 1];
+      return { nextId: nextLesson.redirectId };
+    }
+
+    // If it's the last lesson of the course
+    if (numericId === 126) {
+      return null;
+    }
+
+    return null;
   };
 
 const handleSaveAndContinue = async () => {
@@ -912,24 +959,19 @@ const handleSaveAndContinue = async () => {
     const findNextLesson = (currentId) => {
       const numericId = parseInt(currentId);
       
-      // Check if user has subscription
-      if (!user?.user?.stripe_subscription_id) {
+      // Check if user has subscription OR is exempt
+      if (!user?.user?.stripe_subscription_id && !user?.user?.subscription_exempt) {
         setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
         setShowSubscriptionModal(true);
         setSaving(false);
-        return;
+        return null;
       }
 
-      // Check if user is still in free trial period for level transitions
-      const userCreatedDate = new Date(user.user.createdAt);
-      const currentDate = new Date();
-      const trialEndDate = new Date(userCreatedDate);
-      trialEndDate.setDate(trialEndDate.getDate() + 14); // Add 14 days for trial
+      // Check if user is still in free trial period (exempt users skip this check)
+      const isInTrial = !user?.user?.subscription_exempt && isUserInFreeTrial(user.user.createdAt);
 
-      const isInFreeTrial = currentDate <= trialEndDate;
-
-      // Check for content beyond level 1 during free trial
-      if (isInFreeTrial && numericId >= 58) {
+      // Block access to content beyond Level 1 during free trial (exempt users skip this check)
+      if (isInTrial && numericId >= 58) {
         if (numericId === 58) {
           setSubscriptionModalparagraph('Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
         } else {
@@ -937,7 +979,26 @@ const handleSaveAndContinue = async () => {
         }
         setShowSubscriptionModal(true);
         setSaving(false);
-        return;
+        return null;
+      }
+
+      // For paid users/exempt users, check level completion
+      if (!isInTrial) {
+        // Trying to access Level 2 without completing Level 1
+        if (numericId >= 60 && numericId < 70 && !finishedContent.includes(58)) {
+          setLockModalMessage('You must complete Level 1 before accessing Level 2.');
+          setShowLockModal(true);
+          setSaving(false);
+          return null;
+        }
+        
+        // Trying to access Level 3 without completing Level 2
+        if (numericId >= 70 && !finishedContent.includes(68)) {
+          setLockModalMessage('You must complete Level 2 before accessing Level 3.');
+          setShowLockModal(true);
+          setSaving(false);
+          return null;
+        }
       }
 
       // Handle special case for lesson 63 -> 65
@@ -955,25 +1016,19 @@ const handleSaveAndContinue = async () => {
 
       // Find which level the current lesson belongs to
       let currentLevel = activeLevel;
-      let foundInLevel = false;
       
-      // Check each level to find where the current lesson belongs
       for (let level = 0; level <= 2; level++) {
         if (level === 2) {
-          // Level 3 has nested structure
           const allLevel3Lessons = lessonsByLevel[2].flatMap(section => section.children || []);
           const foundInLevel3 = allLevel3Lessons.find(lesson => lesson.redirectId === numericId);
           if (foundInLevel3) {
             currentLevel = 2;
-            foundInLevel = true;
             break;
           }
         } else {
-          // Level 1 and 2 have flat structure
           const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.redirectId === numericId);
           if (foundInCurrentLevel) {
             currentLevel = level;
-            foundInLevel = true;
             break;
           }
         }
@@ -995,7 +1050,7 @@ const handleSaveAndContinue = async () => {
 
       // If it's the last lesson of the course
       if (numericId === 126) {
-        return null; // Course completed
+        return null;
       }
 
       return null;
@@ -1008,13 +1063,11 @@ const handleSaveAndContinue = async () => {
         case 60: return "The Journey of Entrepreneurship";
         case 70: return "Business Story";
         default:
-          // Check level 3 first
           for (const section of lessonsByLevel[2] || []) {
             const found = section.children?.find(child => child.redirectId === lessonId);
             if (found) return found.title;
           }
           
-          // Check other levels
           for (let level = 0; level <= 1; level++) {
             const found = lessonsByLevel[level]?.find(lesson => lesson.redirectId === lessonId);
             if (found) return found.title;
@@ -1075,7 +1128,6 @@ const handleSaveAndContinue = async () => {
         return;
       }
 
-      // Handle level transitions
       if (nextLessonInfo.nextLevel !== undefined) {
         setActiveLevel(nextLessonInfo.nextLevel);
       }
@@ -1167,6 +1219,15 @@ const handleSaveAndContinue = async () => {
   }
 };
 
+
+// Add this helper function near the top of the component
+const isUserInFreeTrial = (userCreatedDate) => {
+  if (!userCreatedDate) return false;
+  const currentDate = new Date();
+  const trialEndDate = new Date(userCreatedDate);
+  trialEndDate.setDate(trialEndDate.getDate() + 14); // 14 day free trial
+  return currentDate <= trialEndDate;
+};
 
 // Add this useEffect to handle navigation from dashboard
 useEffect(() => {
@@ -1714,7 +1775,7 @@ useEffect(() => {
             <img src={lockSign} alt='lock' className='mb-3' />
             <div className='d-flex justify-content-between align-items-center'>
               <h3 className='fs-14' style={{ marginBottom: '0' }}>
-                {user?.user?.stripe_subscription_id ? 'Trial Period Active' : 'Premium Content Locked'}
+                {user?.user?.stripe_subscription_id || user?.user?.subscription_exempt ? 'Trial Period Active' : 'Premium Content Locked'}
               </h3>
             </div>
 
@@ -1723,8 +1784,8 @@ useEffect(() => {
                 {subscriptionModalparagraph || 'This content is only available to subscribed users. Subscribe now to access all levels and features.'}
               </p>
               
-              {/* Only show subscribe button if user doesn't have subscription */}
-              {!user?.user?.stripe_subscription_id && (
+              {/* Only show subscribe button if user doesn't have subscription AND is not exempt */}
+              {!user?.user?.stripe_subscription_id && !user?.user?.subscription_exempt && (
                 <div
                   className='review-course-btn'
                   style={{
@@ -1749,8 +1810,8 @@ useEffect(() => {
                 </div>
               )}
               
-              {/* Show different button for trial users */}
-              {user?.user?.stripe_subscription_id && (
+              {/* Show different button for trial users or exempt users */}
+              {(user?.user?.stripe_subscription_id || user?.user?.subscription_exempt) && (
                 <div
                   className='review-course-btn'
                   style={{

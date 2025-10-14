@@ -5,26 +5,27 @@ import courseLogo from '../../assets/images/academy-icons/svg/AIE Logo 3x.png'
 import AcademyBtn from '../../components/AcademyBtn'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
-import { userLogout } from '../../redux'
+import { userLogout, userLogin } from '../../redux'
 import './index.css'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 
-// const stripePromise = loadStripe(
-//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-// )
-
-
-const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+const stripePromise = loadStripe(
+  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+)
 
 function CheckSubscription() {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState('monthly')
   const [registrationData, setRegistrationData] = useState(null)
+  const [isReturningUser, setIsReturningUser] = useState(false)
+  const [userTrialUsed, setUserTrialUsed] = useState(false)
   const dispatch = useDispatch()
   const history = useHistory()
+  
+  const user = useSelector((state) => state.user?.user?.user)
 
   const planDetails = {
     monthly: {
@@ -43,75 +44,225 @@ function CheckSubscription() {
     }
   }
 
-  useEffect(() => {
-    // Get registration data from sessionStorage
-    const storedData = sessionStorage.getItem('registrationData')
-    if (!storedData) {
-      // If no registration data, redirect back to register
-      history.push('/register')
-      return
+  // ✅ NEW: Function to refresh user data from backend
+  const refreshUserData = async () => {
+    try {
+      console.log('🔄 Refreshing user data from backend...')
+      
+      // Fetch latest user data
+      const response = await axiosInstance.get('/users')
+      console.log('✅ Fresh user data received:', {
+        id: response.data.id,
+        email: response.data.email,
+        subscription_status: response.data.subscription_status,
+        stripe_subscription_id: response.data.stripe_subscription_id
+      })
+      
+      // Update Redux state with fresh data
+      await dispatch(userLogin())
+      
+      console.log('✅ Redux state updated with fresh user data')
+      
+      return response.data
+    } catch (error) {
+      console.error('❌ Error refreshing user data:', error)
+      throw error
     }
-    setRegistrationData(JSON.parse(storedData))
-  }, [history])
+  }
+
+  useEffect(() => {
+    // Check if this is a returning user (logged in) or new registration
+    if (user && user.id) {
+      // ✅ UPDATED: Check if user already has active subscription OR is exempt
+      if ((user.subscription_status === 'active' && user.stripe_subscription_id) || user.subscription_exempt) {
+        console.log('⚠️ User already has active subscription or is exempt, redirecting to dashboard')
+        toast.info(user.subscription_exempt 
+          ? 'You have subscription access!' 
+          : 'You already have an active subscription!')
+        history.push('/dashboard')
+        return
+      }
+
+      setIsReturningUser(true)
+      setUserTrialUsed(user.trial_used || false)
+      setRegistrationData({
+        name: user.name,
+        email: user.email,
+      })
+    } else {
+      // New user registration flow
+      const storedData = sessionStorage.getItem('registrationData')
+      if (!storedData) {
+        history.push('/register')
+        return
+      }
+      setRegistrationData(JSON.parse(storedData))
+      setIsReturningUser(false)
+      setUserTrialUsed(false)
+    }
+  }, [history, user])
 
   const handleClick = async () => {
     if (!registrationData) {
       toast.error('Registration data not found. Please start over.')
-      history.push('/register')
+      history.push(isReturningUser ? '/dashboard' : '/register')
       return
     }
 
     setIsLoading(true)
 
     try {
-      // Step 1: Register the user first
-      const registrationResponse = await axiosInstance.post('/auth/register', {
-        ...registrationData,
-        selectedPlan: selectedPlan,
-        priceId: planDetails[selectedPlan].priceId
-      })
-
-      if (registrationResponse.status === 200 || registrationResponse.status === 201) {
-        // Step 2: Create checkout session with the registered user
+      if (isReturningUser) {
+        console.log('=== RETURNING USER RESUBSCRIPTION ===')
+        console.log('User ID:', user.id)
+        console.log('User Email:', registrationData.email)
+        console.log('Current Subscription Status:', user.subscription_status)
+        console.log('Plan Selected:', selectedPlan)
+        
         const checkoutResponse = await axiosInstance.post(
           '/course-subscription/create-checkout-session',
           {
             planType: selectedPlan,
-            paymentMethodId: registrationData.paymentMethodId,
-            email: registrationData.email
           },
           {
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('access_token')}`
             }
           }
         )
 
-        const { sessionId } = checkoutResponse.data
-        const stripe = await stripePromise
-        
-        // Clear stored registration data
+        console.log('✅ Checkout session created:', checkoutResponse.data)
+        const { url, sessionId } = checkoutResponse.data
+
+        // Store info for success page
+        sessionStorage.setItem('subscription_in_progress', JSON.stringify({
+          userId: user.id,
+          email: registrationData.email,
+          plan: selectedPlan,
+          isReturning: true,
+          timestamp: Date.now()
+        }))
+
+        // Clear registration data
         sessionStorage.removeItem('registrationData')
+
+        // Redirect to Stripe
+        if (url) {
+          window.location.href = url
+        } else if (sessionId) {
+          const stripe = await stripePromise
+          await stripe.redirectToCheckout({ sessionId })
+        }
         
-        // Redirect to Stripe checkout
-        await stripe.redirectToCheckout({ sessionId })
+      } else {
+        console.log('=== NEW USER REGISTRATION ===')
+        // New user registration flow
+        const registrationResponse = await axiosInstance.post('/auth/register', {
+          ...registrationData,
+          selectedPlan: selectedPlan,
+          priceId: planDetails[selectedPlan].priceId
+        })
+
+        if (registrationResponse.status === 200 || registrationResponse.status === 201) {
+          const checkoutResponse = await axiosInstance.post(
+            '/course-subscription/create-checkout-session',
+            {
+              planType: selectedPlan,
+              paymentMethodId: registrationData.paymentMethodId,
+              email: registrationData.email
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          )
+
+          const { sessionId, url } = checkoutResponse.data
+          
+          // Store registration data for success page
+          sessionStorage.setItem('subscription_in_progress', JSON.stringify({
+            email: registrationData.email,
+            plan: selectedPlan,
+            isReturning: false
+          }))
+          
+          // Clear stored registration data
+          sessionStorage.removeItem('registrationData')
+          
+          // Redirect to Stripe checkout
+          if (url) {
+            window.location.href = url
+          } else {
+            const stripe = await stripePromise
+            await stripe.redirectToCheckout({ sessionId })
+          }
+        }
       }
     } catch (err) {
-      console.error('Checkout error:', err)
+      console.error('❌ Checkout error:', err)
+      console.error('Error response:', err.response?.data)
+      
+      // ✅ CHECK FOR needsRefresh FLAG
+      if (err.response?.data?.needsRefresh === true) {
+        console.log('🔄 Backend indicates user data needs refresh')
+        
+        try {
+          // Refresh user data from backend
+          await refreshUserData()
+          
+          // Show appropriate message
+          const message = err.response?.data?.error || 
+                         'You already have an active subscription. Your account has been updated.'
+          toast.success(message)
+          
+          // Redirect to dashboard
+          setTimeout(() => {
+            history.push('/dashboard')
+          }, 2000)
+          
+          return
+        } catch (refreshError) {
+          console.error('❌ Failed to refresh user data:', refreshError)
+          toast.error('Unable to refresh account data. Please log out and log back in.')
+        }
+      }
+      
+      // Handle other error types
       const errorMessage = err.response?.data?.message || 
                           err.response?.data?.error || 
                           'Something went wrong during checkout'
+      
       toast.error(errorMessage)
       
-      // If registration failed, redirect back to register
-      if (err.response?.status === 400 || err.response?.status === 409) {
-        sessionStorage.removeItem('registrationData')
+      // More specific error handling
+      if (err.response?.status === 401) {
+        toast.error('Please log in again to continue')
+        history.push('/login')
+      } else if (err.response?.status === 404) {
+        toast.error('User not found. Please try registering again.')
         history.push('/register')
+      } else if (err.response?.status === 400 && 
+                 err.response?.data?.error?.includes('already have an active subscription')) {
+        // Additional check for active subscription error
+        console.log('⚠️ User already has active subscription, refreshing data...')
+        try {
+          await refreshUserData()
+          toast.info('You already have an active subscription!')
+          setTimeout(() => {
+            history.push('/dashboard')
+          }, 2000)
+        } catch (refreshError) {
+          console.error('❌ Failed to refresh user data:', refreshError)
+        }
       }
     } finally {
       setIsLoading(false)
     }
   }
+
+  
 
   const handleLogout = async () => {
     dispatch(setGeneralLoading(true))
@@ -131,7 +282,13 @@ function CheckSubscription() {
   }
 
   if (!registrationData) {
-    return <div>Loading...</div>
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -152,8 +309,23 @@ function CheckSubscription() {
           />
           
           <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black subscription-title'>
-            Choose Your Subscription 
+            {isReturningUser ? 'Resubscribe to Continue' : 'Choose Your Subscription'}
           </h2>
+
+          {/* {isReturningUser && (
+            <div className='mb-3 p-3 bg-light rounded text-center'>
+              {userTrialUsed ? (
+                <p className='mb-0 text-warning'>
+                  <strong>Welcome back!</strong> Your 14-day trial has been used. 
+                  Subscription will start immediately.
+                </p>
+              ) : (
+                <p className='mb-0 text-success'>
+                  <strong>Welcome back!</strong> You still have access to a 14-day free trial!
+                </p>
+              )}
+            </div>
+          )} */}
 
           <div className='subscription-plans mt-4'>
             <div 
@@ -171,54 +343,57 @@ function CheckSubscription() {
             >
               <h5>Annual Plan</h5>
               <p className='price'>${planDetails.annual.price}/year</p>
-              <p className='commitment'>Pay once for full year</p>
+              <p className='commitment'>Get 1 month free when you pay for the entire year!</p>
             </div>
           </div>
 
           <div className='align-self-start mt-5 mb-5 payment-section mx-auto'>
-            <h3 className='fs-21 fw-medium text-black'>
+            <h3 className='fs-21 fw-medium text-black text-center'>
               {selectedPlan === 'annual' ? 'Annual' : 'Monthly'} Subscription to Learn to Start LLC
             </h3>
-            <div className='d-flex justify-content-between payment-border'>
+            <div className='d-flex mt-5 justify-content-between payment-border'>
               <p className='fs-15 text-black'>
                 Full access to Course in Entrepreneurship
               </p>
               <span>${planDetails[selectedPlan].price}</span>
             </div>
             <div className='d-flex justify-content-between mt-3'>
-              <p className='fs-15 text-black mb-0'>Total Amount</p>
-              <span>${planDetails[selectedPlan].total}</span>
+              <p className='text-black mb-0 fw-bold'>
+                {isReturningUser && !userTrialUsed ? 'Trial Period' : 'Total Amount Due Today'}
+              </p>
+              <span className="text-black fw-bold">
+                {isReturningUser && !userTrialUsed ? '$0 (14-day trial)' : `$${planDetails[selectedPlan].total}`}
+              </span>
             </div>
           </div>
 
           <AcademyBtn
             disabled={isLoading}
-            title={`${isLoading ? 'Processing...' : 'Subscribe Now'}`}
+            title={`${isLoading ? 'Processing...' : (isReturningUser ? 'Resubscribe Now' : 'Subscribe Now')}`}
             onClick={handleClick}
           />
 
           <p className='text-black fs-13 mt-4 text-center'>
-            Secure payment powered by Stripe. You can cancel your subscription
-            at any time.
+            Secure payments powered by Stripe. You can cancel your subscription at any time. 
+            Review our Terms of Use for more details.
           </p>
 
           <div className='mt-3 text-center'>
-            <p className='text-black fs-13 mb-1'>
-              Registering as: <strong>{registrationData?.email}</strong>
-            </p>
-            <button 
-              onClick={() => {
-                sessionStorage.removeItem('registrationData')
-                history.push('/register')
-              }}
-              className='text-blue-500 fs-13 bg-transparent border-0 text-decoration-underline'
-            >
-              Change registration details
-            </button>
+            {!isReturningUser && (
+              <button 
+                onClick={() => {
+                  sessionStorage.removeItem('registrationData')
+                  history.push('/register')
+                }}
+                className='text-blue-500 fs-13 bg-transparent border-0 text-decoration-underline'
+              >
+                Change registration details
+              </button>
+            )}
           </div>
 
           <div>
-            <p className='text-center text-black text-uppercase fs-13 fw-medium mb-0 mt-5'>
+            <p className='text-center text-black text-uppercase fs-13 fw-medium mb-0'>
               The Startup Studio
             </p>
             <p className='fs-13 fw-medium text-black'>
