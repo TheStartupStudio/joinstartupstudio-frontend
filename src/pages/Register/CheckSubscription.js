@@ -49,22 +49,14 @@ function CheckSubscription() {
   // ✅ NEW: Function to refresh user data from backend
   const refreshUserData = async () => {
     try {
-      console.log('🔄 Refreshing user data from backend...')
       
       // Fetch latest user data
       const response = await axiosInstance.get('/users')
-      console.log('✅ Fresh user data received:', {
-        id: response.data.id,
-        email: response.data.email,
-        subscription_status: response.data.subscription_status,
-        stripe_subscription_id: response.data.stripe_subscription_id
-      })
+
       
       // Update Redux state with fresh data
       await dispatch(userLogin())
-      
-      console.log('✅ Redux state updated with fresh user data')
-      
+            
       return response.data
     } catch (error) {
       console.error('❌ Error refreshing user data:', error)
@@ -77,7 +69,6 @@ function CheckSubscription() {
     if (user && user.id) {
       // ✅ UPDATED: Check if user already has active subscription OR is exempt
       if ((user.subscription_status === 'active' && user.stripe_subscription_id) || user.subscription_exempt) {
-        console.log('⚠️ User already has active subscription or is exempt, redirecting to dashboard')
         toast.info(user.subscription_exempt 
           ? 'You have subscription access!' 
           : 'You already have an active subscription!')
@@ -115,11 +106,6 @@ function CheckSubscription() {
 
     try {
       if (isReturningUser) {
-        console.log('=== RETURNING USER RESUBSCRIPTION ===')
-        console.log('User ID:', user.id)
-        console.log('User Email:', registrationData.email)
-        console.log('Current Subscription Status:', user.subscription_status)
-        console.log('Plan Selected:', selectedPlan)
         
         const checkoutResponse = await axiosInstance.post(
           '/course-subscription/create-checkout-session',
@@ -134,7 +120,6 @@ function CheckSubscription() {
           }
         )
 
-        console.log('✅ Checkout session created:', checkoutResponse.data)
         const { url, sessionId } = checkoutResponse.data
 
         // Store info for success page
@@ -158,7 +143,6 @@ function CheckSubscription() {
         }
         
       } else {
-        console.log('=== NEW USER REGISTRATION ===')
         // New user registration flow
         const registrationResponse = await axiosInstance.post('/auth/register', {
           ...registrationData,
@@ -208,7 +192,6 @@ function CheckSubscription() {
       
       // ✅ CHECK FOR needsRefresh FLAG
       if (err.response?.data?.needsRefresh === true) {
-        console.log('🔄 Backend indicates user data needs refresh')
         
         try {
           // Refresh user data from backend
@@ -248,7 +231,6 @@ function CheckSubscription() {
       } else if (err.response?.status === 400 && 
                  err.response?.data?.error?.includes('already have an active subscription')) {
         // Additional check for active subscription error
-        console.log('⚠️ User already has active subscription, refreshing data...')
         try {
           await refreshUserData()
           toast.info('You already have an active subscription!')

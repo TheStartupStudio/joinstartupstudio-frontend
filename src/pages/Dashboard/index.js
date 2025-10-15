@@ -115,7 +115,6 @@ function Dashboard() {
 
   const handleChange = (selectedOption) => {
     setSelectedLanguage(selectedOption)
-    console.log('Selected Language:', selectedOption.value)
   }
 
   const handleContinueCourse = async () => {

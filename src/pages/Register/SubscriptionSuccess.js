@@ -19,21 +19,13 @@ const SubscriptionSuccess = () => {
 
   const refreshUserData = async () => {
     try {
-      console.log('🔄 Refreshing user data from backend...')
       
       const response = await axiosInstance.get('/users')
-      console.log('✅ Fresh user data received:', {
-        id: response.data.id,
-        subscription_status: response.data.subscription_status,
-        stripe_subscription_id: response.data.stripe_subscription_id
-      })
       
       await dispatch(userLogin())
-      console.log('✅ Redux state updated')
       
       return response.data
     } catch (error) {
-      console.error('❌ Error refreshing user data:', error)
       throw error
     }
   }
@@ -75,7 +67,6 @@ const SubscriptionSuccess = () => {
     } catch (error) {
       
       if (error.response?.status === 404) {
-        console.log('⚠️ Endpoint not found, falling back to refreshUserData method')
         return await refreshUserData()
       }
       
@@ -94,13 +85,6 @@ const SubscriptionSuccess = () => {
         setStatus(`Verifying with Stripe... (${attempts}/${MAX_POLLING_ATTEMPTS})`)
         
         const data = await verifyAndSyncSession(sessionId)
-
-        console.log('Sync Result:', {
-          status: data.subscription_status,
-          subscriptionId: data.stripe_subscription_id,
-          synced: data.synced,
-          processing: data.processing
-        })
 
         const hasActiveSubscription = 
           data.subscription_status === 'active' && 
@@ -127,19 +111,15 @@ const SubscriptionSuccess = () => {
             ? 'Processing payment with Stripe...' 
             : `Current status: ${data.subscription_status || 'pending'}`
           
-          console.log(`⏳ Not active yet. ${statusText}`)
           setStatus(`${statusText} (Attempt ${attempts}/${MAX_POLLING_ATTEMPTS})`)
           
           setTimeout(() => poll(), POLLING_INTERVAL)
         } else {
-          console.log('⏰ Max polling attempts reached')
           setStatus('Still processing...')
           
-          console.log('🔄 Final attempt to refresh user data...')
           const finalUserData = await refreshUserData()
           
           if (finalUserData.subscription_status === 'active' && finalUserData.stripe_subscription_id) {
-            console.log('✅ Final refresh successful - subscription is active!')
             toast.success('🎉 Subscription activated successfully!')
             
             setTimeout(() => {
@@ -147,7 +127,6 @@ const SubscriptionSuccess = () => {
               history.push('/dashboard')
             }, 2000)
           } else {
-            console.log('⚠️ Final refresh - still not active')
             toast.warning(
               'Your subscription is being processed. Please refresh the page in a moment or contact support if issues persist.',
               { autoClose: 8000 }
@@ -169,7 +148,6 @@ const SubscriptionSuccess = () => {
         }
 
         if (attempts < MAX_POLLING_ATTEMPTS) {
-          console.log('⚠️ Error occurred, retrying...')
           setTimeout(() => poll(), POLLING_INTERVAL)
         } else {
           setStatus('Error verifying subscription')
@@ -189,15 +167,12 @@ const SubscriptionSuccess = () => {
   }
 
   useEffect(() => {
-    console.log('🚀 SubscriptionSuccess component mounted')
-    console.log('Current URL:', window.location.href)
     
     const handleSuccess = () => {
       try {
         const params = new URLSearchParams(location.search)
         const sessionId = params.get('session_id')
         
-        console.log('Session ID from URL:', sessionId)
         
         if (!sessionId) {
           toast.error('Invalid payment confirmation. Redirecting...')
@@ -210,12 +185,10 @@ const SubscriptionSuccess = () => {
         const storedData = sessionStorage.getItem('subscription_in_progress')
         if (storedData) {
           const parsedData = JSON.parse(storedData)
-          console.log('📦 Stored subscription data:', parsedData)
         }
 
         setStatus('Payment successful! Verifying with Stripe...')
         
-        console.log('📞 Initiating polling process...')
         pollSubscriptionStatus(sessionId)
         
       } catch (error) {
