@@ -45,8 +45,6 @@ function Dashboard() {
   useImpersonation(originalToken)
 
   useEffect(() => {
-
-    console.log('testing this :', user?.createdAt )
     if (!user?.createdAt || user?.subscription_exempt) return
 
     const calculateTrialTime = () => {
@@ -60,10 +58,14 @@ function Dashboard() {
       if (timeRemaining > 0) {
         setIsTrialActive(true)
         
-        const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
-        const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60))
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000)
+        const totalSeconds = Math.floor(timeRemaining / 1000)
+        const totalMinutes = Math.floor(totalSeconds / 60)
+        const totalHours = Math.floor(totalMinutes / 60)
+        const days = Math.floor(totalHours / 24)
+        
+        const hours = totalHours % 24
+        const minutes = totalMinutes % 60
+        const seconds = totalSeconds % 60
 
         setTrialTimeRemaining({ days, hours, minutes, seconds })
       } else {
@@ -72,10 +74,8 @@ function Dashboard() {
       }
     }
 
-    // Calculate immediately
     calculateTrialTime()
 
-    // Update every second
     const interval = setInterval(calculateTrialTime, 1000)
 
     return () => clearInterval(interval)

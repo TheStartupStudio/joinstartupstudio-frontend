@@ -85,6 +85,9 @@ function Layout({ children }) {
         draggable
         pauseOnHover
       />
+      <div className='d-none d-md-block'>
+        <Footer />
+      </div>
     </React.Fragment>
   )
 }
