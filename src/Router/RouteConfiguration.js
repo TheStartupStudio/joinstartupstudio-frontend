@@ -130,6 +130,9 @@ const PublicPortfolio2024 = React.lazy(() =>
   import('../pages/Academy-Portfolio/index')
 )
 
+// ✅ ADD THIS LINE HERE - Move it up before it's used
+const SubscriptionSuccess = React.lazy(() => import('../pages/Register/SubscriptionSuccess'))
+
 const StudentPortfolio2024 = React.lazy(() =>
   import('../pages/Portfolio2024/studentPortfolio')
 )
@@ -220,6 +223,7 @@ export const adminRoutes = [
 ]
 
 export const mutualRoutes = [
+  { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
   { path: '/dashboard', component: Dashboard, exact: true },
   { path: '/subscribe', component: CheckSubscription, exact: true },
   { path: '/payment', component: Payment, exact: true },
@@ -470,6 +474,8 @@ export const studentRoutes = [
 ]
 
 export const publicRoutes = [
+  { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+  { path: '/subscription/cancel', component: CheckSubscription, exact: true },
   { path: '/explore-the-platform', component: ExplorePlatform, exact: true },
   { path: '/explore-the-course', component: ExploreCourse, exact: true },
   { path: '/contact', component: ContactUs, exact: true },
@@ -499,7 +505,9 @@ export const publicRoutes = [
     path: '/public-portfolio/:username',
     component: PublicPortfolio2024,
     exact: true
-  }
+  },
+  { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+  { path: '/subscription/cancel', component: () => import('../pages/Register/CheckSubscription'), exact: true },
   // {
   //   path: '/student-portfolio/:username',
   //   component: PreviewPortfolioNew,
@@ -512,16 +520,18 @@ export const redirects = [
   { from: '/register', to: '/dashboard' },
   { from: '/ims-login', to: '/dashboard' },
   { from: '/', to: '/dashboard', exact: true },
-  // Only redirect to subscribe if user exists but doesn't have subscription
+  // ✅ Don't redirect subscription success page
   {
     from: '*',
     to: '/subscribe',
     condition: (user) =>
       window.location.pathname !== '/auth-success' &&
+      window.location.pathname !== '/subscription/success' &&
+      window.location.pathname !== '/subscription/cancel' &&
       user?.user?.is_active === true &&
-      !user?.user?.stripe_subscription_id
+      !user?.user?.stripe_subscription_id &&
+      !user?.user?.subscription_exempt // ✅ NEW: Also check exempt status
   },
-  // Default catch-all redirect to home
   {
     from: '*',
     to: '/',

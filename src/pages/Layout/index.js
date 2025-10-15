@@ -20,6 +20,9 @@ function Layout({ children }) {
   const dispatch = useDispatch()
   const location = useLocation()
 
+  const hideSidebarRoutes = ['/terms']
+  const shouldHideSidebar = hideSidebarRoutes.includes(location.pathname)
+
   const toggleBackdrop = () => {
     dispatch(changeSidebarState(false))
   }
@@ -40,9 +43,8 @@ function Layout({ children }) {
         className='wrapper d-flex flex-column min-vh-100'
         style={originalToken && { marginTop: '32px' }}
       >
-        {!(
-           location.pathname === '/payment'
-        ) && (
+        {/* Conditionally render sidebar */}
+        {!shouldHideSidebar && (
           <Sidebar
             handleSideBar={setSideBarVisible}
             sideBarVisible={sideBarVisible}
@@ -52,13 +54,16 @@ function Layout({ children }) {
         <div
           id='content'
           className={`${
-            location.pathname === '/subscribe' ||
-            location.pathanme === '/payment'
+            shouldHideSidebar
+              ? 'full-width-content'
+              : location.pathname === '/subscribe' ||
+                location.pathname === '/payment'
               ? ''
               : 'auth-content'
           } flex-grow-1 d-flex flex-column`}
+          style={shouldHideSidebar ? { width: '100%', marginLeft: 0 } : {}}
         >
-          {sideBarState ? (
+          {sideBarState && !shouldHideSidebar ? (
             <div className='backdrop' onClick={toggleBackdrop}></div>
           ) : null}
           <Header handleSideBar={setSideBarVisible} />
@@ -71,7 +76,14 @@ function Layout({ children }) {
       <ToastContainer
         className='customToast'
         position='bottom-left'
-        autoClose={5000}
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
       />
       <div className='d-none d-md-block'>
         <Footer />

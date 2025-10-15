@@ -23,7 +23,8 @@ import {
   CardExpiryElement, 
   CardCvcElement, 
   useStripe, 
-  useElements 
+  useElements,
+  PaymentRequestButtonElement
 } from '@stripe/react-stripe-js'
 import CheckSubscriptionModal from './CheckSubscriptionModal'
 import closeBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
@@ -153,7 +154,22 @@ function RegistrationForm() {
     setIsLoading(true)
 
     try {
-      // Step 1: Create payment method
+      // Step 1: Check if user exists with this email
+      const checkEmailResponse = await axiosInstance.post('/check-email', {
+        email: formData.emailAddress
+      })
+
+      if (checkEmailResponse.data.exists) {
+        setIsLoading(false)
+        setErrors({
+          ...errors,
+          emailAddress: 'An account with this email already exists. Please use a different email or log in.'
+        })
+        toast.error('An account with this email already exists. Please log in or use a different email.')
+        return
+      }
+
+      // Step 2: Create payment method
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
         card: cardNumberElement,
@@ -164,7 +180,7 @@ function RegistrationForm() {
             line1: formData.address,
             city: formData.city,
             state: formData.state,
-            postal_code: formData.zipC, // Use only zipC now
+            postal_code: formData.zipC,
           },
         },
       })
@@ -176,7 +192,7 @@ function RegistrationForm() {
         return
       }
 
-      // Step 2: Store registration data temporarily
+      // Step 3: Store registration data temporarily
       const registrationData = {
         name: formData.fullName,
         email: formData.emailAddress,
@@ -184,7 +200,7 @@ function RegistrationForm() {
         address: formData.address,
         city: formData.city,
         state: formData.state,
-        zipCode: formData.zipC, // Use zipC as the zipCode for backend
+        zipCode: formData.zipC,
         nameOnCard: formData.nameOn,
         paymentMethodId: paymentMethod.id,
       }
@@ -193,13 +209,18 @@ function RegistrationForm() {
       
       setIsLoading(false)
       
-      // Step 3: Show subscription modal instead of redirect
       setShowCheckSubscription(true)
       
     } catch (error) {
       setIsLoading(false)
       console.error('Registration error:', error)
-      toast.error('Something went wrong. Please try again.')
+      
+      // Handle specific error messages from the backend
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message)
+      } else {
+        toast.error('Something went wrong. Please try again.')
+      }
     }
   }
 
@@ -233,6 +254,95 @@ function RegistrationForm() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  const [paymentRequest, setPaymentRequest] = useState(null)
+
+  // Add this useEffect to initialize Google Pay/Apple Pay
+  useEffect(() => {
+    if (!stripe) return
+    
+    // Only enable Payment Request on HTTPS
+    const isSecureContext = window.isSecureContext || window.location.protocol === 'https:'
+    
+    if (!isSecureContext) {
+      console.warn('Payment Request API requires HTTPS. Skipping initialization.')
+      return
+    }
+
+    const pr = stripe.paymentRequest({
+      country: 'US',
+      currency: 'usd',
+      total: {
+        label: 'Learn to Start Subscription',
+        amount: 0,
+      },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    })
+
+    pr.canMakePayment().then((result) => {
+      if (result) {
+        setPaymentRequest(pr)
+      }
+    })
+
+    pr.on('paymentmethod', async (e) => {
+      try {
+        const email = formData.emailAddress || e.paymentMethod.billing_details.email
+
+        // Check if user exists
+        const checkEmailResponse = await axiosInstance.post('/check-email', {
+          email: email
+        })
+
+        if (checkEmailResponse.data.exists) {
+          e.complete('fail')
+          toast.error('An account with this email already exists. Please log in or use a different email.')
+          return
+        }
+
+        // Auto-fill form data from payment method
+        if (e.paymentMethod.billing_details) {
+          const billing = e.paymentMethod.billing_details
+          setFormData((prev) => ({
+            ...prev,
+            fullName: billing.name || prev.fullName,
+            emailAddress: billing.email || prev.emailAddress,
+            address: billing.address?.line1 || prev.address,
+            city: billing.address?.city || prev.city,
+            state: billing.address?.state || prev.state,
+            zipC: billing.address?.postal_code || prev.zipC,
+            nameOn: billing.name || prev.nameOn,
+          }))
+        }
+
+        // Store payment method ID
+        const registrationData = {
+          name: formData.fullName || e.paymentMethod.billing_details.name,
+          email: email,
+          password: formData.password,
+          address: formData.address || e.paymentMethod.billing_details.address?.line1,
+          city: formData.city || e.paymentMethod.billing_details.address?.city,
+          state: formData.state || e.paymentMethod.billing_details.address?.state,
+          zipCode: formData.zipC || e.paymentMethod.billing_details.address?.postal_code,
+          nameOnCard: formData.nameOn || e.paymentMethod.billing_details.name,
+          paymentMethodId: e.paymentMethod.id,
+        }
+
+        sessionStorage.setItem('registrationData', JSON.stringify(registrationData))
+        
+        // Complete the payment request
+        e.complete('success')
+        
+        // Show subscription modal
+        setShowCheckSubscription(true)
+      } catch (error) {
+        e.complete('fail')
+        console.error('Payment Request error:', error)
+        toast.error(error.response?.data?.message || 'Payment failed. Please try again.')
+      }
+    })
+  }, [stripe, formData.password, formData.emailAddress])
 
   return (
     <>
@@ -288,6 +398,34 @@ function RegistrationForm() {
             {/* $15 per month subscription */}
             Start your free trial today
           </h1>
+
+          {/* Add Google Pay button here - before the form */}
+          {paymentRequest && (
+            <div className='mt-4 mb-3'>
+              <div className='d-flex flex-column align-items-center'>
+                <div style={{ width: '100%', maxWidth: '400px' }}>
+                  <PaymentRequestButtonElement 
+                    options={{ 
+                      paymentRequest,
+                      style: {
+                        paymentRequestButton: {
+                          type: 'default',
+                          theme: 'dark',
+                          height: '48px',
+                        },
+                      },
+                    }} 
+                  />
+                </div>
+                <div className='d-flex align-items-center gap-3 my-3 w-100' style={{ maxWidth: '400px' }}>
+                  <hr style={{ flex: 1, borderTop: '1px solid #ccc' }} />
+                  <span className='fs-13 fw-medium text-black'>OR</span>
+                  <hr style={{ flex: 1, borderTop: '1px solid #ccc' }} />
+                </div>
+              </div>
+            </div>
+          )}
+
           <form className='mt-4-4' onSubmit={handleSubmit} autoComplete='off'>
             <div
     className='d-grid gap-4'
@@ -500,10 +638,26 @@ function RegistrationForm() {
                 </div>
 
                 {/* Card Information Section */}
-                <div className='mt-3'>
-                  <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
-                    Card Information
-                  </p>
+                <div className='mt-3 register-card-info-fill'>
+                  <div className='d-flex align-items-center justify-content-between mb-2'>
+                    <p className='mb-0 fs-13 fw-medium ms-3 text-black'>
+                      Card Information
+                    </p>
+                    {/* Optional: Add browser autofill hint */}
+                    <button
+                      type='button'
+                      className='btn-link fs-11 text-decoration-none'
+                      style={{ color: '#51C7DF', cursor: 'pointer' }}
+                      onClick={() => {
+                        // Trigger browser's native autofill
+                        if (document.querySelector('[name="cardnumber"]')) {
+                          document.querySelector('[name="cardnumber"]').focus()
+                        }
+                      }}
+                    >
+                      Use saved card
+                    </button>
+                  </div>
                   
                   {/* Card Number Field */}
                   <div className='relative mb-3'>
@@ -636,7 +790,7 @@ function RegistrationForm() {
                         <span style={{ color: '#51C7DF' }}>Processing...</span>
                       </div>
                     ) : (
-                      <span className='d-flex align-items-center justify-content-center gap-2' style={{fontWeight: 'bold'}}>
+                      <span className='d-flex align-items-center justify-content-center gap-2' style={{fontWeight: 'bold', color: 'black'}}>
                         Select Your Plan
                         <FontAwesomeIcon icon={faArrowRight} className='ms-2 fw-bold' />
                       </span>

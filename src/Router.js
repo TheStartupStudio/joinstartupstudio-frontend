@@ -21,8 +21,8 @@ import Payment from './pages/Register/Payment'
 import Dashboard from './pages/Dashboard'
 import LtsJournal from './pages/LtsJournal'
 import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
-import AcademyPortfolio from './pages/Academy-Portfolio/index'
 import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
+import SubscriptionSuccess from './pages/Register/SubscriptionSuccess'
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -30,48 +30,107 @@ function Router(props) {
     (state) => state.user
   )
 
+  // ✅ UPDATED: Helper function to check if user has active subscription OR is exempt
+  const hasActiveSubscription = () => {
+    if (!user?.user) return false
+    
+    const subscriptionStatus = user.user.subscription_status
+    const stripeSubscriptionId = user.user.stripe_subscription_id
+    const subscriptionExempt = user.user.subscription_exempt // ✅ NEW: Check exempt status
+    
+    console.log('=== SUBSCRIPTION CHECK ===')
+    console.log('User ID:', user.user.id)
+    console.log('Subscription Status:', subscriptionStatus)
+    console.log('Stripe Subscription ID:', stripeSubscriptionId)
+    console.log('Subscription Exempt:', subscriptionExempt) // ✅ NEW
+    console.log('Has Active:', subscriptionStatus === 'active' || subscriptionExempt) // ✅ UPDATED
+    console.log('========================')
+    
+    // ✅ UPDATED: Return true if exempt OR has active subscription
+    return subscriptionExempt === true || 
+           subscriptionStatus === 'active' || 
+           (subscriptionStatus === 'canceling' && stripeSubscriptionId)
+  }
+
   const roleRoutes = () => {
     if (!isAuthenticated) return publicRoutes
 
-    if (!user?.user?.stripe_subscription_id) {
+    // ✅ Check if current path is subscription success - allow access regardless of subscription status
+    const isSubscriptionSuccessPath = window.location.pathname === '/subscription/success'
+    
+    if (isSubscriptionSuccessPath) {
       return [
-        { path: '/subscribe', component: CheckSubscription, exact: true },
-        { path: '/cancel-payment', component: CancelSubscription, exact: true },
-        { path: '/payment', component: Payment, exact: true },
-        {path: '/dashboard', component: Dashboard, exact: true},
-        {path: '/course', component: Dashboard, exact: true},
-         {
-            path: '/my-course-in-entrepreneurship/journal',
-            component: LtsJournal,
-            props: { category: 'entrepreneurship' }
-          },   {
-            path: '/my-course-in-entrepreneurship',
-            component: MyCourseEntrepreneurship,
-            exact: true
-          },
-          // { path: '/my-portfolio', component: AcademyPortfolio, exact: true },
-          {
-              path: '/public-portfolio/:username',
-              component: PublicPortfolio2024,
-              exact: true
-            },
+        { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+        ...publicRoutes
       ]
     }
 
+    // Users without active subscription - limited access
+    if (!hasActiveSubscription()) {
+      return [
+        { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+        { path: '/subscribe', component: CheckSubscription, exact: true },
+        { path: '/cancel-payment', component: CancelSubscription, exact: true },
+        { path: '/payment', component: Payment, exact: true },
+        { path: '/dashboard', component: Dashboard, exact: true },
+        { path: '/course', component: Dashboard, exact: true },
+        // {
+        //   path: '/my-course-in-entrepreneurship/journal',
+        //   component: LtsJournal,
+        //   props: { category: 'entrepreneurship' }
+        // },
+        {
+          path: '/my-course-in-entrepreneurship',
+          component: MyCourseEntrepreneurship,
+          exact: true
+        },
+        {
+          path: '/public-portfolio/:username',
+          component: PublicPortfolio2024,
+          exact: true
+        },
+        { path: '/logout', component: () => import('./pages/Auth/LogOut'), exact: false },
+        { path: '/my-account', component: () => import('./pages/MyAccount'), exact: true },
+        // Catch-all route that redirects to subscribe page
+        { path: '*', component: CheckSubscription }
+      ]
+    }
+
+    // Users with active subscription OR exempt - full access based on role
     switch (user?.user?.role_id) {
       case 1:
-        return [...mutualRoutes, ...studentRoutes]
+        return [
+          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+          ...mutualRoutes, 
+          ...studentRoutes
+        ]
       case 2:
-        return [...mutualRoutes, ...instructorRoutes]
+        return [
+          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+          ...mutualRoutes, 
+          ...instructorRoutes
+        ]
       case 3:
-        return [...mutualRoutes, ...instructorRoutes, ...adminRoutes]
+        return [
+          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+          ...mutualRoutes, 
+          ...instructorRoutes, 
+          ...adminRoutes
+        ]
       default:
-        return mutualRoutes
+        return [
+          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+          ...mutualRoutes
+        ]
     }
   }
 
   const isResetPasswordRoute =
     window.location.pathname.startsWith('/reset-password')
+  
+  // ✅ Check if this is the subscription success route
+  const isSubscriptionSuccessRoute = 
+    window.location.pathname === '/subscription/success'
 
   return (
     <>
@@ -85,8 +144,15 @@ function Router(props) {
           {isAuthenticated && !isResetPasswordRoute ? (
             <Layout>
               <Switch>
+                {/* ✅ Always render SubscriptionSuccess route FIRST */}
+                <Route 
+                  exact 
+                  path="/subscription/success" 
+                  component={SubscriptionSuccess} 
+                />
                 {renderRoutes(roleRoutes())}
-                {redirects.map((redirect) => (
+                {/* Only apply redirects for users with active subscriptions AND not on success page */}
+                {hasActiveSubscription() && !isSubscriptionSuccessRoute && redirects.map((redirect) => (
                   (!redirect.condition || redirect.condition(user)) && (
                     <Redirect
                       key={redirect.from}
@@ -102,6 +168,12 @@ function Router(props) {
           ) : (
             <PublicLayout>
               <Switch>
+                {/* ✅ Render SubscriptionSuccess for public users too */}
+                <Route 
+                  exact 
+                  path="/subscription/success" 
+                  component={SubscriptionSuccess} 
+                />
                 {renderRoutes(publicRoutes)}
                 {redirects.map((redirect) => (
                   (!redirect.condition || redirect.condition(user)) && (

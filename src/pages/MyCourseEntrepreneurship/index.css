@@ -238,7 +238,7 @@
   background: #ffffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
-  border-radius: 10px;
+  border-radius: 10px !important;
 }
 
 .accordion-content-section {
@@ -264,7 +264,7 @@
 
 .accordion-button {
   background: transparent;
-  border-radius: 10px;
+  border-radius: 10px !important;
 }
 
 .accordion-button:not(.collapsed) {
