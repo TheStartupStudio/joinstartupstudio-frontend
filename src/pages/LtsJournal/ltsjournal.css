@@ -72,6 +72,7 @@
   padding: 5px;
   /* width: 1350px; */
   /* height: 49px; */
+  gap: 5px;
 }
 
 .course-level-journal {
@@ -89,7 +90,7 @@
 
 .course-level-journal:hover {
   background-color: #f7fafc;
-  border-radius: 15px;
+  border-radius: 8px;
 }
 .toastify-success-info {
   background: #9C3 !important;
@@ -100,8 +101,9 @@
   color: #2d3748;
   font-weight: 600;
   background-color: #ebf8ff;
-  border-radius: 15px;
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09);
+  border-radius: 8px;
+  /* box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09); */
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .accessible-level-journal {
