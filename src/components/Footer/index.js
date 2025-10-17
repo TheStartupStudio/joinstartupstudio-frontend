@@ -24,12 +24,12 @@ export default function Footer(props) {
           </div>
           <div className='col-md-12 col-sm-12 col-lg-4 text-align-center-footer'>
             <a
-              href='https://learntostart.com'
+              href='https://academy.learntostart.com'
               rel='noreferrer'
               target='_blank'
-              style={{ fontSize: '12px', color: '#fff' }}
+              style={{ fontSize: '14px', color: '#fff' }}
             >
-              LEARNTOSTART.COM
+              academy.learntostart.com
             </a>
           </div>
           <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer' style={{marginTop:'10px'}}>

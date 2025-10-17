@@ -349,12 +349,16 @@ function RegistrationForm() {
 
     <div className="header-login">
             <header className="py-4 px-5 d-flex justify-content-between align-items-start px-1-mob">
-            <img
+            {/* <img
               className="cursor-pointer w-200-mob img-register-login"
               src={StartupStudioLogo}
               alt="course logo"
               onClick={() => window.location.href = '/'}
-            />
+            /> */}
+
+            <div>
+              
+            </div>
       
             <nav className="mt-4">
               <ul className="list-unstyled gap-2-2" id="navList">
