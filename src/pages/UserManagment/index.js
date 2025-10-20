@@ -31,6 +31,7 @@ import warningTriangle from '../../assets/images/academy-icons/svg/warning-trian
 import userPassword from '../../assets/images/academy-icons/svg/Icon_User_Pass.svg'
 import download from '../../assets/images/academy-icons/svg/download.svg'
 import AddNewOrganization from '../../components/UserManagment/AddNewOrganization'
+import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 
 const UserManagement = () => {
   const dispatch = useDispatch()
@@ -389,8 +390,11 @@ const UserManagement = () => {
           <div className="account-page-padding d-flex justify-content-between flex-col-tab align-start-tab">
             <div>
               <h3 className="page-title bold-page-title text-black mb-0">
-                AIE super Admin Dashboard
+                USER MANAGEMENT
               </h3>
+              <p className="fs-13 fw-light text-black">
+                View user details
+              </p>
             </div>
           </div>
           <img
@@ -402,7 +406,8 @@ const UserManagement = () => {
         </div>
       </div>
       
-      <div className="user-management-container">
+      <div className="user-management-container position-relative">
+        <img src={blueManagerBG} alt="blue-manager-bg" className='position-absolute user-select-none' style={{right: '50%', translate: '50% 0'}} />
         {/* Header Tabs */}
         <div className="header-tabs">
           <button

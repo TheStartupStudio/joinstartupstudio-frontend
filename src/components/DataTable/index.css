@@ -15,11 +15,18 @@ tbody{
   min-width: 1000px;
   border-collapse: collapse;
   display: table;
+  color: #000;
+
+font-family: Montserrat;
+font-size: 0.875rem;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
 }
 
 .data-table thead {
   display: table-header-group;
-  background: #f8fafc;
+  background: rgba(227, 229, 233, 0.50);
   position: sticky;
   top: 0;
   z-index: 11;
@@ -35,18 +42,20 @@ tbody{
 }
 
 .data-table th {
-  background: #f8fafc;
+  /* background: #f8fafc; */
   padding: 8px 16px;
   text-align: left;
-  font-size: 11px;
-  font-weight: 600;
-  color: #374151;
   letter-spacing: 0.5px;
   border: none;
   border-bottom: 1px solid rgb(227, 229, 233);
   position: sticky;
   top: 0;
   z-index: 10;
+  font-weight: 600;
+  font-size: 0.6375rem;
+  font-style: normal;
+  /* font-variant: all-small-caps; */
+  color: black;
 }
 
 .data-table td {
@@ -63,9 +72,6 @@ tbody{
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: Montserrat;
-  font-size: 15px;
-  font-style: normal;
 }
 
 .header-icons {
@@ -89,9 +95,10 @@ tbody{
 }
 
 .status-indicator {
-  width: 8px;
-  height: 8px;
-  background: #10b981;
+  width: 10px;
+  height: 10px;
+  background-color: #9C3;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -99,18 +106,26 @@ tbody{
 .organization-details, .learner-details {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 
 .organization-name, .learner-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: #111827;
+  color: #000;
+font-family: Montserrat;
+font-size: 1rem;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
 }
 
 .organization-domain, .learner-email {
-  font-size: 12px;
-  color: #6b7280;
+color: var(--COLORS-Black, #000);
+font-family: Montserrat;
+font-size: 0.8125rem;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+
 }
 
 .learner-organization {
@@ -154,7 +169,7 @@ tbody{
 
 .actions-column {
   font-family: Montserrat;
-  font-size: 15px !important;
+  font-size: 15px;
   font-style: normal;
 }
 
@@ -169,7 +184,7 @@ tbody{
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  background: white;
+  /* background: white; */
   border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
