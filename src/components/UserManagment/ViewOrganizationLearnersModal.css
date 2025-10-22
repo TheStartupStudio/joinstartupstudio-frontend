@@ -1,0 +1,197 @@
+.view-organization-learners-modal .modal-dialog {
+  max-width: 95vw !important;
+  margin: 1.75rem auto;
+}
+
+.view-organization-learners-modal .modal-content {
+  border: none;
+  border-radius: 24px;
+  background: #f9fafb;
+}
+
+.view-organization-learners-modal .modal-content-wrapper {
+  padding: 10px;
+  /* background: #f9fafb; */
+  /* border-radius: 12px; */
+}
+
+.view-organization-learners-modal .modal-header-learners {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+}
+
+.view-organization-learners-modal .back-button {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+}
+
+.view-organization-learners-modal .back-button:hover {
+  background: #f9fafb;
+  border-color: #51C7DF;
+  color: #51C7DF;
+}
+
+.view-organization-learners-modal .header-content {
+  flex: 1;
+  padding: 15px;
+}
+
+.view-organization-learners-modal .modal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-organization-learners-modal .organization-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+  margin: 4px 0 0 0;
+  text-transform: uppercase;
+}
+
+.view-organization-learners-modal .search-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.view-organization-learners-modal .search-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.view-organization-learners-modal .search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.view-organization-learners-modal .search-input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.view-organization-learners-modal .search-input:focus {
+  outline: none;
+  border-color: #51C7DF;
+  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
+}
+
+.view-organization-learners-modal .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.view-organization-learners-modal .actions-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.view-organization-learners-modal .bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.view-organization-learners-modal .bulk-actions:hover {
+  background: #f9fafb;
+  border-color: #51C7DF;
+}
+
+.view-organization-learners-modal .table-container {
+  background: white;
+  border-radius: 12px;
+  /* padding: 20px;
+  margin-bottom: 20px; */
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+}
+
+.view-organization-learners-modal .pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 0;
+}
+
+.view-organization-learners-modal .pagination-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  /* border: 1px solid #e5e7eb; */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-organization-learners-modal .pagination-btn:hover {
+  background: #f9fafb;
+  border-color: #51C7DF;
+}
+
+.view-organization-learners-modal .pagination-info {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  padding: 0 12px;
+}
+
+/* Dropdown menu styles */
+.view-organization-learners-modal .dropdown-menu {
+  min-width: 200px;
+}
+
+.view-organization-learners-modal .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-organization-learners-modal .admin-icons-dropdown {
+  width: 16px;
+  height: 16px;
+}
