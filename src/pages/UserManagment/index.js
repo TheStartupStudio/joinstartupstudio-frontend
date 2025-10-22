@@ -31,6 +31,7 @@ import warningTriangle from '../../assets/images/academy-icons/svg/warning-trian
 import userPassword from '../../assets/images/academy-icons/svg/Icon_User_Pass.svg'
 import download from '../../assets/images/academy-icons/svg/download.svg'
 import AddNewOrganization from '../../components/UserManagment/AddNewOrganization'
+import ViewOrganizationLearnersModal from '../../components/UserManagment/ViewOrganizationLearnersModal'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 
 const UserManagement = () => {
@@ -45,6 +46,10 @@ const UserManagement = () => {
   const [showAddOrganizationModal, setShowAddOrganizationModal] = useState(false)
   const [selectedOrganization, setSelectedOrganization] = useState(null)
   const [modalMode, setModalMode] = useState('add') // 'add', 'edit', or 'view'
+  
+  // Add state for learners modal
+  const [showLearnersModal, setShowLearnersModal] = useState(false)
+  const [selectedOrgForLearners, setSelectedOrgForLearners] = useState(null)
 
   const organizationsData = [
     {
@@ -204,7 +209,7 @@ const UserManagement = () => {
     
     switch (actionType) {
       case 'view-learners':
-        console.log('View organization learners:', item.id)
+        handleViewLearners(item)
         break
       case 'add-learners':
         console.log('Add learners to organization:', item.id)
@@ -241,6 +246,11 @@ const UserManagement = () => {
     }
   }
 
+  const handleViewLearners = (organization) => {
+    setSelectedOrgForLearners(organization)
+    setShowLearnersModal(true)
+  }
+
   const handleViewOrganization = (organization) => {
     setSelectedOrganization(organization)
     setModalMode('view')
@@ -260,10 +270,7 @@ const UserManagement = () => {
   }
 
   const handleModalSuccess = () => {
-    // Refresh your organizations data here
     console.log('Organization saved successfully, refreshing data...')
-    // You would typically fetch the updated data from your API here
-    // fetchOrganizations()
   }
 
   function addSingleOrganization() {
@@ -605,6 +612,13 @@ const UserManagement = () => {
         onSuccess={handleModalSuccess}
         mode={modalMode}
         organizationData={selectedOrganization}
+      />
+
+      {/* View Organization Learners Modal */}
+      <ViewOrganizationLearnersModal
+        show={showLearnersModal}
+        onHide={() => setShowLearnersModal(false)}
+        organizationName={selectedOrgForLearners?.name || ''}
       />
     </div>
   )

@@ -226,7 +226,7 @@ const ChooseLogin = () => {
         <Col md='10' lg='8' className='main-login-container'>
           <FormWrapper className='login-content-wrapper'>
             <div className='welcome-content'>
-              <div className='login-logo d-none-mob'>
+              <div className='login-logo'>
                 <img
                   src={StartupStudioLogo}
                   alt='logo'

@@ -16,6 +16,7 @@
   box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(60.064998626708984px);
   padding: 5px;
+  gap: 5px;
 }
 
 .tab-button {
