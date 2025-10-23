@@ -4409,6 +4409,13 @@ wave > wave:first-child {
   color: black;
   -webkit-text-fill-color: black;
   -webkit-text-stroke: 0px;
+
+text-align: center;
+
+font-family: Montserrat;
+font-size: 10px;
+font-weight: 600;
+line-height: normal;
 }
 
 .reset-pass-btn {

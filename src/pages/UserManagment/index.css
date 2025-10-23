@@ -31,6 +31,7 @@
   text-align: center;
   border-radius: 8px;
   background-color: white;
+  font-family: 'Montserrat';
 }
 
 .tab-button.active {
@@ -52,7 +53,7 @@
 
 .search-container {
   flex: 1;
-  max-width: 800px;
+  max-width: 640px;
   border-radius: 12px;
   background: #FFF;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
@@ -124,8 +125,6 @@
   align-items: center;
   gap: 15px;
   color: black;
-  font-size: 12px;
-  font-weight: bolder;
   cursor: pointer;
   letter-spacing: 0.5px;
   border-radius: 8px;
@@ -136,6 +135,15 @@
   width: 230px;
   height: 54px;
   justify-content: space-between;
+
+
+
+  text-align: center;
+
+  /* Text - 15 Medium Caps */
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 /* Table */

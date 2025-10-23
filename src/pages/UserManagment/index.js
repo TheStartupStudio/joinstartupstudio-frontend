@@ -32,6 +32,7 @@ import userPassword from '../../assets/images/academy-icons/svg/Icon_User_Pass.s
 import download from '../../assets/images/academy-icons/svg/download.svg'
 import AddNewOrganization from '../../components/UserManagment/AddNewOrganization'
 import ViewOrganizationLearnersModal from '../../components/UserManagment/ViewOrganizationLearnersModal'
+import AddNewLearner from '../../components/UserManagment/AddNewLearner'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 
 const UserManagement = () => {
@@ -50,6 +51,7 @@ const UserManagement = () => {
   // Add state for learners modal
   const [showLearnersModal, setShowLearnersModal] = useState(false)
   const [selectedOrgForLearners, setSelectedOrgForLearners] = useState(null)
+  const [showAddLearnerModal, setShowAddLearnerModal] = useState(false)
 
   const organizationsData = [
     {
@@ -282,7 +284,7 @@ const UserManagement = () => {
   }
 
   function addSingleUser() {
-    console.log('Add Single User')
+    setShowAddLearnerModal(true)
   }
 
   function bulkAddUsers() {
@@ -394,12 +396,31 @@ const UserManagement = () => {
     <div>
       <div>
         <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
-          <div className="account-page-padding d-flex justify-content-between flex-col-tab align-start-tab">
-            <div>
-              <h3 className="page-title bold-page-title text-black mb-0">
+          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
+            <div className="d-flex flex-column gap-2">
+              <h3 className=" text-black mb-0"
+                style={{
+                  color: '#231F20',
+                  fontFamily: 'Montserrat',
+                  fontSize: '23px',
+                  fontStyle: 'normal',
+                  fontWeight: 700,
+                  lineHeight: 'normal',
+                }}
+              >
                 USER MANAGEMENT
               </h3>
-              <p className="fs-13 fw-light text-black">
+              <p
+                style={{
+                  color: '#AEAEAE',
+                  fontFamily: 'Montserrat',
+                  fontSize: '15px',
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  lineHeight: '20px',
+                  marginBottom: '0px',
+                }}
+              >
                 View user details
               </p>
             </div>
@@ -619,6 +640,13 @@ const UserManagement = () => {
         show={showLearnersModal}
         onHide={() => setShowLearnersModal(false)}
         organizationName={selectedOrgForLearners?.name || ''}
+      />
+
+      {/* Add New Learner Modal */}
+      <AddNewLearner
+        show={showAddLearnerModal}
+        onHide={() => setShowAddLearnerModal(false)}
+        // onSuccess={handleLearnerModalSuccess}
       />
     </div>
   )
