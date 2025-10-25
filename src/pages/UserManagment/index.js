@@ -1,6 +1,7 @@
 import './index.css'
 import React, { useEffect, useState, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -33,7 +34,9 @@ import download from '../../assets/images/academy-icons/svg/download.svg'
 import AddNewOrganization from '../../components/UserManagment/AddNewOrganization'
 import ViewOrganizationLearnersModal from '../../components/UserManagment/ViewOrganizationLearnersModal'
 import AddNewLearner from '../../components/UserManagment/AddNewLearner'
+import ViewLearnerModal from '../../components/UserManagment/ViewLearnerModal'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
+import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 
 const UserManagement = () => {
   const dispatch = useDispatch()
@@ -46,12 +49,24 @@ const UserManagement = () => {
   // Modal states
   const [showAddOrganizationModal, setShowAddOrganizationModal] = useState(false)
   const [selectedOrganization, setSelectedOrganization] = useState(null)
-  const [modalMode, setModalMode] = useState('add') // 'add', 'edit', or 'view'
+  const [modalMode, setModalMode] = useState('add')
   
   // Add state for learners modal
   const [showLearnersModal, setShowLearnersModal] = useState(false)
   const [selectedOrgForLearners, setSelectedOrgForLearners] = useState(null)
   const [showAddLearnerModal, setShowAddLearnerModal] = useState(false)
+  const [showViewLearnerModal, setShowViewLearnerModal] = useState(false)
+  const [selectedLearner, setSelectedLearner] = useState(null)
+  const [learnerModalMode, setLearnerModalMode] = useState('add')
+
+  // Add popup states
+  const [loading, setLoading] = useState(false)
+  const [showDeletePopup, setShowDeletePopup] = useState(false)
+  const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false)
+  const [showDeactivatePopup, setShowDeactivatePopup] = useState(false)
+  const [selectedItems, setSelectedItems] = useState([])
+  const [actionContext, setActionContext] = useState('') // 'organizations' or 'users'
+  const [isSingleAction, setIsSingleAction] = useState(false) // Track if it's a single user action
 
   const organizationsData = [
     {
@@ -217,31 +232,40 @@ const UserManagement = () => {
         console.log('Add learners to organization:', item.id)
         break
       case 'view':
-        console.log('View learner details:', item.id)
+        handleViewLearner(item)
         break
       case 'edit':
-        console.log('Edit learner:', item.id)
-        break
-      case 'view-organization':
-        handleViewOrganization(item)
+        handleEditLearner(item)
         break
       case 'edit-organization':
         handleEditOrganization(item)
         break
       case 'deactivate-organization':
-        console.log('Deactivate organization:', item.id)
+        setActionContext('organizations')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeactivatePopup(true)
         break
       case 'delete-organization':
-        console.log('Delete organization:', item.id)
+        setActionContext('organizations')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeletePopup(true)
         break
       case 'export-organization':
         console.log('Export organization data:', item.id)
         break
       case 'deactivate-learner':
-        console.log('Deactivate learner:', item.id)
+        setActionContext('users')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeactivatePopup(true)
         break
       case 'delete-learner':
-        console.log('Delete learner:', item.id)
+        setActionContext('users')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeletePopup(true)
         break
       default:
         break
@@ -275,6 +299,29 @@ const UserManagement = () => {
     console.log('Organization saved successfully, refreshing data...')
   }
 
+  const handleViewLearner = (learner) => {
+    setSelectedLearner(learner)
+    setShowViewLearnerModal(true)
+  }
+
+  const handleEditLearner = (learner) => {
+    setSelectedLearner(learner)
+    setLearnerModalMode('edit')
+    setShowViewLearnerModal(false) // Close view modal
+    setShowAddLearnerModal(true) // Open edit modal
+  }
+
+  const addSingleUser = () => {
+    setLearnerModalMode('add')
+    setSelectedLearner(null)
+    setShowAddLearnerModal(true)
+  }
+
+  const handleLearnerModalSuccess = () => {
+    console.log('Learner saved successfully, refreshing data...')
+    // Refresh your data here
+  }
+
   function addSingleOrganization() {
     handleAddOrganization()
   }
@@ -283,9 +330,9 @@ const UserManagement = () => {
     console.log('Bulk Add Organizations')
   }
 
-  function addSingleUser() {
-    setShowAddLearnerModal(true)
-  }
+  // function addSingleUser() {
+  //   setShowAddLearnerModal(true)
+  // }
 
   function bulkAddUsers() {
     console.log('Bulk Add Users')
@@ -319,38 +366,56 @@ const UserManagement = () => {
   ]
 
   function deactivateOrganizations() {
-    console.log('Deactivate Organizations')
+    setActionContext('organizations')
+    setIsSingleAction(false)
+    setShowDeactivatePopup(true)
+    setShowBulkDropdown(false)
   }
 
   function deleteOrganizations() {
-    console.log('Delete Organizations')
+    setActionContext('organizations')
+    setIsSingleAction(false)
+    setShowDeletePopup(true)
+    setShowBulkDropdown(false)
   }
 
   function exportOrganizations() {
     console.log('Export Organizations')
+    toast.success('Organizations exported successfully!')
   }
 
   function resetPasswords() {
-    console.log('Reset Passwords')
+    setActionContext('users')
+    setIsSingleAction(false)
+    setShowResetPasswordPopup(true)
+    setShowBulkDropdown(false)
   }
 
   function deactivateUsers() {
-    console.log('Deactivate Users')
+    setActionContext('users')
+    setIsSingleAction(false)
+    setShowDeactivatePopup(true)
+    setShowBulkDropdown(false)
   }
 
   function deleteUsers() {
-    console.log('Delete Users')
+    setActionContext('users')
+    setIsSingleAction(false)
+    setShowDeletePopup(true)
+    setShowBulkDropdown(false)
   }
 
   function exportUsers() {
     console.log('Export Users')
+    toast.success('Users exported successfully!')
   }
 
+  // Add the bulk options arrays here
   const bulkOptionsOrganizations = [
     {
       name: 'Deactivate Organizations',
       action: () => deactivateOrganizations(),
-      icons: <img src={userDeactivate} alt="user deactivate" className="admin-icons-dropdown" />
+      icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
     },
     {
       name: 'Delete Organizations',
@@ -368,12 +433,12 @@ const UserManagement = () => {
     {
       name: 'Reset Passwords',
       action: () => resetPasswords(),
-      icons: <img src={userPassword} alt="user password" className="admin-icons-dropdown" />
+      icons: <img src={userPassword} alt="password" className="admin-icons-dropdown" />
     },
     {
       name: 'Deactivate Users',
       action: () => deactivateUsers(),
-      icons: <img src={userDeactivate} alt="user deactivate" className="admin-icons-dropdown" />
+      icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
     },
     {
       name: 'Delete Users',
@@ -386,6 +451,107 @@ const UserManagement = () => {
       icons: <img src={download} alt="download" className="admin-icons-dropdown" />
     }
   ]
+
+  // Popup handlers
+  const handleDeleteCancel = () => {
+    setShowDeletePopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleResetPasswordCancel = () => {
+    setShowResetPasswordPopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleDeactivateCancel = () => {
+    setShowDeactivatePopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleConfirmDelete = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      if (actionContext === 'organizations') {
+        console.log('Deleting organizations:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'Organization deleted successfully!' 
+            : 'Organizations deleted successfully!'
+        )
+      } else {
+        console.log('Deleting users:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'User deleted successfully!' 
+            : 'Users deleted successfully!'
+        )
+      }
+      
+      setShowDeletePopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      toast.error('Failed to delete')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmResetPassword = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      console.log('Resetting passwords for users:', selectedItems)
+      toast.success(
+        isSingleAction 
+          ? 'Password reset successfully!' 
+          : 'Passwords reset successfully!'
+      )
+      setShowResetPasswordPopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      toast.error('Failed to reset passwords')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmDeactivate = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      if (actionContext === 'organizations') {
+        console.log('Deactivating organizations:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'Organization deactivated successfully!' 
+            : 'Organizations deactivated successfully!'
+        )
+      } else {
+        console.log('Deactivating users:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'User deactivated successfully!' 
+            : 'Users deactivated successfully!'
+        )
+      }
+      
+      setShowDeactivatePopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      toast.error('Failed to deactivate')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const currentData = activeTab === 'Organizations' ? organizationsData : usersData
   const currentColumns = activeTab === 'Organizations' ? organizationsColumns : usersColumns
@@ -645,8 +811,88 @@ const UserManagement = () => {
       {/* Add New Learner Modal */}
       <AddNewLearner
         show={showAddLearnerModal}
-        onHide={() => setShowAddLearnerModal(false)}
-        // onSuccess={handleLearnerModalSuccess}
+        onHide={() => {
+          setShowAddLearnerModal(false)
+          setLearnerModalMode('add')
+          setSelectedLearner(null)
+        }}
+        onSuccess={handleLearnerModalSuccess}
+        mode={learnerModalMode}
+        learnerData={selectedLearner}
+      />
+
+      {/* View Learner Modal */}
+      <ViewLearnerModal
+        show={showViewLearnerModal}
+        onHide={() => setShowViewLearnerModal(false)}
+        learner={selectedLearner}
+        onEdit={handleEditLearner}
+      />
+
+      {/* Delete Popup */}
+      <UserManagementPopup
+        show={showDeletePopup}
+        onHide={handleDeleteCancel}
+        onConfirm={handleConfirmDelete}
+        title={
+          isSingleAction
+            ? `Delete ${actionContext === 'organizations' ? 'Organization' : 'User'}?`
+            : `Delete ${actionContext === 'organizations' ? 'Organization(s)' : 'User(s)'}?`
+        }
+        message={
+          isSingleAction
+            ? `Are you sure you want to delete this ${actionContext === 'organizations' ? 'organization' : 'user'}? ${
+                actionContext === 'users' ? 'User and all work' : 'All data'
+              } will be removed from the system. This action cannot be undone.`
+            : `Are you sure you want to delete the selected ${actionContext === 'organizations' ? 'organization(s)' : 'user(s)'}? All data will be removed from the system. This action cannot be undone.`
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={
+          isSingleAction
+            ? `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
+            : `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+        }
+        loading={loading}
+      />
+
+      {/* Reset Password Popup */}
+      <UserManagementPopup
+        show={showResetPasswordPopup}
+        onHide={handleResetPasswordCancel}
+        onConfirm={handleConfirmResetPassword}
+        title={isSingleAction ? "Reset Password?" : "Reset Password(s)?"}
+        message={
+          isSingleAction
+            ? `Are you sure you want to reset ${selectedItems[0]?.name}'s password to the default (Learntostart1!)? The user will need to use this password on their next login.`
+            : "Are you sure you want to reset passwords for the selected user(s) to the default (Learntostart1!)? The users will need to use this password on their next login."
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={isSingleAction ? "YES, RESET PASSWORD" : "YES, RESET PASSWORD(S)"}
+        loading={loading}
+      />
+
+      {/* Deactivate Popup */}
+      <UserManagementPopup
+        show={showDeactivatePopup}
+        onHide={handleDeactivateCancel}
+        onConfirm={handleConfirmDeactivate}
+        title={
+          isSingleAction
+            ? `Deactivate ${actionContext === 'organizations' ? 'Organization' : 'User'}?`
+            : `Deactivate ${actionContext === 'organizations' ? 'Organization(s)' : 'User(s)'}?`
+        }
+        message={
+          isSingleAction
+            ? `Are you sure you want to deactivate this ${actionContext === 'organizations' ? 'organization' : 'user'}? Work and settings will be preserved, but they will no longer have access to the platform.`
+            : `Are you sure you want to deactivate the selected ${actionContext === 'organizations' ? 'organization(s)' : 'user(s)'}? Work and settings will be preserved, but they will no longer have access to the platform.`
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={
+          isSingleAction
+            ? `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
+            : `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+        }
+        loading={loading}
       />
     </div>
   )
