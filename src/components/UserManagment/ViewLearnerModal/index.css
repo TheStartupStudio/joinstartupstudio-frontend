@@ -419,27 +419,177 @@ align-self: stretch;
   border-color: #51C7DF;
 }
 
-/* Responsive Design */
+/* Email Learner Modal Styles */
+.email-learner-modal .modal-dialog {
+  max-width: 742px;
+}
+
+.email-modal-content {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+}
+
+.email-modal-back {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.email-modal-back:hover {
+  background-color: #F3F4F6;
+}
+
+.email-modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.email-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  background: #E2E6EC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email-modal-title {
+  color: #231F20;
+
+/* Text - 15 Medium Regular */
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.email-subject-input {
+  width: 100%;
+  padding: 16px 20px;
+  background: #F9FAFB;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  color: #000000;
+  transition: all 0.2s ease;
+
+  border-radius: 8px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.email-subject-input::placeholder {
+  color: #9CA3AF;
+}
+
+.email-message-textarea {
+  width: 100%;
+  padding: 16px 20px;
+  background: #F9FAFB;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  color: #000000;
+  resize: vertical;
+  min-height: 180px;
+  transition: all 0.2s ease;
+
+  border-radius: 8px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.email-message-textarea::placeholder {
+  color: #9CA3AF;
+}
+
+/* .email-message-textarea:focus {
+  outline: none;
+  border-color: #51C7DF;
+  background: #FFFFFF;
+} */
+
+.email-send-btn {
+  width: 100%;
+  padding: 16px;
+  background: #51C7DF;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+}
+
+.email-send-btn:hover {
+  background: #3FB5D1;
+  transform: translateY(-1px);
+}
+
+.email-send-btn:active {
+  transform: translateY(0);
+}
+
+.email-send-btn:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.email-send-btn .spinner-border-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+/* Responsive styles for email modal */
 @media (max-width: 768px) {
-  .view-learner-modal .modal-content-wrapper-learner {
-    /* padding: 24px; */
+  .email-modal-content {
+    padding: 24px;
   }
 
-  .view-learner-modal .progress-circles-container {
-    flex-direction: column;
-    gap: 24px;
+  .email-modal-back {
+    top: 12px;
+    right: 12px;
   }
 
-  .view-learner-modal .circular-progress-wrapper {
-    width: 120px;
-    height: 120px;
+  .email-modal-title {
+    font-size: 18px;
   }
 
-  .view-learner-modal .modal-actions-view-learner {
-    flex-direction: column;
+  .email-subject-input,
+  .email-message-textarea {
+    padding: 12px 16px;
+    font-size: 14px;
   }
 
-  .view-learner-modal .action-btn-view {
-    width: 100%;
+  .email-send-btn {
+    padding: 14px;
+    font-size: 14px;
   }
 }
