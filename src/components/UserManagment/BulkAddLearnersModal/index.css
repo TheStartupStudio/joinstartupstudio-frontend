@@ -1,0 +1,271 @@
+/* Bulk Add Learners Modal */
+.bulk-add-learners-modal .modal-dialog {
+  max-width: 742px;
+}
+
+.bulk-add-learners-modal .modal-content {
+  border: none;
+  border-radius: 24px;
+  background: #FFFFFF;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.bulk-add-learners-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* Icon and Title - Reuse from AlertPopup */
+.bulk-add-learners-content .popup-icon-container {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: #E2E6EC;
+}
+
+.bulk-add-learners-content .popup-title {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+
+  color: #231F20;
+
+/* Text - 15 Medium Regular */
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+
+/* Download Template Button */
+.download-template-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: #FFFFFF;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 8px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.download-template-btn:hover {
+  background: #F9FAFB;
+}
+
+.download-template-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* File Upload Area */
+.file-upload-area {
+  width: 100%;
+  min-height: 200px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  border-radius: 8px;
+border: 0.5px dashed var(--COLORS-Grey, #AEAEAE);
+background: var(--COLORS-White, #FFF);
+
+}
+
+.file-upload-area:hover {
+  background: #F3F4F6;
+  border-color: #51C7DF;
+}
+
+.file-upload-area.dragging {
+  background: #E0F2FE;
+  border-color: #51C7DF;
+  border-style: solid;
+}
+
+.file-upload-area.has-file {
+  background: #E0F2FE;
+  border-color: #51C7DF;
+  border-style: solid;
+}
+
+.upload-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  border-radius: 21px;
+background: var(--COLORS-Lightest-Grey, #F0F2F6);
+}
+
+.upload-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #000000;
+  margin: 0;
+}
+
+.upload-subtext {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+/* File Selected State */
+.file-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #51C7DF;
+  margin: 0;
+  word-break: break-all;
+  text-align: center;
+}
+
+.file-size {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* Action Buttons - Reuse from AlertPopup */
+.bulk-add-learners-content .popup-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.bulk-add-learners-content .popup-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.bulk-add-learners-content .cancel-btn {
+  background: #FFFFFF;
+  color: #000000;
+  border: 1.5px solid #E5E7EB;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+
+}
+
+.bulk-add-learners-content .cancel-btn:hover:not(:disabled) {
+  background: #F9FAFB;
+  border-color: #D1D5DB;
+}
+
+.bulk-add-learners-content .confirm-btn {
+  background: #51C7DF;
+  color: #FFFFFF;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+
+}
+
+.bulk-add-learners-content .confirm-btn:hover:not(:disabled) {
+  background: #3FB5D1;
+  transform: translateY(-1px);
+}
+
+.bulk-add-learners-content .popup-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.bulk-add-learners-content .popup-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .bulk-add-learners-content {
+    padding: 32px 24px;
+    gap: 20px;
+  }
+
+  .bulk-add-learners-content .popup-title {
+    font-size: 18px;
+  }
+
+  .download-template-btn {
+    font-size: 12px;
+    padding: 12px 16px;
+  }
+
+  .file-upload-area {
+    min-height: 180px;
+    padding: 24px;
+  }
+
+  .upload-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .upload-text {
+    font-size: 14px;
+  }
+
+  .upload-subtext {
+    font-size: 12px;
+  }
+
+  .bulk-add-learners-content .popup-actions {
+    flex-direction: column;
+  }
+
+  .bulk-add-learners-content .popup-btn {
+    width: 100%;
+  }
+}

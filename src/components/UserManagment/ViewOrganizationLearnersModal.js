@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -6,6 +6,9 @@ import { toast } from 'react-toastify'
 import DataTable from '../DataTable'
 import AcademyBtn from '../AcademyBtn'
 import UserManagementPopup from './AlertPopup'
+import AddNewLearner from './AddNewLearner'
+import ViewLearnerModal from './ViewLearnerModal'
+import BulkAddLearnersModal from './BulkAddLearnersModal'
 import groupAdd from '../../assets/images/academy-icons/svg/user-group-add.svg'
 import userPlus from '../../assets/images/academy-icons/svg/Icon_User_Add_Alt.svg'
 import userDeactivate from '../../assets/images/academy-icons/svg/Icon_User_de.svg'
@@ -29,6 +32,17 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
   const [selectedUser, setSelectedUser] = useState(null)
   const [selectedUsers, setSelectedUsers] = useState([])
   const [isBulkAction, setIsBulkAction] = useState(false)
+
+  // Modal states for add/edit/view learners
+  const [showAddLearnerModal, setShowAddLearnerModal] = useState(false)
+  const [showViewLearnerModal, setShowViewLearnerModal] = useState(false)
+  const [showBulkAddLearnersModal, setShowBulkAddLearnersModal] = useState(false)
+  const [selectedLearner, setSelectedLearner] = useState(null)
+  const [learnerModalMode, setLearnerModalMode] = useState('add')
+
+  // Refs for dropdowns
+  const addDropdownRef = useRef(null)
+  const bulkDropdownRef = useRef(null)
 
   // Dummy learners data
   const learnersData = [
@@ -156,6 +170,25 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
     }
   ], [])
 
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
+        setShowAddDropdown(false)
+      }
+      
+      if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
+        setShowBulkDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
   }
@@ -166,6 +199,12 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
     setIsBulkAction(false)
 
     switch (actionType) {
+      case 'view':
+        handleViewLearner(item)
+        break
+      case 'edit':
+        handleEditLearner(item)
+        break
       case 'deactivate-learner':
         setShowDeactivateUserPopup(true)
         break
@@ -177,7 +216,37 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
     }
   }
 
-  // Cancel handlers - reopen modal if needed
+  // Learner modal handlers
+  const handleViewLearner = (learner) => {
+    setSelectedLearner(learner)
+    setShowViewLearnerModal(true)
+  }
+
+  const handleEditLearner = (learner) => {
+    setSelectedLearner(learner)
+    setLearnerModalMode('edit')
+    setShowViewLearnerModal(false)
+    setShowAddLearnerModal(true)
+  }
+
+  const handleAddSingleUser = () => {
+    setLearnerModalMode('add')
+    setSelectedLearner(null)
+    setShowAddLearnerModal(true)
+    setShowAddDropdown(false)
+  }
+
+  const handleBulkAddUsers = () => {
+    setShowBulkAddLearnersModal(true)
+    setShowAddDropdown(false)
+  }
+
+  const handleLearnerModalSuccess = () => {
+    toast.success('Learner saved successfully!')
+    setShowAddLearnerModal(false)
+  }
+
+  // Cancel handlers
   const handleDeleteCancel = () => {
     setShowDeletePopup(false)
     setSelectedUser(null)
@@ -291,18 +360,19 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
 
   const handleBulkExportUsers = () => {
     console.log('Export Users')
+    toast.success('Users exported successfully!')
     setShowBulkDropdown(false)
   }
 
   const addOptions = [
     {
       name: 'Add Single User',
-      action: () => console.log('Add Single User'),
+      action: handleAddSingleUser,
       icon: <img src={userPlus} alt="user add" className="admin-icons-dropdown" />
     },
     {
       name: 'Bulk Add Users',
-      action: () => console.log('Bulk Add Users'),
+      action: handleBulkAddUsers,
       icon: <img src={groupAdd} alt="group add" className="admin-icons-dropdown" />
     }
   ]
@@ -405,7 +475,7 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
               </div>
 
               <div className="actions-container">
-                <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+                <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
                   <div>
                     <AcademyBtn
                       title="Add New User"
@@ -461,7 +531,7 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
                   )}
                 </div>
 
-                <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+                <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
                   <div 
                     className="bulk-actions"
                     onClick={() => {
@@ -562,19 +632,51 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
         </div>
       </Modal>
 
+      {/* Add New Learner Modal */}
+      <AddNewLearner
+        show={showAddLearnerModal}
+        onHide={() => {
+          setShowAddLearnerModal(false)
+          setLearnerModalMode('add')
+          setSelectedLearner(null)
+        }}
+        onSuccess={handleLearnerModalSuccess}
+        mode={learnerModalMode}
+        learnerData={selectedLearner}
+      />
+
+      {/* View Learner Modal */}
+      <ViewLearnerModal
+        show={showViewLearnerModal}
+        onHide={() => setShowViewLearnerModal(false)}
+        learner={selectedLearner}
+        onEdit={handleEditLearner}
+      />
+
+      {/* Bulk Add Learners Modal */}
+      <BulkAddLearnersModal
+        show={showBulkAddLearnersModal}
+        onHide={() => setShowBulkAddLearnersModal(false)}
+        onSuccess={() => {
+          setShowBulkAddLearnersModal(false)
+          toast.success('Learners added successfully!')
+        }}
+        mode="learners"
+      />
+
       {/* Delete User Popup */}
       <UserManagementPopup
         show={showDeletePopup}
         onHide={handleDeleteCancel}
         onConfirm={handleConfirmDelete}
-        title="Delete User?"
+        title={isBulkAction ? "Delete User(s)?" : "Delete User?"}
         message={
           isBulkAction
             ? "Are you sure you want to delete the user(s)? User and all work will be removed from the system. This action cannot be undone."
             : `Are you sure you want to delete ${selectedUser?.name}? User and all work will be removed from the system. This action cannot be undone.`
         }
         cancelText="NO, TAKE ME BACK"
-        confirmText="YES, DELETE USER(S)"
+        confirmText={isBulkAction ? "YES, DELETE USER(S)" : "YES, DELETE USER"}
         loading={loading}
       />
 
@@ -583,14 +685,14 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
         show={showResetPasswordPopup}
         onHide={handleResetPasswordCancel}
         onConfirm={handleConfirmResetPassword}
-        title="Reset Password?"
+        title={isBulkAction ? "Reset Password(s)?" : "Reset Password?"}
         message={
           isBulkAction
             ? "Are you sure you want to reset passwords for the selected user(s) to the default (Learntostart1!)? The users will need to use this password on their next login."
             : `Are you sure you want to reset ${selectedUser?.name}'s password to the default (Learntostart1!)? The user will need to use this password on their next login.`
         }
         cancelText="NO, TAKE ME BACK"
-        confirmText="YES, RESET PASSWORD(S)"
+        confirmText={isBulkAction ? "YES, RESET PASSWORD(S)" : "YES, RESET PASSWORD"}
         loading={loading}
       />
 

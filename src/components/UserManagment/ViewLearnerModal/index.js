@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faPencilAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons'
@@ -18,38 +18,220 @@ import CircularProgress from '../../../components/ProgressBar'
 import AcademyBtn from '../../AcademyBtn'
 import viewPortfolio from '../../../assets/images/academy-icons/icon.core.portfolio.svg'
 import graphUp from '../../../assets/images/graph-up.png'
-
+import leftArrow from '../../../assets/images/academy-icons/left-arrow.png'
+import progressLogo from '../../../assets/images/academy-icons/progress-details-logo.png'
+import CourseNotStarted from '../../CourseProgress/CourseNotStarted'
+import InProggresCourse from '../../CourseProgress/InProggresCourse'
+import ProgressDone from '../../CourseProgress/ProgressDone'
+import { Collapse } from 'bootstrap'
 
 const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const [showEmailModal, setShowEmailModal] = useState(false)
+  const [showProgressModal, setShowProgressModal] = useState(false)
   const [emailSubject, setEmailSubject] = useState('')
   const [emailMessage, setEmailMessage] = useState('')
   const [sendingEmail, setSendingEmail] = useState(false)
+  const accordionRefs = useRef([])
+
+  // Dummy level progress data
+  const levelProgress = {
+    level1: { percentage: 75 },
+    level2: { percentage: 45 },
+    level3: { percentage: 20 }
+  }
+
+  // Dummy finished content IDs
+  const finishedContent = [51, 52, 53, 54, 55, 56, 60, 61, 62, 70, 71, 72]
+
+  const lessonsByLevel = {
+    0: [
+      {
+        id: 'myths',
+        title: 'Myths of Entrepreneurship',
+        status: 'done',
+        redirectId: 51
+      },
+      {
+        id: 'definition',
+        title: 'Definition of Entrepreneurship',
+        status: 'done',
+        redirectId: 52
+      },
+      {
+        id: 'reasons',
+        title: 'Reasons Why Startups Fail',
+        status: 'inProgress',
+        redirectId: 53
+      },
+      {
+        id: 'skills',
+        title: 'Skills and Traits of Effective Entrepreneurs',
+        status: 'notStarted',
+        redirectId: 54
+      },
+      {
+        id: 'people',
+        title: 'People Buy Into People',
+        status: 'notStarted',
+        redirectId: 55
+      },
+      {
+        id: 'selfBrand',
+        title: 'Creating Your Self Brand First',
+        status: 'notStarted',
+        redirectId: 56
+      },
+      {
+        id: 'task1',
+        title: 'Task #1: Create your Individual Value Proposition',
+        status: 'notStarted',
+        redirectId: 57
+      },
+      {
+        id: 'task2',
+        title: 'Task #2: Create your I Am Video',
+        status: 'notStarted',
+        redirectId: 58
+      }
+    ],
+    1: [
+      {
+        id: 'journey',
+        title: 'The Journey of Entrepreneurship',
+        status: 'notStarted',
+        redirectId: 60
+      },
+      {
+        id: 'intro',
+        title: 'An Introduction to the LTS Model and Four Environments',
+        status: 'notStarted',
+        redirectId: 61
+      },
+      {
+        id: 'coreSkills',
+        title: 'The Core Skills and LEARN Stage of the LTS Model',
+        status: 'notStarted',
+        redirectId: 62
+      },
+      {
+        id: 'develop',
+        title: 'The DEVELOP Stage of the LTS Model',
+        status: 'notStarted',
+        redirectId: 63
+      },
+      {
+        id: 'start',
+        title: 'Understanding START & the Test Metrics of LTS',
+        status: 'notStarted',
+        redirectId: 65
+      },
+      {
+        id: 'task3',
+        title: 'Task #1: Evaluate Your Mindset and Skill Set',
+        status: 'notStarted',
+        redirectId: 66
+      },
+      {
+        id: 'process',
+        title: 'The Process of Entrepreneurship',
+        status: 'notStarted',
+        redirectId: 67
+      },
+      {
+        id: 'task4',
+        title: 'Task #2: Build Your Team and Find Your Mentor',
+        status: 'notStarted',
+        redirectId: 68
+      }
+    ],
+    2: [
+      {
+        id: '3.1',
+        title: 'Level 3.1: The Journey of Entrepreneurship',
+        isParent: true,
+        children: [
+          {
+            id: 'journey31',
+            title: 'The Journey of Entrepreneurship',
+            status: 'notStarted',
+            redirectId: 70
+          },
+          {
+            id: 'process31',
+            title: 'The Process and Skill of Storytelling',
+            redirectId: 71
+          },
+          { id: 'relevancy', title: 'Relevancy in World 4.0', redirectId: 72 },
+          { id: 'learn', title: 'The LEARN Stage', redirectId: 73 },
+          { id: 'problems', title: 'Problems Worth Solving', redirectId: 74 },
+          {
+            id: 'task5',
+            title: 'Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends',
+            redirectId: 75
+          },
+          {
+            id: 'task6',
+            title: 'Task #6: Conduct an Industry Analysis',
+            redirectId: 76
+          }
+        ]
+      },
+      {
+        id: '3.2',
+        title: 'Level 3.2: The Develop Stage',
+        isParent: true,
+        children: [
+          { id: 'solution', title: 'Finding the Solution', redirectId: 78 },
+          {
+            id: 'value',
+            title: "Creating Your Startup's Value Proposition",
+            redirectId: 79
+          },
+          {
+            id: 'task7',
+            title: "Task #7: Create Your Startup's Value Proposition",
+            redirectId: 80
+          }
+        ]
+      }
+    ]
+  }
+
+  useEffect(() => {
+    accordionRefs.current.forEach((ref) => {
+      if (ref) {
+        new Collapse(ref, { toggle: false })
+      }
+    })
+  }, [showProgressModal])
+
+  const handleAccordionClick = (index, event) => {
+    event.preventDefault()
+    const target = accordionRefs.current[index]
+    if (target) {
+      const bsCollapse = Collapse.getInstance(target) || new Collapse(target)
+      bsCollapse.toggle()
+    }
+  }
+
+  const getCourseStatus = (redirectId) => {
+    if (finishedContent.includes(redirectId)) {
+      return 'done'
+    }
+
+    const nextAvailableId =
+      finishedContent.length > 0
+        ? Math.min(...finishedContent.map((id) => id + 1))
+        : 51
+
+    if (redirectId === nextAvailableId) {
+      return 'inProgress'
+    }
+
+    return 'notStarted'
+  }
 
   if (!learner) return null
-
-  const courseProgress = [
-    {
-      title: 'ENTREPRENEURSHIP & YOU',
-      level: 'Level 1',
-      percentage: 20,
-      color: '#51C7DF'
-    },
-    {
-      title: 'UNDERSTANDING LEARN TO START',
-      level: 'Level 2',
-      percentage: 0,
-      color: '#E5E7EB'
-    },
-    {
-      title: 'THE JOURNEY OF ENTREPRENEURSHIP',
-      level: 'Level 3',
-      percentage: 0,
-      color: '#E5E7EB'
-    }
-  ]
-
-  const levelProgress = [];
 
   const handleEditClick = () => {
     // Close the view modal
@@ -109,7 +291,11 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   }
 
   const handleViewDetails = () => {
-    console.log('View course details for:', learner.name)
+    setShowProgressModal(true)
+  }
+
+  const toggleProgressModal = () => {
+    setShowProgressModal(!showProgressModal)
   }
 
   return (
@@ -217,20 +403,19 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               </div>
 
               <div className="demo-row">
-
-                 <div className="info-row w-100">
-                    <div className="info-field">
-                      <label className="info-label">Learner Gender</label>
-                      <p className="info-value">{learner.gender || 'Not Specified'}</p>
-                    </div>
+                <div className="info-row w-100">
+                  <div className="info-field">
+                    <label className="info-label">Learner Gender</label>
+                    <p className="info-value">{learner.gender || 'Not Specified'}</p>
                   </div>
+                </div>
 
                 <div className="info-row w-100">
-                    <div className="info-field">
-                      <label className="info-label">Learner Age:</label>
-                      <p className="info-value">{learner.age || 'Not Specified'}</p>
-                    </div>
+                  <div className="info-field">
+                    <label className="info-label">Learner Age:</label>
+                    <p className="info-value">{learner.age || 'Not Specified'}</p>
                   </div>
+                </div>
               </div>
             </div>
           </div>
@@ -252,34 +437,34 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
 
             <div className="progress-circles-container">
               <div className='d-flex gap-4 align-items-center justify-content-around flex-col-mob mt-2rem-mob w-100'>
-            <div className='d-flex flex-column gap-4'>
-              <CircularProgress
-                percentage={levelProgress?.level1?.percentage || 20}
-                level={1}
-              />
-              <p className='text-center'>
-                Entrepreneurship <br /> & You
-              </p>
-            </div>
-            <div className='d-flex flex-column gap-4'>
-              <CircularProgress
-                percentage={levelProgress?.level2?.percentage || 0}
-                level={2}
-              />
-              <p className='text-center'>
-                Understanding <br /> Learn to Start
-              </p>
-            </div>
-            <div className='d-flex flex-column gap-4'>
-              <CircularProgress
-                percentage={levelProgress?.level3?.percentage || 0}
-                level={3}
-              />
-              <p className='text-center'>
-                The Journey of <br /> Entrepreneurship
-              </p>
-            </div>
-          </div>
+                <div className='d-flex flex-column gap-4'>
+                  <CircularProgress
+                    percentage={levelProgress?.level1?.percentage || 20}
+                    level={1}
+                  />
+                  <p className='text-center'>
+                    Entrepreneurship <br /> & You
+                  </p>
+                </div>
+                <div className='d-flex flex-column gap-4'>
+                  <CircularProgress
+                    percentage={levelProgress?.level2?.percentage || 0}
+                    level={2}
+                  />
+                  <p className='text-center'>
+                    Understanding <br /> Learn to Start
+                  </p>
+                </div>
+                <div className='d-flex flex-column gap-4'>
+                  <CircularProgress
+                    percentage={levelProgress?.level3?.percentage || 0}
+                    level={3}
+                  />
+                  <p className='text-center'>
+                    The Journey of <br /> Entrepreneurship
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -289,11 +474,13 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               title={`View Portfolio`}
               icon={viewPortfolio}
               imageSide={true}
+              onClick={handleViewPortfolio}
             />
             <AcademyBtn 
               title={`View Performance Data`}
               icon={graphUp}
               imageSide={true}
+              onClick={handleViewPerformanceData}
             />
           </div>
         </div>
@@ -361,6 +548,167 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
             </button>
           </div>
         </div>
+      </Modal>
+
+      {/* Progress Details Modal */}
+      <Modal
+        show={showProgressModal}
+        onHide={toggleProgressModal}
+        className='certificate-modal'
+        centered
+        size="lg"
+      >
+        <span
+          className='cursor-pointer'
+          onClick={toggleProgressModal}
+          style={{ zIndex: '1' }}
+        >
+          <img className='left-arrow-modal' src={leftArrow} alt='left' />
+        </span>
+        <Modal.Body>
+          <img src={progressLogo} alt='user' className='mb-3' />
+          <div className='d-flex justify-content-between align-items-center'>
+            <h3 className='fs-14' style={{ marginBottom: '0' }}>
+              View Progress Details
+            </h3>
+          </div>
+
+          <div className='accordion mt-5' id='progressAccordion'>
+            {/* Level 1 */}
+            <div className='accordion-item progress-details-accordion'>
+              <h2 className='accordion-header' id='headingOne'>
+                <button
+                  className='accordion-button collapsed text-secondary fw-medium'
+                  type='button'
+                  onClick={(e) => handleAccordionClick(0, e)}
+                  aria-expanded='false'
+                  aria-controls='collapseOne'
+                >
+                  LEVEL 1 | The Myths of Entrepreneurship
+                </button>
+              </h2>
+              <div
+                id='collapseOne'
+                ref={(el) => (accordionRefs.current[0] = el)}
+                className='accordion-collapse collapse'
+                aria-labelledby='headingOne'
+                data-bs-parent='#progressAccordion'
+              >
+                <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
+                  <div className='d-flex flex-column gap-4'>
+                    <CircularProgress
+                      percentage={levelProgress?.level1?.percentage || 0}
+                      level={1}
+                    />
+                  </div>
+                  <div className='d-flex flex-column gap-3'>
+                    {lessonsByLevel[0].map((lesson, index) => {
+                      const status = getCourseStatus(lesson.redirectId)
+                      return status === 'done' ? (
+                        <ProgressDone key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
+                      ) : status === 'inProgress' ? (
+                        <InProggresCourse key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
+                      ) : (
+                        <CourseNotStarted key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Level 2 */}
+            <div className='accordion-item progress-details-accordion'>
+              <h2 className='accordion-header' id='headingTwo'>
+                <button
+                  className='accordion-button collapsed text-secondary fw-medium'
+                  type='button'
+                  onClick={(e) => handleAccordionClick(1, e)}
+                  aria-expanded='false'
+                  aria-controls='collapseTwo'
+                >
+                  LEVEL 2 | Understanding Learn to Start
+                </button>
+              </h2>
+              <div
+                id='collapseTwo'
+                ref={(el) => (accordionRefs.current[1] = el)}
+                className='accordion-collapse collapse'
+                aria-labelledby='headingTwo'
+                data-bs-parent='#progressAccordion'
+              >
+                <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
+                  <div className='d-flex flex-column gap-4'>
+                    <CircularProgress
+                      percentage={levelProgress?.level2?.percentage || 0}
+                      level={2}
+                    />
+                  </div>
+                  <div className='d-flex flex-column gap-3'>
+                    {lessonsByLevel[1].map((lesson, index) => {
+                      const status = getCourseStatus(lesson.redirectId)
+                      return status === 'done' ? (
+                        <ProgressDone key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
+                      ) : status === 'inProgress' ? (
+                        <InProggresCourse key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
+                      ) : (
+                        <CourseNotStarted key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Level 3 */}
+            <div className='accordion-item progress-details-accordion'>
+              <h2 className='accordion-header' id='headingThree'>
+                <button
+                  className='accordion-button collapsed text-secondary fw-medium'
+                  type='button'
+                  onClick={(e) => handleAccordionClick(2, e)}
+                  aria-expanded='false'
+                  aria-controls='collapseThree'
+                >
+                  LEVEL 3 | The LEARN Stage
+                </button>
+              </h2>
+              <div
+                id='collapseThree'
+                ref={(el) => (accordionRefs.current[2] = el)}
+                className='accordion-collapse collapse'
+                aria-labelledby='headingThree'
+                data-bs-parent='#progressAccordion'
+              >
+                <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
+                  <div className='d-flex flex-column gap-4'>
+                    <CircularProgress
+                      percentage={levelProgress?.level3?.percentage || 0}
+                      level={3}
+                    />
+                  </div>
+                  <div className='d-flex flex-column gap-3 text-black'>
+                    {lessonsByLevel[2].map((section, sectionIndex) => (
+                      <React.Fragment key={`section-${section.id}-${sectionIndex}`}>
+                        <p className='mb-0'>{section.title}</p>
+                        {section.children?.map((lesson, lessonIndex) => {
+                          const status = getCourseStatus(lesson.redirectId)
+                          return status === 'done' ? (
+                            <ProgressDone key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
+                          ) : status === 'inProgress' ? (
+                            <InProggresCourse key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
+                          ) : (
+                            <CourseNotStarted key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
+                          )
+                        })}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
       </Modal>
     </>
   )
