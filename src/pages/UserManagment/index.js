@@ -1,5 +1,5 @@
 import './index.css'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
@@ -553,6 +553,33 @@ const UserManagement = () => {
     }
   }
 
+  // Add refs for dropdowns
+  const addDropdownRef = useRef(null)
+  const bulkDropdownRef = useRef(null)
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if click is outside add dropdown
+      if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
+        setShowAddDropdown(false)
+      }
+      
+      // Check if click is outside bulk dropdown
+      if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
+        setShowBulkDropdown(false)
+      }
+    }
+
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside)
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const currentData = activeTab === 'Organizations' ? organizationsData : usersData
   const currentColumns = activeTab === 'Organizations' ? organizationsColumns : usersColumns
   const currentOptions = activeTab === 'Organizations' ? optionsOrganizations : optionsUsers
@@ -636,7 +663,8 @@ const UserManagement = () => {
           </div>
 
           <div className="actions-container">
-            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+            {/* Add New Dropdown */}
+            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
               <div>
                 <AcademyBtn
                   title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
@@ -692,7 +720,8 @@ const UserManagement = () => {
               )}
             </div>
 
-            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+            {/* Bulk Actions Dropdown */}
+            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
               <div 
                 className="bulk-actions"
                 onClick={() => {

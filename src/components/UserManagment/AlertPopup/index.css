@@ -23,7 +23,7 @@ gap: 16px;
 }
 
 /* Icon Container */
-.popup-icon-container {
+.user-management-popup-modal .popup-icon-container {
   width: 36px;
   height: 36px;
   background: #E2E6EC;
@@ -34,13 +34,13 @@ gap: 16px;
   margin-bottom: 20px;
 }
 
-.popup-icon-container svg {
+.user-management-popup-modal .popup-icon-container svg {
   width: 24px;
   height: 24px;
 }
 
 /* Title */
-.popup-title {
+.user-management-popup-modal .popup-title {
   font-family: 'Montserrat', sans-serif;
   color: #231F20;
 font-size: 15px;
@@ -48,7 +48,7 @@ font-weight: 500;
 }
 
 /* Message */
-.popup-message {
+.user-management-popup-modal .popup-message {
   font-family: 'Montserrat', sans-serif;
     color: #000;
     text-align: center;
@@ -57,14 +57,14 @@ font-weight: 500;
 }
 
 /* Action Buttons */
-.popup-actions {
+.user-management-popup-modal .popup-actions {
   display: flex;
   gap: 12px;
   width: 100%;
   justify-content: center;
 }
 
-.popup-btn {
+.user-management-popup-modal .popup-btn {
   flex: 1;
   min-width: 160px;
   padding: 12px 24px;
@@ -80,32 +80,32 @@ font-weight: 500;
   white-space: nowrap;
 }
 
-.popup-btn:disabled {
+.user-management-popup-modal .popup-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
 /* Cancel Button */
-.cancel-btn {
+.user-management-popup-modal .cancel-btn {
   background: #51C7DF;
   color: #FFFFFF;
   box-shadow: 0 2px 8px rgba(81, 199, 223, 0.2);
 }
 
-.cancel-btn:hover:not(:disabled) {
+.user-management-popup-modal .cancel-btn:hover:not(:disabled) {
   background: #30B5CF;
   box-shadow: 0 4px 12px rgba(81, 199, 223, 0.3);
 }
 
 /* Confirm Button */
-.confirm-btn {
-    border-radius: 8px;
-background: var(--COLORS-White, #FFF);
-box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+.user-management-popup-modal .confirm-btn {
+  border-radius: 8px;
+  background: var(--COLORS-White, #FFF);
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
 
 color: var(--COLORS-Pink, #F39);
 font-family: Montserrat;
-font-size: 15px;
+font-size: 12px;
 font-weight: 600;
 }
 
@@ -114,7 +114,7 @@ font-weight: 600;
 }
 
 /* Loading Spinner */
-.popup-btn .spinner-border {
+.user-management-popup-modal .popup-btn .spinner-border {
   width: 16px;
   height: 16px;
   border-width: 2px;
@@ -126,21 +126,21 @@ font-weight: 600;
     padding: 32px 24px;
   }
 
-  .popup-actions {
+  .user-management-popup-modal .popup-actions {
     flex-direction: column;
     gap: 8px;
   }
 
-  .popup-btn {
+  .user-management-popup-modal .popup-btn {
     width: 100%;
     min-width: unset;
   }
 
-  .popup-title {
+  .user-management-popup-modal .popup-title {
     font-size: 16px;
   }
 
-  .popup-message {
+  .user-management-popup-modal .popup-message {
     font-size: 13px;
   }
 }

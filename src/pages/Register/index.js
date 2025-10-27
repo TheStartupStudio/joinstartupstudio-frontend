@@ -28,6 +28,8 @@ import {
 } from '@stripe/react-stripe-js'
 import CheckSubscriptionModal from './CheckSubscriptionModal'
 import closeBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
+// ✅ ADD FACEBOOK PIXEL IMPORTS
+import { trackTrialStarted, trackInitiateCheckout, trackLead } from '../../utils/FacebookPixel'
 
 // Initialize Stripe
 // const stripePromise = loadStripe(
@@ -70,6 +72,14 @@ function RegistrationForm() {
   const currentUrl = window.location.origin
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  // ✅ ADD: Track when user lands on registration page
+  useEffect(() => {
+    trackLead({
+      contentName: 'Registration Page',
+      contentCategory: 'signup'
+    })
+  }, [])
 
   const validateForm = () => {
     let newErrors = {}
@@ -153,8 +163,13 @@ function RegistrationForm() {
 
     setIsLoading(true)
 
+    trackInitiateCheckout({
+      value: 0, // Free trial
+      currency: 'USD',
+      numItems: 1
+    })
+
     try {
-      // Step 1: Check if user exists with this email
       const checkEmailResponse = await axiosInstance.post('/check-email', {
         email: formData.emailAddress
       })
@@ -169,7 +184,6 @@ function RegistrationForm() {
         return
       }
 
-      // Step 2: Create payment method
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
         card: cardNumberElement,
@@ -192,7 +206,6 @@ function RegistrationForm() {
         return
       }
 
-      // Step 3: Store registration data temporarily
       const registrationData = {
         name: formData.fullName,
         email: formData.emailAddress,
@@ -207,8 +220,13 @@ function RegistrationForm() {
 
       sessionStorage.setItem('registrationData', JSON.stringify(registrationData))
       
+      trackTrialStarted({
+        value: 0,
+        currency: 'USD',
+        predictedLifetimeValue: 119.88
+      })
+
       setIsLoading(false)
-      
       setShowCheckSubscription(true)
       
     } catch (error) {
@@ -331,6 +349,12 @@ function RegistrationForm() {
 
         sessionStorage.setItem('registrationData', JSON.stringify(registrationData))
         
+        trackTrialStarted({
+          value: 0,
+          currency: 'USD',
+          predictedLifetimeValue: 119.88
+        })
+
         // Complete the payment request
         e.complete('success')
         
