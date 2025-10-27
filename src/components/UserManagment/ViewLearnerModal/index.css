@@ -1,0 +1,595 @@
+.view-learner-modal .modal-dialog {
+  max-width: 742px;
+}
+
+.view-learner-modal .modal-content {
+  border: none;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.view-learner-modal .modal-content-wrapper-learner {
+  padding: 20px;
+}
+
+/* Header */
+.view-learner-modal .modal-header-view-learner {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.view-learner-modal .header-icon-learner {
+  width: 36px;
+  height: 36px;
+  background: #E2E6EC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.view-learner-modal .header-icon-learner img {
+  width: 24px;
+  height: 24px;
+}
+
+.view-learner-modal .modal-title-view-learner {
+  color: #231F20;
+
+/* Text - 15 Medium Regular */
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+
+.view-learner-modal .header-actions {
+  position: absolute;
+  top: -36px;
+  right: -36px;
+  display: flex;
+height: 64px;
+padding: 17px;
+justify-content: center;
+align-items: center;
+gap: 28px;
+
+  border-radius: 0 24px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+}
+
+.view-learner-modal .icon-button {
+  width: 40px;
+  height: 40px;
+  background: #F3F4F6;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+}
+
+.view-learner-modal .icon-button:hover {
+  background: #E5E7EB;
+  color: #51C7DF;
+}
+
+/* Learner Info Section */
+.view-learner-modal .learner-info-section {
+  margin-bottom: 24px;
+}
+
+.view-learner-modal .info-row,
+.view-learner-modal .info-row-split {
+  margin-bottom: 16px;
+  border-radius: 12px;
+border: 1px solid var(--Ultralight-Grey, #F0F2F6);
+background: var(--COLORS-White, #FFF);
+padding: 8px 18px;
+}
+
+.view-learner-modal .info-row-split {
+  display: flex;
+  gap: 16px;
+}
+
+.view-learner-modal .info-row-split .info-field {
+  flex: 1;
+}
+
+.view-learner-modal .info-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.view-learner-modal .info-label {
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+
+  color: var(--COLORS-Main-Grey, #6F6F6F);
+font-size: 12px;
+font-weight: 500;
+text-transform: capitalize;
+}
+
+.view-learner-modal .info-value {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+
+  overflow: hidden;
+color: var(--COLORS-Black, #000);
+text-overflow: ellipsis;
+
+/* Text - 15 Regular Regular */
+font-size: 15px;
+font-style: normal;
+font-weight: 400;
+line-height: 20px;
+}
+
+.view-learner-modal .status-field {
+  align-items: flex-end;
+}
+
+.view-learner-modal .status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  background-color: #9C3;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05) inset;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* .view-learner-modal .status-indicator.active {
+  background: #10B981;
+} */
+
+.view-learner-modal .status-text {
+  color: #000;
+
+/* Text - 15 Regular Regular */
+font-family: Montserrat;
+font-size: 15px;
+font-weight: 400;
+}
+
+.view-learner-modal .email-learner-btn {
+  width: 100%;
+  padding: 0px 10px 5px 10px;
+  background: white;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  gap: 8px;
+  margin-top: 16px;
+  border: none;
+}
+
+/* .view-learner-modal .email-learner-btn:hover {
+  background: #F9FAFB;
+  border-color: #51C7DF;
+} */
+
+/* Demographics Section */
+.view-learner-modal .demographics-section {
+  /* background: #F9FAFB; */
+  border-radius: 12px;
+  /* padding: 20px; */
+  margin-bottom: 24px;
+}
+
+.view-learner-modal .section-header-view {
+  background: rgba(227, 229, 233, 0.50);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  /* padding-bottom: 12px; */
+  /* border-bottom: 1px solid #E5E7EB; */
+}
+
+.view-learner-modal .section-header-view img {
+  width: 20px;
+  height: 20px;
+}
+
+.view-learner-modal .section-header-view span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #231F20;
+}
+
+.view-learner-modal .demographics-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.view-learner-modal .demo-field {
+  display: flex;
+  border-radius: 12px;
+border: 1px solid var(--Ultralight-Grey, #F0F2F6);
+background: var(--COLORS-White, #FFF);
+display: flex;
+min-height: 54px;
+max-height: 120px;
+padding: 12px 18px;
+align-items: center;
+gap: 20px;
+align-self: stretch;
+}
+
+.view-learner-modal .demo-field.full-width {
+  width: 100%;
+}
+
+.view-learner-modal .demo-row {
+  display: flex;
+  gap: 16px;
+}
+
+.view-learner-modal .demo-row .demo-field {
+  flex: 1;
+}
+
+.view-learner-modal .demo-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #9CA3AF;
+  margin-bottom: 2px;
+}
+
+.view-learner-modal .demo-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #231F20;
+  margin: 0;
+}
+
+/* Course Progress Section */
+.view-learner-modal .course-progress-section {
+  /* background: #F9FAFB; */
+  border-radius: 12px;
+  /* padding: 20px; */
+  margin-bottom: 24px;
+}
+
+.view-learner-modal .section-header-view-progress {
+      background: rgba(227, 229, 233, 0.50);
+    display: flex
+;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.view-learner-modal .section-header-view-progress .header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-learner-modal .section-header-view-progress img {
+  width: 20px;
+  height: 20px;
+}
+
+.view-learner-modal .section-header-view-progress span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #231F20;
+}
+
+.view-learner-modal .view-details-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #000;
+  font-size: 15px;
+}
+
+.view-learner-modal .view-details-link:hover {
+  color: #30A0B8;
+}
+
+.view-learner-modal .progress-circles-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.view-learner-modal .progress-circle-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.view-learner-modal .circular-progress-wrapper {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 12px;
+}
+
+.view-learner-modal .progress-level {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #231F20;
+  margin: 8px 0 4px 0;
+}
+
+.view-learner-modal .progress-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: #666;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+/* Action Buttons */
+.view-learner-modal .modal-actions-view-learner {
+  display: flex;
+  gap: 12px;
+}
+
+.view-learner-modal .modal-actions-view-learner div {
+  width: 100%;
+}
+
+.view-learner-modal .action-btn-view {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.view-learner-modal .portfolio-btn {
+  background: white;
+  color: #000;
+}
+
+.view-learner-modal .portfolio-btn:hover {
+  background: #F9FAFB;
+  border-color: #51C7DF;
+}
+
+.view-learner-modal .performance-btn {
+  background: white;
+  color: #000;
+}
+
+.view-learner-modal .performance-btn:hover {
+  background: #F9FAFB;
+  border-color: #51C7DF;
+}
+
+/* Email Learner Modal Styles */
+.email-learner-modal .modal-dialog {
+  max-width: 742px;
+}
+
+.email-modal-content {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+}
+
+.email-modal-back {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.email-modal-back:hover {
+  background-color: #F3F4F6;
+}
+
+.email-modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.email-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  background: #E2E6EC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email-modal-title {
+  color: #231F20;
+
+/* Text - 15 Medium Regular */
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+
+.email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.email-subject-input {
+  width: 100%;
+  padding: 16px 20px;
+  background: #F9FAFB;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  color: #000000;
+  transition: all 0.2s ease;
+
+  border-radius: 8px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.email-subject-input::placeholder {
+  color: #9CA3AF;
+}
+
+.email-message-textarea {
+  width: 100%;
+  padding: 16px 20px;
+  background: #F9FAFB;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  color: #000000;
+  resize: vertical;
+  min-height: 180px;
+  transition: all 0.2s ease;
+
+  border-radius: 8px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.email-message-textarea::placeholder {
+  color: #9CA3AF;
+}
+
+/* .email-message-textarea:focus {
+  outline: none;
+  border-color: #51C7DF;
+  background: #FFFFFF;
+} */
+
+.email-send-btn {
+  width: 100%;
+  padding: 16px;
+  background: #51C7DF;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+}
+
+.email-send-btn:hover {
+  background: #3FB5D1;
+  transform: translateY(-1px);
+}
+
+.email-send-btn:active {
+  transform: translateY(0);
+}
+
+.email-send-btn:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.email-send-btn .spinner-border-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+/* Responsive styles for email modal */
+@media (max-width: 768px) {
+  .email-modal-content {
+    padding: 24px;
+  }
+
+  .email-modal-back {
+    top: 12px;
+    right: 12px;
+  }
+
+  .email-modal-title {
+    font-size: 18px;
+  }
+
+  .email-subject-input,
+  .email-message-textarea {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .email-send-btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+}

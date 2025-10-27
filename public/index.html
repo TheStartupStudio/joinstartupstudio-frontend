@@ -29,6 +29,9 @@
         'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '1515917456224895');
         fbq('track', 'PageView');
+        
+        // Make fbq available globally for tracking custom events
+        window.fbq = fbq;
       }
     </script>
     <noscript>

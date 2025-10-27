@@ -1,0 +1,146 @@
+.user-management-popup-modal .modal-dialog {
+  max-width: 742px;
+}
+
+.user-management-popup-modal .modal-content {
+  border: none;
+border-radius: 24px;
+  background: #FFFFFF;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.user-management-popup-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+  display: inline-flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 16px;
+}
+
+/* Icon Container */
+.user-management-popup-modal .popup-icon-container {
+  width: 36px;
+  height: 36px;
+  background: #E2E6EC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.user-management-popup-modal .popup-icon-container svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Title */
+.user-management-popup-modal .popup-title {
+  font-family: 'Montserrat', sans-serif;
+  color: #231F20;
+font-size: 15px;
+font-weight: 500;
+}
+
+/* Message */
+.user-management-popup-modal .popup-message {
+  font-family: 'Montserrat', sans-serif;
+    color: #000;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* Action Buttons */
+.user-management-popup-modal .popup-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.user-management-popup-modal .popup-btn {
+  flex: 1;
+  min-width: 160px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  white-space: nowrap;
+}
+
+.user-management-popup-modal .popup-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Cancel Button */
+.user-management-popup-modal .cancel-btn {
+  background: #51C7DF;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(81, 199, 223, 0.2);
+}
+
+.user-management-popup-modal .cancel-btn:hover:not(:disabled) {
+  background: #30B5CF;
+  box-shadow: 0 4px 12px rgba(81, 199, 223, 0.3);
+}
+
+/* Confirm Button */
+.user-management-popup-modal .confirm-btn {
+  border-radius: 8px;
+  background: var(--COLORS-White, #FFF);
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+
+color: var(--COLORS-Pink, #F39);
+font-family: Montserrat;
+font-size: 12px;
+font-weight: 600;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background: rgb(233, 233, 233);
+}
+
+/* Loading Spinner */
+.user-management-popup-modal .popup-btn .spinner-border {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .user-management-popup-content {
+    padding: 32px 24px;
+  }
+
+  .user-management-popup-modal .popup-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .user-management-popup-modal .popup-btn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .user-management-popup-modal .popup-title {
+    font-size: 16px;
+  }
+
+  .user-management-popup-modal .popup-message {
+    font-size: 13px;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import './index.css'
 import graph from '../../assets/images/academy-icons/svg/Icon_Sort.svg'
 import filter from '../../assets/images/academy-icons/svg/Dropdown_ Filter by Level.svg'
@@ -18,6 +18,36 @@ const DataTable = ({
   const [activeFilters, setActiveFilters] = useState({})
   const [openMoreActionsDropdown, setOpenMoreActionsDropdown] = useState(null)
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
+  
+  // Refs for click outside detection
+  const filterDropdownRefs = useRef({})
+  const moreActionsDropdownRefs = useRef({})
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check filter dropdowns
+      if (openFilterDropdown !== null) {
+        const filterRef = filterDropdownRefs.current[openFilterDropdown]
+        if (filterRef && !filterRef.contains(event.target)) {
+          setOpenFilterDropdown(null)
+        }
+      }
+
+      // Check more actions dropdowns
+      if (openMoreActionsDropdown !== null) {
+        const moreActionsRef = moreActionsDropdownRefs.current[openMoreActionsDropdown]
+        if (moreActionsRef && !moreActionsRef.contains(event.target)) {
+          setOpenMoreActionsDropdown(null)
+        }
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [openFilterDropdown, openMoreActionsDropdown])
   
   const filteredData = data.filter(item => {
     if (!searchQuery) return true
@@ -95,7 +125,7 @@ const DataTable = ({
             </svg>
             Add Learners
           </button>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
             <button
               className="action-btn more-actions-btn"
               onClick={(e) => handleMoreActionsClick(item.id, e)}
@@ -167,7 +197,7 @@ const DataTable = ({
             <FontAwesomeIcon icon={faPencilAlt} />
             Edit
           </button>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
             <button
               className="action-btn more-actions-btn"
               onClick={(e) => handleMoreActionsClick(item.id, e)}
@@ -238,7 +268,7 @@ const DataTable = ({
   const handleFilterClick = (columnKey, columnIndex) => {
     const dropdownKey = `${columnKey}-${columnIndex}`
     setOpenFilterDropdown(openFilterDropdown === dropdownKey ? null : dropdownKey)
-    setOpenMoreActionsDropdown(null) // Close more actions dropdown if open
+    setOpenMoreActionsDropdown(null)
   }
 
   const handleFilterOptionClick = (columnKey, option) => {
@@ -270,7 +300,7 @@ const DataTable = ({
                     </div>
                   )}
                   {column.filterable && (
-                    <div className="header-icons" style={{ position: 'relative' }}>
+                    <div className="header-icons" style={{ position: 'relative' }} ref={el => filterDropdownRefs.current[`${column.key}-${index}`] = el}>
                       <img 
                         src={filter} 
                         alt="filter" 

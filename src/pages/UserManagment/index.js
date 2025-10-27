@@ -1,6 +1,7 @@
 import './index.css'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,7 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js'
+} from 'react-chartjs-2'
 import { Bar } from 'react-chartjs-2'
 import LtsContainerWrapper from '../../ui/LtsContainerWrapper'
 import IntMessages from '../../utils/IntlMessages';
@@ -32,7 +33,11 @@ import userPassword from '../../assets/images/academy-icons/svg/Icon_User_Pass.s
 import download from '../../assets/images/academy-icons/svg/download.svg'
 import AddNewOrganization from '../../components/UserManagment/AddNewOrganization'
 import ViewOrganizationLearnersModal from '../../components/UserManagment/ViewOrganizationLearnersModal'
+import AddNewLearner from '../../components/UserManagment/AddNewLearner'
+import ViewLearnerModal from '../../components/UserManagment/ViewLearnerModal'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
+import UserManagementPopup from '../../components/UserManagment/AlertPopup'
+import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearnersModal/index'
 
 const UserManagement = () => {
   const dispatch = useDispatch()
@@ -45,11 +50,26 @@ const UserManagement = () => {
   // Modal states
   const [showAddOrganizationModal, setShowAddOrganizationModal] = useState(false)
   const [selectedOrganization, setSelectedOrganization] = useState(null)
-  const [modalMode, setModalMode] = useState('add') // 'add', 'edit', or 'view'
+  const [modalMode, setModalMode] = useState('add')
   
   // Add state for learners modal
   const [showLearnersModal, setShowLearnersModal] = useState(false)
   const [selectedOrgForLearners, setSelectedOrgForLearners] = useState(null)
+  const [showAddLearnerModal, setShowAddLearnerModal] = useState(false)
+  const [showViewLearnerModal, setShowViewLearnerModal] = useState(false)
+  const [selectedLearner, setSelectedLearner] = useState(null)
+  const [learnerModalMode, setLearnerModalMode] = useState('add')
+
+  // Add popup states
+  const [loading, setLoading] = useState(false)
+  const [showDeletePopup, setShowDeletePopup] = useState(false)
+  const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false)
+  const [showDeactivatePopup, setShowDeactivatePopup] = useState(false)
+  const [selectedItems, setSelectedItems] = useState([])
+  const [actionContext, setActionContext] = useState('') // 'organizations' or 'users'
+  const [isSingleAction, setIsSingleAction] = useState(false) // Track if it's a single user action
+  const [showBulkAddLearnersModal, setShowBulkAddLearnersModal] = useState(false)
+  const [showBulkAddOrganizationsModal, setShowBulkAddOrganizationsModal] = useState(false) // New state for bulk add organizations
 
   const organizationsData = [
     {
@@ -212,13 +232,14 @@ const UserManagement = () => {
         handleViewLearners(item)
         break
       case 'add-learners':
-        console.log('Add learners to organization:', item.id)
+        setSelectedOrgForLearners(item)
+        setShowBulkAddLearnersModal(true)
         break
       case 'view':
-        console.log('View learner details:', item.id)
+        handleViewLearner(item)
         break
       case 'edit':
-        console.log('Edit learner:', item.id)
+        handleEditLearner(item)
         break
       case 'view-organization':
         handleViewOrganization(item)
@@ -227,19 +248,31 @@ const UserManagement = () => {
         handleEditOrganization(item)
         break
       case 'deactivate-organization':
-        console.log('Deactivate organization:', item.id)
+        setActionContext('organizations')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeactivatePopup(true)
         break
       case 'delete-organization':
-        console.log('Delete organization:', item.id)
+        setActionContext('organizations')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeletePopup(true)
         break
       case 'export-organization':
-        console.log('Export organization data:', item.id)
+        handleExportOrganization(item)
         break
       case 'deactivate-learner':
-        console.log('Deactivate learner:', item.id)
+        setActionContext('users')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeactivatePopup(true)
         break
       case 'delete-learner':
-        console.log('Delete learner:', item.id)
+        setActionContext('users')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowDeletePopup(true)
         break
       default:
         break
@@ -270,23 +303,99 @@ const UserManagement = () => {
   }
 
   const handleModalSuccess = () => {
-    console.log('Organization saved successfully, refreshing data...')
+    toast.success('Organization saved successfully!')
+    setShowAddOrganizationModal(false)
   }
 
-  function addSingleOrganization() {
+  const handleViewLearner = (learner) => {
+    setSelectedLearner(learner)
+    setShowViewLearnerModal(true)
+  }
+
+  const handleEditLearner = (learner) => {
+    setSelectedLearner(learner)
+    setLearnerModalMode('edit')
+    setShowViewLearnerModal(false)
+    setShowAddLearnerModal(true)
+  }
+
+  const handleAddSingleUser = () => {
+    setLearnerModalMode('add')
+    setSelectedLearner(null)
+    setShowAddLearnerModal(true)
+    setShowAddDropdown(false)
+  }
+
+  const handleLearnerModalSuccess = () => {
+    toast.success('Learner saved successfully!')
+    setShowAddLearnerModal(false)
+  }
+
+  const handleExportOrganization = (organization) => {
+    console.log('Exporting organization:', organization)
+    toast.success(`Exported ${organization.name} data successfully!`)
+  }
+
+  // Add/Bulk actions
+  const addSingleOrganization = () => {
     handleAddOrganization()
+    setShowAddDropdown(false)
   }
 
-  function bulkAddOrganizations() {
-    console.log('Bulk Add Organizations')
+  const bulkAddOrganizations = () => {
+    setShowBulkAddOrganizationsModal(true)
+    setShowAddDropdown(false)
   }
 
-  function addSingleUser() {
-    console.log('Add Single User')
+  const bulkAddUsers = () => {
+    setShowBulkAddLearnersModal(true)
+    setShowAddDropdown(false)
   }
 
-  function bulkAddUsers() {
-    console.log('Bulk Add Users')
+  // Bulk options handlers
+  const deactivateOrganizations = () => {
+    setActionContext('organizations')
+    setIsSingleAction(false)
+    setShowDeactivatePopup(true)
+    setShowBulkDropdown(false)
+  }
+
+  const deleteOrganizations = () => {
+    setActionContext('organizations')
+    setIsSingleAction(false)
+    setShowDeletePopup(true)
+    setShowBulkDropdown(false)
+  }
+
+  const exportOrganizations = () => {
+    toast.success('Organizations exported successfully!')
+    setShowBulkDropdown(false)
+  }
+
+  const resetPasswords = () => {
+    setActionContext('users')
+    setIsSingleAction(false)
+    setShowResetPasswordPopup(true)
+    setShowBulkDropdown(false)
+  }
+
+  const deactivateUsers = () => {
+    setActionContext('users')
+    setIsSingleAction(false)
+    setShowDeactivatePopup(true)
+    setShowBulkDropdown(false)
+  }
+
+  const deleteUsers = () => {
+    setActionContext('users')
+    setIsSingleAction(false)
+    setShowDeletePopup(true)
+    setShowBulkDropdown(false)
+  }
+
+  const exportUsers = () => {
+    toast.success('Users exported successfully!')
+    setShowBulkDropdown(false)
   }
 
   const optionsOrganizations = [
@@ -305,9 +414,8 @@ const UserManagement = () => {
   const optionsUsers = [
     {
       name: 'Add Single User',
-      action: () => addSingleUser(),
+      action: () => handleAddSingleUser(),
       icon: <img src={userPlus} alt="user add" className="admin-icons-dropdown" />
-
     },
     {
       name: 'Bulk Add Users',
@@ -316,39 +424,11 @@ const UserManagement = () => {
     }
   ]
 
-  function deactivateOrganizations() {
-    console.log('Deactivate Organizations')
-  }
-
-  function deleteOrganizations() {
-    console.log('Delete Organizations')
-  }
-
-  function exportOrganizations() {
-    console.log('Export Organizations')
-  }
-
-  function resetPasswords() {
-    console.log('Reset Passwords')
-  }
-
-  function deactivateUsers() {
-    console.log('Deactivate Users')
-  }
-
-  function deleteUsers() {
-    console.log('Delete Users')
-  }
-
-  function exportUsers() {
-    console.log('Export Users')
-  }
-
   const bulkOptionsOrganizations = [
     {
       name: 'Deactivate Organizations',
       action: () => deactivateOrganizations(),
-      icons: <img src={userDeactivate} alt="user deactivate" className="admin-icons-dropdown" />
+      icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
     },
     {
       name: 'Delete Organizations',
@@ -366,12 +446,12 @@ const UserManagement = () => {
     {
       name: 'Reset Passwords',
       action: () => resetPasswords(),
-      icons: <img src={userPassword} alt="user password" className="admin-icons-dropdown" />
+      icons: <img src={userPassword} alt="password" className="admin-icons-dropdown" />
     },
     {
       name: 'Deactivate Users',
       action: () => deactivateUsers(),
-      icons: <img src={userDeactivate} alt="user deactivate" className="admin-icons-dropdown" />
+      icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
     },
     {
       name: 'Delete Users',
@@ -385,6 +465,130 @@ const UserManagement = () => {
     }
   ]
 
+  // Popup handlers
+  const handleDeleteCancel = () => {
+    setShowDeletePopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleResetPasswordCancel = () => {
+    setShowResetPasswordPopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleDeactivateCancel = () => {
+    setShowDeactivatePopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleConfirmDelete = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      if (actionContext === 'organizations') {
+        console.log('Deleting organizations:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'Organization deleted successfully!' 
+            : 'Organizations deleted successfully!'
+        )
+      } else {
+        console.log('Deleting users:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'User deleted successfully!' 
+            : 'Users deleted successfully!'
+        )
+      }
+      
+      setShowDeletePopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      toast.error('Failed to delete')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmResetPassword = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      console.log('Resetting passwords for users:', selectedItems)
+      toast.success(
+        isSingleAction 
+          ? 'Password reset successfully!' 
+          : 'Passwords reset successfully!'
+      )
+      setShowResetPasswordPopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      toast.error('Failed to reset passwords')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmDeactivate = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      if (actionContext === 'organizations') {
+        console.log('Deactivating organizations:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'Organization deactivated successfully!' 
+            : 'Organizations deactivated successfully!'
+        )
+      } else {
+        console.log('Deactivating users:', selectedItems)
+        toast.success(
+          isSingleAction 
+            ? 'User deactivated successfully!' 
+            : 'Users deactivated successfully!'
+        )
+      }
+      
+      setShowDeactivatePopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      toast.error('Failed to deactivate')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Add refs for dropdowns
+  const addDropdownRef = useRef(null)
+  const bulkDropdownRef = useRef(null)
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
+        setShowAddDropdown(false)
+      }
+      
+      if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
+        setShowBulkDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const currentData = activeTab === 'Organizations' ? organizationsData : usersData
   const currentColumns = activeTab === 'Organizations' ? organizationsColumns : usersColumns
   const currentOptions = activeTab === 'Organizations' ? optionsOrganizations : optionsUsers
@@ -394,12 +598,31 @@ const UserManagement = () => {
     <div>
       <div>
         <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
-          <div className="account-page-padding d-flex justify-content-between flex-col-tab align-start-tab">
-            <div>
-              <h3 className="page-title bold-page-title text-black mb-0">
+          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
+            <div className="d-flex flex-column gap-2">
+              <h3 className=" text-black mb-0"
+                style={{
+                  color: '#231F20',
+                  fontFamily: 'Montserrat',
+                  fontSize: '23px',
+                  fontStyle: 'normal',
+                  fontWeight: 700,
+                  lineHeight: 'normal',
+                }}
+              >
                 USER MANAGEMENT
               </h3>
-              <p className="fs-13 fw-light text-black">
+              <p
+                style={{
+                  color: '#AEAEAE',
+                  fontFamily: 'Montserrat',
+                  fontSize: '15px',
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  lineHeight: '20px',
+                  marginBottom: '0px',
+                }}
+              >
                 View user details
               </p>
             </div>
@@ -415,7 +638,7 @@ const UserManagement = () => {
       
       <div className="user-management-container position-relative">
         <img src={blueManagerBG} alt="blue-manager-bg" className='position-absolute user-select-none' style={{right: '50%', translate: '50% 0'}} />
-        {/* Header Tabs */}
+        
         <div className="header-tabs">
           <button
             className={`tab-button ${activeTab === 'Organizations' ? 'active' : ''}`}
@@ -431,7 +654,6 @@ const UserManagement = () => {
           </button>
         </div>
 
-        {/* Search and Actions Bar */}
         <div className="search-actions-bar">
           <div className="search-container">
             <div className="search-input-wrapper">
@@ -449,7 +671,7 @@ const UserManagement = () => {
           </div>
 
           <div className="actions-container">
-            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
               <div>
                 <AcademyBtn
                   title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
@@ -494,7 +716,6 @@ const UserManagement = () => {
                       onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                       onClick={() => {
                         option.action()
-                        setShowAddDropdown(false)
                       }}
                     >
                       {option.icon}
@@ -505,7 +726,7 @@ const UserManagement = () => {
               )}
             </div>
 
-            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
               <div 
                 className="bulk-actions"
                 onClick={() => {
@@ -552,7 +773,6 @@ const UserManagement = () => {
                       onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                       onClick={() => {
                         option.action()
-                        setShowBulkDropdown(false)
                       }}
                     >
                       {option.icons}
@@ -565,7 +785,6 @@ const UserManagement = () => {
           </div>
         </div>
 
-        {/* Reusable Data Table */}
         <div className="table-container">
           <DataTable 
             columns={currentColumns}
@@ -577,7 +796,6 @@ const UserManagement = () => {
           />
         </div>
 
-        {/* Pagination */}
         <div className="pagination-container">
           <button className="pagination-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -605,7 +823,6 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* Add New Organization Modal */}
       <AddNewOrganization
         show={showAddOrganizationModal}
         onHide={() => setShowAddOrganizationModal(false)}
@@ -614,11 +831,112 @@ const UserManagement = () => {
         organizationData={selectedOrganization}
       />
 
-      {/* View Organization Learners Modal */}
       <ViewOrganizationLearnersModal
         show={showLearnersModal}
         onHide={() => setShowLearnersModal(false)}
         organizationName={selectedOrgForLearners?.name || ''}
+      />
+
+      <AddNewLearner
+        show={showAddLearnerModal}
+        onHide={() => {
+          setShowAddLearnerModal(false)
+          setLearnerModalMode('add')
+          setSelectedLearner(null)
+        }}
+        onSuccess={handleLearnerModalSuccess}
+        mode={learnerModalMode}
+        learnerData={selectedLearner}
+      />
+
+      <ViewLearnerModal
+        show={showViewLearnerModal}
+        onHide={() => setShowViewLearnerModal(false)}
+        learner={selectedLearner}
+        onEdit={handleEditLearner}
+      />
+
+      <UserManagementPopup
+        show={showDeletePopup}
+        onHide={handleDeleteCancel}
+        onConfirm={handleConfirmDelete}
+        title={
+          isSingleAction
+            ? `Delete ${actionContext === 'organizations' ? 'Organization' : 'User'}?`
+            : `Delete ${actionContext === 'organizations' ? 'Organization(s)' : 'User(s)'}?`
+        }
+        message={
+          isSingleAction
+            ? `Are you sure you want to delete this ${actionContext === 'organizations' ? 'organization' : 'user'}? ${
+                actionContext === 'users' ? 'User and all work' : 'All data'
+              } will be removed from the system. This action cannot be undone.`
+            : `Are you sure you want to delete the selected ${actionContext === 'organizations' ? 'organization(s)' : 'user(s)'}? All data will be removed from the system. This action cannot be undone.`
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={
+          isSingleAction
+            ? `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
+            : `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+        }
+        loading={loading}
+      />
+
+      <UserManagementPopup
+        show={showResetPasswordPopup}
+        onHide={handleResetPasswordCancel}
+        onConfirm={handleConfirmResetPassword}
+        title={isSingleAction ? "Reset Password?" : "Reset Password(s)?"}
+        message={
+          isSingleAction
+            ? `Are you sure you want to reset ${selectedItems[0]?.name}'s password to the default (Learntostart1!)? The user will need to use this password on their next login.`
+            : "Are you sure you want to reset passwords for the selected user(s) to the default (Learntostart1!)? The users will need to use this password on their next login."
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={isSingleAction ? "YES, RESET PASSWORD" : "YES, RESET PASSWORD(S)"}
+        loading={loading}
+      />
+
+      <UserManagementPopup
+        show={showDeactivatePopup}
+        onHide={handleDeactivateCancel}
+        onConfirm={handleConfirmDeactivate}
+        title={
+          isSingleAction
+            ? `Deactivate ${actionContext === 'organizations' ? 'Organization' : 'User'}?`
+            : `Deactivate ${actionContext === 'organizations' ? 'Organization(s)' : 'User(s)'}?`
+        }
+        message={
+          isSingleAction
+            ? `Are you sure you want to deactivate this ${actionContext === 'organizations' ? 'organization' : 'user'}? Work and settings will be preserved, but they will no longer have access to the platform.`
+            : `Are you sure you want to deactivate the selected ${actionContext === 'organizations' ? 'organization(s)' : 'user(s)'}? Work and settings will be preserved, but they will no longer have access to the platform.`
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={
+          isSingleAction
+            ? `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
+            : `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+        }
+        loading={loading}
+      />
+
+      <BulkAddLearnersModal
+        show={showBulkAddLearnersModal}
+        onHide={() => setShowBulkAddLearnersModal(false)}
+        onSuccess={() => {
+          setShowBulkAddLearnersModal(false)
+          toast.success('Learners added successfully!')
+        }}
+        mode="learners"
+      />
+
+      <BulkAddLearnersModal
+        show={showBulkAddOrganizationsModal}
+        onHide={() => setShowBulkAddOrganizationsModal(false)}
+        onSuccess={() => {
+          setShowBulkAddOrganizationsModal(false)
+          toast.success('Organizations added successfully!')
+        }}
+        mode="organizations"
       />
     </div>
   )

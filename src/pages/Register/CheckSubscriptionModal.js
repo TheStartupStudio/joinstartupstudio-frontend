@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import AcademyBtn from '../../components/AcademyBtn'
 import courseLogo from '../../assets/images/academy-icons/svg/AIE Logo 3x.png'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { trackSubscribe, trackSignUp, trackPurchase } from '../../utils/FacebookPixel'
 
 const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -29,44 +30,62 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
     }
   }
 
-const handleSubscription = async () => {
-  if (!registrationData || !registrationData.paymentMethodId) {
-    toast.error('Registration data not found. Please try again.')
-    onHide()
-    return
-  }
-
-  setIsLoading(true)
-
-  try {
-    const response = await axiosInstance.post('/auth/register-with-subscription', {
-      ...registrationData,
-      selectedPlan: selectedPlan,
-      priceId: planDetails[selectedPlan].priceId
-    })
-
-    if (response.data.success) {
-      sessionStorage.removeItem('registrationData')
-      
-      if (response.data.tokens) {
-        localStorage.setItem('accessToken', response.data.tokens.accessToken)
-        localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
-      }
-      
-      toast.success('Registration and subscription successful!')
-      
+  const handleSubscription = async () => {
+    if (!registrationData || !registrationData.paymentMethodId) {
+      toast.error('Registration data not found. Please try again.')
       onHide()
-      history.push('/dashboard') 
+      return
     }
-  } catch (error) {
-    console.error('Subscription error:', error)
-    const errorMessage = error.response?.data?.error || 
-                        'Something went wrong during registration'
-    toast.error(errorMessage)
-  } finally {
-    setIsLoading(false)
+
+    setIsLoading(true)
+
+    try {
+      const response = await axiosInstance.post('/auth/register-with-subscription', {
+        ...registrationData,
+        selectedPlan: selectedPlan,
+        priceId: planDetails[selectedPlan].priceId
+      })
+
+      if (response.data.success) {
+        sessionStorage.removeItem('registrationData')
+        
+        if (response.data.tokens) {
+          localStorage.setItem('accessToken', response.data.tokens.accessToken)
+          localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
+        }
+
+        const subscriptionValue = parseFloat(planDetails[selectedPlan].price)
+        
+        trackSignUp('email')
+        
+        // Track subscription
+        trackSubscribe({
+          value: subscriptionValue,
+          currency: 'USD',
+          predictedLifetimeValue: selectedPlan === 'monthly' ? 119.88 : 99.00
+        })
+        
+        trackPurchase({
+          value: 0, 
+          currency: 'USD',
+          contentName: `${selectedPlan === 'monthly' ? 'Monthly' : 'Annual'} Subscription`,
+          contentType: 'subscription'
+        })
+
+        toast.success('Registration and subscription successful!')
+        
+        onHide()
+        history.push('/dashboard') 
+      }
+    } catch (error) {
+      console.error('Subscription error:', error)
+      const errorMessage = error.response?.data?.error || 
+                          'Something went wrong during registration'
+      toast.error(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
   }
-}
 
 
   return (
@@ -76,7 +95,7 @@ const handleSubscription = async () => {
       backdrop="static"
       keyboard={false}
       centered
-          className="check-subscription-transparent-modal" // Add this class
+          className="check-subscription-transparent-modal" 
       >
       
       <Modal.Body>
@@ -150,13 +169,13 @@ const handleSubscription = async () => {
 
 
                 <div style={{
-  position: 'absolute', 
-  top: '50%', 
-  left: '50%', 
-  transform: 'translate(-50%, -50%)', 
-  zIndex: -1,  // Changed from 1000000 to -1
-  pointerEvents: 'none' // Add this to ensure it doesn't block interactions
-}}>
+                      position: 'absolute', 
+                      top: '50%', 
+                      left: '50%', 
+                      transform: 'translate(-50%, -50%)', 
+                      zIndex: -1,  // Changed from 1000000 to -1
+                      pointerEvents: 'none' // Add this to ensure it doesn't block interactions
+                    }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="610" height="767" viewBox="0 0 610 767" fill="none">
                     <path d="M610 288.48C610 552.547 473.447 766.616 305 766.616C136.553 766.616 0 552.547 0 288.48C0 24.4126 144.446 -5.38379 312.893 -5.38379C481.34 -5.38379 610 24.4126 610 288.48Z" fill="url(#paint0_radial_3290_19282)" fill-opacity="0.2"/>
                     <defs>
