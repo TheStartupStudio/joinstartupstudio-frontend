@@ -6,7 +6,7 @@ tbody{
   position: relative;
   width: 100%;
   overflow: auto;
-  border: 1px solid #e5e7eb;
+  /* border: 1px solid #e5e7eb; */
   border-radius: 8px;
 }
 
@@ -66,6 +66,44 @@ line-height: normal;
 
 .data-table tbody tr:hover {
   background: #f9fafb;
+}
+
+/* Drag and drop styles */
+.draggable-row {
+  cursor: move;
+  transition: background-color 0.2s ease;
+}
+
+.draggable-row.drag-over {
+  background-color: #e0f2fe !important;
+  border-top: 2px solid #51C7DF;
+}
+
+.drag-column {
+  width: 50px;
+  text-align: center;
+  padding: 8px !important;
+}
+
+.drag-handle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle svg {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.drag-handle:hover svg {
+  opacity: 1;
 }
 
 .header-with-icons {
@@ -191,6 +229,9 @@ line-height: normal;
   color: #374151;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: none;
+  outline: none;
+  background-color: transparent;
 }
 
 .more-actions-btn {

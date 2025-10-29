@@ -54,6 +54,14 @@ const SIDEBAR_MENU_ITEMS = [
     roles: [3],
     className: (pathname) => pathname.includes('user-managment') ? 'active' : ''
   },
+    {
+    id: 'content-management',
+    title: 'Content Management',
+    srcImage: groupIcon,
+    to: '/content-management',
+    roles: [3],
+    className: (pathname) => pathname.includes('content-management') ? 'active' : ''
+  },
   {
     id: 'intro-course',
     title: 'Intro to course',
