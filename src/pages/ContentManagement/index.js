@@ -10,6 +10,7 @@ import DataTable from '../../components/DataTable'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import axiosInstance from '../../utils/AxiosInstance'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
+import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 
 const ContentManagement = () => {
   const dispatch = useDispatch()
@@ -24,6 +25,14 @@ const ContentManagement = () => {
   const [loading, setLoading] = useState(false)
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
+
+  // Popup states
+  const [showPublishPopup, setShowPublishPopup] = useState(false)
+  const [showUnpublishPopup, setShowUnpublishPopup] = useState(false)
+  const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false)
+  const [showDeleteLevelPopup, setShowDeleteLevelPopup] = useState(false)
+  const [selectedTask, setSelectedTask] = useState(null)
+  const [selectedLevel, setSelectedLevel] = useState(null)
 
   const levels = [
     'Level 1: Entrepreneurship and You',
@@ -174,10 +183,12 @@ const ContentManagement = () => {
         setShowAddTaskModal(true)
         break
       case 'publish':
-        toast.success(`Published task: ${item.name}`)
+        setSelectedTask(item)
+        setShowPublishPopup(true)
         break
       case 'unpublish':
-        toast.success(`Unpublished task: ${item.name}`)
+        setSelectedTask(item)
+        setShowUnpublishPopup(true)
         break
       default:
         break
@@ -275,6 +286,110 @@ const ContentManagement = () => {
       toast.success('Task created successfully!')
     }
     // Add your API call here to save/update the task
+  }
+
+  // Popup handlers
+  const handlePublishCancel = () => {
+    setShowPublishPopup(false)
+    setSelectedTask(null)
+  }
+
+  const handleUnpublishCancel = () => {
+    setShowUnpublishPopup(false)
+    setSelectedTask(null)
+  }
+
+  const handleDeleteTaskCancel = () => {
+    setShowDeleteTaskPopup(false)
+    setSelectedTask(null)
+  }
+
+  const handleDeleteLevelCancel = () => {
+    setShowDeleteLevelPopup(false)
+    setSelectedLevel(null)
+  }
+
+  const handleConfirmPublish = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Update task status in local state
+      setTasksData(prevTasks =>
+        prevTasks.map(task =>
+          task.id === selectedTask.id
+            ? { ...task, status: 'published' }
+            : task
+        )
+      )
+      
+      toast.success(`Task "${selectedTask.name}" published successfully!`)
+      setShowPublishPopup(false)
+      setSelectedTask(null)
+    } catch (error) {
+      toast.error('Failed to publish task')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmUnpublish = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Update task status in local state
+      setTasksData(prevTasks =>
+        prevTasks.map(task =>
+          task.id === selectedTask.id
+            ? { ...task, status: 'unpublished' }
+            : task
+        )
+      )
+      
+      toast.success(`Task "${selectedTask.name}" unpublished successfully!`)
+      setShowUnpublishPopup(false)
+      setSelectedTask(null)
+    } catch (error) {
+      toast.error('Failed to unpublish task')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmDeleteTask = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Remove task from local state
+      setTasksData(prevTasks =>
+        prevTasks.filter(task => task.id !== selectedTask.id)
+      )
+      
+      toast.success(`Task "${selectedTask.name}" deleted successfully!`)
+      setShowDeleteTaskPopup(false)
+      setSelectedTask(null)
+    } catch (error) {
+      toast.error('Failed to delete task')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmDeleteLevel = async () => {
+    setLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      toast.success(`Level "${selectedLevel}" deleted successfully!`)
+      setShowDeleteLevelPopup(false)
+      setSelectedLevel(null)
+    } catch (error) {
+      toast.error('Failed to delete level')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const addOptions = [
@@ -400,6 +515,9 @@ const ContentManagement = () => {
             </button>
           ))}
         </div>
+
+        <div className='main-search-table-container'>
+
 
         <div className="search-actions-bar">
           <div className="search-container">
@@ -548,6 +666,8 @@ const ContentManagement = () => {
         </div>
       </div>
 
+              </div>
+
       <AddTaskModal 
         show={showAddTaskModal}
         onHide={() => {
@@ -559,6 +679,54 @@ const ContentManagement = () => {
         levels={levels}
         mode={modalMode}
         taskData={editingTask}
+      />
+
+      {/* Publish Task Popup */}
+      <UserManagementPopup
+        show={showPublishPopup}
+        onHide={handlePublishCancel}
+        onConfirm={handleConfirmPublish}
+        title="Publish Task?"
+        message="Are you sure you want to publish this task? Once it's published, it will be available to all learners with access to this curriculum."
+        cancelText="NO, TAKE ME BACK"
+        confirmText="YES, PUBLISH TASK"
+        loading={loading}
+      />
+
+      {/* Unpublish Task Popup */}
+      <UserManagementPopup
+        show={showUnpublishPopup}
+        onHide={handleUnpublishCancel}
+        onConfirm={handleConfirmUnpublish}
+        title="Unpublish Task?"
+        message="Are you sure you want to unpublish this task? Once it's unpublished, it will no longer be available to learners."
+        cancelText="NO, TAKE ME BACK"
+        confirmText="YES, UNPUBLISH TASK"
+        loading={loading}
+      />
+
+      {/* Delete Task Popup */}
+      <UserManagementPopup
+        show={showDeleteTaskPopup}
+        onHide={handleDeleteTaskCancel}
+        onConfirm={handleConfirmDeleteTask}
+        title="Delete Task?"
+        message="Are you sure you want to delete this task?"
+        cancelText="NO, TAKE ME BACK"
+        confirmText="YES, DELETE TASK"
+        loading={loading}
+      />
+
+      {/* Delete Level Popup */}
+      <UserManagementPopup
+        show={showDeleteLevelPopup}
+        onHide={handleDeleteLevelCancel}
+        onConfirm={handleConfirmDeleteLevel}
+        title="Delete Level?"
+        message="Are you sure you want to delete this level? Deleting this level will NOT remove tasks assigned to it, but they will no longer be accessible to learners."
+        cancelText="NO, TAKE ME BACK"
+        confirmText="YES, DELETE LEVEL"
+        loading={loading}
       />
     </div>
   )

@@ -553,7 +553,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           </div>
         )}
 
-        {isViewMode && (
+        {/* {isViewMode && (
           <div className="modal-actions">
             <div className="d-flex gap-2" style={{ marginLeft: 'auto' }}>
               <button className="btn-cancel" onClick={handleClose}>
@@ -561,7 +561,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </Modal.Body>
     </Modal>
   )
