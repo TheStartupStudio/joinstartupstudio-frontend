@@ -17,7 +17,7 @@
 
 
      <!-- Meta Pixel Code -->
-    <script>
+    <!-- <script>
       if (window.location.hostname !== 'localhost') {
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -41,7 +41,52 @@
             style="display:none"
             src="https://www.facebook.com/tr?id=1515917456224895&ev=PageView&noscript=1"
           />
-    </noscript>
+    </noscript> -->
+
+
+
+
+    <!-- Meta Pixel Code -->
+<script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+
+    // Check if we're in test environment (localhost)
+    const isTestEnvironment = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1' ||
+                             window.location.port === '8080';
+
+    if (isTestEnvironment) {
+        // Initialize with test event code for testing
+        fbq('init', '25054215557598730', {}, {
+            test_event_code: 'TEST49092'
+        });
+        console.log('✅ Facebook Pixel initialized with test event code');
+        console.log('🆔 Pixel ID: 25054215557598730');
+        console.log('🧪 Test Event Code: TEST49092');
+    } else {
+        // Production initialization
+        fbq('init', '25054215557598730');
+        console.log('✅ Facebook Pixel initialized for production');
+    }
+
+    // Track initial PageView
+    fbq('track', 'PageView');
+
+    // Make fbq available globally
+    window.fbq = fbq;
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=25054215557598730&ev=PageView&noscript=1"
+    /></noscript>
+<!-- End Meta Pixel Code -->
+
+    
     <!-- End Meta Pixel Code -->
 
 
