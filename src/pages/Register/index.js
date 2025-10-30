@@ -32,11 +32,11 @@ import closeBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg
 import { trackTrialStarted, trackLead } from '../../utils/FacebookPixel'
 
 // Initialize Stripe
-const stripePromise = loadStripe(
-  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-)
+// const stripePromise = loadStripe(
+//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+// )
 
-// const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
 
 // Update the card element options for individual fields
 const CARD_ELEMENT_OPTIONS = {
