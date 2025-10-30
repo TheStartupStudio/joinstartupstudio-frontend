@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import AcademyBtn from '../../components/AcademyBtn'
 import courseLogo from '../../assets/images/academy-icons/svg/AIE Logo 3x.png'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
-import { trackSubscribe, trackSignUp, trackPurchase } from '../../utils/FacebookPixel'
+import { trackSubscribe, trackSignUp } from '../../utils/FacebookPixel'
 
 const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -56,6 +56,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
 
         const subscriptionValue = parseFloat(planDetails[selectedPlan].price)
         
+        // Track user registration
         trackSignUp('email')
         
         // Track subscription
@@ -63,13 +64,6 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
           value: subscriptionValue,
           currency: 'USD',
           predictedLifetimeValue: selectedPlan === 'monthly' ? 119.88 : 99.00
-        })
-        
-        trackPurchase({
-          value: 0, 
-          currency: 'USD',
-          contentName: `${selectedPlan === 'monthly' ? 'Monthly' : 'Annual'} Subscription`,
-          contentType: 'subscription'
         })
 
         toast.success('Registration and subscription successful!')
@@ -95,13 +89,13 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
       backdrop="static"
       keyboard={false}
       centered
-          className="check-subscription-transparent-modal" 
-      >
+      className="check-subscription-transparent-modal" 
+    >
       
       <Modal.Body>
-              <div className='d-flex justify-content-center p-sm-5 positon-relative'>
+        <div className='d-flex justify-content-center p-sm-5 positon-relative'>
 
-                <div className='d-flex align-items-center flex-column payment-main bck-gradient position-relative'>
+          <div className='d-flex align-items-center flex-column payment-main bck-gradient position-relative'>
 
                   <div className="subscription-close" onClick={onHide} style={{ cursor: 'pointer' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

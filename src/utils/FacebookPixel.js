@@ -8,6 +8,27 @@ const isFbqAvailable = () => {
   return typeof window !== 'undefined' && typeof window.fbq === 'function'
 }
 
+// ✅ Track which events have been fired to prevent duplicates
+const firedEvents = new Set()
+
+// ✅ Helper to prevent duplicate events within a time window
+const trackEventOnce = (eventKey, trackFunction, timeout = 5000) => {
+  if (firedEvents.has(eventKey)) {
+    console.log(`🚫 Prevented duplicate event: ${eventKey}`)
+    return false
+  }
+  
+  firedEvents.add(eventKey)
+  trackFunction()
+  
+  // Clear the flag after timeout
+  setTimeout(() => {
+    firedEvents.delete(eventKey)
+  }, timeout)
+  
+  return true
+}
+
 /**
  * Track standard Facebook events
  */
@@ -19,100 +40,71 @@ export const trackPageView = () => {
 
 export const trackTrialStarted = (trialData = {}) => {
   if (isFbqAvailable()) {
-    window.fbq('track', 'StartTrial', {
-      value: trialData.value || 0,
-      currency: trialData.currency || 'USD',
-      predicted_ltv: trialData.predictedLifetimeValue || 0
+    const eventKey = `StartTrial_${Date.now()}`
+    trackEventOnce(eventKey, () => {
+      window.fbq('track', 'StartTrial', {
+        value: trialData.value || 0,
+        currency: trialData.currency || 'USD',
+        predicted_ltv: trialData.predictedLifetimeValue || 0
+      })
+      console.log('✅ Facebook Pixel: Trial Started tracked')
     })
-    console.log('Facebook Pixel: Trial Started tracked')
   }
 }
 
 export const trackSignUp = (method = 'email') => {
   if (isFbqAvailable()) {
-    window.fbq('track', 'CompleteRegistration', {
-      status: 'completed',
-      registration_method: method
+    const eventKey = `CompleteRegistration_${Date.now()}`
+    trackEventOnce(eventKey, () => {
+      window.fbq('track', 'CompleteRegistration', {
+        status: 'completed',
+        registration_method: method
+      })
+      console.log('✅ Facebook Pixel: Sign Up tracked')
     })
-    console.log('Facebook Pixel: Sign Up tracked')
   }
 }
 
 export const trackSubscribe = (subscriptionData = {}) => {
   if (isFbqAvailable()) {
-    window.fbq('track', 'Subscribe', {
-      value: subscriptionData.value || 0,
-      currency: subscriptionData.currency || 'USD',
-      predicted_ltv: subscriptionData.predictedLifetimeValue || 0
+    const eventKey = `Subscribe_${subscriptionData.value || 'default'}_${Date.now()}`
+    trackEventOnce(eventKey, () => {
+      window.fbq('track', 'Subscribe', {
+        value: subscriptionData.value || 0,
+        currency: subscriptionData.currency || 'USD',
+        predicted_ltv: subscriptionData.predictedLifetimeValue || 0
+      })
+      console.log('✅ Facebook Pixel: Subscribe tracked')
     })
-    console.log('Facebook Pixel: Subscribe tracked')
   }
 }
 
-export const trackPurchase = (purchaseData = {}) => {
+export const trackCancelSubscription = (cancellationData = {}) => {
   if (isFbqAvailable()) {
-    window.fbq('track', 'Purchase', {
-      value: purchaseData.value || 0,
-      currency: purchaseData.currency || 'USD',
-      content_name: purchaseData.contentName || '',
-      content_type: purchaseData.contentType || 'product'
+    const eventKey = `CancelSubscription_${Date.now()}`
+    trackEventOnce(eventKey, () => {
+      window.fbq('trackCustom', 'CancelSubscription', {
+        cancellation_reason: cancellationData.reason || 'user_initiated',
+        subscription_duration: cancellationData.duration || 0,
+        subscription_value: cancellationData.value || 0,
+        currency: cancellationData.currency || 'USD',
+        user_segment: cancellationData.userSegment || ''
+      })
+      console.log('✅ Facebook Pixel: Cancel Subscription tracked', cancellationData)
     })
-    console.log('Facebook Pixel: Purchase tracked')
   }
 }
 
 export const trackLead = (leadData = {}) => {
   if (isFbqAvailable()) {
-    window.fbq('track', 'Lead', {
-      content_name: leadData.contentName || '',
-      content_category: leadData.contentCategory || ''
+    const eventKey = `Lead_${Date.now()}`
+    trackEventOnce(eventKey, () => {
+      window.fbq('track', 'Lead', {
+        content_name: leadData.contentName || '',
+        content_category: leadData.contentCategory || ''
+      })
+      console.log('✅ Facebook Pixel: Lead tracked')
     })
-    console.log('Facebook Pixel: Lead tracked')
-  }
-}
-
-export const trackAddToCart = (productData = {}) => {
-  if (isFbqAvailable()) {
-    window.fbq('track', 'AddToCart', {
-      value: productData.value || 0,
-      currency: productData.currency || 'USD',
-      content_name: productData.contentName || '',
-      content_type: productData.contentType || 'product'
-    })
-    console.log('Facebook Pixel: Add to Cart tracked')
-  }
-}
-
-export const trackInitiateCheckout = (checkoutData = {}) => {
-  if (isFbqAvailable()) {
-    window.fbq('track', 'InitiateCheckout', {
-      value: checkoutData.value || 0,
-      currency: checkoutData.currency || 'USD',
-      num_items: checkoutData.numItems || 1
-    })
-    console.log('Facebook Pixel: Initiate Checkout tracked')
-  }
-}
-
-export const trackViewContent = (contentData = {}) => {
-  if (isFbqAvailable()) {
-    window.fbq('track', 'ViewContent', {
-      content_name: contentData.contentName || '',
-      content_category: contentData.contentCategory || '',
-      content_ids: contentData.contentIds || [],
-      content_type: contentData.contentType || 'product'
-    })
-    console.log('Facebook Pixel: View Content tracked')
-  }
-}
-
-export const trackSearch = (searchData = {}) => {
-  if (isFbqAvailable()) {
-    window.fbq('track', 'Search', {
-      search_string: searchData.searchString || '',
-      content_category: searchData.contentCategory || ''
-    })
-    console.log('Facebook Pixel: Search tracked')
   }
 }
 
@@ -122,7 +114,7 @@ export const trackSearch = (searchData = {}) => {
 export const trackCustomEvent = (eventName, eventData = {}) => {
   if (isFbqAvailable()) {
     window.fbq('trackCustom', eventName, eventData)
-    console.log(`Facebook Pixel: Custom event "${eventName}" tracked`, eventData)
+    console.log(`✅ Facebook Pixel: Custom event "${eventName}" tracked`, eventData)
   }
 }
 
@@ -132,11 +124,7 @@ export default {
   trackTrialStarted,
   trackSignUp,
   trackSubscribe,
-  trackPurchase,
+  trackCancelSubscription,
   trackLead,
-  trackAddToCart,
-  trackInitiateCheckout,
-  trackViewContent,
-  trackSearch,
   trackCustomEvent
 }
