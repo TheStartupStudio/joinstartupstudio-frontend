@@ -121,10 +121,37 @@ line-height: normal;
   width: 50px;
 }
 
+/* ✅ Updated checkbox styles */
 .checkbox {
   width: 16px;
   height: 16px;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 4px;
+  background: #FFF;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+  border: 1px solid #d1d5db;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+/* ✅ Checked state - fill with blue color */
+.checkbox:checked {
+  background: #51C7DF;
+  border-color: #51C7DF;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+/* ✅ Remove checkmark - no ::after needed */
+.checkbox:checked::after {
+  display: none;
+}
+
+/* Hover effect */
+.checkbox:hover {
+  border-color: #51C7DF;
 }
 
 .organization-info, .learner-info {
@@ -150,26 +177,37 @@ line-height: normal;
 .organization-name, .learner-name {
   color: #000;
 font-family: Montserrat;
-font-size: 1rem;
+font-size: 16px;
 font-style: normal;
 font-weight: 500;
 line-height: normal;
 }
 
-.organization-domain, .learner-email {
+.organization-domain {
 color: var(--COLORS-Black, #000);
 font-family: Montserrat;
-font-size: 0.8125rem;
+font-size: 16px;
 font-style: normal;
 font-weight: 400;
 line-height: normal;
 
 }
 
+.learner-email {
+  color: var(--COLORS-Black, #000);
+font-family: Montserrat;
+font-size: 13px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
 .learner-organization {
-  font-size: 13px;
-  color: #6b7280;
-  font-weight: 400;
+  color: var(--COLORS-Black, #000);
+font-family: Montserrat;
+font-size: 13px;
+font-weight: 400;
+text-transform: uppercase;
 }
 
 .users-count, .fee-amount, .reflections-count, .total-paid {
