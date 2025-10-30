@@ -1,10 +1,15 @@
 .user-management-container {
-  border-radius: 24px;
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 10px;
   background: rgba(255, 255, 255, 0.10);
+
+  border-radius: 8px 8px 24px 24px;
+background: var(--Glassy-White, rgba(255, 255, 255, 0.10));
+
+/* Drop Shadow */
+box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
 }
 
 /* Header Tabs */
@@ -15,7 +20,7 @@
 
   box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(60.064998626708984px);
-  padding: 5px;
+padding: 4px;
   gap: 5px;
 }
 
@@ -57,6 +62,7 @@
   border-radius: 12px;
   background: #FFF;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  height: 54px;
 }
 
 .search-input-wrapper {
@@ -66,11 +72,21 @@
 .search-input {
   width: 100%;
   padding: 12px 40px 12px 18px;
-  border: 1px solid #d1d5db;
   border-radius: 8px;
-  font-size: 15px;
   background: #ffffff;
   transition: border-color 0.2s ease;
+  height: 54px;
+  overflow: hidden;
+  color: black;
+  text-overflow: ellipsis;
+  border: none;
+
+  /* Text - 15 Regular Regular */
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 133.333% */
 }
 
 .search-input:focus {
@@ -78,7 +94,16 @@
 }
 
 .search-input::placeholder {
-  color: #9ca3af;
+  overflow: hidden;
+  color: #6F6F6F;
+  text-overflow: ellipsis;
+
+  /* Text - 15 Regular Regular */
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 133.333% */
 }
 
 .search-icon {
@@ -136,21 +161,15 @@
   height: 54px;
   justify-content: space-between;
 
-
-
   text-align: center;
 
   /* Text - 15 Medium Caps */
   font-family: Montserrat;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Table */
-/* .table-container {
-  overflow-x: auto;
-} */
-
 .organizations-table {
   width: 100%;
   border-collapse: collapse;
@@ -172,7 +191,6 @@
   padding: 8px 16px;
   border: none;
   border-bottom: 1px solid rgb(227, 229, 233);
-
 }
 
 .organizations-table tbody tr:hover {
@@ -200,10 +218,6 @@
   cursor: pointer;
 }
 
-/* .organization-name-column {
-  min-width: 250px;
-} */
-
 .organization-info {
   display: flex;
   gap: 5px;
@@ -212,7 +226,6 @@
 .status-indicator {
   width: 8px;
   height: 8px;
-  /* background: #10b981; */
   border-radius: 50%;
   flex-shrink: 0;
   position: relative;
@@ -235,12 +248,6 @@
   font-size: 12px;
   color: #6b7280;
 }
-
-/* .total-users-column,
-.monthly-fee-column {
-  width: 120px;
-  text-align: center;
-} */
 
 .users-count,
 .fee-amount {
@@ -277,7 +284,7 @@
 }
 
 .action-btn:hover {
-  background: #f9fafb;;
+  background: #f9fafb;
 }
 
 .more-actions-btn {
@@ -345,10 +352,6 @@
     font-size: 12px;
   }
 
-  /* .action-buttons {
-    flex-wrap: wrap;
-  } */
-
   .action-btn {
     font-size: 10px;
     padding: 4px 8px;
@@ -368,13 +371,9 @@
   .organizations-table td {
     padding: 8px 12px;
   }
-
-  /* .organization-name-column {
-    min-width: 200px;
-  } */
 }
 
-.admin-icons-dropdown{
+.admin-icons-dropdown {
   margin-right: 8px;
   width: 18px;
   height: 18px;
@@ -386,4 +385,15 @@
 
 .dropdown-menu .dropdown-item {
   text-transform: none !important;
+}
+
+.add-button-wrapper .continue-course-btn {
+  color: #000 !important;
+  text-align: center !important;
+  font-family: 'Montserrat' !important;
+  font-size: 14px !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  text-transform: uppercase !important;
 }

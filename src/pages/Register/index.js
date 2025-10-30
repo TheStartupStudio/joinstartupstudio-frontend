@@ -29,7 +29,7 @@ import {
 import CheckSubscriptionModal from './CheckSubscriptionModal'
 import closeBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
 // ✅ ADD FACEBOOK PIXEL IMPORTS
-import { trackTrialStarted, trackInitiateCheckout, trackLead } from '../../utils/FacebookPixel'
+import { trackTrialStarted, trackLead } from '../../utils/FacebookPixel'
 
 // Initialize Stripe
 // const stripePromise = loadStripe(
@@ -163,11 +163,11 @@ function RegistrationForm() {
 
     setIsLoading(true)
 
-    trackInitiateCheckout({
-      value: 0, // Free trial
-      currency: 'USD',
-      numItems: 1
-    })
+    // trackInitiateCheckout({
+    //   value: 0, // Free trial
+    //   currency: 'USD',
+    //   numItems: 1
+    // })
 
     try {
       const checkEmailResponse = await axiosInstance.post('/check-email', {

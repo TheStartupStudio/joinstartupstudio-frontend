@@ -1,6 +1,8 @@
 import { Button, Modal, ModalBody } from 'reactstrap'
+import { useRef } from 'react'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
 import axiosInstance from '../../utils/AxiosInstance'
+import { trackCancelSubscription } from '../../utils/FacebookPixel'
 
 function CancelSubModal({
   cancelSubModal,
@@ -8,25 +10,39 @@ function CancelSubModal({
   toggleCancelModal,
   toggleCancelRenewal
 }) {
-const handleCancelSubscription = async () => {
-  try {
-    const response = await axiosInstance.post(
-      '/course-subscription/cancel-subscription'
-    )
+  // ✅ ADD: Prevent duplicate tracking
+  const hasTrackedRef = useRef(false)
 
-    if (response.status === 200) {
-      // Show success message to user
-      alert(response.data.message)
-      toggleCancelRenewal()
+  const handleCancelSubscription = async () => {
+    try {
+      const response = await axiosInstance.post(
+        '/course-subscription/cancel-subscription'
+      )
+
+      if (response.status === 200) {
+        // ✅ FIXED: Only track once
+        if (!hasTrackedRef.current) {
+          trackCancelSubscription({
+            reason: 'user_initiated',
+            value: 15,
+            currency: 'USD',
+            duration: response.data.subscriptionDuration || 0,
+            userSegment: 'paid_subscriber'
+          })
+          hasTrackedRef.current = true
+        }
+
+        alert(response.data.message)
+        toggleCancelRenewal()
+      }
+    } catch (error) {
+      console.error('Error canceling subscription:', error)
+      alert(
+        error.response?.data?.error || 
+        'Something went wrong while canceling the subscription. Please try again.'
+      )
     }
-  } catch (error) {
-    console.error('Error canceling subscription:', error)
-    alert(
-      error.response?.data?.error || 
-      'Something went wrong while canceling the subscription. Please try again.'
-    )
   }
-}
 
   return (
     <Modal

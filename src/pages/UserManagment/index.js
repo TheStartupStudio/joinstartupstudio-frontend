@@ -38,6 +38,7 @@ import ViewLearnerModal from '../../components/UserManagment/ViewLearnerModal'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearnersModal/index'
+import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 
 const UserManagement = () => {
   const dispatch = useDispatch()
@@ -664,18 +665,19 @@ const UserManagement = () => {
                 onChange={handleSearch}
                 className="search-input"
               />
-              <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M17 17L21 21" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
             </div>
           </div>
 
           <div className="actions-container">
             <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
-              <div>
+              <div className="add-button-wrapper">
                 <AcademyBtn
                   title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
-                  icon={faPlus}
+                  icon={plusIcon}
                   onClick={() => {
                     setShowAddDropdown(!showAddDropdown)
                     setShowBulkDropdown(false)
