@@ -166,7 +166,7 @@ padding: 4px;
   /* Text - 15 Medium Caps */
   font-family: Montserrat;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Table */
@@ -393,7 +393,7 @@ padding: 4px;
   font-family: 'Montserrat' !important;
   font-size: 14px !important;
   font-style: normal !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   line-height: normal !important;
   text-transform: uppercase !important;
 }

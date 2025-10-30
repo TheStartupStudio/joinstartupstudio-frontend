@@ -38,6 +38,7 @@ import ViewLearnerModal from '../../components/UserManagment/ViewLearnerModal'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearnersModal/index'
+import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 
 const UserManagement = () => {
   const dispatch = useDispatch()
@@ -676,7 +677,7 @@ const UserManagement = () => {
               <div className="add-button-wrapper">
                 <AcademyBtn
                   title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
-                  icon={faPlus}
+                  icon={plusIcon}
                   onClick={() => {
                     setShowAddDropdown(!showAddDropdown)
                     setShowBulkDropdown(false)
