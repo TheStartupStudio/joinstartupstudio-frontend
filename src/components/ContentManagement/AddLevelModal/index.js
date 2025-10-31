@@ -1,19 +1,20 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import './index.css'
 
 const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
   const [levels, setLevels] = useState(
     existingLevels.length > 0 
-      ? existingLevels.map((level, index) => ({ id: index + 1, title: level }))
+      ? existingLevels.map((level, index) => ({ id: index + 1, title: level, isEditing: false, isNew: false }))
       : [
-          { id: 1, title: 'Level 1: Entrepreneurship and You' },
-          { id: 2, title: 'Level 2: Understanding Learn to Start' },
-          { id: 3, title: 'Level 3: The Journey of Entrepreneurship' }
+          { id: 1, title: 'Level 1: Entrepreneurship and You', isEditing: false, isNew: false },
+          { id: 2, title: 'Level 2: Understanding Learn to Start', isEditing: false, isNew: false },
+          { id: 3, title: 'Level 3: The Journey of Entrepreneurship', isEditing: false, isNew: false }
         ]
   )
+  const [hasNewLevel, setHasNewLevel] = useState(false)
 
   const handleLevelChange = (id, value) => {
     setLevels(prevLevels =>
@@ -23,14 +24,64 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
     )
   }
 
-  const addNewLevel = () => {
+  const toggleEditing = (id) => {
+    setLevels(prevLevels =>
+      prevLevels.map(level =>
+        level.id === id ? { ...level, isEditing: !level.isEditing } : level
+      )
+    )
+  }
+
+  const addNewLevelAfter = (afterId) => {
+    const insertIndex = levels.findIndex(level => level.id === afterId)
     const newId = Math.max(...levels.map(level => level.id), 0) + 1
-    setLevels([...levels, { id: newId, title: '' }])
+    
+    const newLevel = { 
+      id: newId, 
+      title: `Level ${insertIndex + 2}: Add Level title...`, 
+      isEditing: false,
+      isNew: true
+    }
+    
+    const updatedLevels = [
+      ...levels.slice(0, insertIndex + 1),
+      newLevel,
+      ...levels.slice(insertIndex + 1)
+    ]
+
+    // Renumber all levels
+    const renumberedLevels = updatedLevels.map((level, index) => {
+      const levelNumber = index + 1
+      const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
+      return {
+        ...level,
+        title: `Level ${levelNumber}: ${titleWithoutNumber}`
+      }
+    })
+
+    setLevels(renumberedLevels)
+    setHasNewLevel(true)
   }
 
   const deleteLevel = (id) => {
     if (levels.length > 1) {
-      setLevels(levels.filter(level => level.id !== id))
+      const filteredLevels = levels.filter(level => level.id !== id)
+      
+      // Renumber remaining levels
+      const renumberedLevels = filteredLevels.map((level, index) => {
+        const levelNumber = index + 1
+        const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
+        return {
+          ...level,
+          title: `Level ${levelNumber}: ${titleWithoutNumber}`
+        }
+      })
+      
+      setLevels(renumberedLevels)
+      
+      // Check if any new levels remain
+      const hasNewLevels = renumberedLevels.some(level => level.isNew)
+      setHasNewLevel(hasNewLevels)
     }
   }
 
@@ -40,16 +91,24 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
     handleClose()
   }
 
+  const handleSaveAndContinue = () => {
+    // Mark all levels as not new
+    const updatedLevels = levels.map(level => ({ ...level, isNew: false }))
+    setLevels(updatedLevels)
+    setHasNewLevel(false)
+  }
+
   const handleClose = () => {
     setLevels(
       existingLevels.length > 0 
-        ? existingLevels.map((level, index) => ({ id: index + 1, title: level }))
+        ? existingLevels.map((level, index) => ({ id: index + 1, title: level, isEditing: false, isNew: false }))
         : [
-            { id: 1, title: 'Level 1: Entrepreneurship and You' },
-            { id: 2, title: 'Level 2: Understanding Learn to Start' },
-            { id: 3, title: 'Level 3: The Journey of Entrepreneurship' }
+            { id: 1, title: 'Level 1: Entrepreneurship and You', isEditing: false, isNew: false },
+            { id: 2, title: 'Level 2: Understanding Learn to Start', isEditing: false, isNew: false },
+            { id: 3, title: 'Level 3: The Journey of Entrepreneurship', isEditing: false, isNew: false }
           ]
     )
+    setHasNewLevel(false)
     onHide()
   }
 
@@ -71,40 +130,71 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
           
           <div className="levels-list">
             {levels.map((level) => (
-              <div key={level.id} className="level-item">
-                <input
-                  type="text"
-                  className="form-control level-input"
-                  placeholder="Enter level title..."
-                  value={level.title}
-                  onChange={(e) => handleLevelChange(level.id, e.target.value)}
-                />
-                <button 
-                  className="delete-level-btn"
-                  onClick={() => deleteLevel(level.id)}
-                  type="button"
-                  disabled={levels.length === 1}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
+              <div key={level.id}>
+                <div className={`level-item ${level.isNew ? 'new-level' : ''}`}>
+                  <input
+                    type="text"
+                    className="form-control level-input"
+                    placeholder="Enter level title..."
+                    value={level.title}
+                    onChange={(e) => handleLevelChange(level.id, e.target.value)}
+                    disabled={!level.isEditing}
+                  />
+                  {level.isNew ? (
+                    <button
+                      className="edit-level-btn"
+                      onClick={() => toggleEditing(level.id)}
+                      type="button"
+                    >
+                      <svg class="edit-pencil" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.9696 4.71029L12.9672 3.71266C13.7483 2.93162 15.0146 2.93162 15.7957 3.71266L16.5028 4.41977C17.2838 5.20082 17.2838 6.46715 16.5028 7.2482L15.5052 8.24582M11.9696 4.71029L4.04225 12.6377C3.71017 12.9697 3.50555 13.4081 3.46422 13.8759L3.29065 15.8407C3.23588 16.4607 3.75476 16.9796 4.37477 16.9248L6.33956 16.7512C6.80736 16.7099 7.24571 16.5053 7.57778 16.1732L15.5052 8.24582M11.9696 4.71029L15.5052 8.24582" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    </button>
+                  ) : (
+                    <button 
+                      className="delete-level-btn"
+                      onClick={() => deleteLevel(level.id)}
+                      type="button"
+                      disabled={levels.length === 1}
+                    >
+                      <svg className="trash" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.6663 7.5L15.0038 16.9553C14.8638 17.7522 14.1715 18.3333 13.3624 18.3333H6.63696C5.82783 18.3333 5.13559 17.7522 4.99547 16.9553L3.33301 7.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {!hasNewLevel && (
+                  <div 
+                    className='d-flex justify-content-end gap-2 align-items-center mt-2 mb-3' 
+                    style={{
+                      fontSize: '15px',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => addNewLevelAfter(level.id)}
+                  >
+                    Add New Level Here
+                    <svg className="plus" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                )}
               </div>
             ))}
           </div>
-
-          <button 
-            type="button" 
-            className="add-new-level-btn"
-            onClick={addNewLevel}
-          >
-            <span>Add New Level Here</span>
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
         </div>
 
         <div className="modal-actions">
           <button className="btn-cancel" onClick={handleClose}>
             CANCEL
           </button>
+          {hasNewLevel && (
+            <button className="btn-save" onClick={handleSaveAndContinue}>
+              SAVE AND CONTINUE
+            </button>
+          )}
         </div>
       </Modal.Body>
     </Modal>

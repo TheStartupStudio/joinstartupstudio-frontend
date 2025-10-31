@@ -1,14 +1,15 @@
-.add-level-modal .modal-content {
+/* Reuse most styles from AddLevelModal */
+.assign-tasks-modal .modal-content {
   border-radius: 24px;
   border: none;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.add-level-modal-body {
+.assign-tasks-modal-body {
   padding: 40px;
 }
 
-.add-level-modal .modal-icon {
+.assign-tasks-modal .modal-icon {
   width: 36px;
   height: 36px;
   background: rgba(200, 205, 216, 0.5);
@@ -19,7 +20,7 @@
   margin-bottom: 16px;
 }
 
-.add-level-modal .modal-title {
+.assign-tasks-modal .modal-title {
   color: #231F20;
   font-family: 'Montserrat', sans-serif;
   font-size: 15px;
@@ -29,11 +30,11 @@
   margin-bottom: 32px;
 }
 
-.add-level-modal .form-group {
+.assign-tasks-modal .form-group {
   margin-bottom: 24px;
 }
 
-.add-level-modal .form-label {
+.assign-tasks-modal .form-label {
   color: #231F20;
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
@@ -46,74 +47,75 @@
   display: block;
 }
 
-.add-level-modal .levels-list {
+.assign-tasks-modal .tasks-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 24px;
 }
 
-.add-level-modal .level-item {
+.assign-tasks-modal .task-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  background: var(--colors-white, #ffffff);
-  border-radius: 12px;
-  border-style: solid;
-  border-color: var(--stroke-light-outside, rgba(227, 229, 233, 0.50));
-  border-width: 1px;
 }
 
-.add-level-modal .level-item.new-level {
-  background: var(--colors-white, #ffffff);
-  border-radius: 12px;
-  border-style: solid;
-  border-color: var(--stroke-light-outside, transparent);
-  border-width: 1px;
-  padding: 12px 10px 12px 0px;
-  display: flex;
-  flex-direction: row;
-  gap: 28px;
-  align-items: center;
-  justify-content: flex-start;
-  align-self: stretch;
-  flex-shrink: 0;
-  height: 54px;
-  position: relative;
-  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
-}
-
-.add-level-modal .level-input {
+.assign-tasks-modal .task-title {
   flex: 1;
-  height: 48px;
-  padding: 12px 16px;
-  background: #FFF;
   color: #000;
   font-family: 'Montserrat', sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px;
-  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--colors-white, #ffffff);
+  border-radius: 12px;
+  border-style: solid;
+  border-color: var(--stroke-light-outside, rgba(227, 229, 233, 0.50));
+  border-width: 1px;
+  padding: 12px 16px;
+  height: 54px;
 }
 
-.add-level-modal .level-input:focus {
+.assign-tasks-modal .task-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+}
+
+.assign-tasks-modal .level-select {
+  width: 200px;
+  height: 40px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #E3E5E9;
+  background: #FFF;
+  color: #666;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 54px;
+position: relative;
+box-shadow: var(--dropblur-boxes-box-shadow, 0px 3px 6px 0px rgba(0, 0, 0, 0.25));
+backdrop-filter: var(--dropblur-boxes-backdrop-filter, blur(60px));
+
+}
+
+.assign-tasks-modal .level-select:focus {
   outline: none;
   border-color: #51C7DF;
   box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
 }
 
-.add-level-modal .level-item .form-control {
-  border: none !important;
-}
-
-.add-level-modal .level-input::placeholder {
-  color: #6f6f6f;
-}
-
-.add-level-modal .delete-level-btn {
-  width: 48px;
-  height: 48px;
+.assign-tasks-modal .delete-task-btn {
+  width: 40px;
+  height: 40px;
   border: none;
   background: #FFF;
   display: flex;
@@ -122,55 +124,23 @@
   cursor: pointer;
   transition: all 0.2s ease;
   color: #666;
-}
-
-/* .add-level-modal .delete-level-btn:hover:not(:disabled) {
-  background: #FEF2F2;
-  border-color: #FCA5A5;
-  color: #DC2626;
-} */
-
-.add-level-modal .delete-level-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.add-level-modal .add-new-level-btn {
-  width: 100%;
-  height: 48px;
   border-radius: 8px;
-  border: 1px dashed #E3E5E9;
-  background: #F9FAFB;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #000;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
 }
 
-.add-new-level-btn:hover {
-  background: #F3F4F6;
-  border-color: #51C7DF;
-  color: #51C7DF;
+.assign-tasks-modal .delete-task-btn:hover {
+  background: #FEF2F2;
+  color: #DC2626;
 }
 
-.add-level-modal .modal-actions {
+.assign-tasks-modal .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
   padding-top: 24px;
-  /* border-top: 1px solid #E3E5E9; */
 }
 
-.add-level-modal .btn-cancel {
+.assign-tasks-modal .btn-cancel {
   background: var(--colors-light-grey, #dee1e6);
   border-radius: 8px;
   padding: 6px 12px 6px 12px;
@@ -192,26 +162,14 @@
   position: relative;
   outline: none;
   border: none;
+  cursor: pointer;
 }
 
-.add-level-modal .btn-cancel:hover {
+.assign-tasks-modal .btn-cancel:hover {
   background: #C9CDD4;
 }
 
-.edit-level-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  color: #51C7DF;
-  transition: color 0.2s;
-}
-
-/* .edit-level-btn:hover {
-  color: #3da5ba;
-} */
-
-.btn-save {
+.assign-tasks-modal .btn-save {
   background: var(--colors-blue, #51c7df);
   border-radius: 8px;
   padding: 6px 12px 6px 12px;
@@ -235,23 +193,40 @@
   position: relative;
   outline: none;
   border: none;
+  cursor: pointer;
 }
 
-.btn-save:hover {
+.assign-tasks-modal .btn-save:hover {
   background: #3da5ba;
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .add-level-modal-body {
+  .assign-tasks-modal-body {
     padding: 24px;
   }
 
-  .add-level-modal .modal-title {
+  .assign-tasks-modal .modal-title {
     font-size: 14px;
   }
 
-  .add-level-modal .level-input {
-    font-size: 14px;
+  .assign-tasks-modal .task-item {
+    flex-direction: column;
+    height: auto;
+    padding: 16px;
+  }
+
+  .assign-tasks-modal .task-title {
+    width: 100%;
+    text-align: left;
+  }
+
+  .assign-tasks-modal .task-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .assign-tasks-modal .level-select {
+    flex: 1;
   }
 }

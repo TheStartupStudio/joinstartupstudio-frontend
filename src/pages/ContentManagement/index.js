@@ -12,6 +12,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
+import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 
 const ContentManagement = () => {
   const dispatch = useDispatch()
@@ -21,6 +22,7 @@ const ContentManagement = () => {
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [showAddTaskModal, setShowAddTaskModal] = useState(false)
   const [showAddLevelModal, setShowAddLevelModal] = useState(false)
+  const [showAssignModal, setShowAssignModal] = useState(false)
   const [modalMode, setModalMode] = useState('add')
   const [editingTask, setEditingTask] = useState(null)
   const [tasksData, setTasksData] = useState([])
@@ -246,7 +248,7 @@ const ContentManagement = () => {
   }
 
   const viewUncategorizedTasks = () => {
-    toast.info('View Uncategorized Tasks clicked')
+    setShowAssignModal(true)
     setShowAddDropdown(false)
   }
 
@@ -293,6 +295,11 @@ const ContentManagement = () => {
   const handleSaveLevels = (newLevels) => {
     setLevels(newLevels)
     toast.success('Levels updated successfully!')
+  }
+
+  const handleSaveAssignments = (assignments) => {
+    console.log('Task assignments:', assignments)
+    // Handle saving the task assignments
   }
 
   // Popup handlers
@@ -693,6 +700,17 @@ const ContentManagement = () => {
         onHide={() => setShowAddLevelModal(false)}
         onSave={handleSaveLevels}
         existingLevels={levels}
+      />
+
+      <AssignTasksModal
+        show={showAssignModal}
+        onHide={() => setShowAssignModal(false)}
+        onSave={handleSaveAssignments}
+        tasks={[
+          { id: 1, title: 'Applying the LTS Model' },
+          { id: 2, title: 'Why Entrepreneurship Trumps Your Job' },
+          { id: 3, title: 'When to Seek Financing' }
+        ]}
       />
 
       {/* Publish Task Popup */}
