@@ -10,6 +10,7 @@ import DataTable from '../../components/DataTable'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import axiosInstance from '../../utils/AxiosInstance'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
+import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 
 const ContentManagement = () => {
@@ -19,6 +20,7 @@ const ContentManagement = () => {
   const [showAddDropdown, setShowAddDropdown] = useState(false)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [showAddTaskModal, setShowAddTaskModal] = useState(false)
+  const [showAddLevelModal, setShowAddLevelModal] = useState(false)
   const [modalMode, setModalMode] = useState('add')
   const [editingTask, setEditingTask] = useState(null)
   const [tasksData, setTasksData] = useState([])
@@ -34,11 +36,11 @@ const ContentManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const levels = [
+  const [levels, setLevels] = useState([
     'Level 1: Entrepreneurship and You',
     'Level 2: Understanding Learn to Start',
     'Level 3: The Journey of Entrepreneurship'
-  ]
+  ])
 
   // Initial dummy data - replace with API call
   useEffect(() => {
@@ -232,7 +234,7 @@ const ContentManagement = () => {
   }
 
   const addNewLevel = () => {
-    toast.info('Add New Level clicked')
+    setShowAddLevelModal(true)
     setShowAddDropdown(false)
   }
 
@@ -286,6 +288,11 @@ const ContentManagement = () => {
       toast.success('Task created successfully!')
     }
     // Add your API call here to save/update the task
+  }
+
+  const handleSaveLevels = (newLevels) => {
+    setLevels(newLevels)
+    toast.success('Levels updated successfully!')
   }
 
   // Popup handlers
@@ -542,8 +549,8 @@ const ContentManagement = () => {
                   title="ADD NEW LEVEL"
                   icon={faPlus}
                   onClick={() => {
-                    setShowAddDropdown(!showAddDropdown)
-                    setShowBulkDropdown(false)
+                    // ✅ FIX: Call addNewLevel instead of just toggling dropdown
+                    addNewLevel()
                   }}
                 />
               </div>
@@ -679,6 +686,13 @@ const ContentManagement = () => {
         levels={levels}
         mode={modalMode}
         taskData={editingTask}
+      />
+
+      <AddLevelModal
+        show={showAddLevelModal}
+        onHide={() => setShowAddLevelModal(false)}
+        onSave={handleSaveLevels}
+        existingLevels={levels}
       />
 
       {/* Publish Task Popup */}
