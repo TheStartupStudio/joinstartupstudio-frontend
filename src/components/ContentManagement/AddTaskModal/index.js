@@ -6,7 +6,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import './index.css'
 
-const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null }) => {
+const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null, source = 'content' }) => {
   const [taskTitle, setTaskTitle] = useState('')
   const [selectedLevel, setSelectedLevel] = useState('')
   const [activeTab, setActiveTab] = useState('video')
@@ -15,8 +15,11 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const [videoPreview, setVideoPreview] = useState(null)
   const [thumbnailPreview, setThumbnailPreview] = useState(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [information, setInformation] = useState('')
   const [reflectionItems, setReflectionItems] = useState([
-    { id: 1, question: '', instructions: '' }
+    { id: 1, question: '', instructions: '' },
+    { id: 2, question: '', instructions: '' },
+    { id: 3, question: '', instructions: '' }
   ])
   const [currentMode, setCurrentMode] = useState(mode)
   const dropdownRef = useRef(null)
@@ -24,6 +27,8 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const isViewMode = currentMode === 'view'
   const isEditMode = currentMode === 'edit'
   const isAddMode = currentMode === 'add'
+  const isMasterClass = source === 'masterclass'
+  const isLeadership = source === 'leadership'
 
   // Quill toolbar configuration based on mode
   const quillModules = {
@@ -56,9 +61,16 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       setTaskTitle(taskData.title || '')
       setSelectedLevel(taskData.level || '')
       setActiveTab(taskData.contentType || 'video')
+      setInformation(taskData.information || '')
       
       if (taskData.reflectionItems && taskData.reflectionItems.length > 0) {
         setReflectionItems(taskData.reflectionItems)
+      } else if (isLeadership && !taskData.reflectionItems) {
+        setReflectionItems([
+          { id: 1, question: '', instructions: '' },
+          { id: 2, question: '', instructions: '' },
+          { id: 3, question: '', instructions: '' }
+        ])
       }
       
       if (taskData.videoUrl) {
@@ -68,7 +80,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         setThumbnailPreview(taskData.thumbnailUrl)
       }
     }
-  }, [currentMode, taskData, isEditMode, isViewMode])
+  }, [currentMode, taskData, isEditMode, isViewMode, isLeadership])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -92,6 +104,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       thumbnail: thumbnailFile,
       videoUrl: videoPreview,
       thumbnailUrl: thumbnailPreview,
+      information: information,
       reflectionItems: reflectionItems
     }
     onSave(data)
@@ -106,7 +119,16 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     setThumbnailFile(null)
     setVideoPreview(null)
     setThumbnailPreview(null)
-    setReflectionItems([{ id: 1, question: '', instructions: '' }])
+    setInformation('')
+    setReflectionItems(
+      isLeadership 
+        ? [
+            { id: 1, question: '', instructions: '' },
+            { id: 2, question: '', instructions: '' },
+            { id: 3, question: '', instructions: '' }
+          ]
+        : [{ id: 1, question: '', instructions: '' }]
+    )
     setIsDropdownOpen(false)
     setCurrentMode(mode)
     onHide()
@@ -182,13 +204,14 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const deleteReflectionItem = (id) => {
     if (isViewMode) return
-    if (reflectionItems.length > 1) {
+    if (isLeadership && reflectionItems.length > 1) {
+      setReflectionItems(reflectionItems.filter(item => item.id !== id))
+    } else if (!isLeadership && reflectionItems.length > 1) {
       setReflectionItems(reflectionItems.filter(item => item.id !== id))
     }
   }
 
   const handleTabChange = (tab) => {
-    // Allow tab changes in view mode for navigation
     setActiveTab(tab)
   }
 
@@ -209,7 +232,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         </div>
         
         <h5 className="modal-title">
-          {isViewMode ? 'View Task' : isEditMode ? 'Edit Task' : 'Add New Task'}
+          {isViewMode ? (isMasterClass ? 'View Master Class' : 'View Task') : isEditMode ? (isMasterClass ? 'Edit Master Class' : 'Edit Task') : (isMasterClass ? 'Add New Master Class' : 'Add New Task')}
         </h5>
 
         {isViewMode && (
@@ -217,7 +240,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             <div 
               onClick={handleSwitchToEditMode}
               style={{ cursor: 'pointer' }}
-              title="Edit task"
+              title={isMasterClass ? "Edit master class" : "Edit task"}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                 <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -237,12 +260,12 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         )}
 
         <div className="form-group">
-          <label className="form-label">TASK TITLE:</label>
+          <label className="form-label">{isMasterClass ? 'MASTER CLASS TITLE:' : 'TASK TITLE:'}</label>
           <div className="input-wrapper">
             <input
               type="text"
               className="form-control task-title-input"
-              placeholder="Add task title here..."
+              placeholder={isMasterClass ? "Add master class title here..." : "Add task title here..."}
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               readOnly={isViewMode}
@@ -254,7 +277,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         </div>
 
         <div className="form-group">
-          <label className="form-label">CONNECTED AIE LEVEL</label>
+          <label className="form-label">{isMasterClass ? 'CONNECTED MASTER CLASS LEVEL' : 'CONNECTED AIE LEVEL'}</label>
           <div className="custom-level-dropdown" ref={dropdownRef}>
             <div 
               className="level-dropdown-trigger"
@@ -262,7 +285,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
               style={isViewMode ? { cursor: 'not-allowed', opacity: 0.7 } : { cursor: 'pointer' }}
             >
               <span className={selectedLevel ? 'selected-text' : 'placeholder-text'}>
-                {selectedLevel || 'Select AIE level'}
+                {selectedLevel || (isMasterClass ? 'Select master class level' : 'Select AIE level')}
               </span>
               {!isViewMode && (
                 <FontAwesomeIcon 
@@ -288,165 +311,221 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">CONTENT:</label>
-          <div className="content-tabs">
-            <button
-              className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
-              onClick={() => handleTabChange('video')}
-              style={{ cursor: 'pointer' }}
-            >
-              Video
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'reflection' ? 'active' : ''}`}
-              onClick={() => handleTabChange('reflection')}
-              style={{ cursor: 'pointer' }}
-            >
-              Reflection
-            </button>
-          </div>
-        </div>
-
-        {activeTab === 'video' ? (
-          <div className="upload-section">
-            <div className="upload-box">
-              <div className="upload-header">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <g clipPath="url(#clip0_3699_20014)">
-                    <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_3699_20014">
-                      <rect width="20" height="20" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-                <span>Upload Video</span>
-              </div>
-              
-              {videoPreview ? (
-                <div className="upload-preview">
-                  {!isViewMode && (
-                    <button 
-                      className="delete-preview-btn"
-                      onClick={handleDeleteVideo}
-                      type="button"
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  )}
-                  <video 
-                    src={videoPreview} 
-                    controls 
-                    className="video-preview"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              ) : !isViewMode && (
-                <>
-                  <input
-                    type="file"
-                    id="video-upload"
-                    accept="video/*"
-                    onChange={handleVideoUpload}
-                    style={{ display: 'none' }}
-                  />
-                  <label htmlFor="video-upload" className="upload-area">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <g clipPath="url(#clip0_3778_12543)">
-                        <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_3778_12543">
-                          <rect width="20" height="20" fill="white"/>
-                        </clipPath>
-                      </defs>
-                    </svg>
-                    <div className="d-flex flex-column text-center">
-                      <p className="upload-text">Click to upload</p>
-                      <p className="upload-subtext">or drag and drop</p>
-                    </div>
-                    <p className="upload-info">
-                      Only mp4, avi, or webm file format<br />
-                      supported (max. 50Mb)
-                    </p>
-                  </label>
-                </>
-              )}
-            </div>
-
-            <div className="upload-box">
-              <div className="upload-header">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <g clipPath="url(#clip0_3699_20014)">
-                    <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_3699_20014">
-                      <rect width="20" height="20" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
-                <span>Upload Thumbnail</span>
-              </div>
-              
-              {thumbnailPreview ? (
-                <div className="upload-preview">
-                  {!isViewMode && (
-                    <button 
-                      className="delete-preview-btn"
-                      onClick={handleDeleteThumbnail}
-                      type="button"
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  )}
-                  <img 
-                    src={thumbnailPreview} 
-                    alt="Thumbnail preview"
-                    className="thumbnail-preview"
-                  />
-                </div>
-              ) : !isViewMode && (
-                <>
-                  <input
-                    type="file"
-                    id="thumbnail-upload"
-                    accept="image/*"
-                    onChange={handleThumbnailUpload}
-                    style={{ display: 'none' }}
-                  />
-                  <label htmlFor="thumbnail-upload" className="upload-area">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <g clipPath="url(#clip0_3778_12543)">
-                        <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_3778_12543">
-                          <rect width="20" height="20" fill="white"/>
-                        </clipPath>
-                      </defs>
-                    </svg>
-                    <div className="d-flex flex-column text-center">
-                      <p className="upload-text">Click to upload</p>
-                      <p className="upload-subtext">or drag and drop</p>
-                    </div>
-                    <p className="upload-info">
-                      Only png, jpg, or jpeg file format<br />
-                      supported (max. 2Mb)
-                    </p>
-                  </label>
-                </>
-              )}
+        {!isMasterClass && !isLeadership && (
+          <div className="form-group">
+            <label className="form-label">CONTENT:</label>
+            <div className="content-tabs">
+              <button
+                className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
+                onClick={() => handleTabChange('video')}
+                style={{ cursor: 'pointer' }}
+              >
+                Video
+              </button>
+              <button
+                className={`tab-btn ${activeTab === 'reflection' ? 'active' : ''}`}
+                onClick={() => handleTabChange('reflection')}
+                style={{ cursor: 'pointer' }}
+              >
+                Reflection
+              </button>
             </div>
           </div>
+        )}
+
+        {isLeadership && (
+          <div className="form-group">
+            <label className="form-label">CONTENT:</label>
+            <div className="content-tabs">
+              <button
+                className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
+                onClick={() => handleTabChange('video')}
+                style={{ cursor: 'pointer' }}
+              >
+                Video
+              </button>
+              <button
+                className={`tab-btn ${activeTab === 'reflection' ? 'active' : ''}`}
+                onClick={() => handleTabChange('reflection')}
+                style={{ cursor: 'pointer' }}
+              >
+                Reflection
+              </button>
+            </div>
+          </div>
+        )}
+
+        {(isMasterClass || activeTab === 'video') ? (
+          <>
+            <div className="upload-section">
+              <div className="upload-box">
+                <div className="upload-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <g clipPath="url(#clip0_3699_20014)">
+                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_3699_20014">
+                        <rect width="20" height="20" fill="white"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <span>Upload Video</span>
+                </div>
+                
+                {videoPreview ? (
+                  <div className="upload-preview">
+                    {!isViewMode && (
+                      <button 
+                        className="delete-preview-btn"
+                        onClick={handleDeleteVideo}
+                        type="button"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    )}
+                    <video 
+                      src={videoPreview} 
+                      controls 
+                      className="video-preview"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                ) : !isViewMode && (
+                  <>
+                    <input
+                      type="file"
+                      id="video-upload"
+                      accept="video/*"
+                      onChange={handleVideoUpload}
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="video-upload" className="upload-area">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <g clipPath="url(#clip0_3778_12543)">
+                          <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_3778_12543">
+                            <rect width="20" height="20" fill="white"/>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <div className="d-flex flex-column text-center">
+                        <p className="upload-text">Click to upload</p>
+                        <p className="upload-subtext">or drag and drop</p>
+                      </div>
+                      <p className="upload-info">
+                        Only mp4, avi, or webm file format<br />
+                        supported (max. 50Mb)
+                      </p>
+                    </label>
+                  </>
+                )}
+              </div>
+
+              <div className="upload-box">
+                <div className="upload-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <g clipPath="url(#clip0_3699_20014)">
+                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_3699_20014">
+                        <rect width="20" height="20" fill="white"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <span>Upload Thumbnail</span>
+                </div>
+                
+                {thumbnailPreview ? (
+                  <div className="upload-preview">
+                    {!isViewMode && (
+                      <button 
+                        className="delete-preview-btn"
+                        onClick={handleDeleteThumbnail}
+                        type="button"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    )}
+                    <img 
+                      src={thumbnailPreview} 
+                      alt="Thumbnail preview"
+                      className="thumbnail-preview"
+                    />
+                  </div>
+                ) : !isViewMode && (
+                  <>
+                    <input
+                      type="file"
+                      id="thumbnail-upload"
+                      accept="image/*"
+                      onChange={handleThumbnailUpload}
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="thumbnail-upload" className="upload-area">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <g clipPath="url(#clip0_3778_12543)">
+                          <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_3778_12543">
+                            <rect width="20" height="20" fill="white"/>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <div className="d-flex flex-column text-center">
+                        <p className="upload-text">Click to upload</p>
+                        <p className="upload-subtext">or drag and drop</p>
+                      </div>
+                      <p className="upload-info">
+                        Only png, jpg, or jpeg file format<br />
+                        supported (max. 2Mb)
+                      </p>
+                    </label>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {isLeadership && (
+              <div className="reflection-section" style={{ marginTop: '24px' }}>
+                <div className="reflection-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <g clipPath="url(#clip0_3699_20014)">
+                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_3699_20014">
+                        <rect width="20" height="20" fill="white"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <span>Information</span>
+                </div>
+                <div className="reflection-editor-area">
+                  <ReactQuill
+                    theme="snow"
+                    value={information}
+                    onChange={(value) => setInformation(value)}
+                    modules={quillModules}
+                    formats={quillFormats}
+                    placeholder="Add information..."
+                    className="reflection-quill-editor"
+                    readOnly={isViewMode}
+                  />
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="reflection-content">
-            {reflectionItems.map((item) => (
+            {reflectionItems.map((item, index) => (
               <React.Fragment key={item.id}>
                 <div className="reflection-section">
                   <div className="reflection-header">
@@ -460,7 +539,16 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                         </clipPath>
                       </defs>
                     </svg>
-                    <span>Question</span>
+                    <span>{isLeadership ? `Reflection Question ${index + 1}` : 'Question'}</span>
+                    {isLeadership && !isViewMode && reflectionItems.length > 1 && (
+                      <button 
+                        className="delete-reflection-btn"
+                        onClick={() => deleteReflectionItem(item.id)}
+                        type="button"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    )}
                   </div>
                   <div className="reflection-editor-area">
                     <ReactQuill
@@ -469,44 +557,46 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                       onChange={(value) => handleQuestionChange(item.id, value)}
                       modules={quillModules}
                       formats={quillFormats}
-                      placeholder="Add question..."
+                      placeholder={isLeadership ? "Add reflection question..." : "Add question..."}
                       className="reflection-quill-editor"
                       readOnly={isViewMode}
                     />
                   </div>
                 </div>
 
-                <div className="reflection-section">
-                  <div className="reflection-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <g clipPath="url(#clip0_3699_20014)">
-                        <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_3699_20014">
-                          <rect width="20" height="20" fill="white"/>
-                        </clipPath>
-                      </defs>
-                    </svg>
-                    <span>Instructions</span>
+                {!isLeadership && (
+                  <div className="reflection-section">
+                    <div className="reflection-header">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <g clipPath="url(#clip0_3699_20014)">
+                          <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_3699_20014">
+                            <rect width="20" height="20" fill="white"/>
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <span>Instructions</span>
+                    </div>
+                    <div className="reflection-editor-area">
+                      <ReactQuill
+                        theme="snow"
+                        value={item.instructions}
+                        onChange={(value) => handleInstructionsChange(item.id, value)}
+                        modules={quillModules}
+                        formats={quillFormats}
+                        placeholder="Add overview items..."
+                        className="reflection-quill-editor"
+                        readOnly={isViewMode}
+                      />
+                    </div>
                   </div>
-                  <div className="reflection-editor-area">
-                    <ReactQuill
-                      theme="snow"
-                      value={item.instructions}
-                      onChange={(value) => handleInstructionsChange(item.id, value)}
-                      modules={quillModules}
-                      formats={quillFormats}
-                      placeholder="Add overview items..."
-                      className="reflection-quill-editor"
-                      readOnly={isViewMode}
-                    />
-                  </div>
-                </div>
+                )}
               </React.Fragment>
             ))}
 
-            {!isViewMode && (
+            {!isViewMode && !isLeadership && (
               <div className="reflection-actions">
                 {reflectionItems.length > 1 && (
                   <div className="delete-action" onClick={() => deleteReflectionItem(reflectionItems[reflectionItems.length - 1].id)}>
@@ -538,7 +628,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                   <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
                   <path d="M10 14.1743L10.0083 14.1651" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span>Delete Task</span>
+                <span>{isMasterClass ? 'Delete Master Class' : 'Delete Task'}</span>
               </div>
             )}
 
@@ -552,16 +642,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             </div>
           </div>
         )}
-
-        {/* {isViewMode && (
-          <div className="modal-actions">
-            <div className="d-flex gap-2" style={{ marginLeft: 'auto' }}>
-              <button className="btn-cancel" onClick={handleClose}>
-                CLOSE
-              </button>
-            </div>
-          </div>
-        )} */}
       </Modal.Body>
     </Modal>
   )

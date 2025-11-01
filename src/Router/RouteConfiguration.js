@@ -197,6 +197,14 @@ const ContentManagement = React.lazy(() =>
   import('../pages/ContentManagement')
 )
 
+const MasterClassManagement = React.lazy(() =>
+  import('../pages/MasterClassManagement')
+)
+
+const LeadershipJournalManagement = React.lazy(() =>
+  import('../pages/LeadershipJournalManagement')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   {
@@ -213,6 +221,17 @@ export const adminRoutes = [
     path: '/content-management',
     component: ContentManagement,
     breadcrumb: 'Content Management'
+  },
+  {
+    path: '/master-class-management',
+    component: MasterClassManagement,
+    breadcrumb: 'Master Class Management'
+  },
+
+  {
+    path: '/leadership-journal-management',
+    component: LeadershipJournalManagement,
+    breadcrumb: 'Leadership Journal Management'
   },
   {
     path: '/my-school/:page?',
