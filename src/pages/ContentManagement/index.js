@@ -517,7 +517,20 @@ const ContentManagement = () => {
       </div>
       
       <div className="content-management-container position-relative">
-        {/* <img src={blueManagerBG} alt="blue-manager-bg" className='position-absolute user-select-none' style={{right: '50%', translate: '50% 0'}} /> */}
+        <img src={blueManagerBG} className='position-absolute' 
+        style={{
+          top: 0, 
+          left: '50%', 
+          transform: 'translateX(-50%)',
+          zIndex: 0,
+          pointerEvents: 'none',
+          // opacity: 0.1,
+          width: '100dvw',
+          height: '100dvh'
+        }} 
+        alt="Decorative background"
+        aria-hidden="true"
+      />
         <div className="header-tabs d-flex justify-content-between gap-3">
           {levels.map((level, index) => (
             <button

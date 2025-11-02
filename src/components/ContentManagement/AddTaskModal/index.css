@@ -239,6 +239,21 @@ height: unset;
   margin: 0;
 }
 
+.add-task-content-management-modal .delete-reflection-btn {
+  border: none;
+  outline: none;
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  color: #000000;
+  text-align: left;
+  font-family: var(--text-15-medium-regular-font-family, 'Montserrat-Medium', sans-serif);
+  font-size: var(--text-15-medium-regular-font-size, 15px);
+  font-weight: var(--text-15-medium-regular-font-weight, 500);
+  position: relative;
+  background-color: transparent;
+}
+
 .add-task-content-management-modal .upload-subtext {
   font-family: 'Montserrat', sans-serif;
 

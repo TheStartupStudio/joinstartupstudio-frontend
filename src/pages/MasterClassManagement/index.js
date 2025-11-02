@@ -11,6 +11,7 @@ import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
+import pinkMaster from '../../assets/images/academy-icons/ping-master-class.png'
 
 const MasterClassManagement = () => {
   const dispatch = useDispatch()
@@ -28,7 +29,6 @@ const MasterClassManagement = () => {
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
-  // Popup states
   const [showPublishPopup, setShowPublishPopup] = useState(false)
   const [showUnpublishPopup, setShowUnpublishPopup] = useState(false)
   const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false)
@@ -43,7 +43,6 @@ const MasterClassManagement = () => {
     'Live Q&A Episodes'
   ])
 
-  // Initial dummy data - replace with API call
   useEffect(() => {
     setTasksData([
       {
@@ -94,6 +93,27 @@ const MasterClassManagement = () => {
         status: 'unpublished',
         hasContent: true,
         order: 7
+      },
+      {
+        id: 8,
+        name: 'Encouragement Video',
+        status: 'unpublished',
+        hasContent: true,
+        order: 8
+      },
+      {
+        id: 9,
+        name: 'Encouragement Video',
+        status: 'unpublished',
+        hasContent: true,
+        order: 9
+      },
+      {
+        id: 10,
+        name: 'Encouragement Video',
+        status: 'unpublished',
+        hasContent: true,
+        order: 10
       }
     ])
   }, [])
@@ -457,6 +477,22 @@ const MasterClassManagement = () => {
       </div>
       
       <div className="content-management-container position-relative">
+        <img 
+        src={pinkMaster} 
+        className='position-absolute' 
+        style={{
+          top: 0, 
+          left: '50%', 
+          transform: 'translateX(-50%)',
+          zIndex: 0,
+          pointerEvents: 'none',
+          // opacity: 0.1,
+          width: '100dvw',
+          height: '100dvh'
+        }} 
+        alt="Decorative background"
+        aria-hidden="true"
+      />
         <div className="header-tabs d-flex justify-content-between gap-3">
           {levels.map((level, index) => (
             <button

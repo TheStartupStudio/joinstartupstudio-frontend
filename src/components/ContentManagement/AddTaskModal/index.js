@@ -540,15 +540,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                       </defs>
                     </svg>
                     <span>{isLeadership ? `Reflection Question ${index + 1}` : 'Question'}</span>
-                    {isLeadership && !isViewMode && reflectionItems.length > 1 && (
-                      <button 
-                        className="delete-reflection-btn"
-                        onClick={() => deleteReflectionItem(item.id)}
-                        type="button"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    )}
                   </div>
                   <div className="reflection-editor-area">
                     <ReactQuill
@@ -562,6 +553,32 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                       readOnly={isViewMode}
                     />
                   </div>
+
+                    {isLeadership && !isViewMode && (
+                      <div className="d-flex align-item-center justify-content-between">
+                      <button 
+                        className="delete-reflection-btn"
+                        onClick={() => deleteReflectionItem(item.id)}
+                        type="button"
+                      >
+                        <svg class="warning-triangle" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                            <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                            <path d="M10 14.1743L10.0083 14.1651" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+
+                        Delete Item(s)
+                      </button>
+
+                      <button onClick={addNewReflectionItem} className="delete-reflection-btn">
+                        Add New Reflection Question
+
+                        <svg class="plus" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </button>
+                    </div>
+                    )}
                 </div>
 
                 {!isLeadership && (

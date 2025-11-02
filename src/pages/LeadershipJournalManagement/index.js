@@ -11,6 +11,7 @@ import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
+import greenLeader from '../../assets/images/academy-icons/green-leadership-journal.png'
 
 const LeadershipJournalManagement = () => {
   const dispatch = useDispatch()
@@ -442,6 +443,22 @@ const LeadershipJournalManagement = () => {
       </div>
       
       <div className="content-management-container position-relative">
+         <img 
+        src={greenLeader} 
+        className='position-absolute' 
+        style={{
+          top: 0, 
+          left: '50%', 
+          transform: 'translateX(-50%)',
+          zIndex: 0,
+          pointerEvents: 'none',
+          // opacity: 0.1,
+          width: '100dvw',
+          height: '100dvh'
+        }} 
+        alt="Decorative background"
+        aria-hidden="true"
+      />
         <div className="header-tabs d-flex justify-content-between gap-3">
           {levels.map((level, index) => (
             <button
@@ -514,7 +531,7 @@ const LeadershipJournalManagement = () => {
                   </svg>
                 </div>
 
-                {showBulkDropdown && (
+                                {showBulkDropdown && (
                   <div 
                     className="dropdown-menu"
                     style={{
@@ -525,7 +542,7 @@ const LeadershipJournalManagement = () => {
                       border: '1px solid #e5e7eb',
                       borderRadius: '8px',
                       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                      zIndex: 9999,
+                      zIndex: 99999,
                       marginTop: '4px',
                       minWidth: '200px',
                       display: 'block'

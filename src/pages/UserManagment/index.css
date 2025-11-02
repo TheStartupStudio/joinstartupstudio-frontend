@@ -232,6 +232,12 @@ padding: 4px;
   top: 5px;
 }
 
+.user-management-container .table-container{
+  /* background-color: white; */
+  position: relative;
+    z-index: 0;
+}
+
 .organization-details {
   display: flex;
   flex-direction: column;
