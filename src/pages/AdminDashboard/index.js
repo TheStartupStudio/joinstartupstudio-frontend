@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +11,7 @@ import {
 } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
 import LtsContainerWrapper from '../../ui/LtsContainerWrapper'
-import IntMessages from '../../utils/IntlMessages';
+import IntMessages from '../../utils/IntlMessages'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import graphIcon from '../../assets/images/graph-up.png'
 import dollarIcon from '../../assets/images/dollar.png'
@@ -19,7 +19,11 @@ import creaditCardIcon from '../../assets/images/credit-cards.png'
 import groupIcon from '../../assets/images/group.png'
 import totalEntrolledIcon from '../../assets/images/Total Enrolled Learners Icon.png'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import ViewOrganizationModal from '../../components/UserManagment/ViewOrganizationModal/index'
 import './index.css'
+import organizationLogo1 from '../../assets/images/academy-icons/Nord Anglia Schools.png'
+import organizationLogo2 from '../../assets/images/academy-icons/Nord Anglia Schools-horizontal.png'
+
 
 ChartJS.register(
   CategoryScale,
@@ -34,6 +38,12 @@ const AdminDashboard = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [showOrganizationModal, setShowOrganizationModal] = useState(false)
+
+  // ✅ Get user role from Redux
+  const { user } = useSelector((state) => state.user.user)
+  const userRole = user?.role_id || localStorage.getItem('role')
+  const isInstructor = userRole === 2 || userRole === 'instructor' || userRole === 'trial'
 
   useEffect(() => {
     const handleResize = () => {
@@ -47,13 +57,14 @@ const AdminDashboard = () => {
 
 
   const formatRevenue = (amount) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount)
-}
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
+
   const [dashboardData, setDashboardData] = useState({
     paidUsers: 764,
     totalRevenue: 310982,
@@ -66,6 +77,21 @@ const AdminDashboard = () => {
     completedL3: 75,
     totalCompletedAIE: 298
   })
+
+  // Mock organization data
+  const organizationData = {
+    name: 'Nord Anglia Schools',
+    address: '2108 S Conroy-Windermere Rd, Orlando, FL 34708',
+    adminName: 'Angela Nguyen',
+    adminEmail: 'anguyen@ordanglia.com',
+    domain: 'nordanglia.aie.com',
+    pricing: [
+      { amount: 15, frequency: 'Per month' },
+      { amount: 150, frequency: 'Per year' }
+    ],
+    logo1: organizationLogo1, 
+    logo2: organizationLogo2
+  }
 
   const genderYearData = [
     { year: '2022', female: 80, male: 124, nonBinary: 5, other: 0 },
@@ -366,6 +392,19 @@ const AdminDashboard = () => {
           <div className="container-title">
             <img src={graphIcon} alt="Core Info Icon" className="core-info-icon" />
             <p>Core Information</p>
+            {/* ✅ View Organization Details button - only visible for instructors */}
+            {isInstructor && (
+              <button 
+                className="view-org-details-btn"
+                onClick={() => setShowOrganizationModal(true)}
+              >
+                View Organization Details
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M4.99984 10H15.4165M15.4165 10L10.4165 5M15.4165 10L10.4165 15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            )}
           </div>
           <div className="d-flex gap-4 flex-wrap">
             <div className="info-box">
@@ -520,6 +559,13 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* ✅ View Organization Modal */}
+      <ViewOrganizationModal
+        show={showOrganizationModal}
+        onHide={() => setShowOrganizationModal(false)}
+        organizationData={organizationData}
+      />
     </div>
   )
 }

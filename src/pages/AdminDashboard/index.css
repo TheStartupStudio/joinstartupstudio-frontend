@@ -17,6 +17,21 @@
     gap: 24px;
 }
 
+.admin-dashboard-container .view-org-details-btn {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: #000;
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+border: none;
+margin-left: auto;
+background-color: transparent;
+}
+
 .admin-info-container .container-title {
     display: flex;
     align-items: center;
