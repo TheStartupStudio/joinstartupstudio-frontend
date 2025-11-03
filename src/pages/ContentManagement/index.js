@@ -1,4 +1,4 @@
-import './index.css'
+import './ContentManagement.css'
 import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -475,7 +475,7 @@ const ContentManagement = () => {
   }, [])
 
   return (
-    <div>
+    <div className="content-management">
       <div>
         <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
           <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>

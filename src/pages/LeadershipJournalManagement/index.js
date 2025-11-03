@@ -80,6 +80,41 @@ const LeadershipJournalManagement = () => {
         status: 'unpublished',
         hasContent: true,
         order: 5
+      },
+      {
+        id: 6,
+        name: 'Leadership Challenges',
+        status: 'unpublished',
+        hasContent: true,
+        order: 6
+      },
+      {
+        id: 7,
+        name: 'Leadership Challenges',
+        status: 'unpublished',
+        hasContent: true,
+        order: 7
+      },
+      {
+        id: 8,
+        name: 'Leadership Challenges',
+        status: 'unpublished',
+        hasContent: true,
+        order: 8
+      },
+      {
+        id: 9,
+        name: 'Leadership Challenges',
+        status: 'unpublished',
+        hasContent: true,
+        order: 9
+      },
+      {
+        id: 10,
+        name: 'Leadership Challenges',
+        status: 'unpublished',
+        hasContent: true,
+        order: 10
       }
     ])
   }, [])
@@ -401,7 +436,7 @@ const LeadershipJournalManagement = () => {
   }, [])
 
   return (
-    <div>
+    <div className="leadership-journal-management">
       <div>
         <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
           <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
