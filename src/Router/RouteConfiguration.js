@@ -475,7 +475,17 @@ export const instructorRoutes = [
     path: '/financial-literacy/',
     component: TestJournal,
     props: { category: 'financial-literacy' }
-  }
+  },
+  {
+    path: '/admin-dashboard',
+    component: AdminDashboardPage,
+    breadcrumb: 'Admin Dashboard'
+  },
+  {
+    path: '/user-managment',
+    component: UserManagmentPage,
+    breadcrumb: 'User Managment'
+  },
 ]
 
 export const studentRoutes = [

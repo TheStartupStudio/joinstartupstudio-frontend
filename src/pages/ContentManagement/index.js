@@ -30,7 +30,6 @@ const ContentManagement = () => {
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
-  // Popup states
   const [showPublishPopup, setShowPublishPopup] = useState(false)
   const [showUnpublishPopup, setShowUnpublishPopup] = useState(false)
   const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false)
@@ -44,7 +43,6 @@ const ContentManagement = () => {
     'Level 3: The Journey of Entrepreneurship'
   ])
 
-  // Initial dummy data - replace with API call
   useEffect(() => {
     setTasksData([
       {
@@ -165,7 +163,6 @@ const ContentManagement = () => {
         setShowAddTaskModal(true)
         break
       case 'edit':
-        // Prepare task data for edit mode
         const taskDataForEdit = {
           id: item.id,
           title: item.name,
@@ -203,7 +200,6 @@ const ContentManagement = () => {
     setLoading(true)
     
     try {
-      // Update local state immediately for better UX
       const updatedData = newOrderedData.map((item, index) => ({
         ...item,
         order: index + 1
@@ -211,25 +207,15 @@ const ContentManagement = () => {
       
       setTasksData(updatedData)
 
-      // Prepare data for API - send only IDs in new order
       const reorderedTasks = updatedData.map(task => ({
         id: task.id
       }))
-
-      // Make API call to save new order
-      // Replace '/content-management/reorder' with your actual endpoint
-    //   await axiosInstance.patch('/content-management/reorder', {
-    //     tasks: reorderedTasks,
-    //     level: activeLevel
-    //   })
 
       toast.success('Task order updated successfully!')
     } catch (error) {
       console.error('Error reordering tasks:', error)
       toast.success('Task order updated successfully!')
       
-      // Optionally refresh data from server on error
-      // fetchTasks()
     } finally {
       setLoading(false)
     }
@@ -255,20 +241,17 @@ const ContentManagement = () => {
   const handleBulkPublish = () => {
     toast.success('Bulk publish action triggered')
     setShowBulkDropdown(false)
-    // Add your bulk publish logic here
   }
 
   const handleBulkUnpublish = () => {
     toast.success('Bulk unpublish action triggered')
     setShowBulkDropdown(false)
-    // Add your bulk unpublish logic here
   }
 
   const handleSaveTask = (taskData) => {
     console.log('Task data:', taskData)
     
     if (modalMode === 'edit') {
-      // Update existing task
       setTasksData(prevTasks => 
         prevTasks.map(task => 
           task.id === editingTask.id 
@@ -278,7 +261,6 @@ const ContentManagement = () => {
       )
       toast.success('Task updated successfully!')
     } else {
-      // Add new task
       const newTask = {
         id: tasksData.length + 1,
         name: taskData.title,
@@ -289,7 +271,6 @@ const ContentManagement = () => {
       setTasksData(prevTasks => [...prevTasks, newTask])
       toast.success('Task created successfully!')
     }
-    // Add your API call here to save/update the task
   }
 
   const handleSaveLevels = (newLevels) => {
@@ -299,10 +280,8 @@ const ContentManagement = () => {
 
   const handleSaveAssignments = (assignments) => {
     console.log('Task assignments:', assignments)
-    // Handle saving the task assignments
   }
 
-  // Popup handlers
   const handlePublishCancel = () => {
     setShowPublishPopup(false)
     setSelectedTask(null)
@@ -328,7 +307,6 @@ const ContentManagement = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
-      // Update task status in local state
       setTasksData(prevTasks =>
         prevTasks.map(task =>
           task.id === selectedTask.id
@@ -352,7 +330,6 @@ const ContentManagement = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
-      // Update task status in local state
       setTasksData(prevTasks =>
         prevTasks.map(task =>
           task.id === selectedTask.id
@@ -376,7 +353,6 @@ const ContentManagement = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
-      // Remove task from local state
       setTasksData(prevTasks =>
         prevTasks.filter(task => task.id !== selectedTask.id)
       )
@@ -569,7 +545,6 @@ const ContentManagement = () => {
                   title="ADD NEW LEVEL"
                   icon={faPlus}
                   onClick={() => {
-                    // ✅ FIX: Call addNewLevel instead of just toggling dropdown
                     addNewLevel()
                   }}
                 />
@@ -726,7 +701,6 @@ const ContentManagement = () => {
         ]}
       />
 
-      {/* Publish Task Popup */}
       <UserManagementPopup
         show={showPublishPopup}
         onHide={handlePublishCancel}
@@ -738,7 +712,6 @@ const ContentManagement = () => {
         loading={loading}
       />
 
-      {/* Unpublish Task Popup */}
       <UserManagementPopup
         show={showUnpublishPopup}
         onHide={handleUnpublishCancel}
@@ -750,7 +723,6 @@ const ContentManagement = () => {
         loading={loading}
       />
 
-      {/* Delete Task Popup */}
       <UserManagementPopup
         show={showDeleteTaskPopup}
         onHide={handleDeleteTaskCancel}
@@ -762,7 +734,6 @@ const ContentManagement = () => {
         loading={loading}
       />
 
-      {/* Delete Level Popup */}
       <UserManagementPopup
         show={showDeleteLevelPopup}
         onHide={handleDeleteLevelCancel}

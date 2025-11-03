@@ -43,7 +43,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Admin Dashboard',
     srcImage: AdminDashIcon,
     to: '/admin-dashboard',
-    roles: [3],
+    roles: [3, 2],
     className: (pathname) => pathname.includes('admin-dashboard') ? 'active' : ''
   },
   {
@@ -51,7 +51,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'User Managment',
     srcImage: groupIcon,
     to: '/user-managment',
-    roles: [3],
+    roles: [3, 2],
     className: (pathname) => pathname.includes('user-managment') ? 'active' : ''
   },
     {

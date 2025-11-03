@@ -29,7 +29,6 @@ const LeadershipJournalManagement = () => {
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
-  // Popup states
   const [showPublishPopup, setShowPublishPopup] = useState(false)
   const [showUnpublishPopup, setShowUnpublishPopup] = useState(false)
   const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false)
@@ -43,7 +42,6 @@ const LeadershipJournalManagement = () => {
     'Section Three: How do I prove it?'
   ])
 
-  // Initial dummy data - replace with API call
   useEffect(() => {
     setTasksData([
       {
