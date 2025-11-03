@@ -134,6 +134,7 @@ font-style: normal;
 font-weight: 400;
 line-height: 20px;
 margin-bottom: 20px;
+width: 100%;
 }
 
 .view-organization-modal .org-address {
@@ -155,6 +156,7 @@ font-size: 15px;
 font-style: normal;
 font-weight: 400;
 line-height: 20px;
+width: 100%;
 }
 
 .view-organization-modal .org-logos {
@@ -221,6 +223,7 @@ font-style: normal;
 font-weight: 400;
 line-height: 20px;
 margin-bottom: 20px;
+width: 100%;
 }
 
 .view-organization-modal .admin-email {
@@ -242,6 +245,7 @@ font-size: 15px;
 font-style: normal;
 font-weight: 400;
 line-height: 20px;
+width: 100%;
 }
 
 .view-organization-modal .domain-details {
@@ -367,6 +371,240 @@ flex: 1;
   background: #3DA8BF;
 }
 
+/* Edit Mode Input Styles */
+.view-organization-modal .org-input,
+.view-organization-modal .org-textarea {
+  width: 100%;
+  background: #FFF;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.view-organization-modal .org-input:focus,
+.view-organization-modal .org-textarea:focus {
+  outline: none;
+  border-color: #51C7DF;
+  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
+}
+
+.view-organization-modal .org-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* Domain Input Styles */
+.domain-details .domain-url-label {
+  color: #6F6F6F;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.domain-input {
+  margin-bottom: 0 !important;
+}
+
+/* Enhanced Pricing Section for Edit Mode */
+.pricing-section {
+  border-radius: 12px;
+}
+
+.pricing-details.edit-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pricing-item-edit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #FFF;
+}
+
+.pricing-inputs {
+  display: flex;
+  flex: 1;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.pricing-label-small {
+  color: #6F6F6F;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.price-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dollar-sign {
+  position: absolute;
+  left: 12px;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.price-input {
+  width: 100%;
+  height: 48px;
+  padding: 12px 16px 12px 28px;
+  border-radius: 8px;
+  border: 1px solid #E3E5E9;
+  background: #FFF;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.price-input:focus {
+  outline: none;
+  border-color: #51C7DF;
+  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
+}
+
+/* Remove number input arrows */
+.price-input::-webkit-inner-spin-button,
+.price-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.price-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.frequency-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.frequency-select {
+  height: 48px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #E3E5E9;
+  background: #FFF;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.frequency-select:focus {
+  outline: none;
+  border-color: #51C7DF;
+  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
+}
+
+.remove-pricing-btn {
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: none;
+}
+
+.add-pricing-tier-btn {
+  width: 100%;
+  background: #FFF;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: black;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+}
+
+.add-pricing-tier-btn:hover {
+  background: #F3F4F6;
+  border-color: #51C7DF;
+}
+
+/* Modal Action Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-cancel-org,
+.btn-save-org {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel-org {
+  background: #DEE1E6;
+  color: #000;
+}
+
+.btn-cancel-org:hover {
+  background: #C9CDD4;
+}
+
+.btn-save-org {
+  background: #51C7DF;
+  color: #FFF;
+}
+
+.btn-save-org:hover {
+  background: #3DA8BF;
+}
+
+.btn-save-org:disabled,
+.btn-cancel-org:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .view-organization-modal .view-org-modal-header,
@@ -378,5 +616,27 @@ flex: 1;
   .view-organization-modal .org-logos {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .pricing-inputs {
+    flex-direction: column;
+  }
+
+  .pricing-item-edit {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .remove-pricing-btn {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel-org,
+  .btn-save-org {
+    width: 100%;
   }
 }
