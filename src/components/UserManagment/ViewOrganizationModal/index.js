@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faPencilAlt, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -7,6 +8,7 @@ import './index.css'
 import AcademyBtn from '../../AcademyBtn'
 
 const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
+  const history = useHistory()
   const [isEditMode, setIsEditMode] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -136,6 +138,10 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
         logo2: organizationData.logo2 || null
       })
     }
+  }
+
+    const handleViewLearners = () => {
+    history.push('/user-managment')
   }
 
   return (
@@ -423,7 +429,10 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
             </button>
           </div>
         ) : (
-          <AcademyBtn title="VIEW ORGANIZATION LEARNERS" />
+          <AcademyBtn 
+          title="VIEW ORGANIZATION LEARNERS" 
+          onClick={handleViewLearners}
+        />
         )}
       </Modal.Body>
     </Modal>
