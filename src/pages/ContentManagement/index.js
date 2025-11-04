@@ -120,17 +120,19 @@ const ContentManagement = () => {
 
   const columns = useMemo(() => [
     {
-      key: 'name',
-      title: 'TASK NAME',
-      sortable: true,
-      filterable: true,
-      render: (value, item) => (
-        <div className="task-name-cell">
-          <div className={`status-dot ${item.status}`}></div>
-          <span>{value}</span>
-        </div>
-      )
-    }
+    key: 'name',
+    title: 'TASK NAME',
+    sortable: true,
+    filterable: true,
+    width: '100%',
+    className: 'content-management-task-name-column',
+    render: (value, item) => (
+      <div className="task-name-cell">
+        <div className={`status-dot ${item.status}`}></div>
+        <span>{value}</span>
+      </div>
+    )
+  }
   ], [])
 
   const handleSearch = (e) => {
@@ -466,7 +468,7 @@ const ContentManagement = () => {
                   lineHeight: 'normal',
                 }}
               >
-                CONTENT MANAGEMENT
+                COURSE MANAGEMENT
               </h3>
               <p
                 style={{
@@ -479,7 +481,7 @@ const ContentManagement = () => {
                   marginBottom: '0px',
                 }}
               >
-                Manage your content and tasks
+                View and edit course materials
               </p>
             </div>
           </div>
