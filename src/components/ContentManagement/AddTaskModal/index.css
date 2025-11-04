@@ -590,7 +590,7 @@ backdrop-filter: blur(60.064998626708984px);
   position: absolute;
   top: 8px;
   right: 8px;
-  background-color: #dc2626;
+  background-color: gray;
   color: white;
   border: none;
   border-radius: 50%;
@@ -605,7 +605,7 @@ backdrop-filter: blur(60.064998626708984px);
 }
 
 .add-task-content-management-modal .delete-preview-btn:hover {
-  background-color: #b91c1c;
+  background-color: #359eb3;
 }
 
 .add-task-content-management-modal .video-preview {

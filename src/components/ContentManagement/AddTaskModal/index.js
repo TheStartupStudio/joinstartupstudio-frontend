@@ -30,7 +30,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const isMasterClass = source === 'masterclass'
   const isLeadership = source === 'leadership'
 
-  // Quill toolbar configuration based on mode
   const quillModules = {
     toolbar: isViewMode ? false : [
       ['bold', 'italic', 'blockquote'],
@@ -51,7 +50,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     'image'
   ]
 
-  // Load data based on mode
   useEffect(() => {
     setCurrentMode(mode)
   }, [mode])

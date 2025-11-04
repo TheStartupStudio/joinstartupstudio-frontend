@@ -47,11 +47,11 @@ padding: 4px;
 }
 
 /* Search and Actions Bar */
-.search-actions-bar {
+.user-management-container .search-actions-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
   gap: 16px;
   background: #ffffff;
 }
@@ -165,7 +165,7 @@ padding: 4px;
 
   /* Text - 15 Medium Caps */
   font-family: Montserrat;
-  font-size: 14px;
+    font-size: 13px !important;
   font-weight: 500;
 }
 
@@ -342,6 +342,14 @@ padding: 4px;
   margin: 0 12px;
 }
 
+.user-management-container .continue-course-btn{
+      font-family: 'Montserrat', sans-serif;
+  background-color: white;
+  padding: 6px 12px !important;
+  font-size: 13px !important;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .search-actions-bar {
@@ -397,8 +405,7 @@ padding: 4px;
   color: #000 !important;
   text-align: center !important;
   font-family: 'Montserrat' !important;
-  font-size: 14px !important;
-  font-style: normal !important;
+    font-style: normal !important;
   font-weight: 500 !important;
   line-height: normal !important;
   text-transform: uppercase !important;
