@@ -307,6 +307,7 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
             <span>Domain Details</span>
           </div>
           <div className="domain-details">
+            <label className="pricing-label-small">Domain URL:</label>
             {isEditMode ? (
               <>
                 <input
