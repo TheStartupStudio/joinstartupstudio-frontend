@@ -41,7 +41,6 @@ const AdminDashboard = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [showOrganizationModal, setShowOrganizationModal] = useState(false)
 
-  // ✅ Get user role from Redux
   const { user } = useSelector((state) => state.user.user)
   const userRole = user?.role_id || localStorage.getItem('role')
   const isInstructor = userRole === 2 || userRole === 'instructor' || userRole === 'trial'
@@ -81,7 +80,6 @@ const AdminDashboard = () => {
     totalCompletedPortfolios: 150
   })
 
-  // Mock organization data
   const organizationData = {
     name: 'Nord Anglia Schools',
     address: '2108 S Conroy-Windermere Rd, Orlando, FL 34708',
@@ -119,7 +117,6 @@ const AdminDashboard = () => {
     { country: 'Canada', count: 49 }
   ]
 
-  // Function to create gradient patterns
   const createGradientPattern = (ctx, color, isHorizontal = false) => {
     const gradient = ctx.createLinearGradient(
       0, 
@@ -128,7 +125,6 @@ const AdminDashboard = () => {
       0
     )
     
-    // Convert hex to rgba for opacity control
     const hexToRgba = (hex, opacity) => {
       const r = parseInt(hex.slice(1, 3), 16)
       const g = parseInt(hex.slice(3, 5), 16)
@@ -136,13 +132,12 @@ const AdminDashboard = () => {
       return `rgba(${r}, ${g}, ${b}, ${opacity})`
     }
     
-    gradient.addColorStop(0, color) // Full opacity at base
-    gradient.addColorStop(1, hexToRgba(color, 0.2)) // 20% opacity at tip
+    gradient.addColorStop(0, color)
+    gradient.addColorStop(1, hexToRgba(color, 0.2))
     
     return gradient
   }
 
-  // Custom plugin to draw data labels
   const dataLabelsPlugin = {
     id: 'dataLabels',
     afterDatasetsDraw(chart, args, options) {
@@ -163,12 +158,10 @@ const AdminDashboard = () => {
             const isHorizontal = chart.config.options.indexAxis === 'y'
             
             if (isHorizontal) {
-              // For horizontal bars
               ctx.textAlign = 'left'
               ctx.textBaseline = 'middle'
               ctx.fillText(value, bar.x + 5, bar.y)
             } else {
-              // For vertical bars
               ctx.textAlign = 'center'
               ctx.textBaseline = 'bottom'
               ctx.fillText(value, bar.x, bar.y - 5)
@@ -253,7 +246,7 @@ const AdminDashboard = () => {
         data: countryDistributionData.map(item => item.count),
         backgroundColor: function(context) {
           const ctx = context.chart.ctx
-          return createGradientPattern(ctx, '#30C3EC', true) // true for horizontal gradient
+          return createGradientPattern(ctx, '#30C3EC', true) 
         },
         borderRadius: 4,
         barThickness: 40,
@@ -395,7 +388,6 @@ const AdminDashboard = () => {
           <div className="container-title">
             <img src={graphIcon} alt="Core Info Icon" className="core-info-icon" />
             <p>Core Information</p>
-            {/* ✅ View Organization Details button - only visible for instructors */}
             {isInstructor && (
               <button 
                 className="view-org-details-btn"
@@ -517,7 +509,6 @@ const AdminDashboard = () => {
           </div>
 
           <div className="d-flex gap-4 flex-wrap">
-            {/* Gender Distribution by Year Chart */}
             <div style={{
               boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
               padding: '20px',
@@ -558,7 +549,6 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Age Distribution Chart */}
             <div style={{
               boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
               padding: '20px',
@@ -582,7 +572,6 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Country Distribution Chart */}
           <div className="d-flex gap-4 flex-wrap" style={{ marginTop: '20px' }}>
             <div style={{
               boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
@@ -607,7 +596,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* ✅ View Organization Modal */}
       <ViewOrganizationModal
         show={showOrganizationModal}
         onHide={() => setShowOrganizationModal(false)}
