@@ -23,6 +23,7 @@ import ViewOrganizationModal from '../../components/UserManagment/ViewOrganizati
 import './index.css'
 import organizationLogo1 from '../../assets/images/academy-icons/Nord Anglia Schools.png'
 import organizationLogo2 from '../../assets/images/academy-icons/Nord Anglia Schools-horizontal.png'
+import potfolioIconDash from '../../assets/images/academy-icons/portfolio-admin-dash.png'
 
 
 ChartJS.register(
@@ -75,7 +76,9 @@ const AdminDashboard = () => {
     completedL1: 125,
     completedL2: 98,
     completedL3: 75,
-    totalCompletedAIE: 298
+    totalCompletedAIE: 298,
+    totalCreatedPortfolios: 201,
+    totalCompletedPortfolios: 150
   })
 
   // Mock organization data
@@ -408,58 +411,102 @@ const AdminDashboard = () => {
           </div>
           <div className="d-flex gap-4 flex-wrap">
             <div className="info-box">
-              <img src={creaditCardIcon} alt="Paid Users Icon" className="info-icon" />
+              <div className="info-icon">
+                <img src={creaditCardIcon} alt="Paid Users Icon" />
+              </div>
               <p>Paid Users</p>
               <h3>{dashboardData.paidUsers}</h3>
             </div>
 
             <div className="info-box">
-              <img src={dollarIcon} alt="Total Revenue Icon" className="info-icon" />
+              <div className="info-icon">
+                <img src={dollarIcon} alt="Total Revenue Icon" />
+              </div>
               <p>Total Revenue</p>
               <h3>{formatRevenue(dashboardData.totalRevenue)}</h3>
             </div>
+
+{isInstructor ? (
+            <div className="info-box">
+              <div className="info-icon">
+                <img src={totalEntrolledIcon} alt="Group Icon" />
+              </div>
+              <p>Total Enrolled Learners</p>
+              <h3>{dashboardData.totalEnrolledLearners}</h3>
+              <div className='info-box-data'>
+                <p>Total Completed AIE</p>
+                <h3>{dashboardData.totalCompletedAIE}</h3>
+              </div>
+            </div>
+) : null}
           </div>
+
 
           <div className="d-flex gap-4 flex-wrap">
             <div className="info-box">
-              <img src={groupIcon} alt="Group Icon" className="info-icon" />
+              <div className="info-icon">
+                <img src={groupIcon} alt="Group Icon" />
+              </div>
               <p>L1 Learners</p>
               <h3>{dashboardData.l1Learners}</h3>
-              <div>
+              <div className='info-box-data'>
                 <p>Completed L1</p>
                 <h3>{dashboardData.completedL1}</h3>
               </div>
             </div>
 
             <div className="info-box">
-              <img src={groupIcon} alt="Group Icon" className="info-icon" />
+              <div className="info-icon">
+                <img src={groupIcon} alt="Group Icon" />
+              </div>
               <p>L2 Learners</p>
               <h3>{dashboardData.l2Learners}</h3>
-              <div>
+              <div className='info-box-data'>
                 <p>Completed L2</p>
                 <h3>{dashboardData.completedL2}</h3>
               </div>
             </div>
 
             <div className="info-box">
-              <img src={groupIcon} alt="Group Icon" className="info-icon" />
+              <div className="info-icon">
+                <img src={groupIcon} alt="Group Icon" />
+              </div>
               <p>L3 Learners</p>
               <h3>{dashboardData.l3Learners}</h3>
-              <div>
+              <div className='info-box-data'>
                 <p>Completed L3</p>
                 <h3>{dashboardData.completedL3}</h3>
               </div>
             </div>
 
+
+            {isInstructor ? (
+
             <div className="info-box">
-              <img src={totalEntrolledIcon} alt="Group Icon" className="info-icon" />
+              <div className="info-icon">
+                <img src={potfolioIconDash} alt="Group Icon" />
+              </div>
+              <p>Portfolios Created</p>
+              <h3>{dashboardData.totalCreatedPortfolios}</h3>
+              <div className='info-box-data'>
+                <p>Total Completed Portfolios</p>
+                <h3>{dashboardData.totalCompletedPortfolios}</h3>
+              </div>
+            </div>
+            ) : (
+
+            <div className="info-box">
+              <div className="info-icon">
+                <img src={totalEntrolledIcon} alt="Group Icon" />
+              </div>
               <p>Total Enrolled Learners</p>
               <h3>{dashboardData.totalEnrolledLearners}</h3>
-              <div>
+              <div className='info-box-data'>
                 <p>Total Completed AIE</p>
                 <h3>{dashboardData.totalCompletedAIE}</h3>
               </div>
             </div>
+            )}
           </div>
         </div>
 
