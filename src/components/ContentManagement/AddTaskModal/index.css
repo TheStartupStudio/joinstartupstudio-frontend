@@ -239,6 +239,21 @@ height: unset;
   margin: 0;
 }
 
+.add-task-content-management-modal .delete-reflection-btn {
+  border: none;
+  outline: none;
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  color: #000000;
+  text-align: left;
+  font-family: var(--text-15-medium-regular-font-family, 'Montserrat-Medium', sans-serif);
+  font-size: var(--text-15-medium-regular-font-size, 15px);
+  font-weight: var(--text-15-medium-regular-font-weight, 500);
+  position: relative;
+  background-color: transparent;
+}
+
 .add-task-content-management-modal .upload-subtext {
   font-family: 'Montserrat', sans-serif;
 
@@ -575,7 +590,7 @@ backdrop-filter: blur(60.064998626708984px);
   position: absolute;
   top: 8px;
   right: 8px;
-  background-color: #dc2626;
+  background-color: gray;
   color: white;
   border: none;
   border-radius: 50%;
@@ -590,7 +605,7 @@ backdrop-filter: blur(60.064998626708984px);
 }
 
 .add-task-content-management-modal .delete-preview-btn:hover {
-  background-color: #b91c1c;
+  background-color: #359eb3;
 }
 
 .add-task-content-management-modal .video-preview {

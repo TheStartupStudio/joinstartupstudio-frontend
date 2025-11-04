@@ -1,6 +1,6 @@
 import './index.css'
 import React, { useEffect, useState, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
   Chart as ChartJS,
@@ -42,18 +42,22 @@ import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 
 const UserManagement = () => {
   const dispatch = useDispatch()
-  const [activeTab, setActiveTab] = useState('Organizations')
+  
+  const { user } = useSelector((state) => state.user.user)
+  const userRole = user?.role_id || localStorage.getItem('role')
+
+  const isInstructor = userRole === 2 || userRole === 'instructor' || userRole === 'trial'
+  
+  const [activeTab, setActiveTab] = useState(isInstructor ? 'Users' : 'Organizations')
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [showAddDropdown, setShowAddDropdown] = useState(false) 
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   
-  // Modal states
   const [showAddOrganizationModal, setShowAddOrganizationModal] = useState(false)
   const [selectedOrganization, setSelectedOrganization] = useState(null)
   const [modalMode, setModalMode] = useState('add')
   
-  // Add state for learners modal
   const [showLearnersModal, setShowLearnersModal] = useState(false)
   const [selectedOrgForLearners, setSelectedOrgForLearners] = useState(null)
   const [showAddLearnerModal, setShowAddLearnerModal] = useState(false)
@@ -61,16 +65,15 @@ const UserManagement = () => {
   const [selectedLearner, setSelectedLearner] = useState(null)
   const [learnerModalMode, setLearnerModalMode] = useState('add')
 
-  // Add popup states
   const [loading, setLoading] = useState(false)
   const [showDeletePopup, setShowDeletePopup] = useState(false)
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false)
   const [showDeactivatePopup, setShowDeactivatePopup] = useState(false)
   const [selectedItems, setSelectedItems] = useState([])
-  const [actionContext, setActionContext] = useState('') // 'organizations' or 'users'
-  const [isSingleAction, setIsSingleAction] = useState(false) // Track if it's a single user action
+  const [actionContext, setActionContext] = useState('') 
+  const [isSingleAction, setIsSingleAction] = useState(false) 
   const [showBulkAddLearnersModal, setShowBulkAddLearnersModal] = useState(false)
-  const [showBulkAddOrganizationsModal, setShowBulkAddOrganizationsModal] = useState(false) // New state for bulk add organizations
+  const [showBulkAddOrganizationsModal, setShowBulkAddOrganizationsModal] = useState(false) 
 
   const organizationsData = [
     {
@@ -337,7 +340,6 @@ const UserManagement = () => {
     toast.success(`Exported ${organization.name} data successfully!`)
   }
 
-  // Add/Bulk actions
   const addSingleOrganization = () => {
     handleAddOrganization()
     setShowAddDropdown(false)
@@ -353,7 +355,6 @@ const UserManagement = () => {
     setShowAddDropdown(false)
   }
 
-  // Bulk options handlers
   const deactivateOrganizations = () => {
     setActionContext('organizations')
     setIsSingleAction(false)
@@ -466,7 +467,6 @@ const UserManagement = () => {
     }
   ]
 
-  // Popup handlers
   const handleDeleteCancel = () => {
     setShowDeletePopup(false)
     setSelectedItems([])
@@ -567,11 +567,9 @@ const UserManagement = () => {
     }
   }
 
-  // Add refs for dropdowns
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
-  // Add click outside handler
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
@@ -624,7 +622,7 @@ const UserManagement = () => {
                   marginBottom: '0px',
                 }}
               >
-                View user details
+                {isInstructor ? 'View your learners' : 'View user details'}
               </p>
             </div>
           </div>
@@ -640,20 +638,22 @@ const UserManagement = () => {
       <div className="user-management-container position-relative">
         <img src={blueManagerBG} alt="blue-manager-bg" className='position-absolute user-select-none' style={{right: '50%', translate: '50% 0'}} />
         
-        <div className="header-tabs">
-          <button
-            className={`tab-button ${activeTab === 'Organizations' ? 'active' : ''}`}
-            onClick={() => setActiveTab('Organizations')}
-          >
-            Organizations
-          </button>
-          <button
-            className={`tab-button ${activeTab === 'Users' ? 'active' : ''}`}
-            onClick={() => setActiveTab('Users')}
-          >
-            Users
-          </button>
-        </div>
+        {!isInstructor && (
+          <div className="header-tabs">
+            <button
+              className={`tab-button ${activeTab === 'Organizations' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Organizations')}
+            >
+              Organizations
+            </button>
+            <button
+              className={`tab-button ${activeTab === 'Users' ? 'active' : ''}`}
+              onClick={() => setActiveTab('Users')}
+            >
+              Users
+            </button>
+          </div>
+        )}
 
         <div className="search-actions-bar">
           <div className="search-container">
@@ -666,9 +666,9 @@ const UserManagement = () => {
                 className="search-input"
               />
               <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <path d="M17 17L21 21" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+                <path d="M17 17L21 21" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
           </div>
 
@@ -825,19 +825,23 @@ const UserManagement = () => {
         </div>
       </div>
 
-      <AddNewOrganization
-        show={showAddOrganizationModal}
-        onHide={() => setShowAddOrganizationModal(false)}
-        onSuccess={handleModalSuccess}
-        mode={modalMode}
-        organizationData={selectedOrganization}
-      />
+      {!isInstructor && (
+        <AddNewOrganization
+          show={showAddOrganizationModal}
+          onHide={() => setShowAddOrganizationModal(false)}
+          onSuccess={handleModalSuccess}
+          mode={modalMode}
+          organizationData={selectedOrganization}
+        />
+      )}
 
-      <ViewOrganizationLearnersModal
-        show={showLearnersModal}
-        onHide={() => setShowLearnersModal(false)}
-        organizationName={selectedOrgForLearners?.name || ''}
-      />
+      {!isInstructor && (
+        <ViewOrganizationLearnersModal
+          show={showLearnersModal}
+          onHide={() => setShowLearnersModal(false)}
+          organizationName={selectedOrgForLearners?.name || ''}
+        />
+      )}
 
       <AddNewLearner
         show={showAddLearnerModal}
@@ -931,15 +935,17 @@ const UserManagement = () => {
         mode="learners"
       />
 
-      <BulkAddLearnersModal
-        show={showBulkAddOrganizationsModal}
-        onHide={() => setShowBulkAddOrganizationsModal(false)}
-        onSuccess={() => {
-          setShowBulkAddOrganizationsModal(false)
-          toast.success('Organizations added successfully!')
-        }}
-        mode="organizations"
-      />
+      {!isInstructor && (
+        <BulkAddLearnersModal
+          show={showBulkAddOrganizationsModal}
+          onHide={() => setShowBulkAddOrganizationsModal(false)}
+          onSuccess={() => {
+            setShowBulkAddOrganizationsModal(false)
+            toast.success('Organizations added successfully!')
+          }}
+          mode="organizations"
+        />
+      )}
     </div>
   )
 }

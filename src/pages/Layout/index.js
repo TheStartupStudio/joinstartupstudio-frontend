@@ -17,6 +17,8 @@ function Layout({ children }) {
   const [showHeaderSelected, setShowHeaderSelected] = useState(false)
   const { generalLoading } = useSelector((state) => state.general)
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
+  const user = useSelector((state) => state.user?.user)
+  const isAdmin = user?.role === 'admin' || user?.role_id === 3
   const dispatch = useDispatch()
   const location = useLocation()
 
@@ -40,8 +42,11 @@ function Layout({ children }) {
       )}
       {originalToken && <ImpersonationNavbar originalToken={originalToken} />}
       <div
-        className='wrapper d-flex flex-column min-vh-100'
-        style={originalToken && { marginTop: '32px' }}
+        className='wrapper d-flex flex-column'
+        style={{
+          ...(originalToken && { marginTop: '32px' }),
+          ...(isAdmin && { minHeight: '110dvh' })
+        }}
       >
         {/* Conditionally render sidebar */}
         {!shouldHideSidebar && (

@@ -10,9 +10,11 @@
 
   border-radius: 8px;
 background: rgba(255, 255, 255, 0.10);
-box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.15);
-backdrop-filter: blur(60.064998626708984px);
-padding: 4px;
+  box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(60.064998626708984px);
+  padding: 4px;
+  position: relative;
+  z-index: 1;
 }
 
 .tab-button {
@@ -22,7 +24,7 @@ border: none;
   border-radius: 8px;
 backdrop-filter: blur(60.064998626708984px);
 color: #000;
-font-size: 14px;
+font-size: 12px;
 font-style: normal;
 font-weight: 500;
 line-height: normal;
@@ -36,13 +38,8 @@ width: 100%;
 background-color: transparent;
 }
 
-.tab-button:hover {
-  color: #333;
-  background: #f9fafb;
-}
-
-.tab-button.active {
-  background: rgba(185, 223, 236, 0.20);
+.leadership-journal-management .tab-button.active {
+  background: #e0ebc5;
 box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
 }
 
@@ -100,6 +97,14 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.content-management-container .table-container{
+  background-color: white;
+  position: relative;
+  z-index: 0;
 }
 
 .action-btn-new {
@@ -214,7 +219,15 @@ background: var(--Glassy-White, rgba(255, 255, 255, 0.10));
 box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
 }
 
-@media (max-width: 1440px) {
+
+.content-management-container .continue-course-btn{
+      font-family: 'Montserrat', sans-serif;
+  background-color: white;
+  padding: 6px 12px !important;
+  font-size: 13px !important;
+}
+
+@media (max-width: 1200px) {
     .search-actions-bar {
     flex-direction: column;
     align-items: stretch;

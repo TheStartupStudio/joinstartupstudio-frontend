@@ -43,7 +43,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Admin Dashboard',
     srcImage: AdminDashIcon,
     to: '/admin-dashboard',
-    roles: [3],
+    roles: [3, 2],
     className: (pathname) => pathname.includes('admin-dashboard') ? 'active' : ''
   },
   {
@@ -51,7 +51,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'User Managment',
     srcImage: groupIcon,
     to: '/user-managment',
-    roles: [3],
+    roles: [3, 2],
     className: (pathname) => pathname.includes('user-managment') ? 'active' : ''
   },
     {
@@ -61,6 +61,24 @@ const SIDEBAR_MENU_ITEMS = [
     to: '/content-management',
     roles: [3],
     className: (pathname) => pathname.includes('content-management') ? 'active' : ''
+  },
+  
+  {
+    id: 'master-class-management',
+    title: 'Master Class Management',
+    srcImage: groupIcon, // or use a different icon
+    to: '/master-class-management',
+    roles: [3],
+    className: (pathname) => pathname.includes('master-class-management') ? 'active' : ''
+  },
+
+  {
+    id: 'leadership-journal-management',
+    title: 'Leadership Journal Management',
+    srcImage: groupIcon, // or use a different icon
+    to: '/leadership-journal-management',
+    roles: [3],
+    className: (pathname) => pathname.includes('leadership-journal-management') ? 'active' : ''
   },
   {
     id: 'intro-course',

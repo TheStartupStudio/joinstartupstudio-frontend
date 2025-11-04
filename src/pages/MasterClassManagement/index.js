@@ -1,4 +1,4 @@
-import './ContentManagement.css'
+import './index.css'
 import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
@@ -7,16 +7,15 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import AcademyBtn from '../../components/AcademyBtn'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import DataTable from '../../components/DataTable'
-import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
-import axiosInstance from '../../utils/AxiosInstance'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
+import pinkMaster from '../../assets/images/academy-icons/ping-master-class.png'
 
-const ContentManagement = () => {
+const MasterClassManagement = () => {
   const dispatch = useDispatch()
-  const [activeLevel, setActiveLevel] = useState('Level 1: Entrepreneurship and You')
+  const [activeLevel, setActiveLevel] = useState('Encouragement Videos')
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
@@ -38,79 +37,80 @@ const ContentManagement = () => {
   const [selectedLevel, setSelectedLevel] = useState(null)
 
   const [levels, setLevels] = useState([
-    'Level 1: Entrepreneurship and You',
-    'Level 2: Understanding Learn to Start',
-    'Level 3: The Journey of Entrepreneurship'
+    'Encouragement Videos',
+    'Career Guidance Videos',
+    'Story in Motion Podcasts Episodes',
+    'Live Q&A Episodes'
   ])
 
   useEffect(() => {
     setTasksData([
       {
         id: 1,
-        name: 'Myths of Entrepreneurship',
+        name: 'From Nothing to Demand',
         status: 'unpublished',
         hasContent: true,
         order: 1
       },
       {
         id: 2,
-        name: 'Choose My Team Path Task',
+        name: 'Taking a New Perspective',
         status: 'published',
         hasContent: false,
         order: 2
       },
       {
         id: 3,
-        name: 'Industry Analysis Task',
+        name: 'Give Yourself a Break',
         status: 'published',
         hasContent: false,
         order: 3
       },
       {
         id: 4,
-        name: 'Market Analysis Task',
+        name: 'Happiness is Overrated',
         status: 'unpublished',
         hasContent: true,
         order: 4
       },
       {
         id: 5,
-        name: 'AIE Task',
+        name: 'Encouragement Video',
         status: 'unpublished',
         hasContent: true,
         order: 5
       },
       {
         id: 6,
-        name: 'AIE Task',
+        name: 'Encouragement Video',
         status: 'unpublished',
         hasContent: true,
         order: 6
       },
       {
         id: 7,
-        name: 'AIE Task',
+        name: 'Encouragement Video',
         status: 'unpublished',
         hasContent: true,
         order: 7
       },
       {
         id: 8,
-        name: 'AIE Task',
+        name: 'Encouragement Video',
         status: 'unpublished',
         hasContent: true,
         order: 8
       },
       {
         id: 9,
-        name: 'AIE Task',
+        name: 'Encouragement Video',
         status: 'unpublished',
         hasContent: true,
         order: 9
       },
       {
         id: 10,
-        name: 'AIE Task',
+        name: 'Encouragement Video',
         status: 'unpublished',
         hasContent: true,
         order: 10
@@ -120,19 +120,17 @@ const ContentManagement = () => {
 
   const columns = useMemo(() => [
     {
-    key: 'name',
-    title: 'TASK NAME',
-    sortable: true,
-    filterable: true,
-    width: '100%',
-    className: 'content-management-task-name-column',
-    render: (value, item) => (
-      <div className="task-name-cell">
-        <div className={`status-dot ${item.status}`}></div>
-        <span>{value}</span>
-      </div>
-    )
-  }
+      key: 'name',
+      title: 'VIDEO NAME',
+      sortable: true,
+      filterable: true,
+      render: (value, item) => (
+        <div className="task-name-cell">
+          <div className={`status-dot ${item.status}`}></div>
+          <span>{value}</span>
+        </div>
+      )
+    }
   ], [])
 
   const handleSearch = (e) => {
@@ -154,7 +152,7 @@ const ContentManagement = () => {
           reflectionItems: [
             {
               id: 1,
-              question: '<p>What did you learn from this lesson?</p>',
+              question: '<p>What did you learn from this master class?</p>',
               instructions: '<p>Please watch the video and answer the questions below.</p>'
             }
           ]
@@ -175,8 +173,8 @@ const ContentManagement = () => {
           reflectionItems: [
             {
               id: 1,
-              question: '<p>Sample question for this task</p>',
-              instructions: '<p>Sample instructions for this task</p>'
+              question: '<p>Sample question for this master class</p>',
+              instructions: '<p>Sample instructions for this master class</p>'
             }
           ]
         }
@@ -213,11 +211,10 @@ const ContentManagement = () => {
         id: task.id
       }))
 
-      toast.success('Task order updated successfully!')
+      toast.success('Video order updated successfully!')
     } catch (error) {
-      console.error('Error reordering tasks:', error)
-      toast.success('Task order updated successfully!')
-      
+      console.error('Error reordering videos:', error)
+      toast.success('Video order updated successfully!')
     } finally {
       setLoading(false)
     }
@@ -251,7 +248,7 @@ const ContentManagement = () => {
   }
 
   const handleSaveTask = (taskData) => {
-    console.log('Task data:', taskData)
+    console.log('Master class data:', taskData)
     
     if (modalMode === 'edit') {
       setTasksData(prevTasks => 
@@ -261,7 +258,7 @@ const ContentManagement = () => {
             : task
         )
       )
-      toast.success('Task updated successfully!')
+      toast.success('Master class updated successfully!')
     } else {
       const newTask = {
         id: tasksData.length + 1,
@@ -271,7 +268,7 @@ const ContentManagement = () => {
         order: tasksData.length + 1
       }
       setTasksData(prevTasks => [...prevTasks, newTask])
-      toast.success('Task created successfully!')
+      toast.success('Master class created successfully!')
     }
   }
 
@@ -281,7 +278,7 @@ const ContentManagement = () => {
   }
 
   const handleSaveAssignments = (assignments) => {
-    console.log('Task assignments:', assignments)
+    console.log('Video assignments:', assignments)
   }
 
   const handlePublishCancel = () => {
@@ -317,11 +314,11 @@ const ContentManagement = () => {
         )
       )
       
-      toast.success(`Task "${selectedTask.name}" published successfully!`)
+      toast.success(`Master class "${selectedTask.name}" published successfully!`)
       setShowPublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      toast.error('Failed to publish task')
+      toast.error('Failed to publish master class')
     } finally {
       setLoading(false)
     }
@@ -340,11 +337,11 @@ const ContentManagement = () => {
         )
       )
       
-      toast.success(`Task "${selectedTask.name}" unpublished successfully!`)
+      toast.success(`Master class "${selectedTask.name}" unpublished successfully!`)
       setShowUnpublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      toast.error('Failed to unpublish task')
+      toast.error('Failed to unpublish master class')
     } finally {
       setLoading(false)
     }
@@ -359,11 +356,11 @@ const ContentManagement = () => {
         prevTasks.filter(task => task.id !== selectedTask.id)
       )
       
-      toast.success(`Task "${selectedTask.name}" deleted successfully!`)
+      toast.success(`Master class "${selectedTask.name}" deleted successfully!`)
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      toast.error('Failed to delete task')
+      toast.error('Failed to delete master class')
     } finally {
       setLoading(false)
     }
@@ -384,24 +381,9 @@ const ContentManagement = () => {
     }
   }
 
-  const addOptions = [
-    {
-      name: 'Add New Level',
-      action: addNewLevel
-    },
-    {
-      name: 'Add New Content',
-      action: addNewContent
-    },
-    {
-      name: 'View Uncategorized Tasks',
-      action: viewUncategorizedTasks
-    }
-  ]
-
   const bulkOptions = [
     {
-      name: 'Publish Tasks',
+      name: 'Publish Videos',
       action: handleBulkPublish,
       svg: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -422,7 +404,7 @@ const ContentManagement = () => {
       )
     },
     {
-      name: 'Unpublish Tasks',
+      name: 'Unpublish Videos',
       action: handleBulkUnpublish,
       svg: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -453,7 +435,7 @@ const ContentManagement = () => {
   }, [])
 
   return (
-    <div className="content-management">
+    <div className="master-class-managment">
       <div>
         <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
           <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
@@ -468,7 +450,7 @@ const ContentManagement = () => {
                   lineHeight: 'normal',
                 }}
               >
-                COURSE MANAGEMENT
+                MASTER CLASS MANAGEMENT
               </h3>
               <p
                 style={{
@@ -481,7 +463,7 @@ const ContentManagement = () => {
                   marginBottom: '0px',
                 }}
               >
-                View and edit course materials
+                View and edit Master Class Videos
               </p>
             </div>
           </div>
@@ -495,7 +477,9 @@ const ContentManagement = () => {
       </div>
       
       <div className="content-management-container position-relative">
-        <img src={blueManagerBG} className='position-absolute' 
+        <img 
+        src={pinkMaster} 
+        className='position-absolute' 
         style={{
           top: 0, 
           left: '50%', 
@@ -522,155 +506,152 @@ const ContentManagement = () => {
         </div>
 
         <div className='main-search-table-container'>
-
-
-        <div className="search-actions-bar">
-          <div className="search-container">
-            <div className="search-input-wrapper">
-              <input
-                type="text"
-                placeholder="Search for content"
-                value={searchQuery}
-                onChange={handleSearch}
-                className="search-input"
-              />
-              <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          </div>
-
-          <div className="actions-container">
-            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
-              <div>
-                <AcademyBtn
-                  title="ADD NEW LEVEL"
-                  icon={faPlus}
-                  onClick={() => {
-                    addNewLevel()
-                  }}
+          <div className="search-actions-bar">
+            <div className="search-container">
+              <div className="search-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Search for videos"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  className="search-input"
                 />
-              </div>
-            </div>
-
-            <div>
-              <AcademyBtn
-                title="Add New Content"
-                icon={faPlus}
-                onClick={addNewContent}
-              />
-            </div>
-
-            <div>
-              <AcademyBtn
-                title="View Uncategorized Tasks"
-                icon={faPlus}
-                onClick={viewUncategorizedTasks}
-              />
-            </div>
-
-            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
-              <div 
-                className="bulk-actions"
-                onClick={() => {
-                  setShowBulkDropdown(!showBulkDropdown)
-                  setShowAddDropdown(false)
-                }}
-              >
-                <span>BULK ACTIONS</span>
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
+            </div>
 
-              {showBulkDropdown && (
+            <div className="actions-container">
+              <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
+                <div>
+                  <AcademyBtn
+                    title="ADD NEW LEVEL"
+                    icon={faPlus}
+                    onClick={() => {
+                      addNewLevel()
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <AcademyBtn
+                  title="Add New Video"
+                  icon={faPlus}
+                  onClick={addNewContent}
+                />
+              </div>
+
+              <div>
+                <AcademyBtn
+                  title="View Uncategorized Videos"
+                  icon={faPlus}
+                  onClick={viewUncategorizedTasks}
+                />
+              </div>
+
+              <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
                 <div 
-                  className="dropdown-menu"
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    right: 0,
-                    background: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    zIndex: 9999,
-                    marginTop: '4px',
-                    minWidth: '200px',
-                    display: 'block'
+                  className="bulk-actions"
+                  onClick={() => {
+                    setShowBulkDropdown(!showBulkDropdown)
+                    setShowAddDropdown(false)
                   }}
                 >
-                  {bulkOptions.map((option, index) => (
-                    <div 
-                      key={index}
-                      className="dropdown-item"
-                      style={{
-                        padding: '12px 16px',
-                        color: 'black',
-                        fontFamily: 'Montserrat',
-                        fontSize: '12px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-                      onClick={() => {
-                        option.action()
-                      }}
-                    >
-                      {option.svg}
-                      <span>{option.name}</span>
-                    </div>
-                  ))}
+                  <span>BULK ACTIONS</span>
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
-              )}
+
+                {showBulkDropdown && (
+                  <div 
+                    className="dropdown-menu"
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      background: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      zIndex: 9999,
+                      marginTop: '4px',
+                      minWidth: '200px',
+                      display: 'block'
+                    }}
+                  >
+                    {bulkOptions.map((option, index) => (
+                      <div 
+                        key={index}
+                        className="dropdown-item"
+                        style={{
+                          padding: '12px 16px',
+                          color: 'black',
+                          fontFamily: 'Montserrat',
+                          fontSize: '12px',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                        onClick={() => {
+                          option.action()
+                        }}
+                      >
+                        {option.svg}
+                        <span>{option.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="table-container">
-          <DataTable 
-            columns={columns}
-            data={tasksData}
-            searchQuery={searchQuery}
-            onRowAction={handleRowAction}
-            onReorder={handleReorder}
-            showCheckbox={true}
-            activeTab="Content"
-          />
-        </div>
+          <div className="table-container">
+            <DataTable 
+              columns={columns}
+              data={tasksData}
+              searchQuery={searchQuery}
+              onRowAction={handleRowAction}
+              onReorder={handleReorder}
+              showCheckbox={true}
+              activeTab="Content"
+            />
+          </div>
 
-        <div className="pagination-container">
-          <button className="pagination-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <div className="pagination-container">
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button className="pagination-btn">
+             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </button>
-          <button className="pagination-btn">
-           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-            <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          </button>
-          <span className="pagination-info">1 / 2</span>
-          <button className="pagination-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-              <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button className="pagination-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+            </button>
+            <span className="pagination-info">1 / 2</span>
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-
-              </div>
 
       <AddTaskModal 
         show={showAddTaskModal}
@@ -683,6 +664,7 @@ const ContentManagement = () => {
         levels={levels}
         mode={modalMode}
         taskData={editingTask}
+        source="masterclass"
       />
 
       <AddLevelModal
@@ -697,9 +679,9 @@ const ContentManagement = () => {
         onHide={() => setShowAssignModal(false)}
         onSave={handleSaveAssignments}
         tasks={[
-          { id: 1, title: 'Applying the LTS Model' },
-          { id: 2, title: 'Why Entrepreneurship Trumps Your Job' },
-          { id: 3, title: 'When to Seek Financing' }
+          { id: 1, title: 'Introduction to Leadership' },
+          { id: 2, title: 'Advanced Marketing Techniques' },
+          { id: 3, title: 'Financial Management for Startups' }
         ]}
       />
 
@@ -707,10 +689,10 @@ const ContentManagement = () => {
         show={showPublishPopup}
         onHide={handlePublishCancel}
         onConfirm={handleConfirmPublish}
-        title="Publish Task?"
-        message="Are you sure you want to publish this task? Once it's published, it will be available to all learners with access to this curriculum."
+        title="Publish Master Class?"
+        message="Are you sure you want to publish this master class video? Once it's published, it will be available to all learners with access to this content."
         cancelText="NO, TAKE ME BACK"
-        confirmText="YES, PUBLISH TASK"
+        confirmText="YES, PUBLISH VIDEO"
         loading={loading}
       />
 
@@ -718,10 +700,10 @@ const ContentManagement = () => {
         show={showUnpublishPopup}
         onHide={handleUnpublishCancel}
         onConfirm={handleConfirmUnpublish}
-        title="Unpublish Task?"
-        message="Are you sure you want to unpublish this task? Once it's unpublished, it will no longer be available to learners."
+        title="Unpublish Master Class?"
+        message="Are you sure you want to unpublish this master class video? Once it's unpublished, it will no longer be available to learners."
         cancelText="NO, TAKE ME BACK"
-        confirmText="YES, UNPUBLISH TASK"
+        confirmText="YES, UNPUBLISH VIDEO"
         loading={loading}
       />
 
@@ -729,10 +711,10 @@ const ContentManagement = () => {
         show={showDeleteTaskPopup}
         onHide={handleDeleteTaskCancel}
         onConfirm={handleConfirmDeleteTask}
-        title="Delete Task?"
-        message="Are you sure you want to delete this task?"
+        title="Delete Master Class?"
+        message="Are you sure you want to delete this master class video?"
         cancelText="NO, TAKE ME BACK"
-        confirmText="YES, DELETE TASK"
+        confirmText="YES, DELETE VIDEO"
         loading={loading}
       />
 
@@ -741,7 +723,7 @@ const ContentManagement = () => {
         onHide={handleDeleteLevelCancel}
         onConfirm={handleConfirmDeleteLevel}
         title="Delete Level?"
-        message="Are you sure you want to delete this level? Deleting this level will NOT remove tasks assigned to it, but they will no longer be accessible to learners."
+        message="Are you sure you want to delete this level? Deleting this level will NOT remove videos assigned to it, but they will no longer be accessible to learners."
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, DELETE LEVEL"
         loading={loading}
@@ -750,4 +732,4 @@ const ContentManagement = () => {
   )
 }
 
-export default ContentManagement
+export default MasterClassManagement

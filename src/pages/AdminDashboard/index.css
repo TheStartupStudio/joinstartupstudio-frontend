@@ -17,6 +17,21 @@
     gap: 24px;
 }
 
+.admin-dashboard-container .view-org-details-btn {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: #000;
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+border: none;
+margin-left: auto;
+background-color: transparent;
+}
+
 .admin-info-container .container-title {
     display: flex;
     align-items: center;
@@ -49,12 +64,21 @@
     min-width: 220px;
 }
 
-.admin-info-container .info-box img{
-    width: 56px;
+.admin-info-container .info-icon{
+  width: 56px;
     height: 56px;
     background-color: #E2E6EC;
-    border-radius: 100%;
-    padding: 13px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.admin-info-container .info-box img {
+  width: 27px;
+  height: 27px;
+  object-fit: cover;
 }
 
 .admin-info-container .info-box h3{
@@ -62,7 +86,7 @@
     font-size: 21px;
 }
 
-.admin-info-container .info-box div{
+.admin-info-container .info-box .info-box-data{
     background-color: #F0F2F6;
     display: flex;
     padding: 8px 0;

@@ -1,0 +1,207 @@
+.pricing-edit-modal .modal-content {
+  border-radius: 24px;
+  border: none;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.pricing-modal-body {
+  padding: 32px;
+  gap: 24px;
+}
+
+.pricing-modal-body .modal-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #E2E6EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.pricing-modal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  color: #231F20;
+}
+
+.pricing-section-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-header-modal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #F5F5F5;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pricing-details-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pricing-item-edit-modal {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.pricing-inputs-modal {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.price-input-group-modal {
+  flex: 1;
+  min-width: 200px;
+}
+
+.price-input-modal {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #231F20;
+}
+
+.price-input-modal::placeholder {
+  color: #AEAEAE;
+}
+
+.price-input-modal:focus {
+  outline: none;
+  border-color: #FF3399;
+}
+
+.frequency-input-group-modal {
+  flex: 1;
+  min-width: 150px;
+}
+
+.frequency-select-modal {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #231F20;
+  background-color: white;
+  cursor: pointer;
+}
+
+.frequency-select-modal:focus {
+  outline: none;
+  border-color: #FF3399;
+}
+
+.remove-pricing-btn-modal {
+  padding: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.remove-pricing-btn-modal:hover {
+  opacity: 0.7;
+}
+
+.add-pricing-tier-btn-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: transparent;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #231F20;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.add-pricing-tier-btn-modal:hover {
+  background-color: #F5F5F5;
+  border-color: #FF3399;
+}
+
+.pricing-modal-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btn-cancel-pricing,
+.btn-save-pricing {
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-cancel-pricing {
+  background-color: #E0E0E0;
+  color: #231F20;
+}
+
+.btn-cancel-pricing:hover {
+  background-color: #D0D0D0;
+}
+
+.btn-save-pricing {
+  background: linear-gradient(90deg, #00D4FF 0%, #FF3399 100%);
+  color: white;
+}
+
+.btn-save-pricing:hover {
+  opacity: 0.9;
+}
+
+.btn-save-pricing:disabled,
+.btn-cancel-pricing:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .pricing-inputs-modal {
+    flex-direction: column;
+  }
+  
+  .price-input-group-modal,
+  .frequency-input-group-modal {
+    width: 100%;
+    min-width: unset;
+  }
+}
