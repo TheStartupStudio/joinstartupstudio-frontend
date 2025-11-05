@@ -31,8 +31,8 @@ function CheckSubscription() {
 
   const planDetails = {
     monthly: {
-      price: '10.00',
-      total: '10.00',
+      price: '9.99',
+      total: '9.99',
       period: 'month',
       priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID,
       commitment: '12 months'
@@ -46,15 +46,12 @@ function CheckSubscription() {
     }
   }
 
-  // ✅ NEW: Function to refresh user data from backend
   const refreshUserData = async () => {
     try {
       
-      // Fetch latest user data
       const response = await axiosInstance.get('/users')
 
       
-      // Update Redux state with fresh data
       await dispatch(userLogin())
             
       return response.data
@@ -65,9 +62,7 @@ function CheckSubscription() {
   }
 
   useEffect(() => {
-    // Check if this is a returning user (logged in) or new registration
     if (user && user.id) {
-      // ✅ UPDATED: Check if user already has active subscription OR is exempt
       if ((user.subscription_status === 'active' && user.stripe_subscription_id) || user.subscription_exempt) {
         toast.info(user.subscription_exempt 
           ? 'You have subscription access!' 
@@ -83,7 +78,6 @@ function CheckSubscription() {
         email: user.email,
       })
     } else {
-      // New user registration flow
       const storedData = sessionStorage.getItem('registrationData')
       if (!storedData) {
         history.push('/register')
@@ -122,7 +116,6 @@ function CheckSubscription() {
 
         const { url, sessionId } = checkoutResponse.data
 
-        // Store info for success page
         sessionStorage.setItem('subscription_in_progress', JSON.stringify({
           userId: user.id,
           email: registrationData.email,
@@ -131,10 +124,8 @@ function CheckSubscription() {
           timestamp: Date.now()
         }))
 
-        // Clear registration data
         sessionStorage.removeItem('registrationData')
 
-        // Redirect to Stripe
         if (url) {
           window.location.href = url
         } else if (sessionId) {
@@ -143,7 +134,6 @@ function CheckSubscription() {
         }
         
       } else {
-        // New user registration flow
         const registrationResponse = await axiosInstance.post('/auth/register', {
           ...registrationData,
           selectedPlan: selectedPlan,
@@ -167,17 +157,14 @@ function CheckSubscription() {
 
           const { sessionId, url } = checkoutResponse.data
           
-          // Store registration data for success page
           sessionStorage.setItem('subscription_in_progress', JSON.stringify({
             email: registrationData.email,
             plan: selectedPlan,
             isReturning: false
           }))
           
-          // Clear stored registration data
           sessionStorage.removeItem('registrationData')
           
-          // Redirect to Stripe checkout
           if (url) {
             window.location.href = url
           } else {
@@ -190,19 +177,15 @@ function CheckSubscription() {
       console.error('❌ Checkout error:', err)
       console.error('Error response:', err.response?.data)
       
-      // ✅ CHECK FOR needsRefresh FLAG
       if (err.response?.data?.needsRefresh === true) {
         
         try {
-          // Refresh user data from backend
           await refreshUserData()
           
-          // Show appropriate message
           const message = err.response?.data?.error || 
                          'You already have an active subscription. Your account has been updated.'
           toast.success(message)
           
-          // Redirect to dashboard
           setTimeout(() => {
             history.push('/dashboard')
           }, 2000)
@@ -214,14 +197,12 @@ function CheckSubscription() {
         }
       }
       
-      // Handle other error types
       const errorMessage = err.response?.data?.message || 
                           err.response?.data?.error || 
                           'Something went wrong during checkout'
       
       toast.error(errorMessage)
       
-      // More specific error handling
       if (err.response?.status === 401) {
         toast.error('Please log in again to continue')
         history.push('/login')
@@ -230,7 +211,6 @@ function CheckSubscription() {
         history.push('/register')
       } else if (err.response?.status === 400 && 
                  err.response?.data?.error?.includes('already have an active subscription')) {
-        // Additional check for active subscription error
         try {
           await refreshUserData()
           toast.info('You already have an active subscription!')

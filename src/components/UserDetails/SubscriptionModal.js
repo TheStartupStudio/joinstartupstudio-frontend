@@ -22,10 +22,10 @@ function SubscriptionModal({
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        if (!user?.customerId) return
+        if (!user?.customer_id) return
 
         const response = await axiosInstance.get(
-          `/course-subscription/invoices/${user.customerId}`
+          `/course-subscription/invoices/${user.customer_id}`
         )
         setInvoices(response.data)
       } catch (error) {
@@ -36,7 +36,7 @@ function SubscriptionModal({
     }
 
     fetchInvoices()
-  }, [user?.customerId])
+  }, [user?.customer_id])
 
   return (
     <Modal
