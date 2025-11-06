@@ -144,6 +144,17 @@ const UserManagement = () => {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
+  // Helper function to format dates
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A'
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric'
+    })
+  }
+
   // Function to fetch users data
   const fetchUsers = async (page = 1, search = '') => {
     setUsersLoading(true)
@@ -164,8 +175,9 @@ const UserManagement = () => {
           organization_name: user.organization_name,
           email: user.email,
           level: user.level,
-          reflections: user.reflections,
-          total_paid: Math.round(user.total_paid) // Round to integer as expected
+          last_active: user.last_active,
+          trial_start: user.trial_start,
+          activation_date: user.activation_date
         }))
 
         setUsersData(mappedData)
@@ -247,16 +259,22 @@ const UserManagement = () => {
       )
     },
     {
-      key: 'reflections',
-      title: 'REFLECTIONS',
+      key: 'last_active',
+      title: 'LAST ACTIVE',
       sortable: true,
-      render: (value) => <span className="reflections-count">{value}</span>
+      render: (value) => <span className="last-active-date">{formatDate(value)}</span>
     },
     {
-      key: 'total_paid',
-      title: 'TOTAL PAID',
+      key: 'trial_start',
+      title: 'TRIAL START',
       sortable: true,
-      render: (value) => <span className="total-paid">${value}</span>
+      render: (value) => <span className="trial-start-date">{formatDate(value)}</span>
+    },
+    {
+      key: 'activation_date',
+      title: 'ACTIVATION DATE',
+      sortable: true,
+      render: (value) => <span className="activation-date">{formatDate(value)}</span>
     }
   ], [])
 
