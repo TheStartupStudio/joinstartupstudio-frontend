@@ -1,5 +1,5 @@
 import './index.css'
-import React, { useEffect, useState, useMemo, useRef } from 'react'
+import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
@@ -39,6 +39,8 @@ import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearnersModal/index'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
+import axiosInstance from '../../utils/AxiosInstance'
+
 
 const UserManagement = () => {
   const dispatch = useDispatch()
@@ -50,6 +52,7 @@ const UserManagement = () => {
   
   const [activeTab, setActiveTab] = useState(isInstructor ? 'Users' : 'Organizations')
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [showAddDropdown, setShowAddDropdown] = useState(false) 
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
@@ -74,6 +77,17 @@ const UserManagement = () => {
   const [isSingleAction, setIsSingleAction] = useState(false) 
   const [showBulkAddLearnersModal, setShowBulkAddLearnersModal] = useState(false)
   const [showBulkAddOrganizationsModal, setShowBulkAddOrganizationsModal] = useState(false) 
+
+
+    // New state for users data and pagination
+  const [usersData, setUsersData] = useState([])
+  const [usersLoading, setUsersLoading] = useState(false)
+  const [usersPagination, setUsersPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1
+  })
 
   const organizationsData = [
     {
@@ -120,35 +134,57 @@ const UserManagement = () => {
     }
   ]
 
-  const usersData = [
-    {
-      id: 1,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L2',
-      reflections: 24,
-      total_paid: 299
-    },
-    {
-      id: 2,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L1',
-      reflections: 18,
-      total_paid: 199
-    },
-    {
-      id: 3,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L3',
-      reflections: 32,
-      total_paid: 399
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+      setCurrentPage(1) // Reset to first page when search changes
+    }, 500) // 500ms delay
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Function to fetch users data
+  const fetchUsers = async (page = 1, search = '') => {
+    setUsersLoading(true)
+    try {
+      const response = await axiosInstance.get('/super-admin/users', {
+        params: {
+          page,
+          limit: 10,
+          search: search || undefined
+        }
+      })
+
+      if (response.data.success) {
+        // Map API data to expected format
+        const mappedData = response.data.data.map(user => ({
+          id: user.id,
+          name: user.name,
+          organization_name: user.organization_name,
+          email: user.email,
+          level: user.level,
+          reflections: user.reflections,
+          total_paid: Math.round(user.total_paid) // Round to integer as expected
+        }))
+
+        setUsersData(mappedData)
+        setUsersPagination(response.data.pagination)
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error)
+      toast.error('Failed to load users data')
+    } finally {
+      setUsersLoading(false)
     }
-  ]
+  }
+
+  // Fetch users when component mounts or when debounced search/page changes
+  useEffect(() => {
+    if (activeTab === 'Users') {
+      fetchUsers(currentPage, debouncedSearchQuery)
+    }
+  }, [activeTab, currentPage, debouncedSearchQuery])
 
   const organizationsColumns = useMemo(() => [
     {
@@ -588,10 +624,18 @@ const UserManagement = () => {
     }
   }, [])
 
+  // Handle pagination
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= usersPagination.totalPages) {
+      setCurrentPage(newPage)
+    }
+  }
+
   const currentData = activeTab === 'Organizations' ? organizationsData : usersData
   const currentColumns = activeTab === 'Organizations' ? organizationsColumns : usersColumns
   const currentOptions = activeTab === 'Organizations' ? optionsOrganizations : optionsUsers
   const currentBulkOptions = activeTab === 'Organizations' ? bulkOptionsOrganizations : bulkOptionsUsers
+  const isLoading = activeTab === 'Users' ? usersLoading : false
 
   return (
     <div>
@@ -795,34 +839,81 @@ const UserManagement = () => {
             onRowAction={handleRowAction}
             showCheckbox={true}
             activeTab={activeTab}
+            loading={isLoading}
           />
         </div>
 
-        <div className="pagination-container">
-          <button className="pagination-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        {activeTab === 'Users' && (
+          <div className="pagination-container">
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </button>
-          <button className="pagination-btn">
-           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-            <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          </button>
-          <span className="pagination-info">1 / 2</span>
-          <button className="pagination-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-              <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </button>
+            <span className="pagination-info">{currentPage} / {usersPagination.totalPages}</span>
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === usersPagination.totalPages}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(usersPagination.totalPages)}
+              disabled={currentPage === usersPagination.totalPages}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {!activeTab === 'Users' && (
+          <div className="pagination-container">
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button className="pagination-btn">
+             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </button>
-          <button className="pagination-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
+            </button>
+            <span className="pagination-info">1 / 2</span>
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       {!isInstructor && (
@@ -882,7 +973,7 @@ const UserManagement = () => {
         confirmText={
           isSingleAction
             ? `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
-            : `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+            : `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}` 
         }
         loading={loading}
       />
@@ -920,7 +1011,7 @@ const UserManagement = () => {
         confirmText={
           isSingleAction
             ? `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
-            : `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+            : `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}` 
         }
         loading={loading}
       />
