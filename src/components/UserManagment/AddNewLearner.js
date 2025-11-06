@@ -45,37 +45,39 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   }, [show])
 
   // Initialize form data when in edit mode
-  useEffect(() => {
-    if (mode === 'edit' && learnerData) {
-      setFormData({
-        learnerName: learnerData.name || '',
-        email: learnerData.email || '',
-        password: '********',
-        address: learnerData.address || '',
-        city: learnerData.city || '',
-        state: learnerData.state || '',
-        gender: learnerData.gender || '',
-        learnerType: learnerData.learnerType || '',
-        birthDate: learnerData.birthDate ? new Date(learnerData.birthDate) : null,
-        organization: learnerData.organization || ''
-      })
-      setIsUserActive(learnerData.activeStatus === 1)
-    } else {
-      setFormData({
-        learnerName: '',
-        email: '',
-        password: '',
-        address: '',
-        city: '',
-        state: '',
-        gender: '',
-        learnerType: '',
-        birthDate: null,
-        organization: ''
-      })
-      setIsUserActive(true)
+useEffect(() => {
+    if (mode === 'edit' && learnerData?.id && show) {
+      fetchLearnerData(learnerData.id)
     }
   }, [mode, learnerData, show])
+
+
+
+  const fetchLearnerData = async (userId) => {
+    try {
+      const response = await axiosInstance.get(`/super-admin/learners/${userId}`)
+      const data = response.data.data
+      
+      setFormData({
+        learnerName: data.name || '',
+        email: data.email || '',
+        password: '********', // Don't load actual password
+        address: data.address || '',
+        city: data.city || '',
+        state: data.state || '',
+        gender: data.gender || '',
+        learnerType: data.courseLevel || '',
+        birthDate: data.birthDate ? new Date(data.birthDate) : null,
+        organization: data.organizationId || ''
+      })
+      // Fix: Use subscription_status instead of activeStatus
+      setIsUserActive(data.activeStatus)
+    
+    } catch (error) {
+      console.error('Error fetching learner data:', error)
+      toast.error('Failed to load learner data')
+    }
+  }
 
   // Close calendar when clicking outside
   useEffect(() => {
@@ -198,10 +200,10 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
       return false
     }
 
-    if (!learnerType) {
-      toast.error('Learner type is required')
-      return false
-    }
+    // if (!learnerType) {
+    //   toast.error('Learner type is required')
+    //   return false
+    // }
 
     // Birth date validation - Allow all ages but prevent future dates
     if (!birthDate) {
@@ -217,10 +219,10 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
       }
     }
 
-    if (!organization) {
-      toast.error('Organization is required')
-      return false
-    }
+    // if (!organization) {
+    //   toast.error('Organization is required')
+    //   return false
+    // }
 
     return true
   }
@@ -230,19 +232,37 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
 
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
+      const payload = {
+        learnerName: formData.learnerName,
+        email: formData.email,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        gender: formData.gender,
+        birthDate: formData.birthDate ? formData.birthDate.toISOString().split('T')[0] : null,
+        organization: null, // Empty for now as requested
+        activeStatus: isUserActive ? 1 : 0
+      }
+
       if (mode === 'edit') {
-        console.log('Updating learner:', formData)
+        // Don't include password in edit unless it's being changed
+        if (formData.password !== '********') {
+          payload.password = formData.password
+        }
+
+        await axiosInstance.put(`/super-admin/learners/${learnerData.id}`, payload)
         toast.success('Learner updated successfully!')
       } else {
-        console.log('Creating new learner:', formData)
+        // Include password for new learner
+        payload.password = formData.password
+        await axiosInstance.post('/super-admin/learners', payload)
         toast.success('Learner added successfully!')
       }
-      
+
       onSuccess()
       onHide()
-      
+
+      // Reset form if adding new learner
       if (mode === 'add') {
         setFormData({
           learnerName: '',
@@ -259,11 +279,13 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
       }
     } catch (error) {
       console.error(`Error ${mode === 'edit' ? 'updating' : 'adding'} learner:`, error)
-      toast.error(`Failed to ${mode === 'edit' ? 'update' : 'add'} learner`)
+      const errorMessage = error.response?.data?.error || `Failed to ${mode === 'edit' ? 'update' : 'add'} learner`
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
   }
+
 
   const handleClose = () => {
     if (loading) return
@@ -283,18 +305,19 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const handleConfirmResetPassword = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Password reset for learner:', learnerData?.id)
+      await axiosInstance.post(`/super-admin/users/${learnerData.id}/reset-password`)
       toast.success('Password has been reset to default (Learntostart1!)')
       setShowResetPasswordPopup(false)
       onHide()
     } catch (error) {
+      console.error('Error resetting password:', error)
       toast.error('Failed to reset password')
       setShowMainModal(true)
     } finally {
       setLoading(false)
     }
   }
+
 
   const handleDeleteLearnerClick = () => {
     setShowMainModal(false)
@@ -309,13 +332,13 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const handleConfirmDelete = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Deleting learner:', learnerData?.id)
+      await axiosInstance.delete(`/super-admin/users/${learnerData.id}?hardDelete=true`)
       toast.success('Learner deleted successfully!')
       setShowDeletePopup(false)
       onHide()
       onSuccess()
     } catch (error) {
+      console.error('Error deleting learner:', error)
       toast.error('Failed to delete learner')
       setShowMainModal(true)
     } finally {
@@ -331,20 +354,31 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const handleConfirmDeactivateUser = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
       const newStatus = !isUserActive
-      console.log(`${newStatus ? 'Activating' : 'Deactivating'} learner:`, learnerData?.id)
-      toast.success(`User ${newStatus ? 'activated' : 'deactivated'} successfully!`)
+
+      if (newStatus) {
+        // Activate user
+        await axiosInstance.post(`/super-admin/users/${learnerData.id}/reactivate`)
+        toast.success('User activated successfully!')
+      } else {
+        // Deactivate user
+        await axiosInstance.delete(`/super-admin/users/${learnerData.id}`)
+        toast.success('User deactivated successfully!')
+      }
+
       setIsUserActive(newStatus)
       setShowDeactivateUserPopup(false)
       setShowMainModal(true)
+      onSuccess() // Refresh the user list
     } catch (error) {
+      console.error(`Error ${isUserActive ? 'deactivating' : 'activating'} user:`, error)
       toast.error(`Failed to ${isUserActive ? 'deactivate' : 'activate'} user`)
       setShowMainModal(true)
     } finally {
       setLoading(false)
     }
   }
+
 
   const isEditMode = mode === 'edit'
 
