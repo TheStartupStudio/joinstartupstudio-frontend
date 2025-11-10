@@ -17,13 +17,16 @@ import userPassword from '../../assets/images/academy-icons/svg/Icon_User_Pass.s
 import download from '../../assets/images/academy-icons/svg/download.svg'
 import newCity from '../../assets/images/academy-icons/svg/city.svg'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
+import axiosInstance from '../../utils/AxiosInstance'
 import './ViewOrganizationLearnersModal.css'
 
-const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
+const ViewOrganizationLearnersModal = ({ show, onHide, organizationName, organizationId }) => {
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
   
   // Popup states
   const [showDeletePopup, setShowDeletePopup] = useState(false)
@@ -40,93 +43,88 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
   const [selectedLearner, setSelectedLearner] = useState(null)
   const [learnerModalMode, setLearnerModalMode] = useState('add')
 
+  // Data and pagination
+  const [learnersData, setLearnersData] = useState([])
+  const [learnersLoading, setLearnersLoading] = useState(false)
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1
+  })
+
   // Refs for dropdowns
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
-  // Dummy learners data
-  const learnersData = [
-    {
-      id: 1,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L2',
-      reflections: 24,
-      total_paid: 299,
-      isActive: true
-    },
-    {
-      id: 2,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L1',
-      reflections: 18,
-      total_paid: 199,
-      isActive: true
-    },
-    {
-      id: 3,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L3',
-      reflections: 32,
-      total_paid: 399,
-      isActive: false
-    },
-    {
-      id: 4,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L2',
-      reflections: 24,
-      total_paid: 299,
-      isActive: true
-    },
-    {
-      id: 5,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L1',
-      reflections: 18,
-      total_paid: 199,
-      isActive: true
-    },
-    {
-      id: 6,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L3',
-      reflections: 32,
-      total_paid: 399,
-      isActive: true
-    },
-    {
-      id: 7,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L2',
-      reflections: 24,
-      total_paid: 299,
-      isActive: true
-    },
-    {
-      id: 8,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L1',
-      reflections: 18,
-      total_paid: 199,
-      isActive: true
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+      setCurrentPage(1)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Fetch learners data
+  const fetchLearners = async (page = 1, search = '') => {
+    if (!organizationId) return
+
+    setLearnersLoading(true)
+    try {
+      const response = await axiosInstance.get(`/super-admin/universities/${organizationId}/learners`, {
+        params: {
+          page,
+          limit: 10,
+          search: search || undefined
+        }
+      })
+
+      if (response.data.success) {
+        const mappedData = response.data.data.map(learner => ({
+          id: learner.id,
+          name: learner.name,
+          organization_name: learner.organization_name,
+          email: learner.email,
+          level: learner.level,
+          reflections: learner.reflections,
+          total_paid: Math.round(learner.total_paid),
+          last_active: learner.last_active,
+          trial_start: learner.trial_start,
+          activation_date: learner.member_since,
+          activeStatus: learner.activeStatus
+        }))
+
+        setLearnersData(mappedData)
+        setPagination(response.data.pagination)
+      }
+    } catch (error) {
+      console.error('Error fetching learners:', error)
+      toast.error('Failed to load learners data')
+    } finally {
+      setLearnersLoading(false)
     }
-  ]
+  }
+
+  // Fetch data when modal opens or when search/page changes
+  useEffect(() => {
+    if (show && organizationId) {
+      fetchLearners(currentPage, debouncedSearchQuery)
+    }
+  }, [show, organizationId, currentPage, debouncedSearchQuery])
+
+  // Reset state when modal closes
+  useEffect(() => {
+    if (!show) {
+      setSearchQuery('')
+      setCurrentPage(1)
+      setSelectedUsers([])
+      setLearnersData([])
+    }
+  }, [show])
+
+// ...existing code...
 
   const learnersColumns = useMemo(() => [
     {
@@ -136,7 +134,7 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
       filterable: true,
       render: (value, item) => (
         <div className="learner-info">
-          <div className="status-indicator"></div>
+          <div className={`status-indicator ${item.activeStatus ? 'active' : 'inactive'}`}></div>
           <div className="learner-details">
             <div className="learner-name">{item.name}</div>
             <div className="learner-organization">{item.organization_name}</div>
@@ -150,26 +148,60 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
       title: 'LEVEL',
       sortable: true,
       filterable: true,
+      render: (value) => {
+        const displayLevel = value || 'L1'
+        return (
+          <span className={`level-badge level-${displayLevel?.toLowerCase()}`}>
+            {displayLevel}
+          </span>
+        )
+      }
+    },
+    {
+      key: 'last_active',
+      title: 'LAST ACTIVE',
+      sortable: true,
       render: (value) => (
-        <span className={`level-badge level-${value.toLowerCase()}`}>
-          {value}
+        <span className="last-active">
+          {value ? new Date(value).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: 'numeric',
+            year: 'numeric'
+          }) : 'N/A'}
         </span>
       )
     },
     {
-      key: 'reflections',
-      title: 'REFLECTIONS',
+      key: 'trial_start',
+      title: 'TRIAL START',
       sortable: true,
-      render: (value) => <span className="reflections-count">{value}</span>
+      render: (value) => (
+        <span className="trial-start">
+          {value ? new Date(value).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: 'numeric',
+            year: 'numeric'
+          }) : 'N/A'}
+        </span>
+      )
     },
     {
-      key: 'total_paid',
-      title: 'TOTAL PAID',
+      key: 'activation_date',
+      title: 'ACTIVATION DATE',
       sortable: true,
-      render: (value) => <span className="total-paid">${value}</span>
+      render: (value) => (
+        <span className="activation-date">
+          {value ? new Date(value).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: 'numeric',
+            year: 'numeric'
+          }) : 'N/A'}
+        </span>
+      )
     }
   ], [])
 
+// ...existing code...
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -216,6 +248,10 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
     }
   }
 
+  const handleSelectionChange = (selectedItems) => {
+    setSelectedUsers(selectedItems)
+  }
+
   // Learner modal handlers
   const handleViewLearner = (learner) => {
     setSelectedLearner(learner)
@@ -244,6 +280,7 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
   const handleLearnerModalSuccess = () => {
     toast.success('Learner saved successfully!')
     setShowAddLearnerModal(false)
+    fetchLearners(currentPage, debouncedSearchQuery)
   }
 
   // Cancel handlers
@@ -251,31 +288,35 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
     setShowDeletePopup(false)
     setSelectedUser(null)
     setSelectedUsers([])
+    setIsBulkAction(false)
   }
 
   const handleResetPasswordCancel = () => {
     setShowResetPasswordPopup(false)
     setSelectedUser(null)
     setSelectedUsers([])
+    setIsBulkAction(false)
   }
 
   const handleDeactivateUserCancel = () => {
     setShowDeactivateUserPopup(false)
     setSelectedUser(null)
     setSelectedUsers([])
+    setIsBulkAction(false)
   }
 
   // Confirm handlers
   const handleConfirmDelete = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
       if (isBulkAction) {
-        console.log('Deleting users:', selectedUsers)
-        toast.success(`${selectedUsers.length} user(s) deleted successfully!`)
+        const userIds = selectedUsers.map(user => user.id)
+        await axiosInstance.delete('/super-admin/users/bulk-delete', {
+          data: { userIds }
+        })
+        toast.success(`${userIds.length} user(s) deleted successfully!`)
       } else {
-        console.log('Deleting user:', selectedUser?.id)
+        await axiosInstance.delete(`/super-admin/users/${selectedUser.id}`)
         toast.success('User deleted successfully!')
       }
       
@@ -283,8 +324,10 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
       setSelectedUser(null)
       setSelectedUsers([])
       setIsBulkAction(false)
+      fetchLearners(currentPage, debouncedSearchQuery)
     } catch (error) {
-      toast.error('Failed to delete user(s)')
+      console.error('Delete error:', error)
+      toast.error(error.response?.data?.message || 'Failed to delete user(s)')
     } finally {
       setLoading(false)
     }
@@ -293,14 +336,13 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
   const handleConfirmResetPassword = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
       if (isBulkAction) {
-        console.log('Resetting passwords for users:', selectedUsers)
-        toast.success(`Password reset for ${selectedUsers.length} user(s)`)
+        const userIds = selectedUsers.map(user => user.id)
+        await axiosInstance.post('/super-admin/users/bulk-reset-passwords', { userIds })
+        toast.success(`${userIds.length} password(s) reset successfully!`)
       } else {
-        console.log('Resetting password for user:', selectedUser?.id)
-        toast.success('Password has been reset to default (Learntostart1!)')
+        await axiosInstance.patch(`/auth/setDefaultUserPassword/${selectedUser.id}`)
+        toast.success('Password reset successfully!')
       }
       
       setShowResetPasswordPopup(false)
@@ -308,7 +350,8 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
       setSelectedUsers([])
       setIsBulkAction(false)
     } catch (error) {
-      toast.error('Failed to reset password(s)')
+      console.error('Reset password error:', error)
+      toast.error(error.response?.data?.message || 'Failed to reset password(s)')
     } finally {
       setLoading(false)
     }
@@ -317,23 +360,24 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
   const handleConfirmDeactivateUser = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
       if (isBulkAction) {
-        console.log('Deactivating users:', selectedUsers)
-        toast.success(`${selectedUsers.length} user(s) deactivated successfully!`)
+        const userIds = selectedUsers.map(user => user.id)
+        await axiosInstance.post('/super-admin/users/bulk-deactivate', { userIds })
+        toast.success(`${userIds.length} user(s) deactivated successfully!`)
       } else {
-        const action = selectedUser?.isActive ? 'deactivated' : 'activated'
-        console.log(`${action} user:`, selectedUser?.id)
-        toast.success(`User ${action} successfully!`)
+        const userIds = [selectedUser.id]
+        await axiosInstance.post('/super-admin/users/bulk-deactivate', { userIds })
+        toast.success('User deactivated successfully!')
       }
       
       setShowDeactivateUserPopup(false)
       setSelectedUser(null)
       setSelectedUsers([])
       setIsBulkAction(false)
+      fetchLearners(currentPage, debouncedSearchQuery)
     } catch (error) {
-      toast.error('Failed to update user status')
+      console.error('Deactivate error:', error)
+      toast.error(error.response?.data?.message || 'Failed to deactivate user(s)')
     } finally {
       setLoading(false)
     }
@@ -341,27 +385,73 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
 
   // Bulk action handlers
   const handleBulkResetPasswords = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setIsBulkAction(true)
     setShowResetPasswordPopup(true)
     setShowBulkDropdown(false)
   }
 
   const handleBulkDeactivateUsers = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setIsBulkAction(true)
     setShowDeactivateUserPopup(true)
     setShowBulkDropdown(false)
   }
 
   const handleBulkDeleteUsers = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setIsBulkAction(true)
     setShowDeletePopup(true)
     setShowBulkDropdown(false)
   }
 
-  const handleBulkExportUsers = () => {
-    console.log('Export Users')
-    toast.success('Users exported successfully!')
+  const handleBulkExportUsers = async () => {
+    try {
+      const userIds = selectedUsers.length > 0 
+        ? selectedUsers.map(user => user.id).join(',')
+        : undefined
+
+      const response = await axiosInstance.get('/super-admin/users/export', {
+        params: userIds ? { userIds } : {},
+        responseType: 'blob'
+      })
+
+      const blob = new Blob([response.data], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${organizationName}_users_export_${new Date().toISOString()}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+      toast.success(
+        selectedUsers.length > 0
+          ? `${selectedUsers.length} user(s) exported successfully!`
+          : 'All users exported successfully!'
+      )
+    } catch (error) {
+      console.error('Error exporting users:', error)
+      toast.error('Failed to export users')
+    }
     setShowBulkDropdown(false)
+  }
+
+  // Pagination handlers
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setCurrentPage(newPage)
+    }
   }
 
   const addOptions = [
@@ -599,29 +689,48 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
                 onRowAction={handleRowAction}
                 showCheckbox={true}
                 activeTab="Users"
+                loading={learnersLoading}
+                onSelectionChange={handleSelectionChange}
+                selectedItems={selectedUsers}
               />
             </div>
 
             {/* Pagination */}
             <div className="pagination-container">
-              <button className="pagination-btn">
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
-              <button className="pagination-btn">
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                   <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
-              <span className="pagination-info">1 / 2</span>
-              <button className="pagination-btn">
+              <span className="pagination-info">{currentPage} / {pagination.totalPages}</span>
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === pagination.totalPages}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                   <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
-              <button className="pagination-btn">
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(pagination.totalPages)}
+                disabled={currentPage === pagination.totalPages}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -660,6 +769,7 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
         onSuccess={() => {
           setShowBulkAddLearnersModal(false)
           toast.success('Learners added successfully!')
+          fetchLearners(currentPage, debouncedSearchQuery)
         }}
         mode="learners"
       />
@@ -704,14 +814,14 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
         title={
           isBulkAction
             ? "Deactivate User(s)?"
-            : selectedUser?.isActive
+            : selectedUser?.activeStatus
             ? "Deactivate User?"
             : "Activate User?"
         }
         message={
           isBulkAction
             ? "Are you sure you want to deactivate the user(s)? Work and settings will be preserved, but user(s) will no longer have access to the platform."
-            : selectedUser?.isActive
+            : selectedUser?.activeStatus
             ? `Are you sure you want to deactivate ${selectedUser?.name}? Work and settings will be preserved, but the user will no longer have access to the platform.`
             : `Are you sure you want to activate ${selectedUser?.name}? The user will regain access to the platform.`
         }
@@ -719,7 +829,7 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName }) => {
         confirmText={
           isBulkAction
             ? "YES, DEACTIVATE USER(S)"
-            : selectedUser?.isActive
+            : selectedUser?.activeStatus
             ? "YES, DEACTIVATE USER"
             : "YES, ACTIVATE USER"
         }
