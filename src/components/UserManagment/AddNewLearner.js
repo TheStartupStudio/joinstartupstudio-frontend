@@ -39,6 +39,8 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     organization: ''
   })
 
+  const [organizations, setOrganizations] = useState([])
+
   // Sync showMainModal with show prop
   useEffect(() => {
     setShowMainModal(show)
@@ -51,7 +53,20 @@ useEffect(() => {
     }
   }, [mode, learnerData, show])
 
-
+  // Fetch organizations on component mount
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await axiosInstance.get('super-admin/organization/simple')
+        if (response.data.success) {
+          setOrganizations(response.data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching organizations:', error)
+      }
+    }
+    fetchOrganizations()
+  }, [])
 
   const fetchLearnerData = async (userId) => {
     try {
@@ -68,9 +83,11 @@ useEffect(() => {
         gender: data.gender || '',
         learnerType: data.courseLevel || '',
         birthDate: data.birthDate ? new Date(data.birthDate) : null,
-        organization: data.organizationId || ''
+        organization: data.University?.id || data.organizationId || ''
       })
-      // Fix: Use subscription_status instead of activeStatus
+
+      console.log('Ardi 11/10, ', data)
+      // Fix: Use activeStatus directly
       setIsUserActive(data.activeStatus)
     
     } catch (error) {
@@ -110,7 +127,7 @@ useEffect(() => {
 
   const learnerTypeOptions = ['Student', 'Professional', 'Educator', 'Other']
 
-  const organizationOptions = ['Educational Institution', 'Corporate', 'Non-Profit']
+  // const organizationOptions = ['Educational Institution', 'Corporate', 'Non-Profit']
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -228,7 +245,9 @@ useEffect(() => {
   }
 
   const handleSubmit = async () => {
-    if (!validateForm()) return
+   if (!validateForm()) return
+
+  //  console.log('ardi 250, ',formdata)
 
     setLoading(true)
     try {
@@ -240,7 +259,7 @@ useEffect(() => {
         state: formData.state,
         gender: formData.gender,
         birthDate: formData.birthDate ? formData.birthDate.toISOString().split('T')[0] : null,
-        organization: null, // Empty for now as requested
+        universityId: formData.organization || null, // Use the selected organization ID
         activeStatus: isUserActive ? 1 : 0
       }
 
@@ -289,6 +308,20 @@ useEffect(() => {
 
   const handleClose = () => {
     if (loading) return
+    // Reset form data when modal closes
+    setFormData({
+      learnerName: '',
+      email: '',
+      password: '',
+      address: '',
+      city: '',
+      state: '',
+      gender: '',
+      learnerType: '',
+      birthDate: null,
+      organization: ''
+    })
+    setIsUserActive(true)
     onHide()
   }
 
@@ -381,6 +414,9 @@ useEffect(() => {
 
 
   const isEditMode = mode === 'edit'
+
+  // Find selected organization for display
+  const selectedOrganization = organizations.find(org => org.id === formData.organization)
 
   return (
     <>
@@ -715,7 +751,7 @@ useEffect(() => {
                 onClick={() => !loading && setShowOrganizationDropdown(!showOrganizationDropdown)}
               >
                 <span className={formData.organization ? 'selected-value' : 'placeholder-value'}>
-                  {formData.organization || 'Select Organization'}
+                  {selectedOrganization ? selectedOrganization.name : 'Select Organization'}
                 </span>
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                   <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -723,13 +759,13 @@ useEffect(() => {
               </div>
               {showOrganizationDropdown && (
                 <div className="dropdown-menu-learner">
-                  {organizationOptions.map((organization, index) => (
+                  {organizations.map((organization) => (
                     <div
-                      key={index}
+                      key={organization.id}
                       className="dropdown-item-learner"
-                      onClick={() => handleDropdownSelect('organization', organization)}
+                      onClick={() => handleDropdownSelect('organization', organization.id)}
                     >
-                      {organization}
+                      {organization.name}
                     </div>
                   ))}
                 </div>

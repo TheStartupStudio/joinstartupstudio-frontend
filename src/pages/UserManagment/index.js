@@ -98,6 +98,10 @@ const UserManagement = () => {
     totalPages: 1
   })
 
+  // Selected users and organizations for bulk actions
+  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectedOrganizations, setSelectedOrganizations] = useState([])
+
   // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -475,19 +479,19 @@ const UserManagement = () => {
     setShowAddDropdown(false)
   }
 
-  const deactivateOrganizations = () => {
-    setActionContext('organizations')
-    setIsSingleAction(false)
-    setShowDeactivatePopup(true)
-    setShowBulkDropdown(false)
-  }
+  // const deactivateOrganizations = () => {
+  //   setActionContext('organizations')
+  //   setIsSingleAction(false)
+  //   setShowDeactivatePopup(true)
+  //   setShowBulkDropdown(false)
+  // }
 
-  const deleteOrganizations = () => {
-    setActionContext('organizations')
-    setIsSingleAction(false)
-    setShowDeletePopup(true)
-    setShowBulkDropdown(false)
-  }
+  // const deleteOrganizations = () => {
+  //   setActionContext('organizations')
+  //   setIsSingleAction(false)
+  //   setShowDeletePopup(true)
+  //   setShowBulkDropdown(false)
+  // }
 
   const exportOrganizations = async () => {
     try {
@@ -513,28 +517,96 @@ const UserManagement = () => {
   }
 
   const resetPasswords = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setActionContext('users')
+    setSelectedItems(selectedUsers)
     setIsSingleAction(false)
     setShowResetPasswordPopup(true)
     setShowBulkDropdown(false)
   }
 
   const deactivateUsers = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setActionContext('users')
+    setSelectedItems(selectedUsers)
     setIsSingleAction(false)
     setShowDeactivatePopup(true)
     setShowBulkDropdown(false)
   }
 
   const deleteUsers = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setActionContext('users')
+    setSelectedItems(selectedUsers)
     setIsSingleAction(false)
     setShowDeletePopup(true)
     setShowBulkDropdown(false)
   }
 
-  const exportUsers = () => {
-    toast.success('Users exported successfully!')
+  const exportUsers = async () => {
+    try {
+      const userIds = selectedUsers.length > 0 
+        ? selectedUsers.map(user => user.id).join(',')
+        : undefined
+
+      const response = await axiosInstance.get('/super-admin/users-csv/export', {
+        params: userIds ? { userIds } : {},
+        responseType: 'blob'
+      })
+
+      // Create download link
+      const blob = new Blob([response.data], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `users_export_${new Date().toISOString()}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+      toast.success(
+        selectedUsers.length > 0
+          ? `${selectedUsers.length} user(s) exported successfully!`
+          : 'All users exported successfully!'
+      )
+    } catch (error) {
+      console.error('Error exporting users:', error)
+      toast.error('Failed to export users')
+    }
+    setShowBulkDropdown(false)
+  }
+
+  const deactivateOrganizations = () => {
+    if (selectedOrganizations.length === 0) {
+      toast.warning('Please select at least one organization')
+      return
+    }
+    setActionContext('organizations')
+    setSelectedItems(selectedOrganizations)
+    setIsSingleAction(false)
+    setShowDeactivatePopup(true)
+    setShowBulkDropdown(false)
+  }
+
+  const deleteOrganizations = () => {
+    if (selectedOrganizations.length === 0) {
+      toast.warning('Please select at least one organization')
+      return
+    }
+    setActionContext('organizations')
+    setSelectedItems(selectedOrganizations)
+    setIsSingleAction(false)
+    setShowDeletePopup(true)
     setShowBulkDropdown(false)
   }
 
@@ -633,19 +705,22 @@ const UserManagement = () => {
         } else {
           const organizationIds = selectedItems.map(item => item.id)
           await axiosInstance.post('/super-admin/organizations/bulk-delete', { organizationIds })
-          toast.success('Organizations deleted successfully!')
+          toast.success(`${organizationIds.length} organization(s) deleted successfully!`)
         }
-        // Refresh organizations list
+        setSelectedOrganizations([])
         fetchOrganizations(currentPage, debouncedSearchQuery)
       } else {
-        // TODO: Implement user deletion API
-        console.log('Deleting users:', selectedItems)
-        toast.success(
-          isSingleAction 
-            ? 'User deleted successfully!' 
-            : 'Users deleted successfully!'
-        )
-        // Refresh users list
+        if (isSingleAction) {
+          await axiosInstance.delete(`/super-admin/users/${selectedItems[0].id}`)
+          toast.success('User deleted successfully!')
+        } else {
+          const userIds = selectedItems.map(item => item.id)
+          await axiosInstance.post('/super-admin/users/bulk-delete', {
+            data: { userIds }
+          })
+          toast.success(`${userIds.length} user(s) deleted successfully!`)
+        }
+        setSelectedUsers([])
         fetchUsers(currentPage, debouncedSearchQuery)
       }
       
@@ -663,19 +738,22 @@ const UserManagement = () => {
   const handleConfirmResetPassword = async () => {
     setLoading(true)
     try {
-      // TODO: Implement password reset API
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Resetting passwords for users:', selectedItems)
-      toast.success(
-        isSingleAction 
-          ? 'Password reset successfully!' 
-          : 'Passwords reset successfully!'
-      )
+      if (isSingleAction) {
+        await axiosInstance.patch(`/auth/setDefaultUserPassword/${selectedItems[0].id}`)
+        toast.success('Password reset successfully!')
+      } else {
+        const userIds = selectedItems.map(item => item.id)
+        await axiosInstance.post('/super-admin/users/bulk-reset-passwords', { userIds })
+        toast.success(`${userIds.length} password(s) reset successfully!`)
+      }
+      
       setShowResetPasswordPopup(false)
       setSelectedItems([])
+      setSelectedUsers([])
       setIsSingleAction(false)
     } catch (error) {
-      toast.error('Failed to reset passwords')
+      console.error('Reset password error:', error)
+      toast.error(error.response?.data?.message || 'Failed to reset password(s)')
     } finally {
       setLoading(false)
     }
@@ -691,19 +769,21 @@ const UserManagement = () => {
         } else {
           const organizationIds = selectedItems.map(item => item.id)
           await axiosInstance.post('/super-admin/organizations/bulk-deactivate', { organizationIds })
-          toast.success('Organizations deactivated successfully!')
+          toast.success(`${organizationIds.length} organization(s) deactivated successfully!`)
         }
-        // Refresh organizations list
+        setSelectedOrganizations([])
         fetchOrganizations(currentPage, debouncedSearchQuery)
       } else {
-        // TODO: Implement user deactivation API
-        console.log('Deactivating users:', selectedItems)
-        toast.success(
-          isSingleAction 
-            ? 'User deactivated successfully!' 
-            : 'Users deactivated successfully!'
-        )
-        // Refresh users list
+        if (isSingleAction) {
+          const userIds = [selectedItems[0].id]
+          await axiosInstance.post('/super-admin/users/bulk-deactivate', { userIds })
+          toast.success('User deactivated successfully!')
+        } else {
+          const userIds = selectedItems.map(item => item.id)
+          await axiosInstance.post('/super-admin/users/bulk-deactivate', { userIds })
+          toast.success(`${userIds.length} user(s) deactivated successfully!`)
+        }
+        setSelectedUsers([])
         fetchUsers(currentPage, debouncedSearchQuery)
       }
       
@@ -717,6 +797,12 @@ const UserManagement = () => {
       setLoading(false)
     }
   }
+
+  // Reset selections when changing tabs
+  useEffect(() => {
+    setSelectedUsers([])
+    setSelectedOrganizations([])
+  }, [activeTab])
 
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
@@ -753,6 +839,15 @@ const UserManagement = () => {
   const currentBulkOptions = activeTab === 'Organizations' ? bulkOptionsOrganizations : bulkOptionsUsers
   const isLoading = activeTab === 'Users' ? usersLoading : organizationsLoading
   const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+
+  // Add handleSelectionChange function
+  const handleSelectionChange = (selectedItems) => {
+    if (activeTab === 'Users') {
+      setSelectedUsers(selectedItems)
+    } else {
+      setSelectedOrganizations(selectedItems)
+    }
+  }
 
   return (
     <div>
@@ -965,6 +1060,8 @@ const UserManagement = () => {
             showCheckbox={true}
             activeTab={activeTab}
             loading={isLoading}
+            onSelectionChange={handleSelectionChange}
+            selectedItems={activeTab === 'Users' ? selectedUsers : selectedOrganizations}
           />
         </div>
 

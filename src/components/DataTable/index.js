@@ -12,7 +12,9 @@ const DataTable = ({
   searchQuery = '',
   showCheckbox = true,
   activeTab = 'Organizations',
-  onReorder
+  onReorder,
+  onSelectionChange,
+  selectedItems = []
 }) => {
   
   const [openFilterDropdown, setOpenFilterDropdown] = useState(null)
@@ -21,6 +23,7 @@ const DataTable = ({
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
   const [draggedRow, setDraggedRow] = useState(null)
   const [draggedOverRow, setDraggedOverRow] = useState(null)
+  const [selectAll, setSelectAll] = useState(false)
   
   // Refs for click outside detection
   const filterDropdownRefs = useRef({})
@@ -51,6 +54,17 @@ const DataTable = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [openFilterDropdown, openMoreActionsDropdown])
+
+  // Update select all state when selectedItems changes
+  useEffect(() => {
+    if (selectedItems.length === 0) {
+      setSelectAll(false)
+    } else if (selectedItems.length === filteredData.length && filteredData.length > 0) {
+      setSelectAll(true)
+    } else {
+      setSelectAll(false)
+    }
+  }, [selectedItems, data])
   
   const filteredData = data.filter(item => {
     if (!searchQuery) return true
@@ -105,6 +119,31 @@ const DataTable = ({
   const handleMoreActionOptionClick = (action, item) => {
     handleActionClick(action, item)
     setOpenMoreActionsDropdown(null)
+  }
+
+  const handleSelectAll = (e) => {
+    const checked = e.target.checked
+    setSelectAll(checked)
+    
+    if (checked) {
+      onSelectionChange(filteredData)
+    } else {
+      onSelectionChange([])
+    }
+  }
+
+  const handleSelectRow = (item) => {
+    const isSelected = selectedItems.some(selected => selected.id === item.id)
+    
+    if (isSelected) {
+      onSelectionChange(selectedItems.filter(selected => selected.id !== item.id))
+    } else {
+      onSelectionChange([...selectedItems, item])
+    }
+  }
+
+  const isRowSelected = (item) => {
+    return selectedItems.some(selected => selected.id === item.id)
   }
 
   // Drag and drop handlers
@@ -420,7 +459,13 @@ const DataTable = ({
           <tr> 
             {showCheckbox && (
               <th className="checkbox-column">
-                <input type="checkbox" className="checkbox" />
+                <input 
+                  type="checkbox" 
+                  className="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                  disabled={filteredData.length === 0}
+                />
               </th>
             )}
             {columns.map((column, index) => (
@@ -505,7 +550,12 @@ const DataTable = ({
             >
               {showCheckbox && (
                 <td className="checkbox-column">
-                  <input type="checkbox" className="checkbox" />
+                  <input 
+                    type="checkbox" 
+                    className="checkbox"
+                    checked={isRowSelected(item)}
+                    onChange={() => handleSelectRow(item)}
+                  />
                 </td>
               )}
               {columns.map((column, colIndex) => (
