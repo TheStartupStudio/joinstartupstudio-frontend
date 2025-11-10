@@ -36,7 +36,9 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     gender: '',
     learnerType: '',
     birthDate: null,
-    organization: ''
+    organization: '',
+    roleId: 1, // Default to student
+    subscriptionExempt: false
   })
 
   const [organizations, setOrganizations] = useState([])
@@ -76,18 +78,18 @@ useEffect(() => {
       setFormData({
         learnerName: data.name || '',
         email: data.email || '',
-        password: '********', // Don't load actual password
+        password: '********',
         address: data.address || '',
         city: data.city || '',
         state: data.state || '',
         gender: data.gender || '',
         learnerType: data.courseLevel || '',
         birthDate: data.birthDate ? new Date(data.birthDate) : null,
-        organization: data.University?.id || data.organizationId || ''
+        organization: data.University?.id || data.organizationId || '',
+        roleId: data.role_id || 1,
+        subscriptionExempt: data.subscription_exempt || false
       })
 
-      console.log('Ardi 11/10, ', data)
-      // Fix: Use activeStatus directly
       setIsUserActive(data.activeStatus)
     
     } catch (error) {
@@ -127,6 +129,15 @@ useEffect(() => {
 
   const learnerTypeOptions = ['Student', 'Professional', 'Educator', 'Other']
 
+
+    const [showRoleDropdown, setShowRoleDropdown] = useState(false)
+
+  const roleOptions = [
+    { id: 1, name: 'Student' },
+    { id: 2, name: 'Client' },
+    { id: 3, name: 'Super Admin' }
+  ]
+
   // const organizationOptions = ['Educational Institution', 'Corporate', 'Non-Profit']
 
   const handleInputChange = (field, value) => {
@@ -160,6 +171,7 @@ useEffect(() => {
     setShowStateDropdown(false)
     setShowTypeDropdown(false)
     setShowOrganizationDropdown(false)
+    setShowRoleDropdown(false)
   }
 
   const handleStatusToggle = () => {
@@ -247,8 +259,6 @@ useEffect(() => {
   const handleSubmit = async () => {
    if (!validateForm()) return
 
-  //  console.log('ardi 250, ',formdata)
-
     setLoading(true)
     try {
       const payload = {
@@ -259,12 +269,13 @@ useEffect(() => {
         state: formData.state,
         gender: formData.gender,
         birthDate: formData.birthDate ? formData.birthDate.toISOString().split('T')[0] : null,
-        universityId: formData.organization || null, // Use the selected organization ID
-        activeStatus: isUserActive ? 1 : 0
+        universityId: formData.organization || null,
+        activeStatus: isUserActive ? 1 : 0,
+        role_id: formData.roleId,
+        subscription_exempt: formData.subscriptionExempt ? 1 : 0
       }
 
       if (mode === 'edit') {
-        // Don't include password in edit unless it's being changed
         if (formData.password !== '********') {
           payload.password = formData.password
         }
@@ -272,7 +283,6 @@ useEffect(() => {
         await axiosInstance.put(`/super-admin/learners/${learnerData.id}`, payload)
         toast.success('Learner updated successfully!')
       } else {
-        // Include password for new learner
         payload.password = formData.password
         await axiosInstance.post('/super-admin/learners', payload)
         toast.success('Learner added successfully!')
@@ -281,7 +291,6 @@ useEffect(() => {
       onSuccess()
       onHide()
 
-      // Reset form if adding new learner
       if (mode === 'add') {
         setFormData({
           learnerName: '',
@@ -293,7 +302,9 @@ useEffect(() => {
           gender: '',
           learnerType: '',
           birthDate: null,
-          organization: ''
+          organization: '',
+          roleId: 1,
+          subscriptionExempt: false
         })
       }
     } catch (error) {
@@ -305,10 +316,8 @@ useEffect(() => {
     }
   }
 
-
   const handleClose = () => {
     if (loading) return
-    // Reset form data when modal closes
     setFormData({
       learnerName: '',
       email: '',
@@ -319,7 +328,9 @@ useEffect(() => {
       gender: '',
       learnerType: '',
       birthDate: null,
-      organization: ''
+      organization: '',
+      roleId: 1,
+      subscriptionExempt: false
     })
     setIsUserActive(true)
     onHide()
@@ -417,6 +428,7 @@ useEffect(() => {
 
   // Find selected organization for display
   const selectedOrganization = organizations.find(org => org.id === formData.organization)
+  const selectedRole = roleOptions.find(role => role.id === formData.roleId)
 
   return (
     <>
@@ -770,6 +782,74 @@ useEffect(() => {
                   ))}
                 </div>
               )}
+            </div>
+
+
+            {/* Role & Subscription */}
+            <div className="section-header">
+              <img src={spark} alt="Spark Icon" />
+              <span>Role & Subscription</span>
+            </div>
+
+            {/* Select Role */}
+            <div className="custom-dropdown-learner">
+              <div
+                className="dropdown-trigger-learner"
+                onClick={() => !loading && setShowRoleDropdown(!showRoleDropdown)}
+              >
+                <span className={formData.roleId ? 'selected-value' : 'placeholder-value'}>
+                  {selectedRole ? selectedRole.name : 'Select Role'}
+                </span>
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              {showRoleDropdown && (
+                <div className="dropdown-menu-learner">
+                  {roleOptions.map((role) => (
+                    <div
+                      key={role.id}
+                      className="dropdown-item-learner"
+                      onClick={() => handleDropdownSelect('roleId', role.id)}
+                    >
+                      {role.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Subscription Exempt Toggle */}
+            <div className="d-flex align-items-center justify-content-between" style={{ padding: '1rem 0' }}>
+              <div>
+                <h4 style={{
+                  color: 'var(--COLORS-Black, #000)',
+                  fontFamily: 'Montserrat',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  marginBottom: '4px'
+                }}>
+                  Subscription Exempt
+                </h4>
+                <p style={{
+                  color: '#6F6F6F',
+                  fontFamily: 'Montserrat',
+                  fontSize: '12px',
+                  fontWeight: 400,
+                  marginBottom: '0px'
+                }}>
+                  Grant full access without subscription requirement
+                </p>
+              </div>
+              <label className="switch">
+                <input 
+                  type="checkbox" 
+                  checked={formData.subscriptionExempt}
+                  onChange={(e) => handleInputChange('subscriptionExempt', e.target.checked)}
+                  disabled={loading}
+                />
+                <span className="slider round"></span>
+              </label>
             </div>
           </div>
 
