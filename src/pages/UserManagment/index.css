@@ -350,6 +350,27 @@ padding: 4px;
 }
 
 
+
+.user-management-container .learner-info .status-indicator.active {
+  background-color: #9C3;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.user-management-container .learner-info .status-indicator.inactive {
+  background-color: #AEAEAE;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.user-management-container .last-active,
+.user-management-container .trial-start,
+.user-management-container.activation-date {
+  color: #231F20;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .search-actions-bar {

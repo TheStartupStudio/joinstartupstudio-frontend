@@ -6,15 +6,9 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import { toast } from 'react-toastify'
 import 'react-circular-progressbar/dist/styles.css'
 import './index.css'
-// import userIcon from '../../assets/images/academy-icons/svg/user-icon.svg'
-// import demographicsIcon from '../../assets/images/academy-icons/svg/demographics-icon.svg'
-// import courseProgressIcon from '../../assets/images/academy-icons/svg/course-progress-icon.svg'
 import CourseProgress from '../../CourseProgress/CourseProgress'
 import spark from '../../../assets/images/academy-icons/svg/spark.svg'
 import CircularProgress from '../../../components/ProgressBar'
-// import CourseNotStarted from './CourseNotStarted'
-// import InProggresCourse from './InProggresCourse'
-// import ProgressDone from './ProgressDone'
 import AcademyBtn from '../../AcademyBtn'
 import viewPortfolio from '../../../assets/images/academy-icons/icon.core.portfolio.svg'
 import graphUp from '../../../assets/images/graph-up.png'
@@ -24,6 +18,7 @@ import CourseNotStarted from '../../CourseProgress/CourseNotStarted'
 import InProggresCourse from '../../CourseProgress/InProggresCourse'
 import ProgressDone from '../../CourseProgress/ProgressDone'
 import { Collapse } from 'bootstrap'
+import axiosInstance from '../../../utils/AxiosInstance'
 
 const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const [showEmailModal, setShowEmailModal] = useState(false)
@@ -33,116 +28,76 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const [sendingEmail, setSendingEmail] = useState(false)
   const accordionRefs = useRef([])
 
-  // Dummy level progress data
-  const levelProgress = {
-    level1: { percentage: 75 },
-    level2: { percentage: 45 },
-    level3: { percentage: 20 }
+  // Dynamic data states
+  const [learnerData, setLearnerData] = useState(null)
+  const [levelProgress, setLevelProgress] = useState({
+    level1: { percentage: 0, completed: 0, total: 8 },
+    level2: { percentage: 0, completed: 0, total: 8 },
+    level3: { percentage: 0, completed: 0, total: 52 }
+  })
+  const [finishedContent, setFinishedContent] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  // Fetch learner data and progress when modal opens
+  useEffect(() => {
+    if (show && learner?.id) {
+      fetchLearnerData()
+      fetchLevelProgress()
+    }
+  }, [show, learner?.id])
+
+  const fetchLearnerData = async () => {
+    setLoading(true)
+    try {
+      const response = await axiosInstance.get(`/super-admin/learners/${learner.id}`)
+      setLearnerData(response.data.data)
+    } catch (error) {
+      console.error('Error fetching learner data:', error)
+      toast.error('Failed to load learner data')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  // Dummy finished content IDs
-  const finishedContent = [51, 52, 53, 54, 55, 56, 60, 61, 62, 70, 71, 72]
+  const fetchLevelProgress = async () => {
+  try {
+    const response = await axiosInstance.get(`/super-admin/user-level-progress/${learner.id}`)
+    const progressData = response.data // API returns the object directly
+    
+    setLevelProgress({
+      level1: progressData.level1 || { percentage: 0, completed: 0, total: 8 },
+      level2: progressData.level2 || { percentage: 0, completed: 0, total: 8 },
+      level3: progressData.level3 || { percentage: 0, completed: 0, total: 52 }
+    })
+
+    // Note: The API does not return finishedContent, so lesson statuses will default to 'notStarted'
+    // If finished content IDs are needed, the API should be updated to include them
+  } catch (error) {
+    console.error('Error fetching level progress:', error)
+    toast.error('Failed to load progress data')
+  }
+}
 
   const lessonsByLevel = {
     0: [
-      {
-        id: 'myths',
-        title: 'Myths of Entrepreneurship',
-        status: 'done',
-        redirectId: 51
-      },
-      {
-        id: 'definition',
-        title: 'Definition of Entrepreneurship',
-        status: 'done',
-        redirectId: 52
-      },
-      {
-        id: 'reasons',
-        title: 'Reasons Why Startups Fail',
-        status: 'inProgress',
-        redirectId: 53
-      },
-      {
-        id: 'skills',
-        title: 'Skills and Traits of Effective Entrepreneurs',
-        status: 'notStarted',
-        redirectId: 54
-      },
-      {
-        id: 'people',
-        title: 'People Buy Into People',
-        status: 'notStarted',
-        redirectId: 55
-      },
-      {
-        id: 'selfBrand',
-        title: 'Creating Your Self Brand First',
-        status: 'notStarted',
-        redirectId: 56
-      },
-      {
-        id: 'task1',
-        title: 'Task #1: Create your Individual Value Proposition',
-        status: 'notStarted',
-        redirectId: 57
-      },
-      {
-        id: 'task2',
-        title: 'Task #2: Create your I Am Video',
-        status: 'notStarted',
-        redirectId: 58
-      }
+      { id: 'myths', title: 'Myths of Entrepreneurship', status: 'done', redirectId: 51 },
+      { id: 'definition', title: 'Definition of Entrepreneurship', status: 'done', redirectId: 52 },
+      { id: 'reasons', title: 'Reasons Why Startups Fail', status: 'inProgress', redirectId: 53 },
+      { id: 'skills', title: 'Skills and Traits of Effective Entrepreneurs', status: 'notStarted', redirectId: 54 },
+      { id: 'people', title: 'People Buy Into People', status: 'notStarted', redirectId: 55 },
+      { id: 'selfBrand', title: 'Creating Your Self Brand First', status: 'notStarted', redirectId: 56 },
+      { id: 'task1', title: 'Task #1: Create your Individual Value Proposition', status: 'notStarted', redirectId: 57 },
+      { id: 'task2', title: 'Task #2: Create your I Am Video', status: 'notStarted', redirectId: 58 }
     ],
     1: [
-      {
-        id: 'journey',
-        title: 'The Journey of Entrepreneurship',
-        status: 'notStarted',
-        redirectId: 60
-      },
-      {
-        id: 'intro',
-        title: 'An Introduction to the LTS Model and Four Environments',
-        status: 'notStarted',
-        redirectId: 61
-      },
-      {
-        id: 'coreSkills',
-        title: 'The Core Skills and LEARN Stage of the LTS Model',
-        status: 'notStarted',
-        redirectId: 62
-      },
-      {
-        id: 'develop',
-        title: 'The DEVELOP Stage of the LTS Model',
-        status: 'notStarted',
-        redirectId: 63
-      },
-      {
-        id: 'start',
-        title: 'Understanding START & the Test Metrics of LTS',
-        status: 'notStarted',
-        redirectId: 65
-      },
-      {
-        id: 'task3',
-        title: 'Task #1: Evaluate Your Mindset and Skill Set',
-        status: 'notStarted',
-        redirectId: 66
-      },
-      {
-        id: 'process',
-        title: 'The Process of Entrepreneurship',
-        status: 'notStarted',
-        redirectId: 67
-      },
-      {
-        id: 'task4',
-        title: 'Task #2: Build Your Team and Find Your Mentor',
-        status: 'notStarted',
-        redirectId: 68
-      }
+      { id: 'journey', title: 'The Journey of Entrepreneurship', status: 'notStarted', redirectId: 60 },
+      { id: 'intro', title: 'An Introduction to the LTS Model and Four Environments', status: 'notStarted', redirectId: 61 },
+      { id: 'coreSkills', title: 'The Core Skills and LEARN Stage of the LTS Model', status: 'notStarted', redirectId: 62 },
+      { id: 'develop', title: 'The DEVELOP Stage of the LTS Model', status: 'notStarted', redirectId: 63 },
+      { id: 'start', title: 'Understanding START & the Test Metrics of LTS', status: 'notStarted', redirectId: 65 },
+      { id: 'task3', title: 'Task #1: Evaluate Your Mindset and Skill Set', status: 'notStarted', redirectId: 66 },
+      { id: 'process', title: 'The Process of Entrepreneurship', status: 'notStarted', redirectId: 67 },
+      { id: 'task4', title: 'Task #2: Build Your Team and Find Your Mentor', status: 'notStarted', redirectId: 68 }
     ],
     2: [
       {
@@ -150,30 +105,13 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
         title: 'Level 3.1: The Journey of Entrepreneurship',
         isParent: true,
         children: [
-          {
-            id: 'journey31',
-            title: 'The Journey of Entrepreneurship',
-            status: 'notStarted',
-            redirectId: 70
-          },
-          {
-            id: 'process31',
-            title: 'The Process and Skill of Storytelling',
-            redirectId: 71
-          },
+          { id: 'journey31', title: 'The Journey of Entrepreneurship', status: 'notStarted', redirectId: 70 },
+          { id: 'process31', title: 'The Process and Skill of Storytelling', redirectId: 71 },
           { id: 'relevancy', title: 'Relevancy in World 4.0', redirectId: 72 },
           { id: 'learn', title: 'The LEARN Stage', redirectId: 73 },
           { id: 'problems', title: 'Problems Worth Solving', redirectId: 74 },
-          {
-            id: 'task5',
-            title: 'Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends',
-            redirectId: 75
-          },
-          {
-            id: 'task6',
-            title: 'Task #6: Conduct an Industry Analysis',
-            redirectId: 76
-          }
+          { id: 'task5', title: 'Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends', redirectId: 75 },
+          { id: 'task6', title: 'Task #6: Conduct an Industry Analysis', redirectId: 76 }
         ]
       },
       {
@@ -182,16 +120,8 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
         isParent: true,
         children: [
           { id: 'solution', title: 'Finding the Solution', redirectId: 78 },
-          {
-            id: 'value',
-            title: "Creating Your Startup's Value Proposition",
-            redirectId: 79
-          },
-          {
-            id: 'task7',
-            title: "Task #7: Create Your Startup's Value Proposition",
-            redirectId: 80
-          }
+          { id: 'value', title: "Creating Your Startup's Value Proposition", redirectId: 79 },
+          { id: 'task7', title: "Task #7: Create Your Startup's Value Proposition", redirectId: 80 }
         ]
       }
     ]
@@ -233,10 +163,11 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
 
   if (!learner) return null
 
+  // Use fetched data or fallback to prop data
+  const displayData = learnerData || learner
+
   const handleEditClick = () => {
-    // Close the view modal
     onHide()
-    // Trigger the edit action with a small delay to ensure smooth transition
     setTimeout(() => {
       onEdit(learner)
     }, 100)
@@ -266,16 +197,16 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
     setSendingEmail(true)
 
     try {
-      // Simulate sending email
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      console.log('Sending email to:', learner.email)
-      console.log('Subject:', emailSubject)
-      console.log('Message:', emailMessage)
+      // TODO: Replace with actual email API endpoint
+      await axiosInstance.post(`/super-admin/send-email/${learner.id}`, {
+        subject: emailSubject,
+        message: emailMessage
+      })
 
       toast.success('Email sent successfully!')
       handleCloseEmailModal()
     } catch (error) {
+      console.error('Error sending email:', error)
       toast.error('Failed to send email')
     } finally {
       setSendingEmail(false)
@@ -283,11 +214,11 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   }
 
   const handleViewPortfolio = () => {
-    console.log('View portfolio for:', learner.name)
+    window.open(`/user-portfolio/${displayData.username || learner.id}`, '_blank')
   }
 
   const handleViewPerformanceData = () => {
-    console.log('View performance data for:', learner.name)
+    window.open(`/performance-data/${learner.id}`, '_blank')
   }
 
   const handleViewDetails = () => {
@@ -296,6 +227,18 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
 
   const toggleProgressModal = () => {
     setShowProgressModal(!showProgressModal)
+  }
+
+  if (loading) {
+    return (
+      <Modal show={show} onHide={onHide} centered>
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </Modal>
+    )
   }
 
   return (
@@ -321,22 +264,13 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
             
             {/* Action Buttons */}
             <div className="header-actions">
-              <div
-                onClick={onHide}
-                style={{ cursor: 'pointer' }}
-                title="Go back"
-              >
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <path d="M23.125 15H7.5M7.5 15L15 7.5M7.5 15L15 22.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-
+              <div onClick={onHide} style={{ cursor: 'pointer' }} title="Go back">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                  <path d="M23.125 15H7.5M7.5 15L15 7.5M7.5 15L15 22.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
 
-              <div
-                onClick={handleEditClick}
-                style={{ cursor: 'pointer' }}
-                title="Edit learner"
-              >
+              <div onClick={handleEditClick} style={{ cursor: 'pointer' }} title="Edit learner">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                   <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -349,7 +283,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
             <div className="info-row">
               <div className="info-field">
                 <label className="info-label">Learner Name</label>
-                <p className="info-value">{learner.name}</p>
+                <p className="info-value">{displayData.name}</p>
               </div>
             </div>
 
@@ -357,7 +291,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               <div className="info-row-split w-100">
                 <div className="info-field">
                   <label className="info-label">Email</label>
-                  <p className="info-value">{learner.email}</p>
+                  <p className="info-value">{displayData.email}</p>
                 </div>
               </div>
 
@@ -365,8 +299,8 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 <div className="d-flex align-items-center justify-content-between w-100 gap-2">
                   <label className="info-label">STATUS</label>
                   <div className="d-flex gap-2">
-                    <span className="status-indicator active"></span>
-                    <span className="status-text">Active</span>
+                    <span className={`status-indicator ${displayData.activeStatus ? 'active' : 'inactive'}`}></span>
+                    <span className="status-text">{displayData.activeStatus ? 'Active' : 'Inactive'}</span>
                   </div>
                 </div>
               </div>
@@ -390,15 +324,15 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
 
             <div className="demographics-content">
               <div className="demo-field full-width">
-                <p className="demo-value">{learner.address || '125 N City Street'}</p>
+                <p className="demo-value">{displayData.address || 'Not Specified'}</p>
               </div>
 
               <div className="demo-row">
                 <div className="demo-field">
-                  <p className="demo-value">{learner.city || 'Orlando'}</p>
+                  <p className="demo-value">{displayData.city || 'Not Specified'}</p>
                 </div>
                 <div className="demo-field">
-                  <p className="demo-value">{learner.state || 'Florida'}</p>
+                  <p className="demo-value">{displayData.state || 'Not Specified'}</p>
                 </div>
               </div>
 
@@ -406,14 +340,18 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 <div className="info-row w-100">
                   <div className="info-field">
                     <label className="info-label">Learner Gender</label>
-                    <p className="info-value">{learner.gender || 'Not Specified'}</p>
+                    <p className="info-value">{displayData.gender || 'Not Specified'}</p>
                   </div>
                 </div>
 
                 <div className="info-row w-100">
                   <div className="info-field">
                     <label className="info-label">Learner Age:</label>
-                    <p className="info-value">{learner.age || 'Not Specified'}</p>
+                    <p className="info-value">
+                      {displayData.birthDate 
+                        ? new Date().getFullYear() - new Date(displayData.birthDate).getFullYear()
+                        : 'Not Specified'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -439,7 +377,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               <div className='d-flex gap-4 align-items-center justify-content-around flex-col-mob mt-2rem-mob w-100'>
                 <div className='d-flex flex-column gap-4'>
                   <CircularProgress
-                    percentage={levelProgress?.level1?.percentage || 20}
+                    percentage={levelProgress?.level1?.percentage || 0}
                     level={1}
                   />
                   <p className='text-center'>
@@ -486,7 +424,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
         </div>
       </Modal>
 
-      {/* Email Learner Modal */}
+      {/* Email Learner Modal - unchanged */}
       <Modal
         show={showEmailModal}
         onHide={handleCloseEmailModal}
@@ -550,7 +488,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
         </div>
       </Modal>
 
-      {/* Progress Details Modal */}
+      {/* Progress Details Modal - updated with dynamic data */}
       <Modal
         show={showProgressModal}
         onHide={toggleProgressModal}
@@ -558,11 +496,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
         centered
         size="lg"
       >
-        <span
-          className='cursor-pointer'
-          onClick={toggleProgressModal}
-          style={{ zIndex: '1' }}
-        >
+        <span className='cursor-pointer' onClick={toggleProgressModal} style={{ zIndex: '1' }}>
           <img className='left-arrow-modal' src={leftArrow} alt='left' />
         </span>
         <Modal.Body>
@@ -584,7 +518,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                   aria-expanded='false'
                   aria-controls='collapseOne'
                 >
-                  LEVEL 1 | The Myths of Entrepreneurship
+                  LEVEL 1 | The Myths of Entrepreneurship ({levelProgress.level1.completed}/{levelProgress.level1.total})
                 </button>
               </h2>
               <div
@@ -627,7 +561,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                   aria-expanded='false'
                   aria-controls='collapseTwo'
                 >
-                  LEVEL 2 | Understanding Learn to Start
+                  LEVEL 2 | Understanding Learn to Start ({levelProgress.level2.completed}/{levelProgress.level2.total})
                 </button>
               </h2>
               <div
@@ -670,7 +604,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                   aria-expanded='false'
                   aria-controls='collapseThree'
                 >
-                  LEVEL 3 | The LEARN Stage
+                  LEVEL 3 | The LEARN Stage ({levelProgress.level3.completed}/{levelProgress.level3.total})
                 </button>
               </h2>
               <div

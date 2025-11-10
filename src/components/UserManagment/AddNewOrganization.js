@@ -11,40 +11,34 @@ import AcademyBtn from '../AcademyBtn'
 import ViewOrganizationLearnersModal from './ViewOrganizationLearnersModal'
 import PricingChangeModal from './PricingChangeModal'
 
-// Dummy data for testing edit mode
-const DUMMY_ORGANIZATION_DATA = {
-  id: 1,
-  organizationName: 'Nord Anglia Schools',
-  organizationAddress: '2108 S Conroy-Windermere Rd, Orlando, FL 34706',
-  administratorName: 'Angela Nguyen',
-  administratorEmail: 'anguyen@nordanglia.com',
-  domainURL: 'nordanglia.aie.com',
-  pricingTiers: [
-    {
-      amount: '$15',
-      frequency: 'monthly'
-    },
-    {
-      amount: '$150',
-      frequency: 'yearly'
-    }
-  ]
-}
-
 const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizationData = null }) => {
   const [loading, setLoading] = useState(false)
   const [showLearnersModal, setShowLearnersModal] = useState(false)
   const [showPricingChangeModal, setShowPricingChangeModal] = useState(false)
   const [pendingSave, setPendingSave] = useState(false)
   const [originalPricingTiers, setOriginalPricingTiers] = useState([])
+  const [activeTab, setActiveTab] = useState('details')
   
   const [formData, setFormData] = useState({
     organizationName: '',
     organizationAddress: '',
+    city: '',
+    state: '',
+    zipCode: '',
     administratorName: '',
     administratorEmail: '',
     domainURL: '',
-    pricingTiers: [
+    courseAccess: {
+      financialLiteracyJournal: false,
+      forumAccess: false,
+      leadershipJournal: false,
+      masterClasses: false
+    },
+    organizationPricing: {
+      amount: '',
+      frequency: 'monthly'
+    },
+    learnerPricing: [
       {
         amount: '',
         frequency: 'monthly'
@@ -55,40 +49,95 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const frequencyOptions = [
     { value: 'monthly', label: 'Per month' },
     { value: 'yearly', label: 'Per year' },
+    { value: 'quarterly', label: 'Per quarter' },
     { value: 'one-time', label: 'One-time' }
   ]
 
-  // Initialize form data when in edit or view mode
+  const courseAccessLabels = {
+    financialLiteracyJournal: 'Financial Literacy Journal',
+    forumAccess: 'Forum Access',
+    leadershipJournal: 'Leadership Journal',
+    masterClasses: 'Master Classes'
+  }
+
+  // Fetch organization data when in edit or view mode
   useEffect(() => {
-    if (mode === 'edit' || mode === 'view') {
-      setFormData({
-        id: DUMMY_ORGANIZATION_DATA.id,
-        organizationName: DUMMY_ORGANIZATION_DATA.organizationName,
-        organizationAddress: DUMMY_ORGANIZATION_DATA.organizationAddress,
-        administratorName: DUMMY_ORGANIZATION_DATA.administratorName,
-        administratorEmail: DUMMY_ORGANIZATION_DATA.administratorEmail,
-        domainURL: DUMMY_ORGANIZATION_DATA.domainURL,
-        pricingTiers: DUMMY_ORGANIZATION_DATA.pricingTiers
-      })
-      // Store original pricing tiers for comparison
-      setOriginalPricingTiers(JSON.parse(JSON.stringify(DUMMY_ORGANIZATION_DATA.pricingTiers)))
-    } else {
-      setFormData({
-        organizationName: '',
-        organizationAddress: '',
-        administratorName: '',
-        administratorEmail: '',
-        domainURL: '',
-        pricingTiers: [
-          {
+    const fetchOrganizationData = async () => {
+      if ((mode === 'edit' || mode === 'view') && organizationData?.id) {
+        try {
+          setLoading(true)
+          const response = await axiosInstance.get(`/super-admin/organizations/${organizationData.id}`)
+          
+          if (response.data.success) {
+            const orgData = response.data.data
+            setFormData({
+              id: orgData.id,
+              organizationName: orgData.organizationName || '',
+              organizationAddress: orgData.organizationAddress || '',
+              city: orgData.city || '',
+              state: orgData.state || '',
+              zipCode: orgData.zipCode || '',
+              administratorName: orgData.administratorName || '',
+              administratorEmail: orgData.administratorEmail || '',
+              domainURL: orgData.domainURL || '',
+              courseAccess: orgData.courseAccess || {
+                financialLiteracyJournal: false,
+                forumAccess: false,
+                leadershipJournal: false,
+                masterClasses: false
+              },
+              organizationPricing: orgData.organizationPricing || {
+                amount: '',
+                frequency: 'monthly'
+              },
+              learnerPricing: orgData.learnerPricing?.length > 0 
+                ? orgData.learnerPricing 
+                : [{ amount: '', frequency: 'monthly' }]
+            })
+            setOriginalPricingTiers(JSON.parse(JSON.stringify(orgData.learnerPricing || [])))
+          }
+        } catch (error) {
+          console.error('Error fetching organization:', error)
+          toast.error('Failed to load organization data')
+        } finally {
+          setLoading(false)
+        }
+      } else {
+        // Reset form for add mode
+        setFormData({
+          organizationName: '',
+          organizationAddress: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          administratorName: '',
+          administratorEmail: '',
+          domainURL: '',
+          courseAccess: {
+            financialLiteracyJournal: false,
+            forumAccess: false,
+            leadershipJournal: false,
+            masterClasses: false
+          },
+          organizationPricing: {
             amount: '',
             frequency: 'monthly'
-          }
-        ]
-      })
-      setOriginalPricingTiers([])
+          },
+          learnerPricing: [
+            {
+              amount: '',
+              frequency: 'monthly'
+            }
+          ]
+        })
+        setOriginalPricingTiers([])
+      }
     }
-  }, [mode, show])
+
+    if (show) {
+      fetchOrganizationData()
+    }
+  }, [mode, organizationData, show])
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -97,20 +146,40 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     }))
   }
 
-  const handlePricingChange = (index, field, value) => {
-    const updatedTiers = [...formData.pricingTiers]
-    updatedTiers[index][field] = value
+  const handleCourseAccessChange = (course) => {
     setFormData(prev => ({
       ...prev,
-      pricingTiers: updatedTiers
+      courseAccess: {
+        ...prev.courseAccess,
+        [course]: !prev.courseAccess[course]
+      }
     }))
   }
 
-  const addNewPricingTier = () => {
+  const handleOrganizationPricingChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      pricingTiers: [
-        ...prev.pricingTiers,
+      organizationPricing: {
+        ...prev.organizationPricing,
+        [field]: value
+      }
+    }))
+  }
+
+  const handleLearnerPricingChange = (index, field, value) => {
+    const updatedTiers = [...formData.learnerPricing]
+    updatedTiers[index][field] = value
+    setFormData(prev => ({
+      ...prev,
+      learnerPricing: updatedTiers
+    }))
+  }
+
+  const addNewLearnerPricingTier = () => {
+    setFormData(prev => ({
+      ...prev,
+      learnerPricing: [
+        ...prev.learnerPricing,
         {
           amount: '',
           frequency: 'monthly'
@@ -119,12 +188,12 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     }))
   }
 
-  const removePricingTier = (index) => {
-    if (formData.pricingTiers.length > 1) {
-      const updatedTiers = formData.pricingTiers.filter((_, i) => i !== index)
+  const removeLearnerPricingTier = (index) => {
+    if (formData.learnerPricing.length > 1) {
+      const updatedTiers = formData.learnerPricing.filter((_, i) => i !== index)
       setFormData(prev => ({
         ...prev,
-        pricingTiers: updatedTiers
+        learnerPricing: updatedTiers
       }))
     }
   }
@@ -152,7 +221,6 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
       return false
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(administratorEmail)) {
       toast.error('Please enter a valid email address')
@@ -162,16 +230,21 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     return true
   }
 
-  // Check if pricing has changed
   const hasPricingChanged = () => {
     if (mode !== 'edit') return false
     
-    if (formData.pricingTiers.length !== originalPricingTiers.length) {
+    if (formData.organizationPricing.amount !== originalPricingTiers.organizationPricing?.amount ||
+        formData.organizationPricing.frequency !== originalPricingTiers.organizationPricing?.frequency) {
+      return true
+    }
+    
+    if (formData.learnerPricing.length !== originalPricingTiers.length) {
       return true
     }
 
-    return formData.pricingTiers.some((tier, index) => {
+    return formData.learnerPricing.some((tier, index) => {
       const original = originalPricingTiers[index]
+      if (!original) return true
       return tier.amount !== original.amount || tier.frequency !== original.frequency
     })
   }
@@ -179,14 +252,12 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const handleSubmit = async () => {
     if (!validateForm()) return
 
-    // Check if pricing has changed in edit mode
     if (mode === 'edit' && hasPricingChanged()) {
       setPendingSave(true)
       setShowPricingChangeModal(true)
       return
     }
 
-    // If no pricing change or in add mode, proceed with save
     await performSave(false)
   }
 
@@ -198,42 +269,36 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const performSave = async (applyToCurrentUsers) => {
     setLoading(true)
     try {
-      // Simulate API call with timeout
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
+      const payload = {
+        organizationName: formData.organizationName,
+        organizationAddress: formData.organizationAddress,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        administratorName: formData.administratorName,
+        administratorEmail: formData.administratorEmail,
+        domainURL: formData.domainURL,
+        courseAccess: formData.courseAccess,
+        organizationPricing: formData.organizationPricing,
+        learnerPricing: formData.learnerPricing,
+        applyToCurrentUsers
+      }
+
+      let response
       if (mode === 'edit') {
-        // Simulate update existing organization
-        console.log('Updating organization:', formData, 'Apply to current users:', applyToCurrentUsers)
+        response = await axiosInstance.put(`/super-admin/organizations/${formData.id}`, payload)
         toast.success('Organization updated successfully!')
       } else {
-        // Simulate create new organization
-        console.log('Creating new organization:', formData)
+        response = await axiosInstance.post('/super-admin/organizations', payload)
         toast.success('Organization added successfully!')
       }
       
       onSuccess()
       onHide()
       setPendingSave(false)
-      
-      // Reset form only if adding new
-      if (mode === 'add') {
-        setFormData({
-          organizationName: '',
-          organizationAddress: '',
-          administratorName: '',
-          administratorEmail: '',
-          domainURL: '',
-          pricingTiers: [
-            {
-              amount: '',
-              frequency: 'monthly'
-            }
-          ]
-        })
-      }
     } catch (error) {
       console.error('Error saving organization:', error)
-      toast.error(`Failed to ${mode === 'edit' ? 'update' : 'add'} organization`)
+      toast.error(error.response?.data?.message || `Failed to ${mode === 'edit' ? 'update' : 'add'} organization`)
     } finally {
       setLoading(false)
       setPendingSave(false)
@@ -255,9 +320,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   }
 
   const handleViewLearners = () => {
-    // Close the current modal first
     onHide()
-    // Then open the learners modal after a small delay to ensure smooth transition
     setTimeout(() => {
       setShowLearnersModal(true)
     }, 100)
@@ -283,7 +346,6 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
         size="lg"
       >
         <div className="modal-content-wrapper">
-          {/* Header */}
           <div className="modal-header-custom">
             <div className="header-icon">
              <img src={newCity} alt="Organization" />
@@ -293,166 +355,294 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             </h3>
           </div>
 
-          {/* Organization Details Section */}
-          <div className="form-section">
-            <div className="section-header">
-              <img src={spark} alt="Spark Icon" />
-              <span>Organization Details</span>
-            </div>
-            
-            <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('organizationName')}>
-              <input
-                type="text"
-                value={formData.organizationName}
-                onChange={(e) => !isReadOnly && handleInputChange('organizationName', e.target.value)}
-                className="form-input"
-                placeholder=" "
-                id="organizationName"
-                disabled={isReadOnly}
-              />
-              <label className="input-label" htmlFor="organizationName">Organization Name</label>
-              {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
-            </div>
-
-            <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('organizationAddress')}>
-              <input
-                type="text"
-                value={formData.organizationAddress}
-                onChange={(e) => !isReadOnly && handleInputChange('organizationAddress', e.target.value)}
-                className="form-input"
-                placeholder=" "
-                id="organizationAddress"
-                disabled={isReadOnly}
-              />
-              <label className="input-label" htmlFor="organizationAddress">Address</label>
-              {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
-            </div>
+          <div className="tab-navigation">
+            <button
+              type="button"
+              className={`tab-nav-button ${activeTab === 'details' ? 'active' : ''}`}
+              onClick={() => setActiveTab('details')}
+            >
+              Organization Details
+            </button>
+            <button
+              type="button"
+              className={`tab-nav-button ${activeTab === 'pricing' ? 'active' : ''}`}
+              onClick={() => setActiveTab('pricing')}
+            >
+              Course & Pricing
+            </button>
           </div>
 
-          {/* Administrator Details Section */}
-          <div className="form-section">
-            <div className="section-header">
-              <img src={spark} alt="Spark Icon" />
-              <span>Administrator Details</span>
-            </div>
-            
-            <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('administratorName')}>
-              <input
-                type="text"
-                value={formData.administratorName}
-                onChange={(e) => !isReadOnly && handleInputChange('administratorName', e.target.value)}
-                className="form-input"
-                placeholder=" "
-                id="administratorName"
-                disabled={isReadOnly}
-              />
-              <label className="input-label" htmlFor="administratorName">Administrator Name</label>
-              {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
-            </div>
-
-            <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('administratorEmail')}>
-              <input
-                type="email"
-                value={formData.administratorEmail}
-                onChange={(e) => !isReadOnly && handleInputChange('administratorEmail', e.target.value)}
-                className="form-input"
-                placeholder=" "
-                id="administratorEmail"
-                disabled={isReadOnly}
-              />
-              <label className="input-label" htmlFor="administratorEmail">Administrator Email</label>
-              {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
-            </div>
-          </div>
-
-          {/* Domain Details Section */}
-          <div className="form-section">
-            <div className="section-header">
-              <img src={spark} alt="Spark Icon" />
-              <span>Domain Details</span>
-            </div>
-            
-            <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('domainURL')}>
-              <input
-                type="text"
-                value={formData.domainURL}
-                onChange={(e) => !isReadOnly && handleInputChange('domainURL', e.target.value)}
-                className="form-input"
-                placeholder=" "
-                id="domainURL"
-                disabled={isReadOnly}
-              />
-              <label className="input-label" htmlFor="domainURL">Domain URL</label>
-              {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
-            </div>
-          </div>
-
-          {/* Pricing Details Section */}
-          <div className="form-section">
-            <div className="section-header">
-              <img src={spark} alt="Spark Icon" />
-              <span>Pricing Details</span>
-            </div>
-            
-            {formData.pricingTiers.map((tier, index) => (
-              <div key={index} className="pricing-tier">
-                <div className="pricing-inputs">
-                  <div className="input-group pricing-amount" onClick={() => !isReadOnly && handleInputFocus(`pricingAmount-${index}`)}>
+          <div className="tab-content">
+            {activeTab === 'details' && (
+              <>
+                <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Organization Details</span>
+                  </div>
+                  
+                  <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('organizationName')}>
                     <input
                       type="text"
-                      value={tier.amount}
-                      onChange={(e) => !isReadOnly && handlePricingChange(index, 'amount', e.target.value)}
+                      value={formData.organizationName}
+                      onChange={(e) => !isReadOnly && handleInputChange('organizationName', e.target.value)}
                       className="form-input"
                       placeholder=" "
-                      id={`pricingAmount-${index}`}
+                      id="organizationName"
                       disabled={isReadOnly}
                     />
-                    <label className="input-label" htmlFor={`pricingAmount-${index}`}>Price</label>
+                    <label className="input-label" htmlFor="organizationName">Add Organization Name</label>
                     {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
                   </div>
 
-                  <div className="frequency-dropdown">
-                    <select
-                      value={tier.frequency}
-                      onChange={(e) => !isReadOnly && handlePricingChange(index, 'frequency', e.target.value)}
-                      className="frequency-select"
+                  <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('organizationAddress')}>
+                    <input
+                      type="text"
+                      value={formData.organizationAddress}
+                      onChange={(e) => !isReadOnly && handleInputChange('organizationAddress', e.target.value)}
+                      className="form-input"
+                      placeholder=" "
+                      id="organizationAddress"
                       disabled={isReadOnly}
-                    >
-                      {frequencyOptions.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                    />
+                    <label className="input-label" htmlFor="organizationAddress">Add Organization Address</label>
+                    {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                  </div>
+
+                  <div className="d-flex gap-2 justify-content-between">
+                    <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('city')}>
+                      <input
+                        type="text"
+                        value={formData.city}
+                        onChange={(e) => !isReadOnly && handleInputChange('city', e.target.value)}
+                        className="form-input"
+                        placeholder=" "
+                        id="city"
+                        disabled={isReadOnly}
+                      />
+                      <label className="input-label" htmlFor="city">Add City</label>
+                      {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                    </div>
+
+                    <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('state')}>
+                      <input
+                        type="text"
+                        value={formData.state}
+                        onChange={(e) => !isReadOnly && handleInputChange('state', e.target.value)}
+                        className="form-input"
+                        placeholder=" "
+                        id="state"
+                        disabled={isReadOnly}
+                      />
+                      <label className="input-label" htmlFor="state">Add State</label>
+                      {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                    </div>
+
+                    <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('zipCode')}>
+                      <input
+                        type="text"
+                        value={formData.zipCode}
+                        onChange={(e) => !isReadOnly && handleInputChange('zipCode', e.target.value)}
+                        className="form-input"
+                        placeholder=" "
+                        id="zipCode"
+                        disabled={isReadOnly}
+                      />
+                      <label className="input-label" htmlFor="zipCode">Add Zip Code</label>
+                      {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                    </div>
                   </div>
                 </div>
-                
-                {!isReadOnly && formData.pricingTiers.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removePricingTier(index)}
-                    className="remove-tier-btn"
-                    title="Remove pricing tier"
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                )}
-              </div>
-            ))}
 
-            {!isReadOnly && (
-              <button
-                type="button"
-                onClick={addNewPricingTier}
-                className="add-pricing-tier-btn"
-              >
-                <FontAwesomeIcon icon={faPlus} />
-                Add new pricing tier
-              </button>
+                <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Administrator Details</span>
+                  </div>
+                  
+                  <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('administratorName')}>
+                    <input
+                      type="text"
+                      value={formData.administratorName}
+                      onChange={(e) => !isReadOnly && handleInputChange('administratorName', e.target.value)}
+                      className="form-input"
+                      placeholder=" "
+                      id="administratorName"
+                      disabled={isReadOnly}
+                    />
+                    <label className="input-label" htmlFor="administratorName">Add Administrator Name</label>
+                    {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                  </div>
+
+                  <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('administratorEmail')}>
+                    <input
+                      type="email"
+                      value={formData.administratorEmail}
+                      onChange={(e) => !isReadOnly && handleInputChange('administratorEmail', e.target.value)}
+                      className="form-input"
+                      placeholder=" "
+                      id="administratorEmail"
+                      disabled={isReadOnly}
+                    />
+                    <label className="input-label" htmlFor="administratorEmail">Add Administrator Email</label>
+                    {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Domain Details</span>
+                  </div>
+                  
+                  <div className="input-group" onClick={() => !isReadOnly && handleInputFocus('domainURL')}>
+                    <input
+                      type="text"
+                      value={formData.domainURL}
+                      onChange={(e) => !isReadOnly && handleInputChange('domainURL', e.target.value)}
+                      className="form-input"
+                      placeholder=" "
+                      id="domainURL"
+                      disabled={isReadOnly}
+                    />
+                    <label className="input-label" htmlFor="domainURL">Add Domain URL</label>
+                    {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {activeTab === 'pricing' && (
+              <>
+                <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Course Details</span>
+                  </div>
+                  
+                  <div className="course-access-toggles">
+                    {Object.keys(formData.courseAccess).map(course => (
+                      <div key={course} className="toggle-item">
+                        <span className="toggle-label">{courseAccessLabels[course]}</span>
+                        <label className="switch">
+                          <input
+                            type="checkbox"
+                            checked={formData.courseAccess[course]}
+                            onChange={() => !isReadOnly && handleCourseAccessChange(course)}
+                            disabled={isReadOnly}
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Organization Pricing Details</span>
+                  </div>
+                  
+                  <div className="pricing-inputs">
+                    <div className="input-group pricing-amount" onClick={() => !isReadOnly && handleInputFocus('orgPricingAmount')}>
+                      <input
+                        type="text"
+                        value={formData.organizationPricing.amount}
+                        onChange={(e) => !isReadOnly && handleOrganizationPricingChange('amount', e.target.value)}
+                        className="form-input"
+                        placeholder=" "
+                        id="orgPricingAmount"
+                        disabled={isReadOnly}
+                      />
+                      <label className="input-label" htmlFor="orgPricingAmount">Add dollar amount (ie. $15)</label>
+                      {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                    </div>
+
+                    <div className="frequency-dropdown">
+                      <select
+                        value={formData.organizationPricing.frequency}
+                        onChange={(e) => !isReadOnly && handleOrganizationPricingChange('frequency', e.target.value)}
+                        className="frequency-select"
+                        disabled={isReadOnly}
+                      >
+                        {frequencyOptions.map(option => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Learner Pricing Details</span>
+                  </div>
+                  
+                  {formData.learnerPricing.map((tier, index) => (
+                    <div key={index} className="pricing-tier">
+                      <div className="pricing-inputs">
+                        <div className="input-group pricing-amount" onClick={() => !isReadOnly && handleInputFocus(`learnerPricingAmount-${index}`)}>
+                          <input
+                            type="text"
+                            value={tier.amount}
+                            onChange={(e) => !isReadOnly && handleLearnerPricingChange(index, 'amount', e.target.value)}
+                            className="form-input"
+                            placeholder=" "
+                            id={`learnerPricingAmount-${index}`}
+                            disabled={isReadOnly}
+                          />
+                          <label className="input-label" htmlFor={`learnerPricingAmount-${index}`}>Add dollar amount (ie. $15)</label>
+                          {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                        </div>
+
+                        <div className="frequency-dropdown">
+                          <select
+                            value={tier.frequency}
+                            onChange={(e) => !isReadOnly && handleLearnerPricingChange(index, 'frequency', e.target.value)}
+                            className="frequency-select"
+                            disabled={isReadOnly}
+                          >
+                            {frequencyOptions.map(option => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      
+                      {!isReadOnly && formData.learnerPricing.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeLearnerPricingTier(index)}
+                          className="remove-tier-btn"
+                          title="Remove pricing tier"
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  {!isReadOnly && (
+                    <button
+                      type="button"
+                      onClick={addNewLearnerPricingTier}
+                      className="add-pricing-tier-btn"
+                    >
+                      <span>Add new pricing tier</span>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                  )}
+                </div>
+              </>
             )}
           </div>
 
-          {/* Action Buttons */}
           <div className="modal-actions">
             {isViewMode ? (
               <div className="full-width-btn">
@@ -489,7 +679,6 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
         </div>
       </Modal>
 
-      {/* Pricing Change Confirmation Modal */}
       <PricingChangeModal
         show={showPricingChangeModal}
         onHide={() => {
@@ -499,11 +688,11 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
         onConfirm={handlePricingChangeConfirm}
       />
 
-      {/* View Organization Learners Modal */}
       <ViewOrganizationLearnersModal
         show={showLearnersModal}
         onHide={handleLearnersModalClose}
         organizationName={formData.organizationName}
+        organizationId={formData.id}
       />
     </>
   )
