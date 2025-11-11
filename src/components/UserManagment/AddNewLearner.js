@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -9,17 +9,22 @@ import userIcon from '../../assets/images/academy-icons/svg/user-group-add.svg'
 import leftArrow from '../../assets/images/arrowSave/ICON - Click to save@2x.png'
 import spark from '../../assets/images/academy-icons/svg/spark.svg'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
+import CustomBirthDateCalendar from '../../components/CustomBirthDateCalendar'
+import { FaRegCalendarAlt } from 'react-icons/fa'
 
 const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = null }) => {
   const [loading, setLoading] = useState(false)
   const [showGenderDropdown, setShowGenderDropdown] = useState(false)
   const [showStateDropdown, setShowStateDropdown] = useState(false)
   const [showTypeDropdown, setShowTypeDropdown] = useState(false)
+  const [showOrganizationDropdown, setShowOrganizationDropdown] = useState(false)
   const [showDeletePopup, setShowDeletePopup] = useState(false)
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false)
   const [showDeactivateUserPopup, setShowDeactivateUserPopup] = useState(false)
   const [showMainModal, setShowMainModal] = useState(false)
   const [isUserActive, setIsUserActive] = useState(true)
+  const [showCalendar, setShowCalendar] = useState(false)
+  const calendarRef = useRef(null)
   
   const [formData, setFormData] = useState({
     learnerName: '',
@@ -30,8 +35,13 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     state: '',
     gender: '',
     learnerType: '',
-    age: ''
+    birthDate: null,
+    organization: '',
+    roleId: 1, // Default to student
+    subscriptionExempt: false
   })
+
+  const [organizations, setOrganizations] = useState([])
 
   // Sync showMainModal with show prop
   useEffect(() => {
@@ -39,35 +49,68 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   }, [show])
 
   // Initialize form data when in edit mode
-  useEffect(() => {
-    if (mode === 'edit' && learnerData) {
-      setFormData({
-        learnerName: learnerData.name || '',
-        email: learnerData.email || '',
-        password: '********',
-        address: learnerData.address || '125 N City Street',
-        city: learnerData.city || 'Orlando',
-        state: learnerData.state || 'Florida',
-        gender: learnerData.gender || 'Female',
-        learnerType: learnerData.learnerType || 'Student',
-        age: learnerData.age || '24'
-      })
-      setIsUserActive(learnerData.isActive !== false)
-    } else {
-      setFormData({
-        learnerName: '',
-        email: '',
-        password: '',
-        address: '',
-        city: '',
-        state: '',
-        gender: '',
-        learnerType: '',
-        age: ''
-      })
-      setIsUserActive(true)
+useEffect(() => {
+    if (mode === 'edit' && learnerData?.id && show) {
+      fetchLearnerData(learnerData.id)
     }
   }, [mode, learnerData, show])
+
+  // Fetch organizations on component mount
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await axiosInstance.get('super-admin/organization/simple')
+        if (response.data.success) {
+          setOrganizations(response.data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching organizations:', error)
+      }
+    }
+    fetchOrganizations()
+  }, [])
+
+  const fetchLearnerData = async (userId) => {
+    try {
+      const response = await axiosInstance.get(`/super-admin/learners/${userId}`)
+      const data = response.data.data
+      
+      setFormData({
+        learnerName: data.name || '',
+        email: data.email || '',
+        password: '********',
+        address: data.address || '',
+        city: data.city || '',
+        state: data.state || '',
+        gender: data.gender || '',
+        learnerType: data.courseLevel || '',
+        birthDate: data.birthDate ? new Date(data.birthDate) : null,
+        organization: data.University?.id || data.organizationId || '',
+        roleId: data.role_id || 1,
+        subscriptionExempt: data.subscription_exempt || false
+      })
+
+      setIsUserActive(data.activeStatus)
+    
+    } catch (error) {
+      console.error('Error fetching learner data:', error)
+      toast.error('Failed to load learner data')
+    }
+  }
+
+  // Close calendar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setShowCalendar(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const genderOptions = ['Female', 'Male', 'Non-binary', 'Other']
   
@@ -86,11 +129,30 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
 
   const learnerTypeOptions = ['Student', 'Professional', 'Educator', 'Other']
 
+
+    const [showRoleDropdown, setShowRoleDropdown] = useState(false)
+
+  const roleOptions = [
+    { id: 1, name: 'Student' },
+    { id: 2, name: 'Client' },
+    { id: 3, name: 'Super Admin' }
+  ]
+
+  // const organizationOptions = ['Educational Institution', 'Corporate', 'Non-Profit']
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }))
+  }
+
+  const handleBirthDateChange = (date) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      birthDate: date
+    }))
+    setShowCalendar(false)
   }
 
   const handleInputFocus = (inputId) => {
@@ -108,6 +170,8 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     setShowGenderDropdown(false)
     setShowStateDropdown(false)
     setShowTypeDropdown(false)
+    setShowOrganizationDropdown(false)
+    setShowRoleDropdown(false)
   }
 
   const handleStatusToggle = () => {
@@ -117,7 +181,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   }
 
   const validateForm = () => {
-    const { learnerName, email, password, address, city, state, gender, learnerType, age } = formData
+    const { learnerName, email, password, address, city, state, gender, learnerType, birthDate, organization } = formData
     
     if (!learnerName.trim()) {
       toast.error('Learner name is required')
@@ -135,12 +199,12 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
       return false
     }
     
-    if (!password.trim()) {
+    if (mode === 'add' && !password.trim()) {
       toast.error('Password is required')
       return false
     }
 
-    if (password.length < 8) {
+    if (mode === 'add' && password.length < 8) {
       toast.error('Password must be at least 8 characters')
       return false
     }
@@ -165,43 +229,68 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
       return false
     }
 
-    if (!learnerType) {
-      toast.error('Learner type is required')
+    // if (!learnerType) {
+    //   toast.error('Learner type is required')
+    //   return false
+    // }
+
+    // Birth date validation - Allow all ages but prevent future dates
+    if (!birthDate) {
+      toast.error('Birth date is required')
       return false
+    } else {
+      const today = new Date()
+      const selectedDate = new Date(birthDate)
+      
+      if (selectedDate > today) {
+        toast.error('Birth date cannot be in the future')
+        return false
+      }
     }
 
-    if (!age.trim()) {
-      toast.error('Age is required')
-      return false
-    }
-
-    const ageNum = parseInt(age)
-    if (isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
-      toast.error('Please enter a valid age')
-      return false
-    }
+    // if (!organization) {
+    //   toast.error('Organization is required')
+    //   return false
+    // }
 
     return true
   }
 
   const handleSubmit = async () => {
-    if (!validateForm()) return
+   if (!validateForm()) return
 
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
+      const payload = {
+        learnerName: formData.learnerName,
+        email: formData.email,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        gender: formData.gender,
+        birthDate: formData.birthDate ? formData.birthDate.toISOString().split('T')[0] : null,
+        universityId: formData.organization || null,
+        activeStatus: isUserActive ? 1 : 0,
+        role_id: formData.roleId,
+        subscription_exempt: formData.subscriptionExempt ? 1 : 0
+      }
+
       if (mode === 'edit') {
-        console.log('Updating learner:', formData)
+        if (formData.password !== '********') {
+          payload.password = formData.password
+        }
+
+        await axiosInstance.put(`/super-admin/learners/${learnerData.id}`, payload)
         toast.success('Learner updated successfully!')
       } else {
-        console.log('Creating new learner:', formData)
+        payload.password = formData.password
+        await axiosInstance.post('/super-admin/learners', payload)
         toast.success('Learner added successfully!')
       }
-      
+
       onSuccess()
       onHide()
-      
+
       if (mode === 'add') {
         setFormData({
           learnerName: '',
@@ -212,12 +301,16 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
           state: '',
           gender: '',
           learnerType: '',
-          age: ''
+          birthDate: null,
+          organization: '',
+          roleId: 1,
+          subscriptionExempt: false
         })
       }
     } catch (error) {
       console.error(`Error ${mode === 'edit' ? 'updating' : 'adding'} learner:`, error)
-      toast.error(`Failed to ${mode === 'edit' ? 'update' : 'add'} learner`)
+      const errorMessage = error.response?.data?.error || `Failed to ${mode === 'edit' ? 'update' : 'add'} learner`
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -225,6 +318,21 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
 
   const handleClose = () => {
     if (loading) return
+    setFormData({
+      learnerName: '',
+      email: '',
+      password: '',
+      address: '',
+      city: '',
+      state: '',
+      gender: '',
+      learnerType: '',
+      birthDate: null,
+      organization: '',
+      roleId: 1,
+      subscriptionExempt: false
+    })
+    setIsUserActive(true)
     onHide()
   }
 
@@ -241,18 +349,19 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const handleConfirmResetPassword = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Password reset for learner:', learnerData?.id)
+      await axiosInstance.post(`/super-admin/users/${learnerData.id}/reset-password`)
       toast.success('Password has been reset to default (Learntostart1!)')
       setShowResetPasswordPopup(false)
       onHide()
     } catch (error) {
+      console.error('Error resetting password:', error)
       toast.error('Failed to reset password')
       setShowMainModal(true)
     } finally {
       setLoading(false)
     }
   }
+
 
   const handleDeleteLearnerClick = () => {
     setShowMainModal(false)
@@ -267,13 +376,13 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const handleConfirmDelete = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Deleting learner:', learnerData?.id)
+      await axiosInstance.delete(`/super-admin/users/${learnerData.id}?hardDelete=true`)
       toast.success('Learner deleted successfully!')
       setShowDeletePopup(false)
       onHide()
       onSuccess()
     } catch (error) {
+      console.error('Error deleting learner:', error)
       toast.error('Failed to delete learner')
       setShowMainModal(true)
     } finally {
@@ -289,14 +398,24 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const handleConfirmDeactivateUser = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
       const newStatus = !isUserActive
-      console.log(`${newStatus ? 'Activating' : 'Deactivating'} learner:`, learnerData?.id)
-      toast.success(`User ${newStatus ? 'activated' : 'deactivated'} successfully!`)
+
+      if (newStatus) {
+        // Activate user
+        await axiosInstance.post(`/super-admin/users/${learnerData.id}/reactivate`)
+        toast.success('User activated successfully!')
+      } else {
+        // Deactivate user
+        await axiosInstance.delete(`/super-admin/users/${learnerData.id}`)
+        toast.success('User deactivated successfully!')
+      }
+
       setIsUserActive(newStatus)
       setShowDeactivateUserPopup(false)
       setShowMainModal(true)
+      onSuccess() // Refresh the user list
     } catch (error) {
+      console.error(`Error ${isUserActive ? 'deactivating' : 'activating'} user:`, error)
       toast.error(`Failed to ${isUserActive ? 'deactivate' : 'activate'} user`)
       setShowMainModal(true)
     } finally {
@@ -304,7 +423,12 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     }
   }
 
+
   const isEditMode = mode === 'edit'
+
+  // Find selected organization for display
+  const selectedOrganization = organizations.find(org => org.id === formData.organization)
+  const selectedRole = roleOptions.find(role => role.id === formData.roleId)
 
   return (
     <>
@@ -454,7 +578,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
             {/* Demographics Section */}
             <div className="section-header">
               <img src={spark} alt="Spark Icon" />
-              <span>Organization Details</span>
+              <span>Demographics</span>
             </div>
 
             {/* Address */}
@@ -520,7 +644,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
               </div>
             </div>
 
-            {/* Gender and Age Row */}
+            {/* Gender and Birth Date Row */}
             <div className="form-row-learner">
               <div className="form-group-half">
                 <div className="custom-dropdown-learner">
@@ -552,22 +676,180 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
               </div>
 
               <div className="form-group-half">
-                <div className="input-group" onClick={() => !loading && handleInputFocus('age')}>
-                  <input
-                    type="number"
-                    value={formData.age}
-                    onChange={(e) => !loading && handleInputChange('age', e.target.value)}
-                    className="form-input"
-                    placeholder=" "
-                    id="age"
-                    disabled={loading}
-                    min="1"
-                    max="120"
-                  />
-                  <label className="input-label" htmlFor="age">Learner Age</label>
-                  {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                <div className='relative' ref={calendarRef}>
+                  <div 
+                    className='relative w-100 input-container-modal'
+                    style={{
+                      borderRadius: '12px',
+                      border: 'none',
+                      padding: '1rem 0.625rem 0.625rem',
+                      boxShadow: '0px 3px 6px #00000029',
+                      background: '#ffffff',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => !loading && setShowCalendar(!showCalendar)}
+                  >
+                    <div className='d-flex align-items-center justify-content-between'>
+                      <div className='d-flex align-items-center gap-2 w-100'>
+                        <FaRegCalendarAlt 
+                          style={{ 
+                            color: '#6F6F6F', 
+                            fontSize: '18px',
+                            marginLeft: '4px'
+                          }} 
+                        />
+                        <input
+                          className='input-style'
+                          style={{
+                            border: 'none',
+                            boxShadow: 'none',
+                            padding: 0,
+                            cursor: 'pointer',
+                            background: 'transparent',
+                            pointerEvents: 'none'
+                          }}
+                          placeholder='Select Birth Date'
+                          readOnly
+                          value={
+                            formData.birthDate
+                              ? formData.birthDate.toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                })
+                              : ''
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Custom Calendar Dropdown */}
+                  {showCalendar && (
+                    <div 
+                      className='calendar-dropdown'
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        marginTop: '8px',
+                        zIndex: 1000,
+                        background: '#fff',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)'
+                      }}
+                    >
+                      <CustomBirthDateCalendar
+                        selectedDate={formData.birthDate}
+                        onDateChange={handleBirthDateChange}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
+            </div>
+
+            {/* Organizational Details Section */}
+            <div className="section-header">
+              <img src={spark} alt="Spark Icon" />
+              <span>Organizational Details</span>
+            </div>
+
+            {/* Select Organization */}
+            <div className="custom-dropdown-learner">
+              <div
+                className="dropdown-trigger-learner"
+                onClick={() => !loading && setShowOrganizationDropdown(!showOrganizationDropdown)}
+              >
+                <span className={formData.organization ? 'selected-value' : 'placeholder-value'}>
+                  {selectedOrganization ? selectedOrganization.name : 'Select Organization'}
+                </span>
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              {showOrganizationDropdown && (
+                <div className="dropdown-menu-learner">
+                  {organizations.map((organization) => (
+                    <div
+                      key={organization.id}
+                      className="dropdown-item-learner"
+                      onClick={() => handleDropdownSelect('organization', organization.id)}
+                    >
+                      {organization.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+
+            {/* Role & Subscription */}
+            <div className="section-header">
+              <img src={spark} alt="Spark Icon" />
+              <span>Role & Subscription</span>
+            </div>
+
+            {/* Select Role */}
+            <div className="custom-dropdown-learner">
+              <div
+                className="dropdown-trigger-learner"
+                onClick={() => !loading && setShowRoleDropdown(!showRoleDropdown)}
+              >
+                <span className={formData.roleId ? 'selected-value' : 'placeholder-value'}>
+                  {selectedRole ? selectedRole.name : 'Select Role'}
+                </span>
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              {showRoleDropdown && (
+                <div className="dropdown-menu-learner">
+                  {roleOptions.map((role) => (
+                    <div
+                      key={role.id}
+                      className="dropdown-item-learner"
+                      onClick={() => handleDropdownSelect('roleId', role.id)}
+                    >
+                      {role.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Subscription Exempt Toggle */}
+            <div className="d-flex align-items-center justify-content-between" style={{ padding: '1rem 0' }}>
+              <div>
+                <h4 style={{
+                  color: 'var(--COLORS-Black, #000)',
+                  fontFamily: 'Montserrat',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  marginBottom: '4px'
+                }}>
+                  Subscription Exempt
+                </h4>
+                <p style={{
+                  color: '#6F6F6F',
+                  fontFamily: 'Montserrat',
+                  fontSize: '12px',
+                  fontWeight: 400,
+                  marginBottom: '0px'
+                }}>
+                  Grant full access without subscription requirement
+                </p>
+              </div>
+              <label className="switch">
+                <input 
+                  type="checkbox" 
+                  checked={formData.subscriptionExempt}
+                  onChange={(e) => handleInputChange('subscriptionExempt', e.target.checked)}
+                  disabled={loading}
+                />
+                <span className="slider round"></span>
+              </label>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 import './index.css'
-import React, { useEffect, useState, useMemo, useRef } from 'react'
+import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
@@ -39,6 +39,8 @@ import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearnersModal/index'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
+import axiosInstance from '../../utils/AxiosInstance'
+
 
 const UserManagement = () => {
   const dispatch = useDispatch()
@@ -50,6 +52,7 @@ const UserManagement = () => {
   
   const [activeTab, setActiveTab] = useState(isInstructor ? 'Users' : 'Organizations')
   const [searchQuery, setSearchQuery] = useState('')
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [showAddDropdown, setShowAddDropdown] = useState(false) 
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
@@ -75,80 +78,129 @@ const UserManagement = () => {
   const [showBulkAddLearnersModal, setShowBulkAddLearnersModal] = useState(false)
   const [showBulkAddOrganizationsModal, setShowBulkAddOrganizationsModal] = useState(false) 
 
-  const organizationsData = [
-    {
-      id: 1,
-      name: 'Organization Name',
-      domain: 'organization.aie.com',
-      totalUsers: 24,
-      monthlyFee: '$15 / user / mo'
-    },
-    {
-      id: 2,
-      name: 'Organization Name',
-      domain: 'organization.aie.com',
-      totalUsers: 24,
-      monthlyFee: '$15 / user / mo'
-    },
-    {
-      id: 3,
-      name: 'Organization Name',
-      domain: 'organization.aie.com',
-      totalUsers: 24,
-      monthlyFee: '$15 / user / mo'
-    },
-    {
-      id: 4,
-      name: 'Organization Name',
-      domain: 'organization.aie.com',
-      totalUsers: 24,
-      monthlyFee: '$15 / user / mo'
-    },
-    {
-      id: 5,
-      name: 'Organization Name',
-      domain: 'organization.aie.com',
-      totalUsers: 24,
-      monthlyFee: '$15 / user / mo'
-    },
-    {
-      id: 6,
-      name: 'Organization Name',
-      domain: 'organization.aie.com',
-      totalUsers: 24,
-      monthlyFee: '$15 / user / mo'
-    }
-  ]
+  // Users data and pagination
+  const [usersData, setUsersData] = useState([])
+  const [usersLoading, setUsersLoading] = useState(false)
+  const [usersPagination, setUsersPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1
+  })
 
-  const usersData = [
-    {
-      id: 1,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L2',
-      reflections: 24,
-      total_paid: 299
-    },
-    {
-      id: 2,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L1',
-      reflections: 18,
-      total_paid: 199
-    },
-    {
-      id: 3,
-      name: 'Learner Name',
-      organization_name: 'Organization',
-      email: 'name@email.com',
-      level: 'L3',
-      reflections: 32,
-      total_paid: 399
+  // Organizations data and pagination
+  const [organizationsData, setOrganizationsData] = useState([])
+  const [organizationsLoading, setOrganizationsLoading] = useState(false)
+  const [organizationsPagination, setOrganizationsPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1
+  })
+
+  // Selected users and organizations for bulk actions
+  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectedOrganizations, setSelectedOrganizations] = useState([])
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+      setCurrentPage(1) // Reset to first page when search changes
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Function to fetch organizations data
+  const fetchOrganizations = async (page = 1, search = '') => {
+    setOrganizationsLoading(true)
+    try {
+      const response = await axiosInstance.get('/super-admin/organizations', {
+        params: {
+          page,
+          limit: 10,
+          search: search || undefined
+        }
+      })
+
+      if (response.data.success) {
+        const mappedData = response.data.data.map(org => ({
+          id: org.id,
+          name: org.name,
+          domain: org.domainUrl || org.domain,
+          totalUsers: org.totalUsers || 0,
+          monthlyFee: org.organizationPricing && org.organizationPricing.length > 0
+            ? `$${org.organizationPricing[0].amount} / ${org.organizationPricing[0].frequency}`
+            : 'N/A',
+          address: org.address,
+          city: org.city,
+          state: org.state,
+          zipCode: org.zipCode,
+          administratorName: org.administratorName,
+          administratorEmail: org.administratorEmail,
+          features: org.features,
+          organizationPricing: org.organizationPricing,
+          learnerPricing: org.learnerPricing
+        }))
+
+        setOrganizationsData(mappedData)
+        setOrganizationsPagination(response.data.pagination)
+      }
+    } catch (error) {
+      console.error('Error fetching organizations:', error)
+      toast.error('Failed to load organizations data')
+    } finally {
+      setOrganizationsLoading(false)
     }
-  ]
+  }
+
+  // Function to fetch users data
+  const fetchUsers = async (page = 1, search = '') => {
+    setUsersLoading(true)
+    try {
+      const response = await axiosInstance.get('/super-admin/users', {
+        params: {
+          page,
+          limit: 10,
+          search: search || undefined
+        }
+      })
+
+      if (response.data.success) {
+        const mappedData = response.data.data.map(user => ({
+          id: user.id,
+          name: user.name,
+          organization_name: user.organization_name,
+          email: user.email,
+          level: user.level,
+          reflections: user.reflections,
+          total_paid: Math.round(user.total_paid),
+          last_active: user.last_active,
+          trial_start: user.trial_start,
+          activation_date: user.member_since,
+          activeStatus: user.activeStatus
+        }))
+
+        setUsersData(mappedData)
+        setUsersPagination(response.data.pagination)
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error)
+      toast.error('Failed to load users data')
+    } finally {
+      setUsersLoading(false)
+    }
+  }
+
+  // Fetch data when component mounts or when debounced search/page/tab changes
+  useEffect(() => {
+    if (activeTab === 'Users') {
+      fetchUsers(currentPage, debouncedSearchQuery)
+    } else if (activeTab === 'Organizations') {
+      fetchOrganizations(currentPage, debouncedSearchQuery)
+    }
+  }, [activeTab, currentPage, debouncedSearchQuery])
 
   const organizationsColumns = useMemo(() => [
     {
@@ -190,7 +242,7 @@ const UserManagement = () => {
       filterable: true,
       render: (value, item) => (
         <div className="learner-info">
-          <div className="status-indicator"></div>
+          <div className={`status-indicator ${item.activeStatus ? 'active' : 'inactive'}`}></div>
           <div className="learner-details">
             <div className="learner-name">{item.name}</div>
             <div className="learner-organization">{item.organization_name}</div>
@@ -211,16 +263,46 @@ const UserManagement = () => {
       )
     },
     {
-      key: 'reflections',
-      title: 'REFLECTIONS',
+      key: 'last_active',
+      title: 'LAST ACTIVE',
       sortable: true,
-      render: (value) => <span className="reflections-count">{value}</span>
+      render: (value) => (
+        <span className="last-active">
+          {value ? new Date(value).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: 'numeric',
+            year: 'numeric'
+          }) : 'N/A'}
+        </span>
+      )
     },
     {
-      key: 'total_paid',
-      title: 'TOTAL PAID',
+      key: 'trial_start',
+      title: 'TRIAL START',
       sortable: true,
-      render: (value) => <span className="total-paid">${value}</span>
+      render: (value) => (
+        <span className="trial-start">
+          {value ? new Date(value).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: 'numeric',
+            year: 'numeric'
+          }) : 'N/A'}
+        </span>
+      )
+    },
+    {
+      key: 'activation_date',
+      title: 'ACTIVATION DATE',
+      sortable: true,
+      render: (value) => (
+        <span className="activation-date">
+          {value ? new Date(value).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: 'numeric',
+            year: 'numeric'
+          }) : 'N/A'}
+        </span>
+      )
     }
   ], [])
 
@@ -288,16 +370,32 @@ const UserManagement = () => {
     setShowLearnersModal(true)
   }
 
-  const handleViewOrganization = (organization) => {
-    setSelectedOrganization(organization)
-    setModalMode('view')
-    setShowAddOrganizationModal(true)
+  const handleViewOrganization = async (organization) => {
+    try {
+      const response = await axiosInstance.get(`/super-admin/organizations/${organization.id}`)
+      if (response.data.success) {
+        setSelectedOrganization(response.data.data)
+        setModalMode('view')
+        setShowAddOrganizationModal(true)
+      }
+    } catch (error) {
+      console.error('Error fetching organization details:', error)
+      toast.error('Failed to load organization details')
+    }
   }
 
-  const handleEditOrganization = (organization) => {
-    setSelectedOrganization(organization)
-    setModalMode('edit')
-    setShowAddOrganizationModal(true)
+  const handleEditOrganization = async (organization) => {
+    try {
+      const response = await axiosInstance.get(`/super-admin/organizations/${organization.id}`)
+      if (response.data.success) {
+        setSelectedOrganization(response.data.data)
+        setModalMode('edit')
+        setShowAddOrganizationModal(true)
+      }
+    } catch (error) {
+      console.error('Error fetching organization details:', error)
+      toast.error('Failed to load organization details')
+    }
   }
 
   const handleAddOrganization = () => {
@@ -309,6 +407,10 @@ const UserManagement = () => {
   const handleModalSuccess = () => {
     toast.success('Organization saved successfully!')
     setShowAddOrganizationModal(false)
+    // Refresh organizations list
+    if (activeTab === 'Organizations') {
+      fetchOrganizations(currentPage, debouncedSearchQuery)
+    }
   }
 
   const handleViewLearner = (learner) => {
@@ -333,11 +435,33 @@ const UserManagement = () => {
   const handleLearnerModalSuccess = () => {
     toast.success('Learner saved successfully!')
     setShowAddLearnerModal(false)
+    // Refresh users list
+    if (activeTab === 'Users') {
+      fetchUsers(currentPage, debouncedSearchQuery)
+    }
   }
 
-  const handleExportOrganization = (organization) => {
-    console.log('Exporting organization:', organization)
-    toast.success(`Exported ${organization.name} data successfully!`)
+  const handleExportOrganization = async (organization) => {
+    try {
+      const response = await axiosInstance.get(`/super-admin/organizations/${organization.id}/export`)
+      if (response.data.success) {
+        // Create downloadable file
+        const dataStr = JSON.stringify(response.data.data, null, 2)
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
+        
+        const exportFileDefaultName = `organization_${organization.name}_${new Date().toISOString()}.json`
+        
+        const linkElement = document.createElement('a')
+        linkElement.setAttribute('href', dataUri)
+        linkElement.setAttribute('download', exportFileDefaultName)
+        linkElement.click()
+        
+        toast.success(`Exported ${organization.name} data successfully!`)
+      }
+    } catch (error) {
+      console.error('Error exporting organization:', error)
+      toast.error('Failed to export organization data')
+    }
   }
 
   const addSingleOrganization = () => {
@@ -355,48 +479,134 @@ const UserManagement = () => {
     setShowAddDropdown(false)
   }
 
-  const deactivateOrganizations = () => {
-    setActionContext('organizations')
-    setIsSingleAction(false)
-    setShowDeactivatePopup(true)
-    setShowBulkDropdown(false)
-  }
+  // const deactivateOrganizations = () => {
+  //   setActionContext('organizations')
+  //   setIsSingleAction(false)
+  //   setShowDeactivatePopup(true)
+  //   setShowBulkDropdown(false)
+  // }
 
-  const deleteOrganizations = () => {
-    setActionContext('organizations')
-    setIsSingleAction(false)
-    setShowDeletePopup(true)
-    setShowBulkDropdown(false)
-  }
+  // const deleteOrganizations = () => {
+  //   setActionContext('organizations')
+  //   setIsSingleAction(false)
+  //   setShowDeletePopup(true)
+  //   setShowBulkDropdown(false)
+  // }
 
-  const exportOrganizations = () => {
-    toast.success('Organizations exported successfully!')
+  const exportOrganizations = async () => {
+    try {
+      const response = await axiosInstance.get('/super-admin/organizations/export')
+      if (response.data.success) {
+        const dataStr = JSON.stringify(response.data.data, null, 2)
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
+        
+        const exportFileDefaultName = `all_organizations_${new Date().toISOString()}.json`
+        
+        const linkElement = document.createElement('a')
+        linkElement.setAttribute('href', dataUri)
+        linkElement.setAttribute('download', exportFileDefaultName)
+        linkElement.click()
+        
+        toast.success('Organizations exported successfully!')
+      }
+    } catch (error) {
+      console.error('Error exporting organizations:', error)
+      toast.error('Failed to export organizations')
+    }
     setShowBulkDropdown(false)
   }
 
   const resetPasswords = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setActionContext('users')
+    setSelectedItems(selectedUsers)
     setIsSingleAction(false)
     setShowResetPasswordPopup(true)
     setShowBulkDropdown(false)
   }
 
   const deactivateUsers = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setActionContext('users')
+    setSelectedItems(selectedUsers)
     setIsSingleAction(false)
     setShowDeactivatePopup(true)
     setShowBulkDropdown(false)
   }
 
   const deleteUsers = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
     setActionContext('users')
+    setSelectedItems(selectedUsers)
     setIsSingleAction(false)
     setShowDeletePopup(true)
     setShowBulkDropdown(false)
   }
 
-  const exportUsers = () => {
-    toast.success('Users exported successfully!')
+  const exportUsers = async () => {
+    try {
+      const userIds = selectedUsers.length > 0 
+        ? selectedUsers.map(user => user.id).join(',')
+        : undefined
+
+      const response = await axiosInstance.get('/super-admin/users-csv/export', {
+        params: userIds ? { userIds } : {},
+        responseType: 'blob'
+      })
+
+      // Create download link
+      const blob = new Blob([response.data], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `users_export_${new Date().toISOString()}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+      toast.success(
+        selectedUsers.length > 0
+          ? `${selectedUsers.length} user(s) exported successfully!`
+          : 'All users exported successfully!'
+      )
+    } catch (error) {
+      console.error('Error exporting users:', error)
+      toast.error('Failed to export users')
+    }
+    setShowBulkDropdown(false)
+  }
+
+  const deactivateOrganizations = () => {
+    if (selectedOrganizations.length === 0) {
+      toast.warning('Please select at least one organization')
+      return
+    }
+    setActionContext('organizations')
+    setSelectedItems(selectedOrganizations)
+    setIsSingleAction(false)
+    setShowDeactivatePopup(true)
+    setShowBulkDropdown(false)
+  }
+
+  const deleteOrganizations = () => {
+    if (selectedOrganizations.length === 0) {
+      toast.warning('Please select at least one organization')
+      return
+    }
+    setActionContext('organizations')
+    setSelectedItems(selectedOrganizations)
+    setIsSingleAction(false)
+    setShowDeletePopup(true)
     setShowBulkDropdown(false)
   }
 
@@ -488,29 +698,38 @@ const UserManagement = () => {
   const handleConfirmDelete = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
       if (actionContext === 'organizations') {
-        console.log('Deleting organizations:', selectedItems)
-        toast.success(
-          isSingleAction 
-            ? 'Organization deleted successfully!' 
-            : 'Organizations deleted successfully!'
-        )
+        if (isSingleAction) {
+          await axiosInstance.delete(`/super-admin/organizations/${selectedItems[0].id}`)
+          toast.success('Organization deleted successfully!')
+        } else {
+          const organizationIds = selectedItems.map(item => item.id)
+          await axiosInstance.post('/super-admin/organizations/bulk-delete', { organizationIds })
+          toast.success(`${organizationIds.length} organization(s) deleted successfully!`)
+        }
+        setSelectedOrganizations([])
+        fetchOrganizations(currentPage, debouncedSearchQuery)
       } else {
-        console.log('Deleting users:', selectedItems)
-        toast.success(
-          isSingleAction 
-            ? 'User deleted successfully!' 
-            : 'Users deleted successfully!'
-        )
+        if (isSingleAction) {
+          await axiosInstance.delete(`/super-admin/users/${selectedItems[0].id}`)
+          toast.success('User deleted successfully!')
+        } else {
+          const userIds = selectedItems.map(item => item.id)
+          await axiosInstance.post('/super-admin/users/bulk-delete', {
+            data: { userIds }
+          })
+          toast.success(`${userIds.length} user(s) deleted successfully!`)
+        }
+        setSelectedUsers([])
+        fetchUsers(currentPage, debouncedSearchQuery)
       }
       
       setShowDeletePopup(false)
       setSelectedItems([])
       setIsSingleAction(false)
     } catch (error) {
-      toast.error('Failed to delete')
+      console.error('Delete error:', error)
+      toast.error(error.response?.data?.message || 'Failed to delete')
     } finally {
       setLoading(false)
     }
@@ -519,18 +738,22 @@ const UserManagement = () => {
   const handleConfirmResetPassword = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Resetting passwords for users:', selectedItems)
-      toast.success(
-        isSingleAction 
-          ? 'Password reset successfully!' 
-          : 'Passwords reset successfully!'
-      )
+      if (isSingleAction) {
+        await axiosInstance.patch(`/auth/setDefaultUserPassword/${selectedItems[0].id}`)
+        toast.success('Password reset successfully!')
+      } else {
+        const userIds = selectedItems.map(item => item.id)
+        await axiosInstance.post('/super-admin/users/bulk-reset-passwords', { userIds })
+        toast.success(`${userIds.length} password(s) reset successfully!`)
+      }
+      
       setShowResetPasswordPopup(false)
       setSelectedItems([])
+      setSelectedUsers([])
       setIsSingleAction(false)
     } catch (error) {
-      toast.error('Failed to reset passwords')
+      console.error('Reset password error:', error)
+      toast.error(error.response?.data?.message || 'Failed to reset password(s)')
     } finally {
       setLoading(false)
     }
@@ -539,33 +762,47 @@ const UserManagement = () => {
   const handleConfirmDeactivate = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
       if (actionContext === 'organizations') {
-        console.log('Deactivating organizations:', selectedItems)
-        toast.success(
-          isSingleAction 
-            ? 'Organization deactivated successfully!' 
-            : 'Organizations deactivated successfully!'
-        )
+        if (isSingleAction) {
+          await axiosInstance.post(`/super-admin/organizations/${selectedItems[0].id}/deactivate`)
+          toast.success('Organization deactivated successfully!')
+        } else {
+          const organizationIds = selectedItems.map(item => item.id)
+          await axiosInstance.post('/super-admin/organizations/bulk-deactivate', { organizationIds })
+          toast.success(`${organizationIds.length} organization(s) deactivated successfully!`)
+        }
+        setSelectedOrganizations([])
+        fetchOrganizations(currentPage, debouncedSearchQuery)
       } else {
-        console.log('Deactivating users:', selectedItems)
-        toast.success(
-          isSingleAction 
-            ? 'User deactivated successfully!' 
-            : 'Users deactivated successfully!'
-        )
+        if (isSingleAction) {
+          const userIds = [selectedItems[0].id]
+          await axiosInstance.post('/super-admin/users/bulk-deactivate', { userIds })
+          toast.success('User deactivated successfully!')
+        } else {
+          const userIds = selectedItems.map(item => item.id)
+          await axiosInstance.post('/super-admin/users/bulk-deactivate', { userIds })
+          toast.success(`${userIds.length} user(s) deactivated successfully!`)
+        }
+        setSelectedUsers([])
+        fetchUsers(currentPage, debouncedSearchQuery)
       }
       
       setShowDeactivatePopup(false)
       setSelectedItems([])
       setIsSingleAction(false)
     } catch (error) {
-      toast.error('Failed to deactivate')
+      console.error('Deactivate error:', error)
+      toast.error(error.response?.data?.message || 'Failed to deactivate')
     } finally {
       setLoading(false)
     }
   }
+
+  // Reset selections when changing tabs
+  useEffect(() => {
+    setSelectedUsers([])
+    setSelectedOrganizations([])
+  }, [activeTab])
 
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
@@ -588,10 +825,29 @@ const UserManagement = () => {
     }
   }, [])
 
+  // Handle pagination
+  const handlePageChange = (newPage) => {
+    const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setCurrentPage(newPage)
+    }
+  }
+
   const currentData = activeTab === 'Organizations' ? organizationsData : usersData
   const currentColumns = activeTab === 'Organizations' ? organizationsColumns : usersColumns
   const currentOptions = activeTab === 'Organizations' ? optionsOrganizations : optionsUsers
   const currentBulkOptions = activeTab === 'Organizations' ? bulkOptionsOrganizations : bulkOptionsUsers
+  const isLoading = activeTab === 'Users' ? usersLoading : organizationsLoading
+  const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+
+  // Add handleSelectionChange function
+  const handleSelectionChange = (selectedItems) => {
+    if (activeTab === 'Users') {
+      setSelectedUsers(selectedItems)
+    } else {
+      setSelectedOrganizations(selectedItems)
+    }
+  }
 
   return (
     <div>
@@ -642,13 +898,21 @@ const UserManagement = () => {
           <div className="header-tabs">
             <button
               className={`tab-button ${activeTab === 'Organizations' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Organizations')}
+              onClick={() => {
+                setActiveTab('Organizations')
+                setCurrentPage(1)
+                setSearchQuery('')
+              }}
             >
               Organizations
             </button>
             <button
               className={`tab-button ${activeTab === 'Users' ? 'active' : ''}`}
-              onClick={() => setActiveTab('Users')}
+              onClick={() => {
+                setActiveTab('Users')
+                setCurrentPage(1)
+                setSearchQuery('')
+              }}
             >
               Users
             </button>
@@ -666,8 +930,8 @@ const UserManagement = () => {
                 className="search-input"
               />
               <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M17 17L21 21" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17 17L21 21" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
           </div>
@@ -795,28 +1059,47 @@ const UserManagement = () => {
             onRowAction={handleRowAction}
             showCheckbox={true}
             activeTab={activeTab}
+            loading={isLoading}
+            onSelectionChange={handleSelectionChange}
+            selectedItems={activeTab === 'Users' ? selectedUsers : selectedOrganizations}
           />
         </div>
 
         <div className="pagination-container">
-          <button className="pagination-btn">
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <button className="pagination-btn">
-           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-            <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
-          <span className="pagination-info">1 / 2</span>
-          <button className="pagination-btn">
+          <span className="pagination-info">{currentPage} / {currentPagination.totalPages}</span>
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === currentPagination.totalPages}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
               <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <button className="pagination-btn">
+          <button 
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPagination.totalPages)}
+            disabled={currentPage === currentPagination.totalPages}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -840,6 +1123,7 @@ const UserManagement = () => {
           show={showLearnersModal}
           onHide={() => setShowLearnersModal(false)}
           organizationName={selectedOrgForLearners?.name || ''}
+          organizationId={selectedOrgForLearners?.id}
         />
       )}
 
@@ -882,7 +1166,7 @@ const UserManagement = () => {
         confirmText={
           isSingleAction
             ? `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
-            : `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+            : `YES, DELETE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}` 
         }
         loading={loading}
       />
@@ -920,7 +1204,7 @@ const UserManagement = () => {
         confirmText={
           isSingleAction
             ? `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
-            : `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}`
+            : `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}` 
         }
         loading={loading}
       />
@@ -931,6 +1215,7 @@ const UserManagement = () => {
         onSuccess={() => {
           setShowBulkAddLearnersModal(false)
           toast.success('Learners added successfully!')
+          fetchUsers(currentPage, debouncedSearchQuery)
         }}
         mode="learners"
       />
@@ -942,6 +1227,7 @@ const UserManagement = () => {
           onSuccess={() => {
             setShowBulkAddOrganizationsModal(false)
             toast.success('Organizations added successfully!')
+            fetchOrganizations(currentPage, debouncedSearchQuery)
           }}
           mode="organizations"
         />

@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
-import csvToArray from '../../CSVUpload/csvToArray'
-import template from '../../../assets/files/CSV_USERS_EXAMPLE.csv'
+import csvToArrayLearners from '../../CSVUpload/csvToArrayLearners'
 import './index.css'
 
 const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) => {
@@ -67,6 +66,29 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
     }
   }
 
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await axiosInstance.get('/super-admin/learners-csv/download-template', {
+        responseType: 'blob'
+      })
+
+      const blob = new Blob([response.data], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `learners_template_${new Date().toISOString()}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+      toast.success('Template downloaded successfully!')
+    } catch (error) {
+      console.error('Error downloading template:', error)
+      toast.error('Failed to download template')
+    }
+  }
+
   const handleUpload = async () => {
     if (!file) {
       toast.error('Please select a CSV file to upload')
@@ -79,7 +101,7 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
 
     reader.onload = async function (e) {
       try {
-        const results = csvToArray(e.target.result, ',')
+        const results = csvToArrayLearners(e.target.result, ',')
         
         if (results.length === 0) {
           toast.error('CSV file is empty')
@@ -87,33 +109,37 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
           return
         }
 
-        // Process based on mode
-        if (mode === 'learners') {
-          for (let learner of results) {
-            let payload = {
-              ...learner,
-              stripe_subscription_id: 'true',
-              payment_type: 'school',
-              is_active: 1
-            }
-            await axiosInstance.post('/instructor/add-users', payload)
-          }
-        } else if (mode === 'organizations') {
-          for (let organization of results) {
-            let payload = {
-              ...organization
-            }
-            // Replace with actual endpoint for organizations
-            await axiosInstance.post('/admin/add-organization', payload)
-          }
-        }
+        const learners = results.map(learner => ({
+          learnerName: learner.learnerName,
+          email: learner.email,
+          password: learner.password || 'Learntostart1!',
+          gender: learner.gender,
+          birthDate: learner.birthDate,
+          address: learner.address,
+          city: learner.city,
+          state: learner.state,
+          universityId: learner.universityId || null
+        }))
 
-        toast.success(currentContent.successMessage)
-        onSuccess()
-        handleCancel()
+        const response = await axiosInstance.post('/super-admin/learners-csv/bulk-create', {
+          learners
+        })
+
+        if (response.data.success) {
+          toast.success(`${response.data.created} learner(s) added successfully!`)
+          
+          if (response.data.errors && response.data.errors.length > 0) {
+            response.data.errors.forEach(error => {
+              toast.error(`Row ${error.row}: ${error.message}`)
+            })
+          }
+          
+          onSuccess()
+          handleCancel()
+        }
       } catch (error) {
         console.error('Upload error:', error)
-        toast.error(error.response?.data?.message || `Error uploading ${mode}`)
+        toast.error(error.response?.data?.message || 'Error uploading learners')
       } finally {
         setLoading(false)
       }
@@ -132,15 +158,6 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
       setFile(null)
       onHide()
     }
-  }
-
-  const handleDownloadTemplate = () => {
-    const link = document.createElement('a')
-    link.href = template
-    link.download = mode === 'learners' ? 'CSV_LEARNERS_TEMPLATE.csv' : 'CSV_ORGANIZATIONS_TEMPLATE.csv'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
   }
 
   return (

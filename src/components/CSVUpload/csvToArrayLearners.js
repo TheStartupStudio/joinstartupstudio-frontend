@@ -1,34 +1,58 @@
 const csvToArrayLearners = (str, delimiter = ',') => {
-  str = str.replace(/\r\n/g, '\n')
+  str = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
 
-  const headers = str
-    .slice(0, str.indexOf('\n'))
-    .split(delimiter)
-    .map((header) => {
-      if (
-        header === 'Password' ||
-        header === 'Levels' ||
-        header === 'Year' ||
-        header === 'Period' ||
-        header === 'Programs' ||
-        header === 'Name' ||
-        header === 'Email' ||
-        header === 'Profession'
-      )
-        header = header.toLowerCase()
-      return header
-    })
+  const firstLine = str.slice(0, str.indexOf('\n'))
+  delimiter = firstLine.includes(';') ? ';' : ','
 
+  const headers = firstLine.split(delimiter).map((header) => {
+    if (
+      [
+        'Password',
+        'Level',
+        'Year',
+        'Period',
+        'Year',
+        'Name',
+        'Email',
+        'Profession',
+        'Gender',
+        'BirthDate',
+        'Address',
+        'City',
+        'State',
+        'UniversityId'
+      ].includes(header)
+    ) {
+      return header.toLowerCase()
+    }
+    return header
+  })
+
+  if (headers[0] === 'School Assignment') {
+    headers[0] = 'universityName'
+  }
+
+  if (headers[1] === 'Instructor Name') {
+    headers[1] = 'instructorName'
+  }
+
+  if (headers[2] === 'Student Name') {
+    headers[2] = 'name'
+  }
+
+  // Updated header validation for learners
   if (
-    headers[2] !== 'name' ||
-    headers[3] !== 'email' ||
-    headers[4] !== 'password' ||
-    headers[5] !== 'levels' ||
-    headers[6] !== 'programs' ||
-    headers[7] !== 'profession' ||
-    headers[8] !== 'period'
+    headers[0] !== 'learnerName' ||
+    headers[1] !== 'email' ||
+    headers[2] !== 'password' ||
+    headers[3] !== 'gender' ||
+    headers[4] !== 'birthDate' ||
+    headers[5] !== 'address' ||
+    headers[6] !== 'city' ||
+    headers[7] !== 'state' ||
+    headers[8] !== 'universityId'
   ) {
-    throw new Error('Invalid CSV Format for Students')
+    throw new Error('Invalid CSV Format for Learners')
   }
 
   const rows = str.slice(str.indexOf('\n') + 1).split('\n')
@@ -36,9 +60,8 @@ const csvToArrayLearners = (str, delimiter = ',') => {
   const arr = rows
     .filter((row) => row.trim() !== '') // Skip empty lines
     .map((row) => {
-      // Split using regex to handle values with quotes
       const values = row
-        .split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+        .split(new RegExp(`${delimiter}(?=(?:[^"]*"[^"]*")*[^"]*$)`))
         .map((val) => val.replace(/^"|"$/g, '').trim())
 
       const el = headers.reduce((object, header, index) => {

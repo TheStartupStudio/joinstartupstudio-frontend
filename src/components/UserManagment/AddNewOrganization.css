@@ -83,7 +83,6 @@
   color: #333;
   background: var(--COLORS-White, #FFF);
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .input-label {
@@ -285,11 +284,135 @@
   }
 }
 
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.10);
+  overflow: hidden;
 
-.full-width-btn {
-  width: 100%;
+  border-radius: 8px;
+background: rgba(255, 255, 255, 0.10);
+box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.15);
+backdrop-filter: blur(60.064998626708984px);
 }
 
-.full-width-btn > * {
-  width: 100% !important;
+.tab-nav-button {
+  flex: 1;
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
+
+.tab-nav-button.active {
+  border-radius: 8px;
+background: rgba(185, 223, 236, 0.20);
+box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+backdrop-filter: blur(60.064998626708984px);
+}
+
+.tab-nav-button:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Tab Content */
+.tab-content {
+  margin-top: 20px;
+}
+
+/* Toggle Switch Styles */
+.course-access-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toggle-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #231F20;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+input:disabled + .slider {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Select label adjustment */
+.input-label.select-label {
+  top: -8px;
+  font-size: 12px;
+  background: white;
+  padding: 0 4px;
+}
+
+/* Existing styles remain the same... */

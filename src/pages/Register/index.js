@@ -1,5 +1,5 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import AcademyBtn from '../../components/AcademyBtn'
@@ -28,8 +28,11 @@ import {
 } from '@stripe/react-stripe-js'
 import CheckSubscriptionModal from './CheckSubscriptionModal'
 import closeBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
-// ✅ ADD FACEBOOK PIXEL IMPORTS
 import { trackTrialStarted, trackLead } from '../../utils/FacebookPixel'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { FaRegCalendarAlt } from 'react-icons/fa'
+import CustomBirthDateCalendar from '../../components/CustomBirthDateCalendar'
 
 // Initialize Stripe
 // const stripePromise = loadStripe(
@@ -38,7 +41,6 @@ import { trackTrialStarted, trackLead } from '../../utils/FacebookPixel'
 
 const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
 
-// Update the card element options for individual fields
 const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
@@ -58,7 +60,6 @@ const CARD_ELEMENT_OPTIONS = {
   hidePostalCode: true,
 }
 
-// Registration Form Component (inside Elements wrapper)
 function RegistrationForm() {
   const stripe = useStripe()
   const elements = useElements()
@@ -73,7 +74,6 @@ function RegistrationForm() {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-  // ✅ ADD: Track when user lands on registration page
   useEffect(() => {
     trackLead({
       contentName: 'Registration Page',
@@ -103,7 +103,18 @@ function RegistrationForm() {
       newErrors.confirmPassword = 'Passwords do not match.'
     }
 
-    // Validate required billing fields
+    // Birth date validation - Allow all ages but prevent future dates
+    if (!formData.birthDate) {
+      newErrors.birthDate = 'Birth date is required.'
+    } else {
+      const today = new Date()
+      const birthDate = new Date(formData.birthDate)
+      
+      if (birthDate > today) {
+        newErrors.birthDate = 'Birth date cannot be in the future.'
+      }
+    }
+
     if (!formData.address.trim()) {
       newErrors.address = 'Address is required.'
     }
@@ -129,13 +140,17 @@ function RegistrationForm() {
     emailAddress: '',
     password: '',
     confirmPassword: '',
+    birthDate: null,
     address: '',
     city: '',
     state: '',
     zipCode: '',
     nameOn: '',
-    zipC: '' // Add this for the card zip code
+    zipC: '' 
   })
+
+  const [showCalendar, setShowCalendar] = useState(false)
+  const calendarRef = useRef(null)
 
   const handleInputChange = (e) => {
     const { id, value } = e.target
@@ -144,6 +159,28 @@ function RegistrationForm() {
       [id]: value
     }))
   }
+
+  const handleBirthDateChange = (date) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      birthDate: date
+    }))
+    setShowCalendar(false)
+  }
+
+  // Close calendar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setShowCalendar(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -210,6 +247,7 @@ function RegistrationForm() {
         name: formData.fullName,
         email: formData.emailAddress,
         password: formData.password,
+        birthDate: formData.birthDate?.toISOString().split('T')[0], // ✅ ADD: Format birth date
         address: formData.address,
         city: formData.city,
         state: formData.state,
@@ -233,7 +271,6 @@ function RegistrationForm() {
       setIsLoading(false)
       console.error('Registration error:', error)
       
-      // Handle specific error messages from the backend
       if (error.response?.data?.message) {
         toast.error(error.response.data.message)
       } else {
@@ -263,7 +300,6 @@ function RegistrationForm() {
     body.classList.toggle("nav-open");
   };
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth)
@@ -275,11 +311,9 @@ function RegistrationForm() {
 
   const [paymentRequest, setPaymentRequest] = useState(null)
 
-  // Add this useEffect to initialize Google Pay/Apple Pay
   useEffect(() => {
     if (!stripe) return
     
-    // Only enable Payment Request on HTTPS
     const isSecureContext = window.isSecureContext || window.location.protocol === 'https:'
     
     if (!isSecureContext) {
@@ -308,7 +342,6 @@ function RegistrationForm() {
       try {
         const email = formData.emailAddress || e.paymentMethod.billing_details.email
 
-        // Check if user exists
         const checkEmailResponse = await axiosInstance.post('/check-email', {
           email: email
         })
@@ -319,7 +352,6 @@ function RegistrationForm() {
           return
         }
 
-        // Auto-fill form data from payment method
         if (e.paymentMethod.billing_details) {
           const billing = e.paymentMethod.billing_details
           setFormData((prev) => ({
@@ -334,7 +366,6 @@ function RegistrationForm() {
           }))
         }
 
-        // Store payment method ID
         const registrationData = {
           name: formData.fullName || e.paymentMethod.billing_details.name,
           email: email,
@@ -355,10 +386,8 @@ function RegistrationForm() {
           predictedLifetimeValue: 119.88
         })
 
-        // Complete the payment request
         e.complete('success')
         
-        // Show subscription modal
         setShowCheckSubscription(true)
       } catch (error) {
         e.complete('fail')
@@ -462,7 +491,6 @@ function RegistrationForm() {
     }}
   >
               <div>
-                {/* Account Information Section */}
                 <div>
                   <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
                     Account Information
@@ -483,23 +511,8 @@ function RegistrationForm() {
                       )}
                     </div>
 
-                    {/* Email */}
-                    <div className='relative'>
-                      <ModalInput
-                        id={'emailAddress'}
-                        labelTitle={'Email Address'}
-                        value={formData.emailAddress}
-                        onChange={handleInputChange}
-                        autoComplete={'new-email'}
-                      />
-                      {errors.emailAddress && (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
-                          {errors.emailAddress}
-                        </p>
-                      )}
-                    </div>
 
-                    {/* Password */}
+                                        {/* Password */}
                     <div className='relative'>
                       <div className='relative w-100 d-flex justify-content-between input-container-modal'>
                         <input
@@ -532,6 +545,22 @@ function RegistrationForm() {
                       {errors.password && (
                         <p className='invalid-feedback d-block position-absolute fs-10'>
                           {errors.password}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Email */}
+                    <div className='relative'>
+                      <ModalInput
+                        id={'emailAddress'}
+                        labelTitle={'Email Address'}
+                        value={formData.emailAddress}
+                        onChange={handleInputChange}
+                        autoComplete={'new-email'}
+                      />
+                      {errors.emailAddress && (
+                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                          {errors.emailAddress}
                         </p>
                       )}
                     </div>
@@ -579,6 +608,93 @@ function RegistrationForm() {
                         <div className='position-absolute password-register'>
                           <IntlMessages id='create_account.password_policy' />
                         </div>
+                      )}
+                    </div>
+
+                    {/* ✅ Birth Date Field with Custom Calendar */}
+                    <div className='relative' ref={calendarRef}>
+                      <div 
+                        className='relative w-100 input-container-modal'
+                        style={{
+                          borderRadius: '12px',
+                          border: 'none',
+                          padding: '1rem 0.625rem 0.625rem',
+                          boxShadow: '0px 3px 6px #00000029',
+                          background: '#ffffff',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => setShowCalendar(!showCalendar)}
+                      >
+                        <div className='d-flex align-items-center justify-content-between'>
+                          <div className='d-flex align-items-center gap-2 w-100'>
+                            <FaRegCalendarAlt 
+                              style={{ 
+                                color: '#6F6F6F', 
+                                fontSize: '18px',
+                                marginLeft: '4px'
+                              }} 
+                            />
+                            <input
+                              className='input-style'
+                              style={{
+                                border: 'none',
+                                boxShadow: 'none',
+                                padding: 0,
+                                cursor: 'pointer',
+                                background: 'transparent',
+                                pointerEvents: 'none'
+                              }}
+                              placeholder='Select Birth Date'
+                              readOnly
+                              value={
+                                formData.birthDate
+                                  ? formData.birthDate.toLocaleDateString('en-US', {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                    })
+                                  : ''
+                              }
+                            />
+                            {/* <label 
+                              className='label-style'
+                              style={{
+                                left: '40px'
+                              }}
+                            >
+                              Birth Date
+                            </label> */}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Custom Calendar Dropdown */}
+                      {showCalendar && (
+                        <div 
+                          className='calendar-dropdown'
+                          style={{
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            right: 0,
+                            marginTop: '8px',
+                            zIndex: 1000,
+                            background: '#fff',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)'
+                          }}
+                        >
+                          <CustomBirthDateCalendar
+                            selectedDate={formData.birthDate}
+                            onDateChange={handleBirthDateChange}
+                          />
+                        </div>
+                      )}
+
+                      {errors.birthDate && (
+                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                          {errors.birthDate}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -665,19 +781,16 @@ function RegistrationForm() {
                   </div>
                 </div>
 
-                {/* Card Information Section */}
                 <div className='mt-3 register-card-info-fill'>
                   <div className='d-flex align-items-center justify-content-between mb-2'>
                     <p className='mb-0 fs-13 fw-medium ms-3 text-black'>
                       Card Information
                     </p>
-                    {/* Optional: Add browser autofill hint */}
                     <button
                       type='button'
                       className='btn-link fs-11 text-decoration-none'
                       style={{ color: '#51C7DF', cursor: 'pointer' }}
                       onClick={() => {
-                        // Trigger browser's native autofill
                         if (document.querySelector('[name="cardnumber"]')) {
                           document.querySelector('[name="cardnumber"]').focus()
                         }
@@ -687,7 +800,6 @@ function RegistrationForm() {
                     </button>
                   </div>
                   
-                  {/* Card Number Field */}
                   <div className='relative mb-3'>
                     <div className='stripe-card-wrapper' style={{
                       borderRadius: '12px',
@@ -770,7 +882,6 @@ function RegistrationForm() {
               </div>
             </div>
 
-            {/* Bottom Section */}
             <div className='d-flex flex-column align-items-center mt-3'>
               <p className='text-center fs-13 fw-medium mb-3 blue-color lh-sm'>
                 By creating an account you agree to our
@@ -887,7 +998,6 @@ function RegistrationForm() {
   )
 }
 
-// Main Register Component (wrapper with Elements provider)
 function Register() {
   return (
     <Elements stripe={stripePromise}>

@@ -4,6 +4,8 @@ import graph from '../../assets/images/academy-icons/svg/Icon_Sort.svg'
 import filter from '../../assets/images/academy-icons/svg/Dropdown_ Filter by Level.svg'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const DataTable = ({ 
   columns, 
@@ -12,7 +14,10 @@ const DataTable = ({
   searchQuery = '',
   showCheckbox = true,
   activeTab = 'Organizations',
-  onReorder
+  onReorder,
+  onSelectionChange,
+  selectedItems = [],
+  loading = false
 }) => {
   
   const [openFilterDropdown, setOpenFilterDropdown] = useState(null)
@@ -21,6 +26,7 @@ const DataTable = ({
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
   const [draggedRow, setDraggedRow] = useState(null)
   const [draggedOverRow, setDraggedOverRow] = useState(null)
+  const [selectAll, setSelectAll] = useState(false)
   
   // Refs for click outside detection
   const filterDropdownRefs = useRef({})
@@ -51,6 +57,17 @@ const DataTable = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [openFilterDropdown, openMoreActionsDropdown])
+
+  // Update select all state when selectedItems changes
+  useEffect(() => {
+    if (selectedItems.length === 0) {
+      setSelectAll(false)
+    } else if (selectedItems.length === filteredData.length && filteredData.length > 0) {
+      setSelectAll(true)
+    } else {
+      setSelectAll(false)
+    }
+  }, [selectedItems, data])
   
   const filteredData = data.filter(item => {
     if (!searchQuery) return true
@@ -105,6 +122,31 @@ const DataTable = ({
   const handleMoreActionOptionClick = (action, item) => {
     handleActionClick(action, item)
     setOpenMoreActionsDropdown(null)
+  }
+
+  const handleSelectAll = (e) => {
+    const checked = e.target.checked
+    setSelectAll(checked)
+    
+    if (checked) {
+      onSelectionChange(filteredData)
+    } else {
+      onSelectionChange([])
+    }
+  }
+
+  const handleSelectRow = (item) => {
+    const isSelected = selectedItems.some(selected => selected.id === item.id)
+    
+    if (isSelected) {
+      onSelectionChange(selectedItems.filter(selected => selected.id !== item.id))
+    } else {
+      onSelectionChange([...selectedItems, item])
+    }
+  }
+
+  const isRowSelected = (item) => {
+    return selectedItems.some(selected => selected.id === item.id)
   }
 
   // Drag and drop handlers
@@ -420,7 +462,13 @@ const DataTable = ({
           <tr> 
             {showCheckbox && (
               <th className="checkbox-column">
-                <input type="checkbox" className="checkbox" />
+                <input 
+                  type="checkbox" 
+                  className="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                  disabled={filteredData.length === 0}
+                />
               </th>
             )}
             {columns.map((column, index) => (
@@ -492,32 +540,66 @@ const DataTable = ({
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item, index) => (
-            <tr 
-              key={item.id}
-              draggable={activeTab === 'Content'}
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnd={handleDragEnd}
-              onDragOver={handleDragOver}
-              onDragEnter={(e) => handleDragEnter(e, index)}
-              onDrop={(e) => handleDrop(e, index)}
-              className={`${draggedOverRow === index ? 'drag-over' : ''} ${activeTab === 'Content' ? 'draggable-row' : ''}`}
-            >
-              {showCheckbox && (
-                <td className="checkbox-column">
-                  <input type="checkbox" className="checkbox" />
+          {loading ? (
+            Array.from({ length: 10 }).map((_, index) => (
+              <tr key={`skeleton-${index}`}>
+                {showCheckbox && (
+                  <td className="checkbox-column">
+                    <Skeleton width={20} height={20} />
+                  </td>
+                )}
+                {columns.map((column, colIndex) => (
+                  <td key={colIndex} className={column.className || ''}>
+                    <Skeleton width="80%" height={20} />
+                  </td>
+                ))}
+                <td className="actions-column">
+                  <Skeleton width={100} height={30} />
                 </td>
-              )}
-              {columns.map((column, colIndex) => (
-                <td key={colIndex} className={column.className || ''}>
-                  {renderCell(column, item)}
-                </td>
-              ))}
-              <td className="actions-column">
-                {renderActions(item)}
+              </tr>
+            ))
+          ) : filteredData.length === 0 ? (
+            <tr>
+              <td 
+                colSpan={columns.length + (showCheckbox ? 1 : 0) + 1} 
+                style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}
+              >
+                No data available
               </td>
             </tr>
-          ))}
+          ) : (
+            filteredData.map((item, index) => (
+              <tr 
+                key={item.id}
+                draggable={activeTab === 'Content'}
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+                className={`${draggedOverRow === index ? 'drag-over' : ''} ${activeTab === 'Content' ? 'draggable-row' : ''}`}
+              >
+                {showCheckbox && (
+                  <td className="checkbox-column">
+                    <input 
+                      type="checkbox" 
+                      className="checkbox"
+                      checked={isRowSelected(item)}
+                      onChange={() => handleSelectRow(item)}
+                    />
+                  </td>
+                )}
+                {columns.map((column, colIndex) => (
+                  <td key={colIndex} className={column.className || ''}>
+                    {renderCell(column, item)}
+                  </td>
+                ))}
+                <td className="actions-column">
+                  {renderActions(item)}
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
