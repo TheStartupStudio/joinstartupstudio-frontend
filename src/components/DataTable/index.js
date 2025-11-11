@@ -4,6 +4,8 @@ import graph from '../../assets/images/academy-icons/svg/Icon_Sort.svg'
 import filter from '../../assets/images/academy-icons/svg/Dropdown_ Filter by Level.svg'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const DataTable = ({ 
   columns, 
@@ -14,7 +16,8 @@ const DataTable = ({
   activeTab = 'Organizations',
   onReorder,
   onSelectionChange,
-  selectedItems = []
+  selectedItems = [],
+  loading = false
 }) => {
   
   const [openFilterDropdown, setOpenFilterDropdown] = useState(null)
@@ -537,37 +540,66 @@ const DataTable = ({
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item, index) => (
-            <tr 
-              key={item.id}
-              draggable={activeTab === 'Content'}
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnd={handleDragEnd}
-              onDragOver={handleDragOver}
-              onDragEnter={(e) => handleDragEnter(e, index)}
-              onDrop={(e) => handleDrop(e, index)}
-              className={`${draggedOverRow === index ? 'drag-over' : ''} ${activeTab === 'Content' ? 'draggable-row' : ''}`}
-            >
-              {showCheckbox && (
-                <td className="checkbox-column">
-                  <input 
-                    type="checkbox" 
-                    className="checkbox"
-                    checked={isRowSelected(item)}
-                    onChange={() => handleSelectRow(item)}
-                  />
+          {loading ? (
+            Array.from({ length: 10 }).map((_, index) => (
+              <tr key={`skeleton-${index}`}>
+                {showCheckbox && (
+                  <td className="checkbox-column">
+                    <Skeleton width={20} height={20} />
+                  </td>
+                )}
+                {columns.map((column, colIndex) => (
+                  <td key={colIndex} className={column.className || ''}>
+                    <Skeleton width="80%" height={20} />
+                  </td>
+                ))}
+                <td className="actions-column">
+                  <Skeleton width={100} height={30} />
                 </td>
-              )}
-              {columns.map((column, colIndex) => (
-                <td key={colIndex} className={column.className || ''}>
-                  {renderCell(column, item)}
-                </td>
-              ))}
-              <td className="actions-column">
-                {renderActions(item)}
+              </tr>
+            ))
+          ) : filteredData.length === 0 ? (
+            <tr>
+              <td 
+                colSpan={columns.length + (showCheckbox ? 1 : 0) + 1} 
+                style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}
+              >
+                No data available
               </td>
             </tr>
-          ))}
+          ) : (
+            filteredData.map((item, index) => (
+              <tr 
+                key={item.id}
+                draggable={activeTab === 'Content'}
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+                className={`${draggedOverRow === index ? 'drag-over' : ''} ${activeTab === 'Content' ? 'draggable-row' : ''}`}
+              >
+                {showCheckbox && (
+                  <td className="checkbox-column">
+                    <input 
+                      type="checkbox" 
+                      className="checkbox"
+                      checked={isRowSelected(item)}
+                      onChange={() => handleSelectRow(item)}
+                    />
+                  </td>
+                )}
+                {columns.map((column, colIndex) => (
+                  <td key={colIndex} className={column.className || ''}>
+                    {renderCell(column, item)}
+                  </td>
+                ))}
+                <td className="actions-column">
+                  {renderActions(item)}
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
