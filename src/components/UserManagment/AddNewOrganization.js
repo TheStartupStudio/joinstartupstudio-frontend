@@ -49,7 +49,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const frequencyOptions = [
     { value: 'monthly', label: 'Per month' },
     { value: 'yearly', label: 'Per year' },
-    { value: 'quarterly', label: 'Per quarter' },
+    { value: '6-month', label: 'Every 6 Months' },
     { value: 'one-time', label: 'One-time' }
   ]
 
