@@ -520,6 +520,7 @@ useEffect(() => {
                   placeholder=" "
                   id="email"
                   disabled={loading}
+                  autoComplete="off"
                 />
                 <label className="input-label" htmlFor="email">Email</label>
                 {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
@@ -535,6 +536,7 @@ useEffect(() => {
                   placeholder=" "
                   id="password"
                   disabled={loading}
+                  autoComplete="new-password"
                 />
                 <label className="input-label" htmlFor="password">Password: Learntostart1!</label>
                 {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}

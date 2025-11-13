@@ -45,7 +45,8 @@ function Dashboard() {
   useImpersonation(originalToken)
 
   useEffect(() => {
-    if (!user?.createdAt || user?.subscription_exempt) return
+    // Only show trial countdown if trial has started and user is not exempt and not subscribed
+    if (!user?.trialStart || user?.subscription_exempt || user?.stripe_subscription_id) return
 
     const calculateTrialTime = () => {
       const userCreatedDate = new Date(user.createdAt)
