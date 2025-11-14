@@ -1,5 +1,6 @@
 import './index.css'
 import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
@@ -40,9 +41,11 @@ import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearnersModal/index'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 import axiosInstance from '../../utils/AxiosInstance'
+import ViewOrganizationInvoicesModal from '../../components/UserManagment/ViewOrganizationInvoicesModal'
 
 
 const UserManagement = () => {
+  const history = useHistory()
   const dispatch = useDispatch()
   
   const { user } = useSelector((state) => state.user.user)
@@ -77,6 +80,8 @@ const UserManagement = () => {
   const [isSingleAction, setIsSingleAction] = useState(false) 
   const [showBulkAddLearnersModal, setShowBulkAddLearnersModal] = useState(false)
   const [showBulkAddOrganizationsModal, setShowBulkAddOrganizationsModal] = useState(false) 
+  const [showInvoicesModal, setShowInvoicesModal] = useState(false)
+  const [selectedOrgForInvoices, setSelectedOrgForInvoices] = useState(null)
 
   // Users data and pagination
   const [usersData, setUsersData] = useState([])
@@ -317,6 +322,9 @@ const UserManagement = () => {
       case 'view-learners':
         handleViewLearners(item)
         break
+      case 'view-invoices':
+        handleViewInvoices(item)
+        break
       case 'add-learners':
         setSelectedOrgForLearners(item)
         setShowBulkAddLearnersModal(true)
@@ -368,6 +376,11 @@ const UserManagement = () => {
   const handleViewLearners = (organization) => {
     setSelectedOrgForLearners(organization)
     setShowLearnersModal(true)
+  }
+
+  const handleViewInvoices = (organization) => {
+    setSelectedOrgForInvoices(organization)
+    setShowInvoicesModal(true)
   }
 
   const handleViewOrganization = async (organization) => {
@@ -992,6 +1005,14 @@ const UserManagement = () => {
               )}
             </div>
 
+            <div className="add-button-wrapper" style={{position: 'relative'}}>
+              <AcademyBtn
+                    title={`View Invoices`}
+                    icon={plusIcon}
+                    onClick={() => history.push('/view-invoices')}
+                  />
+            </div>
+
             <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
               <div 
                 className="bulk-actions"
@@ -1230,6 +1251,15 @@ const UserManagement = () => {
             fetchOrganizations(currentPage, debouncedSearchQuery)
           }}
           mode="organizations"
+        />
+      )}
+
+      {!isInstructor && (
+        <ViewOrganizationInvoicesModal
+          show={showInvoicesModal}
+          onHide={() => setShowInvoicesModal(false)}
+          organizationName={selectedOrgForInvoices?.name || ''}
+          organizationId={selectedOrgForInvoices?.id}
         />
       )}
     </div>

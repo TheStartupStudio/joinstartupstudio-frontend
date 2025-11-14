@@ -298,6 +298,21 @@ const DataTable = ({
             </svg>
             Add Learners
           </button>
+          <button
+            className="action-btn edit-btn"
+            onClick={(e) => {
+              e.stopPropagation()
+              onRowAction('view-invoices', item)
+              // setOpenActionId(null)
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2"/>
+              <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2"/>
+              <path d="M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            View Invoices
+          </button>
           <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
             <button
               className="action-btn more-actions-btn"
@@ -348,6 +363,31 @@ const DataTable = ({
               </div>
             )}
           </div>
+        </div>
+      )
+    } else if (activeTab === 'Invoices') {
+      return (
+        <div className="action-buttons">
+          <button
+            className="action-btn view-btn"
+            onClick={() => handleActionClick('view', item)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M2.5 10.8335C5.5 4.16683 14.5 4.16683 17.5 10.8335" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10 14.1665C8.61929 14.1665 7.5 13.0472 7.5 11.6665C7.5 10.2858 8.61929 9.1665 10 9.1665C11.3807 9.1665 12.5 10.2858 12.5 11.6665C12.5 13.0472 11.3807 14.1665 10 14.1665Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            View
+          </button>
+          <button
+            className="action-btn send-btn"
+            onClick={() => handleActionClick('send', item)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M18.3332 1.66699L9.1665 10.8337" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M18.3332 1.66699L12.4998 18.3337L9.1665 10.8337L1.6665 7.50033L18.3332 1.66699Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Send
+          </button>
         </div>
       )
     } else {

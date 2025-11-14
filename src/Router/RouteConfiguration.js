@@ -205,6 +205,10 @@ const LeadershipJournalManagement = React.lazy(() =>
   import('../pages/LeadershipJournalManagement')
 )
 
+
+const ViewInvoices = React.lazy(() => import('../pages/ViewInvoices'))
+
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   {
@@ -247,6 +251,11 @@ export const adminRoutes = [
     path: '/my-courses-management',
     component: MyCourseAndCredentialsContainer,
     breadcrumb: 'My Course & Credentials'
+  },
+  {
+    path: '/view-invoices',
+    breadcrumb: 'View Invoices',
+    component: ViewInvoices,
   }
 ]
 

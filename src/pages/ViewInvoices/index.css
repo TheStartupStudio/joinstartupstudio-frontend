@@ -1,0 +1,329 @@
+.view-invoices-container {
+  min-height: 100vh;
+}
+
+.view-invoices-container .page-main-title {
+  color: #231F20;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.view-invoices-container .page-subtitle {
+  color: #AEAEAE;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  margin-bottom: 0;
+}
+
+.view-invoices-container .invoices-content-wrapper {
+  padding: 40px 10px;
+}
+
+.view-invoices-container .back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #231F20;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: opacity 0.2s ease;
+}
+
+.view-invoices-container .back-button:hover {
+  opacity: 0.7;
+}
+
+.view-invoices-container .back-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.view-invoices-container .search-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.view-invoices-container .search-container {
+  flex: 1;
+  max-width: 400px;
+}
+
+.view-invoices-container .search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.view-invoices-container .search-input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.view-invoices-container .search-input:focus {
+  border-color: #51C7DF;
+}
+
+.view-invoices-container .search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.view-invoices-container .search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.view-invoices-container .actions-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.view-invoices-container .view-archive-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: white;
+  border: 2px solid #51C7DF;
+  border-radius: 8px;
+  color: #51C7DF;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-invoices-container .view-archive-btn:hover {
+  background: #51C7DF;
+  color: white;
+}
+
+.view-invoices-container .bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  color: #666;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-invoices-container .bulk-actions:hover {
+  border-color: #51C7DF;
+  color: #51C7DF;
+}
+
+.view-invoices-container .dropdown-wrapper {
+  position: relative;
+}
+
+.view-invoices-container .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 200px;
+  margin-top: 4px;
+}
+
+.view-invoices-container .dropdown-item {
+  padding: 12px 16px;
+  color: #231F20;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+ .view-invoices-container .dropdown-item:hover {
+  background-color: #F9FAFB;
+}
+
+.view-invoices-container .dropdown-item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.view-invoices-container .dropdown-item:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.view-invoices-container .table-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.view-invoices-container .invoice-organization-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.view-invoices-container .organization-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #231F20;
+}
+
+.view-invoices-container .organization-id {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #666;
+}
+
+.view-invoices-container .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.view-invoices-container .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* .view-invoices-container .status-badge.status-complete {
+  background: #D4EDDA;
+  color: #155724;
+} */
+
+.view-invoices-container .status-badge.status-complete .status-dot {
+  background: #28A745;
+}
+
+/* .view-invoices-container .status-badge.status-unpaid {
+  background: #F8D7DA;
+  color: #721C24;
+} */
+
+.view-invoices-container .status-badge.status-unpaid .status-dot {
+  background: #DC3545;
+}
+
+.view-invoices-container .status-badge.status-created {
+  background: #D1ECF1;
+  color: #0C5460;
+}
+
+.view-invoices-container .status-badge.status-created .status-dot {
+  background: #17A2B8;
+}
+
+.view-invoices-container .invoice-date,
+.view-invoices-container .payment-date {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #333;
+}
+
+.view-invoices-container .pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.view-invoices-container .pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-invoices-container .pagination-btn:hover:not(:disabled) {
+  background: #F9FAFB;
+  border-color: #51C7DF;
+}
+
+.view-invoices-container .pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.view-invoices-container .pagination-info {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #231F20;
+  padding: 0 12px;
+}
+
+@media (max-width: 768px) {
+  .view-invoices-container .invoices-content-wrapper {
+    padding: 0 20px 20px 20px;
+  }
+
+  .view-invoices-container .search-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .view-invoices-container .search-container {
+    max-width: 100%;
+  }
+
+  .view-invoices-container .actions-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .view-invoices-container .view-archive-btn,
+  .view-invoices-container .bulk-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
