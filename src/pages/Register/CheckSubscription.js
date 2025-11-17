@@ -29,7 +29,6 @@ function CheckSubscription() {
   
   const user = useSelector((state) => state.user?.user?.user)
 
-  // Update the defaultPlanDetails to include all frequency options
   const defaultPlanDetails = {
     monthly: {
       price: '9.99',
@@ -47,7 +46,6 @@ function CheckSubscription() {
     }
   }
 
-  // ✅ Use organization pricing if available, otherwise use default
   const planDetails = organizationPricing || defaultPlanDetails
 
   const refreshUserData = async () => {
@@ -61,7 +59,6 @@ function CheckSubscription() {
     }
   }
 
-// ✅ Fetch organization pricing when component mounts
 useEffect(() => {
   const fetchOrganizationPricing = async () => {
     if (!user || !user.id) {
@@ -91,13 +88,11 @@ useEffect(() => {
         if (response.data.hasOrganizationPricing && response.data.pricing) {
           console.log('✅ Organization pricing found:', response.data.pricing)
           
-          // Transform organization pricing to match planDetails format
           const orgPricing = {}
           
           Object.keys(response.data.pricing).forEach(key => {
             const pricing = response.data.pricing[key]
             
-            // Map frequency to readable period text
             const periodMap = {
               'monthly': 'month',
               'yearly': 'year',
@@ -105,7 +100,6 @@ useEffect(() => {
               '6-month': '6 months'
             }
             
-            // Map frequency to commitment text
             const commitmentMap = {
               'monthly': '12 months',
               'yearly': 'year',
@@ -128,7 +122,6 @@ useEffect(() => {
           console.log('✅ Transformed org pricing:', orgPricing)
           setOrganizationPricing(orgPricing)
           
-          // Set default selected plan based on available options (prioritize monthly)
           if (orgPricing.monthly) {
             setSelectedPlan('monthly')
           } else if (orgPricing.annual) {
@@ -138,7 +131,6 @@ useEffect(() => {
           } else if (orgPricing['one-time']) {
             setSelectedPlan('one-time')
           } else {
-            // Fallback to first available option
             setSelectedPlan(Object.keys(orgPricing)[0])
           }
         } else {
@@ -202,7 +194,7 @@ useEffect(() => {
           '/course-subscription/create-checkout-session',
           {
             planType: selectedPlan,
-            organizationPriceId: planDetails[selectedPlan]?.priceId // ✅ Send org price ID
+            organizationPriceId: planDetails[selectedPlan]?.priceId 
           },
           {
             headers: {
@@ -327,7 +319,6 @@ useEffect(() => {
       })
   }
 
-  // ✅ Show loading state while fetching pricing
   if (!registrationData || loadingPricing) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
@@ -358,13 +349,6 @@ useEffect(() => {
           <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black subscription-title'>
             {isReturningUser ? 'Resubscribe to Continue' : 'Choose Your Subscription'}
           </h2>
-
-          {/* ✅ Show organization pricing indicator */}
-          {organizationPricing && (
-            <div className='mb-3 p-2 bg-info text-white rounded text-center'>
-              <small>Organization Pricing Applied</small>
-            </div>
-          )}
 
           <div className='subscription-plans mt-4 flex-wrap'>
             {/* Monthly Plan */}

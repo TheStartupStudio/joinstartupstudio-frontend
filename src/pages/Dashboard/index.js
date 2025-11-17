@@ -35,7 +35,6 @@ function Dashboard() {
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const user = useSelector((state) => state.user.user.user)
   
-  // Trial countdown states
   const [trialTimeRemaining, setTrialTimeRemaining] = useState(null)
   const [isTrialActive, setIsTrialActive] = useState(false)
 
@@ -45,8 +44,7 @@ function Dashboard() {
   useImpersonation(originalToken)
 
   useEffect(() => {
-    // Only show trial countdown if trial has started and user is not exempt and not subscribed
-    if (!user?.trialStart || user?.subscription_exempt || user?.stripe_subscription_id) return
+    if (!user?.createdAt || user?.subscription_exempt ) return
 
     const calculateTrialTime = () => {
       const userCreatedDate = new Date(user.createdAt)

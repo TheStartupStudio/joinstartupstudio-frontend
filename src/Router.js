@@ -30,23 +30,13 @@ function Router(props) {
     (state) => state.user
   )
 
-  // ✅ UPDATED: Helper function to check if user has active subscription OR is exempt
   const hasActiveSubscription = () => {
     if (!user?.user) return false
     
     const subscriptionStatus = user.user.subscription_status
     const stripeSubscriptionId = user.user.stripe_subscription_id
-    const subscriptionExempt = user.user.subscription_exempt // ✅ NEW: Check exempt status
+    const subscriptionExempt = user.user.subscription_exempt 
     
-    console.log('=== SUBSCRIPTION CHECK ===')
-    console.log('User ID:', user.user.id)
-    console.log('Subscription Status:', subscriptionStatus)
-    console.log('Stripe Subscription ID:', stripeSubscriptionId)
-    console.log('Subscription Exempt:', subscriptionExempt) // ✅ NEW
-    console.log('Has Active:', subscriptionStatus === 'active' || subscriptionExempt) // ✅ UPDATED
-    console.log('========================')
-    
-    // ✅ UPDATED: Return true if exempt OR has active subscription
     return subscriptionExempt === true || 
            subscriptionStatus === 'active' || 
            (subscriptionStatus === 'canceling' && stripeSubscriptionId)
@@ -55,7 +45,6 @@ function Router(props) {
   const roleRoutes = () => {
     if (!isAuthenticated) return publicRoutes
 
-    // ✅ Check if current path is subscription success - allow access regardless of subscription status
     const isSubscriptionSuccessPath = window.location.pathname === '/subscription/success'
     
     if (isSubscriptionSuccessPath) {
@@ -65,7 +54,6 @@ function Router(props) {
       ]
     }
 
-    // Users without active subscription - limited access
     if (!hasActiveSubscription()) {
       return [
         { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
@@ -91,12 +79,10 @@ function Router(props) {
         },
         { path: '/logout', component: () => import('./pages/Auth/LogOut'), exact: false },
         { path: '/my-account', component: () => import('./pages/MyAccount'), exact: true },
-        // Catch-all route that redirects to subscribe page
         { path: '*', component: CheckSubscription }
       ]
     }
 
-    // Users with active subscription OR exempt - full access based on role
     switch (user?.user?.role_id) {
       case 1:
         return [
@@ -128,7 +114,6 @@ function Router(props) {
   const isResetPasswordRoute =
     window.location.pathname.startsWith('/reset-password')
   
-  // ✅ Check if this is the subscription success route
   const isSubscriptionSuccessRoute = 
     window.location.pathname === '/subscription/success'
 
