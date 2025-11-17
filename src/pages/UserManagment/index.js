@@ -347,7 +347,7 @@ const UserManagement = () => {
         setShowDeletePopup(true)
         break
       case 'export-organization':
-        handleExportOrganization(item)
+        exportOrganization(item) // Updated to use new function
         break
       case 'deactivate-learner':
         setActionContext('users')
@@ -388,6 +388,54 @@ const UserManagement = () => {
       console.error('Error fetching organization details:', error)
       toast.error('Failed to load organization details')
     }
+  }
+
+  const handleBulkAddOrganizationsSuccess = async () => {
+    try {
+      // Sync all Stripe prices after bulk organization creation
+      await axiosInstance.post('/super-admin/organizations/sync-all-stripe-prices')
+      console.log('✅ Stripe prices synced successfully')
+    } catch (syncError) {
+      console.error('⚠️ Failed to sync Stripe prices:', syncError)
+      toast.warning('Organizations created, but failed to sync some Stripe prices')
+    }
+
+    setShowBulkAddOrganizationsModal(false)
+    toast.success('Organizations added successfully!')
+    fetchOrganizations(currentPage, debouncedSearchQuery)
+  }
+
+  const exportOrganizations = async () => {
+    try {
+      const organizationIds = selectedOrganizations.length > 0 
+        ? selectedOrganizations.map(org => org.id).join(',')
+        : undefined
+
+      const response = await axiosInstance.get('/super-admin/organizations-csv/export', {
+        params: organizationIds ? { organizationIds } : {},
+        responseType: 'blob'
+      })
+
+      const blob = new Blob([response.data], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `organizations_export_${new Date().toISOString().split('T')[0]}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+      toast.success(
+        selectedOrganizations.length > 0
+          ? `${selectedOrganizations.length} organization(s) exported successfully!`
+          : 'All organizations exported successfully!'
+      )
+    } catch (error) {
+      console.error('Error exporting organizations:', error)
+      toast.error('Failed to export organizations')
+    }
+    setShowBulkDropdown(false)
   }
 
   const handleEditOrganization = async (organization) => {
@@ -496,28 +544,28 @@ const UserManagement = () => {
   //   setShowBulkDropdown(false)
   // }
 
-  const exportOrganizations = async () => {
-    try {
-      const response = await axiosInstance.get('/super-admin/organizations/export')
-      if (response.data.success) {
-        const dataStr = JSON.stringify(response.data.data, null, 2)
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
+  // const exportOrganizations = async () => {
+  //   try {
+  //     const response = await axiosInstance.get('/super-admin/organizations/export')
+  //     if (response.data.success) {
+  //       const dataStr = JSON.stringify(response.data.data, null, 2)
+  //       const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
         
-        const exportFileDefaultName = `all_organizations_${new Date().toISOString()}.json`
+  //       const exportFileDefaultName = `all_organizations_${new Date().toISOString()}.json`
         
-        const linkElement = document.createElement('a')
-        linkElement.setAttribute('href', dataUri)
-        linkElement.setAttribute('download', exportFileDefaultName)
-        linkElement.click()
+  //       const linkElement = document.createElement('a')
+  //       linkElement.setAttribute('href', dataUri)
+  //       linkElement.setAttribute('download', exportFileDefaultName)
+  //       linkElement.click()
         
-        toast.success('Organizations exported successfully!')
-      }
-    } catch (error) {
-      console.error('Error exporting organizations:', error)
-      toast.error('Failed to export organizations')
-    }
-    setShowBulkDropdown(false)
-  }
+  //       toast.success('Organizations exported successfully!')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error exporting organizations:', error)
+  //     toast.error('Failed to export organizations')
+  //   }
+  //   setShowBulkDropdown(false)
+  // }
 
   const resetPasswords = () => {
     if (selectedUsers.length === 0) {
@@ -640,6 +688,11 @@ const UserManagement = () => {
 
   const bulkOptionsOrganizations = [
     {
+      name: 'Activate Organizations',
+      action: () => activateOrganizations(),
+      icons: <img src={userPlus} alt="activate" className="admin-icons-dropdown" />
+    },
+    {
       name: 'Deactivate Organizations',
       action: () => deactivateOrganizations(),
       icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
@@ -651,7 +704,7 @@ const UserManagement = () => {
     },
     {
       name: 'Export Organizations',
-      action: () => exportOrganizations(),
+      action: () => exportOrganizations(), // Updated to use new function
       icons: <img src={download} alt="download" className="admin-icons-dropdown" />
     }
   ]
@@ -845,6 +898,35 @@ const UserManagement = () => {
       setSelectedUsers(selectedItems)
     } else {
       setSelectedOrganizations(selectedItems)
+    }
+  }
+
+
+  const activateOrganizations = async () => {
+    if (selectedOrganizations.length === 0) {
+      toast.warning('Please select at least one organization')
+      return
+    }
+
+    try {
+      setLoading(true)
+      const organizationIds = selectedOrganizations.map(org => org.id)
+      
+      const response = await axiosInstance.post('/super-admin/organizations/bulk-activate', {
+        organizationIds
+      })
+
+      if (response.data.success) {
+        toast.success(`${response.data.affectedOrganizations} organization(s) and their users activated successfully!`)
+        setSelectedOrganizations([])
+        fetchOrganizations(currentPage, debouncedSearchQuery)
+      }
+    } catch (error) {
+      console.error('Error activating organizations:', error)
+      toast.error(error.response?.data?.error || 'Failed to activate organizations')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
     }
   }
 
@@ -1231,11 +1313,7 @@ const UserManagement = () => {
         <BulkAddLearnersModal
           show={showBulkAddOrganizationsModal}
           onHide={() => setShowBulkAddOrganizationsModal(false)}
-          onSuccess={() => {
-            setShowBulkAddOrganizationsModal(false)
-            toast.success('Organizations added successfully!')
-            fetchOrganizations(currentPage, debouncedSearchQuery)
-          }}
+          onSuccess={handleBulkAddOrganizationsSuccess}
           mode="organizations"
         />
       )}
