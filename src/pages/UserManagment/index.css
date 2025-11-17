@@ -223,6 +223,7 @@ padding: 4px;
   gap: 5px;
 }
 
+
 .status-indicator {
   width: 8px;
   height: 8px;
@@ -351,12 +352,14 @@ padding: 4px;
 
 
 
-.user-management-container .learner-info .status-indicator.active {
+.user-management-container .learner-info .status-indicator.active,
+.organization-info .status-indicator.active{
   background-color: #9C3;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }
 
-.user-management-container .learner-info .status-indicator.inactive {
+.user-management-container .learner-info .status-indicator.inactive,
+.organization-info .status-indicator.inactive{
   background-color: #AEAEAE;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }

@@ -141,7 +141,9 @@ const UserManagement = () => {
           administratorEmail: org.administratorEmail,
           features: org.features,
           organizationPricing: org.organizationPricing,
-          learnerPricing: org.learnerPricing
+          learnerPricing: org.learnerPricing,
+                    isActive: org.isActive !== undefined ? org.isActive : true
+
         }))
 
         setOrganizationsData(mappedData)
@@ -208,7 +210,7 @@ const UserManagement = () => {
       filterable: true,
       render: (value, item) => (
         <div className="organization-info">
-          <div className="status-indicator"></div>
+          <div className={`status-indicator ${item.isActive ? 'active' : 'inactive'}`}></div>
           <div className="organization-details">
             <div className="organization-name">{item.name}</div>
             <div className="organization-domain">{item.domain}</div>
