@@ -349,7 +349,7 @@ const UserManagement = () => {
         setShowDeletePopup(true)
         break
       case 'export-organization':
-        exportOrganization(item) // Updated to use new function
+        exportOrganization(item) 
         break
       case 'deactivate-learner':
         setActionContext('users')
@@ -394,7 +394,6 @@ const UserManagement = () => {
 
   const handleBulkAddOrganizationsSuccess = async () => {
     try {
-      // Sync all Stripe prices after bulk organization creation
       await axiosInstance.post('/super-admin/organizations/sync-all-stripe-prices')
       console.log('✅ Stripe prices synced successfully')
     } catch (syncError) {
@@ -1023,7 +1022,7 @@ const UserManagement = () => {
             <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
               <div className="add-button-wrapper">
                 <AcademyBtn
-                  title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
+                  title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'Learner'}`}
                   icon={plusIcon}
                   onClick={() => {
                     setShowAddDropdown(!showAddDropdown)

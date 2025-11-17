@@ -28,7 +28,6 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const [sendingEmail, setSendingEmail] = useState(false)
   const accordionRefs = useRef([])
 
-  // Dynamic data states
   const [learnerData, setLearnerData] = useState(null)
   const [levelProgress, setLevelProgress] = useState({
     level1: { percentage: 0, completed: 0, total: 8 },
@@ -38,7 +37,6 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const [finishedContent, setFinishedContent] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // Fetch learner data and progress when modal opens
   useEffect(() => {
     if (show && learner?.id) {
       fetchLearnerData()
@@ -62,7 +60,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const fetchLevelProgress = async () => {
   try {
     const response = await axiosInstance.get(`/super-admin/user-level-progress/${learner.id}`)
-    const progressData = response.data // API returns the object directly
+    const progressData = response.data
     
     setLevelProgress({
       level1: progressData.level1 || { percentage: 0, completed: 0, total: 8 },
@@ -70,8 +68,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
       level3: progressData.level3 || { percentage: 0, completed: 0, total: 52 }
     })
 
-    // Note: The API does not return finishedContent, so lesson statuses will default to 'notStarted'
-    // If finished content IDs are needed, the API should be updated to include them
+
   } catch (error) {
     console.error('Error fetching level progress:', error)
     toast.error('Failed to load progress data')
@@ -163,7 +160,6 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
 
   if (!learner) return null
 
-  // Use fetched data or fallback to prop data
   const displayData = learnerData || learner
 
   const handleEditClick = () => {
@@ -197,7 +193,6 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
     setSendingEmail(true)
 
     try {
-      // TODO: Replace with actual email API endpoint
       await axiosInstance.post(`/super-admin/send-email/${learner.id}`, {
         subject: emailSubject,
         message: emailMessage
@@ -492,9 +487,10 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
       <Modal
         show={showProgressModal}
         onHide={toggleProgressModal}
-        className='certificate-modal'
+        // className='certificate-modal'
         centered
         size="lg"
+        backdrop={false}
       >
         <span className='cursor-pointer' onClick={toggleProgressModal} style={{ zIndex: '1' }}>
           <img className='left-arrow-modal' src={leftArrow} alt='left' />
@@ -508,7 +504,6 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
           </div>
 
           <div className='accordion mt-5' id='progressAccordion'>
-            {/* Level 1 */}
             <div className='accordion-item progress-details-accordion'>
               <h2 className='accordion-header' id='headingOne'>
                 <button
@@ -551,7 +546,6 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               </div>
             </div>
 
-            {/* Level 2 */}
             <div className='accordion-item progress-details-accordion'>
               <h2 className='accordion-header' id='headingTwo'>
                 <button
@@ -594,7 +588,6 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               </div>
             </div>
 
-            {/* Level 3 */}
             <div className='accordion-item progress-details-accordion'>
               <h2 className='accordion-header' id='headingThree'>
                 <button
