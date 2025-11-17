@@ -83,7 +83,6 @@ const UserManagement = () => {
   const [showInvoicesModal, setShowInvoicesModal] = useState(false)
   const [selectedOrgForInvoices, setSelectedOrgForInvoices] = useState(null)
 
-  // Users data and pagination
   const [usersData, setUsersData] = useState([])
   const [usersLoading, setUsersLoading] = useState(false)
   const [usersPagination, setUsersPagination] = useState({
@@ -93,7 +92,6 @@ const UserManagement = () => {
     totalPages: 1
   })
 
-  // Organizations data and pagination
   const [organizationsData, setOrganizationsData] = useState([])
   const [organizationsLoading, setOrganizationsLoading] = useState(false)
   const [organizationsPagination, setOrganizationsPagination] = useState({
@@ -103,21 +101,18 @@ const UserManagement = () => {
     totalPages: 1
   })
 
-  // Selected users and organizations for bulk actions
   const [selectedUsers, setSelectedUsers] = useState([])
   const [selectedOrganizations, setSelectedOrganizations] = useState([])
 
-  // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
-      setCurrentPage(1) // Reset to first page when search changes
+      setCurrentPage(1) 
     }, 500)
 
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  // Function to fetch organizations data
   const fetchOrganizations = async (page = 1, search = '') => {
     setOrganizationsLoading(true)
     try {
@@ -160,7 +155,6 @@ const UserManagement = () => {
     }
   }
 
-  // Function to fetch users data
   const fetchUsers = async (page = 1, search = '') => {
     setUsersLoading(true)
     try {
@@ -198,7 +192,6 @@ const UserManagement = () => {
     }
   }
 
-  // Fetch data when component mounts or when debounced search/page/tab changes
   useEffect(() => {
     if (activeTab === 'Users') {
       fetchUsers(currentPage, debouncedSearchQuery)
@@ -420,7 +413,6 @@ const UserManagement = () => {
   const handleModalSuccess = () => {
     toast.success('Organization saved successfully!')
     setShowAddOrganizationModal(false)
-    // Refresh organizations list
     if (activeTab === 'Organizations') {
       fetchOrganizations(currentPage, debouncedSearchQuery)
     }
@@ -448,7 +440,6 @@ const UserManagement = () => {
   const handleLearnerModalSuccess = () => {
     toast.success('Learner saved successfully!')
     setShowAddLearnerModal(false)
-    // Refresh users list
     if (activeTab === 'Users') {
       fetchUsers(currentPage, debouncedSearchQuery)
     }
@@ -458,7 +449,6 @@ const UserManagement = () => {
     try {
       const response = await axiosInstance.get(`/super-admin/organizations/${organization.id}/export`)
       if (response.data.success) {
-        // Create downloadable file
         const dataStr = JSON.stringify(response.data.data, null, 2)
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
         
@@ -576,7 +566,6 @@ const UserManagement = () => {
         responseType: 'blob'
       })
 
-      // Create download link
       const blob = new Blob([response.data], { type: 'text/csv' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -811,7 +800,6 @@ const UserManagement = () => {
     }
   }
 
-  // Reset selections when changing tabs
   useEffect(() => {
     setSelectedUsers([])
     setSelectedOrganizations([])
@@ -838,7 +826,6 @@ const UserManagement = () => {
     }
   }, [])
 
-  // Handle pagination
   const handlePageChange = (newPage) => {
     const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
     if (newPage >= 1 && newPage <= pagination.totalPages) {
@@ -853,7 +840,6 @@ const UserManagement = () => {
   const isLoading = activeTab === 'Users' ? usersLoading : organizationsLoading
   const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
 
-  // Add handleSelectionChange function
   const handleSelectionChange = (selectedItems) => {
     if (activeTab === 'Users') {
       setSelectedUsers(selectedItems)

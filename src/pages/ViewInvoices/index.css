@@ -20,7 +20,13 @@
 }
 
 .view-invoices-container .invoices-content-wrapper {
-  padding: 40px 10px;
+  margin: 40px 10px;
+  border-radius: 24px;
+background: var(--Glassy-White, rgba(255, 255, 255, 0.10));
+
+/* Drop Shadow */
+box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+padding: 12px 0px;
 }
 
 .view-invoices-container .back-button {
@@ -51,14 +57,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin: 0px 16px 20px 16px;
   gap: 20px;
   flex-wrap: wrap;
 }
 
 .view-invoices-container .search-container {
+  position: relative !important;
   flex: 1;
-  max-width: 400px;
+  border-radius: 12px;
+background-color: white;
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
 }
 
 .view-invoices-container .search-input-wrapper {
@@ -68,7 +77,7 @@
 
 .view-invoices-container .search-input {
   width: 100%;
-  padding: 12px 40px 12px 16px;
+  padding: 12px 50px 12px 16px;
   border: 1px solid #E5E7EB;
   border-radius: 8px;
   font-family: 'Montserrat', sans-serif;
@@ -90,7 +99,23 @@
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
+  border: none;
+  background-color: transparent;
+
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  z-index: 10000;
 }
 
 .view-invoices-container .actions-container {
@@ -267,8 +292,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  padding: 20px 0;
+  gap: 6px;
 }
 
 .view-invoices-container .pagination-btn {
@@ -278,7 +302,7 @@
   width: 36px;
   height: 36px;
   background: white;
-  border: 1px solid #E5E7EB;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -290,7 +314,6 @@
 }
 
 .view-invoices-container .pagination-btn:disabled {
-  opacity: 0.4;
   cursor: not-allowed;
 }
 

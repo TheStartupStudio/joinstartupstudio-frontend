@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import DataTable from '../../components/DataTable'
 import AcademyBtn from '../../components/AcademyBtn'
+import InvoiceFilters from '../../components/InvoiceFilters'
 import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
@@ -20,8 +21,14 @@ const ViewInvoices = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [selectedInvoices, setSelectedInvoices] = useState([])
+  const [showFilters, setShowFilters] = useState(false)
+  const [appliedFilters, setAppliedFilters] = useState({
+    organizationName: '',
+    dateFrom: null,
+    dateTo: null
+  })
+  const [columnFilters, setColumnFilters] = useState({})
   
-  // Data and pagination
   const [invoicesData, setInvoicesData] = useState([])
   const [invoicesLoading, setInvoicesLoading] = useState(false)
   const [pagination, setPagination] = useState({
@@ -31,7 +38,8 @@ const ViewInvoices = () => {
     totalPages: 1
   })
 
-  // Dummy data for demonstration
+  const searchContainerRef = useRef(null)
+
   const dummyInvoices = [
     {
       id: 1,
@@ -115,7 +123,6 @@ const ViewInvoices = () => {
     }
   ]
 
-  // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
@@ -125,14 +132,11 @@ const ViewInvoices = () => {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  // Fetch invoices data
   const fetchInvoices = async (page = 1, search = '') => {
     setInvoicesLoading(true)
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500))
 
-      // Filter data based on search
       let filteredData = dummyInvoices
       if (search) {
         filteredData = dummyInvoices.filter(invoice =>
@@ -142,7 +146,6 @@ const ViewInvoices = () => {
         )
       }
 
-      // Paginate data
       const startIndex = (page - 1) * 10
       const endIndex = startIndex + 10
       const paginatedData = filteredData.slice(startIndex, endIndex)
@@ -162,7 +165,6 @@ const ViewInvoices = () => {
     }
   }
 
-  // Fetch data when component mounts or when search/page changes
   useEffect(() => {
     fetchInvoices(currentPage, debouncedSearchQuery)
   }, [currentPage, debouncedSearchQuery])
@@ -172,7 +174,7 @@ const ViewInvoices = () => {
       key: 'organizationName',
       title: 'ORGANIZATION NAME',
       sortable: true,
-      filterable: true,
+      filterable: false,
       render: (value, item) => (
         <div className="invoice-organization-info">
           <div className="organization-name">{item.organizationName}</div>
@@ -196,6 +198,7 @@ const ViewInvoices = () => {
       key: 'invoiceDate',
       title: 'INVOICE DATE',
       sortable: true,
+      filterable: true,
       render: (value) => (
         <span className="invoice-date">
           {value ? new Date(value).toLocaleDateString('en-US', {
@@ -210,6 +213,7 @@ const ViewInvoices = () => {
       key: 'paymentDate',
       title: 'PAYMENT DATE',
       sortable: true,
+      filterable: true,
       render: (value) => (
         <span className="payment-date">
           {value ? new Date(value).toLocaleDateString('en-US', {
@@ -230,12 +234,26 @@ const ViewInvoices = () => {
     console.log(`${actionType} action for invoice:`, item)
     
     switch (actionType) {
-      case 'view':
-        // Open invoice details
+      case 'view-invoice':
         console.log('View invoice:', item)
+        toast.info('View Invoice feature coming soon!')
         break
-      case 'send':
+      case 'send-invoice':
         handleSendInvoice(item)
+        break
+      case 'generate-invoice':
+        console.log('Generate invoice for:', item)
+        toast.info('Generate Invoice feature coming soon!')
+        break
+      case 'archive-invoice':
+        console.log('Archive invoice:', item)
+        toast.success(`Invoice ${item.organizationId} archived successfully!`)
+        break
+      case 'delete-invoice':
+        console.log('Delete invoice:', item)
+        if (window.confirm(`Are you sure you want to delete invoice ${item.organizationId}?`)) {
+          toast.success(`Invoice ${item.organizationId} deleted successfully!`)
+        }
         break
       default:
         break
@@ -253,13 +271,11 @@ const ViewInvoices = () => {
   }
 
   const handleGenerateInvoice = () => {
-    // Navigate to generate invoice page or open modal
     console.log('Generate invoice clicked')
     toast.info('Generate Invoice feature coming soon!')
   }
 
   const handleViewArchive = () => {
-    // Navigate to archive page
     console.log('View archive clicked')
     toast.info('View Archive feature coming soon!')
   }
@@ -272,6 +288,18 @@ const ViewInvoices = () => {
 
   const handleSelectionChange = (selectedItems) => {
     setSelectedInvoices(selectedItems)
+  }
+
+  const handleApplyFilters = (filters) => {
+    setAppliedFilters(filters)
+    setShowFilters(false)
+    setCurrentPage(1)
+    console.log('Applied filters:', filters)
+  }
+
+  const handleColumnFilterChange = (filters) => {
+    setColumnFilters(filters)
+    console.log('Column filters changed:', filters)
   }
 
   const bulkActions = [
@@ -310,6 +338,19 @@ const ViewInvoices = () => {
     }
   ]
 
+  const handleClickOutside = (event) => {
+    if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+      setShowFilters(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
     <div className="view-invoices-container">
       <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
@@ -332,14 +373,12 @@ const ViewInvoices = () => {
       </div>
 
       <div className="invoices-content-wrapper">
-
-        {/* Search and Actions Bar */}
         <div className="search-actions-bar">
-                    {/* Back to User Management Button */}
+        {/* Back button */}
         <div className="back-button-container">
           <button 
             className="back-button"
-            onClick={() => history.push('/user-managment')}
+            onClick={() => history.push('/user-management')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M12.5 15L7.5 10L12.5 5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -347,7 +386,12 @@ const ViewInvoices = () => {
             Return to User Management
           </button>
         </div>
-          <div className="search-container">
+
+          <div 
+            className="search-container" 
+            ref={searchContainerRef}
+            style={{ position: 'relative' }}
+          >
             <div className="search-input-wrapper">
               <input
                 type="text"
@@ -356,11 +400,43 @@ const ViewInvoices = () => {
                 onChange={handleSearch}
                 className="search-input"
               />
-              <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M17 17L21 21" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <button 
+                // className="filter-toggle-btn"
+                className="filter-toggle-btn search-icon"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setShowFilters(!showFilters)
+                  console.log('Filter button clicked')
+                }}
+                title="Open Filters"
+                type="button"
+              >
+                <svg 
+                  className="filter-icon" 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none"
+                >
+                  <path 
+                    d="M21.25 11.9999H8.895M4.534 11.9999H2.75M4.534 11.9999C4.534 11.4217 4.76368 10.8672 5.17251 10.4584C5.58134 10.0496 6.13583 9.81989 6.714 9.81989C7.29217 9.81989 7.84666 10.0496 8.25549 10.4584C8.66432 10.8672 8.894 11.4217 8.894 11.9999C8.894 12.5781 8.66432 13.1326 8.25549 13.5414C7.84666 13.9502 7.29217 14.1799 6.714 14.1799C6.13583 14.1799 5.58134 13.9502 5.17251 13.5414C4.76368 13.1326 4.534 12.5781 4.534 11.9999ZM21.25 18.6069H15.502M15.502 18.6069C15.502 19.1852 15.2718 19.7403 14.8628 20.1492C14.4539 20.5582 13.8993 20.7879 13.321 20.7879C12.7428 20.7879 12.1883 20.5572 11.7795 20.1484C11.3707 19.7396 11.141 19.1851 11.141 18.6069M15.502 18.6069C15.502 18.0286 15.2718 17.4745 14.8628 17.0655C14.4539 16.6566 13.8993 16.4269 13.321 16.4269C12.7428 16.4269 12.1883 16.6566 11.7795 17.0654C11.3707 17.4742 11.141 18.0287 11.141 18.6069M11.141 18.6069H2.75M21.25 5.39289H18.145M13.784 5.39289H2.75M13.784 5.39289C13.784 4.81472 14.0137 4.26023 14.4225 3.8514C14.8313 3.44257 15.3858 3.21289 15.964 3.21289C16.2503 3.21289 16.5338 3.26928 16.7983 3.37883C17.0627 3.48839 17.3031 3.64897 17.5055 3.8514C17.7079 4.05383 17.8685 4.29415 17.9781 4.55864C18.0876 4.82313 18.144 5.10661 18.144 5.39289C18.144 5.67917 18.0876 5.96265 17.9781 6.22714C17.8685 6.49163 17.7079 6.73195 17.5055 6.93438C17.3031 7.13681 17.0627 7.29739 16.7983 7.40695C16.5338 7.5165 16.2503 7.57289 15.964 7.57289C15.3858 7.57289 14.8313 7.34321 14.4225 6.93438C14.0137 6.52555 13.784 5.97106 13.784 5.39289Z" 
+                    stroke="black" 
+                    strokeWidth="2" 
+                    strokeMiterlimit="10" 
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
             </div>
+
+            {/* Filter Dropdown - positioned absolutely within search container */}
+            <InvoiceFilters
+              show={showFilters}
+              onHide={() => setShowFilters(false)}
+              onApplyFilters={handleApplyFilters}
+              anchorRef={searchContainerRef}
+            />
           </div>
 
           <div className="actions-container">
@@ -370,15 +446,12 @@ const ViewInvoices = () => {
               onClick={handleGenerateInvoice}
             />
             
-            <button 
-              className="view-archive-btn"
+
+             <AcademyBtn
+              title="VIEW ARCHIVE"
+              icon={plusIcon}
               onClick={handleViewArchive}
-            >
-              VIEW ARCHIVE
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+            />
 
             <div className="dropdown-wrapper" style={{ position: 'relative' }}>
               <div 
@@ -412,7 +485,7 @@ const ViewInvoices = () => {
         </div>
 
         {/* Table */}
-        <div className="table-container">
+        <div>
           <DataTable 
             columns={invoicesColumns}
             data={invoicesData}
@@ -423,10 +496,11 @@ const ViewInvoices = () => {
             loading={invoicesLoading}
             onSelectionChange={handleSelectionChange}
             selectedItems={selectedInvoices}
+            onFilterChange={handleColumnFilterChange}
           />
-        </div>
 
-        {/* Pagination */}
+
+           {/* Pagination */}
         <div className="pagination-container">
           <button 
             className="pagination-btn"
@@ -468,6 +542,9 @@ const ViewInvoices = () => {
             </svg>
           </button>
         </div>
+        </div>
+
+      
       </div>
     </div>
   )
