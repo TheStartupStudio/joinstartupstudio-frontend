@@ -74,12 +74,12 @@ function RegistrationForm() {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-  useEffect(() => {
-    trackLead({
-      contentName: 'Registration Page',
-      contentCategory: 'signup'
-    })
-  }, [])
+  // useEffect(() => {
+  //   trackLead({
+  //     contentName: 'Registration Page',
+  //     contentCategory: 'signup'
+  //   })
+  // }, [])
 
   const validateForm = () => {
     let newErrors = {}
@@ -103,7 +103,6 @@ function RegistrationForm() {
       newErrors.confirmPassword = 'Passwords do not match.'
     }
 
-    // Birth date validation - Allow all ages but prevent future dates
     if (!formData.birthDate) {
       newErrors.birthDate = 'Birth date is required.'
     } else {
@@ -168,7 +167,6 @@ function RegistrationForm() {
     setShowCalendar(false)
   }
 
-  // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
@@ -199,12 +197,6 @@ function RegistrationForm() {
     }
 
     setIsLoading(true)
-
-    // trackInitiateCheckout({
-    //   value: 0, // Free trial
-    //   currency: 'USD',
-    //   numItems: 1
-    // })
 
     try {
       const checkEmailResponse = await axiosInstance.post('/check-email', {
@@ -247,7 +239,7 @@ function RegistrationForm() {
         name: formData.fullName,
         email: formData.emailAddress,
         password: formData.password,
-        birthDate: formData.birthDate?.toISOString().split('T')[0], // ✅ ADD: Format birth date
+        birthDate: formData.birthDate?.toISOString().split('T')[0],
         address: formData.address,
         city: formData.city,
         state: formData.state,
@@ -257,6 +249,13 @@ function RegistrationForm() {
       }
 
       sessionStorage.setItem('registrationData', JSON.stringify(registrationData))
+      
+      trackLead({
+        contentName: 'Registration Page',
+        contentCategory: 'signup',
+        value: 0,
+        currency: 'USD'
+      })
       
       trackTrialStarted({
         value: 0,
