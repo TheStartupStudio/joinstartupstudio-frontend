@@ -45,7 +45,7 @@
     </noscript>
     <!-- End Meta Pixel Code -->
 
-   <!-- Google Analytics 4 (GA4) -->
+   <!-- Google Analytics 4 (GA4) - Enhanced Setup -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-C3K19TT4W5"
@@ -56,8 +56,387 @@
         dataLayer.push(arguments)
       }
       gtag('js', new Date())
-      gtag('config', 'G-C3K19TT4W5')
       
+      // Enhanced GA4 Configuration
+      gtag('config', 'G-C3K19TT4W5', {
+        'send_page_view': true,
+        'cookie_flags': 'SameSite=None;Secure',
+        'allow_google_signals': true,
+        'allow_ad_personalization_signals': true,
+        'user_properties': {
+          'user_type': 'visitor'
+        },
+        // Custom dimensions mapping
+        'custom_map': {
+          'dimension1': 'user_role',
+          'dimension2': 'subscription_status', 
+          'dimension3': 'trial_status',
+          'dimension4': 'registration_method',
+          'dimension5': 'payment_method',
+          'metric1': 'lifetime_value',
+          'metric2': 'days_since_signup'
+        }
+      })
+
+      // Enhanced Measurement Events
+      gtag('event', 'page_view', {
+        'page_title': document.title,
+        'page_location': window.location.href,
+        'page_path': window.location.pathname
+      })
+
+      // Track scroll depth for engagement
+      let scrollTracked = {}
+      window.addEventListener('scroll', function() {
+        const scrollPercentage = Math.round((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight * 100)
+        
+        if (scrollPercentage >= 25 && !scrollTracked['25']) {
+          scrollTracked['25'] = true
+          gtag('event', 'scroll', {
+            'event_category': 'engagement',
+            'event_label': '25% Scroll Depth',
+            'value': 25
+          })
+        }
+        if (scrollPercentage >= 50 && !scrollTracked['50']) {
+          scrollTracked['50'] = true
+          gtag('event', 'scroll', {
+            'event_category': 'engagement',
+            'event_label': '50% Scroll Depth',
+            'value': 50
+          })
+        }
+        if (scrollPercentage >= 75 && !scrollTracked['75']) {
+          scrollTracked['75'] = true
+          gtag('event', 'scroll', {
+            'event_category': 'engagement',
+            'event_label': '75% Scroll Depth',
+            'value': 75
+          })
+        }
+        if (scrollPercentage >= 90 && !scrollTracked['90']) {
+          scrollTracked['90'] = true
+          gtag('event', 'scroll', {
+            'event_category': 'engagement',
+            'event_label': '90% Scroll Depth',
+            'value': 90
+          })
+        }
+      })
+
+      // Track time on page
+      let startTime = Date.now()
+      window.addEventListener('beforeunload', function() {
+        const timeOnPage = Math.round((Date.now() - startTime) / 1000)
+        gtag('event', 'timing_complete', {
+          'name': 'page_engagement',
+          'value': timeOnPage,
+          'event_category': 'engagement',
+          'event_label': window.location.pathname
+        })
+      })
+
+      // Track outbound links
+      document.addEventListener('click', function(e) {
+        let target = e.target
+        while (target && target.tagName !== 'A') {
+          target = target.parentElement
+        }
+        
+        if (target && target.tagName === 'A' && target.href) {
+          const url = new URL(target.href, window.location.href)
+          if (url.hostname !== window.location.hostname) {
+            gtag('event', 'click', {
+              'event_category': 'outbound',
+              'event_label': url.href,
+              'transport_type': 'beacon'
+            })
+          }
+        }
+      })
+
+      // Track file downloads
+      document.addEventListener('click', function(e) {
+        let target = e.target
+        while (target && target.tagName !== 'A') {
+          target = target.parentElement
+        }
+        
+        if (target && target.tagName === 'A' && target.href) {
+          const fileExtensions = /\.(pdf|docx|xlsx|zip|mp4|mp3|avi|mov|wmv)$/i
+          if (fileExtensions.test(target.href)) {
+            gtag('event', 'file_download', {
+              'event_category': 'downloads',
+              'event_label': target.href,
+              'file_extension': target.href.split('.').pop(),
+              'file_name': target.href.split('/').pop()
+            })
+          }
+        }
+      })
+
+      // Track video engagement (for HTML5 videos)
+      document.addEventListener('DOMContentLoaded', function() {
+        const videos = document.querySelectorAll('video')
+        videos.forEach(function(video) {
+          let tracked = {}
+          
+          video.addEventListener('play', function() {
+            if (!tracked['video_start']) {
+              tracked['video_start'] = true
+              gtag('event', 'video_start', {
+                'event_category': 'video',
+                'event_label': video.src || video.currentSrc
+              })
+            }
+          })
+          
+          video.addEventListener('ended', function() {
+            gtag('event', 'video_complete', {
+              'event_category': 'video',
+              'event_label': video.src || video.currentSrc
+            })
+          })
+          
+          video.addEventListener('timeupdate', function() {
+            const percentComplete = Math.round((video.currentTime / video.duration) * 100)
+            
+            if (percentComplete >= 25 && !tracked['25']) {
+              tracked['25'] = true
+              gtag('event', 'video_progress', {
+                'event_category': 'video',
+                'event_label': video.src || video.currentSrc,
+                'value': 25
+              })
+            }
+            if (percentComplete >= 50 && !tracked['50']) {
+              tracked['50'] = true
+              gtag('event', 'video_progress', {
+                'event_category': 'video',
+                'event_label': video.src || video.currentSrc,
+                'value': 50
+              })
+            }
+            if (percentComplete >= 75 && !tracked['75']) {
+              tracked['75'] = true
+              gtag('event', 'video_progress', {
+                'event_category': 'video',
+                'event_label': video.src || video.currentSrc,
+                'value': 75
+              })
+            }
+          })
+        })
+      })
+
+      // Track form interactions
+      document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('form')
+        forms.forEach(function(form) {
+          let formInteracted = false
+          
+          form.addEventListener('focusin', function() {
+            if (!formInteracted) {
+              formInteracted = true
+              gtag('event', 'form_start', {
+                'event_category': 'form',
+                'event_label': form.id || form.name || 'unnamed_form'
+              })
+            }
+          })
+          
+          form.addEventListener('submit', function() {
+            gtag('event', 'form_submit', {
+              'event_category': 'form',
+              'event_label': form.id || form.name || 'unnamed_form'
+            })
+          })
+        })
+      })
+
+      // Enhanced ecommerce tracking helper
+      window.trackGA4Purchase = function(data) {
+        gtag('event', 'purchase', {
+          'transaction_id': data.transactionId,
+          'value': parseFloat(data.value),
+          'currency': data.currency || 'USD',
+          'tax': data.tax || 0,
+          'shipping': data.shipping || 0,
+          'items': data.items || [],
+          'coupon': data.coupon || ''
+        })
+      }
+
+      // Track user registration
+      window.trackGA4Signup = function(data) {
+        gtag('event', 'sign_up', {
+          'method': data.method || 'email',
+          'event_category': 'registration',
+          'event_label': 'User Registration',
+          'user_role': data.role || 'student'
+        })
+        
+        // Set user properties
+        gtag('set', 'user_properties', {
+          'user_id': data.userId,
+          'user_role': data.role || 'student',
+          'subscription_status': data.subscriptionStatus || 'trial'
+        })
+      }
+
+      // Track trial starts
+      window.trackGA4TrialStart = function(data) {
+        gtag('event', 'begin_trial', {
+          'trial_type': data.plan || 'free_trial',
+          'trial_duration': '14_days',
+          'predicted_ltv': data.predictedLTV || 119.88,
+          'event_category': 'trial',
+          'value': 0
+        })
+      }
+
+      // Track subscription events
+      window.trackGA4Subscribe = function(data) {
+        gtag('event', 'subscribe', {
+          'value': parseFloat(data.value),
+          'currency': data.currency || 'USD',
+          'subscription_plan': data.plan,
+          'billing_cycle': data.billingCycle || 'monthly',
+          'event_category': 'subscription'
+        })
+      }
+
+      // Track cancellations
+      window.trackGA4CancelSubscription = function(data) {
+        gtag('event', 'cancel_subscription', {
+          'cancellation_reason': data.reason,
+          'subscription_duration': data.duration || 0,
+          'subscription_value': data.value || 0,
+          'event_category': 'subscription'
+        })
+      }
+
+      // Track content engagement
+      window.trackGA4ContentEngagement = function(data) {
+        gtag('event', 'select_content', {
+          'content_type': data.type,
+          'content_id': data.id,
+          'content_name': data.name,
+          'event_category': 'engagement'
+        })
+      }
+
+      // Track search
+      window.trackGA4Search = function(query, resultsCount) {
+        gtag('event', 'search', {
+          'search_term': query,
+          'search_results': resultsCount || 0,
+          'event_category': 'search'
+        })
+      }
+
+      // Track errors for monitoring
+      window.trackGA4Error = function(errorMessage, errorType) {
+        gtag('event', 'exception', {
+          'description': errorMessage,
+          'error_type': errorType || 'unknown',
+          'fatal': false
+        })
+      }
+
+      // Track add to cart
+      window.trackGA4AddToCart = function(data) {
+        gtag('event', 'add_to_cart', {
+          'currency': 'USD',
+          'value': parseFloat(data.value),
+          'items': [{
+            'item_id': data.itemId,
+            'item_name': data.itemName,
+            'item_category': data.category,
+            'price': parseFloat(data.price),
+            'quantity': data.quantity || 1
+          }]
+        })
+      }
+
+      // Track remove from cart
+      window.trackGA4RemoveFromCart = function(data) {
+        gtag('event', 'remove_from_cart', {
+          'currency': 'USD',
+          'value': parseFloat(data.value),
+          'items': [{
+            'item_id': data.itemId,
+            'item_name': data.itemName,
+            'price': parseFloat(data.price),
+            'quantity': data.quantity || 1
+          }]
+        })
+      }
+
+      // Track checkout progress
+      window.trackGA4CheckoutProgress = function(step, option) {
+        gtag('event', 'checkout_progress', {
+          'checkout_step': step,
+          'checkout_option': option || '',
+          'event_category': 'ecommerce'
+        })
+      }
+
+      // Track refunds
+      window.trackGA4Refund = function(transactionId) {
+        gtag('event', 'refund', {
+          'transaction_id': transactionId,
+          'event_category': 'ecommerce'
+        })
+      }
+
+      // Enhanced conversion tracking (requires user consent)
+      window.trackGA4EnhancedConversion = function(data) {
+        gtag('set', 'user_data', {
+          'email': data.email,
+          'phone_number': data.phone,
+          'address': {
+            'first_name': data.firstName,
+            'last_name': data.lastName,
+            'street': data.street,
+            'city': data.city,
+            'region': data.region,
+            'postal_code': data.postalCode,
+            'country': data.country
+          }
+        })
+      }
+
+      // Consent mode (for GDPR/privacy compliance)
+      window.grantGA4Consent = function() {
+        gtag('consent', 'update', {
+          'analytics_storage': 'granted',
+          'ad_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted'
+        })
+      }
+
+      window.denyGA4Consent = function() {
+        gtag('consent', 'update', {
+          'analytics_storage': 'denied',
+          'ad_storage': 'denied',
+          'ad_user_data': 'denied',
+          'ad_personalization': 'denied'
+        })
+      }
+
+      // Initialize with default consent (adjust based on your privacy policy)
+      gtag('consent', 'default', {
+        'analytics_storage': 'granted',
+        'ad_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted',
+        'wait_for_update': 500
+      })
+
+      // Make gtag globally available
+      window.gtag = gtag
     </script>
 
     <link rel="manifest" href="/manifest.json" />
