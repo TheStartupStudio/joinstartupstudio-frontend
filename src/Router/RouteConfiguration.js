@@ -209,33 +209,47 @@ const LeadershipJournalManagement = React.lazy(() =>
 const ViewInvoices = React.lazy(() => import('../pages/ViewInvoices'))
 
 
+export const ROUTE_ACCESS = {
+  SUPER_ADMIN: 3,
+  INSTRUCTOR: 2,
+  STUDENT: 1
+}
+
+
 export const adminRoutes = [
-  { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
+  { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '', requiredRole: ROUTE_ACCESS.SUPER_ADMIN },
   {
     path: '/admin-dashboard',
     component: AdminDashboardPage,
-    breadcrumb: 'Admin Dashboard'
+    breadcrumb: 'Admin Dashboard',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
-  {
+   {
     path: '/user-managment',
     component: UserManagmentPage,
-    breadcrumb: 'User Managment'
+    breadcrumb: 'User Managment',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
     path: '/content-management',
     component: ContentManagement,
-    breadcrumb: 'Content Management'
+    breadcrumb: 'Content Management',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
     path: '/master-class-management',
     component: MasterClassManagement,
-    breadcrumb: 'Master Class Management'
+    breadcrumb: 'Master Class Management',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
+    requiresUniversitySetting: 'hasMasterClasses'
   },
 
-  {
+   {
     path: '/leadership-journal-management',
     component: LeadershipJournalManagement,
-    breadcrumb: 'Leadership Journal Management'
+    breadcrumb: 'Leadership Journal Management',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
+    requiresUniversitySetting: 'hasLeadershipJournal'
   },
   {
     path: '/my-school/:page?',
@@ -272,7 +286,7 @@ export const mutualRoutes = [
   { path: '/csv-upload', component: CSVUpload },
   { path: '/portfolio', component: Portfolio },
   { path: '/my-portfolio', component: AcademyPortfolio, exact: true },
-  { path: '/beyond-your-course', component: BeyondYourCourse, exact: true },
+  // { path: '/beyond-your-course', component: BeyondYourCourse, exact: true },
   { path: '/beyond-your-course/:id', component: BeyondYourCourse, exact: true },
   { path: '/story-in-motion', component: StoryInMotion },
   { path: '/UserProject/:uid', component: UserPortfolioProj },
@@ -285,7 +299,18 @@ export const mutualRoutes = [
   { path: '/verify', component: VerifyEmail },
   { path: '/my-account', component: MyAccount, exact: true },
   { path: '/logout', component: Logout },
-  { path: '/leadership-journal', component: LeadershipJournal, exact: true },
+  { 
+    path: '/leadership-journal', 
+    component: LeadershipJournal, 
+    exact: true,
+    requiresUniversitySetting: 'hasLeadershipJournal'
+  },
+  {
+    path: '/beyond-your-course',
+    component: BeyondYourCourse,
+    exact: true,
+    requiresUniversitySetting: 'hasMasterClasses'
+  },
   // { path: '/leader-board', component: LeaderBoardPage, exact: true },
   // { path: '/startup-forum', component: StartupForumPage, exact: true },
   // { path: '/startup-forum/following', component: StartupForumPage, exact: true },
@@ -488,12 +513,15 @@ export const instructorRoutes = [
   {
     path: '/admin-dashboard',
     component: AdminDashboardPage,
-    breadcrumb: 'Admin Dashboard'
+    breadcrumb: 'Admin Dashboard',
+    requiredRole: ROUTE_ACCESS.INSTRUCTOR,
+    replaces: '/dashboard' // Instructors see this instead of regular dashboard
   },
   {
     path: '/user-managment',
     component: UserManagmentPage,
-    breadcrumb: 'User Managment'
+    breadcrumb: 'User Managment',
+    requiredRole: ROUTE_ACCESS.INSTRUCTOR
   },
 ]
 

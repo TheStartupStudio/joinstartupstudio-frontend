@@ -12,9 +12,13 @@ import './index.css'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 
-const stripePromise = loadStripe(
-  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-)
+// const stripePromise = loadStripe(
+//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+// )
+
+
+const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+
 
 function CheckSubscription() {
   const [isLoading, setIsLoading] = useState(false)
@@ -360,9 +364,6 @@ useEffect(() => {
                 <h5>Monthly Plan</h5>
                 <p className='price'>${planDetails.monthly.price}/month</p>
                 <p className='commitment'>{planDetails.monthly.commitment}</p>
-                {planDetails.monthly.description && (
-                  <p className='text-muted small'>{planDetails.monthly.description}</p>
-                )}
               </div>
             )}
 
@@ -375,9 +376,7 @@ useEffect(() => {
                 <h5>6-Month Plan</h5>
                 <p className='price'>${planDetails['6-month'].price}/6 months</p>
                 <p className='commitment'>{planDetails['6-month'].commitment}</p>
-                {planDetails['6-month'].description && (
-                  <p className='text-muted small'>{planDetails['6-month'].description}</p>
-                )}
+                
               </div>
             )}
 
@@ -390,9 +389,7 @@ useEffect(() => {
                 <h5>Annual Plan</h5>
                 <p className='price'>${planDetails.annual.price}/year</p>
                 <p className='commitment'>{planDetails.annual.commitment}</p>
-                {planDetails.annual.description && (
-                  <p className='text-muted small'>{planDetails.annual.description}</p>
-                )}
+                
               </div>
             )}
 
@@ -405,9 +402,7 @@ useEffect(() => {
                 <h5>One-Time Payment</h5>
                 <p className='price'>${planDetails['one-time'].price}</p>
                 <p className='commitment'>{planDetails['one-time'].commitment}</p>
-                {planDetails['one-time'].description && (
-                  <p className='text-muted small'>{planDetails['one-time'].description}</p>
-                )}
+                
               </div>
             )}
           </div>

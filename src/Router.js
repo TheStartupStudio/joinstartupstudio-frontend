@@ -23,6 +23,8 @@ import LtsJournal from './pages/LtsJournal'
 import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
 import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
 import SubscriptionSuccess from './pages/Register/SubscriptionSuccess'
+import { filterRoutesByAccess, getDefaultDashboard } from './utils/routeHelpers'
+
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -83,32 +85,44 @@ function Router(props) {
       ]
     }
 
-    switch (user?.user?.role_id) {
-      case 1:
-        return [
-          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
-          ...mutualRoutes, 
-          ...studentRoutes
-        ]
-      case 2:
-        return [
-          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
-          ...mutualRoutes, 
-          ...instructorRoutes
-        ]
-      case 3:
-        return [
-          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
-          ...mutualRoutes, 
-          ...instructorRoutes, 
-          ...adminRoutes
-        ]
-      default:
-        return [
-          { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
-          ...mutualRoutes
-        ]
-    }
+        const userRoleId = user?.user?.role_id
+            const filteredMutualRoutes = filterRoutesByAccess(mutualRoutes, user)
+
+
+
+    switch (userRoleId) {
+    case 1: // Student
+      const filteredStudentRoutes = filterRoutesByAccess(studentRoutes, user)
+      return [
+        { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+        ...filteredMutualRoutes, 
+        ...filteredStudentRoutes
+      ]
+    
+    case 2: // Instructor
+      const filteredInstructorRoutes = filterRoutesByAccess(instructorRoutes, user)
+      return [
+        { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+        ...filteredMutualRoutes, 
+        ...filteredInstructorRoutes
+      ]
+    
+    case 3: // Super Admin
+      const filteredInstructorRoutesAdmin = filterRoutesByAccess(instructorRoutes, user)
+      const filteredAdminRoutes = filterRoutesByAccess(adminRoutes, user)
+      return [
+        { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+        ...filteredMutualRoutes, 
+        ...filteredInstructorRoutesAdmin,
+        ...filteredAdminRoutes
+      ]
+    
+    default:
+      return [
+        { path: '/subscription/success', component: SubscriptionSuccess, exact: true },
+        ...filteredMutualRoutes
+      ]
+  }
   }
 
   const isResetPasswordRoute =

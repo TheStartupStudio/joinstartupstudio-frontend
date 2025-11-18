@@ -224,6 +224,22 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
     setShowProgressModal(!showProgressModal)
   }
 
+  const calculateAge = (birthDateString) => {
+    if (!birthDateString) return 'Not Specified'
+    
+    const birthDate = new Date(birthDateString)
+    const today = new Date()
+    
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--
+    }
+    
+    return age
+  }
+
   if (loading) {
     return (
       <Modal show={show} onHide={onHide} centered>
@@ -342,11 +358,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 <div className="info-row w-100">
                   <div className="info-field">
                     <label className="info-label">Learner Age:</label>
-                    <p className="info-value">
-                      {displayData.birthDate 
-                        ? new Date().getFullYear() - new Date(displayData.birthDate).getFullYear()
-                        : 'Not Specified'}
-                    </p>
+                    <p className="info-value">{calculateAge(displayData.birthDate)}</p>
                   </div>
                 </div>
               </div>
