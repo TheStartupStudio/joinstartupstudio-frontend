@@ -24,6 +24,8 @@ import './index.css'
 import organizationLogo1 from '../../assets/images/academy-icons/Nord Anglia Schools.png'
 import organizationLogo2 from '../../assets/images/academy-icons/Nord Anglia Schools-horizontal.png'
 import potfolioIconDash from '../../assets/images/academy-icons/portfolio-admin-dash.png'
+import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
+
 
 
 ChartJS.register(
@@ -370,7 +372,7 @@ const AdminDashboard = () => {
           <div className="account-page-padding d-flex justify-content-between flex-col-tab align-start-tab">
             <div>
               <h3 className="page-title bold-page-title text-black mb-0">
-                AIE super Admin Dashboard
+                Organizational Admin Dashboard
               </h3>
             </div>
           </div>
@@ -384,6 +386,7 @@ const AdminDashboard = () => {
       </div>
 
       <div className="admin-dashboard-container">
+                <img src={blueManagerBG} alt="blue-manager-bg" className='position-absolute user-select-none' style={{right: '50%', translate: '50% 0'}} />
         <div className="admin-info-container">
           <div className="container-title">
             <img src={graphIcon} alt="Core Info Icon" className="core-info-icon" />

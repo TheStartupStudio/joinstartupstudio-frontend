@@ -335,6 +335,8 @@ const handleFileChange = (event) => {
                     }
                     name='occupation'
                   />
+
+                  {user?.role_id !== 2 && (
                   <ModalInput
                     id={'address'}
                     labelTitle={'Address EX: San Francisco, USA'}
@@ -348,6 +350,7 @@ const handleFileChange = (event) => {
                     }
                     name='address'
                   />
+                  )}
                 </div>
               </div>
               <div>
@@ -416,91 +419,96 @@ const handleFileChange = (event) => {
               </div>
             </div>
 
-            <div className='mt-5'>
-              <h4 className='fs-15'>Social Media Profiles</h4>
-              <div className='d-flex flex-column gap-3'>
-                <ModalInput
-                  id={'linkedin'}
-                  labelTitle={'LinkedIn'}
-                  imgSrc={linkedinLogo}
-                  value={changedMedias?.linkedIn}
-                  onChange={(e) =>
-                    setChangedMedias({
-                      ...changedMedias,
-                      linkedIn: e.target.value
-                    })
-                  }
-                />
-                <ModalInput
-                  id={'facebook'}
-                  labelTitle={'Facebook'}
-                  imgSrc={facebookLogo}
-                  value={changedMedias?.facebook}
-                  onChange={(e) =>
-                    setChangedMedias({
-                      ...changedMedias,
-                      facebook: e.target.value
-                    })
-                  }
-                />
-                <ModalInput
-                  id={'twitter'}
-                  labelTitle={'X (Twitter)'}
-                  imgSrc={twitterLogo}
-                  value={changedMedias?.twitter}
-                  onChange={(e) =>
-                    setChangedMedias({
-                      ...changedMedias,
-                      twitter: e.target.value
-                    })
-                  }
-                />
-                <ModalInput
-                  id={'instagram'}
-                  labelTitle={'Instagram'}
-                  imgSrc={instaLogo}
-                  value={changedMedias?.instagram}
-                  onChange={(e) =>
-                    setChangedMedias({
-                      ...changedMedias,
-                      instagram: e.target.value
-                    })
-                  }
-                />
-                <ModalInput
-                  id={'website'}
-                  labelTitle={'Website'}
-                  imgSrc={browserLogo}
-                  value={changedMedias?.website}
-                  onChange={(e) =>
-                    setChangedMedias({
-                      ...changedMedias,
-                      website: e.target.value
-                    })
-                  }
-                />
-              </div>
 
+                        {/* Only show Social Media Profiles for non-instructor users */}
+            {user?.role_id !== 2 && (
               <div className='mt-5'>
-                <h4 className='fs-15'>Personal Bio</h4>
-                <ReactQuill
-                  value={changedUser?.bio}
-                  onChange={(content) =>
-                    setChangedUser({ ...changedUser, bio: content })
-                  }
-                  className='text-black'
-                  modules={{
-                    toolbar: [
-                      [{ header: [1, 2, 3, false] }],
-                      ['bold', 'italic', 'underline'],
-                      [{ list: 'ordered' }, { list: 'bullet' }],
-                      [{ align: [] }],
-                      ['link', 'image']
-                    ]
-                  }}
-                />
+                <h4 className='fs-15'>Social Media Profiles</h4>
+                <div className='d-flex flex-column gap-3'>
+                  <ModalInput
+                    id={'linkedin'}
+                    labelTitle={'LinkedIn'}
+                    imgSrc={linkedinLogo}
+                    value={changedMedias?.linkedIn}
+                    onChange={(e) =>
+                      setChangedMedias({
+                        ...changedMedias,
+                        linkedIn: e.target.value
+                      })
+                    }
+                  />
+                  <ModalInput
+                    id={'facebook'}
+                    labelTitle={'Facebook'}
+                    imgSrc={facebookLogo}
+                    value={changedMedias?.facebook}
+                    onChange={(e) =>
+                      setChangedMedias({
+                        ...changedMedias,
+                        facebook: e.target.value
+                      })
+                    }
+                  />
+                  <ModalInput
+                    id={'twitter'}
+                    labelTitle={'X (Twitter)'}
+                    imgSrc={twitterLogo}
+                    value={changedMedias?.twitter}
+                    onChange={(e) =>
+                      setChangedMedias({
+                        ...changedMedias,
+                        twitter: e.target.value
+                      })
+                    }
+                  />
+                  <ModalInput
+                    id={'instagram'}
+                    labelTitle={'Instagram'}
+                    imgSrc={instaLogo}
+                    value={changedMedias?.instagram}
+                    onChange={(e) =>
+                      setChangedMedias({
+                        ...changedMedias,
+                        instagram: e.target.value
+                      })
+                    }
+                  />
+                  <ModalInput
+                    id={'website'}
+                    labelTitle={'Website'}
+                    imgSrc={browserLogo}
+                    value={changedMedias?.website}
+                    onChange={(e) =>
+                      setChangedMedias({
+                        ...changedMedias,
+                        website: e.target.value
+                      })
+                    }
+                  />
+                </div>
               </div>
+            )}
+
+            <div className='mt-5'>
+              <h4 className='fs-15'>Personal Bio</h4>
+              <ReactQuill
+                value={changedUser?.bio}
+                onChange={(content) =>
+                  setChangedUser({ ...changedUser, bio: content })
+                }
+                className='text-black'
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ align: [] }],
+                    ['link', 'image']
+                  ]
+                }}
+              />
             </div>
+
             <div className='d-flex justify-content-between mt-3 ms-2 flex-col-900 gap-05-900'>
               <div
                 className='d-flex align-items-center gap-2 cursor-pointer'

@@ -35,7 +35,6 @@ function Dashboard() {
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const user = useSelector((state) => state.user.user.user)
   
-  // Trial countdown states
   const [trialTimeRemaining, setTrialTimeRemaining] = useState(null)
   const [isTrialActive, setIsTrialActive] = useState(false)
 
@@ -45,11 +44,12 @@ function Dashboard() {
   useImpersonation(originalToken)
 
   useEffect(() => {
-    if (!user?.createdAt || user?.subscription_exempt) return
+    if (!user?.trialStart || user?.subscription_exempt) return
 
     const calculateTrialTime = () => {
-      const userCreatedDate = new Date(user.createdAt)
-      const trialEndDate = new Date(userCreatedDate)
+      const trialStartDate = new Date(user.trialStart.replace(' ', 'T'))
+      
+      const trialEndDate = new Date(trialStartDate)
       trialEndDate.setDate(trialEndDate.getDate() + 14)
       
       const now = new Date()
@@ -75,11 +75,10 @@ function Dashboard() {
     }
 
     calculateTrialTime()
-
     const interval = setInterval(calculateTrialTime, 1000)
 
     return () => clearInterval(interval)
-  }, [user])
+  }, [user?.trialStart, user?.subscription_exempt])
 
   useEffect(() => {
     dispatch(getPeriodsStart())

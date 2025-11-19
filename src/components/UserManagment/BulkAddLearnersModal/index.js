@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import csvToArrayLearners from '../../CSVUpload/csvToArrayLearners'
+import csvToArrayOrganizations from '../../CSVUpload/csvToArrayOrganizations'
 import './index.css'
 
 const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) => {
@@ -10,7 +11,6 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
   const [file, setFile] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
 
-  // Dynamic content based on mode
   const content = {
     learners: {
       title: 'Bulk Add Learners',
@@ -68,7 +68,11 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
 
   const handleDownloadTemplate = async () => {
     try {
-      const response = await axiosInstance.get('/super-admin/learners-csv/download-template', {
+      const endpoint = mode === 'organizations' 
+        ? '/super-admin/organizations-csv/download-template'
+        : '/super-admin/learners-csv/download-template'
+
+      const response = await axiosInstance.get(endpoint, {
         responseType: 'blob'
       })
 
@@ -76,7 +80,10 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', `learners_template_${new Date().toISOString()}.csv`)
+      const filename = mode === 'organizations' 
+        ? `organizations_template_${new Date().toISOString().split('T')[0]}.csv`
+        : `learners_template_${new Date().toISOString().split('T')[0]}.csv`
+      link.setAttribute('download', filename)
       document.body.appendChild(link)
       link.click()
       link.remove()
@@ -86,6 +93,102 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
     } catch (error) {
       console.error('Error downloading template:', error)
       toast.error('Failed to download template')
+    }
+  }
+
+  const submitHandler = async (results) => {
+    setLoading(true)
+
+    try {
+      if (mode === 'organizations') {
+        console.log('📤 Submitting organizations:', results)
+        
+        const organizations = results.map(org => ({
+          organizationName: org.organizationName?.trim() || null,
+          domain: org.domain?.trim() || null,
+          administratorName: org.administratorName?.trim() || null,
+          administratorEmail: org.administratorEmail?.trim() || null,
+          address: org.address?.trim() || null,
+          city: org.city?.trim() || null,
+          state: org.state?.trim() || null,
+          zipCode: org.zipCode?.trim() || null,
+          learnerMonthlyPrice: org.learnerMonthlyPrice ? parseFloat(org.learnerMonthlyPrice) : 9.99,
+          learnerYearlyPrice: org.learnerYearlyPrice ? parseFloat(org.learnerYearlyPrice) : 99.00
+        }))
+
+        console.log('📨 Final organizations payload:', { organizations })
+
+        const response = await axiosInstance.post('/super-admin/organizations-csv/bulk-create', {
+          organizations
+        })
+
+        if (response.data.success) {
+          console.log('✅ Organizations success response:', response.data)
+          toast.success(`${response.data.data.successCount} organization(s) added successfully!`)
+          
+          if (response.data.data.errors && response.data.data.errors.length > 0) {
+            console.warn('⚠️ Organization errors:', response.data.data.errors)
+            response.data.data.errors.forEach(error => {
+              toast.error(`Row ${error.row} (${error.domain}): ${error.error}`, {
+                autoClose: 5000
+              })
+            })
+          }
+          
+          onSuccess()
+          onHide()
+          setFile(null)
+        }
+      } else if (mode === 'learners') {
+        console.log('📤 Submitting learners:', results)
+        
+        const learners = results.map(learner => ({
+          learnerName: learner.learnerName?.trim() || null,
+          email: learner.email?.trim()?.toLowerCase() || null,
+          password: learner.password?.trim() || 'Learntostart1!',
+          gender: learner.gender?.trim() || null,
+          birthDate: learner.birthDate?.trim() || null,
+          address: learner.address?.trim() || null,
+          city: learner.city?.trim() || null,
+          state: learner.state?.trim() || null,
+          zipCode: learner.zipCode?.trim() || null,
+          universityId: learner.universityId ? parseInt(learner.universityId) : null
+        }))
+
+        console.log('📨 Final learners payload:', { learners })
+
+        const response = await axiosInstance.post('/super-admin/learners-csv/bulk-create', {
+          learners
+        })
+
+        if (response.data.success) {
+          console.log('✅ Learners success response:', response.data)
+          toast.success(`${response.data.data.successCount} learner(s) added successfully!`)
+          
+          if (response.data.data.errors && response.data.data.errors.length > 0) {
+            console.warn('⚠️ Learner errors:', response.data.data.errors)
+            response.data.data.errors.forEach(error => {
+              toast.error(`Row ${error.row} (${error.email || 'N/A'}): ${error.error}`, {
+                autoClose: 5000
+              })
+            })
+          }
+          
+          onSuccess()
+          onHide()
+          setFile(null)
+        }
+      }
+    } catch (error) {
+      console.error('❌ Submission error:', error)
+      const message =
+        error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        error?.message ||
+        `Error adding ${mode}`
+      toast.error(message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -101,7 +204,10 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
 
     reader.onload = async function (e) {
       try {
-        const results = csvToArrayLearners(e.target.result, ',')
+        const parser = mode === 'organizations' ? csvToArrayOrganizations : csvToArrayLearners
+        const results = parser(e.target.result, ',')
+        
+        console.log('📋 Parsed CSV results:', results)
         
         if (results.length === 0) {
           toast.error('CSV file is empty')
@@ -109,38 +215,10 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
           return
         }
 
-        const learners = results.map(learner => ({
-          learnerName: learner.learnerName,
-          email: learner.email,
-          password: learner.password || 'Learntostart1!',
-          gender: learner.gender,
-          birthDate: learner.birthDate,
-          address: learner.address,
-          city: learner.city,
-          state: learner.state,
-          universityId: learner.universityId || null
-        }))
-
-        const response = await axiosInstance.post('/super-admin/learners-csv/bulk-create', {
-          learners
-        })
-
-        if (response.data.success) {
-          toast.success(`${response.data.created} learner(s) added successfully!`)
-          
-          if (response.data.errors && response.data.errors.length > 0) {
-            response.data.errors.forEach(error => {
-              toast.error(`Row ${error.row}: ${error.message}`)
-            })
-          }
-          
-          onSuccess()
-          handleCancel()
-        }
+        await submitHandler(results)
       } catch (error) {
         console.error('Upload error:', error)
-        toast.error(error.response?.data?.message || 'Error uploading learners')
-      } finally {
+        toast.error(error.message || `Error parsing ${mode} CSV`)
         setLoading(false)
       }
     }
@@ -186,10 +264,11 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
           type="button"
           className="download-template-btn"
           onClick={handleDownloadTemplate}
+          disabled={loading}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M8 11L8 3M8 11L5 8M8 11L11 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           {currentContent.buttonText}
         </button>
@@ -200,7 +279,7 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onClick={() => document.getElementById('csvFileInput').click()}
+          onClick={() => !loading && document.getElementById('csvFileInput').click()}
         >
           <input
             type="file"
@@ -208,13 +287,14 @@ const BulkAddLearnersModal = ({ show, onHide, onSuccess, mode = 'learners' }) =>
             accept=".csv"
             onChange={handleFileInputChange}
             style={{ display: 'none' }}
+            disabled={loading}
           />
           
           <div className="upload-icon">
            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <g clip-path="url(#clip0_3743_9143)">
-                <path d="M12 22V13M12 13L15.5 16.5M12 13L8.5 16.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M20 17.6073C21.4937 17.0221 23 15.6889 23 13C23 9 19.6667 8 18 8C18 6 18 2 12 2C6 2 6 6 6 8C4.33333 8 1 9 1 13C1 15.6889 2.50628 17.0221 4 17.6073" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <g clipPath="url(#clip0_3743_9143)">
+                <path d="M12 22V13M12 13L15.5 16.5M12 13L8.5 16.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M20 17.6073C21.4937 17.0221 23 15.6889 23 13C23 9 19.6667 8 18 8C18 6 18 2 12 2C6 2 6 6 6 8C4.33333 8 1 9 1 13C1 15.6889 2.50628 17.0221 4 17.6073" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </g>
             <defs>
                 <clipPath id="clip0_3743_9143">

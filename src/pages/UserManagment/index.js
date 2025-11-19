@@ -1,5 +1,6 @@
 import './index.css'
 import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
@@ -40,9 +41,11 @@ import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearnersModal/index'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 import axiosInstance from '../../utils/AxiosInstance'
+import ViewOrganizationInvoicesModal from '../../components/UserManagment/ViewOrganizationInvoicesModal'
 
 
 const UserManagement = () => {
+  const history = useHistory()
   const dispatch = useDispatch()
   
   const { user } = useSelector((state) => state.user.user)
@@ -77,8 +80,9 @@ const UserManagement = () => {
   const [isSingleAction, setIsSingleAction] = useState(false) 
   const [showBulkAddLearnersModal, setShowBulkAddLearnersModal] = useState(false)
   const [showBulkAddOrganizationsModal, setShowBulkAddOrganizationsModal] = useState(false) 
+  const [showInvoicesModal, setShowInvoicesModal] = useState(false)
+  const [selectedOrgForInvoices, setSelectedOrgForInvoices] = useState(null)
 
-  // Users data and pagination
   const [usersData, setUsersData] = useState([])
   const [usersLoading, setUsersLoading] = useState(false)
   const [usersPagination, setUsersPagination] = useState({
@@ -88,7 +92,6 @@ const UserManagement = () => {
     totalPages: 1
   })
 
-  // Organizations data and pagination
   const [organizationsData, setOrganizationsData] = useState([])
   const [organizationsLoading, setOrganizationsLoading] = useState(false)
   const [organizationsPagination, setOrganizationsPagination] = useState({
@@ -98,21 +101,18 @@ const UserManagement = () => {
     totalPages: 1
   })
 
-  // Selected users and organizations for bulk actions
   const [selectedUsers, setSelectedUsers] = useState([])
   const [selectedOrganizations, setSelectedOrganizations] = useState([])
 
-  // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
-      setCurrentPage(1) // Reset to first page when search changes
+      setCurrentPage(1) 
     }, 500)
 
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  // Function to fetch organizations data
   const fetchOrganizations = async (page = 1, search = '') => {
     setOrganizationsLoading(true)
     try {
@@ -141,7 +141,9 @@ const UserManagement = () => {
           administratorEmail: org.administratorEmail,
           features: org.features,
           organizationPricing: org.organizationPricing,
-          learnerPricing: org.learnerPricing
+          learnerPricing: org.learnerPricing,
+                    isActive: org.isActive !== undefined ? org.isActive : true
+
         }))
 
         setOrganizationsData(mappedData)
@@ -155,7 +157,6 @@ const UserManagement = () => {
     }
   }
 
-  // Function to fetch users data
   const fetchUsers = async (page = 1, search = '') => {
     setUsersLoading(true)
     try {
@@ -193,7 +194,6 @@ const UserManagement = () => {
     }
   }
 
-  // Fetch data when component mounts or when debounced search/page/tab changes
   useEffect(() => {
     if (activeTab === 'Users') {
       fetchUsers(currentPage, debouncedSearchQuery)
@@ -210,7 +210,7 @@ const UserManagement = () => {
       filterable: true,
       render: (value, item) => (
         <div className="organization-info">
-          <div className="status-indicator"></div>
+          <div className={`status-indicator ${item.isActive ? 'active' : 'inactive'}`}></div>
           <div className="organization-details">
             <div className="organization-name">{item.name}</div>
             <div className="organization-domain">{item.domain}</div>
@@ -317,6 +317,9 @@ const UserManagement = () => {
       case 'view-learners':
         handleViewLearners(item)
         break
+      case 'view-invoices':
+        handleViewInvoices(item)
+        break
       case 'add-learners':
         setSelectedOrgForLearners(item)
         setShowBulkAddLearnersModal(true)
@@ -346,7 +349,7 @@ const UserManagement = () => {
         setShowDeletePopup(true)
         break
       case 'export-organization':
-        handleExportOrganization(item)
+        exportOrganization(item) 
         break
       case 'deactivate-learner':
         setActionContext('users')
@@ -370,6 +373,11 @@ const UserManagement = () => {
     setShowLearnersModal(true)
   }
 
+  const handleViewInvoices = (organization) => {
+    setSelectedOrgForInvoices(organization)
+    setShowInvoicesModal(true)
+  }
+
   const handleViewOrganization = async (organization) => {
     try {
       const response = await axiosInstance.get(`/super-admin/organizations/${organization.id}`)
@@ -382,6 +390,53 @@ const UserManagement = () => {
       console.error('Error fetching organization details:', error)
       toast.error('Failed to load organization details')
     }
+  }
+
+  const handleBulkAddOrganizationsSuccess = async () => {
+    try {
+      await axiosInstance.post('/super-admin/organizations/sync-all-stripe-prices')
+      console.log('✅ Stripe prices synced successfully')
+    } catch (syncError) {
+      console.error('⚠️ Failed to sync Stripe prices:', syncError)
+      toast.warning('Organizations created, but failed to sync some Stripe prices')
+    }
+
+    setShowBulkAddOrganizationsModal(false)
+    toast.success('Organizations added successfully!')
+    fetchOrganizations(currentPage, debouncedSearchQuery)
+  }
+
+  const exportOrganizations = async () => {
+    try {
+      const organizationIds = selectedOrganizations.length > 0 
+        ? selectedOrganizations.map(org => org.id).join(',')
+        : undefined
+
+      const response = await axiosInstance.get('/super-admin/organizations-csv/export', {
+        params: organizationIds ? { organizationIds } : {},
+        responseType: 'blob'
+      })
+
+      const blob = new Blob([response.data], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `organizations_export_${new Date().toISOString().split('T')[0]}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+      toast.success(
+        selectedOrganizations.length > 0
+          ? `${selectedOrganizations.length} organization(s) exported successfully!`
+          : 'All organizations exported successfully!'
+      )
+    } catch (error) {
+      console.error('Error exporting organizations:', error)
+      toast.error('Failed to export organizations')
+    }
+    setShowBulkDropdown(false)
   }
 
   const handleEditOrganization = async (organization) => {
@@ -407,7 +462,6 @@ const UserManagement = () => {
   const handleModalSuccess = () => {
     toast.success('Organization saved successfully!')
     setShowAddOrganizationModal(false)
-    // Refresh organizations list
     if (activeTab === 'Organizations') {
       fetchOrganizations(currentPage, debouncedSearchQuery)
     }
@@ -435,7 +489,6 @@ const UserManagement = () => {
   const handleLearnerModalSuccess = () => {
     toast.success('Learner saved successfully!')
     setShowAddLearnerModal(false)
-    // Refresh users list
     if (activeTab === 'Users') {
       fetchUsers(currentPage, debouncedSearchQuery)
     }
@@ -445,7 +498,6 @@ const UserManagement = () => {
     try {
       const response = await axiosInstance.get(`/super-admin/organizations/${organization.id}/export`)
       if (response.data.success) {
-        // Create downloadable file
         const dataStr = JSON.stringify(response.data.data, null, 2)
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
         
@@ -493,28 +545,28 @@ const UserManagement = () => {
   //   setShowBulkDropdown(false)
   // }
 
-  const exportOrganizations = async () => {
-    try {
-      const response = await axiosInstance.get('/super-admin/organizations/export')
-      if (response.data.success) {
-        const dataStr = JSON.stringify(response.data.data, null, 2)
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
+  // const exportOrganizations = async () => {
+  //   try {
+  //     const response = await axiosInstance.get('/super-admin/organizations/export')
+  //     if (response.data.success) {
+  //       const dataStr = JSON.stringify(response.data.data, null, 2)
+  //       const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
         
-        const exportFileDefaultName = `all_organizations_${new Date().toISOString()}.json`
+  //       const exportFileDefaultName = `all_organizations_${new Date().toISOString()}.json`
         
-        const linkElement = document.createElement('a')
-        linkElement.setAttribute('href', dataUri)
-        linkElement.setAttribute('download', exportFileDefaultName)
-        linkElement.click()
+  //       const linkElement = document.createElement('a')
+  //       linkElement.setAttribute('href', dataUri)
+  //       linkElement.setAttribute('download', exportFileDefaultName)
+  //       linkElement.click()
         
-        toast.success('Organizations exported successfully!')
-      }
-    } catch (error) {
-      console.error('Error exporting organizations:', error)
-      toast.error('Failed to export organizations')
-    }
-    setShowBulkDropdown(false)
-  }
+  //       toast.success('Organizations exported successfully!')
+  //     }
+  //   } catch (error) {
+  //     console.error('Error exporting organizations:', error)
+  //     toast.error('Failed to export organizations')
+  //   }
+  //   setShowBulkDropdown(false)
+  // }
 
   const resetPasswords = () => {
     if (selectedUsers.length === 0) {
@@ -563,7 +615,6 @@ const UserManagement = () => {
         responseType: 'blob'
       })
 
-      // Create download link
       const blob = new Blob([response.data], { type: 'text/csv' })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -638,6 +689,11 @@ const UserManagement = () => {
 
   const bulkOptionsOrganizations = [
     {
+      name: 'Activate Organizations',
+      action: () => activateOrganizations(),
+      icons: <img src={userPlus} alt="activate" className="admin-icons-dropdown" />
+    },
+    {
       name: 'Deactivate Organizations',
       action: () => deactivateOrganizations(),
       icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
@@ -649,7 +705,7 @@ const UserManagement = () => {
     },
     {
       name: 'Export Organizations',
-      action: () => exportOrganizations(),
+      action: () => exportOrganizations(), // Updated to use new function
       icons: <img src={download} alt="download" className="admin-icons-dropdown" />
     }
   ]
@@ -798,7 +854,6 @@ const UserManagement = () => {
     }
   }
 
-  // Reset selections when changing tabs
   useEffect(() => {
     setSelectedUsers([])
     setSelectedOrganizations([])
@@ -825,7 +880,6 @@ const UserManagement = () => {
     }
   }, [])
 
-  // Handle pagination
   const handlePageChange = (newPage) => {
     const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
     if (newPage >= 1 && newPage <= pagination.totalPages) {
@@ -840,12 +894,40 @@ const UserManagement = () => {
   const isLoading = activeTab === 'Users' ? usersLoading : organizationsLoading
   const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
 
-  // Add handleSelectionChange function
   const handleSelectionChange = (selectedItems) => {
     if (activeTab === 'Users') {
       setSelectedUsers(selectedItems)
     } else {
       setSelectedOrganizations(selectedItems)
+    }
+  }
+
+
+  const activateOrganizations = async () => {
+    if (selectedOrganizations.length === 0) {
+      toast.warning('Please select at least one organization')
+      return
+    }
+
+    try {
+      setLoading(true)
+      const organizationIds = selectedOrganizations.map(org => org.id)
+      
+      const response = await axiosInstance.post('/super-admin/organizations/bulk-activate', {
+        organizationIds
+      })
+
+      if (response.data.success) {
+        toast.success(`${response.data.affectedOrganizations} organization(s) and their users activated successfully!`)
+        setSelectedOrganizations([])
+        fetchOrganizations(currentPage, debouncedSearchQuery)
+      }
+    } catch (error) {
+      console.error('Error activating organizations:', error)
+      toast.error(error.response?.data?.error || 'Failed to activate organizations')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
     }
   }
 
@@ -940,7 +1022,7 @@ const UserManagement = () => {
             <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
               <div className="add-button-wrapper">
                 <AcademyBtn
-                  title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'User'}`}
+                  title={`Add New ${activeTab === 'Organizations' ? 'Organization' : 'Learner'}`}
                   icon={plusIcon}
                   onClick={() => {
                     setShowAddDropdown(!showAddDropdown)
@@ -990,6 +1072,14 @@ const UserManagement = () => {
                   ))}
                 </div>
               )}
+            </div>
+
+            <div className="add-button-wrapper" style={{position: 'relative'}}>
+              <AcademyBtn
+                    title={`View Invoices`}
+                    icon={plusIcon}
+                    onClick={() => history.push('/view-invoices')}
+                  />
             </div>
 
             <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
@@ -1224,12 +1314,17 @@ const UserManagement = () => {
         <BulkAddLearnersModal
           show={showBulkAddOrganizationsModal}
           onHide={() => setShowBulkAddOrganizationsModal(false)}
-          onSuccess={() => {
-            setShowBulkAddOrganizationsModal(false)
-            toast.success('Organizations added successfully!')
-            fetchOrganizations(currentPage, debouncedSearchQuery)
-          }}
+          onSuccess={handleBulkAddOrganizationsSuccess}
           mode="organizations"
+        />
+      )}
+
+      {!isInstructor && (
+        <ViewOrganizationInvoicesModal
+          show={showInvoicesModal}
+          onHide={() => setShowInvoicesModal(false)}
+          organizationName={selectedOrgForInvoices?.name || ''}
+          organizationId={selectedOrgForInvoices?.id}
         />
       )}
     </div>

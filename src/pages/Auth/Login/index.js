@@ -46,6 +46,17 @@ const ChooseLogin = () => {
     }))
   }
 
+
+  // Helper function to determine dashboard route based on role
+  const getDashboardRoute = (roleId) => {
+    // Role 2 (Instructor) and Role 3 (Super Admin) go to admin-dashboard
+    if (roleId === 2 || roleId === 3) {
+      return '/admin-dashboard'
+    }
+    // Role 1 (Student) goes to regular dashboard
+    return '/dashboard'
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     dispatch(loginLoading(true))
@@ -76,7 +87,13 @@ const ChooseLogin = () => {
                 toast.error('Wrong email or password!')
                 dispatch(setLoginLoading(false))
               } else {
-                history.push('/dashboard')
+                // Get user role from localStorage after successful login
+                const storedUser = JSON.parse(localStorage.getItem('user'))
+                const roleId = storedUser?.user?.role_id
+                
+                // Redirect based on role
+                const dashboardRoute = getDashboardRoute(roleId)
+                history.push(dashboardRoute)
               }
             })
             .catch((err) => {

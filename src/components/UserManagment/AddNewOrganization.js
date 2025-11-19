@@ -49,7 +49,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const frequencyOptions = [
     { value: 'monthly', label: 'Per month' },
     { value: 'yearly', label: 'Per year' },
-    { value: 'quarterly', label: 'Per quarter' },
+    { value: '6-month', label: 'Every 6 Months' },
     { value: 'one-time', label: 'One-time' }
   ]
 
@@ -288,9 +288,27 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
       if (mode === 'edit') {
         response = await axiosInstance.put(`/super-admin/organizations/${formData.id}`, payload)
         toast.success('Organization updated successfully!')
+        
+        // Sync Stripe prices after update
+        try {
+          await axiosInstance.post('/super-admin/organizations/sync-all-stripe-prices')
+          console.log('✅ Stripe prices synced after organization update')
+        } catch (syncError) {
+          console.error('⚠️ Failed to sync Stripe prices:', syncError)
+          toast.warning('Organization updated, but failed to sync Stripe prices')
+        }
       } else {
         response = await axiosInstance.post('/super-admin/organizations', payload)
         toast.success('Organization added successfully!')
+        
+        // Sync Stripe prices after creation
+        try {
+          await axiosInstance.post('/super-admin/organizations/sync-all-stripe-prices')
+          console.log('✅ Stripe prices synced after organization creation')
+        } catch (syncError) {
+          console.error('⚠️ Failed to sync Stripe prices:', syncError)
+          toast.warning('Organization created, but failed to sync Stripe prices')
+        }
       }
       
       onSuccess()

@@ -16,7 +16,9 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 //   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
 // )
 
+
 const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+
 
 function CheckSubscription() {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,12 +26,14 @@ function CheckSubscription() {
   const [registrationData, setRegistrationData] = useState(null)
   const [isReturningUser, setIsReturningUser] = useState(false)
   const [userTrialUsed, setUserTrialUsed] = useState(false)
+  const [organizationPricing, setOrganizationPricing] = useState(null) // ✅ New state
+  const [loadingPricing, setLoadingPricing] = useState(true) // ✅ New state
   const dispatch = useDispatch()
   const history = useHistory()
   
   const user = useSelector((state) => state.user?.user?.user)
 
-  const planDetails = {
+  const defaultPlanDetails = {
     monthly: {
       price: '9.99',
       total: '9.99',
@@ -46,20 +50,110 @@ function CheckSubscription() {
     }
   }
 
+  const planDetails = organizationPricing || defaultPlanDetails
+
   const refreshUserData = async () => {
     try {
-      
       const response = await axiosInstance.get('/users')
-
-      
       await dispatch(userLogin())
-            
       return response.data
     } catch (error) {
       console.error('❌ Error refreshing user data:', error)
       throw error
     }
   }
+
+useEffect(() => {
+  const fetchOrganizationPricing = async () => {
+    if (!user || !user.id) {
+      console.log('❌ No user found, skipping pricing fetch')
+      setLoadingPricing(false)
+      return
+    }
+
+    try {
+      console.log('📌 Fetching organization pricing for user:', user.id)
+      
+      const response = await axiosInstance.get('/super-admin/user/organization-pricing', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+      })
+
+      console.log('✅ Organization pricing response:', response.data)
+
+      if (response.data.success) {
+        if (response.data.subscriptionExempt) {
+          toast.info('You have subscription access!')
+          history.push('/dashboard')
+          return
+        }
+
+        if (response.data.hasOrganizationPricing && response.data.pricing) {
+          console.log('✅ Organization pricing found:', response.data.pricing)
+          
+          const orgPricing = {}
+          
+          Object.keys(response.data.pricing).forEach(key => {
+            const pricing = response.data.pricing[key]
+            
+            const periodMap = {
+              'monthly': 'month',
+              'yearly': 'year',
+              'one-time': 'one-time',
+              '6-month': '6 months'
+            }
+            
+            const commitmentMap = {
+              'monthly': '12 months',
+              'yearly': 'year',
+              'one-time': 'one-time payment',
+              '6-month': '6 months'
+            }
+            
+            orgPricing[key] = {
+              price: pricing.amount.toFixed(2),
+              total: pricing.amount.toFixed(2),
+              period: periodMap[pricing.frequency] || pricing.frequency,
+              priceId: pricing.priceId,
+              commitment: commitmentMap[pricing.frequency] || pricing.frequency,
+              description: pricing.description,
+              frequency: pricing.frequency,
+              isOrganizationPrice: true
+            }
+          })
+
+          console.log('✅ Transformed org pricing:', orgPricing)
+          setOrganizationPricing(orgPricing)
+          
+          if (orgPricing.monthly) {
+            setSelectedPlan('monthly')
+          } else if (orgPricing.annual) {
+            setSelectedPlan('annual')
+          } else if (orgPricing['6-month']) {
+            setSelectedPlan('6-month')
+          } else if (orgPricing['one-time']) {
+            setSelectedPlan('one-time')
+          } else {
+            setSelectedPlan(Object.keys(orgPricing)[0])
+          }
+        } else {
+          console.log('ℹ️ Using default pricing')
+          setOrganizationPricing(null)
+        }
+      }
+    } catch (error) {
+      console.error('❌ Error fetching organization pricing:', error)
+      console.error('Error response:', error.response?.data)
+      setOrganizationPricing(null)
+    } finally {
+      setLoadingPricing(false)
+    }
+  }
+
+  fetchOrganizationPricing()
+}, [user, history])
+
 
   useEffect(() => {
     if (user && user.id) {
@@ -100,11 +194,11 @@ function CheckSubscription() {
 
     try {
       if (isReturningUser) {
-        
         const checkoutResponse = await axiosInstance.post(
           '/course-subscription/create-checkout-session',
           {
             planType: selectedPlan,
+            organizationPriceId: planDetails[selectedPlan]?.priceId 
           },
           {
             headers: {
@@ -146,7 +240,8 @@ function CheckSubscription() {
             {
               planType: selectedPlan,
               paymentMethodId: registrationData.paymentMethodId,
-              email: registrationData.email
+              email: registrationData.email,
+              organizationPriceId: planDetails[selectedPlan]?.priceId // ✅ Send org price ID
             },
             {
               headers: {
@@ -178,18 +273,14 @@ function CheckSubscription() {
       console.error('Error response:', err.response?.data)
       
       if (err.response?.data?.needsRefresh === true) {
-        
         try {
           await refreshUserData()
-          
           const message = err.response?.data?.error || 
                          'You already have an active subscription. Your account has been updated.'
           toast.success(message)
-          
           setTimeout(() => {
             history.push('/dashboard')
           }, 2000)
-          
           return
         } catch (refreshError) {
           console.error('❌ Failed to refresh user data:', refreshError)
@@ -209,24 +300,11 @@ function CheckSubscription() {
       } else if (err.response?.status === 404) {
         toast.error('User not found. Please try registering again.')
         history.push('/register')
-      } else if (err.response?.status === 400 && 
-                 err.response?.data?.error?.includes('already have an active subscription')) {
-        try {
-          await refreshUserData()
-          toast.info('You already have an active subscription!')
-          setTimeout(() => {
-            history.push('/dashboard')
-          }, 2000)
-        } catch (refreshError) {
-          console.error('❌ Failed to refresh user data:', refreshError)
-        }
       }
     } finally {
       setIsLoading(false)
     }
   }
-
-  
 
   const handleLogout = async () => {
     dispatch(setGeneralLoading(true))
@@ -245,7 +323,7 @@ function CheckSubscription() {
       })
   }
 
-  if (!registrationData) {
+  if (!registrationData || loadingPricing) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
         <div className="spinner-border text-primary" role="status">
@@ -276,39 +354,57 @@ function CheckSubscription() {
             {isReturningUser ? 'Resubscribe to Continue' : 'Choose Your Subscription'}
           </h2>
 
-          {/* {isReturningUser && (
-            <div className='mb-3 p-3 bg-light rounded text-center'>
-              {userTrialUsed ? (
-                <p className='mb-0 text-warning'>
-                  <strong>Welcome back!</strong> Your 14-day trial has been used. 
-                  Subscription will start immediately.
-                </p>
-              ) : (
-                <p className='mb-0 text-success'>
-                  <strong>Welcome back!</strong> You still have access to a 14-day free trial!
-                </p>
-              )}
-            </div>
-          )} */}
+          <div className='subscription-plans mt-4 flex-wrap'>
+            {/* Monthly Plan */}
+            {planDetails.monthly && (
+              <div 
+                className={`plan-option ${selectedPlan === 'monthly' ? 'selected' : ''}`}
+                onClick={() => setSelectedPlan('monthly')}
+              >
+                <h5>Monthly Plan</h5>
+                <p className='price'>${planDetails.monthly.price}/month</p>
+                <p className='commitment'>{planDetails.monthly.commitment}</p>
+              </div>
+            )}
 
-          <div className='subscription-plans mt-4'>
-            <div 
-              className={`plan-option ${selectedPlan === 'monthly' ? 'selected' : ''}`}
-              onClick={() => setSelectedPlan('monthly')}
-            >
-              <h5>Monthly Plan</h5>
-              <p className='price'>${planDetails.monthly.price}/month</p>
-              <p className='commitment'>12-month commitment</p>
-            </div>
+            {/* 6-Month Plan */}
+            {planDetails['6-month'] && (
+              <div 
+                className={`plan-option ${selectedPlan === '6-month' ? 'selected' : ''}`}
+                onClick={() => setSelectedPlan('6-month')}
+              >
+                <h5>6-Month Plan</h5>
+                <p className='price'>${planDetails['6-month'].price}/6 months</p>
+                <p className='commitment'>{planDetails['6-month'].commitment}</p>
+                
+              </div>
+            )}
 
-            <div 
-              className={`plan-option ${selectedPlan === 'annual' ? 'selected' : ''}`}
-              onClick={() => setSelectedPlan('annual')}
-            >
-              <h5>Annual Plan</h5>
-              <p className='price'>${planDetails.annual.price}/year</p>
-              <p className='commitment'>Get 1 month free when you pay for the entire year!</p>
-            </div>
+            {/* Annual Plan */}
+            {planDetails.annual && (
+              <div 
+                className={`plan-option ${selectedPlan === 'annual' ? 'selected' : ''}`}
+                onClick={() => setSelectedPlan('annual')}
+              >
+                <h5>Annual Plan</h5>
+                <p className='price'>${planDetails.annual.price}/year</p>
+                <p className='commitment'>{planDetails.annual.commitment}</p>
+                
+              </div>
+            )}
+
+            {/* One-Time Plan */}
+            {planDetails['one-time'] && (
+              <div 
+                className={`plan-option ${selectedPlan === 'one-time' ? 'selected' : ''}`}
+                onClick={() => setSelectedPlan('one-time')}
+              >
+                <h5>One-Time Payment</h5>
+                <p className='price'>${planDetails['one-time'].price}</p>
+                <p className='commitment'>{planDetails['one-time'].commitment}</p>
+                
+              </div>
+            )}
           </div>
 
           <div className='align-self-start mt-5 mb-5 payment-section mx-auto'>
@@ -319,20 +415,22 @@ function CheckSubscription() {
               <p className='fs-15 text-black'>
                 Full access to Course in Entrepreneurship
               </p>
-              <span>${planDetails[selectedPlan].price}</span>
+              <span>${planDetails[selectedPlan]?.price || '0.00'}</span>
             </div>
             <div className='d-flex justify-content-between mt-3'>
               <p className='text-black mb-0 fw-bold'>
                 {isReturningUser && !userTrialUsed ? 'Trial Period' : 'Total Amount Due Today'}
               </p>
               <span className="text-black fw-bold">
-                {isReturningUser && !userTrialUsed ? '$0 (14-day trial)' : `$${planDetails[selectedPlan].total}`}
+                {isReturningUser && !userTrialUsed 
+                  ? '$0 (14-day trial)' 
+                  : `$${planDetails[selectedPlan]?.total || '0.00'}`}
               </span>
             </div>
           </div>
 
           <AcademyBtn
-            disabled={isLoading}
+            disabled={isLoading || !planDetails[selectedPlan]}
             title={`${isLoading ? 'Processing...' : (isReturningUser ? 'Resubscribe Now' : 'Subscribe Now')}`}
             onClick={handleClick}
           />

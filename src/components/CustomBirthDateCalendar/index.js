@@ -14,9 +14,13 @@ const CustomBirthDateCalendar = ({ selectedDate, onDateChange }) => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ]
 
-  // Generate year range (from 1900 to current year)
   const currentYear = new Date().getFullYear()
   const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i)
+
+  const createDateAtNoon = (year, month, day) => {
+    const date = new Date(year, month, day, 12, 0, 0, 0)
+    return date
+  }
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear()
@@ -28,32 +32,29 @@ const CustomBirthDateCalendar = ({ selectedDate, onDateChange }) => {
 
     const days = []
 
-    // Previous month's trailing days
     const prevMonthLastDay = new Date(year, month, 0).getDate()
     for (let i = startingDayOfWeek - 1; i >= 0; i--) {
       days.push({
         day: prevMonthLastDay - i,
         isCurrentMonth: false,
-        date: new Date(year, month - 1, prevMonthLastDay - i)
+        date: createDateAtNoon(year, month - 1, prevMonthLastDay - i)
       })
     }
 
-    // Current month days
     for (let day = 1; day <= daysInMonth; day++) {
       days.push({
         day,
         isCurrentMonth: true,
-        date: new Date(year, month, day)
+        date: createDateAtNoon(year, month, day)
       })
     }
 
-    // Next month's leading days
-    const remainingDays = 42 - days.length // 6 rows * 7 days
+    const remainingDays = 42 - days.length
     for (let day = 1; day <= remainingDays; day++) {
       days.push({
         day,
         isCurrentMonth: false,
-        date: new Date(year, month + 1, day)
+        date: createDateAtNoon(year, month + 1, day)
       })
     }
 
@@ -88,8 +89,13 @@ const CustomBirthDateCalendar = ({ selectedDate, onDateChange }) => {
 
   const handleDateClick = (dayObj) => {
     if (dayObj.isCurrentMonth) {
-      setCurrentDate(dayObj.date)
-      onDateChange(dayObj.date)
+      const selectedDate = createDateAtNoon(
+        dayObj.date.getFullYear(),
+        dayObj.date.getMonth(),
+        dayObj.date.getDate()
+      )
+      setCurrentDate(selectedDate)
+      onDateChange(selectedDate)
     }
   }
 

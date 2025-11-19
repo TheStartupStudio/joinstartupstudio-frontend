@@ -327,3 +327,31 @@ text-transform: uppercase;
     padding: 8px 12px;
   }
 }
+
+/* Add to index.css */
+
+.date-input {
+  width: 100%;
+  padding: 10px 36px 10px 36px;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #231F20;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.date-input:focus {
+  border-color: #51C7DF;
+}
+
+.date-filter-dropdown .react-datepicker-wrapper {
+  width: 100%;
+}
+
+.date-filter-dropdown .react-datepicker__input-container {
+  width: 100%;
+}

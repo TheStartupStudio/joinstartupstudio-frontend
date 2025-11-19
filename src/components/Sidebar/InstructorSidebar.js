@@ -26,35 +26,31 @@ import EditUserModal from '../UserDetails/EditUserModal'
 import SubscriptionModal from '../UserDetails//SubscriptionModal'
 
 const SIDEBAR_MENU_ITEMS = [
-  // Role 3 for admin
-  // Role 2 for instructor
-  // Role 1 for student
-  // 'all' for all roles
   {
     id: 'dashboard',
     title: 'Dashboard',
     srcImage: DashIcon,
     to: '/dashboard',
-    roles: ['all'],
-    className: (pathname) => pathname.includes('dashboard') && !pathname.includes('admin-dashboard') ? 'active' : ''
+    roles: [1], // Only students
+    className: (pathname) => pathname === '/dashboard' ? 'active' : ''
   },
   {
     id: 'admin-dashboard',
     title: 'Admin Dashboard',
     srcImage: AdminDashIcon,
     to: '/admin-dashboard',
-    roles: [3, 2],
+    roles: [3, 2], // Admin and Instructor
     className: (pathname) => pathname.includes('admin-dashboard') ? 'active' : ''
   },
   {
     id: 'user-managment',
-    title: 'User Managment',
+    title: 'User Management',
     srcImage: groupIcon,
     to: '/user-managment',
     roles: [3, 2],
     className: (pathname) => pathname.includes('user-managment') ? 'active' : ''
   },
-    {
+  {
     id: 'content-management',
     title: 'Content Management',
     srcImage: groupIcon,
@@ -62,22 +58,22 @@ const SIDEBAR_MENU_ITEMS = [
     roles: [3],
     className: (pathname) => pathname.includes('content-management') ? 'active' : ''
   },
-  
   {
     id: 'master-class-management',
     title: 'Master Class Management',
-    srcImage: groupIcon, // or use a different icon
+    srcImage: groupIcon,
     to: '/master-class-management',
     roles: [3],
+    requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('master-class-management') ? 'active' : ''
   },
-
   {
     id: 'leadership-journal-management',
     title: 'Leadership Journal Management',
-    srcImage: groupIcon, // or use a different icon
+    srcImage: groupIcon,
     to: '/leadership-journal-management',
-    roles: [3],
+    roles: [2, 1],
+    requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal-management') ? 'active' : ''
   },
   {
@@ -85,15 +81,15 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Intro to course',
     srcImage: IntroToIcon,
     to: '/my-course-in-entrepreneurship',
-    roles: ['all'],
+    roles: [2, 1],
     className: (pathname) => pathname === '/my-course-in-entrepreneurship' ? 'active' : ''
   },
   {
     id: 'course-entrepreneurship',
-    title: 'Course in enterpreneurship',
+    title: 'Course in entrepreneurship',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
-    roles: ['all'],
+    roles: [2, 1],
     className: (pathname) => pathname.includes('my-course-in-entrepreneurship/journal') ? 'active' : ''
   },
   {
@@ -101,7 +97,8 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Master classes',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: ['all'],
+    roles: [2, 1],
+    requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
   },
   {
@@ -109,7 +106,8 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Leadership journal',
     srcImage: LeadershipIcon,
     to: '/leadership-journal',
-    roles: ['all'],
+    roles: [2, 1],
+    requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal') ? 'active' : ''
   },
   {
@@ -117,7 +115,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'My portfolio',
     srcImage: PortfolioIcon,
     to: '/my-portfolio',
-    roles: ['all'],
+    roles: [2, 1],
     className: (pathname) => pathname.includes('my-portfolio') ? 'active' : ''
   }
 ]
@@ -141,11 +139,23 @@ const InstructorSidebar = (props) => {
     return itemRoles.includes(userRoleId)
   }
 
-  // Filter menu items based on user role
+  // Filter menu items based on user role AND university settings
   const getVisibleMenuItems = () => {
-    const userRoleId = user?.role_id || 1 // Default to student (1) if no role
+    const userRoleId = user?.role_id || 1
+    const university = user?.University
 
-    return SIDEBAR_MENU_ITEMS.filter(item => hasPermission(item.roles, userRoleId))
+    return SIDEBAR_MENU_ITEMS.filter(item => {
+      // Check role permission
+      if (!hasPermission(item.roles, userRoleId)) return false
+
+      // Check university setting requirement
+      if (item.requiresUniversitySetting) {
+        const setting = university?.[item.requiresUniversitySetting]
+        if (!setting) return false
+      }
+
+      return true
+    })
   }
 
   const toggle = () => setModal((prev) => !prev)
