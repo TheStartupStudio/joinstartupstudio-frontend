@@ -28,62 +28,43 @@ jobs:
       - name: Install dependencies
         run: npm install --force
 
-      # Set BUILD_ENV and create .env file from secrets based on branch
+      # Create .env file from secrets based on branch
       - name: Create .env file
-        id: env_setup
         run: |
           echo "Current branch: ${{ github.ref_name }}"
           
-          # Determine BUILD_ENV and env file name based on branch
+          # Determine server URL based on branch
           if [ "${{ github.ref_name }}" = "dev" ]; then
-            BUILD_ENV="development"
-            ENV_FILE=".env.development"
             echo "Using DEV server URL"
             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_DEV }}"
           elif [ "${{ github.ref_name }}" = "release" ]; then
-            BUILD_ENV="release"
-            ENV_FILE=".env.release"
             echo "Using RELEASE server URL"
             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_RELEASE }}"
           elif [ "${{ github.ref_name }}" = "new-features" ]; then
-            BUILD_ENV="newfeatures"
-            ENV_FILE=".env.newfeatures"
-            echo "Using NEW-FEATURES server URL (from secret: REACT_APP_SERVER_BASE_URL_NEW_FEATURES)"
+            echo "Using NEW-FEATURES server URL"
             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_NEW_FEATURES }}"
           elif [ "${{ github.ref_name }}" = "academy-platform" ]; then
-            BUILD_ENV="development"
-            ENV_FILE=".env.development"
-            echo "Using AIE server URL (from secret: REACT_APP_SERVER_BASE_URL_AIE)"
+            echo "Using AIE server URL"
             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_AIE }}"
           else
-            BUILD_ENV="development"
-            ENV_FILE=".env.development"
             echo "Using PROD server URL"
             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_PROD }}"
           fi
           
-          # Create the .env file with the name webpack expects
-          echo "REACT_APP_CLIENT_BASE_URL=${{ secrets.REACT_APP_CLIENT_BASE_URL }}" >> $ENV_FILE
-          echo "REACT_APP_SERVER_BASE_URL=$SERVER_URL" >> $ENV_FILE
+          # Create the .env file (webpack expects .env by default)
+          echo "REACT_APP_CLIENT_BASE_URL=${{ secrets.REACT_APP_CLIENT_BASE_URL }}" >> .env
+          echo "REACT_APP_SERVER_BASE_URL=$SERVER_URL" >> .env
           
-          # Set BUILD_ENV as output and environment variable
-          echo "BUILD_ENV=$BUILD_ENV" >> $GITHUB_ENV
-          echo "build_env=$BUILD_ENV" >> $GITHUB_OUTPUT
-          echo "env_file=$ENV_FILE" >> $GITHUB_OUTPUT
-          
-          echo "Created $ENV_FILE file with environment variables"
-          echo "BUILD_ENV set to: $BUILD_ENV"
+          echo "Created .env file with environment variables"
           echo "Verifying REACT_APP_SERVER_BASE_URL is set (value masked for security):"
-          if grep -q "REACT_APP_SERVER_BASE_URL=" $ENV_FILE; then
-            echo "✓ REACT_APP_SERVER_BASE_URL is set in $ENV_FILE"
+          if grep -q "REACT_APP_SERVER_BASE_URL=" .env; then
+            echo "✓ REACT_APP_SERVER_BASE_URL is set in .env"
           else
             echo "✗ REACT_APP_SERVER_BASE_URL is missing!"
             exit 1
           fi
 
       - name: Build project
-        env:
-          BUILD_ENV: ${{ steps.env_setup.outputs.build_env }}
         run: npm run build
 
       - name: Verify build output
