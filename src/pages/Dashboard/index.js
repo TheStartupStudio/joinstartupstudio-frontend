@@ -23,6 +23,7 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons'
+import axios from '../../utils/AxiosInstance'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -46,38 +47,27 @@ function Dashboard() {
   useEffect(() => {
     if (!user?.trialStart || user?.subscription_exempt) return
 
-    const calculateTrialTime = () => {
-      const trialStartDate = new Date(user.trialStart.replace(' ', 'T'))
+    const fetchTrialTime = async () => {
+    try {
+      const data = await getTrialTimeRemaining()
       
-      const trialEndDate = new Date(trialStartDate)
-      trialEndDate.setDate(trialEndDate.getDate() + 14)
-      
-      const now = new Date()
-      const timeRemaining = trialEndDate - now
-
-      if (timeRemaining > 0) {
+      if (data.isTrialActive) {
         setIsTrialActive(true)
-        
-        const totalSeconds = Math.floor(timeRemaining / 1000)
-        const totalMinutes = Math.floor(totalSeconds / 60)
-        const totalHours = Math.floor(totalMinutes / 60)
-        const days = Math.floor(totalHours / 24)
-        
-        const hours = totalHours % 24
-        const minutes = totalMinutes % 60
-        const seconds = totalSeconds % 60
-
-        setTrialTimeRemaining({ days, hours, minutes, seconds })
+        setTrialTimeRemaining(data.timeRemaining)
       } else {
         setIsTrialActive(false)
         setTrialTimeRemaining(null)
       }
+    } catch (error) {
+      console.error('Error fetching trial time:', error)
     }
+  }
 
-    calculateTrialTime()
-    const interval = setInterval(calculateTrialTime, 1000)
+  fetchTrialTime()
+  
+  const interval = setInterval(fetchTrialTime, 60000)
 
-    return () => clearInterval(interval)
+  return () => clearInterval(interval)
   }, [user?.trialStart, user?.subscription_exempt])
 
   useEffect(() => {
@@ -166,6 +156,12 @@ function Dashboard() {
     } catch (error) {
       console.error('Navigation error:', error);
     }
+  }
+
+
+  const getTrialTimeRemaining = async () => {
+    const response = await axios.get('/dashboard/trial-time')
+    return response.data
   }
 
   return (
