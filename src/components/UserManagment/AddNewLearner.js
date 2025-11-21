@@ -29,7 +29,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const [formData, setFormData] = useState({
     learnerName: '',
     email: '',
-    password: '',
+    password: '********',
     address: '',
     city: '',
     state: '',
@@ -537,6 +537,7 @@ useEffect(() => {
                   id="password"
                   disabled={loading}
                   autoComplete="new-password"
+                  disabled
                 />
                 <label className="input-label" htmlFor="password">Password: Learntostart1!</label>
                 {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}

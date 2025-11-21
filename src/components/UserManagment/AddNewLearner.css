@@ -115,10 +115,10 @@
   outline: none;
 }
 
-.add-learner-modal .form-input:focus {
+/* .add-learner-modal .form-input:focus {
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
-}
+} */
 
 .add-learner-modal .form-input:disabled {
   background: #F3F4F6;
