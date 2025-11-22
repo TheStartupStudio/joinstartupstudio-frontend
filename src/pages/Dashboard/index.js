@@ -23,6 +23,7 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons'
+import TrialTimerInitializer from '../../components/TrialTimer/TrialTimerInitializer'
 import axios from '../../utils/AxiosInstance'
 
 function Dashboard() {
@@ -35,40 +36,11 @@ function Dashboard() {
   const [chatId, setChatId] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const user = useSelector((state) => state.user.user.user)
-  
-  const [trialTimeRemaining, setTrialTimeRemaining] = useState(null)
-  const [isTrialActive, setIsTrialActive] = useState(false)
-
-  const { finishedContent, levelProgress, loading, totalProgress } =
-    useSelector((state) => state.course)
+  const { trialTimeRemaining, isTrialActive } = useSelector(
+    (state) => state.trialTimer
+  )
 
   useImpersonation(originalToken)
-
-  useEffect(() => {
-    if (!user?.trialStart || user?.subscription_exempt) return
-
-    const fetchTrialTime = async () => {
-    try {
-      const data = await getTrialTimeRemaining()
-      
-      if (data.isTrialActive) {
-        setIsTrialActive(true)
-        setTrialTimeRemaining(data.timeRemaining)
-      } else {
-        setIsTrialActive(false)
-        setTrialTimeRemaining(null)
-      }
-    } catch (error) {
-      console.error('Error fetching trial time:', error)
-    }
-  }
-
-  fetchTrialTime()
-  
-  const interval = setInterval(fetchTrialTime, 60000)
-
-  return () => clearInterval(interval)
-  }, [user?.trialStart, user?.subscription_exempt])
 
   useEffect(() => {
     dispatch(getPeriodsStart())
@@ -158,68 +130,49 @@ function Dashboard() {
     }
   }
 
-
-  const getTrialTimeRemaining = async () => {
-    const response = await axios.get('/dashboard/trial-time')
-    return response.data
-  }
-
   return (
     <div className='container-fluid'>
       <div className='row'>
         {/* Trial Countdown Banner */}
-          {isTrialActive && trialTimeRemaining && (
-            <div 
-              className=' mb-1rem-tab'
-              style={{
-                background: 'linear-gradient(180deg, var(--COLORS-Light-Blue, #B9DFEC) 0%, var(--COLORS-White, #FFF) 100%)',
-                padding: '10px',
-                minHeight: '4rem',
-
-              }}
-            >
-              <div className='d-flex align-items-center justify-content-center flex-wrap gap-4 text-center' 
-              style={{
-                  color: '#000',
-                  fontFamily: 'Montserrat',
-                  fontSize: '1.25rem',
-                  fontStyle: 'normal',
-                  fontWeight: 500,
-                }}>
-
-                <div>
-                  TIME REMAINING IN TRIAL PERIOD:
-                </div>
-                
-                <div className='d-flex gap-2 align-items-center flex-wrap'>
-                  {trialTimeRemaining.days > 0 && (
-                      <div>
-                        {trialTimeRemaining.days}
-                      </div>
-                  )}
-
+        <TrialTimerInitializer />
+        {isTrialActive && trialTimeRemaining && (
+          <div 
+            className='mb-1rem-tab'
+            style={{
+              background: 'linear-gradient(180deg, var(--COLORS-Light-Blue, #B9DFEC) 0%, var(--COLORS-White, #FFF) 100%)',
+              padding: '10px',
+              minHeight: '4rem',
+            }}
+          >
+            <div className='d-flex align-items-center justify-content-center flex-wrap gap-4 text-center' 
+            style={{
+                color: '#000',
+                fontFamily: 'Montserrat',
+                fontSize: '1.25rem',
+                fontStyle: 'normal',
+                fontWeight: 500,
+              }}>
+              <div>
+                TIME REMAINING IN TRIAL PERIOD:
+              </div>
+              
+              <div className='d-flex gap-2 align-items-center flex-wrap'>
+                {trialTimeRemaining.days > 0 && (
+                  <>
+                    <div>{trialTimeRemaining.days}d</div>
                     <div>:</div>
-                  
-                    <div>
-                      {String(trialTimeRemaining.hours).padStart(2, '0')}
-                    </div>
-
-                    <div>:</div>
-                
-                    <div>
-                      {String(trialTimeRemaining.minutes).padStart(2, '0')}
-                    </div>
-
-                    <div>:</div>
-          
-                    <div>
-                      {String(trialTimeRemaining.seconds).padStart(2, '0')}
-                    </div>
-                   
-                </div>
+                  </>
+                )}
+                <div>{String(trialTimeRemaining.hours).padStart(2, '0')}</div>
+                <div>:</div>
+                <div>{String(trialTimeRemaining.minutes).padStart(2, '0')}</div>
+                <div>:</div>
+                <div>{String(trialTimeRemaining.seconds).padStart(2, '0')}</div>
               </div>
             </div>
-          )}
+          </div>
+        )}
+        
         <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between align-items-center flex-col-tab align-start-tab'>
             <h3 className='page-title bold-page-title text-black'>

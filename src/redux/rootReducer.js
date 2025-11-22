@@ -19,6 +19,7 @@ import portfolioReducer from './portfolio/Reducer'
 import taskLessonReducer from './taskLessons/reducer'
 import backButtonReducer from './backButtonReducer'
 import sidebarReducer from './sidebar/Reducer'
+import trialTimerReducer from './trialTimer/reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
   lessons: taskLessonReducer,
   portfolio: portfolioReducer,
   backButton: backButtonReducer,
-  sidebar: sidebarReducer
+  sidebar: sidebarReducer,
+  trialTimer: trialTimerReducer
 })
 export default rootReducer
