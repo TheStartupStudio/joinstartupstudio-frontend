@@ -16,7 +16,10 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const [showLearnersModal, setShowLearnersModal] = useState(false)
   const [showPricingChangeModal, setShowPricingChangeModal] = useState(false)
   const [pendingSave, setPendingSave] = useState(false)
-  const [originalPricingTiers, setOriginalPricingTiers] = useState([])
+  const [originalPricing, setOriginalPricing] = useState({
+    organizationPricing: { amount: '', frequency: 'monthly' },
+    learnerPricing: []
+  })
   const [activeTab, setActiveTab] = useState('details')
   
   const [formData, setFormData] = useState({
@@ -60,7 +63,6 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     masterClasses: 'Master Classes'
   }
 
-  // Fetch organization data when in edit or view mode
   useEffect(() => {
     const fetchOrganizationData = async () => {
       if ((mode === 'edit' || mode === 'view') && organizationData?.id) {
@@ -94,7 +96,11 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                 ? orgData.learnerPricing 
                 : [{ amount: '', frequency: 'monthly' }]
             })
-            setOriginalPricingTiers(JSON.parse(JSON.stringify(orgData.learnerPricing || [])))
+            
+            setOriginalPricing({
+              organizationPricing: JSON.parse(JSON.stringify(orgData.organizationPricing || { amount: '', frequency: 'monthly' })),
+              learnerPricing: JSON.parse(JSON.stringify(orgData.learnerPricing || []))
+            })
           }
         } catch (error) {
           console.error('Error fetching organization:', error)
@@ -103,7 +109,6 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           setLoading(false)
         }
       } else {
-        // Reset form for add mode
         setFormData({
           organizationName: '',
           organizationAddress: '',
@@ -130,7 +135,10 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             }
           ]
         })
-        setOriginalPricingTiers([])
+        setOriginalPricing({
+          organizationPricing: { amount: '', frequency: 'monthly' },
+          learnerPricing: []
+        })
       }
     }
 
@@ -233,20 +241,21 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const hasPricingChanged = () => {
     if (mode !== 'edit') return false
     
-    if (formData.organizationPricing.amount !== originalPricingTiers.organizationPricing?.amount ||
-        formData.organizationPricing.frequency !== originalPricingTiers.organizationPricing?.frequency) {
-      return true
-    }
+    const orgPricingChanged = 
+      formData.organizationPricing.amount !== originalPricing.organizationPricing.amount ||
+      formData.organizationPricing.frequency !== originalPricing.organizationPricing.frequency
     
-    if (formData.learnerPricing.length !== originalPricingTiers.length) {
+    if (formData.learnerPricing.length !== originalPricing.learnerPricing.length) {
       return true
     }
 
-    return formData.learnerPricing.some((tier, index) => {
-      const original = originalPricingTiers[index]
+    const learnerPricingChanged = formData.learnerPricing.some((tier, index) => {
+      const original = originalPricing.learnerPricing[index]
       if (!original) return true
       return tier.amount !== original.amount || tier.frequency !== original.frequency
     })
+
+    return orgPricingChanged || learnerPricingChanged
   }
 
   const handleSubmit = async () => {
@@ -289,24 +298,18 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
         response = await axiosInstance.put(`/super-admin/organizations/${formData.id}`, payload)
         toast.success('Organization updated successfully!')
         
-        // Sync Stripe prices after update
         try {
           await axiosInstance.post('/super-admin/organizations/sync-all-stripe-prices')
-          console.log('✅ Stripe prices synced after organization update')
         } catch (syncError) {
-          console.error('⚠️ Failed to sync Stripe prices:', syncError)
           toast.warning('Organization updated, but failed to sync Stripe prices')
         }
       } else {
         response = await axiosInstance.post('/super-admin/organizations', payload)
         toast.success('Organization added successfully!')
         
-        // Sync Stripe prices after creation
         try {
           await axiosInstance.post('/super-admin/organizations/sync-all-stripe-prices')
-          console.log('✅ Stripe prices synced after organization creation')
         } catch (syncError) {
-          console.error('⚠️ Failed to sync Stripe prices:', syncError)
           toast.warning('Organization created, but failed to sync Stripe prices')
         }
       }
