@@ -72,7 +72,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Leadership Journal Management',
     srcImage: groupIcon,
     to: '/leadership-journal-management',
-    roles: [2, 1],
+    roles: [3],
     requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal-management') ? 'active' : ''
   },
