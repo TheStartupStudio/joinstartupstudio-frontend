@@ -10,6 +10,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 import ViewInvoiceModal from '../../components/UserManagment/ViewInvoiceModal'
+import GenerateInvoiceModal from '../../components/UserManagment/GenerateInvoiceModal'
 // import archiveIcon from '../../assets/images/academy-icons/svg/archive.svg'
 import './index.css'
 
@@ -39,8 +40,10 @@ const ViewInvoices = () => {
     totalPages: 1
   })
 
-  const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(true)
+  const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(false)
+  const [showGenerateModal, setShowGenerateModal] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState(null)
+  const [invoiceMode, setInvoiceMode] = useState('view') // 'view' or 'edit'
 
   const searchContainerRef = useRef(null)
 
@@ -270,6 +273,7 @@ const ViewInvoices = () => {
     switch (actionType) {
       case 'view-invoice':
         setSelectedInvoice(item)
+        setInvoiceMode('view')
         setShowEditInvoiceModal(true)
         break
       case 'send-invoice':
@@ -305,8 +309,34 @@ const ViewInvoices = () => {
   }
 
   const handleGenerateInvoice = () => {
-    console.log('Generate invoice clicked')
-    toast.info('Generate Invoice feature coming soon!')
+    setShowGenerateModal(true)
+  }
+
+  const handleGenerateInvoiceSubmit = (organization) => {
+    // Create new invoice with organization data
+    const newInvoice = {
+      id: Date.now(),
+      organizationName: organization.name,
+      organizationId: `#${Math.floor(10000 + Math.random() * 90000)}`,
+      organizationAddress: '',
+      city: '',
+      state: '',
+      zip: '',
+      status: 'Draft',
+      invoiceDate: new Date().toISOString().split('T')[0],
+      paymentDate: '',
+      invoiceNumber: `INV${Math.floor(10000 + Math.random() * 90000)}`,
+      issueDate: new Date().toISOString().split('T')[0],
+      dueDate: '',
+      items: [],
+      subtotal: 0,
+      tax: 0,
+      total: 0
+    }
+
+    setSelectedInvoice(newInvoice)
+    setInvoiceMode('edit')
+    setShowEditInvoiceModal(true)
   }
 
   const handleViewArchive = () => {
@@ -580,13 +610,22 @@ const ViewInvoices = () => {
 
         <ViewInvoiceModal
           show={showEditInvoiceModal}
-          // onHide={() => {
-          //   setShowEditInvoiceModal(false)
-          //   setSelectedInvoice(null)
-          // }}
-          // onSuccess={() => {
-          //   fetchInvoices(currentPage, debouncedSearchQuery)
-          // }}
+          onHide={() => {
+            setShowEditInvoiceModal(false)
+            setSelectedInvoice(null)
+            setInvoiceMode('view')
+          }}
+          onSuccess={() => {
+            fetchInvoices(currentPage, debouncedSearchQuery)
+          }}
+          invoiceData={selectedInvoice}
+          mode={invoiceMode}
+        />
+
+        <GenerateInvoiceModal
+          show={showGenerateModal}
+          onHide={() => setShowGenerateModal(false)}
+          onGenerate={handleGenerateInvoiceSubmit}
         />
       
       </div>
