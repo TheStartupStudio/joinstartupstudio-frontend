@@ -9,6 +9,7 @@ import InvoiceFilters from '../../components/InvoiceFilters'
 import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
+import ViewInvoiceModal from '../../components/UserManagment/ViewInvoiceModal'
 // import archiveIcon from '../../assets/images/academy-icons/svg/archive.svg'
 import './index.css'
 
@@ -38,90 +39,123 @@ const ViewInvoices = () => {
     totalPages: 1
   })
 
+  const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(true)
+  const [selectedInvoice, setSelectedInvoice] = useState(null)
+
   const searchContainerRef = useRef(null)
 
   const dummyInvoices = [
-    {
-      id: 1,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 2,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 3,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Unpaid',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 4,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 5,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 6,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 7,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 8,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 9,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 10,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    }
-  ]
+  {
+    id: 1,
+    organizationName: 'Tech Solutions Inc',
+    organizationId: '#01245',
+    organizationAddress: '123 Tech Street',
+    city: 'San Francisco',
+    state: 'CA',
+    zip: '94102',
+    status: 'Complete',
+    invoiceDate: '2025-09-27',
+    paymentDate: '2025-10-27',
+    invoiceNumber: '01245',
+    issueDate: '2025-09-27',
+    dueDate: '2025-10-27',
+    items: [
+      {
+        description: 'AIE Learner Access',
+        quantity: '1000',
+        price: '15',
+        total: 15000
+      }
+    ],
+    subtotal: 15000,
+    tax: 1050,
+    total: 16050
+  },
+  {
+    id: 2,
+    organizationName: 'Educational Services LLC',
+    organizationId: '#01246',
+    organizationAddress: '456 Learning Ave',
+    city: 'New York',
+    state: 'NY',
+    zip: '10001',
+    status: 'Complete',
+    invoiceDate: '2025-09-27',
+    paymentDate: '2025-10-27',
+    invoiceNumber: '01246',
+    issueDate: '2025-09-27',
+    dueDate: '2025-10-27',
+    items: [
+      {
+        description: 'Platform Subscription',
+        quantity: '500',
+        price: '20',
+        total: 10000
+      },
+      {
+        description: 'Training Modules',
+        quantity: '100',
+        price: '50',
+        total: 5000
+      }
+    ],
+    subtotal: 15000,
+    tax: 1050,
+    total: 16050
+  },
+  {
+    id: 3,
+    organizationName: 'Future Academy',
+    organizationId: '#01247',
+    organizationAddress: '789 Innovation Blvd',
+    city: 'Austin',
+    state: 'TX',
+    zip: '78701',
+    status: 'Unpaid',
+    invoiceDate: '2025-09-27',
+    paymentDate: '2025-10-27',
+    invoiceNumber: '01247',
+    issueDate: '2025-09-27',
+    dueDate: '2025-10-27',
+    items: [
+      {
+        description: 'Student Licenses',
+        quantity: '2000',
+        price: '12',
+        total: 24000
+      }
+    ],
+    subtotal: 24000,
+    tax: 1680,
+    total: 25680
+  },
+  {
+    id: 4,
+    organizationName: 'Learning Hub Corp',
+    organizationId: '#01248',
+    organizationAddress: '321 Education Dr',
+    city: 'Boston',
+    state: 'MA',
+    zip: '02108',
+    status: 'Complete',
+    invoiceDate: '2025-09-27',
+    paymentDate: '2025-10-27',
+    invoiceNumber: '01248',
+    issueDate: '2025-09-27',
+    dueDate: '2025-10-27',
+    items: [
+      {
+        description: 'Annual Subscription',
+        quantity: '1',
+        price: '50000',
+        total: 50000
+      }
+    ],
+    subtotal: 50000,
+    tax: 3500,
+    total: 53500
+  }
+]
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -235,8 +269,8 @@ const ViewInvoices = () => {
     
     switch (actionType) {
       case 'view-invoice':
-        console.log('View invoice:', item)
-        toast.info('View Invoice feature coming soon!')
+        setSelectedInvoice(item)
+        setShowEditInvoiceModal(true)
         break
       case 'send-invoice':
         handleSendInvoice(item)
@@ -544,6 +578,16 @@ const ViewInvoices = () => {
         </div>
         </div>
 
+        <ViewInvoiceModal
+          show={showEditInvoiceModal}
+          // onHide={() => {
+          //   setShowEditInvoiceModal(false)
+          //   setSelectedInvoice(null)
+          // }}
+          // onSuccess={() => {
+          //   fetchInvoices(currentPage, debouncedSearchQuery)
+          // }}
+        />
       
       </div>
     </div>

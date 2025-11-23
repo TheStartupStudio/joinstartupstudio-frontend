@@ -1,0 +1,661 @@
+.edit-invoice-modal .modal-dialog {
+  max-width: 1280px;
+  margin: 1.75rem auto;
+}
+
+.edit-invoice-modal .modal-content {
+  border: none;
+  border-radius: 12px;
+  border-radius: 24px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+position: relative;
+z-index: 1000;
+}
+
+.invoice-modal-content {
+  padding: 0;
+}
+
+/* Header */
+.invoice-modal-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 32px;
+  gap: 16px;
+}
+
+.modal-icon{
+  width: 36px;
+height: 36px;
+flex-shrink: 0;
+background-color: #E2E6EC;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+}
+
+.header-icons-nav{
+  position: absolute;
+top: -16px;
+right: -16px;
+
+  display: flex;
+height: 64px;
+padding: 17px;
+justify-content: center;
+align-items: center;
+gap: 28px;
+
+  border-radius: 0 24px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+}
+
+.invoice-modal-title{
+  color: #231F20;
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+
+/* Body */
+.invoice-modal-body {
+  display: flex;
+padding: 20px 0;
+flex-direction: column;
+align-items: flex-start;
+gap: 40px;
+  border-radius: 24px;
+background: var(--Glassy-White, rgba(255, 255, 255, 0.10));
+
+/* Drop+Blur Boxes */
+box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.25);
+}
+
+.organization-header {
+  color: #231F20;
+font-family: Montserrat;
+font-size: 27px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+font-variant: all-small-caps;
+padding: 0px 20px;
+margin: 0;
+}
+
+.organization-header h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+}
+
+/* Top Section */
+.invoice-top-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 32px;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.issued-to-section{
+  display: flex;
+  flex-direction: column;
+}
+
+.section-label {
+  font-family: Montserrat;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  font-variant: all-small-caps;
+  margin-bottom: 12px;
+}
+
+.name-section-label{
+  color: #000;
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+  margin-bottom: 8px;
+}
+
+
+.address-section-label,
+.city-section-label {
+  color: #000;
+font-family: Montserrat;
+font-size: 15px;
+font-weight: 400;
+margin-bottom: 10px;
+}
+
+
+.detail-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.detail-row p {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  width: 150px;
+}
+
+.detail-row .name-section-label {
+  text-align: right;
+}
+
+/* Pay To Section */
+.pay-to-section {
+  margin-top: 32px;
+
+}
+
+.pay-to-section .section-label{
+  margin-bottom: 0px;
+}
+
+.pay-to-section .name-section-label{
+  font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+  margin-bottom: 8px;
+}
+
+.pay-to-details {
+  margin-top: 12px;
+}
+
+.pay-to-details p {
+  font-family: 'Montserrat', sans-serif;
+  color: #000;
+
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 400;
+line-height: 15px;
+margin-bottom: 0px;
+}
+
+/* Items Section */
+/* .invoice-items-section {
+  margin-bottom: 32px;
+} */
+
+.items-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1.5fr;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 2px solid #000;
+  margin-bottom: 16px;
+}
+
+.items-header > div {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.col-quantity,
+.col-price,
+.col-total {
+  text-align: center;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1.5fr;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #E5E5E5;
+  align-items: center;
+}
+
+.item-row input[type="number"]::-webkit-inner-spin-button,
+.item-row input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.item-row input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.col-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.total-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-item-btn,
+.delete-item-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-item-btn:hover {
+  color: #51C7DF;
+}
+
+.delete-item-btn:hover {
+  color: #FF4444;
+}
+
+.delete-item-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.add-new-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 2px dashed #E5E5E5;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.2s ease;
+}
+
+.add-new-item-btn:hover {
+  border-color: #51C7DF;
+  color: #51C7DF;
+  background: rgba(81, 199, 223, 0.05);
+}
+
+
+/* ...existing code... */
+
+.invoice-items-section {
+  /* margin: 30px 0; */
+  width: 100%;
+}
+
+.invoice-items-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px 42px;
+  background-color: #F5F5F5 !important;
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+.header-cell {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.invoice-item-row {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px 42px;
+  background-color: #FFFFFF;
+  align-items: center;
+}
+
+.invoice-item-row.add-item-row {
+  background-color: #FFFFFF;
+  border: none;
+  border-radius: 0;
+  margin-top: 0;
+}
+
+.item-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Montserrat', sans-serif;
+
+  color: #000;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.item-cell input {
+  border-radius: 12px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+display: flex;
+height: 54px;
+padding: 12px 18px;
+align-items: center;
+gap: 28px;
+flex-shrink: 0;
+color: black;
+}
+
+.description-col {
+  grid-column: 1;
+  justify-content: flex-start;
+}
+
+.qty-col {
+  grid-column: 2;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.price-col {
+  grid-column: 3;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.total-col {
+  grid-column: 4;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.item-description {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.item-quantity,
+.item-price,
+.item-total {
+  color: #000;
+
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.edit-btn,
+.delete-btn,
+.confirm-btn,
+.cancel-btn {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.edit-btn:hover,
+.delete-btn:hover,
+.confirm-btn:hover,
+.cancel-btn:hover {
+  opacity: 0.7;
+}
+
+.add-description-input,
+.add-qty-input,
+.add-price-input,
+.add-total-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  padding: 0;
+  outline: none;
+  color: #999999;
+}
+
+.add-description-input::placeholder,
+.add-qty-input::placeholder,
+.add-price-input::placeholder,
+.add-total-input::placeholder {
+  color: #CCCCCC;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.add-total-input {
+  cursor: not-allowed;
+}
+
+.add-new-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  color: #000000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+  margin-top: 0;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.add-new-item-btn:hover {
+  color: #51C7DF;
+}
+
+.add-new-item-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.add-new-item-btn svg path {
+  transition: stroke 0.2s;
+}
+
+.add-new-item-btn:hover svg path {
+  stroke: #51C7DF;
+}
+
+/* ...existing code... */
+
+/* Totals Section */
+.invoice-totals-section {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  padding: 12px 30px;
+  border-top: 0.75px solid #AEAEAE;
+background: rgba(255, 255, 255, 0.10);
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 300px;
+  gap: 40px;
+}
+
+.total-row label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+
+.total-row .total-value {
+  font-size: 16px;
+}
+
+.total-final {
+  border-top: 2px solid #000;
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+.total-final label,
+.total-final .total-value {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* Footer */
+.invoice-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 24px 32px;
+  border-top: 1px solid #E5E5E5;
+}
+
+.cancel-btn,
+.save-btn {
+  /* padding: 12px 32px; */
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.cancel-btn {
+  background: #F5F5F5;
+  color: #666;
+}
+
+.cancel-btn:hover {
+  background: #E5E5E5;
+}
+
+.save-btn {
+  background: #51C7DF;
+  color: #FFF;
+}
+
+.save-btn:hover {
+  background: #3FB5CE;
+}
+
+.save-btn:disabled,
+.cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.totals-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 8px;
+}
+
+.totals-values{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.totals-label{
+  color: #000;
+  text-align: right;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  width: 200px;
+}
+
+
+.totals-value{
+  color: #000;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .invoice-top-section {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .items-header,
+  .item-row {
+    grid-template-columns: 2fr 0.8fr 0.8fr 1fr;
+    gap: 8px;
+  }
+
+  .invoice-modal-body {
+    padding: 16px;
+  }
+
+  .invoice-modal-header,
+  .invoice-modal-footer {
+    padding: 16px;
+  }
+
+  .total-row {
+    min-width: 250px;
+  }
+}
