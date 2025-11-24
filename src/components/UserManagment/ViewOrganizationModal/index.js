@@ -7,12 +7,14 @@ import { toast } from 'react-toastify'
 import './index.css'
 import AcademyBtn from '../../AcademyBtn'
 import PricingChangeModal from '../PricingChangeModal'
+import ManagePaymentModal from '../ManagePaymentModal'
 
 const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
   const history = useHistory()
   const [isEditMode, setIsEditMode] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showPricingChangeModal, setShowPricingChangeModal] = useState(false)
+  const [showManagePaymentModal, setShowManagePaymentModal] = useState(false)
   const [originalPricing, setOriginalPricing] = useState([])
   const [originalOrgPricing, setOriginalOrgPricing] = useState([])
   const [formData, setFormData] = useState({
@@ -26,6 +28,7 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
     logo1: null,
     logo2: null
   })
+  const [paymentData, setPaymentData] = useState(null)
 
   useEffect(() => {
     if (organizationData) {
@@ -236,6 +239,28 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
 
   const handleViewLearners = () => {
     history.push('/user-managment')
+  }
+
+  const handleEditPricingClick = () => {
+    setPaymentData({
+      nameOnCard: 'My Organization',
+      cardNumber: '1234567890',
+      expirationDate: '10/27',
+      cvc: '123',
+      zipCode: '36741',
+      billingAddress: '1234 My Home Street',
+      city: 'Orlando',
+      state: 'FL',
+      billingZipCode: '34761',
+      paymentMethod: 'credit-card'
+    })
+    setShowManagePaymentModal(true)
+  }
+
+  const handleSavePaymentInfo = async (paymentInfo) => {
+    console.log('Saving payment info:', paymentInfo)
+    // Here you would typically save to your backend
+    toast.success('Payment information updated successfully!')
   }
 
   return (
@@ -508,10 +533,12 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
                 </g>
               </svg>
               <span>Pricing Details</span>
-                <button className="edit-btn">
+              {!isEditMode && (
+                <button className="edit-btn" onClick={handleEditPricingClick}>
                   <span>Edit Pricing Details</span>
                   <FontAwesomeIcon icon={faPencilAlt} />
                 </button>
+              )}
             </div>
             <div className={`pricing-details ${isEditMode ? 'edit-mode' : ''}`}>
               {isEditMode ? (
@@ -617,6 +644,13 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
         onHide={() => setShowPricingChangeModal(false)}
         onConfirm={handlePricingChangeConfirm}
         onCancel={handlePricingChangeCancel}
+      />
+
+      <ManagePaymentModal
+        show={true}
+        onHide={() => setShowManagePaymentModal(false)}
+        paymentData={paymentData}
+        onSave={handleSavePaymentInfo}
       />
     </>
   )
