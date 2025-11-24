@@ -1,5 +1,5 @@
 /**
- * Entry application component used to compose providers and render Routes.
+ * DEV AIE.
  * */
 
 import React, { useEffect } from 'react'

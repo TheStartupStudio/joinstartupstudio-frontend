@@ -135,20 +135,20 @@ jobs:
             --paths "/*"
 
       # Slack notification on success
-      # - name: Notify Slack on Success
-      #   if: success()
-      #   run: |
-      #     COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/"/\\"/g')
-      #     curl -X POST -H 'Content-type: application/json' \
-      #       --data "{\"text\":\"✅ Deployment Successful!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\"}" \
-      #       ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Notify Slack on Success
+        if: success()
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/"/\\"/g')
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"✅ Deployment Successful!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\"}" \
+            ${{ secrets.SLACK_WEBHOOK_URL }}
 
       # Slack notification on failure
-      # - name: Notify Slack on Failure
-      #   if: failure()
-      #   run: |
-      #     COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/"/\\"/g')
-      #     curl -X POST -H 'Content-type: application/json' \
-      #       --data "{\"text\":\"❌ Deployment Failed!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\nView logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
-      #       ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Notify Slack on Failure
+        if: failure()
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/"/\\"/g')
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"❌ Deployment Failed!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\nView logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+            ${{ secrets.SLACK_WEBHOOK_URL }}
 
