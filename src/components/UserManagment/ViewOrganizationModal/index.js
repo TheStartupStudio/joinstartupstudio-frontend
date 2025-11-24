@@ -14,6 +14,7 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
   const [loading, setLoading] = useState(false)
   const [showPricingChangeModal, setShowPricingChangeModal] = useState(false)
   const [originalPricing, setOriginalPricing] = useState([])
+  const [originalOrgPricing, setOriginalOrgPricing] = useState([])
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -21,6 +22,7 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
     adminEmail: '',
     domain: '',
     pricing: [],
+    orgPrice: [],
     logo1: null,
     logo2: null
   })
@@ -37,11 +39,15 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
           { amount: '15', frequency: 'Per month' },
           { amount: '150', frequency: 'Per year' }
         ],
+        orgPrice: organizationData.orgPrice || [
+          { amount: '150,000', frequency: 'Per year' }
+        ],
         logo1: organizationData.logo1 || null,
         logo2: organizationData.logo2 || null
       }
       setFormData(initialData)
       setOriginalPricing(JSON.parse(JSON.stringify(initialData.pricing)))
+      setOriginalOrgPricing(JSON.parse(JSON.stringify(initialData.orgPrice)))
     }
   }, [organizationData])
 
@@ -62,6 +68,9 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
           pricing: organizationData.pricing || [
             { amount: '15', frequency: 'Per month' },
             { amount: '150', frequency: 'Per year' }
+          ],
+          orgPrice: organizationData.orgPrice || [
+            { amount: '150,000', frequency: 'Per year' }
           ],
           logo1: organizationData.logo1 || null,
           logo2: organizationData.logo2 || null
@@ -91,10 +100,29 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
     }))
   }
 
+  const handleOrgPricingChange = (index, field, value) => {
+    const updatedOrgPricing = [...formData.orgPrice]
+    updatedOrgPricing[index] = {
+      ...updatedOrgPricing[index],
+      [field]: value
+    }
+    setFormData(prev => ({
+      ...prev,
+      orgPrice: updatedOrgPricing
+    }))
+  }
+
   const addNewPricingTier = () => {
     setFormData(prev => ({
       ...prev,
       pricing: [...prev.pricing, { amount: '', frequency: 'Per month' }]
+    }))
+  }
+
+  const addNewOrgPricingTier = () => {
+    setFormData(prev => ({
+      ...prev,
+      orgPrice: [...prev.orgPrice, { amount: '', frequency: 'Per year' }]
     }))
   }
 
@@ -108,15 +136,38 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
     }
   }
 
+  const removeOrgPricingTier = (index) => {
+    if (formData.orgPrice.length > 1) {
+      const updatedOrgPricing = formData.orgPrice.filter((_, i) => i !== index)
+      setFormData(prev => ({
+        ...prev,
+        orgPrice: updatedOrgPricing
+      }))
+    }
+  }
+
   const hasPricingChanged = () => {
     if (formData.pricing.length !== originalPricing.length) {
       return true
     }
 
-    return formData.pricing.some((tier, index) => {
+    const pricingChanged = formData.pricing.some((tier, index) => {
       const original = originalPricing[index]
       return tier.amount !== original.amount || tier.frequency !== original.frequency
     })
+
+    if (pricingChanged) return true
+
+    if (formData.orgPrice.length !== originalOrgPricing.length) {
+      return true
+    }
+
+    const orgPricingChanged = formData.orgPrice.some((tier, index) => {
+      const original = originalOrgPricing[index]
+      return tier.amount !== original.amount || tier.frequency !== original.frequency
+    })
+
+    return orgPricingChanged
   }
 
   const handleSaveChanges = async () => {
@@ -137,6 +188,7 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
       toast.success('Organization updated successfully!')
       setIsEditMode(false)
       setOriginalPricing(JSON.parse(JSON.stringify(formData.pricing)))
+      setOriginalOrgPricing(JSON.parse(JSON.stringify(formData.orgPrice)))
       setLoading(false)
       setShowPricingChangeModal(false)
     } catch (error) {
@@ -155,7 +207,8 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
     setShowPricingChangeModal(false)
     setFormData(prev => ({
       ...prev,
-      pricing: JSON.parse(JSON.stringify(originalPricing))
+      pricing: JSON.parse(JSON.stringify(originalPricing)),
+      orgPrice: JSON.parse(JSON.stringify(originalOrgPricing))
     }))
   }
 
@@ -171,6 +224,9 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
         pricing: organizationData.pricing || [
           { amount: '15', frequency: 'Per month' },
           { amount: '150', frequency: 'Per year' }
+        ],
+        orgPrice: organizationData.orgPrice || [
+          { amount: '150,000', frequency: 'Per year' }
         ],
         logo1: organizationData.logo1 || null,
         logo2: organizationData.logo2 || null
@@ -355,6 +411,91 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
                 </>
               ) : (
                 formData.domain
+              )}
+            </div>
+          </div>
+
+          {/* NEW: Organizational Pricing Section */}
+          <div className="org-section pricing-section">
+            <div className="section-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <g clipPath="url(#clip0_3587_14757)">
+                  <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+                </g>
+              </svg>
+              <span>Organizational Pricing</span>
+                <button className="edit-btn">
+                  <span>Edit Organizational Pricing</span>
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </button>
+            </div>
+            <div className={`pricing-details ${isEditMode ? 'edit-mode' : ''}`}>
+              {isEditMode ? (
+                <>
+                  {formData.orgPrice.map((price, index) => (
+                    <div key={index} className="pricing-item-edit">
+                      <div className="pricing-inputs">
+                        <div className="price-input-group">
+                          <label className="pricing-label-small">Price:</label>
+                          <div className="price-input-wrapper">
+                            <span className="dollar-sign">$</span>
+                            <input
+                              type="text"
+                              className="price-input"
+                              value={price.amount}
+                              onChange={(e) => handleOrgPricingChange(index, 'amount', e.target.value)}
+                              placeholder="0"
+                            />
+                          </div>
+                        </div>
+                        <div className="frequency-input-group">
+                          <select
+                            className="frequency-select"
+                            value={price.frequency}
+                            onChange={(e) => handleOrgPricingChange(index, 'frequency', e.target.value)}
+                          >
+                            <option value="Per month">Per month</option>
+                            <option value="Per year">Per year</option>
+                            <option value="Per quarter">Per quarter</option>
+                            <option value="One-time">One-time</option>
+                          </select>
+                        </div>
+                      </div>
+                      {formData.orgPrice.length > 1 && (
+                        <button 
+                          className="remove-pricing-btn"
+                          onClick={() => removeOrgPricingTier(index)}
+                          type="button"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M16.6663 7.5L15.0038 16.9553C14.8638 17.7522 14.1715 18.3333 13.3624 18.3333H6.63696C5.82783 18.3333 5.13559 17.7522 4.99547 16.9553L3.33301 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M17.5 4.99984H12.8125M2.5 4.99984H7.1875M7.1875 4.99984V3.33317C7.1875 2.4127 7.93369 1.6665 8.85417 1.6665H11.1458C12.0663 1.6665 12.8125 2.4127 12.8125 3.33317V4.99984M7.1875 4.99984H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button 
+                    className="add-pricing-tier-btn"
+                    onClick={addNewOrgPricingTier}
+                    type="button"
+                  >
+                    <span>Add new pricing tier</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </>
+              ) : (
+                formData.orgPrice.map((price, index) => (
+                  <div key={index} className="pricing-item">
+                    <div className="price-item-conatiner">
+                      <div className="pricing-label">Price:</div>
+                      <div className="pricing-value">${price.amount}</div>
+                    </div>
+                    <div className="pricing-frequency">{price.frequency}</div>
+                  </div>
+                ))
               )}
             </div>
           </div>
