@@ -836,6 +836,12 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
               </div>
             )}
 
+
+            {/* Subscription Exempt Toggle - Only for Admins */}
+            {isAdmin && (
+
+              <>
+
             {/* Role & Subscription */}
             <div className="section-header">
               <img src={spark} alt="Spark Icon" />
@@ -870,8 +876,6 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
               )}
             </div>
 
-            {/* Subscription Exempt Toggle - Only for Admins */}
-            {isAdmin && (
               <div className="d-flex align-items-center justify-content-between" style={{ padding: '1rem 0' }}>
                 <div>
                   <h4 style={{
@@ -903,6 +907,8 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
                   <span className="slider round"></span>
                 </label>
               </div>
+
+              </>
             )}
           </div>
 
