@@ -284,12 +284,12 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     console.log(`${actionType} action for invoice:`, item)
     
     switch (actionType) {
-      case 'view-invoice':
+      case 'view':
         setSelectedInvoice(item)
         setInvoiceMode('view')
         setShowEditInvoiceModal(true)
         break
-      case 'send-invoice':
+      case 'send':
         handleSendInvoice(item)
         break
       case 'generate-invoice':
@@ -408,7 +408,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       setArchiveMode(false)
     } else {
       // If in normal mode, return to user management
-      history.push('/user-management')
+      history.push('/user-managment')
     }
   }
 
