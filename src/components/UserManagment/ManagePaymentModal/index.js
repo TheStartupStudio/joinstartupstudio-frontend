@@ -14,6 +14,12 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
     expirationDate: '',
     cvc: '',
     zipCode: '',
+    // Bank Account fields
+    nameOnBankAccount: '',
+    routingNumber: '',
+    accountNumber: '',
+    accountType: 'checking',
+    // Billing Address (shared)
     billingAddress: '',
     city: '',
     state: '',
@@ -28,6 +34,12 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
         expirationDate: paymentData.expirationDate || '10/27',
         cvc: paymentData.cvc || '123',
         zipCode: paymentData.zipCode || '36741',
+        // Bank Account
+        nameOnBankAccount: paymentData.nameOnBankAccount || 'My Organization',
+        routingNumber: paymentData.routingNumber || '1234567890',
+        accountNumber: paymentData.accountNumber || '1234567890',
+        accountType: paymentData.accountType || 'checking',
+        // Billing Address
         billingAddress: paymentData.billingAddress || '1234 My Home Street',
         city: paymentData.city || 'Orlando',
         state: paymentData.state || 'FL',
@@ -53,6 +65,11 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
     if (paymentMethod === 'credit-card') {
       if (!formData.nameOnCard || !formData.cardNumber || !formData.expirationDate || !formData.cvc) {
         toast.warning('Please fill in all card information fields')
+        return
+      }
+    } else if (paymentMethod === 'bank-account') {
+      if (!formData.nameOnBankAccount || !formData.routingNumber || !formData.accountNumber) {
+        toast.warning('Please fill in all bank account information fields')
         return
       }
     }
@@ -86,7 +103,7 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
       show={show}
       onHide={onHide}
       centered
-      size="md"
+      size="sm"
       className="manage-payment-modal"
     >
       <Modal.Header className="payment-modal-header">
@@ -103,8 +120,7 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
 
         <div className="modal-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M2.5 6.66667C2.5 5.74619 3.24619 5 4.16667 5H15.8333C16.7538 5 17.5 5.74619 17.5 6.66667V13.3333C17.5 14.2538 16.7538 15 15.8333 15H4.16667C3.24619 15 2.5 14.2538 2.5 13.3333V6.66667Z" stroke="black" strokeWidth="1.5"/>
-            <path d="M2.5 8.33333H17.5" stroke="black" strokeWidth="1.5"/>
+            <path d="M18.3337 4.99992V14.9999C18.3337 15.4583 18.1706 15.8508 17.8445 16.1774C17.5184 16.5041 17.1259 16.6671 16.667 16.6666H3.33366C2.87533 16.6666 2.4831 16.5035 2.15699 16.1774C1.83088 15.8513 1.66755 15.4588 1.66699 14.9999V4.99992C1.66699 4.54159 1.83033 4.14936 2.15699 3.82325C2.48366 3.49714 2.87588 3.33381 3.33366 3.33325H16.667C17.1253 3.33325 17.5178 3.49659 17.8445 3.82325C18.1712 4.14992 18.3342 4.54214 18.3337 4.99992ZM3.33366 6.66659H16.667V4.99992H3.33366V6.66659ZM3.33366 9.99992V14.9999H16.667V9.99992H3.33366Z" fill="black"/>
           </svg>
         </div>
         <h5 className="modal-title">Manage Payment Information</h5>
@@ -112,13 +128,8 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
 
       <Modal.Body className="payment-modal-body">
         {/* Payment Method Section */}
-        <div className="payment-section">
+        <div>
           <div className="section-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <g clipPath="url(#clip0_3587_14757)">
-                <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-              </g>
-            </svg>
             <span>Payment Method*</span>
           </div>
           <div className="payment-method-options">
@@ -150,13 +161,8 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
 
         {/* Card Information Section */}
         {paymentMethod === 'credit-card' && (
-          <div className="payment-section">
+          <div>
             <div className="section-header">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <g clipPath="url(#clip0_3587_14757)">
-                  <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                </g>
-              </svg>
               <span>Card Information</span>
             </div>
             <div className="card-info-fields">
@@ -249,14 +255,100 @@ const ManagePaymentModal = ({ show, onHide, paymentData, onSave }) => {
           </div>
         )}
 
-        {/* Billing Address Section */}
-        <div className="payment-section">
+        {/* Bank Account Information Section - Only show when bank-account is selected */}
+        {paymentMethod === 'bank-account' && (
+          <div>
+            <div className="section-header">
+              <span>Bank Information</span>
+            </div>
+            <div className="bank-info-fields">
+              <div className="form-group">
+                <label className="field-label">Name On Bank Account</label>
+                <div className="input-with-icon">
+                  <input
+                    type="text"
+                    className="payment-input"
+                    value={formData.nameOnBankAccount}
+                    onChange={(e) => handleInputChange('nameOnBankAccount', e.target.value)}
+                    placeholder="My Organization"
+                  />
+                  <button className="edit-icon-btn" type="button">
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="field-label">Routing Number</label>
+                <div className="input-with-icon">
+                  <input
+                    type="text"
+                    className="payment-input"
+                    value={formData.routingNumber}
+                    onChange={(e) => handleInputChange('routingNumber', e.target.value)}
+                    placeholder="1234567890"
+                    maxLength="9"
+                  />
+                  <button className="edit-icon-btn" type="button">
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="field-label">Account Number</label>
+                <div className="input-with-icon">
+                  <input
+                    type="text"
+                    className="payment-input"
+                    value={formData.accountNumber}
+                    onChange={(e) => handleInputChange('accountNumber', e.target.value)}
+                    placeholder="1234567890"
+                    maxLength="17"
+                  />
+                  <button className="edit-icon-btn" type="button">
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Account Type */}
+              <div>
+                <div className="section-header">
+                  <span>Account Type</span>
+                </div>
+                <div className="payment-method-options">
+                  <label className="payment-method-radio">
+                    <input
+                      type="radio"
+                      name="accountType"
+                      value="checking"
+                      checked={formData.accountType === 'checking'}
+                      onChange={(e) => handleInputChange('accountType', e.target.value)}
+                    />
+                    <span className="radio-custom"></span>
+                    <span className="radio-label">Checking</span>
+                  </label>
+                  <label className="payment-method-radio">
+                    <input
+                      type="radio"
+                      name="accountType"
+                      value="savings"
+                      checked={formData.accountType === 'savings'}
+                      onChange={(e) => handleInputChange('accountType', e.target.value)}
+                    />
+                    <span className="radio-custom"></span>
+                    <span className="radio-label">Savings</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Billing Address Section - Always visible */}
+        <div>
           <div className="section-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <g clipPath="url(#clip0_3587_14757)">
-                <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-              </g>
-            </svg>
             <span>Billing Address</span>
           </div>
           <div className="billing-address-fields">

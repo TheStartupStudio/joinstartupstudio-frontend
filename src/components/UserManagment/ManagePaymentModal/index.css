@@ -59,6 +59,9 @@
 
 .manage-payment-modal .payment-modal-body {
   padding: 20px 40px 40px 40px;
+  display:flex;
+  gap:32px;
+  flex-direction: column;
 }
 
 .manage-payment-modal .payment-section {
@@ -66,28 +69,34 @@
 }
 
 .manage-payment-modal .section-header {
-  margin-bottom: 16px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
   display: flex;
-  padding: 4px;
+  padding: 4px 0px;
   align-items: flex-start;
   gap: 12px;
   align-self: stretch;
   border-radius: 4px;
-  background: rgba(227, 229, 233, 0.50);
   color: #000;
-  font-size: 15px;
+  font-size: 13px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  margin-bottom: 12px;
 }
 
 .manage-payment-modal .payment-method-options {
   display: flex;
   gap: 24px;
-  padding: 8px 0;
-  margin-bottom: 12px;
+  color: #000;
+  padding-bottom: 12px;
+
+/* Text - 15 Medium Regular */
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
 }
 
 .manage-payment-modal .payment-method-radio {
@@ -132,13 +141,13 @@
 }
 
 .manage-payment-modal .payment-note {
-  color: #6F6F6F;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-style: italic;
-  font-weight: 400;
+  color: #000;
+  font-family: Montserrat;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
   margin: 0;
-  padding: 4px 0;
+  padding-bottom: 4px;
 }
 
 .manage-payment-modal .card-info-fields,
@@ -149,13 +158,22 @@
 }
 
 .manage-payment-modal .form-group {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
   flex: 1;
+  border-radius: 12px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+border: none;
 }
 
 .manage-payment-modal .field-label {
+  position: absolute;
+  top:6px;
+  left: 18px;
+  z-index: 999;
   color: #6F6F6F;
   font-family: 'Montserrat', sans-serif;
   font-size: 12px;
@@ -169,7 +187,7 @@
   align-items: center;
   min-height: 54px;
   max-height: 120px;
-  padding: 0px 18px;
+  padding: 18px 18px 0px 18px;
   gap: 20px;
   border-radius: 12px;
   border: 1px solid rgba(227, 229, 233, 0.50);
@@ -200,6 +218,10 @@
 
 .manage-payment-modal .edit-icon-btn {
   background: transparent;
+  position: absolute;
+  top: 50%;
+  right: 17px;
+  transform: translateY(-50%);
   border: none;
   cursor: pointer;
   color: #6F6F6F;
@@ -266,6 +288,64 @@
   cursor: not-allowed;
 }
 
+/* Bank Information Section */
+.bank-info-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+/* Account Type Radio Buttons */
+.account-type-options {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.account-type-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.account-type-radio input[type="radio"] {
+  display: none;
+}
+
+.account-type-radio .radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #D1D5DB;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.account-type-radio input[type="radio"]:checked + .radio-custom {
+  border-color: #51C7DF;
+}
+
+.account-type-radio input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: #51C7DF;
+  border-radius: 50%;
+}
+
+.account-type-radio .radio-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .manage-payment-modal .payment-modal-header,
@@ -291,5 +371,10 @@
   .manage-payment-modal .btn-cancel-payment,
   .manage-payment-modal .btn-save-payment {
     width: 100%;
+  }
+
+  .account-type-options {
+    flex-direction: column;
+    gap: 12px;
   }
 }
