@@ -8,6 +8,8 @@ import './index.css'
 import AcademyBtn from '../../AcademyBtn'
 import PricingChangeModal from '../PricingChangeModal'
 import ManagePaymentModal from '../ManagePaymentModal'
+import PayInvoiceModal from '../PayInvoiceModal'
+
 
 const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
   const history = useHistory()
@@ -647,7 +649,14 @@ const ViewOrganizationModal = ({ show, onHide, organizationData, onSave }) => {
       />
 
       <ManagePaymentModal
-        show={true}
+        show={false}
+        onHide={() => setShowManagePaymentModal(false)}
+        paymentData={paymentData}
+        onSave={handleSavePaymentInfo}
+      />
+
+      <PayInvoiceModal 
+        show={false}
         onHide={() => setShowManagePaymentModal(false)}
         paymentData={paymentData}
         onSave={handleSavePaymentInfo}
