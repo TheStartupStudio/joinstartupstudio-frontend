@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faPencilAlt, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import CustomBirthDateCalendar from '../../CustomBirthDateCalendar'
+import { invoiceApi } from '../../../utils/invoiceApi'
 import './PayInvoiceModal.css'
 
 const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
@@ -95,17 +96,28 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
       return
     }
 
+    if (!invoiceData?.id) {
+      toast.error('Invoice ID is required')
+      return
+    }
+
     setLoading(true)
     try {
+      await invoiceApi.payInvoice(invoiceData.id, {
+        paymentMethod,
+        sendDate,
+        ...formData
+      })
+      
+      toast.success('Payment processed successfully!')
       if (onPay) {
         await onPay({ ...formData, paymentMethod, sendDate })
       }
-      toast.success('Payment processed successfully!')
-      setLoading(false)
       onHide()
     } catch (error) {
       console.error('Error processing payment:', error)
-      toast.error('Failed to process payment')
+      toast.error(error.response?.data?.message || 'Failed to process payment')
+    } finally {
       setLoading(false)
     }
   }

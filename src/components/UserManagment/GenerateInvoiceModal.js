@@ -1,86 +1,161 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
+import { toast } from 'react-toastify'
+import axiosInstance from '../../utils/AxiosInstance'
 import './GenerateInvoiceModal.css'
 
 const GenerateInvoiceModal = ({ show, onHide, onGenerate }) => {
+  const [loading, setLoading] = useState(false)
+  const [organizationsLoading, setOrganizationsLoading] = useState(false)
+  const [organizations, setOrganizations] = useState([])
   const [selectedOrganization, setSelectedOrganization] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  // Dummy organizations data
-  const organizations = [
-    { id: 1, name: 'Tech Solutions Inc' },
-    { id: 2, name: 'Educational Services LLC' },
-    { id: 3, name: 'Future Academy' },
-    { id: 4, name: 'Learning Hub Corp' },
-    { id: 5, name: 'Innovation Institute' }
-  ]
+  useEffect(() => {
+    if (show) {
+      fetchOrganizations()
+    }
+  }, [show])
 
-  const handleGenerate = () => {
+  const fetchOrganizations = async () => {
+    setOrganizationsLoading(true)
+    try {
+      const response = await axiosInstance.get('/super-admin/organizations', {
+        params: {
+          page: 1,
+          limit: 1000 // Get all organizations for the dropdown
+        }
+      })
+
+      if (response.data.success) {
+        setOrganizations(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching organizations:', error)
+      toast.error('Failed to load organizations')
+    } finally {
+      setOrganizationsLoading(false)
+    }
+  }
+
+  const handleSubmit = async () => {
     if (!selectedOrganization) {
+      toast.error('Please select an organization')
       return
     }
-    
-    const selectedOrg = organizations.find(org => org.id === parseInt(selectedOrganization))
-    onGenerate(selectedOrg)
-    onHide()
+
+    setLoading(true)
+    try {
+      // Call the backend API to generate invoice
+      const response = await axiosInstance.post(`/invoices/generate/${selectedOrganization}`)
+      
+      if (response.data.success) {
+        toast.success('Invoice generated successfully!')
+        onGenerate(response.data.data)
+        onHide()
+        setSelectedOrganization('')
+      }
+    } catch (error) {
+      console.error('Error generating invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to generate invoice')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleCancel = () => {
-    setSelectedOrganization('')
-    onHide()
-  }
+  const filteredOrganizations = organizations.filter(org =>
+    org.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <Modal
       show={show}
-      onHide={handleCancel}
+      onHide={onHide}
       backdrop={true}
       keyboard={true}
       className="generate-invoice-modal"
       centered
-      size="lg"
     >
-      <div className="generate-modal-content">
-
-        <div className="d-flex flex-column gap-2">
-            <div className="generate-modal-icon">
+      <div className="modal-content-wrapper">
+        <div className="modal-header-custom">
+          <div className="header-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M5.83398 7.50032L10.0007 10.417L14.1673 7.50032" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M1.66602 13.8337V6.16699C1.66602 5.06242 2.56145 4.16699 3.66602 4.16699H16.3327C17.4373 4.16699 18.3327 5.06242 18.3327 6.16699V13.8337C18.3327 14.9382 17.4373 15.8337 16.3327 15.8337H3.66602C2.56145 15.8337 1.66602 14.9382 1.66602 13.8337Z" stroke="black" stroke-width="1.5"/>
+              <path d="M10 9.16699H12.0833H14.1667" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10 5.83301H12.0833H14.1667" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M6.66667 12.5V3.1C6.66667 2.76863 6.93529 2.5 7.26667 2.5H16.9C17.2314 2.5 17.5 2.76863 17.5 3.1V14.1667C17.5 16.0076 16.0076 17.5 14.1667 17.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4.49935 12.5H6.66602H10.2327C10.5641 12.5 10.8359 12.7682 10.8662 13.0982C10.9879 14.4253 11.5521 17.5 14.166 17.5H6.66602H5.49935C3.84249 17.5 2.49935 16.1569 2.49935 14.5C2.49935 13.3954 3.39478 12.5 4.49935 12.5Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            </div>
-
-            <h4 className="generate-modal-title">Generate Invoice</h4>
+          </div>
+          <h3 className="modal-title">Generate Invoice</h3>
         </div>
 
-        <div className="generate-modal-body">
-          <div className="form-group">
-            <select
-              className="organization-select"
-              value={selectedOrganization}
-              onChange={(e) => setSelectedOrganization(e.target.value)}
-            >
-              <option value="">Select Organization</option>
-              {organizations.map(org => (
-                <option key={org.id} value={org.id}>{org.name}</option>
-              ))}
-            </select>
-          </div>
+        <div className="modal-body-custom">
+          <div className="form-section">
+            <label className="form-label">Select Organization</label>
+            
+            <div className="search-input-wrapper mb-3">
+              <input
+                type="text"
+                className="form-control search-input"
+                placeholder="Search organizations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M14.1667 14.1667L17.5 17.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C10.9442 15.8333 12.5468 15.0846 13.7203 13.8744C14.8898 12.6685 15.8333 11.0044 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
 
-          <div className="modal-actions">
-            <button 
-              className="cancel-btn"
-              onClick={handleCancel}
-            >
-              CANCEL
-            </button>
-            <button 
-              className="generate-btn"
-              onClick={handleGenerate}
-              disabled={!selectedOrganization}
-            >
-              GENERATE INVOICE
-            </button>
+            {organizationsLoading ? (
+              <div className="text-center py-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            ) : (
+              <select
+                className="form-control organization-select"
+                value={selectedOrganization}
+                onChange={(e) => setSelectedOrganization(e.target.value)}
+                disabled={loading}
+              >
+                <option value="">-- Select Organization --</option>
+                {filteredOrganizations.map(org => (
+                  <option key={org.id} value={org.id}>
+                    {org.name} - {org.domain}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {filteredOrganizations.length === 0 && !organizationsLoading && searchQuery && (
+              <p className="text-muted mt-2">No organizations found matching "{searchQuery}"</p>
+            )}
           </div>
+        </div>
+
+        <div className="modal-actions">
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={onHide}
+            disabled={loading}
+          >
+            CANCEL
+          </button>
+          <button
+            type="button"
+            className="generate-btn"
+            onClick={handleSubmit}
+            disabled={loading || !selectedOrganization}
+          >
+            {loading ? (
+              <span className="spinner-border spinner-border-sm" />
+            ) : (
+              'GENERATE INVOICE'
+            )}
+          </button>
         </div>
       </div>
     </Modal>

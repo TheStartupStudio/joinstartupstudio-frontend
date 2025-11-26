@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import DataTable from '../../components/DataTable'
 import AcademyBtn from '../../components/AcademyBtn'
 import InvoiceFilters from '../../components/InvoiceFilters'
-import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 import ViewInvoiceModal from '../../components/UserManagment/ViewInvoiceModal'
 import GenerateInvoiceModal from '../../components/UserManagment/GenerateInvoiceModal'
 import GenerateMultipleInvoicesPopup from '../../components/UserManagment/GenerateMultipleInvoicesPopup'
 import DeleteInvoicePopup from '../../components/UserManagment/DeleteInvoicePopup'
+import { invoiceApi } from '../../utils/invoiceApi'
 import './index.css'
 
 const ViewInvoices = ({ isArchiveMode = false }) => {
@@ -20,21 +20,21 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const dispatch = useDispatch()
   const location = useLocation()
   
-  // Local state to track archive mode (independent of route)
-  const [archiveMode, setArchiveMode] = useState(isArchiveMode)
+  // Get user from Redux store
+  const { user } = useSelector((state) => state.user?.user || {})
+  const userRole = user?.role_id || localStorage.getItem('role')
   
+  // Determine if super admin or org client
+  const isSuperAdmin = userRole === 3 || userRole === 'super-admin'
+  
+  // Local state
+  const [archiveMode, setArchiveMode] = useState(isArchiveMode)
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [selectedInvoices, setSelectedInvoices] = useState([])
   const [showFilters, setShowFilters] = useState(false)
-  const [appliedFilters, setAppliedFilters] = useState({
-    organizationName: '',
-    dateFrom: null,
-    dateTo: null
-  })
-  const [columnFilters, setColumnFilters] = useState({})
   
   const [invoicesData, setInvoicesData] = useState([])
   const [invoicesLoading, setInvoicesLoading] = useState(false)
@@ -52,123 +52,10 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const [selectedInvoice, setSelectedInvoice] = useState(null)
   const [invoiceMode, setInvoiceMode] = useState('view')
   const [deleteLoading, setDeleteLoading] = useState(false)
-  const [generateLoading, setGenerateLoading] = useState(false)
 
   const searchContainerRef = useRef(null)
 
-  const dummyInvoices = [
-    {
-      id: 1,
-      organizationName: 'Tech Solutions Inc',
-      organizationId: '#01245',
-      organizationAddress: '123 Tech Street',
-      city: 'San Francisco',
-      state: 'CA',
-      zip: '94102',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01245',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'AIE Learner Access',
-          quantity: '1000',
-          price: '15',
-          total: 15000
-        }
-      ],
-      subtotal: 15000,
-      tax: 1050,
-      total: 16050
-    },
-    {
-      id: 2,
-      organizationName: 'Educational Services LLC',
-      organizationId: '#01246',
-      organizationAddress: '456 Learning Ave',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01246',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'Platform Subscription',
-          quantity: '500',
-          price: '20',
-          total: 10000
-        },
-        {
-          description: 'Training Modules',
-          quantity: '100',
-          price: '50',
-          total: 5000
-        }
-      ],
-      subtotal: 15000,
-      tax: 1050,
-      total: 16050
-    },
-    {
-      id: 3,
-      organizationName: 'Future Academy',
-      organizationId: '#01247',
-      organizationAddress: '789 Innovation Blvd',
-      city: 'Austin',
-      state: 'TX',
-      zip: '78701',
-      status: 'Unpaid',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01247',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'Student Licenses',
-          quantity: '2000',
-          price: '12',
-          total: 24000
-        }
-      ],
-      subtotal: 24000,
-      tax: 1680,
-      total: 25680
-    },
-    {
-      id: 4,
-      organizationName: 'Learning Hub Corp',
-      organizationId: '#01248',
-      organizationAddress: '321 Education Dr',
-      city: 'Boston',
-      state: 'MA',
-      zip: '02108',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01248',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'Annual Subscription',
-          quantity: '1',
-          price: '50000',
-          total: 50000
-        }
-      ],
-      subtotal: 50000,
-      tax: 3500,
-      total: 53500
-    }
-  ]
-
+  // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
@@ -178,46 +65,71 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  const fetchInvoices = async (page = 1, search = '') => {
+  // Get organization ID based on user role
+  const getOrganizationId = () => {
+    if (isSuperAdmin) {
+      // For super admin, you might want to show all organizations
+      // or have a selector. For now, we'll return null to indicate "all"
+      return null
+    } else {
+      // For org client, use their university ID
+      return user?.universityId || user?.University?.id
+    }
+  }
+
+    const fetchInvoices = async (page = 1, search = '') => {
     setInvoicesLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 500))
+      console.log('Fetching all invoices with params:', { page, search, archiveMode })
 
-      // In archive mode, filter for archived/completed invoices
-      let filteredData = archiveMode 
-        ? dummyInvoices.filter(invoice => invoice.status === 'Complete')
-        : dummyInvoices
-
-      if (search) {
-        filteredData = filteredData.filter(invoice =>
-          invoice.organizationName.toLowerCase().includes(search.toLowerCase()) ||
-          invoice.organizationId.toLowerCase().includes(search.toLowerCase()) ||
-          invoice.status.toLowerCase().includes(search.toLowerCase())
-        )
-      }
-
-      const startIndex = (page - 1) * 10
-      const endIndex = startIndex + 10
-      const paginatedData = filteredData.slice(startIndex, endIndex)
-
-      setInvoicesData(paginatedData)
-      setPagination({
-        total: filteredData.length,
+      // ✅ Use getAllInvoices instead of getOrganizationInvoices
+      const response = await invoiceApi.getAllInvoices({
         page,
         limit: 10,
-        totalPages: Math.ceil(filteredData.length / 10)
+        status: archiveMode ? 'archived' : undefined,
+        includeArchived: archiveMode ? 'true' : 'false',
+        search
+      })
+
+      console.log('Invoices response:', response)
+
+      const invoicesData = response.data || []
+      
+      setInvoicesData(invoicesData)
+      setPagination(response.pagination || {
+        total: invoicesData.length,
+        page,
+        limit: 10,
+        totalPages: Math.ceil(invoicesData.length / 10)
       })
     } catch (error) {
       console.error('Error fetching invoices:', error)
-      toast.error('Failed to load invoices data')
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to load invoices data'
+      toast.error(errorMessage)
+      setInvoicesData([])
+      setPagination({
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 1
+      })
     } finally {
       setInvoicesLoading(false)
     }
   }
 
-  useEffect(() => {
+
+    useEffect(() => {
     fetchInvoices(currentPage, debouncedSearchQuery)
   }, [currentPage, debouncedSearchQuery, archiveMode])
+
+  // Fetch invoices when dependencies change
+  useEffect(() => {
+    if (user) {
+      console.log('User changed, fetching invoices:', user)
+      fetchInvoices(currentPage, debouncedSearchQuery)
+    }
+  }, [currentPage, debouncedSearchQuery, archiveMode, user])
 
   const invoicesColumns = useMemo(() => [
     {
@@ -238,24 +150,20 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       sortable: true,
       filterable: true,
       render: (value) => (
-        <span className={`status-badge status-${value.toLowerCase()}`}>
+        <span className={`status-badge status-${value?.toLowerCase()}`}>
           <span className="status-dot"></span>
           {value}
         </span>
       )
     },
     {
-      key: 'invoiceDate',
+      key: 'issueDate',
       title: 'INVOICE DATE',
       sortable: true,
       filterable: true,
       render: (value) => (
         <span className="invoice-date">
-          {value ? new Date(value).toLocaleDateString('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric'
-          }) : 'N/A'}
+          {value || 'N/A'}
         </span>
       )
     },
@@ -266,11 +174,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       filterable: true,
       render: (value) => (
         <span className="payment-date">
-          {value ? new Date(value).toLocaleDateString('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric'
-          }) : 'N/A'}
+          {value || 'N/A'}
         </span>
       )
     }
@@ -284,21 +188,20 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     console.log(`${actionType} action for invoice:`, item)
     
     switch (actionType) {
-      case 'view':
+      case 'view-invoice':
         setSelectedInvoice(item)
         setInvoiceMode('view')
         setShowEditInvoiceModal(true)
         break
-      case 'send':
+      case 'send-invoice':
         handleSendInvoice(item)
         break
       case 'generate-invoice':
         console.log('Generate invoice for:', item)
-        toast.info('Generate Invoice feature coming soon!')
+        setShowGenerateModal(true)
         break
       case 'archive-invoice':
-        console.log('Archive invoice:', item)
-        toast.success(`Invoice ${item.organizationId} archived successfully!`)
+        handleArchiveInvoice(item)
         break
       case 'delete-invoice':
         setSelectedInvoice(item)
@@ -310,12 +213,42 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   }
 
   const handleSendInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      setInvoicesLoading(true)
+      await invoiceApi.sendInvoiceEmail(invoice.id, {
+        subject: `Invoice ${invoice.invoiceNumber}`,
+        message: 'Please find attached your invoice.'
+      })
       toast.success('Invoice sent successfully!')
     } catch (error) {
       console.error('Error sending invoice:', error)
-      toast.error('Failed to send invoice')
+      toast.error(error.response?.data?.message || 'Failed to send invoice')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleArchiveInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      await invoiceApi.archiveInvoice(invoice.id)
+      toast.success(`Invoice ${invoice.invoiceNumber} archived successfully!`)
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('Error archiving invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to archive invoice')
+    } finally {
+      setInvoicesLoading(false)
     }
   }
 
@@ -323,30 +256,19 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setShowGenerateModal(true)
   }
 
-  const handleGenerateInvoiceSubmit = (organization) => {
-    const newInvoice = {
-      id: Date.now(),
-      organizationName: organization.name,
-      organizationId: `#${Math.floor(10000 + Math.random() * 90000)}`,
-      organizationAddress: '',
-      city: '',
-      state: '',
-      zip: '',
-      status: 'Draft',
-      invoiceDate: new Date().toISOString().split('T')[0],
-      paymentDate: '',
-      invoiceNumber: `INV${Math.floor(10000 + Math.random() * 90000)}`,
-      issueDate: new Date().toISOString().split('T')[0],
-      dueDate: '',
-      items: [],
-      subtotal: 0,
-      tax: 0,
-      total: 0
+  const handleGenerateInvoiceSubmit = async (generatedInvoice) => {
+    // Invoice is already generated by the modal
+    // Just refresh the list
+    toast.success('Invoice generated successfully!')
+    setShowGenerateModal(false)
+    await fetchInvoices(currentPage, debouncedSearchQuery)
+    
+    // Optionally show the new invoice
+    if (generatedInvoice && generatedInvoice.id) {
+      setSelectedInvoice(generatedInvoice)
+      setInvoiceMode('view')
+      setShowEditInvoiceModal(true)
     }
-
-    setSelectedInvoice(newInvoice)
-    setInvoiceMode('edit')
-    setShowEditInvoiceModal(true)
   }
 
   const handleGenerateMultiple = () => {
@@ -358,57 +280,50 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   }
 
   const handleConfirmGenerateMultiple = async () => {
-    setGenerateLoading(true)
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      toast.success(`${selectedInvoices.length} invoice(s) generated successfully!`)
-      setShowGenerateMultiplePopup(false)
-      setSelectedInvoices([])
-      fetchInvoices(currentPage, debouncedSearchQuery)
-    } catch (error) {
-      console.error('Error generating invoices:', error)
-      toast.error('Failed to generate invoices')
-    } finally {
-      setGenerateLoading(false)
-    }
+    // The GenerateMultipleInvoicesPopup component handles the generation
+    // Just refresh the list after it's done
+    await fetchInvoices(currentPage, debouncedSearchQuery)
+    setSelectedInvoices([])
   }
 
   const handleDeleteInvoice = async () => {
     setDeleteLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      if (selectedInvoice) {
-        toast.success(`Invoice ${selectedInvoice.organizationId} deleted successfully!`)
+      if (selectedInvoice?.id) {
+        await invoiceApi.deleteInvoice(selectedInvoice.id)
+        toast.success(`Invoice ${selectedInvoice.invoiceNumber} deleted successfully!`)
       } else if (selectedInvoices.length > 0) {
+        // Delete multiple
+        const deletePromises = selectedInvoices
+          .filter(invoice => invoice.id)
+          .map(invoice => invoiceApi.deleteInvoice(invoice.id))
+        
+        await Promise.all(deletePromises)
         toast.success(`${selectedInvoices.length} invoice(s) deleted successfully!`)
         setSelectedInvoices([])
       }
       
       setShowDeleteInvoicePopup(false)
       setSelectedInvoice(null)
-      fetchInvoices(currentPage, debouncedSearchQuery)
+      await fetchInvoices(currentPage, debouncedSearchQuery)
     } catch (error) {
       console.error('Error deleting invoice:', error)
-      toast.error('Failed to delete invoice(s)')
+      toast.error(error.response?.data?.message || 'Failed to delete invoice(s)')
     } finally {
       setDeleteLoading(false)
     }
   }
 
   const handleViewArchive = () => {
-    // Toggle archive mode
     setArchiveMode(!archiveMode)
-    setCurrentPage(1) // Reset to first page
+    setCurrentPage(1)
   }
 
   const handleBackButton = () => {
     if (archiveMode) {
-      // If in archive mode, return to view invoices
       setArchiveMode(false)
     } else {
-      // If in normal mode, return to user management
-      history.push('/user-managment')
+      history.push('/user-management')
     }
   }
 
@@ -422,43 +337,26 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setSelectedInvoices(selectedItems)
   }
 
-  const handleApplyFilters = (filters) => {
-    setAppliedFilters(filters)
-    setShowFilters(false)
-    setCurrentPage(1)
-    console.log('Applied filters:', filters)
-  }
-
-  const handleColumnFilterChange = (filters) => {
-    setColumnFilters(filters)
-    console.log('Column filters changed:', filters)
-  }
-
   const bulkActions = [
     {
-      name: 'Generate Invoices',
-      action: handleGenerateMultiple
-    },
-    {
-      name: 'Export Selected',
-      action: () => {
-        if (selectedInvoices.length === 0) {
-          toast.warning('Please select at least one invoice')
-          return
-        }
-        console.log('Export selected:', selectedInvoices)
-        toast.info('Export feature coming soon!')
-      }
-    },
-    {
       name: 'Send Selected',
-      action: () => {
+      action: async () => {
         if (selectedInvoices.length === 0) {
           toast.warning('Please select at least one invoice')
           return
         }
-        console.log('Send selected:', selectedInvoices)
-        toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
+        
+        try {
+          setInvoicesLoading(true)
+          for (const invoice of selectedInvoices) {
+            await invoiceApi.sendInvoiceEmail(invoice.id, {})
+          }
+          toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
+        } catch (error) {
+          toast.error('Failed to send some invoices')
+        } finally {
+          setInvoicesLoading(false)
+        }
       }
     },
     {
@@ -485,6 +383,22 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  // Show loading while waiting for user
+  if (!user) {
+    return (
+      <div className="view-invoices-container">
+        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
+            <div className="d-flex flex-column gap-2">
+              <h3 className="text-black mb-0 page-main-title">VIEW INVOICES</h3>
+              <p className="page-subtitle">Loading user information...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="view-invoices-container">
@@ -562,21 +476,24 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
               </button>
             </div>
 
-            <InvoiceFilters
-              show={showFilters}
-              onHide={() => setShowFilters(false)}
-              onApplyFilters={handleApplyFilters}
-              anchorRef={searchContainerRef}
-            />
+            {showFilters && (
+              <InvoiceFilters
+                show={showFilters}
+                onHide={() => setShowFilters(false)}
+                anchorRef={searchContainerRef}
+              />
+            )}
           </div>
 
           {!archiveMode && (
             <div className="actions-container">
-              <AcademyBtn
-                title="GENERATE INVOICE"
-                icon={plusIcon}
-                onClick={handleGenerateInvoice}
-              />
+              {isSuperAdmin && (
+                <AcademyBtn
+                  title="GENERATE INVOICE"
+                  icon={plusIcon}
+                  onClick={handleGenerateInvoice}
+                />
+              )}
 
               <AcademyBtn
                 title="VIEW ARCHIVE"
@@ -627,14 +544,13 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             loading={invoicesLoading}
             onSelectionChange={handleSelectionChange}
             selectedItems={selectedInvoices}
-            onFilterChange={handleColumnFilterChange}
           />
 
           <div className="pagination-container">
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -644,17 +560,17 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                 <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <span className="pagination-info">{currentPage} / {pagination.totalPages}</span>
+            <span className="pagination-info">{currentPage} / {pagination.totalPages || 1}</span>
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === pagination.totalPages}
+              disabled={currentPage === pagination.totalPages || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                 <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -663,7 +579,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(pagination.totalPages)}
-              disabled={currentPage === pagination.totalPages}
+              disabled={currentPage === pagination.totalPages || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -697,7 +613,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           show={showGenerateMultiplePopup}
           onHide={() => setShowGenerateMultiplePopup(false)}
           onConfirm={handleConfirmGenerateMultiple}
-          loading={generateLoading}
+          selectedOrganizations={selectedInvoices}
         />
 
         <DeleteInvoicePopup
