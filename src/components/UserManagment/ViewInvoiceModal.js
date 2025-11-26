@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
 import './ViewInvoiceModal.css'
 import PreviewInvoiceEmailModal from './PreviewInvoiceEmailModal'
+import PayInvoiceModal from './PayInvoiceModal'
 
 const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, mode: initialMode = 'view' }) => {
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState(initialMode)
   const [showPreviewEmailModal, setShowPreviewEmailModal] = useState(false)
+  const [showPayInvoiceModal, setShowPayInvoiceModal] = useState(false)
+  
+  // Get user role from Redux
+  const { user } = useSelector((state) => state.user.user)
+  const isInstructor = user?.role_id === 2
   
   // Default dummy data
   const defaultDummyData = {
@@ -157,6 +164,21 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     toast.success('Invoice email sent successfully!')
   }
 
+  const handlePayInvoice = () => {
+    setShowPayInvoiceModal(true)
+  }
+
+  const handlePaymentSubmit = async (paymentData) => {
+    try {
+      console.log('Payment data:', paymentData)
+      // Add your API call here to process payment
+      toast.success('Payment scheduled successfully!')
+    } catch (error) {
+      console.error('Error processing payment:', error)
+      throw error
+    }
+  }
+
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -230,6 +252,21 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
 
             </div>
           </div>
+
+          {/* Instructor Payment Info - Only show for instructors */}
+          {isInstructor && (
+            <div className="instructor-payment-info">
+              <span className="payment-info-text">
+                Invoice will be automatically paid on {formData.dueDate || '11/30/2025'}
+              </span>
+              <div className="edit-payment-btn" onClick={handlePayInvoice}>
+                <span>Edit</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M11.333 2.00004C11.5081 1.82494 11.7169 1.68605 11.9457 1.59129C12.1745 1.49653 12.4191 1.44775 12.6663 1.44775C12.9135 1.44775 13.1581 1.49653 13.3869 1.59129C13.6157 1.68605 13.8245 1.82494 13.9997 2.00004C14.1748 2.17513 14.3137 2.38393 14.4084 2.61272C14.5032 2.84151 14.552 3.08615 14.552 3.33337C14.552 3.58059 14.5032 3.82524 14.4084 4.05403C14.3137 4.28282 14.1748 4.49161 13.9997 4.66671L5.33301 13.3334L1.33301 14.6667L2.66634 10.6667L11.333 2.00004Z" stroke="#51C7DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          )}
 
           {/* Invoice Body */}
           <div className="invoice-modal-body">
@@ -403,6 +440,14 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
         onHide={() => setShowPreviewEmailModal(false)}
         invoiceData={formData}
         onConfirmSend={handleConfirmSend}
+      />
+
+      {/* Pay Invoice Modal - Only for instructors */}
+      <PayInvoiceModal
+        show={showPayInvoiceModal}
+        onHide={() => setShowPayInvoiceModal(false)}
+        invoiceData={formData}
+        onPay={handlePaymentSubmit}
       />
     </>
   )
