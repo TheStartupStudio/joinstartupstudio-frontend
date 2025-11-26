@@ -1,0 +1,451 @@
+.pay-invoice-modal .modal-content {
+  border-radius: 24px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 0px;
+}
+
+.pay-invoice-modal .payment-modal-header {
+  position: relative;
+  padding: 40px 40px 40px 40px !important;
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pay-invoice-modal .header-btn-container {
+  display: flex;
+  height: 64px;
+  padding: 17px;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  border-radius: 0 24px;
+  background: var(--COLORS-White, #FFF);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.pay-invoice-modal .back-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.pay-invoice-modal .back-button:hover {
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+}
+
+.pay-invoice-modal .modal-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(200, 205, 216, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.pay-invoice-modal .modal-title {
+  color: #231F20;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.pay-invoice-modal .payment-modal-body {
+  padding: 20px 40px 40px 40px;
+  display:flex;
+  gap:32px;
+  flex-direction: column;
+}
+
+.pay-invoice-modal .payment-section {
+  margin-bottom: 32px;
+}
+
+.pay-invoice-modal .section-header {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  display: flex;
+  padding: 4px;
+  align-items: flex-start;
+  gap: 12px;
+  align-self: stretch;
+  border-radius: 4px;
+  color: #000;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  background: var(--Background-Grey, rgba(227, 229, 233, 0.50));
+  align-items: center;
+}
+
+.pay-invoice-modal .payment-detail-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  color: #000;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.pay-invoice-modal .payment-method-options {
+  display: flex;
+  gap: 24px;
+  color: #000;
+  padding-bottom: 12px;
+
+/* Text - 15 Medium Regular */
+font-family: Montserrat;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+}
+
+.pay-invoice-modal .payment-method-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #000;
+}
+
+.pay-invoice-modal .payment-method-radio input[type="radio"] {
+  display: none;
+}
+
+.pay-invoice-modal .radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #BBBDBF;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.pay-invoice-modal .payment-method-radio input[type="radio"]:checked + .radio-custom {
+  border-color: #51C7DF;
+  background: #51C7DF;
+}
+
+.pay-invoice-modal .payment-method-radio input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFF;
+}
+
+.pay-invoice-modal .payment-note {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  margin: 0;
+  padding-bottom: 4px;
+}
+
+.pay-invoice-modal .card-info-fields,
+.pay-invoice-modal .billing-address-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pay-invoice-modal .form-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  border-radius: 12px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+border: none;
+}
+
+.pay-invoice-modal .field-label {
+  position: absolute;
+  top:6px;
+  left: 18px;
+  z-index: 999;
+  color: #6F6F6F;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.pay-invoice-modal .input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  max-height: 120px;
+  padding: 18px 18px 0px 18px;
+  gap: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(227, 229, 233, 0.50);
+  background: #FFF;
+  transition: all 0.2s ease;
+}
+
+.pay-invoice-modal .input-with-icon:focus-within {
+  border-color: #51C7DF;
+  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
+}
+
+.pay-invoice-modal .payment-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.pay-invoice-modal .payment-input::placeholder {
+  color: #BBBDBF;
+}
+
+.pay-invoice-modal .edit-icon-btn {
+  background: transparent;
+  position: absolute;
+  top: 50%;
+  right: 17px;
+  transform: translateY(-50%);
+  border: none;
+  cursor: pointer;
+  color: #6F6F6F;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.pay-invoice-modal .edit-icon-btn:hover {
+  color: #51C7DF;
+}
+
+.pay-invoice-modal .card-details-row,
+.pay-invoice-modal .address-details-row {
+  display: flex;
+  gap: 16px;
+}
+
+.pay-invoice-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.pay-invoice-modal .btn-cancel-payment,
+.pay-invoice-modal .btn-save-payment {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pay-invoice-modal .btn-cancel-payment {
+  background: #DEE1E6;
+  color: #000;
+}
+
+.pay-invoice-modal .btn-cancel-payment:hover {
+  background: #C9CDD4;
+}
+
+.pay-invoice-modal .btn-save-payment {
+  background: #51C7DF;
+  color: #FFF;
+}
+
+.pay-invoice-modal .btn-save-payment:hover {
+  background: #3DA8BF;
+}
+
+.pay-invoice-modal .btn-save-payment:disabled,
+.pay-invoice-modal .btn-cancel-payment:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Bank Information Section */
+.bank-info-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+/* Account Type Radio Buttons */
+.account-type-options {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.account-type-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.account-type-radio input[type="radio"] {
+  display: none;
+}
+
+.account-type-radio .radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #D1D5DB;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.pay-invoice-modal .date-input-wrapper{
+  display: flex;
+  flex-direction: row-reverse;
+width: 250px;
+padding: 8px 15px;
+align-items: center;
+gap: 8px;
+flex-shrink: 0;
+align-self: stretch;
+  border-radius: 8px;
+border: 1px solid #DDD;
+background: #FFF;
+box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+}
+
+.pay-invoice-modal .date-input{
+  border: none;
+  padding: 5px 0px 5px 0px;
+}
+
+.account-type-radio input[type="radio"]:checked + .radio-custom {
+  border-color: #51C7DF;
+}
+
+.account-type-radio input[type="radio"]:checked + .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.account-type-radio .radio-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Calendar Dropdown */
+.calendar-dropdown {
+  width: fit-content;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 16px;
+}
+
+.send-date-content {
+  position: relative;
+}
+
+.date-input {
+  cursor: pointer;
+}
+
+.calendar-icon {
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pay-invoice-modal .payment-modal-header,
+  .pay-invoice-modal .payment-modal-body {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .pay-invoice-modal .card-details-row,
+  .pay-invoice-modal .address-details-row {
+    flex-direction: column;
+  }
+
+  .pay-invoice-modal .payment-method-options {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pay-invoice-modal .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .pay-invoice-modal .btn-cancel-payment,
+  .pay-invoice-modal .btn-save-payment {
+    width: 100%;
+  }
+
+  .account-type-options {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .calendar-dropdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 350px;
+  }
+}

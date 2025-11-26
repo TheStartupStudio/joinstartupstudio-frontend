@@ -431,7 +431,7 @@ useEffect(() => {
 
           <AcademyBtn
             disabled={isLoading || !planDetails[selectedPlan]}
-            title={`${isLoading ? 'Processing...' : (isReturningUser ? 'Resubscribe Now' : 'Subscribe Now')}`}
+            title={`${isLoading ? 'Processing...' : (user?.trial_used ? 'Resubscribe Now' : 'Subscribe Now')}`}
             onClick={handleClick}
           />
 

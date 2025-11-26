@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import DataTable from '../../components/DataTable'
 import AcademyBtn from '../../components/AcademyBtn'
@@ -9,12 +9,24 @@ import InvoiceFilters from '../../components/InvoiceFilters'
 import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
-// import archiveIcon from '../../assets/images/academy-icons/svg/archive.svg'
+import ViewInvoiceModal from '../../components/UserManagment/ViewInvoiceModal'
+import GenerateInvoiceModal from '../../components/UserManagment/GenerateInvoiceModal'
+import GenerateMultipleInvoicesPopup from '../../components/UserManagment/GenerateMultipleInvoicesPopup'
+import DeleteInvoicePopup from '../../components/UserManagment/DeleteInvoicePopup'
+import ManagePaymentModal from '../../components/UserManagment/ManagePaymentModal'
 import './index.css'
 
-const ViewInvoices = () => {
+const ViewInvoices = ({ isArchiveMode = false }) => {
   const history = useHistory()
   const dispatch = useDispatch()
+  const location = useLocation()
+  
+  // Get user role from Redux
+  const { user } = useSelector((state) => state.user.user)
+  const isInstructor = user?.role_id === 2
+  
+  // Local state to track archive mode (independent of route)
+  const [archiveMode, setArchiveMode] = useState(isArchiveMode)
   
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
@@ -38,88 +50,128 @@ const ViewInvoices = () => {
     totalPages: 1
   })
 
+  const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(false)
+  const [showGenerateModal, setShowGenerateModal] = useState(false)
+  const [showGenerateMultiplePopup, setShowGenerateMultiplePopup] = useState(false)
+  const [showDeleteInvoicePopup, setShowDeleteInvoicePopup] = useState(false)
+  const [selectedInvoice, setSelectedInvoice] = useState(null)
+  const [invoiceMode, setInvoiceMode] = useState('view')
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [generateLoading, setGenerateLoading] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+
   const searchContainerRef = useRef(null)
 
   const dummyInvoices = [
     {
       id: 1,
-      organizationName: 'Organization Name',
+      organizationName: 'Tech Solutions Inc',
       organizationId: '#01245',
+      organizationAddress: '123 Tech Street',
+      city: 'San Francisco',
+      state: 'CA',
+      zip: '94102',
       status: 'Complete',
       invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
+      paymentDate: '2025-10-27',
+      invoiceNumber: '01245',
+      issueDate: '2025-09-27',
+      dueDate: '2025-10-27',
+      items: [
+        {
+          description: 'AIE Learner Access',
+          quantity: '1000',
+          price: '15',
+          total: 15000
+        }
+      ],
+      subtotal: 15000,
+      tax: 1050,
+      total: 16050
     },
     {
       id: 2,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
+      organizationName: 'Educational Services LLC',
+      organizationId: '#01246',
+      organizationAddress: '456 Learning Ave',
+      city: 'New York',
+      state: 'NY',
+      zip: '10001',
       status: 'Complete',
       invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
+      paymentDate: '2025-10-27',
+      invoiceNumber: '01246',
+      issueDate: '2025-09-27',
+      dueDate: '2025-10-27',
+      items: [
+        {
+          description: 'Platform Subscription',
+          quantity: '500',
+          price: '20',
+          total: 10000
+        },
+        {
+          description: 'Training Modules',
+          quantity: '100',
+          price: '50',
+          total: 5000
+        }
+      ],
+      subtotal: 15000,
+      tax: 1050,
+      total: 16050
     },
     {
       id: 3,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
+      organizationName: 'Future Academy',
+      organizationId: '#01247',
+      organizationAddress: '789 Innovation Blvd',
+      city: 'Austin',
+      state: 'TX',
+      zip: '78701',
       status: 'Unpaid',
       invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
+      paymentDate: '2025-10-27',
+      invoiceNumber: '01247',
+      issueDate: '2025-09-27',
+      dueDate: '2025-10-27',
+      items: [
+        {
+          description: 'Student Licenses',
+          quantity: '2000',
+          price: '12',
+          total: 24000
+        }
+      ],
+      subtotal: 24000,
+      tax: 1680,
+      total: 25680
     },
     {
       id: 4,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
+      organizationName: 'Learning Hub Corp',
+      organizationId: '#01248',
+      organizationAddress: '321 Education Dr',
+      city: 'Boston',
+      state: 'MA',
+      zip: '02108',
       status: 'Complete',
       invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 5,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 6,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 7,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 8,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 9,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
-    },
-    {
-      id: 10,
-      organizationName: 'Organization Name',
-      organizationId: '#01245',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27'
+      paymentDate: '2025-10-27',
+      invoiceNumber: '01248',
+      issueDate: '2025-09-27',
+      dueDate: '2025-10-27',
+      items: [
+        {
+          description: 'Annual Subscription',
+          quantity: '1',
+          price: '50000',
+          total: 50000
+        }
+      ],
+      subtotal: 50000,
+      tax: 3500,
+      total: 53500
     }
   ]
 
@@ -137,9 +189,13 @@ const ViewInvoices = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 500))
 
-      let filteredData = dummyInvoices
+      // In archive mode, filter for archived/completed invoices
+      let filteredData = archiveMode 
+        ? dummyInvoices.filter(invoice => invoice.status === 'Complete')
+        : dummyInvoices
+
       if (search) {
-        filteredData = dummyInvoices.filter(invoice =>
+        filteredData = filteredData.filter(invoice =>
           invoice.organizationName.toLowerCase().includes(search.toLowerCase()) ||
           invoice.organizationId.toLowerCase().includes(search.toLowerCase()) ||
           invoice.status.toLowerCase().includes(search.toLowerCase())
@@ -167,64 +223,122 @@ const ViewInvoices = () => {
 
   useEffect(() => {
     fetchInvoices(currentPage, debouncedSearchQuery)
-  }, [currentPage, debouncedSearchQuery])
+  }, [currentPage, debouncedSearchQuery, archiveMode])
 
-  const invoicesColumns = useMemo(() => [
-    {
-      key: 'organizationName',
-      title: 'ORGANIZATION NAME',
-      sortable: true,
-      filterable: false,
-      render: (value, item) => (
-        <div className="invoice-organization-info">
-          <div className="organization-name">{item.organizationName}</div>
-          <div className="organization-id">{item.organizationId}</div>
-        </div>
-      )
-    },
-    {
-      key: 'status',
-      title: 'STATUS',
-      sortable: true,
-      filterable: true,
-      render: (value) => (
-        <span className={`status-badge status-${value.toLowerCase()}`}>
-          <span className="status-dot"></span>
-          {value}
-        </span>
-      )
-    },
-    {
-      key: 'invoiceDate',
-      title: 'INVOICE DATE',
-      sortable: true,
-      filterable: true,
-      render: (value) => (
-        <span className="invoice-date">
-          {value ? new Date(value).toLocaleDateString('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric'
-          }) : 'N/A'}
-        </span>
-      )
-    },
-    {
-      key: 'paymentDate',
-      title: 'PAYMENT DATE',
-      sortable: true,
-      filterable: true,
-      render: (value) => (
-        <span className="payment-date">
-          {value ? new Date(value).toLocaleDateString('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric'
-          }) : 'N/A'}
-        </span>
-      )
+  const invoicesColumns = useMemo(() => {
+    if (isInstructor) {
+      return [
+        {
+          key: 'organizationId',
+          title: 'ORGANIZATION ID',
+          sortable: true,
+          filterable: false,
+          render: (value) => (
+            <div className="organization-id">{value}</div>
+          )
+        },
+        {
+          key: 'status',
+          title: 'STATUS',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className={`status-badge status-${value.toLowerCase()}`}>
+              <span className="status-dot"></span>
+              {value}
+            </span>
+          )
+        },
+        {
+          key: 'invoiceDate',
+          title: 'INVOICE DATE',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className="invoice-date">
+              {value ? new Date(value).toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+              }) : 'N/A'}
+            </span>
+          )
+        },
+        {
+          key: 'paymentDate',
+          title: 'PAYMENT DATE',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className="payment-date">
+              {value ? new Date(value).toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+              }) : 'N/A'}
+            </span>
+          )
+        }
+      ]
     }
-  ], [])
+    
+    return [
+      {
+        key: 'organizationName',
+        title: 'ORGANIZATION NAME',
+        sortable: true,
+        filterable: false,
+        render: (value, item) => (
+          <div className="invoice-organization-info">
+            <div className="organization-name">{item.organizationName}</div>
+            <div className="organization-id">{item.organizationId}</div>
+          </div>
+        )
+      },
+      {
+        key: 'status',
+        title: 'STATUS',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className={`status-badge status-${value.toLowerCase()}`}>
+            <span className="status-dot"></span>
+            {value}
+          </span>
+        )
+      },
+      {
+        key: 'invoiceDate',
+        title: 'INVOICE DATE',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className="invoice-date">
+            {value ? new Date(value).toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric'
+            }) : 'N/A'}
+          </span>
+        )
+      },
+      {
+        key: 'paymentDate',
+        title: 'PAYMENT DATE',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className="payment-date">
+            {value ? new Date(value).toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric'
+            }) : 'N/A'}
+          </span>
+        )
+      }
+    ]
+  }, [isInstructor])
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
@@ -234,11 +348,12 @@ const ViewInvoices = () => {
     console.log(`${actionType} action for invoice:`, item)
     
     switch (actionType) {
-      case 'view-invoice':
-        console.log('View invoice:', item)
-        toast.info('View Invoice feature coming soon!')
+      case 'view':
+        setSelectedInvoice(item)
+        setInvoiceMode('view')
+        setShowEditInvoiceModal(true)
         break
-      case 'send-invoice':
+      case 'send':
         handleSendInvoice(item)
         break
       case 'generate-invoice':
@@ -250,10 +365,8 @@ const ViewInvoices = () => {
         toast.success(`Invoice ${item.organizationId} archived successfully!`)
         break
       case 'delete-invoice':
-        console.log('Delete invoice:', item)
-        if (window.confirm(`Are you sure you want to delete invoice ${item.organizationId}?`)) {
-          toast.success(`Invoice ${item.organizationId} deleted successfully!`)
-        }
+        setSelectedInvoice(item)
+        setShowDeleteInvoicePopup(true)
         break
       default:
         break
@@ -271,13 +384,98 @@ const ViewInvoices = () => {
   }
 
   const handleGenerateInvoice = () => {
-    console.log('Generate invoice clicked')
-    toast.info('Generate Invoice feature coming soon!')
+    setShowGenerateModal(true)
+  }
+
+  const handleGenerateInvoiceSubmit = (organization) => {
+    const newInvoice = {
+      id: Date.now(),
+      organizationName: organization.name,
+      organizationId: `#${Math.floor(10000 + Math.random() * 90000)}`,
+      organizationAddress: '',
+      city: '',
+      state: '',
+      zip: '',
+      status: 'Draft',
+      invoiceDate: new Date().toISOString().split('T')[0],
+      paymentDate: '',
+      invoiceNumber: `INV${Math.floor(10000 + Math.random() * 90000)}`,
+      issueDate: new Date().toISOString().split('T')[0],
+      dueDate: '',
+      items: [],
+      subtotal: 0,
+      tax: 0,
+      total: 0
+    }
+
+    setSelectedInvoice(newInvoice)
+    setInvoiceMode('edit')
+    setShowEditInvoiceModal(true)
+  }
+
+  const handleGenerateMultiple = () => {
+    if (selectedInvoices.length === 0) {
+      toast.warning('Please select at least one organization')
+      return
+    }
+    setShowGenerateMultiplePopup(true)
+  }
+
+  const handleConfirmGenerateMultiple = async () => {
+    setGenerateLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      toast.success(`${selectedInvoices.length} invoice(s) generated successfully!`)
+      setShowGenerateMultiplePopup(false)
+      setSelectedInvoices([])
+      fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('Error generating invoices:', error)
+      toast.error('Failed to generate invoices')
+    } finally {
+      setGenerateLoading(false)
+    }
+  }
+
+  const handleDeleteInvoice = async () => {
+    setDeleteLoading(true)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      if (selectedInvoice) {
+        toast.success(`Invoice ${selectedInvoice.organizationId} deleted successfully!`)
+      } else if (selectedInvoices.length > 0) {
+        toast.success(`${selectedInvoices.length} invoice(s) deleted successfully!`)
+        setSelectedInvoices([])
+      }
+      
+      setShowDeleteInvoicePopup(false)
+      setSelectedInvoice(null)
+      fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('Error deleting invoice:', error)
+      toast.error('Failed to delete invoice(s)')
+    } finally {
+      setDeleteLoading(false)
+    }
   }
 
   const handleViewArchive = () => {
-    console.log('View archive clicked')
-    toast.info('View Archive feature coming soon!')
+    // Toggle archive mode
+    setArchiveMode(!archiveMode)
+    setCurrentPage(1) // Reset to first page
+  }
+
+  const handleBackButton = () => {
+    if (archiveMode) {
+      setArchiveMode(false)
+    } else {
+      if (isInstructor) {
+        history.push('/admin-dashboard')
+      } else {
+        history.push('/user-managment')
+      }
+    }
   }
 
   const handlePageChange = (newPage) => {
@@ -303,6 +501,10 @@ const ViewInvoices = () => {
   }
 
   const bulkActions = [
+    {
+      name: 'Generate Invoices',
+      action: handleGenerateMultiple
+    },
     {
       name: 'Export Selected',
       action: () => {
@@ -332,8 +534,7 @@ const ViewInvoices = () => {
           toast.warning('Please select at least one invoice')
           return
         }
-        console.log('Delete selected:', selectedInvoices)
-        toast.info('Delete feature coming soon!')
+        setShowDeleteInvoicePopup(true)
       }
     }
   ]
@@ -351,16 +552,32 @@ const ViewInvoices = () => {
     }
   }, [])
 
+  const handlePaymentModal = () => {
+    setShowPaymentModal(true)
+  }
+
+  const handleSavePayment = async (paymentData) => {
+    try {
+      // Add your API call here to save payment data
+      console.log('Saving payment data:', paymentData)
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      toast.success('Payment information updated successfully!')
+    } catch (error) {
+      console.error('Error saving payment:', error)
+      throw error
+    }
+  }
+
   return (
     <div className="view-invoices-container">
       <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
         <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
           <div className="d-flex flex-column gap-2">
             <h3 className="text-black mb-0 page-main-title">
-              VIEW INVOICES
+              {archiveMode ? 'INVOICE ARCHIVE' : 'VIEW INVOICES'}
             </h3>
             <p className="page-subtitle">
-              View invoices from all organizations
+              {archiveMode ? 'View archived invoices from all organizations' : 'View invoices from all organizations'}
             </p>
           </div>
         </div>
@@ -374,18 +591,21 @@ const ViewInvoices = () => {
 
       <div className="invoices-content-wrapper">
         <div className="search-actions-bar">
-        {/* Back button */}
-        <div className="back-button-container">
-          <button 
-            className="back-button"
-            onClick={() => history.push('/user-management')}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M12.5 15L7.5 10L12.5 5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Return to User Management
-          </button>
-        </div>
+          <div className="back-button-container">
+            <button 
+              className="back-button"
+              onClick={handleBackButton}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12.5 15L7.5 10L12.5 5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {archiveMode 
+                ? 'Return to View Invoices' 
+                : isInstructor 
+                  ? 'Return to Dashboard' 
+                  : 'Return to User Management'}
+            </button>
+          </div>
 
           <div 
             className="search-container" 
@@ -401,12 +621,10 @@ const ViewInvoices = () => {
                 className="search-input"
               />
               <button 
-                // className="filter-toggle-btn"
                 className="filter-toggle-btn search-icon"
                 onClick={(e) => {
                   e.stopPropagation()
                   setShowFilters(!showFilters)
-                  console.log('Filter button clicked')
                 }}
                 title="Open Filters"
                 type="button"
@@ -430,7 +648,6 @@ const ViewInvoices = () => {
               </button>
             </div>
 
-            {/* Filter Dropdown - positioned absolutely within search container */}
             <InvoiceFilters
               show={showFilters}
               onHide={() => setShowFilters(false)}
@@ -439,52 +656,102 @@ const ViewInvoices = () => {
             />
           </div>
 
-          <div className="actions-container">
-            <AcademyBtn
-              title="GENERATE INVOICE"
-              icon={plusIcon}
-              onClick={handleGenerateInvoice}
-            />
-            
+          {!archiveMode && (
+            <div className="actions-container">
+              {isInstructor ? (
+                <>
 
-             <AcademyBtn
-              title="VIEW ARCHIVE"
-              icon={plusIcon}
-              onClick={handleViewArchive}
-            />
+                  <AcademyBtn
+                    title="UPDATE PAYMENT METHODS"
+                    icon={plusIcon}
+                    onClick={handlePaymentModal}
+                  />
 
-            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
-              <div 
-                className="bulk-actions"
-                onClick={() => setShowBulkDropdown(!showBulkDropdown)}
-              >
-                <span>BULK ACTIONS</span>
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
 
-              {showBulkDropdown && (
-                <div className="dropdown-menu">
-                  {bulkActions.map((action, index) => (
+                  <AcademyBtn
+                    title="VIEW ARCHIVE"
+                    icon={plusIcon}
+                    onClick={handleViewArchive}
+                  />
+
+                  <div className="dropdown-wrapper" style={{ position: 'relative' }}>
                     <div 
-                      key={index}
-                      className="dropdown-item"
-                      onClick={() => {
-                        action.action()
-                        setShowBulkDropdown(false)
-                      }}
+                      className="bulk-actions"
+                      onClick={() => setShowBulkDropdown(!showBulkDropdown)}
                     >
-                      {action.name}
+                      <span>BULK ACTIONS</span>
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
                     </div>
-                  ))}
-                </div>
+
+                    {showBulkDropdown && (
+                      <div className="dropdown-menu">
+                        {bulkActions.map((action, index) => (
+                          <div 
+                            key={index}
+                            className="dropdown-item"
+                            onClick={() => {
+                              action.action()
+                              setShowBulkDropdown(false)
+                            }}
+                          >
+                            {action.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                </>
+              ) : (
+                <>
+                  <AcademyBtn
+                    title="GENERATE INVOICE"
+                    icon={plusIcon}
+                    onClick={handleGenerateInvoice}
+                  />
+
+                  <AcademyBtn
+                    title="VIEW ARCHIVE"
+                    icon={plusIcon}
+                    onClick={handleViewArchive}
+                  />
+
+                  <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+                    <div 
+                      className="bulk-actions"
+                      onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                    >
+                      <span>BULK ACTIONS</span>
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+
+                    {showBulkDropdown && (
+                      <div className="dropdown-menu">
+                        {bulkActions.map((action, index) => (
+                          <div 
+                            key={index}
+                            className="dropdown-item"
+                            onClick={() => {
+                              action.action()
+                              setShowBulkDropdown(false)
+                            }}
+                          >
+                            {action.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Table */}
         <div>
           <DataTable 
             columns={invoicesColumns}
@@ -499,52 +766,93 @@ const ViewInvoices = () => {
             onFilterChange={handleColumnFilterChange}
           />
 
-
-           {/* Pagination */}
-        <div className="pagination-container">
-          <button 
-            className="pagination-btn"
-            onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button 
-            className="pagination-btn"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <span className="pagination-info">{currentPage} / {pagination.totalPages}</span>
-          <button 
-            className="pagination-btn"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === pagination.totalPages}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-              <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <button 
-            className="pagination-btn"
-            onClick={() => handlePageChange(pagination.totalPages)}
-            disabled={currentPage === pagination.totalPages}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
+          <div className="pagination-container">
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <span className="pagination-info">{currentPage} / {pagination.totalPages}</span>
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === pagination.totalPages}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button 
+              className="pagination-btn"
+              onClick={() => handlePageChange(pagination.totalPages)}
+              disabled={currentPage === pagination.totalPages}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
-      
+        <ViewInvoiceModal
+          show={showEditInvoiceModal}
+          onHide={() => {
+            setShowEditInvoiceModal(false)
+            setSelectedInvoice(null)
+            setInvoiceMode('view')
+          }}
+          onSuccess={() => {
+            fetchInvoices(currentPage, debouncedSearchQuery)
+          }}
+          invoiceData={selectedInvoice}
+          mode={invoiceMode}
+        />
+
+        <GenerateInvoiceModal
+          show={showGenerateModal}
+          onHide={() => setShowGenerateModal(false)}
+          onGenerate={handleGenerateInvoiceSubmit}
+        />
+
+        <GenerateMultipleInvoicesPopup
+          show={showGenerateMultiplePopup}
+          onHide={() => setShowGenerateMultiplePopup(false)}
+          onConfirm={handleConfirmGenerateMultiple}
+          loading={generateLoading}
+        />
+
+        <DeleteInvoicePopup
+          show={showDeleteInvoicePopup}
+          onHide={() => {
+            setShowDeleteInvoicePopup(false)
+            setSelectedInvoice(null)
+          }}
+          onConfirm={handleDeleteInvoice}
+          loading={deleteLoading}
+          count={selectedInvoice ? 1 : selectedInvoices.length}
+        />
+
+        <ManagePaymentModal
+          show={showPaymentModal}
+          onHide={() => setShowPaymentModal(false)}
+          paymentData={null}
+          onSave={handleSavePayment}
+        />
       </div>
     </div>
   )

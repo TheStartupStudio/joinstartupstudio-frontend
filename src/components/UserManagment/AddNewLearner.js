@@ -11,6 +11,7 @@ import spark from '../../assets/images/academy-icons/svg/spark.svg'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import CustomBirthDateCalendar from '../../components/CustomBirthDateCalendar'
 import { FaRegCalendarAlt } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 
 const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = null }) => {
   const [loading, setLoading] = useState(false)
@@ -26,10 +27,14 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const [showCalendar, setShowCalendar] = useState(false)
   const calendarRef = useRef(null)
   
+  const currentUser = useSelector((state) => state.user.user.user)
+  const isAdmin = currentUser?.role_id === 3
+  const isClient = currentUser?.role_id === 2
+  
   const [formData, setFormData] = useState({
     learnerName: '',
     email: '',
-    password: '',
+    password: '********',
     address: '',
     city: '',
     state: '',
@@ -37,38 +42,45 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     learnerType: '',
     birthDate: null,
     organization: '',
-    roleId: 1, // Default to student
+    roleId: 1, 
     subscriptionExempt: false
   })
 
   const [organizations, setOrganizations] = useState([])
 
-  // Sync showMainModal with show prop
   useEffect(() => {
     setShowMainModal(show)
   }, [show])
 
-  // Initialize form data when in edit mode
-useEffect(() => {
-    if (mode === 'edit' && learnerData?.id && show) {
-      fetchLearnerData(learnerData.id)
-    }
-  }, [mode, learnerData, show])
-
-  // Fetch organizations on component mount
   useEffect(() => {
-    const fetchOrganizations = async () => {
-      try {
-        const response = await axiosInstance.get('super-admin/organization/simple')
-        if (response.data.success) {
-          setOrganizations(response.data.data)
-        }
-      } catch (error) {
-        console.error('Error fetching organizations:', error)
+    if (show) {
+      if (mode === 'edit' && learnerData?.id) {
+        fetchLearnerData(learnerData.id)
+      } else if (isClient && mode === 'add') {
+        setFormData(prev => ({
+          ...prev,
+          organization: currentUser.universityId || currentUser.University?.id,
+          password: 'Learntostart1!'
+        }))
       }
     }
-    fetchOrganizations()
-  }, [])
+  }, [mode, learnerData, show, isClient, currentUser])
+
+  useEffect(() => {
+    if (isAdmin) {
+      const fetchOrganizations = async () => {
+        try {
+          const response = await axiosInstance.get('super-admin/organization/simple')
+          if (response.data.success) {
+            setOrganizations(response.data.data)
+          }
+        } catch (error) {
+          console.error('Error fetching organizations:', error)
+        }
+      }
+      fetchOrganizations()
+    }
+  }, [isAdmin])
 
   const fetchLearnerData = async (userId) => {
     try {
@@ -98,7 +110,6 @@ useEffect(() => {
     }
   }
 
-  // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
@@ -129,16 +140,18 @@ useEffect(() => {
 
   const learnerTypeOptions = ['Student', 'Professional', 'Educator', 'Other']
 
+  const [showRoleDropdown, setShowRoleDropdown] = useState(false)
 
-    const [showRoleDropdown, setShowRoleDropdown] = useState(false)
-
-  const roleOptions = [
-    { id: 1, name: 'Student' },
-    { id: 2, name: 'Client' },
-    { id: 3, name: 'Super Admin' }
-  ]
-
-  // const organizationOptions = ['Educational Institution', 'Corporate', 'Non-Profit']
+  const roleOptions = isAdmin 
+    ? [
+        { id: 1, name: 'Student' },
+        { id: 2, name: 'Client' },
+        { id: 3, name: 'Super Admin' }
+      ]
+    : [
+        { id: 1, name: 'Student' },
+        { id: 2, name: 'Client' }
+      ]
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -175,7 +188,6 @@ useEffect(() => {
   }
 
   const handleStatusToggle = () => {
-    // Close main modal and show deactivate/activate popup
     setShowMainModal(false)
     setShowDeactivateUserPopup(true)
   }
@@ -229,12 +241,6 @@ useEffect(() => {
       return false
     }
 
-    // if (!learnerType) {
-    //   toast.error('Learner type is required')
-    //   return false
-    // }
-
-    // Birth date validation - Allow all ages but prevent future dates
     if (!birthDate) {
       toast.error('Birth date is required')
       return false
@@ -247,11 +253,6 @@ useEffect(() => {
         return false
       }
     }
-
-    // if (!organization) {
-    //   toast.error('Organization is required')
-    //   return false
-    // }
 
     return true
   }
@@ -271,8 +272,11 @@ useEffect(() => {
         birthDate: formData.birthDate ? formData.birthDate.toISOString().split('T')[0] : null,
         universityId: formData.organization || null,
         activeStatus: isUserActive ? 1 : 0,
-        role_id: formData.roleId,
-        subscription_exempt: formData.subscriptionExempt ? 1 : 0
+        role_id: formData.roleId
+      }
+
+      if (isAdmin) {
+        payload.subscription_exempt = formData.subscriptionExempt ? 1 : 0
       }
 
       if (mode === 'edit') {
@@ -302,7 +306,7 @@ useEffect(() => {
           gender: '',
           learnerType: '',
           birthDate: null,
-          organization: '',
+          organization: isClient ? (currentUser.universityId || currentUser.University?.id) : '',
           roleId: 1,
           subscriptionExempt: false
         })
@@ -328,7 +332,7 @@ useEffect(() => {
       gender: '',
       learnerType: '',
       birthDate: null,
-      organization: '',
+      organization: isClient ? (currentUser.universityId || currentUser.University?.id) : '',
       roleId: 1,
       subscriptionExempt: false
     })
@@ -361,7 +365,6 @@ useEffect(() => {
       setLoading(false)
     }
   }
-
 
   const handleDeleteLearnerClick = () => {
     setShowMainModal(false)
@@ -401,11 +404,9 @@ useEffect(() => {
       const newStatus = !isUserActive
 
       if (newStatus) {
-        // Activate user
         await axiosInstance.post(`/super-admin/users/${learnerData.id}/reactivate`)
         toast.success('User activated successfully!')
       } else {
-        // Deactivate user
         await axiosInstance.delete(`/super-admin/users/${learnerData.id}`)
         toast.success('User deactivated successfully!')
       }
@@ -413,7 +414,7 @@ useEffect(() => {
       setIsUserActive(newStatus)
       setShowDeactivateUserPopup(false)
       setShowMainModal(true)
-      onSuccess() // Refresh the user list
+      onSuccess()
     } catch (error) {
       console.error(`Error ${isUserActive ? 'deactivating' : 'activating'} user:`, error)
       toast.error(`Failed to ${isUserActive ? 'deactivate' : 'activate'} user`)
@@ -423,12 +424,39 @@ useEffect(() => {
     }
   }
 
-
   const isEditMode = mode === 'edit'
 
-  // Find selected organization for display
-  const selectedOrganization = organizations.find(org => org.id === formData.organization)
+  const selectedOrganization = isAdmin 
+    ? organizations.find(org => org.id === formData.organization)
+    : currentUser?.University
+  
   const selectedRole = roleOptions.find(role => role.id === formData.roleId)
+
+  const getRoleLabel = (roleId) => {
+    switch(roleId) {
+      case 1:
+        return 'Learner'
+      case 2:
+        return 'Client'
+      case 3:
+        return 'Super Admin'
+      default:
+        return 'Learner'
+    }
+  }
+
+  const getModalTitle = () => {
+    if (mode === 'add') {
+      return 'Add New Learner'
+    }
+    const roleLabel = getRoleLabel(formData.roleId)
+    return `Edit ${roleLabel}`
+  }
+
+  const getDeleteButtonText = () => {
+    const roleLabel = getRoleLabel(formData.roleId)
+    return `Delete ${roleLabel}`
+  }
 
   return (
     <>
@@ -449,7 +477,7 @@ useEffect(() => {
 
             <div className="d-flex justify-content-between align-item-center gap-3 flex-wrap">
               <h3 className="modal-title-learner">
-                {isEditMode ? 'Edit Learner' : 'Add New Learner'}
+                {getModalTitle()}
               </h3>
 
               {isEditMode && (
@@ -494,7 +522,7 @@ useEffect(() => {
 
           {/* Form Fields */}
           <div className="form-section-learner">
-            {/* Learner Name */}
+            {/* Learner Name - Update label based on role */}
             <div className="input-group" onClick={() => !loading && handleInputFocus('learnerName')}>
               <input
                 type="text"
@@ -505,12 +533,14 @@ useEffect(() => {
                 id="learnerName"
                 disabled={loading}
               />
-              <label className="input-label" htmlFor="learnerName">Learner Name</label>
+              <label className="input-label" htmlFor="learnerName">
+                {mode === 'edit' ? `${getRoleLabel(formData.roleId)} Name` : 'Learner Name'}
+              </label>
               {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
             </div>
 
             <div className="d-flex gap-2">
-              {/* Email */}
+              {/* Email - Update label based on role */}
               <div className="input-group" onClick={() => !loading && handleInputFocus('email')}>
                 <input
                   type="email"
@@ -522,7 +552,9 @@ useEffect(() => {
                   disabled={loading}
                   autoComplete="off"
                 />
-                <label className="input-label" htmlFor="email">Email</label>
+                <label className="input-label" htmlFor="email">
+                  {mode === 'edit' ? `${getRoleLabel(formData.roleId)} Email` : 'Email'}
+                </label>
                 {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
               </div>
 
@@ -594,7 +626,9 @@ useEffect(() => {
                 id="address"
                 disabled={loading}
               />
-              <label className="input-label" htmlFor="address">Learner Address</label>
+              <label className="input-label" htmlFor="address">
+                {mode === 'edit' ? `${getRoleLabel(formData.roleId)} Address` : 'Learner Address'}
+              </label>
               {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
             </div>
 
@@ -611,7 +645,9 @@ useEffect(() => {
                     id="city"
                     disabled={loading}
                   />
-                  <label className="input-label" htmlFor="city">Learner City</label>
+                  <label className="input-label" htmlFor="city">
+                    {mode === 'edit' ? `${getRoleLabel(formData.roleId)} City` : 'Learner City'}
+                  </label>
                   {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
                 </div>
               </div>
@@ -623,7 +659,7 @@ useEffect(() => {
                     onClick={() => !loading && setShowStateDropdown(!showStateDropdown)}
                   >
                     <span className={formData.state ? 'selected-value' : 'placeholder-value'}>
-                      {formData.state || 'Learner State'}
+                      {formData.state || (mode === 'edit' ? `${getRoleLabel(formData.roleId)} State` : 'Learner State')}
                     </span>
                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                       <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -759,38 +795,57 @@ useEffect(() => {
             </div>
 
             {/* Select Organization */}
-            <div className="custom-dropdown-learner">
-              <div
-                className="dropdown-trigger-learner"
-                onClick={() => !loading && setShowOrganizationDropdown(!showOrganizationDropdown)}
-              >
-                <span className={formData.organization ? 'selected-value' : 'placeholder-value'}>
-                  {selectedOrganization ? selectedOrganization.name : 'Select Organization'}
-                </span>
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              {showOrganizationDropdown && (
-                <div className="dropdown-menu-learner">
-                  {organizations.map((organization) => (
-                    <div
-                      key={organization.id}
-                      className="dropdown-item-learner"
-                      onClick={() => handleDropdownSelect('organization', organization.id)}
-                    >
-                      {organization.name}
-                    </div>
-                  ))}
+            {isAdmin ? (
+              <div className="custom-dropdown-learner">
+                <div
+                  className="dropdown-trigger-learner"
+                  onClick={() => !loading && setShowOrganizationDropdown(!showOrganizationDropdown)}
+                >
+                  <span className={formData.organization ? 'selected-value' : 'placeholder-value'}>
+                    {selectedOrganization ? selectedOrganization.name : 'Select Organization'}
+                  </span>
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
-              )}
-            </div>
+                {showOrganizationDropdown && (
+                  <div className="dropdown-menu-learner">
+                    {organizations.map((organization) => (
+                      <div
+                        key={organization.id}
+                        className="dropdown-item-learner"
+                        onClick={() => handleDropdownSelect('organization', organization.id)}
+                      >
+                        {organization.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="input-group">
+                <input
+                  type="text"
+                  value={selectedOrganization?.name || 'No Organization'}
+                  className="form-input"
+                  placeholder=" "
+                  disabled={true}
+                  style={{ cursor: 'not-allowed', opacity: 0.7 }}
+                />
+                <label className="input-label">Organization</label>
+              </div>
+            )}
 
+
+            {/* Subscription Exempt Toggle - Only for Admins */}
+            {isAdmin && (
+
+              <>
 
             {/* Role & Subscription */}
             <div className="section-header">
               <img src={spark} alt="Spark Icon" />
-              <span>Role & Subscription</span>
+              <span>Role{isAdmin ? ' & Subscription' : ''}</span>
             </div>
 
             {/* Select Role */}
@@ -821,43 +876,45 @@ useEffect(() => {
               )}
             </div>
 
-            {/* Subscription Exempt Toggle */}
-            <div className="d-flex align-items-center justify-content-between" style={{ padding: '1rem 0' }}>
-              <div>
-                <h4 style={{
-                  color: 'var(--COLORS-Black, #000)',
-                  fontFamily: 'Montserrat',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  marginBottom: '4px'
-                }}>
-                  Subscription Exempt
-                </h4>
-                <p style={{
-                  color: '#6F6F6F',
-                  fontFamily: 'Montserrat',
-                  fontSize: '12px',
-                  fontWeight: 400,
-                  marginBottom: '0px'
-                }}>
-                  Grant full access without subscription requirement
-                </p>
+              <div className="d-flex align-items-center justify-content-between" style={{ padding: '1rem 0' }}>
+                <div>
+                  <h4 style={{
+                    color: 'var(--COLORS-Black, #000)',
+                    fontFamily: 'Montserrat',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    marginBottom: '4px'
+                  }}>
+                    Subscription Exempt
+                  </h4>
+                  <p style={{
+                    color: '#6F6F6F',
+                    fontFamily: 'Montserrat',
+                    fontSize: '12px',
+                    fontWeight: 400,
+                    marginBottom: '0px'
+                  }}>
+                    Grant full access without subscription requirement
+                  </p>
+                </div>
+                <label className="switch">
+                  <input 
+                    type="checkbox" 
+                    checked={formData.subscriptionExempt}
+                    onChange={(e) => handleInputChange('subscriptionExempt', e.target.checked)}
+                    disabled={loading}
+                  />
+                  <span className="slider round"></span>
+                </label>
               </div>
-              <label className="switch">
-                <input 
-                  type="checkbox" 
-                  checked={formData.subscriptionExempt}
-                  onChange={(e) => handleInputChange('subscriptionExempt', e.target.checked)}
-                  disabled={loading}
-                />
-                <span className="slider round"></span>
-              </label>
-            </div>
+
+              </>
+            )}
           </div>
 
           {/* Action Buttons */}
           <div className="modal-actions-learner">
-            {/* Delete Learner Button - Only in Edit Mode */}
+            {/* Delete Button - Only in Edit Mode */}
             {isEditMode && (
               <div 
                 className="d-flex align-items-center gap-2"
@@ -876,7 +933,7 @@ useEffect(() => {
                   fontSize: '15px',
                   fontWeight: 600,
                 }}>
-                  Delete Learner
+                  {getDeleteButtonText()}
                 </div>
               </div>
             )}
@@ -905,43 +962,43 @@ useEffect(() => {
         </div>
       </Modal>
 
-      {/* Delete Learner Popup */}
+      {/* Delete Popup - Update message based on role */}
       <UserManagementPopup
         show={showDeletePopup}
         onHide={handleDeleteCancel}
         onConfirm={handleConfirmDelete}
-        title="Delete User?"
-        message="Are you sure you want to delete the user(s)? User and all work will be removed from the system. This action cannot be undone."
+        title={`Delete ${getRoleLabel(formData.roleId)}?`}
+        message={`Are you sure you want to delete this ${getRoleLabel(formData.roleId).toLowerCase()}? All data will be removed from the system. This action cannot be undone.`}
         cancelText="NO, TAKE ME BACK"
-        confirmText="YES, DELETE USER(S)"
+        confirmText={`YES, DELETE ${getRoleLabel(formData.roleId).toUpperCase()}`}
         loading={loading}
       />
 
-      {/* Reset Password Popup */}
+      {/* Reset Password Popup - Update message based on role */}
       <UserManagementPopup
         show={showResetPasswordPopup}
         onHide={handleResetPasswordCancel}
         onConfirm={handleConfirmResetPassword}
         title="Reset Password?"
-        message="Are you sure you want to reset this learner's password to the default (Learntostart1!)? The learner will need to use this password on their next login."
+        message={`Are you sure you want to reset this ${getRoleLabel(formData.roleId).toLowerCase()}'s password to the default (Learntostart1!)? They will need to use this password on their next login.`}
         cancelText="NO, TAKE ME BACK"
-        confirmText="YES, RESET PASSWORD(S)"
+        confirmText="YES, RESET PASSWORD"
         loading={loading}
       />
 
-      {/* Deactivate/Activate User Popup */}
+      {/* Deactivate/Activate User Popup - Update message based on role */}
       <UserManagementPopup
         show={showDeactivateUserPopup}
         onHide={handleDeactivateUserCancel}
         onConfirm={handleConfirmDeactivateUser}
-        title={isUserActive ? "Deactivate User?" : "Activate User?"}
+        title={isUserActive ? `Deactivate ${getRoleLabel(formData.roleId)}?` : `Activate ${getRoleLabel(formData.roleId)}?`}
         message={
           isUserActive 
-            ? "Are you sure you want to deactivate the user(s)? Work and settings will be preserved, but user(s) will no longer have access to the platform."
-            : "Are you sure you want to activate the user(s)? User(s) will regain access to the platform."
+            ? `Are you sure you want to deactivate this ${getRoleLabel(formData.roleId).toLowerCase()}? Work and settings will be preserved, but they will no longer have access to the platform.`
+            : `Are you sure you want to activate this ${getRoleLabel(formData.roleId).toLowerCase()}? They will regain access to the platform.`
         }
         cancelText="NO, TAKE ME BACK"
-        confirmText={isUserActive ? "YES, DEACTIVATE USER(S)" : "YES, ACTIVATE USER(S)"}
+        confirmText={isUserActive ? `YES, DEACTIVATE ${getRoleLabel(formData.roleId).toUpperCase()}` : `YES, ACTIVATE ${getRoleLabel(formData.roleId).toUpperCase()}`}
         loading={loading}
       />
     </>

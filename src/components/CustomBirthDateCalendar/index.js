@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import './index.css'
 
@@ -21,6 +21,13 @@ const CustomBirthDateCalendar = ({ selectedDate, onDateChange }) => {
     const date = new Date(year, month, day, 12, 0, 0, 0)
     return date
   }
+
+  useEffect(() => {
+    if (selectedDate) {
+      setCurrentDate(selectedDate)
+      setViewDate(selectedDate)
+    }
+  }, [selectedDate])
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear()
@@ -89,24 +96,48 @@ const CustomBirthDateCalendar = ({ selectedDate, onDateChange }) => {
 
   const handleDateClick = (dayObj) => {
     if (dayObj.isCurrentMonth) {
-      const selectedDate = createDateAtNoon(
+      const newDate = createDateAtNoon(
         dayObj.date.getFullYear(),
         dayObj.date.getMonth(),
         dayObj.date.getDate()
       )
-      setCurrentDate(selectedDate)
-      onDateChange(selectedDate)
+      setCurrentDate(newDate)
+      onDateChange(newDate)
     }
   }
 
   const handleMonthSelect = (monthIndex) => {
-    setViewDate(new Date(viewDate.getFullYear(), monthIndex, 1))
+    const baseDate = currentDate || viewDate
+    const currentDay = baseDate.getDate()
+    const newYear = viewDate.getFullYear()
+    
+    const daysInNewMonth = new Date(newYear, monthIndex + 1, 0).getDate()
+    const safeDay = Math.min(currentDay, daysInNewMonth)
+    
+    const newDate = createDateAtNoon(newYear, monthIndex, safeDay)
+    
+    setViewDate(newDate)
+    setCurrentDate(newDate)
     setShowMonthPicker(false)
+    
+    onDateChange(newDate)
   }
 
   const handleYearSelect = (year) => {
-    setViewDate(new Date(year, viewDate.getMonth(), 1))
+    const baseDate = currentDate || viewDate
+    const currentMonth = baseDate.getMonth()
+    const currentDay = baseDate.getDate()
+    
+    const daysInMonth = new Date(year, currentMonth + 1, 0).getDate()
+    const safeDay = Math.min(currentDay, daysInMonth)
+    
+    const newDate = createDateAtNoon(year, currentMonth, safeDay)
+    
+    setViewDate(newDate)
+    setCurrentDate(newDate)
     setShowYearPicker(false)
+    
+    onDateChange(newDate)
   }
 
   const days = getDaysInMonth(viewDate)
@@ -124,23 +155,21 @@ const CustomBirthDateCalendar = ({ selectedDate, onDateChange }) => {
         
         <div className="month-year-container">
           {/* Month/Year Display - clickable */}
-          {!showMonthPicker && !showYearPicker && (
-            <div className="month-year-display">
-              <span 
-                className="month-selector"
-                onClick={() => setShowMonthPicker(true)}
-              >
-                {months[viewDate.getMonth()]}
-              </span>
-              {' '}
-              <span 
-                className="year-selector"
-                onClick={() => setShowYearPicker(true)}
-              >
-                {viewDate.getFullYear()}
-              </span>
-            </div>
-          )}
+          <div className="month-year-display">
+            <span 
+              className="month-selector"
+              onClick={() => setShowMonthPicker(true)}
+            >
+              {months[viewDate.getMonth()]}
+            </span>
+            {' '}
+            <span 
+              className="year-selector"
+              onClick={() => setShowYearPicker(true)}
+            >
+              {viewDate.getFullYear()}
+            </span>
+          </div>
 
           {/* Month Picker */}
           {showMonthPicker && (
@@ -212,33 +241,31 @@ const CustomBirthDateCalendar = ({ selectedDate, onDateChange }) => {
         </button>
       </div>
 
-      {/* Only show calendar days when not picking month/year */}
-      {!showMonthPicker && !showYearPicker && (
-        <div className="calendar-grid">
-          <div className="days-header">
-            {daysOfWeek.map(day => (
-              <div key={day} className="day-name">{day}</div>
-            ))}
-          </div>
-
-          <div className="days-grid">
-            {days.map((dayObj, index) => (
-              <button
-                key={index}
-                type="button"
-                className={`calendar-day ${
-                  !dayObj.isCurrentMonth ? 'other-month' : ''
-                } ${isToday(dayObj.date) ? 'today' : ''} ${
-                  isSelected(dayObj.date) ? 'selected' : ''
-                }`}
-                onClick={() => handleDateClick(dayObj)}
-              >
-                {dayObj.day}
-              </button>
-            ))}
-          </div>
+      {/* Calendar Grid - Always visible */}
+      <div className="calendar-grid">
+        <div className="days-header">
+          {daysOfWeek.map(day => (
+            <div key={day} className="day-name">{day}</div>
+          ))}
         </div>
-      )}
+
+        <div className="days-grid">
+          {days.map((dayObj, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`calendar-day ${
+                !dayObj.isCurrentMonth ? 'other-month' : ''
+              } ${isToday(dayObj.date) ? 'today' : ''} ${
+                isSelected(dayObj.date) ? 'selected' : ''
+              }`}
+              onClick={() => handleDateClick(dayObj)}
+            >
+              {dayObj.day}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

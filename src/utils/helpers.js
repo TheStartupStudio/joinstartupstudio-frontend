@@ -149,6 +149,10 @@ export const handleUserRedirect = (user) => {
     return 'passwordResetRequired'
   }
 
+  if (!user.data.last_login) {
+    return 'passwordResetRequired'
+  }
+
   if (user.data.is_active !== true) {
     window.location.href = '/verify-email'
     return

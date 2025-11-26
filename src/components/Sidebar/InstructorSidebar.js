@@ -24,6 +24,7 @@ import CancelSubModal from '../UserDetails/CancelSubModal'
 import CertificateModal from '../UserDetails/CertificateModal'
 import EditUserModal from '../UserDetails/EditUserModal'
 import SubscriptionModal from '../UserDetails//SubscriptionModal'
+import InvoiceIcon from '../../assets/images/academy-icons/hand-card.png'
 
 const SIDEBAR_MENU_ITEMS = [
   {
@@ -72,7 +73,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Leadership Journal Management',
     srcImage: groupIcon,
     to: '/leadership-journal-management',
-    roles: [2, 1],
+    roles: [3],
     requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal-management') ? 'active' : ''
   },
@@ -117,6 +118,14 @@ const SIDEBAR_MENU_ITEMS = [
     to: '/my-portfolio',
     roles: [2, 1],
     className: (pathname) => pathname.includes('my-portfolio') ? 'active' : ''
+  },
+  {
+    id: 'view-invoices',
+    title: 'View Invoices',
+    srcImage: InvoiceIcon,
+    to: '/view-invoices',
+    roles: [3, 2],
+    className: (pathname) => pathname.includes('view-invoices') ? 'active' : ''
   }
 ]
 

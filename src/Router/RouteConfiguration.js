@@ -523,6 +523,13 @@ export const instructorRoutes = [
     breadcrumb: 'User Managment',
     requiredRole: ROUTE_ACCESS.INSTRUCTOR
   },
+
+  {
+    path: '/view-invoices',
+    breadcrumb: 'View Invoices',
+    component: ViewInvoices,
+    requiredRole: ROUTE_ACCESS.INSTRUCTOR
+  }
 ]
 
 export const studentRoutes = [
