@@ -13,11 +13,10 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
   const [showPreviewEmailModal, setShowPreviewEmailModal] = useState(false)
   const [showPayInvoiceModal, setShowPayInvoiceModal] = useState(false)
   
-  // Get user role from Redux
   const { user } = useSelector((state) => state.user.user)
+  const isOrgClient = user?.role_id === 2
   const isInstructor = user?.role_id === 2
   
-  // Default dummy data
   const defaultDummyData = {
     organizationName: 'Organization Name',
     organizationAddress: '123 Tech Street',
@@ -48,18 +47,14 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     total: 0
   })
 
-  // Load invoice data when modal opens
   useEffect(() => {
     setMode(initialMode)
     if (show && invoiceData) {
-      // If invoiceData has an ID, fetch full invoice details from API
       if (invoiceData.id) {
         fetchInvoiceDetails(invoiceData.id)
       } else {
-        // Use provided data directly
         setFormData({
           ...invoiceData,
-          // Ensure dates are in correct format
           issueDate: invoiceData.issueDate || invoiceData.invoiceDate,
           dueDate: invoiceData.dueDate
         })
@@ -72,9 +67,14 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
   const fetchInvoiceDetails = async (invoiceId) => {
     setLoading(true)
     try {
-      const response = await invoiceApi.getInvoiceById(invoiceId)
+      let response
       
-      // The backend returns data in response.data
+      if (isOrgClient) {
+        response = await invoiceApi.getClientInvoiceById(invoiceId)
+      } else {
+        response = await invoiceApi.getInvoiceById(invoiceId)
+      }
+      
       const invoice = response.data
       
       setFormData({
@@ -97,7 +97,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     } catch (error) {
       console.error('Error fetching invoice:', error)
       toast.error(error.response?.data?.message || 'Failed to load invoice details')
-      // Fallback to provided data or dummy data
       setFormData(invoiceData || defaultDummyData)
     } finally {
       setLoading(false)
@@ -127,7 +126,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
   const handleNewItemChange = (field, value) => {
     const updatedItem = { ...newItemData, [field]: value }
     
-    // Calculate total if quantity and price are provided
     if (field === 'quantity' || field === 'price') {
       const qty = parseFloat(field === 'quantity' ? value : newItemData.quantity) || 0
       const price = parseFloat(field === 'price' ? value : newItemData.price) || 0
@@ -155,7 +153,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     }))
     calculateTotals(updatedItems)
     
-    // Reset new item data
     setNewItemData({
       description: '',
       quantity: '',
@@ -177,7 +174,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
 
   const calculateTotals = (items) => {
     const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.total) || 0), 0)
-    const tax = subtotal * 0.07 // 7% tax as per backend
+    const tax = subtotal * 0.07 
     const total = subtotal + tax
 
     setFormData(prev => ({
@@ -218,7 +215,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
       toast.success(response.message || 'Invoice updated successfully!')
       setMode('view')
       
-      // Refresh invoice data
       await fetchInvoiceDetails(formData.id)
       
       if (onSuccess) onSuccess()
@@ -262,30 +258,23 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
   }
 
   const handlePaymentSubmit = async (paymentData) => {
-    try {
-      console.log('Payment data:', paymentData)
-      // Add your API call here to process payment
-      toast.success('Payment scheduled successfully!')
-    } catch (error) {
-      console.error('Error processing payment:', error)
-      throw error
+  try {
+    console.log('Payment successful:', paymentData)
+    
+    if (formData.id) {
+      await fetchInvoiceDetails(formData.id)
     }
-  }
-
-  const handlePayInvoice = () => {
-    setShowPayInvoiceModal(true)
-  }
-
-  const handlePaymentSubmit = async (paymentData) => {
-    try {
-      console.log('Payment data:', paymentData)
-      // Add your API call here to process payment
-      toast.success('Payment scheduled successfully!')
-    } catch (error) {
-      console.error('Error processing payment:', error)
-      throw error
+    
+    if (onSuccess) {
+      onSuccess()
     }
+    
+    toast.success('Invoice paid successfully!')
+  } catch (error) {
+    console.error('Error handling payment:', error)
+    throw error
   }
+}
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {

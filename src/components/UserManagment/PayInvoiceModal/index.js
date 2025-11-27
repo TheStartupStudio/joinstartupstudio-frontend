@@ -5,6 +5,7 @@ import { faArrowLeft, faPencilAlt, faCalendar } from '@fortawesome/free-solid-sv
 import { toast } from 'react-toastify'
 import CustomBirthDateCalendar from '../../CustomBirthDateCalendar'
 import { invoiceApi } from '../../../utils/invoiceApi'
+import { useSelector } from 'react-redux'
 import './PayInvoiceModal.css'
 
 const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
@@ -18,17 +19,20 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
     expirationDate: '',
     cvc: '',
     zipCode: '',
-    // Bank Account fields
     nameOnBankAccount: '',
     routingNumber: '',
     accountNumber: '',
     accountType: 'checking',
-    // Billing Address (shared)
     billingAddress: '',
     city: '',
     state: '',
     billingZipCode: ''
   })
+    const [loadingPaymentMethod, setLoadingPaymentMethod] = useState(false)
+
+
+  const { user } = useSelector((state) => state.user.user)
+  const isOrgClient = user?.role_id === 2
 
   useEffect(() => {
     if (invoiceData) {
@@ -38,12 +42,10 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
         expirationDate: invoiceData.expirationDate || '10/27',
         cvc: invoiceData.cvc || '123',
         zipCode: invoiceData.zipCode || '36741',
-        // Bank Account
         nameOnBankAccount: invoiceData.nameOnBankAccount || 'My Organization',
         routingNumber: invoiceData.routingNumber || '1234567890',
         accountNumber: invoiceData.accountNumber || '1234567890',
         accountType: invoiceData.accountType || 'checking',
-        // Billing Address
         billingAddress: invoiceData.billingAddress || '1234 My Home Street',
         city: invoiceData.city || 'Orlando',
         state: invoiceData.state || 'FL',
@@ -52,6 +54,27 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
       setPaymentMethod(invoiceData.paymentMethod || 'credit-card')
     }
   }, [invoiceData, show])
+
+
+    useEffect(() => {
+    if (show) {
+      fetchPaymentMethod()
+    }
+  }, [show])
+
+
+   const fetchPaymentMethod = async () => {
+    setLoadingPaymentMethod(true)
+    try {
+      const response = await invoiceApi.getClientPaymentMethod()
+      setPaymentMethod(response.data)
+    } catch (error) {
+      console.error('Error fetching payment method:', error)
+      toast.error('Failed to load payment method')
+    } finally {
+      setLoadingPaymentMethod(false)
+    }
+  }
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -78,45 +101,31 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
   }
 
   const handlePayNow = async () => {
-    // Validate required fields
-    if (paymentMethod === 'credit-card') {
-      if (!formData.nameOnCard || !formData.cardNumber || !formData.expirationDate || !formData.cvc) {
-        toast.warning('Please fill in all card information fields')
-        return
-      }
-    } else if (paymentMethod === 'bank-account') {
-      if (!formData.nameOnBankAccount || !formData.routingNumber || !formData.accountNumber) {
-        toast.warning('Please fill in all bank account information fields')
-        return
-      }
-    }
-
-    if (!formData.billingAddress || !formData.city || !formData.state || !formData.billingZipCode) {
-      toast.warning('Please fill in all billing address fields')
-      return
-    }
-
     if (!invoiceData?.id) {
       toast.error('Invoice ID is required')
       return
     }
 
+    if (!paymentMethod) {
+      toast.error('No payment method on file. Please add a payment method first.')
+      return
+    }
+
     setLoading(true)
     try {
-      await invoiceApi.payInvoice(invoiceData.id, {
-        paymentMethod,
-        sendDate,
-        ...formData
-      })
+      const response = await invoiceApi.payClientInvoice(invoiceData.id)
       
       toast.success('Payment processed successfully!')
+      
       if (onPay) {
-        await onPay({ ...formData, paymentMethod, sendDate })
+        await onPay(response.data)
       }
+      
       onHide()
     } catch (error) {
       console.error('Error processing payment:', error)
-      toast.error(error.response?.data?.message || 'Failed to process payment')
+      const errorMessage = error.response?.data?.message || 'Failed to process payment'
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -124,6 +133,20 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
 
   const handleCancel = () => {
     onHide()
+  }
+
+   const formatPaymentMethod = () => {
+    if (!paymentMethod) return 'No payment method on file'
+
+    if (paymentMethod.type === 'card' && paymentMethod.card) {
+      return `${paymentMethod.card.brand.toUpperCase()} ending in ${paymentMethod.card.last4}`
+    }
+
+    if (paymentMethod.type === 'us_bank_account' && paymentMethod.us_bank_account) {
+      return `Bank account ending in ${paymentMethod.us_bank_account.last4}`
+    }
+
+    return 'Payment method available'
   }
 
   return (

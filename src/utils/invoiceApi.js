@@ -1,7 +1,6 @@
 import axiosInstance from './AxiosInstance'
 
 export const invoiceApi = {
-
      /**
    * Get ALL invoices (super admin only)
    */
@@ -100,5 +99,80 @@ export const invoiceApi = {
     )
     const responses = await Promise.allSettled(promises)
     return responses
+  },
+
+  /**
+   * Get all invoices for the logged-in client's organization
+   */
+  getClientInvoices: async (params = {}) => {
+    try {
+      const response = await axiosInstance.get('/client/invoices', { params })
+      return response.data
+    } catch (error) {
+      console.error('Error fetching client invoices:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Get single invoice details for client
+   */
+  getClientInvoiceById: async (invoiceId) => {
+    try {
+      const response = await axiosInstance.get(`/client/invoices/${invoiceId}`)
+      return response.data
+    } catch (error) {
+      console.error('Error fetching client invoice:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Pay an invoice using Stripe (client-side)
+   */
+  // payClientInvoice: async (invoiceId, paymentData) => {
+  //   try {
+  //     const response = await axiosInstance.post(`/client/invoices/${invoiceId}/pay`, paymentData)
+  //     return response.data
+  //   } catch (error) {
+  //     console.error('Error paying client invoice:', error)
+  //     throw error
+  //   }
+  // },
+
+  /**
+   * Download invoice as PDF (client-side)
+   */
+  downloadClientInvoice: async (invoiceId) => {
+    try {
+      const response = await axiosInstance.get(`/client/invoices/${invoiceId}/download`, {
+        responseType: 'blob'
+      })
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `invoice-${invoiceId}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+      
+      return response.data
+    } catch (error) {
+      console.error('Error downloading client invoice:', error)
+      throw error
+    }
+  },
+
+
+  payClientInvoice: async (invoiceId) => {
+    const response = await axiosInstance.post(`/client/invoices/${invoiceId}/pay`)
+    return response.data
+  },
+
+  getClientPaymentMethod: async () => {
+    const response = await axiosInstance.get('/client/payment-method')
+    return response.data
   }
 }
