@@ -13,12 +13,20 @@ import GenerateInvoiceModal from '../../components/UserManagment/GenerateInvoice
 import GenerateMultipleInvoicesPopup from '../../components/UserManagment/GenerateMultipleInvoicesPopup'
 import DeleteInvoicePopup from '../../components/UserManagment/DeleteInvoicePopup'
 import { invoiceApi } from '../../utils/invoiceApi'
+import ManagePaymentModal from '../../components/UserManagment/ManagePaymentModal'
 import './index.css'
 
 const ViewInvoices = ({ isArchiveMode = false }) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const location = useLocation()
+  
+  // Get user role from Redux
+  const { user } = useSelector((state) => state.user.user)
+  const isInstructor = user?.role_id === 2
+  
+  // Get user role from Redux
+  const isInstructor = user?.role_id === 2
   
   // Get user from Redux store
   const { user } = useSelector((state) => state.user?.user || {})
@@ -52,6 +60,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const [selectedInvoice, setSelectedInvoice] = useState(null)
   const [invoiceMode, setInvoiceMode] = useState('view')
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [generateLoading, setGenerateLoading] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
 
   const searchContainerRef = useRef(null)
 
@@ -131,54 +141,120 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }, [currentPage, debouncedSearchQuery, archiveMode, user])
 
-  const invoicesColumns = useMemo(() => [
-    {
-      key: 'organizationName',
-      title: 'ORGANIZATION NAME',
-      sortable: true,
-      filterable: false,
-      render: (value, item) => (
-        <div className="invoice-organization-info">
-          <div className="organization-name">{item.organizationName}</div>
-          <div className="organization-id">{item.organizationId}</div>
-        </div>
-      )
-    },
-    {
-      key: 'status',
-      title: 'STATUS',
-      sortable: true,
-      filterable: true,
-      render: (value) => (
-        <span className={`status-badge status-${value?.toLowerCase()}`}>
-          <span className="status-dot"></span>
-          {value}
-        </span>
-      )
-    },
-    {
-      key: 'issueDate',
-      title: 'INVOICE DATE',
-      sortable: true,
-      filterable: true,
-      render: (value) => (
-        <span className="invoice-date">
-          {value || 'N/A'}
-        </span>
-      )
-    },
-    {
-      key: 'paymentDate',
-      title: 'PAYMENT DATE',
-      sortable: true,
-      filterable: true,
-      render: (value) => (
-        <span className="payment-date">
-          {value || 'N/A'}
-        </span>
-      )
+  const invoicesColumns = useMemo(() => {
+    if (isInstructor) {
+      return [
+        {
+          key: 'organizationId',
+          title: 'ORGANIZATION ID',
+          sortable: true,
+          filterable: false,
+          render: (value) => (
+            <div className="organization-id">{value}</div>
+          )
+        },
+        {
+          key: 'status',
+          title: 'STATUS',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className={`status-badge status-${value.toLowerCase()}`}>
+              <span className="status-dot"></span>
+              {value}
+            </span>
+          )
+        },
+        {
+          key: 'invoiceDate',
+          title: 'INVOICE DATE',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className="invoice-date">
+              {value ? new Date(value).toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+              }) : 'N/A'}
+            </span>
+          )
+        },
+        {
+          key: 'paymentDate',
+          title: 'PAYMENT DATE',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className="payment-date">
+              {value ? new Date(value).toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+              }) : 'N/A'}
+            </span>
+          )
+        }
+      ]
     }
-  ], [])
+    
+    return [
+      {
+        key: 'organizationName',
+        title: 'ORGANIZATION NAME',
+        sortable: true,
+        filterable: false,
+        render: (value, item) => (
+          <div className="invoice-organization-info">
+            <div className="organization-name">{item.organizationName}</div>
+            <div className="organization-id">{item.organizationId}</div>
+          </div>
+        )
+      },
+      {
+        key: 'status',
+        title: 'STATUS',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className={`status-badge status-${value.toLowerCase()}`}>
+            <span className="status-dot"></span>
+            {value}
+          </span>
+        )
+      },
+      {
+        key: 'invoiceDate',
+        title: 'INVOICE DATE',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className="invoice-date">
+            {value ? new Date(value).toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric'
+            }) : 'N/A'}
+          </span>
+        )
+      },
+      {
+        key: 'paymentDate',
+        title: 'PAYMENT DATE',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className="payment-date">
+            {value ? new Date(value).toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric'
+            }) : 'N/A'}
+          </span>
+        )
+      }
+    ]
+  }, [isInstructor])
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
@@ -323,7 +399,11 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     if (archiveMode) {
       setArchiveMode(false)
     } else {
-      history.push('/user-management')
+      if (isInstructor) {
+        history.push('/admin-dashboard')
+      } else {
+        history.push('/user-managment')
+      }
     }
   }
 
@@ -400,6 +480,22 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     )
   }
 
+  const handlePaymentModal = () => {
+    setShowPaymentModal(true)
+  }
+
+  const handleSavePayment = async (paymentData) => {
+    try {
+      // Add your API call here to save payment data
+      console.log('Saving payment data:', paymentData)
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      toast.success('Payment information updated successfully!')
+    } catch (error) {
+      console.error('Error saving payment:', error)
+      throw error
+    }
+  }
+
   return (
     <div className="view-invoices-container">
       <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
@@ -431,7 +527,11 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M12.5 15L7.5 10L12.5 5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              {archiveMode ? 'Return to View Invoices' : 'Return to User Management'}
+              {archiveMode 
+                ? 'Return to View Invoices' 
+                : isInstructor 
+                  ? 'Return to Dashboard' 
+                  : 'Return to User Management'}
             </button>
           </div>
 
@@ -487,48 +587,96 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
           {!archiveMode && (
             <div className="actions-container">
-              {isSuperAdmin && (
-                <AcademyBtn
-                  title="GENERATE INVOICE"
-                  icon={plusIcon}
-                  onClick={handleGenerateInvoice}
-                />
-              )}
+              {isInstructor ? (
+                <>
 
-              <AcademyBtn
-                title="VIEW ARCHIVE"
-                icon={plusIcon}
-                onClick={handleViewArchive}
-              />
+                  <AcademyBtn
+                    title="UPDATE PAYMENT METHODS"
+                    icon={plusIcon}
+                    onClick={handlePaymentModal}
+                  />
 
-              <div className="dropdown-wrapper" style={{ position: 'relative' }}>
-                <div 
-                  className="bulk-actions"
-                  onClick={() => setShowBulkDropdown(!showBulkDropdown)}
-                >
-                  <span>BULK ACTIONS</span>
-                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
 
-                {showBulkDropdown && (
-                  <div className="dropdown-menu">
-                    {bulkActions.map((action, index) => (
-                      <div 
-                        key={index}
-                        className="dropdown-item"
-                        onClick={() => {
-                          action.action()
-                          setShowBulkDropdown(false)
-                        }}
-                      >
-                        {action.name}
+                  <AcademyBtn
+                    title="VIEW ARCHIVE"
+                    icon={plusIcon}
+                    onClick={handleViewArchive}
+                  />
+
+                  <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+                    <div 
+                      className="bulk-actions"
+                      onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                    >
+                      <span>BULK ACTIONS</span>
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+
+                    {showBulkDropdown && (
+                      <div className="dropdown-menu">
+                        {bulkActions.map((action, index) => (
+                          <div 
+                            key={index}
+                            className="dropdown-item"
+                            onClick={() => {
+                              action.action()
+                              setShowBulkDropdown(false)
+                            }}
+                          >
+                            {action.name}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
                   </div>
-                )}
-              </div>
+
+                </>
+              ) : (
+                <>
+                  <AcademyBtn
+                    title="GENERATE INVOICE"
+                    icon={plusIcon}
+                    onClick={handleGenerateInvoice}
+                  />
+
+                  <AcademyBtn
+                    title="VIEW ARCHIVE"
+                    icon={plusIcon}
+                    onClick={handleViewArchive}
+                  />
+
+                  <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+                    <div 
+                      className="bulk-actions"
+                      onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                    >
+                      <span>BULK ACTIONS</span>
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+
+                    {showBulkDropdown && (
+                      <div className="dropdown-menu">
+                        {bulkActions.map((action, index) => (
+                          <div 
+                            key={index}
+                            className="dropdown-item"
+                            onClick={() => {
+                              action.action()
+                              setShowBulkDropdown(false)
+                            }}
+                          >
+                            {action.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -625,6 +773,13 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           onConfirm={handleDeleteInvoice}
           loading={deleteLoading}
           count={selectedInvoice ? 1 : selectedInvoices.length}
+        />
+
+        <ManagePaymentModal
+          show={showPaymentModal}
+          onHide={() => setShowPaymentModal(false)}
+          paymentData={null}
+          onSave={handleSavePayment}
         />
       </div>
     </div>
