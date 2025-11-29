@@ -5,7 +5,14 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { loadStripe } from '@stripe/stripe-js'
-import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js'
+import { 
+  Elements, 
+  useStripe, 
+  useElements, 
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement
+} from '@stripe/react-stripe-js'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
@@ -27,8 +34,7 @@ const CARD_ELEMENT_OPTIONS = {
       color: '#ef4444',
       iconColor: '#ef4444'
     }
-  },
-  hidePostalCode: false
+  }
 }
 
 const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
@@ -90,17 +96,44 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
         if (payment.billing_details) {
           setFormData(prev => ({
             ...prev,
-            billingAddress: payment.billing_details.address?.line1 || '',
-            city: payment.billing_details.address?.city || '',
-            state: payment.billing_details.address?.state || '',
-            billingZipCode: payment.billing_details.address?.postal_code || ''
+            billingAddress: payment.billing_details.address?.line1 || user?.University?.address || '',
+            city: payment.billing_details.address?.city || user?.University?.city || '',
+            state: payment.billing_details.address?.state || String(user?.University?.state || ''),
+            billingZipCode: payment.billing_details.address?.postal_code || String(user?.University?.zipCode || '')
+          }))
+        } else {
+          // Use university data if no payment billing details exist
+          setFormData(prev => ({
+            ...prev,
+            billingAddress: user?.University?.address || '',
+            city: user?.University?.city || '',
+            state: String(user?.University?.state || ''),
+            billingZipCode: String(user?.University?.zipCode || '')
           }))
         }
+      } else {
+        // No existing payment method, use university data
+        setFormData(prev => ({
+          ...prev,
+          billingAddress: user?.University?.address || '',
+          city: user?.University?.city || '',
+          state: String(user?.University?.state || ''),
+          billingZipCode: String(user?.University?.zipCode || '')
+        }))
       }
     } catch (error) {
       console.error('Error fetching payment method:', error)
       if (error.response?.status !== 404) {
         toast.error('Failed to load payment information')
+      } else {
+        // 404 means no payment method exists, use university data
+        setFormData(prev => ({
+          ...prev,
+          billingAddress: user?.University?.address || '',
+          city: user?.University?.city || '',
+          state: String(user?.University?.state || ''),
+          billingZipCode: String(user?.University?.zipCode || '')
+        }))
       }
     } finally {
       setLoadingData(false)
@@ -133,84 +166,44 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
   }
 
   const handleSaveChanges = async () => {
-  if (!stripe || !elements) {
-    toast.error('Stripe not loaded. Please refresh the page.')
-    return
-  }
-
-  if (!formData.billingAddress || !formData.city || !formData.state || !formData.billingZipCode) {
-    toast.warning('Please fill in all billing address fields')
-    return
-  }
-  
-  if (!/^\d{5}(-\d{4})?$/.test(formData.billingZipCode)) {
-    toast.error('Invalid zip code format')
-    return
-  }
-
-  setLoading(true)
-  try {
-    let requestData = {
-      paymentMethodType: paymentMethod === 'credit-card' ? 'card' : 'bank_account',
-      setAsDefault: isDefaultPayment,
-      billingAddress: formData.billingAddress,
-      city: formData.city,
-      state: formData.state,
-      zipCode: formData.billingZipCode
+    if (!stripe || !elements) {
+      toast.error('Stripe not loaded. Please refresh the page.')
+      return
     }
 
-    if (paymentMethod === 'credit-card') {
-      const cardElement = elements.getElement(CardElement)
-      
-      if (!cardElement) {
-        throw new Error('Card information is required')
+    if (!formData.billingAddress || !formData.city || !formData.state || !formData.billingZipCode) {
+      toast.warning('Please fill in all billing address fields')
+      return
+    }
+    
+    // if (!/^\d{5}(-\d{4})?$/.test(formData.billingZipCode)) {
+    //   toast.error('Invalid zip code format')
+    //   return
+    // }
+
+    setLoading(true)
+    try {
+      let requestData = {
+        paymentMethodType: paymentMethod === 'credit-card' ? 'card' : 'bank_account',
+        setAsDefault: isDefaultPayment,
+        billingAddress: formData.billingAddress,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.billingZipCode
       }
 
-      const { error, paymentMethod: stripePaymentMethod } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: {
-          name: user?.name || '',
-          email: user?.email || '',
-          address: {
-            line1: formData.billingAddress,
-            city: formData.city,
-            state: formData.state,
-            postal_code: formData.billingZipCode,
-            country: 'US'
-          }
+      if (paymentMethod === 'credit-card') {
+        const cardNumberElement = elements.getElement(CardNumberElement)
+        
+        if (!cardNumberElement) {
+          throw new Error('Card information is required')
         }
-      })
 
-      if (error) {
-        throw new Error(error.message)
-      }
-
-      requestData.cardToken = stripePaymentMethod.id
-
-    } else if (paymentMethod === 'bank-account') {
-      if (!formData.accountHolderName || !formData.routingNumber || !formData.accountNumber) {
-        throw new Error('Please fill in all bank account fields')
-      }
-
-      if (!validateBankAccount()) {
-        setLoading(false)
-        return
-      }
-
-      if (!clientSecret) {
-        throw new Error('Setup intent not ready. Please refresh and try again.')
-      }
-
-      const { error, setupIntent } = await stripe.confirmUsBankAccountSetup(clientSecret, {
-        payment_method: {
-          us_bank_account: {
-            account_holder_type: formData.accountHolderType,
-            routing_number: formData.routingNumber,
-            account_number: formData.accountNumber
-          },
+        const { error, paymentMethod: stripePaymentMethod } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardNumberElement,
           billing_details: {
-            name: formData.accountHolderName,
+            name: user?.name || '',
             email: user?.email || '',
             address: {
               line1: formData.billingAddress,
@@ -220,42 +213,82 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
               country: 'US'
             }
           }
-        }
-      })
+        })
 
-      if (error) {
-        throw new Error(error.message)
+        if (error) {
+          throw new Error(error.message)
+        }
+
+        requestData.cardToken = stripePaymentMethod.id
+
+      } else if (paymentMethod === 'bank-account') {
+        if (!formData.accountHolderName || !formData.routingNumber || !formData.accountNumber) {
+          throw new Error('Please fill in all bank account fields')
+        }
+
+        if (!validateBankAccount()) {
+          setLoading(false)
+          return
+        }
+
+        if (!clientSecret) {
+          throw new Error('Setup intent not ready. Please refresh and try again.')
+        }
+
+        const { error, setupIntent } = await stripe.confirmUsBankAccountSetup(clientSecret, {
+          payment_method: {
+            us_bank_account: {
+              account_holder_type: formData.accountHolderType,
+              routing_number: formData.routingNumber,
+              account_number: formData.accountNumber
+            },
+            billing_details: {
+              name: formData.accountHolderName,
+              email: user?.email || '',
+              address: {
+                line1: formData.billingAddress,
+                city: formData.city,
+                state: formData.state,
+                postal_code: formData.billingZipCode,
+                country: 'US'
+              }
+            }
+          }
+        })
+
+        if (error) {
+          throw new Error(error.message)
+        }
+
+        console.log('SetupIntent confirmed:', setupIntent.status)
+
+        requestData.setupIntentId = setupIntent.id
       }
 
-      console.log('SetupIntent confirmed:', setupIntent.status)
+      const response = await axiosInstance.post('/client/payment-method', requestData)
 
-      requestData.setupIntentId = setupIntent.id
+      if (response.data.data.needsVerification) {
+        toast.info(
+          '🏦 Bank account added successfully! Check your email for verification instructions from Stripe. ' +
+          'You may also see a small deposit in your account within 1-2 business days.',
+          { autoClose: 8000 }
+        )
+      } else {
+        toast.success('Payment method saved successfully!')
+      }
+      
+      if (onSave) {
+        await onSave(response.data.data)
+      }
+      
+      onHide()
+    } catch (error) {
+      console.error('Error saving payment information:', error)
+      toast.error(error.message || 'Failed to save payment information')
+    } finally {
+      setLoading(false)
     }
-
-    const response = await axiosInstance.post('/client/payment-method', requestData)
-
-    if (response.data.data.needsVerification) {
-      toast.info(
-        '🏦 Bank account added successfully! Check your email for verification instructions from Stripe. ' +
-        'You may also see a small deposit in your account within 1-2 business days.',
-        { autoClose: 8000 }
-      )
-    } else {
-      toast.success('Payment method saved successfully!')
-    }
-    
-    if (onSave) {
-      await onSave(response.data.data)
-    }
-    
-    onHide()
-  } catch (error) {
-    console.error('Error saving payment information:', error)
-    toast.error(error.message || 'Failed to save payment information')
-  } finally {
-    setLoading(false)
   }
-}
 
   const handleRemovePaymentMethod = async () => {
     if (!window.confirm('Are you sure you want to remove this payment method?')) {
@@ -319,55 +352,6 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
       </Modal.Header>
 
       <Modal.Body className="payment-modal-body">
-        {/* Existing Payment Method */}
-        {existingPaymentMethod && (
-          <div className="existing-payment-info">
-            <div className="section-header">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <g clipPath="url(#clip0_3587_14757)">
-                  <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                </g>
-              </svg>
-              <span>Current Payment Method</span>
-            </div>
-            <div className="current-payment-card">
-              {existingPaymentMethod.card && (
-                <div className="payment-info-row">
-                  <div>
-                    <strong>{existingPaymentMethod.card.brand.toUpperCase()}</strong> ending in {existingPaymentMethod.card.last4}
-                    <br />
-                    <small>Expires {existingPaymentMethod.card.exp_month}/{existingPaymentMethod.card.exp_year}</small>
-                  </div>
-                  <button className="btn-remove-payment" onClick={handleRemovePaymentMethod} disabled={loading}>
-                    Remove
-                  </button>
-                </div>
-              )}
-              {existingPaymentMethod.us_bank_account && (
-                <div className="payment-info-row">
-                  <div>
-                    <strong>{existingPaymentMethod.us_bank_account.bank_name || 'Bank Account'}</strong>
-                    <br />
-                    <small>
-                      {existingPaymentMethod.us_bank_account.account_holder_type} - 
-                      Account ending in {existingPaymentMethod.us_bank_account.last4}
-                    </small>
-                    {existingPaymentMethod.us_bank_account.status && (
-                      <span className={`badge badge-${existingPaymentMethod.us_bank_account.status === 'verified' ? 'success' : 'warning'} ml-2`}>
-                        {existingPaymentMethod.us_bank_account.status}
-                      </span>
-                    )}
-                  </div>
-                  <button className="btn-remove-payment" onClick={handleRemovePaymentMethod} disabled={loading}>
-                    Remove
-                  </button>
-                </div>
-              )}
-            </div>
-            <hr />
-          </div>
-        )}
-
         {/* Payment Method Selection */}
         <div>
           <div className="section-header">
@@ -429,14 +413,84 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
               </svg>
               <span>Card Information</span>
             </div>
-            <div className="card-info-fields">
-              <div className="form-group stripe-card-element">
-                <label className="field-label">Card Details *</label>
-                <div className="stripe-card-container">
-                  <CardElement options={CARD_ELEMENT_OPTIONS} />
+            
+            {/* Show existing card info if available, otherwise show input fields */}
+            {existingPaymentMethod && existingPaymentMethod.card ? (
+              <div className="card-info-fields">
+                <div className="form-group stripe-card-element">
+                  <label className="field-label">Card Number *</label>
+                  <div className="stripe-card-container disabled-field">
+                    <input
+                      type="text"
+                      value={`•••• •••• •••• ${existingPaymentMethod.card.last4}`}
+                      disabled
+                      className="stripe-disabled-input"
+                    />
+                  </div>
+                </div>
+                
+                <div className="card-details-row">
+                  <div className="form-group stripe-card-element">
+                    <label className="field-label">Expiration Date *</label>
+                    <div className="stripe-card-container disabled-field">
+                      <input
+                        type="text"
+                        value={`${String(existingPaymentMethod.card.exp_month).padStart(2, '0')}/${String(existingPaymentMethod.card.exp_year).slice(-2)}`}
+                        disabled
+                        className="stripe-disabled-input"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="form-group stripe-card-element">
+                    <label className="field-label">CVC *</label>
+                    <div className="stripe-card-container disabled-field">
+                      <input
+                        type="text"
+                        value="•••"
+                        disabled
+                        className="stripe-disabled-input"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="d-flex justify-content-end mt-3">
+                  <button 
+                    className="btn-remove-payment" 
+                    onClick={handleRemovePaymentMethod} 
+                    disabled={loading}
+                  >
+                    {loading ? 'Removing...' : 'Remove Payment Method'}
+                  </button>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="card-info-fields">
+                <div className="form-group stripe-card-element">
+                  <label className="field-label">Card Number *</label>
+                  <div className="stripe-card-container">
+                    <CardNumberElement options={CARD_ELEMENT_OPTIONS} />
+                  </div>
+                </div>
+                
+                <div className="card-details-row">
+                  <div className="form-group stripe-card-element">
+                    <label className="field-label">Expiration Date *</label>
+                    <div className="stripe-card-container">
+                      <CardExpiryElement options={CARD_ELEMENT_OPTIONS} />
+                    </div>
+                  </div>
+                  
+                  <div className="form-group stripe-card-element">
+                    <label className="field-label">CVC *</label>
+                    <div className="stripe-card-container">
+                      <CardCvcElement options={CARD_ELEMENT_OPTIONS} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -451,81 +505,148 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
               </svg>
               <span>Bank Account Information</span>
             </div>
-            <div className="bank-info-fields">
-              <div className="alert alert-info">
-                <i className="fas fa-info-circle mr-2"></i>
-                <strong>Test Mode:</strong> Use routing number <code>110000000</code> and account number <code>000123456789</code> for testing.
-              </div>
+            
+            {/* Show existing bank account info if available, otherwise show input fields */}
+            {existingPaymentMethod && existingPaymentMethod.us_bank_account ? (
+              <div className="bank-info-fields">
+                <div className="form-group">
+                  <label className="field-label">Account Holder Name *</label>
+                  <input
+                    type="text"
+                    className="input-with-icon disabled-field"
+                    value={existingPaymentMethod.billing_details?.name || 'Account Holder'}
+                    disabled
+                  />
+                </div>
 
-              <div className="form-group">
-                <label className="field-label">Account Holder Name *</label>
-                <input
-                  type="text"
-                  className="input-with-icon"
-                  value={formData.accountHolderName}
-                  onChange={(e) => handleInputChange('accountHolderName', e.target.value)}
-                  placeholder="John Doe or Company Name"
-                />
-              </div>
+                <div className="form-group">
+                  <label className="field-label">Bank Name</label>
+                  <input
+                    type="text"
+                    className="input-with-icon disabled-field"
+                    value={existingPaymentMethod.us_bank_account.bank_name || 'Bank Account'}
+                    disabled
+                  />
+                </div>
 
-              <div className="form-group">
-                <label className="field-label">Routing Number *</label>
-                <input
-                  type="text"
-                  className="input-with-icon"
-                  value={formData.routingNumber}
-                  onChange={(e) => handleInputChange('routingNumber', e.target.value.replace(/\D/g, ''))}
-                  placeholder="110000000"
-                  maxLength="9"
-                />
-                <small className="text-muted">
-                  Test mode: Use <strong>110000000</strong>
-                </small>
-              </div>
+                <div className="form-group">
+                  <label className="field-label">Account Number *</label>
+                  <input
+                    type="text"
+                    className="input-with-icon disabled-field"
+                    value={`••••••${existingPaymentMethod.us_bank_account.last4}`}
+                    disabled
+                  />
+                </div>
 
-              <div className="form-group">
-                <label className="field-label">Account Number *</label>
-                <input
-                  type="text"
-                  className="input-with-icon"
-                  value={formData.accountNumber}
-                  onChange={(e) => handleInputChange('accountNumber', e.target.value.replace(/\D/g, ''))}
-                  placeholder="000123456789"
-                  maxLength="17"
-                />
-                <small className="text-muted">
-                  Test mode: Use <strong>000123456789</strong> (success) or <strong>000111111113</strong> (verification required)
-                </small>
-              </div>
+                <div className="form-group">
+                  <label className="field-label">Account Holder Type *</label>
+                  <input
+                    type="text"
+                    className="input-with-icon disabled-field"
+                    value={existingPaymentMethod.us_bank_account.account_holder_type === 'company' ? 'Company/Organization' : 'Individual'}
+                    disabled
+                  />
+                </div>
 
-              <div className="form-group">
-                <label className="field-label">Account Holder Type *</label>
-                <div className="payment-method-options">
-                  <label className="payment-method-radio">
-                    <input
-                      type="radio"
-                      name="accountHolderType"
-                      value="company"
-                      checked={formData.accountHolderType === 'company'}
-                      onChange={(e) => handleInputChange('accountHolderType', e.target.value)}
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">Company/Organization</span>
-                  </label>
-                  <label className="payment-method-radio">
-                    <input
-                      type="radio"
-                      name="accountHolderType"
-                      value="individual"
-                      checked={formData.accountHolderType === 'individual'}
-                      onChange={(e) => handleInputChange('accountHolderType', e.target.value)}
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">Individual</span>
-                  </label>
+                {existingPaymentMethod.us_bank_account.status && (
+                  <div className="form-group">
+                    <label className="field-label">Verification Status</label>
+                    <div>
+                      <span className={`badge badge-${existingPaymentMethod.us_bank_account.status === 'verified' ? 'success' : 'warning'}`}>
+                        {existingPaymentMethod.us_bank_account.status.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="d-flex justify-content-end mt-3">
+                  <button 
+                    className="btn-remove-payment" 
+                    onClick={handleRemovePaymentMethod} 
+                    disabled={loading}
+                  >
+                    {loading ? 'Removing...' : 'Remove Payment Method'}
+                  </button>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="bank-info-fields">
+                <div className="alert alert-info">
+                  <i className="fas fa-info-circle mr-2"></i>
+                  <strong>Test Mode:</strong> Use routing number <code>110000000</code> and account number <code>000123456789</code> for testing.
+                </div>
+
+                <div className="form-group">
+                  <label className="field-label">Account Holder Name *</label>
+                  <input
+                    type="text"
+                    className="input-with-icon"
+                    value={formData.accountHolderName}
+                    onChange={(e) => handleInputChange('accountHolderName', e.target.value)}
+                    placeholder="John Doe or Company Name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="field-label">Routing Number *</label>
+                  <input
+                    type="text"
+                    className="input-with-icon"
+                    value={formData.routingNumber}
+                    onChange={(e) => handleInputChange('routingNumber', e.target.value.replace(/\D/g, ''))}
+                    placeholder="110000000"
+                    maxLength="9"
+                  />
+                  <small className="text-muted">
+                    Test mode: Use <strong>110000000</strong>
+                  </small>
+                </div>
+
+                <div className="form-group">
+                  <label className="field-label">Account Number *</label>
+                  <input
+                    type="text"
+                    className="input-with-icon"
+                    value={formData.accountNumber}
+                    onChange={(e) => handleInputChange('accountNumber', e.target.value.replace(/\D/g, ''))}
+                    placeholder="000123456789"
+                    maxLength="17"
+                  />
+                  <small className="text-muted">
+                    Test mode: Use <strong>000123456789</strong> (success) or <strong>000111111113</strong> (verification required)
+                  </small>
+                </div>
+
+                <div className="form-group">
+                  <label className="field-label">Account Holder Type *</label>
+                  <div className="payment-method-options">
+                    <label className="payment-method-radio">
+                      <input
+                        type="radio"
+                        name="accountHolderType"
+                        value="company"
+                        checked={formData.accountHolderType === 'company'}
+                        onChange={(e) => handleInputChange('accountHolderType', e.target.value)}
+                      />
+                      <span className="radio-custom"></span>
+                      <span className="radio-label">Company/Organization</span>
+                    </label>
+                    <label className="payment-method-radio">
+                      <input
+                        type="radio"
+                        name="accountHolderType"
+                        value="individual"
+                        checked={formData.accountHolderType === 'individual'}
+                        onChange={(e) => handleInputChange('accountHolderType', e.target.value)}
+                      />
+                      <span className="radio-custom"></span>
+                      <span className="radio-label">Individual</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

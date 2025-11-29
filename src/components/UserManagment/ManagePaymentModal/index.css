@@ -83,6 +83,7 @@
   font-weight: 500;
   line-height: normal;
   margin-bottom: 12px;
+  align-items: center;
 }
 
 .manage-payment-modal .payment-method-options {

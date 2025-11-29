@@ -171,6 +171,11 @@ export const invoiceApi = {
     return response.data
   },
 
+  scheduleInvoicePayment: async (invoiceId, data) => {
+    const response = await axiosInstance.post(`/invoices/${invoiceId}/schedule-payment`, data)
+    return response.data
+  },
+
   getClientPaymentMethod: async () => {
     const response = await axiosInstance.get('/client/payment-method')
     return response.data
