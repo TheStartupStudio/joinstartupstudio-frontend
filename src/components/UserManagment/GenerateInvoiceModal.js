@@ -76,9 +76,9 @@ const GenerateInvoiceModal = ({ show, onHide, onGenerate }) => {
       className="generate-invoice-modal"
       centered
     >
-      <div className="modal-content-wrapper">
-        <div className="modal-header-custom">
-          <div className="header-icon">
+      <div className="generate-modal-content">
+        <div className="d-flex flex-column gap-3">
+          <div className="generate-modal-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M10 9.16699H12.0833H14.1667" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M10 5.83301H12.0833H14.1667" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -86,48 +86,25 @@ const GenerateInvoiceModal = ({ show, onHide, onGenerate }) => {
               <path d="M4.49935 12.5H6.66602H10.2327C10.5641 12.5 10.8359 12.7682 10.8662 13.0982C10.9879 14.4253 11.5521 17.5 14.166 17.5H6.66602H5.49935C3.84249 17.5 2.49935 16.1569 2.49935 14.5C2.49935 13.3954 3.39478 12.5 4.49935 12.5Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <h3 className="modal-title">Generate Invoice</h3>
+          <h3 className="generate-modal-title">Generate Invoice</h3>
         </div>
 
         <div className="modal-body-custom">
           <div className="form-section">
-            <label className="form-label">Select Organization</label>
-            
-            <div className="search-input-wrapper mb-3">
-              <input
-                type="text"
-                className="form-control search-input"
-                placeholder="Search organizations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M14.1667 14.1667L17.5 17.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C10.9442 15.8333 12.5468 15.0846 13.7203 13.8744C14.8898 12.6685 15.8333 11.0044 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
 
-            {organizationsLoading ? (
-              <div className="text-center py-4">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
-            ) : (
               <select
                 className="form-control organization-select"
                 value={selectedOrganization}
                 onChange={(e) => setSelectedOrganization(e.target.value)}
                 disabled={loading}
               >
-                <option value="">-- Select Organization --</option>
+                <option value="">Select Organization </option>
                 {filteredOrganizations.map(org => (
                   <option key={org.id} value={org.id}>
                     {org.name} - {org.domain}
                   </option>
                 ))}
               </select>
-            )}
 
             {filteredOrganizations.length === 0 && !organizationsLoading && searchQuery && (
               <p className="text-muted mt-2">No organizations found matching "{searchQuery}"</p>

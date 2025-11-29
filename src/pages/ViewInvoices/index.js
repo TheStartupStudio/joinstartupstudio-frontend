@@ -148,8 +148,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     if (isInstructor) {
       return [
         {
-          key: 'organizationId',
-          title: 'ORGANIZATION ID',
+          key: 'invoiceNumber',
+          title: 'INVOICE NUMBER',
           sortable: true,
           filterable: false,
           render: (value) => (
@@ -169,7 +169,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           )
         },
         {
-          key: 'invoiceDate',
+          key: 'issueDate',
           title: 'INVOICE DATE',
           sortable: true,
           filterable: true,
@@ -210,7 +210,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         render: (value, item) => (
           <div className="invoice-organization-info">
             <div className="organization-name">{item.organizationName}</div>
-            <div className="organization-id">{item.organizationId}</div>
+            <div className="organization-id">{item.invoiceNumber}</div>
           </div>
         )
       },

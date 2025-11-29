@@ -256,6 +256,14 @@ max-width: 640px;
   border-radius: 50%;
 }
 
+.view-invoices-container .status-scheduled .status-dot {
+  background: rgb(99, 195, 255);
+}
+
+.view-invoices-container .status-failed .status-dot {
+  background: orangered;
+}
+
 .view-invoices-container .status-complete .status-dot {
   background: #9C3;
 }

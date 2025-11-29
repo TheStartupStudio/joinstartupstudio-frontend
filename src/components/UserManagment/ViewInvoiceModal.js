@@ -366,13 +366,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
           )}
 
           {/* Invoice Body */}
-          {loading ? (
-            <div className="invoice-modal-body" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-              <div className="spinner-border text-primary" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-            </div>
-          ) : (
             <div className="invoice-modal-body">
               {/* Organization Name Header */}
               <div className="organization-header">
@@ -535,7 +528,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                 </div>
               </div>
             </div>
-          )}
+
         </div>
       </Modal>
 
