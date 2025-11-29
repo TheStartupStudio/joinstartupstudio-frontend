@@ -86,7 +86,12 @@ export const invoiceApi = {
    * Archive invoice
    */
   archiveInvoice: async (invoiceId) => {
-    const response = await axiosInstance.post(`/invoices/${invoiceId}/archive`)
+    const response = await api.patch(`/client/invoices/${invoiceId}/archive`)
+    return response.data
+  },
+
+  unarchiveInvoice: async (invoiceId) => {
+    const response = await api.patch(`/client/invoices/${invoiceId}/unarchive`)
     return response.data
   },
 
