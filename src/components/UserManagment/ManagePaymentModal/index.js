@@ -46,6 +46,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
   const [isDefaultPayment, setIsDefaultPayment] = useState(true)
   const [existingPaymentMethod, setExistingPaymentMethod] = useState(null)
   const [clientSecret, setClientSecret] = useState('')
+  const [showVerificationInfo, setShowVerificationInfo] = useState(false)
   
   const [formData, setFormData] = useState({
     accountHolderName: '',
@@ -67,7 +68,6 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
     }
   }, [show])
 
-
   const createSetupIntent = async () => {
     try {
       const response = await axiosInstance.post('/client/payment-method/setup-intent')
@@ -87,12 +87,21 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
         const payment = response.data.data
         setExistingPaymentMethod(payment)
         
+        // Set payment method type based on what exists
         if (payment.type === 'card') {
           setPaymentMethod('credit-card')
         } else if (payment.type === 'us_bank_account') {
           setPaymentMethod('bank-account')
+          
+          // Show verification info if bank account is not verified
+          if (payment.us_bank_account?.status && 
+              payment.us_bank_account.status !== 'verified' && 
+              payment.us_bank_account.status !== 'verified_by_stripe') {
+            setShowVerificationInfo(true)
+          }
         }
         
+        // Set billing address from payment method or university data
         if (payment.billing_details) {
           setFormData(prev => ({
             ...prev,
@@ -102,7 +111,6 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
             billingZipCode: payment.billing_details.address?.postal_code || String(user?.University?.zipCode || '')
           }))
         } else {
-          // Use university data if no payment billing details exist
           setFormData(prev => ({
             ...prev,
             billingAddress: user?.University?.address || '',
@@ -112,7 +120,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
           }))
         }
       } else {
-        // No existing payment method, use university data
+        // No existing payment method
         setFormData(prev => ({
           ...prev,
           billingAddress: user?.University?.address || '',
@@ -125,16 +133,15 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
       console.error('Error fetching payment method:', error)
       if (error.response?.status !== 404) {
         toast.error('Failed to load payment information')
-      } else {
-        // 404 means no payment method exists, use university data
-        setFormData(prev => ({
-          ...prev,
-          billingAddress: user?.University?.address || '',
-          city: user?.University?.city || '',
-          state: String(user?.University?.state || ''),
-          billingZipCode: String(user?.University?.zipCode || '')
-        }))
       }
+      // Use university data as fallback
+      setFormData(prev => ({
+        ...prev,
+        billingAddress: user?.University?.address || '',
+        city: user?.University?.city || '',
+        state: String(user?.University?.state || ''),
+        billingZipCode: String(user?.University?.zipCode || '')
+      }))
     } finally {
       setLoadingData(false)
     }
@@ -149,11 +156,17 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
 
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method)
+    setShowVerificationInfo(false)
   }
 
   const validateBankAccount = () => {
+    if (!formData.accountHolderName.trim()) {
+      toast.error('Account holder name is required')
+      return false
+    }
+
     if (!/^\d{9}$/.test(formData.routingNumber)) {
-      toast.error('Routing number must be 9 digits')
+      toast.error('Routing number must be exactly 9 digits')
       return false
     }
 
@@ -176,11 +189,6 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
       return
     }
     
-    // if (!/^\d{5}(-\d{4})?$/.test(formData.billingZipCode)) {
-    //   toast.error('Invalid zip code format')
-    //   return
-    // }
-
     setLoading(true)
     try {
       let requestData = {
@@ -222,6 +230,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
         requestData.cardToken = stripePaymentMethod.id
 
       } else if (paymentMethod === 'bank-account') {
+        // Validate bank account fields
         if (!formData.accountHolderName || !formData.routingNumber || !formData.accountNumber) {
           throw new Error('Please fill in all bank account fields')
         }
@@ -235,6 +244,9 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
           throw new Error('Setup intent not ready. Please refresh and try again.')
         }
 
+        console.log('🏦 Confirming US Bank Account Setup...')
+
+        // ✅ Properly confirm bank account setup with Stripe
         const { error, setupIntent } = await stripe.confirmUsBankAccountSetup(clientSecret, {
           payment_method: {
             us_bank_account: {
@@ -257,33 +269,46 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
         })
 
         if (error) {
+          console.error('❌ Bank account setup error:', error)
           throw new Error(error.message)
         }
 
-        console.log('SetupIntent confirmed:', setupIntent.status)
+        console.log('✅ SetupIntent Status:', setupIntent.status)
+        console.log('✅ Payment Method ID:', setupIntent.payment_method)
 
+        // Add setup intent ID to request
         requestData.setupIntentId = setupIntent.id
+        requestData.paymentMethodId = setupIntent.payment_method
       }
 
+      // Send to backend
       const response = await axiosInstance.post('/client/payment-method', requestData)
 
       if (response.data.data.needsVerification) {
+        setShowVerificationInfo(true)
         toast.info(
-          '🏦 Bank account added successfully! Check your email for verification instructions from Stripe. ' +
-          'You may also see a small deposit in your account within 1-2 business days.',
-          { autoClose: 8000 }
+          '🏦 Bank account added! Check your email for verification instructions from Stripe. ' +
+          'Verification is required before you can make payments.',
+          { autoClose: 10000 }
         )
       } else {
-        toast.success('Payment method saved successfully!')
+        toast.success('✅ Payment method saved successfully!')
       }
       
       if (onSave) {
         await onSave(response.data.data)
       }
       
-      onHide()
+      // Refresh payment method data
+      await fetchPaymentMethod()
+      
+      // Don't close modal if verification is needed
+      if (!response.data.data.needsVerification) {
+        onHide()
+      }
+      
     } catch (error) {
-      console.error('Error saving payment information:', error)
+      console.error('❌ Error saving payment information:', error)
       toast.error(error.message || 'Failed to save payment information')
     } finally {
       setLoading(false)
@@ -300,6 +325,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
       await axiosInstance.delete('/client/payment-method')
       toast.success('Payment method removed successfully!')
       setExistingPaymentMethod(null)
+      setShowVerificationInfo(false)
       onHide()
     } catch (error) {
       console.error('Error removing payment method:', error)
@@ -310,7 +336,30 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
   }
 
   const handleCancel = () => {
+    setShowVerificationInfo(false)
     onHide()
+  }
+
+  const getBankAccountStatusBadge = (status) => {
+    const statusMap = {
+      'new': { color: 'warning', text: 'Pending Verification', icon: '⏳' },
+      'verified': { color: 'success', text: 'Verified', icon: '✅' },
+      'verified_by_stripe': { color: 'success', text: 'Verified by Stripe', icon: '✅' },
+      'verification_failed': { color: 'danger', text: 'Verification Failed', icon: '❌' },
+      'errored': { color: 'danger', text: 'Error', icon: '❌' }
+    }
+
+    const statusInfo = statusMap[status] || statusMap['new']
+    
+    return (
+      <span className={`badge badge-${statusInfo.color}`} style={{
+        padding: '6px 12px',
+        fontSize: '13px',
+        fontWeight: '500'
+      }}>
+        {statusInfo.icon} {statusInfo.text}
+      </span>
+    )
   }
 
   if (loadingData) {
@@ -352,6 +401,32 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
       </Modal.Header>
 
       <Modal.Body className="payment-modal-body">
+        {/* Show verification alert if bank account needs verification */}
+        {showVerificationInfo && existingPaymentMethod?.us_bank_account && (
+          <div className="alert alert-info mb-4" style={{
+            backgroundColor: '#e3f2fd',
+            border: '1px solid #2196F3',
+            borderRadius: '8px',
+            padding: '16px'
+          }}>
+            <h6 style={{ color: '#1976d2', marginBottom: '10px' }}>
+              <i className="fas fa-info-circle mr-2"></i>
+              Bank Account Verification Required
+            </h6>
+            <p style={{ marginBottom: '10px', fontSize: '14px' }}>
+              Your bank account has been added but needs to be verified before you can make payments.
+            </p>
+            <ul style={{ marginBottom: '10px', fontSize: '14px', paddingLeft: '20px' }}>
+              <li><strong>Check your email</strong> from Stripe for verification instructions</li>
+              <li>You may receive <strong>micro-deposits</strong> (2 small amounts) in your bank account within 1-2 business days</li>
+              <li>Or you may receive a <strong>descriptor code</strong> via email for instant verification</li>
+            </ul>
+            <p style={{ marginBottom: '0', fontSize: '13px', color: '#666' }}>
+              💡 Once verified, this payment method will be available for automatic invoice payments
+            </p>
+          </div>
+        )}
+
         {/* Payment Method Selection */}
         <div>
           <div className="section-header">
@@ -387,19 +462,6 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
             </label>
           </div>
           <p className="payment-note">*This payment method will be used for automatic invoice payments</p>
-          
-          <div className="form-check mt-3">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="defaultPayment"
-              checked={isDefaultPayment}
-              onChange={(e) => setIsDefaultPayment(e.target.checked)}
-            />
-            <label className="form-check-label" htmlFor="defaultPayment">
-              Set as default payment method
-            </label>
-          </div>
         </div>
 
         {/* Card Information */}
@@ -414,7 +476,6 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
               <span>Card Information</span>
             </div>
             
-            {/* Show existing card info if available, otherwise show input fields */}
             {existingPaymentMethod && existingPaymentMethod.card ? (
               <div className="card-info-fields">
                 <div className="form-group stripe-card-element">
@@ -455,7 +516,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
                   </div>
                 </div>
                 
-                <div className="d-flex justify-content-end mt-3">
+                <div className="d-flex justify-content-end">
                   <button 
                     className="btn-remove-payment" 
                     onClick={handleRemovePaymentMethod} 
@@ -506,7 +567,6 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
               <span>Bank Account Information</span>
             </div>
             
-            {/* Show existing bank account info if available, otherwise show input fields */}
             {existingPaymentMethod && existingPaymentMethod.us_bank_account ? (
               <div className="bank-info-fields">
                 <div className="form-group">
@@ -552,11 +612,15 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
                 {existingPaymentMethod.us_bank_account.status && (
                   <div className="form-group">
                     <label className="field-label">Verification Status</label>
-                    <div>
-                      <span className={`badge badge-${existingPaymentMethod.us_bank_account.status === 'verified' ? 'success' : 'warning'}`}>
-                        {existingPaymentMethod.us_bank_account.status.toUpperCase()}
-                      </span>
+                    <div className="mt-2">
+                      {getBankAccountStatusBadge(existingPaymentMethod.us_bank_account.status)}
                     </div>
+                    {(existingPaymentMethod.us_bank_account.status === 'new' || 
+                      existingPaymentMethod.us_bank_account.status === 'verification_failed') && (
+                      <small className="d-block mt-2 text-muted">
+                        Check your email for verification instructions from Stripe
+                      </small>
+                    )}
                   </div>
                 )}
                 
@@ -574,7 +638,12 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
               <div className="bank-info-fields">
                 <div className="alert alert-info">
                   <i className="fas fa-info-circle mr-2"></i>
-                  <strong>Test Mode:</strong> Use routing number <code>110000000</code> and account number <code>000123456789</code> for testing.
+                  <strong>Test Mode - Bank Account Numbers:</strong>
+                  <ul className="mb-0 mt-2" style={{ fontSize: '13px' }}>
+                    <li><strong>Routing:</strong> <code>110000000</code> (test routing number)</li>
+                    <li><strong>Account (instant success):</strong> <code>000123456789</code></li>
+                    <li><strong>Account (requires verification):</strong> <code>000111111113</code></li>
+                  </ul>
                 </div>
 
                 <div className="form-group">
@@ -589,7 +658,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
                 </div>
 
                 <div className="form-group">
-                  <label className="field-label">Routing Number *</label>
+                  <label className="field-label">Routing Number * (9 digits)</label>
                   <input
                     type="text"
                     className="input-with-icon"
@@ -598,13 +667,10 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
                     placeholder="110000000"
                     maxLength="9"
                   />
-                  <small className="text-muted">
-                    Test mode: Use <strong>110000000</strong>
-                  </small>
                 </div>
 
                 <div className="form-group">
-                  <label className="field-label">Account Number *</label>
+                  <label className="field-label">Account Number * (4-17 digits)</label>
                   <input
                     type="text"
                     className="input-with-icon"
@@ -613,13 +679,10 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
                     placeholder="000123456789"
                     maxLength="17"
                   />
-                  <small className="text-muted">
-                    Test mode: Use <strong>000123456789</strong> (success) or <strong>000111111113</strong> (verification required)
-                  </small>
                 </div>
 
-                <div className="form-group">
-                  <label className="field-label">Account Holder Type *</label>
+                <div>
+                  <label>Account Holder Type *</label>
                   <div className="payment-method-options">
                     <label className="payment-method-radio">
                       <input
@@ -645,6 +708,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
                     </label>
                   </div>
                 </div>
+
               </div>
             )}
           </div>

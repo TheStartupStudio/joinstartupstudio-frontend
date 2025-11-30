@@ -80,30 +80,35 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
       let response
 
-      if (isInstructor) {
-        response = await invoiceApi.getClientInvoices({
+      if (archiveMode) {
+        // ✅ Fetch archived invoices from /invoices/archived
+        response = await invoiceApi.getArchivedInvoices({
           page,
           limit: 10,
-          status: archiveMode ? 'archived' : undefined,
-          includeArchived: archiveMode ? 'true' : 'false',
-          search
-        })
-      } else if (isSuperAdmin) {
-        response = await invoiceApi.getAllInvoices({
-          page,
-          limit: 10,
-          status: archiveMode ? 'archived' : undefined,
-          includeArchived: archiveMode ? 'true' : 'false',
           search
         })
       } else {
-        response = await invoiceApi.getInstructorInvoices({
-          page,
-          limit: 10,
-          status: archiveMode ? 'archived' : undefined,
-          includeArchived: archiveMode ? 'true' : 'false',
-          search
-        })
+        // ✅ Fetch regular invoices
+        if (isInstructor) {
+          response = await invoiceApi.getClientInvoices({ 
+            page, 
+            limit: 10, 
+            search 
+          })
+        } else if (isSuperAdmin) {
+          response = await invoiceApi.getAllInvoices({ 
+            page, 
+            limit: 10, 
+            search 
+          })
+        } else {
+          // For other roles (if any)
+          response = await invoiceApi.getClientInvoices({ 
+            page, 
+            limit: 10, 
+            search 
+          })
+        }
       }
 
       console.log('Invoices response:', response)
@@ -259,8 +264,191 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     ]
   }, [isInstructor])
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value)
+  const handleDownloadInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      // ✅ Download invoice PDF
+      const response = await invoiceApi.downloadInvoice(invoice.id)
+      
+      // Create blob and download
+      const blob = new Blob([response.data], { type: 'application/pdf' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `Invoice_${invoice.invoiceNumber}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+      
+      toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
+    } catch (error) {
+      console.error('❌ Error downloading invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to download invoice')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleSendInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      // ✅ Send invoice email
+      await invoiceApi.sendInvoiceEmail(invoice.id, {
+        subject: `Invoice ${invoice.invoiceNumber}`,
+        message: 'Please find attached your invoice.'
+      })
+      toast.success(`Invoice ${invoice.invoiceNumber} sent successfully!`)
+    } catch (error) {
+      console.error('❌ Error sending invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to send invoice')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleArchiveInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      // ✅ Archive invoice using POST /invoices/:invoiceId/archive
+      const response = await invoiceApi.archiveInvoice(invoice.id, null)
+      
+      toast.success(response.message || `Invoice ${invoice.invoiceNumber} archived successfully!`)
+      
+      // Refresh the invoice list
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error archiving invoice:', error)
+      const errorMessage = error.response?.data?.message || 'Failed to archive invoice'
+      toast.error(errorMessage)
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleUnarchiveInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      // ✅ Unarchive invoice using DELETE /invoices/:invoiceId/unarchive
+      const response = await invoiceApi.unarchiveInvoice(invoice.id)
+      
+      toast.success(response.message || `Invoice ${invoice.invoiceNumber} unarchived successfully!`)
+      
+      // Refresh the archive list
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error unarchiving invoice:', error)
+      const errorMessage = error.response?.data?.message || 'Failed to unarchive invoice'
+      toast.error(errorMessage)
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  // ✅ Add bulk archive functionality
+  const handleBulkArchiveInvoices = async () => {
+    if (selectedInvoices.length === 0) {
+      toast.warning('Please select at least one invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      // ✅ Use bulk archive endpoint
+      const invoiceIds = selectedInvoices.map(inv => inv.id)
+      const response = await invoiceApi.bulkArchiveInvoices(invoiceIds)
+      
+      toast.success(response.message || `${response.archivedCount} invoice(s) archived successfully!`)
+      setSelectedInvoices([])
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error archiving invoices:', error)
+      const errorMessage = error.response?.data?.message || 'Failed to archive some invoices'
+      toast.error(errorMessage)
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleDeleteInvoice = async () => {
+    setDeleteLoading(true)
+    try {
+      if (selectedInvoice?.id) {
+        // ✅ Delete single invoice
+        await invoiceApi.deleteInvoice(selectedInvoice.id)
+        toast.success(`Invoice ${selectedInvoice.invoiceNumber} deleted successfully!`)
+      } else if (selectedInvoices.length > 0) {
+        // ✅ Delete multiple invoices
+        const deletePromises = selectedInvoices
+          .filter(invoice => invoice.id)
+          .map(invoice => invoiceApi.deleteInvoice(invoice.id))
+        
+        await Promise.all(deletePromises)
+        toast.success(`${selectedInvoices.length} invoice(s) deleted successfully!`)
+        setSelectedInvoices([])
+      }
+      
+      setShowDeleteInvoicePopup(false)
+      setSelectedInvoice(null)
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error deleting invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to delete invoice(s)')
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
+
+  // ✅ Add bulk send functionality
+  const handleBulkSendInvoices = async () => {
+    if (selectedInvoices.length === 0) {
+      toast.warning('Please select at least one invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      // Send all selected invoices
+      const sendPromises = selectedInvoices.map(invoice => 
+        invoiceApi.sendInvoiceEmail(invoice.id, {
+          subject: `Invoice ${invoice.invoiceNumber}`,
+          message: 'Please find attached your invoice.'
+        })
+      )
+      
+      await Promise.all(sendPromises)
+      toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
+      setSelectedInvoices([])
+    } catch (error) {
+      console.error('❌ Error sending invoices:', error)
+      toast.error('Failed to send some invoices')
+    } finally {
+      setInvoicesLoading(false)
+    }
   }
 
   const handleRowAction = (actionType, item) => {
@@ -276,14 +464,20 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         handleDownloadInvoice(item)
         break
       case 'send-invoice':
+      case 'send':
         handleSendInvoice(item)
         break
       case 'generate-invoice':
-        console.log('Generate invoice for:', item)
         setShowGenerateModal(true)
         break
       case 'archive-invoice':
-        handleArchiveInvoice(item)
+        if (archiveMode) {
+          // ✅ If in archive mode, unarchive
+          handleUnarchiveInvoice(item)
+        } else {
+          // ✅ If not in archive mode, archive
+          handleArchiveInvoice(item)
+        }
         break
       case 'delete-invoice':
         setSelectedInvoice(item)
@@ -294,44 +488,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }
 
-  const handleSendInvoice = async (invoice) => {
-    if (!invoice?.id) {
-      toast.error('Invalid invoice')
-      return
-    }
-
-    try {
-      setInvoicesLoading(true)
-      await invoiceApi.sendInvoiceEmail(invoice.id, {
-        subject: `Invoice ${invoice.invoiceNumber}`,
-        message: 'Please find attached your invoice.'
-      })
-      toast.success('Invoice sent successfully!')
-    } catch (error) {
-      console.error('Error sending invoice:', error)
-      toast.error(error.response?.data?.message || 'Failed to send invoice')
-    } finally {
-      setInvoicesLoading(false)
-    }
-  }
-
-  const handleArchiveInvoice = async (invoice) => {
-    if (!invoice?.id) {
-      toast.error('Invalid invoice')
-      return
-    }
-
-    try {
-      setInvoicesLoading(true)
-      await invoiceApi.archiveInvoice(invoice.id)
-      toast.success(`Invoice ${invoice.invoiceNumber} archived successfully!`)
-      await fetchInvoices(currentPage, debouncedSearchQuery)
-    } catch (error) {
-      console.error('Error archiving invoice:', error)
-      toast.error(error.response?.data?.message || 'Failed to archive invoice')
-    } finally {
-      setInvoicesLoading(false)
-    }
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value)
   }
 
   const handleGenerateInvoice = () => {
@@ -363,33 +521,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setSelectedInvoices([])
   }
 
-  const handleDeleteInvoice = async () => {
-    setDeleteLoading(true)
-    try {
-      if (selectedInvoice?.id) {
-        await invoiceApi.deleteInvoice(selectedInvoice.id)
-        toast.success(`Invoice ${selectedInvoice.invoiceNumber} deleted successfully!`)
-      } else if (selectedInvoices.length > 0) {
-        const deletePromises = selectedInvoices
-          .filter(invoice => invoice.id)
-          .map(invoice => invoiceApi.deleteInvoice(invoice.id))
-        
-        await Promise.all(deletePromises)
-        toast.success(`${selectedInvoices.length} invoice(s) deleted successfully!`)
-        setSelectedInvoices([])
-      }
-      
-      setShowDeleteInvoicePopup(false)
-      setSelectedInvoice(null)
-      await fetchInvoices(currentPage, debouncedSearchQuery)
-    } catch (error) {
-      console.error('Error deleting invoice:', error)
-      toast.error(error.response?.data?.message || 'Failed to delete invoice(s)')
-    } finally {
-      setDeleteLoading(false)
-    }
-  }
-
   const handleViewArchive = () => {
     setArchiveMode(!archiveMode)
     setCurrentPage(1)
@@ -417,39 +548,68 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setSelectedInvoices(selectedItems)
   }
 
-  const bulkActions = [
-    {
-      name: 'Send Selected',
-      action: async () => {
-        if (selectedInvoices.length === 0) {
-          toast.warning('Please select at least one invoice')
-          return
-        }
-        
-        try {
-          setInvoicesLoading(true)
-          for (const invoice of selectedInvoices) {
-            await invoiceApi.sendInvoiceEmail(invoice.id, {})
+  // ✅ Update bulk actions based on mode
+  const bulkActions = useMemo(() => {
+    if (archiveMode) {
+      return [
+        {
+          name: 'Unarchive Selected',
+          action: async () => {
+            if (selectedInvoices.length === 0) {
+              toast.warning('Please select at least one invoice')
+              return
+            }
+            
+            try {
+              setInvoicesLoading(true)
+              const promises = selectedInvoices.map(inv => 
+                invoiceApi.unarchiveInvoice(inv.id)
+              )
+              await Promise.all(promises)
+              toast.success(`${selectedInvoices.length} invoice(s) unarchived successfully!`)
+              setSelectedInvoices([])
+              await fetchInvoices(currentPage, debouncedSearchQuery)
+            } catch (error) {
+              toast.error('Failed to unarchive some invoices')
+            } finally {
+              setInvoicesLoading(false)
+            }
           }
-          toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
-        } catch (error) {
-          toast.error('Failed to send some invoices')
-        } finally {
-          setInvoicesLoading(false)
+        },
+        {
+          name: 'Delete Selected',
+          action: () => {
+            if (selectedInvoices.length === 0) {
+              toast.warning('Please select at least one invoice')
+              return
+            }
+            setShowDeleteInvoicePopup(true)
+          }
         }
-      }
-    },
-    {
-      name: 'Delete Selected',
-      action: () => {
-        if (selectedInvoices.length === 0) {
-          toast.warning('Please select at least one invoice')
-          return
-        }
-        setShowDeleteInvoicePopup(true)
-      }
+      ]
     }
-  ]
+
+    return [
+      {
+        name: 'Send Selected',
+        action: handleBulkSendInvoices
+      },
+      {
+        name: 'Archive Selected',
+        action: handleBulkArchiveInvoices
+      },
+      {
+        name: 'Delete Selected',
+        action: () => {
+          if (selectedInvoices.length === 0) {
+            toast.warning('Please select at least one invoice')
+            return
+          }
+          setShowDeleteInvoicePopup(true)
+        }
+      }
+    ]
+  }, [selectedInvoices, archiveMode])
 
   const handleClickOutside = (event) => {
     if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {

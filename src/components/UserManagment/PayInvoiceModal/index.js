@@ -141,33 +141,54 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
       return
     }
 
+    // ✅ Check if bank account is verified
+    if (existingPaymentMethod.type === 'us_bank_account') {
+      const status = existingPaymentMethod.us_bank_account?.status
+      
+      if (status !== 'verified' && status !== 'verified_by_stripe') {
+        toast.error(
+          '⚠️ Your bank account is not yet verified. Please complete the verification process before making payments.',
+          { autoClose: 8000 }
+        )
+        return
+      }
+    }
 
     // ✅ Validate scheduled payment date
     if (sendDate) {
-    const now = new Date()
-    const scheduledDate = new Date(sendDate)
-    
-    if (scheduledDate <= now) {
-      toast.error('Payment date must be in the future.')
-      return
+      const now = new Date()
+      const scheduledDate = new Date(sendDate)
+      
+      if (scheduledDate <= now) {
+        toast.error('Payment date must be in the future.')
+        return
+      }
     }
-  }
 
     setLoading(true)
     try {
       let response
       
       if (sendDate) {
-        // ✅ Schedule payment with Stripe (no cron needed!)
+        // ✅ Schedule payment with Stripe
         response = await invoiceApi.scheduleInvoicePayment(invoiceData.id, {
-          scheduledDate: sendDate.toISOString()
+          scheduledDate: sendDate.toISOString(),
+          paymentMethodType: existingPaymentMethod.type
         })
         
         toast.success(`✅ Payment scheduled! Stripe will automatically charge on ${formatDate(sendDate)}`)
       } else {
-        // ✅ Pay immediately
-        response = await invoiceApi.payClientInvoice(invoiceData.id)
-        toast.success('Payment processed successfully!')
+        // ✅ Pay immediately with proper payment method type
+        response = await invoiceApi.payClientInvoice(invoiceData.id, {
+          paymentMethodType: existingPaymentMethod.type
+        })
+        
+        // ✅ Handle bank account payment confirmation
+        if (existingPaymentMethod.type === 'us_bank_account') {
+          toast.success('✅ Bank account payment initiated! Processing may take 1-2 business days.')
+        } else {
+          toast.success('✅ Payment processed successfully!')
+        }
       }
       
       if (onPay) {
@@ -176,7 +197,7 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
       
       onHide()
     } catch (error) {
-      console.error('Error processing payment:', error)
+      console.error('❌ Error processing payment:', error)
       const errorMessage = error.response?.data?.message || 'Failed to process payment'
       toast.error(errorMessage)
     } finally {
@@ -186,6 +207,24 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
 
   const handleCancel = () => {
     onHide()
+  }
+
+  const getBankAccountStatusBadge = (status) => {
+    const statusMap = {
+      'new': { color: 'warning', text: 'Pending Verification', icon: '⏳' },
+      'verified': { color: 'success', text: 'Verified', icon: '✅' },
+      'verified_by_stripe': { color: 'success', text: 'Verified', icon: '✅' },
+      'verification_failed': { color: 'danger', text: 'Verification Failed', icon: '❌' },
+      'errored': { color: 'danger', text: 'Error', icon: '❌' }
+    }
+
+    const statusInfo = statusMap[status] || statusMap['new']
+    
+    return (
+      <span className={`badge badge-${statusInfo.color}`}>
+        {statusInfo.icon} {statusInfo.text}
+      </span>
+    )
   }
 
   return (
@@ -453,11 +492,15 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
                     {existingPaymentMethod.us_bank_account.status && (
                       <div className="form-group">
                         <label className="field-label">Verification Status</label>
-                        <div>
-                          <span className={`badge badge-${existingPaymentMethod.us_bank_account.status === 'verified' ? 'success' : 'warning'}`}>
-                            {existingPaymentMethod.us_bank_account.status.toUpperCase()}
-                          </span>
+                        <div className="mt-2">
+                          {getBankAccountStatusBadge(existingPaymentMethod.us_bank_account.status)}
                         </div>
+                        {(existingPaymentMethod.us_bank_account.status === 'new' || 
+                          existingPaymentMethod.us_bank_account.status === 'verification_failed') && (
+                          <small className="d-block mt-2 text-warning">
+                            ⚠️ Payment cannot be processed until bank account is verified
+                          </small>
+                        )}
                       </div>
                     )}
                   </div>

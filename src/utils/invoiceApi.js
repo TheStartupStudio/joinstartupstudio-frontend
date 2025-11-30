@@ -1,13 +1,13 @@
 import axiosInstance from './AxiosInstance'
 
 export const invoiceApi = {
-     /**
+  /**
    * Get ALL invoices (super admin only)
    */
-    getAllInvoices: async (params = {}) => {
-    const { page = 1, limit = 10, status, includeArchived = 'false', search = '' } = params
+  getAllInvoices: async (params = {}) => {
+    const { page = 1, limit = 10, status, search = '' } = params
     const response = await axiosInstance.get('/invoices', {
-      params: { page, limit, status, includeArchived, search }
+      params: { page, limit, status, search }
     })
     return response.data
   },
@@ -16,21 +16,12 @@ export const invoiceApi = {
    * Get all invoices for an organization
    */
   getOrganizationInvoices: async (organizationId, params = {}) => {
-    const { page = 1, limit = 10, status, includeArchived = 'false' } = params
-    
-    console.log('Fetching invoices with params:', {
-      organizationId,
-      page,
-      limit,
-      status,
-      includeArchived
-    })
+    const { page = 1, limit = 10, status } = params
     
     const response = await axiosInstance.get(`/invoices/organization/${organizationId}`, {
-      params: { page, limit, status, includeArchived }
+      params: { page, limit, status }
     })
     
-    console.log('Invoice API response:', response.data)
     return response.data
   },
 
@@ -59,7 +50,7 @@ export const invoiceApi = {
   },
 
   /**
-   * Delete invoice
+   * Delete invoice (hard delete)
    */
   deleteInvoice: async (invoiceId) => {
     const response = await axiosInstance.delete(`/invoices/${invoiceId}`)
@@ -83,15 +74,49 @@ export const invoiceApi = {
   },
 
   /**
-   * Archive invoice
+   * Download invoice PDF
    */
-  archiveInvoice: async (invoiceId) => {
-    const response = await api.patch(`/client/invoices/${invoiceId}/archive`)
+  downloadInvoice: async (invoiceId) => {
+    const response = await axiosInstance.get(`/invoices/${invoiceId}/download`, {
+      responseType: 'blob'
+    })
+    return response
+  },
+
+  // ✅ ARCHIVE FUNCTIONALITY (matching backend routes)
+
+  /**
+   * Get all archived invoices for current user
+   */
+  getArchivedInvoices: async (params = {}) => {
+    const { page = 1, limit = 10, search = '' } = params
+    const response = await axiosInstance.get('/client/invoices/archived', {
+      params: { page, limit, search }
+    })
     return response.data
   },
 
+  /**
+   * Archive invoice - creates archive record
+   */
+  archiveInvoice: async (invoiceId, notes = null) => {
+    const response = await axiosInstance.post(`/invoices/${invoiceId}/archive`, { notes })
+    return response.data
+  },
+
+  /**
+   * Unarchive invoice - removes from archive
+   */
   unarchiveInvoice: async (invoiceId) => {
-    const response = await api.patch(`/client/invoices/${invoiceId}/unarchive`)
+    const response = await axiosInstance.delete(`/invoices/${invoiceId}/unarchive`)
+    return response.data
+  },
+
+  /**
+   * Bulk archive invoices
+   */
+  bulkArchiveInvoices: async (invoiceIds) => {
+    const response = await axiosInstance.post('/invoices/bulk-archive', { invoiceIds })
     return response.data
   },
 
@@ -110,13 +135,11 @@ export const invoiceApi = {
    * Get all invoices for the logged-in client's organization
    */
   getClientInvoices: async (params = {}) => {
-    try {
-      const response = await axiosInstance.get('/client/invoices', { params })
-      return response.data
-    } catch (error) {
-      console.error('Error fetching client invoices:', error)
-      throw error
-    }
+    const { page = 1, limit = 10, search = '' } = params
+    const response = await axiosInstance.get('/client/invoices', { 
+      params: { page, limit, search } 
+    })
+    return response.data
   },
 
   /**
@@ -149,38 +172,41 @@ export const invoiceApi = {
    * Download invoice as PDF (client-side)
    */
   downloadClientInvoice: async (invoiceId) => {
-    try {
-      const response = await axiosInstance.get(`/client/invoices/${invoiceId}/download`, {
-        responseType: 'blob'
-      })
-      
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `invoice-${invoiceId}.pdf`)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url)
-      
-      return response.data
-    } catch (error) {
-      console.error('Error downloading client invoice:', error)
-      throw error
-    }
-  },
-
-
-  payClientInvoice: async (invoiceId) => {
-    const response = await axiosInstance.post(`/client/invoices/${invoiceId}/pay`)
+    const response = await axiosInstance.get(`/client/invoices/${invoiceId}/download`, {
+      responseType: 'blob'
+    })
+    
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `invoice-${invoiceId}.pdf`)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+    
     return response.data
   },
 
+  /**
+   * Pay invoice (client-side)
+   */
+  payClientInvoice: async (invoiceId, paymentData = {}) => {
+    const response = await axiosInstance.post(`/client/invoices/${invoiceId}/pay`, paymentData)
+    return response.data
+  },
+
+  /**
+   * Schedule invoice payment
+   */
   scheduleInvoicePayment: async (invoiceId, data) => {
     const response = await axiosInstance.post(`/invoices/${invoiceId}/schedule-payment`, data)
     return response.data
   },
 
+  /**
+   * Get client payment method
+   */
   getClientPaymentMethod: async () => {
     const response = await axiosInstance.get('/client/payment-method')
     return response.data

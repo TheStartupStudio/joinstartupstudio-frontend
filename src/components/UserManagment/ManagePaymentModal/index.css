@@ -155,7 +155,7 @@ line-height: normal;
 .manage-payment-modal .billing-address-fields {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  /* gap: 16px; */
 }
 
 .manage-payment-modal .form-group {
@@ -194,6 +194,7 @@ border: none;
   border: 1px solid rgba(227, 229, 233, 0.50);
   background: #FFF;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 .manage-payment-modal .input-with-icon:focus-within {
@@ -353,8 +354,9 @@ border: none;
 }
 
 .stripe-card-container {
-  min-height: 54px;
-  padding: 18px;
+      min-height: 54px;
+    max-height: 120px;
+    padding: 25px 18px 0px 18px;
   border-radius: 12px;
   border: 1px solid rgba(227, 229, 233, 0.50);
   background: #FFF;
@@ -450,33 +452,6 @@ border: none;
   }
 }
 
-
-/* ...existing styles... */
-
-/* Stripe Card Element Styles */
-.stripe-card-element {
-  margin-bottom: 24px;
-}
-
-.stripe-card-container {
-  min-height: 54px;
-  padding: 18px;
-  border-radius: 12px;
-  border: 1px solid rgba(227, 229, 233, 0.50);
-  background: #FFF;
-  transition: all 0.2s ease;
-}
-
-.stripe-card-container:focus-within {
-  border-color: #51C7DF;
-  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
-}
-
-/* Existing Payment Info */
-.existing-payment-info {
-  margin-bottom: 24px;
-}
-
 .current-payment-card {
   background: #F9FAFB;
   border: 1px solid #E5E7EB;
@@ -526,32 +501,6 @@ border: none;
   }
 }
 
-
-/* ...existing styles... */
-
-/* Stripe Card Element Styles */
-.stripe-card-element {
-  margin-bottom: 24px;
-}
-
-.stripe-card-container {
-  min-height: 54px;
-  padding: 18px;
-  border-radius: 12px;
-  border: 1px solid rgba(227, 229, 233, 0.50);
-  background: #FFF;
-  transition: all 0.2s ease;
-}
-
-.stripe-card-container:focus-within {
-  border-color: #51C7DF;
-  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
-}
-
-/* Existing Payment Info */
-.existing-payment-info {
-  margin-bottom: 24px;
-}
 
 .current-payment-card {
   background: #F9FAFB;

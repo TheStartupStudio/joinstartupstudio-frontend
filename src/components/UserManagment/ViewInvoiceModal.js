@@ -354,7 +354,21 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
           {isInstructor && (
             <div className="instructor-payment-info">
               <span className="payment-info-text">
-                Invoice will be automatically paid on {formData.dueDate || '11/30/2025'}
+                {formData.status === 'scheduled' ? (
+                  <>Invoice will be automatically paid on {formData.dueDate || 'N/A'}</>
+                ) : formData.status === 'paid' ? (
+                  <>Invoice was successfully paid on {formData.paidDate || formData.dueDate || 'N/A'}</>
+                ) : formData.status === 'pending' ? (
+                  <>Payment pending - Due date: {formData.dueDate || 'N/A'}</>
+                ) : formData.status === 'failed' ? (
+                  <>Payment failed - Please update your payment method</>
+                ) : formData.status === 'overdue' ? (
+                  <>Invoice overdue - Payment was due on {formData.dueDate || 'N/A'}</>
+                ) : formData.status === 'cancelled' ? (
+                  <>Invoice cancelled</>
+                ) : (
+                  <>Invoice due on {formData.dueDate || 'N/A'}</>
+                )}
               </span>
               <div className="edit-payment-btn" onClick={handlePayInvoice}>
                 <span>Edit</span>
