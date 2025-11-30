@@ -693,3 +693,29 @@ background: rgba(255, 255, 255, 0.10);
     min-width: 250px;
   }
 }
+
+/* ✅ Ensure invoice content prints well */
+@media print {
+  .invoice-modal-header {
+    page-break-after: avoid;
+  }
+  
+  .invoice-modal-body {
+    page-break-inside: avoid;
+  }
+  
+  .instructor-payment-info,
+  .edit-btn,
+  .delete-btn,
+  .confirm-btn,
+  .cancel-btn,
+  .add-new-item-btn {
+    display: none !important;
+  }
+}
+
+/* ✅ Ensure good quality for canvas capture */
+.invoice-modal-content {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}

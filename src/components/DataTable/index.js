@@ -105,6 +105,17 @@ const DataTable = ({
     } else if (activeTab === 'Invoices') {
       return [
         { 
+          name: 'Export Invoice as PDF', 
+          action: 'export-invoice-pdf',
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5.83301 8.33301L9.99967 12.4997L14.1663 8.33301" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10 12.5V2.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )
+        },
+        { 
           name: 'Generate Invoice', 
           action: 'generate-invoice',
           icon: (
@@ -254,8 +265,10 @@ const DataTable = ({
             title="Send Invoice"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M18.3332 1.66699L9.1665 10.8337" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M18.3332 1.66699L12.4998 18.3337L9.1665 10.8337L1.6665 7.50033L18.3332 1.66699Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M7.5 7.5L11.25 10L15 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2.49935 11.25H4.16602" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M0.832682 8.75H4.16602" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4.16732 6.25033V6.16699C4.16732 5.06242 5.06275 4.16699 6.16732 4.16699H16.334C17.4386 4.16699 18.334 5.06242 18.334 6.16699V13.8337C18.334 14.9382 17.4386 15.8337 16.334 15.8337H6.16732C5.06275 15.8337 4.16732 14.9382 4.16732 13.8337V13.7503" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
             Send
           </button>
@@ -288,7 +301,7 @@ const DataTable = ({
                   display: 'block'
                 }}
               >
-                {/* ✅ Download Invoice */}
+                {/* ✅ Export Invoice as PDF - First Option */}
                 <div 
                   className="more-actions-dropdown-item"
                   style={{
@@ -304,7 +317,7 @@ const DataTable = ({
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                   onClick={() => {
-                    handleActionClick('download-invoice', item)
+                    handleActionClick('export-invoice-pdf', item)
                     setOpenMoreActionsDropdown(null)
                   }}
                 >
@@ -313,7 +326,7 @@ const DataTable = ({
                     <path d="M5.83301 8.33301L9.99967 12.4997L14.1663 8.33301" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M10 12.5V2.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  Download Invoice
+                  Export Invoice as PDF
                 </div>
 
                 {/* ✅ Generate Invoice */}

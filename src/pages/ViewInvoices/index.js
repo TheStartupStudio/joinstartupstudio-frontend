@@ -14,6 +14,8 @@ import GenerateMultipleInvoicesPopup from '../../components/UserManagment/Genera
 import DeleteInvoicePopup from '../../components/UserManagment/DeleteInvoicePopup'
 import { invoiceApi } from '../../utils/invoiceApi'
 import ManagePaymentModal from '../../components/UserManagment/ManagePaymentModal'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import './index.css'
 
 const ViewInvoices = ({ isArchiveMode = false }) => {
@@ -138,9 +140,9 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }
 
-  useEffect(() => {
-    fetchInvoices(currentPage, debouncedSearchQuery)
-  }, [currentPage, debouncedSearchQuery, archiveMode])
+  // useEffect(() => {
+  //   fetchInvoices(currentPage, debouncedSearchQuery)
+  // }, [currentPage, debouncedSearchQuery, archiveMode])
 
   useEffect(() => {
     if (user) {
@@ -272,21 +274,39 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
     try {
       setInvoicesLoading(true)
-      // ✅ Download invoice PDF
-      const response = await invoiceApi.downloadInvoice(invoice.id)
+      toast.info('Downloading invoice...')
       
-      // Create blob and download
-      const blob = new Blob([response.data], { type: 'application/pdf' })
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `Invoice_${invoice.invoiceNumber}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
-      
-      toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
+      // ✅ Try backend PDF download first (if available)
+      try {
+        const response = await invoiceApi.downloadInvoice(invoice.id)
+        
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `Invoice_${invoice.invoiceNumber}.pdf`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        
+        toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
+        return
+      } catch (backendError) {
+        // ✅ If backend download fails, open modal for client-side PDF generation
+        console.log('Backend PDF not available, using client-side generation')
+        setSelectedInvoice(invoice)
+        setInvoiceMode('view')
+        setShowEditInvoiceModal(true)
+        
+        // Wait for modal to render, then trigger download
+        setTimeout(() => {
+          const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
+          if (downloadBtn) {
+            downloadBtn.click()
+          }
+        }, 500)
+      }
     } catch (error) {
       console.error('❌ Error downloading invoice:', error)
       toast.error(error.response?.data?.message || 'Failed to download invoice')
@@ -451,6 +471,164 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }
 
+  const handleExportInvoicePDF = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      toast.info('Generating PDF...')
+
+      // ✅ Create a hidden modal container for PDF generation
+      const modalContainer = document.createElement('div')
+      modalContainer.id = 'hidden-invoice-pdf-container'
+      modalContainer.style.position = 'fixed'
+      modalContainer.style.top = '-9999px'
+      modalContainer.style.left = '-9999px'
+      modalContainer.style.width = '210mm' // A4 width
+      modalContainer.style.background = 'white'
+      document.body.appendChild(modalContainer)
+
+      // ✅ Create invoice HTML structure
+      modalContainer.innerHTML = `
+        <div style="padding: 40px; font-family: 'Montserrat', sans-serif; background: white;">
+          <!-- Organization Header -->
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</h2>
+          </div>
+
+          <!-- Issued To & Invoice Details -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+            <div style="flex: 1;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">ISSUED TO:</p>
+              <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</p>
+              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.organizationAddress || '123 Tech Street'}</p>
+              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.city || 'City'}${invoice.state ? ', ' + invoice.state : ''}${invoice.zip ? ', ' + invoice.zip : ''}</p>
+              
+              <div style="margin-top: 30px;">
+                <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">PAY TO:</p>
+                <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">Learn to Start, LLC</p>
+                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">3100 Corvig-Windermere Road,</p>
+                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">Suite 201 - #132</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">Windermere, FL 34786</p>
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="margin-bottom: 12px;">
+                <p style="margin: 0; font-size: 12px; font-weight: 600;">INVOICE #:</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.invoiceNumber || 'N/A'}</p>
+              </div>
+              <div style="margin-bottom: 12px;">
+                <p style="margin: 0; font-size: 12px; font-weight: 600;">DATE:</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.issueDate || invoice.invoiceDate || 'N/A'}</p>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 12px; font-weight: 600;">DUE DATE:</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.dueDate || 'N/A'}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Items Table -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+            <thead>
+              <tr style="background: #f5f5f5;">
+                <th style="padding: 12px; text-align: left; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">DESCRIPTION</th>
+                <th style="padding: 12px; text-align: center; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;"># OF ITEMS</th>
+                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">PRICE</th>
+                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(invoice.items || []).map(item => `
+                <tr>
+                  <td style="padding: 12px; font-size: 12px; border-bottom: 1px solid #eee;">${item.description || 'Item'}</td>
+                  <td style="padding: 12px; text-align: center; font-size: 12px; border-bottom: 1px solid #eee;">${item.quantity || 0}</td>
+                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.price || 0).toFixed(2)}</td>
+                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.total || 0).toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <!-- Totals -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 40px;">
+            <div style="flex: 1;">
+              <p style="margin: 0; font-size: 16px; font-weight: 600;">SUBTOTAL</p>
+            </div>
+            <div style="min-width: 200px; text-align: right;">
+              <div style="margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 14px;">$${parseFloat(invoice.subtotal || 0).toLocaleString()}</p>
+              </div>
+              <div style="margin-bottom: 8px;">
+                <span style="font-size: 12px; color: #707070;">Tax (7%)</span>
+                <span style="margin-left: 20px; font-size: 14px;">$${parseFloat(invoice.tax || 0).toLocaleString()}</span>
+              </div>
+              <div style="padding-top: 12px; border-top: 2px solid #000;">
+                <span style="font-size: 14px; font-weight: 600;">TOTAL</span>
+                <span style="margin-left: 20px; font-size: 16px; font-weight: 600;">$${parseFloat(invoice.total || 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+
+      // ✅ Wait for fonts to load
+      await document.fonts.ready
+
+      // ✅ Generate PDF using html2canvas + jsPDF (same as certificate)
+      const canvas = await html2canvas(modalContainer, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        windowWidth: modalContainer.scrollWidth,
+        windowHeight: modalContainer.scrollHeight
+      })
+
+      // ✅ Remove hidden container
+      document.body.removeChild(modalContainer)
+
+      // ✅ Create PDF
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      })
+
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = pdf.internal.pageSize.getHeight()
+      const imgWidth = canvas.width
+      const imgHeight = canvas.height
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
+      const imgX = (pdfWidth - imgWidth * ratio) / 2
+      const imgY = 10
+
+      pdf.addImage(
+        imgData, 
+        'PNG', 
+        imgX, 
+        imgY, 
+        imgWidth * ratio, 
+        imgHeight * ratio
+      )
+
+      // ✅ Save PDF
+      pdf.save(`Invoice_${invoice.invoiceNumber || 'Export'}.pdf`)
+      
+      toast.success(`Invoice ${invoice.invoiceNumber} exported successfully!`)
+    } catch (error) {
+      console.error('❌ Error exporting invoice:', error)
+      toast.error('Failed to export invoice as PDF')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
   const handleRowAction = (actionType, item) => {
     console.log(`${actionType} action for invoice:`, item)
     
@@ -459,6 +637,9 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         setSelectedInvoice(item)
         setInvoiceMode('view')
         setShowEditInvoiceModal(true)
+        break
+      case 'export-invoice-pdf':
+        handleExportInvoicePDF(item)
         break
       case 'download-invoice':
         handleDownloadInvoice(item)
@@ -472,10 +653,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         break
       case 'archive-invoice':
         if (archiveMode) {
-          // ✅ If in archive mode, unarchive
           handleUnarchiveInvoice(item)
         } else {
-          // ✅ If not in archive mode, archive
           handleArchiveInvoice(item)
         }
         break
@@ -816,22 +995,22 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
                       </svg>
                     </div>
 
-                    {showBulkDropdown && (
-                      <div className="dropdown-menu">
-                        {bulkActions.map((action, index) => (
-                          <div 
-                            key={index}
-                            className="dropdown-item"
-                            onClick={() => {
-                              action.action()
-                              setShowBulkDropdown(false)
-                            }}
-                          >
-                            {action.name}
+                      {showBulkDropdown && (
+                          <div className="dropdown-menu">
+                            {bulkActions.map((action, index) => (
+                              <div 
+                                key={index}
+                                className="dropdown-item"
+                                onClick={() => {
+                                  action.action()
+                                  setShowBulkDropdown(false)
+                                }}
+                              >
+                                {action.name}
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        )}
                   </div>
                 </>
               )}

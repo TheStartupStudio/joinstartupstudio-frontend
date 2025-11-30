@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import './ViewInvoiceModal.css'
 import PreviewInvoiceEmailModal from './PreviewInvoiceEmailModal'
 import { invoiceApi } from '../../utils/invoiceApi'
@@ -12,6 +14,10 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
   const [mode, setMode] = useState(initialMode)
   const [showPreviewEmailModal, setShowPreviewEmailModal] = useState(false)
   const [showPayInvoiceModal, setShowPayInvoiceModal] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
+  
+  // ✅ Add ref for the invoice content
+  const invoiceContentRef = useRef(null)
   
   const { user } = useSelector((state) => state.user.user)
   const isOrgClient = user?.role_id === 2
@@ -285,6 +291,78 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     }).format(value || 0)
   }
 
+  // ✅ Download invoice as PDF
+  const handleDownloadInvoice = async () => {
+    if (!invoiceContentRef.current) {
+      toast.error('Invoice content not ready')
+      return
+    }
+
+    setIsDownloading(true)
+    toast.info('Generating PDF...')
+
+    try {
+      // Create a clone of the invoice content for PDF generation
+      const element = invoiceContentRef.current
+      
+      // Temporarily hide action buttons and edit mode elements
+      const editButtons = element.querySelectorAll('.edit-btn, .delete-btn, .confirm-btn, .cancel-btn, .add-new-item-btn')
+      const instructorInfo = element.querySelector('.instructor-payment-info')
+      
+      editButtons.forEach(btn => btn.style.display = 'none')
+      if (instructorInfo) instructorInfo.style.display = 'none'
+
+      // Capture the element as canvas
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight
+      })
+
+      // Restore hidden elements
+      editButtons.forEach(btn => btn.style.display = '')
+      if (instructorInfo) instructorInfo.style.display = ''
+
+      // Create PDF
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      })
+
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = pdf.internal.pageSize.getHeight()
+      const imgWidth = canvas.width
+      const imgHeight = canvas.height
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
+      const imgX = (pdfWidth - imgWidth * ratio) / 2
+      const imgY = 10
+
+      pdf.addImage(
+        imgData, 
+        'PNG', 
+        imgX, 
+        imgY, 
+        imgWidth * ratio, 
+        imgHeight * ratio
+      )
+
+      // Save the PDF
+      pdf.save(`Invoice_${formData.invoiceNumber || 'Document'}.pdf`)
+      
+      toast.success('Invoice downloaded successfully!')
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      toast.error('Failed to generate PDF')
+    } finally {
+      setIsDownloading(false)
+    }
+  }
+
   return (
     <>
       <Modal
@@ -296,7 +374,8 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
         centered
         size="lg"
       >
-        <div className="invoice-modal-content">
+        {/* ✅ Wrap the content in a ref for PDF generation */}
+        <div className="invoice-modal-content" ref={invoiceContentRef}>
           {/* Header */}
           <div className="invoice-modal-header">
             <div className="modal-icon">
@@ -309,7 +388,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
             </div>
 
             <h4 className="invoice-modal-title">
-              {loading ? 'Loading...' : mode === 'edit' ? 'Edit Invoice' : 'View Invoice'}
+              {loading ? 'Loading...' : isDownloading ? 'Generating PDF...' : mode === 'edit' ? 'Edit Invoice' : 'View Invoice'}
             </h4>
 
             <div className="header-icons-nav">
@@ -321,6 +400,19 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
 
               {mode === 'view' && !loading ? (
                 <>
+                {/* ✅ Download Button */}
+                <div 
+                  onClick={handleDownloadInvoice} 
+                  style={{ cursor: isDownloading ? 'not-allowed' : 'pointer' }}
+                  title="Download Invoice as PDF"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                    <path d="M26.25 18.75V23.125C26.25 23.6223 26.0525 24.099 25.7008 24.4508C25.349 24.8025 24.8723 25 24.375 25H5.625C5.12772 25 4.65081 24.8025 4.29917 24.4508C3.94754 24.099 3.75 23.6223 3.75 23.125V18.75" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8.75 12.5L15 18.75L21.25 12.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M15 18.75V3.75" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+
                 <div onClick={() => setMode('edit')} style={{ cursor: 'pointer' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                     <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
