@@ -9,6 +9,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { FaTimes } from 'react-icons/fa'
+import { useSelector } from 'react-redux'
 
 const DataTable = ({ 
   columns, 
@@ -36,6 +37,11 @@ const DataTable = ({
   
   const filterDropdownRefs = useRef({})
   const moreActionsDropdownRefs = useRef({})
+
+    const { user } = useSelector((state) => state.user.user)
+      const isInstructor = user?.role_id === 2;
+
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -259,19 +265,21 @@ const DataTable = ({
             View
           </button>
           
-          <button
-            className="action-btn send-btn"
-            onClick={() => handleActionClick('send-invoice', item)}
-            title="Send Invoice"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M7.5 7.5L11.25 10L15 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M2.49935 11.25H4.16602" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M0.832682 8.75H4.16602" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M4.16732 6.25033V6.16699C4.16732 5.06242 5.06275 4.16699 6.16732 4.16699H16.334C17.4386 4.16699 18.334 5.06242 18.334 6.16699V13.8337C18.334 14.9382 17.4386 15.8337 16.334 15.8337H6.16732C5.06275 15.8337 4.16732 14.9382 4.16732 13.8337V13.7503" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            Send
-          </button>
+          {!isInstructor && (
+            <button
+              className="action-btn send-btn"
+              onClick={() => handleActionClick('send-invoice', item)}
+              title="Send Invoice"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M7.5 7.5L11.25 10L15 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2.49935 11.25H4.16602" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M0.832682 8.75H4.16602" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M4.16732 6.25033V6.16699C4.16732 5.06242 5.06275 4.16699 6.16732 4.16699H16.334C17.4386 4.16699 18.334 5.06242 18.334 6.16699V13.8337C18.334 14.9382 17.4386 15.8337 16.334 15.8337H6.16732C5.06275 15.8337 4.16732 14.9382 4.16732 13.8337V13.7503" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Send
+            </button>
+          )}
           
           <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
             <button
@@ -387,33 +395,35 @@ const DataTable = ({
                   Archive Invoice
                 </div>
 
-                {/* ✅ Delete Invoice */}
-                <div 
-                  className="more-actions-dropdown-item"
-                  style={{
-                    padding: '12px 16px',
-                    color: '#DC3545',
-                    fontFamily: 'Montserrat',
-                    fontSize: '12px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-                  onClick={() => {
-                    handleActionClick('delete-invoice', item)
-                    setOpenMoreActionsDropdown(null)
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                  <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M10 7.5V10.8333" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M10 14.1753L10.0083 14.1661" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                  Delete Invoice
-                </div>
+                {/* ✅ Delete Invoice - only show if not instructor */}
+                {!isInstructor && (
+                  <div 
+                    className="more-actions-dropdown-item"
+                    style={{
+                      padding: '12px 16px',
+                      color: '#DC3545',
+                      fontFamily: 'Montserrat',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                    onClick={() => {
+                      handleActionClick('delete-invoice', item)
+                      setOpenMoreActionsDropdown(null)
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M10 7.5V10.8333" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M10 14.1753L10.0083 14.1661" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Delete Invoice
+                  </div>
+                )}
               </div>
             )}
           </div>

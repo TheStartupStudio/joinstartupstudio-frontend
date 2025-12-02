@@ -8,6 +8,17 @@ import CloseBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg
 const Header = (props) => {
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user?.user?.user)
+  const userRole = user?.role_id || parseInt(localStorage.getItem('role'))
+  
+  // ✅ Get appropriate dashboard path based on role
+  const getDashboardPath = () => {
+    // Role 2 = Client, Role 3 = Admin/Super Admin
+    if (userRole === 2 || userRole === 3) {
+      return '/admin-dashboard'
+    }
+    return '/dashboard'
+  }
 
   return (
     <div
@@ -18,7 +29,7 @@ const Header = (props) => {
       <div className='d-flex gap-1'>
         <NavLink
           className='d-flex gap-1 align-items-center'
-          to='/dashboard'
+          to={getDashboardPath()}
           onClick={() => dispatch(collapseTrue())}
         >
           <img
