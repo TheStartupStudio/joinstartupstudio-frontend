@@ -240,6 +240,20 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
     return age
   }
 
+  const getRoleBasedTitle = () => {
+    const role = displayData?.role_id || learner?.role_id
+    switch(role) {
+      case 1:
+        return 'Learner'
+      case 2:
+        return 'Client'
+      case 3:
+        return 'Admin'
+      default:
+        return 'User'
+    }
+  }
+
   if (loading) {
     return (
       <Modal show={show} onHide={onHide} centered>
@@ -271,7 +285,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 <path d="M2.59062 19.9916H17.1706C18.9302 19.9916 19.7612 19.4682 19.7612 18.3369C19.7612 15.4918 16.0035 11.4056 9.87623 11.4056C3.75774 11.4056 0 15.4918 0 18.3369C0 19.4682 0.831124 19.9916 2.59062 19.9916ZM2.15738 18.5817C1.72414 18.5817 1.56499 18.4719 1.56499 18.168C1.56499 16.2009 4.56233 12.824 9.87623 12.824C15.1989 12.824 18.1963 16.2009 18.1963 18.168C18.1963 18.4719 18.0371 18.5817 17.6039 18.5817H2.15738ZM9.89387 9.97045C12.573 9.97045 14.7303 7.71634 14.7303 4.92192C14.7303 2.17814 12.573 0 9.89387 0C7.2237 0 5.04863 2.21191 5.04863 4.9388C5.04863 7.72479 7.21484 9.97045 9.89387 9.97045ZM9.89387 8.56061C8.09904 8.56061 6.61362 6.97338 6.61362 4.9388C6.61362 2.96328 8.09019 1.40988 9.89387 1.40988C11.6976 1.40988 13.1654 2.93795 13.1654 4.92192C13.1654 6.95654 11.6888 8.56061 9.89387 8.56061Z" fill="black"/>
               </svg>
             </div>
-            <h3 className="modal-title-view-learner">View Learner</h3>
+            <h3 className="modal-title-view-learner">View {getRoleBasedTitle()}</h3>
             
             {/* Action Buttons */}
             <div className="header-actions">
@@ -281,7 +295,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 </svg>
               </div>
 
-              <div onClick={handleEditClick} style={{ cursor: 'pointer' }} title="Edit learner">
+              <div onClick={handleEditClick} style={{ cursor: 'pointer' }} title={`Edit ${getRoleBasedTitle().toLowerCase()}`}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                   <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -293,7 +307,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
           <div className="learner-info-section">
             <div className="info-row">
               <div className="info-field">
-                <label className="info-label">Learner Name</label>
+                <label className="info-label">{getRoleBasedTitle()} Name</label>
                 <p className="info-value">{displayData.name}</p>
               </div>
             </div>
@@ -322,7 +336,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 <path d="M5.83301 7.50032L9.99968 10.417L14.1663 7.50032" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M1.66699 13.8337V6.16699C1.66699 5.06242 2.56242 4.16699 3.66699 4.16699H16.3337C17.4382 4.16699 18.3337 5.06242 18.3337 6.16699V13.8337C18.3337 14.9382 17.4382 15.8337 16.3337 15.8337H3.66699C2.56242 15.8337 1.66699 14.9382 1.66699 13.8337Z" stroke="black" strokeWidth="1.5"/>
               </svg>
-              EMAIL LEARNER
+              EMAIL {getRoleBasedTitle().toUpperCase()}
             </button>
           </div>
 
@@ -457,7 +471,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 <path d="M1.66699 13.8337V6.16699C1.66699 5.06242 2.56242 4.16699 3.66699 4.16699H16.3337C17.4382 4.16699 18.3337 5.06242 18.3337 6.16699V13.8337C18.3337 14.9382 17.4382 15.8337 16.3337 15.8337H3.66699C2.56242 15.8337 1.66699 14.9382 1.66699 13.8337Z" stroke="black" stroke-width="1.5"/>
               </svg>
             </div>
-            <h3 className="email-modal-title">Email Learner</h3>
+            <h3 className="email-modal-title">Email {getRoleBasedTitle()}</h3>
           </div>
 
           {/* Email Form */}

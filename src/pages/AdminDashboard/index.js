@@ -25,6 +25,8 @@ import organizationLogo1 from '../../assets/images/academy-icons/Nord Anglia Sch
 import organizationLogo2 from '../../assets/images/academy-icons/Nord Anglia Schools-horizontal.png'
 import potfolioIconDash from '../../assets/images/academy-icons/portfolio-admin-dash.png'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
+import NotificationBell from '../../components/NotificationBell'
+
 
 
 
@@ -368,7 +370,7 @@ const AdminDashboard = () => {
   return (
     <div>
       <div>
-        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+        <div className="col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4 flex-row">
           <div className="account-page-padding d-flex justify-content-between flex-col-tab align-start-tab">
             <div>
               <h3 className="page-title bold-page-title text-black mb-0">
@@ -376,12 +378,17 @@ const AdminDashboard = () => {
               </h3>
             </div>
           </div>
-          <img
-            src={MenuIcon}
-            alt='menu'
-            className='menu-icon-cie self-start-tab cursor-pointer'
-            onClick={() => dispatch(toggleCollapse())}
-          />
+
+          <div className="d-flex align-items-center justify-content-center">
+
+            {userRole === 2 ? (<NotificationBell />) :  null}
+            <img
+              src={MenuIcon}
+              alt='menu'
+              className='menu-icon-cie self-start-tab cursor-pointer'
+              onClick={() => dispatch(toggleCollapse())}
+            />
+          </div>
         </div>
       </div>
 

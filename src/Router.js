@@ -150,17 +150,43 @@ function Router(props) {
                   component={SubscriptionSuccess} 
                 />
                 {renderRoutes(roleRoutes())}
-                {/* Only apply redirects for users with active subscriptions AND not on success page */}
-                {hasActiveSubscription() && !isSubscriptionSuccessRoute && redirects.map((redirect) => (
-                  (!redirect.condition || redirect.condition(user)) && (
-                    <Redirect
-                      key={redirect.from}
-                      from={redirect.from}
-                      to={redirect.to}
-                      exact={redirect.exact || false}
+                
+                {/* ✅ Only apply redirects for users with active subscriptions AND not on success page */}
+                {hasActiveSubscription() && !isSubscriptionSuccessRoute && (
+                  <Switch>
+                    {/* Root redirect based on role */}
+                    <Redirect 
+                      exact 
+                      from="/" 
+                      to={user?.user?.role_id === 2 || user?.user?.role_id === 3 ? '/admin-dashboard' : '/dashboard'} 
                     />
-                  )
-                ))}
+                    
+                    {/* Dashboard redirect for clients/admins */}
+                    <Redirect 
+                      exact 
+                      from="/dashboard" 
+                      to={user?.user?.role_id === 2 || user?.user?.role_id === 3 ? '/admin-dashboard' : '/dashboard'} 
+                    />
+                    
+                    {/* Register/Login redirects */}
+                    <Redirect 
+                      exact 
+                      from="/register" 
+                      to={user?.user?.role_id === 2 || user?.user?.role_id === 3 ? '/admin-dashboard' : '/dashboard'} 
+                    />
+                    <Redirect 
+                      exact 
+                      from="/ims-login" 
+                      to={user?.user?.role_id === 2 || user?.user?.role_id === 3 ? '/admin-dashboard' : '/dashboard'} 
+                    />
+                    
+                    {/* Subscription redirect - only if needed */}
+                    {redirects.find(r => r.from === '*' && r.to === '/subscribe' && (!r.condition || r.condition(user))) && (
+                      <Redirect from="*" to="/subscribe" />
+                    )}
+                  </Switch>
+                )}
+                
                 <Route component={NotFound} />
               </Switch>
             </Layout>

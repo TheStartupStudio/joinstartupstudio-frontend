@@ -42,6 +42,8 @@ import BulkAddLearnersModal from '../../components/UserManagment/BulkAddLearners
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 import axiosInstance from '../../utils/AxiosInstance'
 import ViewOrganizationInvoicesModal from '../../components/UserManagment/ViewOrganizationInvoicesModal'
+import NotificationBell from '../../components/NotificationBell'
+
 
 
 const UserManagement = () => {
@@ -934,7 +936,7 @@ const UserManagement = () => {
   return (
     <div>
       <div>
-        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+        <div className="col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
           <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
             <div className="d-flex flex-column gap-2">
               <h3 className=" text-black mb-0"
@@ -964,12 +966,16 @@ const UserManagement = () => {
               </p>
             </div>
           </div>
-          <img
-            src={MenuIcon}
-            alt='menu'
-            className='menu-icon-cie self-start-tab cursor-pointer'
-            onClick={() => dispatch(toggleCollapse())}
-          />
+          
+          <div className="d-flex align-items-center justify-content-center">
+            {isInstructor ? (<NotificationBell />) : null}
+            <img
+              src={MenuIcon}
+              alt='menu'
+              className='menu-icon-cie self-start-tab cursor-pointer'
+              onClick={() => dispatch(toggleCollapse())}
+            />
+          </div>
         </div>
       </div>
       

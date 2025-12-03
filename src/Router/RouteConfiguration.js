@@ -599,9 +599,6 @@ export const publicRoutes = [
 ]
 
 export const redirects = [
-  { from: '/register', to: '/dashboard' },
-  { from: '/ims-login', to: '/dashboard' },
-  { from: '/', to: '/dashboard', exact: true },
   // ✅ Don't redirect subscription success page
   {
     from: '*',
@@ -612,7 +609,7 @@ export const redirects = [
       window.location.pathname !== '/subscription/cancel' &&
       user?.user?.is_active === true &&
       !user?.user?.stripe_subscription_id &&
-      !user?.user?.subscription_exempt // ✅ NEW: Also check exempt status
+      !user?.user?.subscription_exempt
   },
   {
     from: '*',

@@ -11,6 +11,16 @@ const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef }) => {
   const panelRef = useRef(null)
 
   useEffect(() => {
+    if (onApplyFilters) {
+      onApplyFilters({
+        organizationName,
+        dateFrom,
+        dateTo
+      })
+    }
+  }, [organizationName, dateFrom, dateTo])
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         panelRef.current && 
@@ -30,25 +40,6 @@ const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef }) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [show, onHide, anchorRef])
-
-  const handleApply = () => {
-    onApplyFilters({
-      organizationName,
-      dateFrom,
-      dateTo
-    })
-  }
-
-  const handleClear = () => {
-    setOrganizationName('')
-    setDateFrom(null)
-    setDateTo(null)
-    onApplyFilters({
-      organizationName: '',
-      dateFrom: null,
-      dateTo: null
-    })
-  }
 
   if (!show) return null
 
@@ -70,7 +61,7 @@ const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef }) => {
                     <rect width="20" height="20" fill="white"/>
                     </clipPath>
                 </defs>
-                </svg>
+            </svg>
             <span className="filter-label">Search by Organization Name</span>
           </div>
           <div className="filter-input-wrapper">
@@ -97,6 +88,25 @@ const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef }) => {
                 strokeLinejoin="round"
               />
             </svg>
+            {organizationName && (
+              <button 
+                className="clear-input-btn"
+                onClick={() => setOrganizationName('')}
+                style={{
+                  position: 'absolute',
+                  right: '40px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#999',
+                  fontSize: '14px'
+                }}
+              >
+                <FaTimes />
+              </button>
+            )}
           </div>
         </div>
 
@@ -165,14 +175,6 @@ const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef }) => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                {dateFrom && (
-                  <button 
-                    className="clear-date-btn"
-                    onClick={() => setDateFrom(null)}
-                  >
-                    <FaTimes />
-                  </button>
-                )}
               </div>
             </div>
 
@@ -225,29 +227,10 @@ const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef }) => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                {dateTo && (
-                  <button 
-                    className="clear-date-btn"
-                    onClick={() => setDateTo(null)}
-                  >
-                    <FaTimes />
-                  </button>
-                )}
               </div>
             </div>
           </div>
         </div>
-
-        {/* Action Buttons
-        
-        <div className="filter-dropdown-footer">
-          <button className="clear-filters-btn" onClick={handleClear}>
-            Clear All
-          </button>
-          <button className="apply-filters-btn" onClick={handleApply}>
-            Apply Filters
-          </button>
-        </div> */}
       </div>
     </div>
   )

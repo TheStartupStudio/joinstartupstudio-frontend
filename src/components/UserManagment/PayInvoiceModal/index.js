@@ -4,53 +4,95 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faPencilAlt, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import CustomBirthDateCalendar from '../../CustomBirthDateCalendar'
+import { invoiceApi } from '../../../utils/invoiceApi'
+import { useSelector } from 'react-redux'
+import axiosInstance from '../../../utils/AxiosInstance'
 import './PayInvoiceModal.css'
 
 const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
   const [loading, setLoading] = useState(false)
+  const [loadingPaymentMethod, setLoadingPaymentMethod] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('credit-card')
+  const [existingPaymentMethod, setExistingPaymentMethod] = useState(null)
   const [sendDate, setSendDate] = useState(null)
   const [showCalendar, setShowCalendar] = useState(false)
   const [formData, setFormData] = useState({
-    nameOnCard: '',
-    cardNumber: '',
-    expirationDate: '',
-    cvc: '',
-    zipCode: '',
-    // Bank Account fields
-    nameOnBankAccount: '',
-    routingNumber: '',
-    accountNumber: '',
-    accountType: 'checking',
-    // Billing Address (shared)
     billingAddress: '',
     city: '',
     state: '',
     billingZipCode: ''
   })
 
+  const { user } = useSelector((state) => state.user.user)
+
   useEffect(() => {
-    if (invoiceData) {
-      setFormData({
-        nameOnCard: invoiceData.nameOnCard || 'My Organization',
-        cardNumber: invoiceData.cardNumber || '1234567890',
-        expirationDate: invoiceData.expirationDate || '10/27',
-        cvc: invoiceData.cvc || '123',
-        zipCode: invoiceData.zipCode || '36741',
-        // Bank Account
-        nameOnBankAccount: invoiceData.nameOnBankAccount || 'My Organization',
-        routingNumber: invoiceData.routingNumber || '1234567890',
-        accountNumber: invoiceData.accountNumber || '1234567890',
-        accountType: invoiceData.accountType || 'checking',
-        // Billing Address
-        billingAddress: invoiceData.billingAddress || '1234 My Home Street',
-        city: invoiceData.city || 'Orlando',
-        state: invoiceData.state || 'FL',
-        billingZipCode: invoiceData.billingZipCode || '34761'
-      })
-      setPaymentMethod(invoiceData.paymentMethod || 'credit-card')
+    if (show) {
+      fetchPaymentMethod()
     }
-  }, [invoiceData, show])
+  }, [show])
+
+  const fetchPaymentMethod = async () => {
+    setLoadingPaymentMethod(true)
+    try {
+      const response = await axiosInstance.get('/client/payment-method')
+      
+      if (response.data?.data) {
+        const payment = response.data.data
+        setExistingPaymentMethod(payment)
+        
+        if (payment.type === 'card') {
+          setPaymentMethod('credit-card')
+        } else if (payment.type === 'us_bank_account') {
+          setPaymentMethod('bank-account')
+        }
+        
+        // Set billing address from payment method or fall back to university data
+        if (payment.billing_details) {
+          setFormData(prev => ({
+            ...prev,
+            billingAddress: payment.billing_details.address?.line1 || user?.University?.address || '',
+            city: payment.billing_details.address?.city || user?.University?.city || '',
+            state: payment.billing_details.address?.state || String(user?.University?.state || ''),
+            billingZipCode: payment.billing_details.address?.postal_code || String(user?.University?.zipCode || '')
+          }))
+        } else {
+          // Use university data if no payment billing details exist
+          setFormData(prev => ({
+            ...prev,
+            billingAddress: user?.University?.address || '',
+            city: user?.University?.city || '',
+            state: String(user?.University?.state || ''),
+            billingZipCode: String(user?.University?.zipCode || '')
+          }))
+        }
+      } else {
+        // No existing payment method, use university data
+        setFormData(prev => ({
+          ...prev,
+          billingAddress: user?.University?.address || '',
+          city: user?.University?.city || '',
+          state: String(user?.University?.state || ''),
+          billingZipCode: String(user?.University?.zipCode || '')
+        }))
+      }
+    } catch (error) {
+      console.error('Error fetching payment method:', error)
+      if (error.response?.status !== 404) {
+        toast.error('Failed to load payment method')
+      } else {
+        // 404 means no payment method exists, use university data
+        setFormData(prev => ({
+          ...prev,
+          billingAddress: user?.University?.address || '',
+          city: user?.University?.city || '',
+          state: String(user?.University?.state || ''),
+          billingZipCode: String(user?.University?.zipCode || '')
+        }))
+      }
+    } finally {
+      setLoadingPaymentMethod(false)
+    }
+  }
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -64,6 +106,18 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
   }
 
   const handleDateChange = (date) => {
+    // ✅ Validate that date is not in the past
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    
+    const selectedDate = new Date(date)
+    selectedDate.setHours(0, 0, 0, 0)
+    
+    if (selectedDate < today) {
+      toast.error('Payment date must be in the future')
+      return
+    }
+    
     setSendDate(date)
     setShowCalendar(false)
   }
@@ -77,41 +131,100 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
   }
 
   const handlePayNow = async () => {
-    // Validate required fields
-    if (paymentMethod === 'credit-card') {
-      if (!formData.nameOnCard || !formData.cardNumber || !formData.expirationDate || !formData.cvc) {
-        toast.warning('Please fill in all card information fields')
-        return
-      }
-    } else if (paymentMethod === 'bank-account') {
-      if (!formData.nameOnBankAccount || !formData.routingNumber || !formData.accountNumber) {
-        toast.warning('Please fill in all bank account information fields')
+    if (!invoiceData?.id) {
+      toast.error('Invoice ID is required')
+      return
+    }
+
+    if (!existingPaymentMethod) {
+      toast.error('No payment method on file. Please add a payment method first.')
+      return
+    }
+
+    // ✅ Check if bank account is verified
+    if (existingPaymentMethod.type === 'us_bank_account') {
+      const status = existingPaymentMethod.us_bank_account?.status
+      
+      if (status !== 'verified' && status !== 'verified_by_stripe') {
+        toast.error(
+          '⚠️ Your bank account is not yet verified. Please complete the verification process before making payments.',
+          { autoClose: 8000 }
+        )
         return
       }
     }
 
-    if (!formData.billingAddress || !formData.city || !formData.state || !formData.billingZipCode) {
-      toast.warning('Please fill in all billing address fields')
-      return
+    // ✅ Validate scheduled payment date
+    if (sendDate) {
+      const now = new Date()
+      const scheduledDate = new Date(sendDate)
+      
+      if (scheduledDate <= now) {
+        toast.error('Payment date must be in the future.')
+        return
+      }
     }
 
     setLoading(true)
     try {
-      if (onPay) {
-        await onPay({ ...formData, paymentMethod, sendDate })
+      let response
+      
+      if (sendDate) {
+        // ✅ Schedule payment with Stripe
+        response = await invoiceApi.scheduleInvoicePayment(invoiceData.id, {
+          scheduledDate: sendDate.toISOString(),
+          paymentMethodType: existingPaymentMethod.type
+        })
+        
+        toast.success(`✅ Payment scheduled! Stripe will automatically charge on ${formatDate(sendDate)}`)
+      } else {
+        // ✅ Pay immediately with proper payment method type
+        response = await invoiceApi.payClientInvoice(invoiceData.id, {
+          paymentMethodType: existingPaymentMethod.type
+        })
+        
+        // ✅ Handle bank account payment confirmation
+        if (existingPaymentMethod.type === 'us_bank_account') {
+          toast.success('✅ Bank account payment initiated! Processing may take 1-2 business days.')
+        } else {
+          toast.success('✅ Payment processed successfully!')
+        }
       }
-      toast.success('Payment processed successfully!')
-      setLoading(false)
+      
+      if (onPay) {
+        await onPay(response.data)
+      }
+      
       onHide()
     } catch (error) {
-      console.error('Error processing payment:', error)
-      toast.error('Failed to process payment')
+      console.error('❌ Error processing payment:', error)
+      const errorMessage = error.response?.data?.message || 'Failed to process payment'
+      toast.error(errorMessage)
+    } finally {
       setLoading(false)
     }
   }
 
   const handleCancel = () => {
     onHide()
+  }
+
+  const getBankAccountStatusBadge = (status) => {
+    const statusMap = {
+      'new': { color: 'warning', text: 'Pending Verification', icon: '⏳' },
+      'verified': { color: 'success', text: 'Verified', icon: '✅' },
+      'verified_by_stripe': { color: 'success', text: 'Verified', icon: '✅' },
+      'verification_failed': { color: 'danger', text: 'Verification Failed', icon: '❌' },
+      'errored': { color: 'danger', text: 'Error', icon: '❌' }
+    }
+
+    const statusInfo = statusMap[status] || statusMap['new']
+    
+    return (
+      <span className={`badge badge-${statusInfo.color}`}>
+        {statusInfo.icon} {statusInfo.text}
+      </span>
+    )
   }
 
   return (
@@ -165,7 +278,7 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
           </div>
         </div>
 
-        {/* Payment Send Date Section */}
+        {/* ✅ Updated Payment Send Date Section with validation message */}
         <div className="payment-send-date-section">
           <div className="section-header">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -173,17 +286,17 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
                 <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
               </g>
             </svg>
-            <span>Payment Send Date</span>
+            <span>Payment Send Date (Optional)</span>
           </div>
           <div className="send-date-content">
-            <label>Select Date To Send Payment</label>
+            <label>Schedule Payment for Future Date</label>
             <div className="date-input-wrapper" style={{width: 'fit-content'}}>
               <input
                 type="text"
                 className="date-input"
                 value={formatDate(sendDate)}
                 onClick={() => setShowCalendar(!showCalendar)}
-                placeholder="Choose Date"
+                placeholder="Pay Now or Choose Future Date"
                 readOnly
               />
               <FontAwesomeIcon 
@@ -192,219 +305,138 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
                 onClick={() => setShowCalendar(!showCalendar)}
               />
               {showCalendar && (
-              <div className="calendar-dropdown">
-                <CustomBirthDateCalendar
-                  selectedDate={sendDate}
-                  onDateChange={handleDateChange}
-                />
-              </div>
-            )}
+                <div className="calendar-dropdown">
+                  <CustomBirthDateCalendar
+                    selectedDate={sendDate}
+                    onDateChange={handleDateChange}
+                  />
+                </div>
+              )}
             </div>
-            
+            {sendDate && (
+              <p className="scheduled-date-note">
+                💡 Payment will be automatically processed on {formatDate(sendDate)}
+              </p>
+            )}
+            {!sendDate && (
+              <p className="payment-note">
+                Leave empty to pay immediately
+              </p>
+            )}
           </div>
         </div>
 
         {/* Payment Method Section */}
-        <div>
-          <div className="section-header">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <g clipPath="url(#clip0_3587_14757)">
-                <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-              </g>
-            </svg>
-            <span>Payment Method*</span>
-          </div>
-          <div className="payment-method-options">
-            <label className="payment-method-radio">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="credit-card"
-                checked={paymentMethod === 'credit-card'}
-                onChange={() => handlePaymentMethodChange('credit-card')}
-              />
-              <span className="radio-custom"></span>
-              <span className="radio-label">Credit Card</span>
-            </label>
-            <label className="payment-method-radio">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="bank-account"
-                checked={paymentMethod === 'bank-account'}
-                onChange={() => handlePaymentMethodChange('bank-account')}
-              />
-              <span className="radio-custom"></span>
-              <span className="radio-label">Bank Account</span>
-            </label>
-          </div>
-          <p className="payment-note">*Invoices will automatically be paid using this payment method</p>
-        </div>
-
-        {/* Card Information Section */}
-        {paymentMethod === 'credit-card' && (
-          <div>
-            <div className="section-header">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <g clipPath="url(#clip0_3587_14757)">
-                  <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                </g>
-              </svg>
-              <span>Card Information</span>
+        {loadingPaymentMethod ? (
+          <div className="text-center py-3">
+            <div className="spinner-border spinner-border-sm text-primary" role="status">
+              <span className="sr-only">Loading...</span>
             </div>
-            <div className="card-info-fields">
-              <div className="form-group">
-                <label className="field-label">Name On Credit Card</label>
-                <div className="input-with-icon">
-                  <input
-                    type="text"
-                    className="payment-input"
-                    value={formData.nameOnCard}
-                    onChange={(e) => handleInputChange('nameOnCard', e.target.value)}
-                    placeholder="My Organization"
-                  />
-                  <button className="edit-icon-btn" type="button">
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="field-label">Card Number</label>
-                <div className="input-with-icon">
-                  <input
-                    type="text"
-                    className="payment-input"
-                    value={formData.cardNumber}
-                    onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                    placeholder="1234567890"
-                    maxLength="16"
-                  />
-                  <button className="edit-icon-btn" type="button">
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="card-details-row">
-                <div className="form-group">
-                  <label className="field-label">Expiration (MM/YY)</label>
-                  <div className="input-with-icon">
-                    <input
-                      type="text"
-                      className="payment-input"
-                      value={formData.expirationDate}
-                      onChange={(e) => handleInputChange('expirationDate', e.target.value)}
-                      placeholder="10/27"
-                      maxLength="5"
-                    />
-                    <button className="edit-icon-btn" type="button">
-                      <FontAwesomeIcon icon={faPencilAlt} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="field-label">CVC</label>
-                  <div className="input-with-icon">
-                    <input
-                      type="text"
-                      className="payment-input"
-                      value={formData.cvc}
-                      onChange={(e) => handleInputChange('cvc', e.target.value)}
-                      placeholder="123"
-                      maxLength="4"
-                    />
-                    <button className="edit-icon-btn" type="button">
-                      <FontAwesomeIcon icon={faPencilAlt} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="field-label">Zip Code</label>
-                  <div className="input-with-icon">
-                    <input
-                      type="text"
-                      className="payment-input"
-                      value={formData.zipCode}
-                      onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                      placeholder="36741"
-                      maxLength="10"
-                    />
-                    <button className="edit-icon-btn" type="button">
-                      <FontAwesomeIcon icon={faPencilAlt} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p className="mt-2">Loading payment method...</p>
           </div>
-        )}
-
-        {/* Bank Account Information Section - Only show when bank-account is selected */}
-        {paymentMethod === 'bank-account' && (
-          <div>
-            <div className="section-header">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <g clipPath="url(#clip0_3587_14757)">
-                  <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                </g>
-              </svg>
-              <span>Bank Information</span>
+        ) : (
+          <>
+            <div>
+              <div className="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <g clipPath="url(#clip0_3587_14757)">
+                    <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+                  </g>
+                </svg>
+                <span>Payment Method*</span>
+              </div>
+              <div className="payment-method-options">
+                <label className="payment-method-radio">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="credit-card"
+                    checked={paymentMethod === 'credit-card'}
+                    onChange={() => handlePaymentMethodChange('credit-card')}
+                    disabled
+                  />
+                  <span className="radio-custom"></span>
+                  <span className="radio-label">Credit Card</span>
+                </label>
+                <label className="payment-method-radio">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="bank-account"
+                    checked={paymentMethod === 'bank-account'}
+                    onChange={() => handlePaymentMethodChange('bank-account')}
+                    disabled
+                  />
+                  <span className="radio-custom"></span>
+                  <span className="radio-label">US Bank Account</span>
+                </label>
+              </div>
+              <p className="payment-note">*Invoices will automatically be paid using this payment method</p>
             </div>
-            <div className="bank-info-fields">
-              <div className="form-group">
-                <label className="field-label">Name On Bank Account</label>
-                <div className="input-with-icon">
-                  <input
-                    type="text"
-                    className="payment-input"
-                    value={formData.nameOnBankAccount}
-                    onChange={(e) => handleInputChange('nameOnBankAccount', e.target.value)}
-                    placeholder="My Organization"
-                  />
-                  <button className="edit-icon-btn" type="button">
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </button>
-                </div>
-              </div>
 
-              <div className="form-group">
-                <label className="field-label">Routing Number</label>
-                <div className="input-with-icon">
-                  <input
-                    type="text"
-                    className="payment-input"
-                    value={formData.routingNumber}
-                    onChange={(e) => handleInputChange('routingNumber', e.target.value)}
-                    placeholder="1234567890"
-                    maxLength="9"
-                  />
-                  <button className="edit-icon-btn" type="button">
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </button>
+            {/* Card Information Section */}
+            {paymentMethod === 'credit-card' && (
+              <div>
+                <div className="section-header">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <g clipPath="url(#clip0_3587_14757)">
+                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19 C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </g>
+                  </svg>
+                  <span>Card Information</span>
                 </div>
+                
+                {existingPaymentMethod && existingPaymentMethod.card ? (
+                  <div className="card-info-fields">
+                    <div className="form-group stripe-card-element">
+                      <label className="field-label">Card Number *</label>
+                      <div className="stripe-card-container disabled-field">
+                        <input
+                          type="text"
+                          value={`•••• •••• •••• ${existingPaymentMethod.card.last4}`}
+                          disabled
+                          className="stripe-disabled-input"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="card-details-row">
+                      <div className="form-group stripe-card-element">
+                        <label className="field-label">Expiration Date *</label>
+                        <div className="stripe-card-container disabled-field">
+                          <input
+                            type="text"
+                            value={`${String(existingPaymentMethod.card.exp_month).padStart(2, '0')}/${String(existingPaymentMethod.card.exp_year).slice(-2)}`}
+                            disabled
+                            className="stripe-disabled-input"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="form-group stripe-card-element">
+                        <label className="field-label">CVC *</label>
+                        <div className="stripe-card-container disabled-field">
+                          <input
+                            type="text"
+                            value="•••"
+                            disabled
+                            className="stripe-disabled-input"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="alert alert-warning">
+                    <i className="fas fa-exclamation-triangle mr-2"></i>
+                    No credit card on file. Please add a payment method in the Manage Payment section.
+                  </div>
+                )}
               </div>
+            )}
 
-              <div className="form-group">
-                <label className="field-label">Account Number</label>
-                <div className="input-with-icon">
-                  <input
-                    type="text"
-                    className="payment-input"
-                    value={formData.accountNumber}
-                    onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-                    placeholder="1234567890"
-                    maxLength="17"
-                  />
-                  <button className="edit-icon-btn" type="button">
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Account Type */}
+            {/* Bank Account Information Section */}
+            {paymentMethod === 'bank-account' && (
               <div>
                 <div className="section-header">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -412,38 +444,78 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
                       <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
                     </g>
                   </svg>
-                  <span>Account Type</span>
+                  <span>Bank Account Information</span>
                 </div>
-                <div className="payment-method-options">
-                  <label className="payment-method-radio">
-                    <input
-                      type="radio"
-                      name="accountType"
-                      value="checking"
-                      checked={formData.accountType === 'checking'}
-                      onChange={(e) => handleInputChange('accountType', e.target.value)}
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">Checking</span>
-                  </label>
-                  <label className="payment-method-radio">
-                    <input
-                      type="radio"
-                      name="accountType"
-                      value="savings"
-                      checked={formData.accountType === 'savings'}
-                      onChange={(e) => handleInputChange('accountType', e.target.value)}
-                    />
-                    <span className="radio-custom"></span>
-                    <span className="radio-label">Savings</span>
-                  </label>
-                </div>
+                
+                {existingPaymentMethod && existingPaymentMethod.us_bank_account ? (
+                  <div className="bank-info-fields">
+                    <div className="form-group">
+                      <label className="field-label">Account Holder Name *</label>
+                      <input
+                        type="text"
+                        className="input-with-icon disabled-field"
+                        value={existingPaymentMethod.billing_details?.name || 'Account Holder'}
+                        disabled
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="field-label">Bank Name</label>
+                      <input
+                        type="text"
+                        className="input-with-icon disabled-field"
+                        value={existingPaymentMethod.us_bank_account.bank_name || 'Bank Account'}
+                        disabled
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="field-label">Account Number *</label>
+                      <input
+                        type="text"
+                        className="input-with-icon disabled-field"
+                        value={`••••••${existingPaymentMethod.us_bank_account.last4}`}
+                        disabled
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="field-label">Account Holder Type *</label>
+                      <input
+                        type="text"
+                        className="input-with-icon disabled-field"
+                        value={existingPaymentMethod.us_bank_account.account_holder_type === 'company' ? 'Company/Organization' : 'Individual'}
+                        disabled
+                      />
+                    </div>
+
+                    {existingPaymentMethod.us_bank_account.status && (
+                      <div className="form-group">
+                        <label className="field-label">Verification Status</label>
+                        <div className="mt-2">
+                          {getBankAccountStatusBadge(existingPaymentMethod.us_bank_account.status)}
+                        </div>
+                        {(existingPaymentMethod.us_bank_account.status === 'new' || 
+                          existingPaymentMethod.us_bank_account.status === 'verification_failed') && (
+                          <small className="d-block mt-2 text-warning">
+                            ⚠️ Payment cannot be processed until bank account is verified
+                          </small>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="alert alert-warning">
+                    <i className="fas fa-exclamation-triangle mr-2"></i>
+                    No bank account on file. Please add a payment method in the Manage Payment section.
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
+            )}
+          </>
         )}
 
-        {/* Billing Address Section - Always visible */}
+        {/* Billing Address Section */}
         <div>
           <div className="section-header">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -455,14 +527,14 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
           </div>
           <div className="billing-address-fields">
             <div className="form-group">
-              <label className="field-label">Address</label>
-              <div className="input-with-icon">
+              <label className="field-label">Address *</label>
+              <div>
                 <input
                   type="text"
-                  className="payment-input"
+                  className="input-with-icon"
                   value={formData.billingAddress}
                   onChange={(e) => handleInputChange('billingAddress', e.target.value)}
-                  placeholder="1234 My Home Street"
+                  placeholder="1234 Main Street"
                 />
                 <button className="edit-icon-btn" type="button">
                   <FontAwesomeIcon icon={faPencilAlt} />
@@ -472,11 +544,11 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
 
             <div className="address-details-row">
               <div className="form-group">
-                <label className="field-label">City</label>
-                <div className="input-with-icon">
+                <label className="field-label">City *</label>
+                <div>
                   <input
                     type="text"
-                    className="payment-input"
+                    className="input-with-icon"
                     value={formData.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
                     placeholder="Orlando"
@@ -488,13 +560,13 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
               </div>
 
               <div className="form-group">
-                <label className="field-label">State</label>
-                <div className="input-with-icon">
+                <label className="field-label">State *</label>
+                <div>
                   <input
                     type="text"
-                    className="payment-input"
+                    className="input-with-icon"
                     value={formData.state}
-                    onChange={(e) => handleInputChange('state', e.target.value)}
+                    onChange={(e) => handleInputChange('state', e.target.value.toUpperCase())}
                     placeholder="FL"
                     maxLength="2"
                   />
@@ -505,14 +577,14 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
               </div>
 
               <div className="form-group">
-                <label className="field-label">Zip Code</label>
-                <div className="input-with-icon">
+                <label className="field-label">Zip Code *</label>
+                <div>
                   <input
                     type="text"
-                    className="payment-input"
+                    className="input-with-icon"
                     value={formData.billingZipCode}
                     onChange={(e) => handleInputChange('billingZipCode', e.target.value)}
-                    placeholder="34761"
+                    placeholder="12345"
                     maxLength="10"
                   />
                   <button className="edit-icon-btn" type="button">
@@ -536,7 +608,7 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
           <button 
             className="btn-save-payment"
             onClick={handlePayNow}
-            disabled={loading}
+            disabled={loading || !existingPaymentMethod}
           >
             {loading ? 'PROCESSING...' : 'PAY NOW'}
           </button>

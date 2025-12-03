@@ -6,40 +6,39 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import DataTable from '../../components/DataTable'
 import AcademyBtn from '../../components/AcademyBtn'
 import InvoiceFilters from '../../components/InvoiceFilters'
-import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import plusIcon from '../../assets/images/academy-icons/svg/plus.svg'
 import ViewInvoiceModal from '../../components/UserManagment/ViewInvoiceModal'
 import GenerateInvoiceModal from '../../components/UserManagment/GenerateInvoiceModal'
 import GenerateMultipleInvoicesPopup from '../../components/UserManagment/GenerateMultipleInvoicesPopup'
 import DeleteInvoicePopup from '../../components/UserManagment/DeleteInvoicePopup'
+import { invoiceApi } from '../../utils/invoiceApi'
 import ManagePaymentModal from '../../components/UserManagment/ManagePaymentModal'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import './index.css'
+import NotificationBell from '../../components/NotificationBell'
+import axiosInstance from '../../utils/AxiosInstance'
+
 
 const ViewInvoices = ({ isArchiveMode = false }) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const location = useLocation()
   
-  // Get user role from Redux
-  const { user } = useSelector((state) => state.user.user)
+  const { user } = useSelector((state) => state.user?.user || {})
+  const userRole = user?.role_id || localStorage.getItem('role')
+
   const isInstructor = user?.role_id === 2
+  const isSuperAdmin = user?.role_id === 3 || userRole === 'super-admin'
   
-  // Local state to track archive mode (independent of route)
   const [archiveMode, setArchiveMode] = useState(isArchiveMode)
-  
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [selectedInvoices, setSelectedInvoices] = useState([])
   const [showFilters, setShowFilters] = useState(false)
-  const [appliedFilters, setAppliedFilters] = useState({
-    organizationName: '',
-    dateFrom: null,
-    dateTo: null
-  })
-  const [columnFilters, setColumnFilters] = useState({})
   
   const [invoicesData, setInvoicesData] = useState([])
   const [invoicesLoading, setInvoicesLoading] = useState(false)
@@ -62,119 +61,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   const searchContainerRef = useRef(null)
 
-  const dummyInvoices = [
-    {
-      id: 1,
-      organizationName: 'Tech Solutions Inc',
-      organizationId: '#01245',
-      organizationAddress: '123 Tech Street',
-      city: 'San Francisco',
-      state: 'CA',
-      zip: '94102',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01245',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'AIE Learner Access',
-          quantity: '1000',
-          price: '15',
-          total: 15000
-        }
-      ],
-      subtotal: 15000,
-      tax: 1050,
-      total: 16050
-    },
-    {
-      id: 2,
-      organizationName: 'Educational Services LLC',
-      organizationId: '#01246',
-      organizationAddress: '456 Learning Ave',
-      city: 'New York',
-      state: 'NY',
-      zip: '10001',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01246',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'Platform Subscription',
-          quantity: '500',
-          price: '20',
-          total: 10000
-        },
-        {
-          description: 'Training Modules',
-          quantity: '100',
-          price: '50',
-          total: 5000
-        }
-      ],
-      subtotal: 15000,
-      tax: 1050,
-      total: 16050
-    },
-    {
-      id: 3,
-      organizationName: 'Future Academy',
-      organizationId: '#01247',
-      organizationAddress: '789 Innovation Blvd',
-      city: 'Austin',
-      state: 'TX',
-      zip: '78701',
-      status: 'Unpaid',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01247',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'Student Licenses',
-          quantity: '2000',
-          price: '12',
-          total: 24000
-        }
-      ],
-      subtotal: 24000,
-      tax: 1680,
-      total: 25680
-    },
-    {
-      id: 4,
-      organizationName: 'Learning Hub Corp',
-      organizationId: '#01248',
-      organizationAddress: '321 Education Dr',
-      city: 'Boston',
-      state: 'MA',
-      zip: '02108',
-      status: 'Complete',
-      invoiceDate: '2025-09-27',
-      paymentDate: '2025-10-27',
-      invoiceNumber: '01248',
-      issueDate: '2025-09-27',
-      dueDate: '2025-10-27',
-      items: [
-        {
-          description: 'Annual Subscription',
-          quantity: '1',
-          price: '50000',
-          total: 50000
-        }
-      ],
-      subtotal: 50000,
-      tax: 3500,
-      total: 53500
-    }
-  ]
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
@@ -184,53 +70,96 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
+  const getOrganizationId = () => {
+    if (isSuperAdmin) {
+      return null
+    } else {
+      return user?.universityId || user?.University?.id
+    }
+  }
+
   const fetchInvoices = async (page = 1, search = '') => {
     setInvoicesLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 500))
+      console.log('Fetching invoices with params:', { page, search, archiveMode, userRole: user?.role_id })
 
-      // In archive mode, filter for archived/completed invoices
-      let filteredData = archiveMode 
-        ? dummyInvoices.filter(invoice => invoice.status === 'Complete')
-        : dummyInvoices
+      let response
 
-      if (search) {
-        filteredData = filteredData.filter(invoice =>
-          invoice.organizationName.toLowerCase().includes(search.toLowerCase()) ||
-          invoice.organizationId.toLowerCase().includes(search.toLowerCase()) ||
-          invoice.status.toLowerCase().includes(search.toLowerCase())
-        )
+      if (archiveMode) {
+        // ✅ Fetch archived invoices from /invoices/archived
+        response = await invoiceApi.getArchivedInvoices({
+          page,
+          limit: 10,
+          search
+        })
+      } else {
+        // ✅ Fetch regular invoices
+        if (isInstructor) {
+          response = await invoiceApi.getClientInvoices({ 
+            page, 
+            limit: 10, 
+            search 
+          })
+        } else if (isSuperAdmin) {
+          response = await invoiceApi.getAllInvoices({ 
+            page, 
+            limit: 10, 
+            search 
+          })
+        } else {
+          // For other roles (if any)
+          response = await invoiceApi.getClientInvoices({ 
+            page, 
+            limit: 10, 
+            search 
+          })
+        }
       }
 
-      const startIndex = (page - 1) * 10
-      const endIndex = startIndex + 10
-      const paginatedData = filteredData.slice(startIndex, endIndex)
+      console.log('Invoices response:', response)
 
-      setInvoicesData(paginatedData)
-      setPagination({
-        total: filteredData.length,
+      const invoicesData = response.data || []
+      
+      setInvoicesData(invoicesData)
+      setPagination(response.pagination || {
+        total: invoicesData.length,
         page,
         limit: 10,
-        totalPages: Math.ceil(filteredData.length / 10)
+        totalPages: Math.ceil(invoicesData.length / 10)
       })
     } catch (error) {
       console.error('Error fetching invoices:', error)
-      toast.error('Failed to load invoices data')
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to load invoices data'
+      toast.error(errorMessage)
+      setInvoicesData([])
+      setPagination({
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 1
+      })
     } finally {
       setInvoicesLoading(false)
     }
   }
 
+  // useEffect(() => {
+  //   fetchInvoices(currentPage, debouncedSearchQuery)
+  // }, [currentPage, debouncedSearchQuery, archiveMode])
+
   useEffect(() => {
-    fetchInvoices(currentPage, debouncedSearchQuery)
-  }, [currentPage, debouncedSearchQuery, archiveMode])
+    if (user) {
+      console.log('User changed, fetching invoices:', user)
+      fetchInvoices(currentPage, debouncedSearchQuery)
+    }
+  }, [currentPage, debouncedSearchQuery, archiveMode, user])
 
   const invoicesColumns = useMemo(() => {
     if (isInstructor) {
       return [
         {
-          key: 'organizationId',
-          title: 'ORGANIZATION ID',
+          key: 'invoiceNumber',
+          title: 'INVOICE NUMBER',
           sortable: true,
           filterable: false,
           render: (value) => (
@@ -250,7 +179,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           )
         },
         {
-          key: 'invoiceDate',
+          key: 'issueDate',
           title: 'INVOICE DATE',
           sortable: true,
           filterable: true,
@@ -291,7 +220,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         render: (value, item) => (
           <div className="invoice-organization-info">
             <div className="organization-name">{item.organizationName}</div>
-            <div className="organization-id">{item.organizationId}</div>
+            <div className="organization-id">{item.invoiceNumber}</div>
           </div>
         )
       },
@@ -340,8 +269,346 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     ]
   }, [isInstructor])
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value)
+  const handleDownloadInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      toast.info('Downloading invoice...')
+      
+      try {
+        const response = await invoiceApi.downloadInvoice(invoice.id)
+        
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `Invoice_${invoice.invoiceNumber}.pdf`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        
+        toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
+        return
+      } catch (backendError) {
+        console.log('Backend PDF not available, using client-side generation')
+        setSelectedInvoice(invoice)
+        setInvoiceMode('view')
+        setShowEditInvoiceModal(true)
+        
+        setTimeout(() => {
+          const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
+          if (downloadBtn) {
+            downloadBtn.click()
+          }
+        }, 500)
+      }
+    } catch (error) {
+      console.error('❌ Error downloading invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to download invoice')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleSendInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      await invoiceApi.sendInvoiceEmail(invoice.id, {
+        subject: `Invoice ${invoice.invoiceNumber}`,
+        message: 'Please find attached your invoice.'
+      })
+      toast.success(`Invoice ${invoice.invoiceNumber} sent successfully!`)
+    } catch (error) {
+      console.error('❌ Error sending invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to send invoice')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleArchiveInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      const response = await invoiceApi.archiveInvoice(invoice.id, null)
+      
+      toast.success(response.message || `Invoice ${invoice.invoiceNumber} archived successfully!`)
+      
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error archiving invoice:', error)
+      const errorMessage = error.response?.data?.message || 'Failed to archive invoice'
+      toast.error(errorMessage)
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleUnarchiveInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      const response = await invoiceApi.unarchiveInvoice(invoice.id)
+      
+      toast.success(response.message || `Invoice ${invoice.invoiceNumber} unarchived successfully!`)
+      
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error unarchiving invoice:', error)
+      const errorMessage = error.response?.data?.message || 'Failed to unarchive invoice'
+      toast.error(errorMessage)
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleBulkArchiveInvoices = async () => {
+    if (selectedInvoices.length === 0) {
+      toast.warning('Please select at least one invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      const invoiceIds = selectedInvoices.map(inv => inv.id)
+      const response = await invoiceApi.bulkArchiveInvoices(invoiceIds)
+      
+      toast.success(response.message || `${response.archivedCount} invoice(s) archived successfully!`)
+      setSelectedInvoices([])
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error archiving invoices:', error)
+      const errorMessage = error.response?.data?.message || 'Failed to archive some invoices'
+      toast.error(errorMessage)
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleDeleteInvoice = async () => {
+    setDeleteLoading(true)
+    try {
+      if (selectedInvoice?.id) {
+        await invoiceApi.deleteInvoice(selectedInvoice.id)
+        toast.success(`Invoice ${selectedInvoice.invoiceNumber} deleted successfully!`)
+      } else if (selectedInvoices.length > 0) {
+        const deletePromises = selectedInvoices
+          .filter(invoice => invoice.id)
+          .map(invoice => invoiceApi.deleteInvoice(invoice.id))
+        
+        await Promise.all(deletePromises)
+        toast.success(`${selectedInvoices.length} invoice(s) deleted successfully!`)
+        setSelectedInvoices([])
+      }
+      
+      setShowDeleteInvoicePopup(false)
+      setSelectedInvoice(null)
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+    } catch (error) {
+      console.error('❌ Error deleting invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to delete invoice(s)')
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
+
+  const handleBulkSendInvoices = async () => {
+    if (selectedInvoices.length === 0) {
+      toast.warning('Please select at least one invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      const sendPromises = selectedInvoices.map(invoice => 
+        invoiceApi.sendInvoiceEmail(invoice.id, {
+          subject: `Invoice ${invoice.invoiceNumber}`,
+          message: 'Please find attached your invoice.'
+        })
+      )
+      
+      await Promise.all(sendPromises)
+      toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
+      setSelectedInvoices([])
+    } catch (error) {
+      console.error('❌ Error sending invoices:', error)
+      toast.error('Failed to send some invoices')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleExportInvoicePDF = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      toast.info('Generating PDF...')
+
+      const modalContainer = document.createElement('div')
+      modalContainer.id = 'hidden-invoice-pdf-container'
+      modalContainer.style.position = 'fixed'
+      modalContainer.style.top = '-9999px'
+      modalContainer.style.left = '-9999px'
+      modalContainer.style.width = '210mm' 
+      modalContainer.style.background = 'white'
+      document.body.appendChild(modalContainer)
+
+      modalContainer.innerHTML = `
+        <div style="padding: 40px; font-family: 'Montserrat', sans-serif; background: white;">
+          <!-- Organization Header -->
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="margin: 0; font-size: 24px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</h2>
+          </div>
+
+          <!-- Issued To & Invoice Details -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+            <div style="flex: 1;">
+              <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">ISSUED TO:</p>
+              <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</p>
+              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.organizationAddress || '123 Tech Street'}</p>
+              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.city || 'City'}${invoice.state ? ', ' + invoice.state : ''}${invoice.zip ? ', ' + invoice.zip : ''}</p>
+              
+              <div style="margin-top: 30px;">
+                <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">PAY TO:</p>
+                <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">Learn to Start, LLC</p>
+                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">3100 Corvig-Windermere Road,</p>
+                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">Suite 201 - #132</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">Windermere, FL 34786</p>
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="margin-bottom: 12px;">
+                <p style="margin: 0; font-size: 12px; font-weight: 600;">INVOICE #:</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.invoiceNumber || 'N/A'}</p>
+              </div>
+              <div style="margin-bottom: 12px;">
+                <p style="margin: 0; font-size: 12px; font-weight: 600;">DATE:</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.issueDate || invoice.invoiceDate || 'N/A'}</p>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 12px; font-weight: 600;">DUE DATE:</p>
+                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.dueDate || 'N/A'}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Items Table -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+            <thead>
+              <tr style="background: #f5f5f5;">
+                <th style="padding: 12px; text-align: left; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">DESCRIPTION</th>
+                <th style="padding: 12px; text-align: center; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;"># OF ITEMS</th>
+                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">PRICE</th>
+                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${(invoice.items || []).map(item => `
+                <tr>
+                  <td style="padding: 12px; font-size: 12px; border-bottom: 1px solid #eee;">${item.description || 'Item'}</td>
+                  <td style="padding: 12px; text-align: center; font-size: 12px; border-bottom: 1px solid #eee;">${item.quantity || 0}</td>
+                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.price || 0).toFixed(2)}</td>
+                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.total || 0).toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <!-- Totals -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 40px;">
+            <div style="flex: 1;">
+              <p style="margin: 0; font-size: 16px; font-weight: 600;">SUBTOTAL</p>
+            </div>
+            <div style="min-width: 200px; text-align: right;">
+              <div style="margin-bottom: 8px;">
+                <p style="margin: 0; font-size: 14px;">$${parseFloat(invoice.subtotal || 0).toLocaleString()}</p>
+              </div>
+              <div style="margin-bottom: 8px;">
+                <span style="font-size: 12px; color: #707070;">Tax (7%)</span>
+                <span style="margin-left: 20px; font-size: 14px;">$${parseFloat(invoice.tax || 0).toLocaleString()}</span>
+              </div>
+              <div style="padding-top: 12px; border-top: 2px solid #000;">
+                <span style="font-size: 14px; font-weight: 600;">TOTAL</span>
+                <span style="margin-left: 20px; font-size: 16px; font-weight: 600;">$${parseFloat(invoice.total || 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+
+      await document.fonts.ready
+
+      const canvas = await html2canvas(modalContainer, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        windowWidth: modalContainer.scrollWidth,
+        windowHeight: modalContainer.scrollHeight
+      })
+
+      document.body.removeChild(modalContainer)
+
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      })
+
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = pdf.internal.pageSize.getHeight()
+      const imgWidth = canvas.width
+      const imgHeight = canvas.height
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
+      const imgX = (pdfWidth - imgWidth * ratio) / 2
+      const imgY = 10
+
+      pdf.addImage(
+        imgData, 
+        'PNG', 
+        imgX, 
+        imgY, 
+        imgWidth * ratio, 
+        imgHeight * ratio
+      )
+
+      pdf.save(`Invoice_${invoice.invoiceNumber || 'Export'}.pdf`)
+      
+      toast.success(`Invoice ${invoice.invoiceNumber} exported successfully!`)
+    } catch (error) {
+      console.error('❌ Error exporting invoice:', error)
+      toast.error('Failed to export invoice as PDF')
+    } finally {
+      setInvoicesLoading(false)
+    }
   }
 
   const handleRowAction = (actionType, item) => {
@@ -353,16 +620,25 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         setInvoiceMode('view')
         setShowEditInvoiceModal(true)
         break
+      case 'export-invoice-pdf':
+        handleExportInvoicePDF(item)
+        break
+      case 'download-invoice':
+        handleDownloadInvoice(item)
+        break
+      case 'send-invoice':
       case 'send':
         handleSendInvoice(item)
         break
       case 'generate-invoice':
-        console.log('Generate invoice for:', item)
-        toast.info('Generate Invoice feature coming soon!')
+        setShowGenerateModal(true)
         break
       case 'archive-invoice':
-        console.log('Archive invoice:', item)
-        toast.success(`Invoice ${item.organizationId} archived successfully!`)
+        if (archiveMode) {
+          handleUnarchiveInvoice(item)
+        } else {
+          handleArchiveInvoice(item)
+        }
         break
       case 'delete-invoice':
         setSelectedInvoice(item)
@@ -373,44 +649,24 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }
 
-  const handleSendInvoice = async (invoice) => {
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      toast.success('Invoice sent successfully!')
-    } catch (error) {
-      console.error('Error sending invoice:', error)
-      toast.error('Failed to send invoice')
-    }
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value)
   }
 
   const handleGenerateInvoice = () => {
     setShowGenerateModal(true)
   }
 
-  const handleGenerateInvoiceSubmit = (organization) => {
-    const newInvoice = {
-      id: Date.now(),
-      organizationName: organization.name,
-      organizationId: `#${Math.floor(10000 + Math.random() * 90000)}`,
-      organizationAddress: '',
-      city: '',
-      state: '',
-      zip: '',
-      status: 'Draft',
-      invoiceDate: new Date().toISOString().split('T')[0],
-      paymentDate: '',
-      invoiceNumber: `INV${Math.floor(10000 + Math.random() * 90000)}`,
-      issueDate: new Date().toISOString().split('T')[0],
-      dueDate: '',
-      items: [],
-      subtotal: 0,
-      tax: 0,
-      total: 0
+  const handleGenerateInvoiceSubmit = async (generatedInvoice) => {
+    toast.success('Invoice generated successfully!')
+    setShowGenerateModal(false)
+    await fetchInvoices(currentPage, debouncedSearchQuery)
+    
+    if (generatedInvoice && generatedInvoice.id) {
+      setSelectedInvoice(generatedInvoice)
+      setInvoiceMode('view')
+      setShowEditInvoiceModal(true)
     }
-
-    setSelectedInvoice(newInvoice)
-    setInvoiceMode('edit')
-    setShowEditInvoiceModal(true)
   }
 
   const handleGenerateMultiple = () => {
@@ -422,48 +678,13 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   }
 
   const handleConfirmGenerateMultiple = async () => {
-    setGenerateLoading(true)
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      toast.success(`${selectedInvoices.length} invoice(s) generated successfully!`)
-      setShowGenerateMultiplePopup(false)
-      setSelectedInvoices([])
-      fetchInvoices(currentPage, debouncedSearchQuery)
-    } catch (error) {
-      console.error('Error generating invoices:', error)
-      toast.error('Failed to generate invoices')
-    } finally {
-      setGenerateLoading(false)
-    }
-  }
-
-  const handleDeleteInvoice = async () => {
-    setDeleteLoading(true)
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      if (selectedInvoice) {
-        toast.success(`Invoice ${selectedInvoice.organizationId} deleted successfully!`)
-      } else if (selectedInvoices.length > 0) {
-        toast.success(`${selectedInvoices.length} invoice(s) deleted successfully!`)
-        setSelectedInvoices([])
-      }
-      
-      setShowDeleteInvoicePopup(false)
-      setSelectedInvoice(null)
-      fetchInvoices(currentPage, debouncedSearchQuery)
-    } catch (error) {
-      console.error('Error deleting invoice:', error)
-      toast.error('Failed to delete invoice(s)')
-    } finally {
-      setDeleteLoading(false)
-    }
+    await fetchInvoices(currentPage, debouncedSearchQuery)
+    setSelectedInvoices([])
   }
 
   const handleViewArchive = () => {
-    // Toggle archive mode
     setArchiveMode(!archiveMode)
-    setCurrentPage(1) // Reset to first page
+    setCurrentPage(1)
   }
 
   const handleBackButton = () => {
@@ -488,56 +709,67 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setSelectedInvoices(selectedItems)
   }
 
-  const handleApplyFilters = (filters) => {
-    setAppliedFilters(filters)
-    setShowFilters(false)
-    setCurrentPage(1)
-    console.log('Applied filters:', filters)
-  }
-
-  const handleColumnFilterChange = (filters) => {
-    setColumnFilters(filters)
-    console.log('Column filters changed:', filters)
-  }
-
-  const bulkActions = [
-    {
-      name: 'Generate Invoices',
-      action: handleGenerateMultiple
-    },
-    {
-      name: 'Export Selected',
-      action: () => {
-        if (selectedInvoices.length === 0) {
-          toast.warning('Please select at least one invoice')
-          return
+  const bulkActions = useMemo(() => {
+    if (archiveMode) {
+      return [
+        {
+          name: 'Unarchive Selected',
+          action: async () => {
+            if (selectedInvoices.length === 0) {
+              toast.warning('Please select at least one invoice')
+              return
+            }
+            
+            try {
+              setInvoicesLoading(true)
+              const promises = selectedInvoices.map(inv => 
+                invoiceApi.unarchiveInvoice(inv.id)
+              )
+              await Promise.all(promises)
+              toast.success(`${selectedInvoices.length} invoice(s) unarchived successfully!`)
+              setSelectedInvoices([])
+              await fetchInvoices(currentPage, debouncedSearchQuery)
+            } catch (error) {
+              toast.error('Failed to unarchive some invoices')
+            } finally {
+              setInvoicesLoading(false)
+            }
+          }
+        },
+        {
+          name: 'Delete Selected',
+          action: () => {
+            if (selectedInvoices.length === 0) {
+              toast.warning('Please select at least one invoice')
+              return
+            }
+            setShowDeleteInvoicePopup(true)
+          }
         }
-        console.log('Export selected:', selectedInvoices)
-        toast.info('Export feature coming soon!')
-      }
-    },
-    {
-      name: 'Send Selected',
-      action: () => {
-        if (selectedInvoices.length === 0) {
-          toast.warning('Please select at least one invoice')
-          return
-        }
-        console.log('Send selected:', selectedInvoices)
-        toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
-      }
-    },
-    {
-      name: 'Delete Selected',
-      action: () => {
-        if (selectedInvoices.length === 0) {
-          toast.warning('Please select at least one invoice')
-          return
-        }
-        setShowDeleteInvoicePopup(true)
-      }
+      ]
     }
-  ]
+
+    return [
+      {
+        name: 'Send Selected',
+        action: handleBulkSendInvoices
+      },
+      {
+        name: 'Archive Selected',
+        action: handleBulkArchiveInvoices
+      },
+      {
+        name: 'Delete Selected',
+        action: () => {
+          if (selectedInvoices.length === 0) {
+            toast.warning('Please select at least one invoice')
+            return
+          }
+          setShowDeleteInvoicePopup(true)
+        }
+      }
+    ]
+  }, [selectedInvoices, archiveMode])
 
   const handleClickOutside = (event) => {
     if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
@@ -552,13 +784,27 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }, [])
 
+  if (!user) {
+    return (
+      <div className="view-invoices-container">
+        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
+            <div className="d-flex flex-column gap-2">
+              <h3 className="text-black mb-0 page-main-title">VIEW INVOICES</h3>
+              <p className="page-subtitle">Loading user information...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const handlePaymentModal = () => {
     setShowPaymentModal(true)
   }
 
   const handleSavePayment = async (paymentData) => {
     try {
-      // Add your API call here to save payment data
       console.log('Saving payment data:', paymentData)
       await new Promise(resolve => setTimeout(resolve, 1000))
       toast.success('Payment information updated successfully!')
@@ -570,7 +816,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   return (
     <div className="view-invoices-container">
-      <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+      <div className="col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
         <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
           <div className="d-flex flex-column gap-2">
             <h3 className="text-black mb-0 page-main-title">
@@ -581,12 +827,15 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             </p>
           </div>
         </div>
-        <img
-          src={MenuIcon}
-          alt='menu'
-          className='menu-icon-cie self-start-tab cursor-pointer'
-          onClick={() => dispatch(toggleCollapse())}
-        />
+        <div className="d-flex align-items-center justify-content-center">
+                    {isInstructor ? (<NotificationBell />) : null}
+                    <img
+                      src={MenuIcon}
+                      alt='menu'
+                      className='menu-icon-cie self-start-tab cursor-pointer'
+                      onClick={() => dispatch(toggleCollapse())}
+                    />
+                  </div>
       </div>
 
       <div className="invoices-content-wrapper">
@@ -648,12 +897,13 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
               </button>
             </div>
 
-            <InvoiceFilters
-              show={showFilters}
-              onHide={() => setShowFilters(false)}
-              onApplyFilters={handleApplyFilters}
-              anchorRef={searchContainerRef}
-            />
+            {showFilters && (
+              <InvoiceFilters
+                show={showFilters}
+                onHide={() => setShowFilters(false)}
+                anchorRef={searchContainerRef}
+              />
+            )}
           </div>
 
           {!archiveMode && (
@@ -729,22 +979,22 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
                       </svg>
                     </div>
 
-                    {showBulkDropdown && (
-                      <div className="dropdown-menu">
-                        {bulkActions.map((action, index) => (
-                          <div 
-                            key={index}
-                            className="dropdown-item"
-                            onClick={() => {
-                              action.action()
-                              setShowBulkDropdown(false)
-                            }}
-                          >
-                            {action.name}
+                      {showBulkDropdown && (
+                          <div className="dropdown-menu">
+                            {bulkActions.map((action, index) => (
+                              <div 
+                                key={index}
+                                className="dropdown-item"
+                                onClick={() => {
+                                  action.action()
+                                  setShowBulkDropdown(false)
+                                }}
+                              >
+                                {action.name}
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        )}
                   </div>
                 </>
               )}
@@ -763,14 +1013,13 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             loading={invoicesLoading}
             onSelectionChange={handleSelectionChange}
             selectedItems={selectedInvoices}
-            onFilterChange={handleColumnFilterChange}
           />
 
           <div className="pagination-container">
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -780,17 +1029,17 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                 <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <span className="pagination-info">{currentPage} / {pagination.totalPages}</span>
+            <span className="pagination-info">{currentPage} / {pagination.totalPages || 1}</span>
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === pagination.totalPages}
+              disabled={currentPage === pagination.totalPages || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                 <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -799,7 +1048,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             <button 
               className="pagination-btn"
               onClick={() => handlePageChange(pagination.totalPages)}
-              disabled={currentPage === pagination.totalPages}
+              disabled={currentPage === pagination.totalPages || invoicesLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -833,7 +1082,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           show={showGenerateMultiplePopup}
           onHide={() => setShowGenerateMultiplePopup(false)}
           onConfirm={handleConfirmGenerateMultiple}
-          loading={generateLoading}
+          selectedOrganizations={selectedInvoices}
         />
 
         <DeleteInvoicePopup

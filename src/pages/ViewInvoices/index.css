@@ -251,18 +251,25 @@ max-width: 640px;
 }
 
 .view-invoices-container .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
 }
 
-/* .view-invoices-container .status-badge.status-complete {
-  background: #D4EDDA;
-  color: #155724;
-} */
+.view-invoices-container .status-scheduled .status-dot {
+  background: rgb(99, 195, 255);
+}
 
-.view-invoices-container .status-badge.status-complete .status-dot {
-  background: #28A745;
+.view-invoices-container .status-failed .status-dot {
+  background: orangered;
+}
+
+.view-invoices-container .status-complete .status-dot {
+  background: #9C3;
+}
+
+.view-invoices-container .status-paid .status-dot {
+  background: #9C3;
 }
 
 /* .view-invoices-container .status-badge.status-unpaid {
@@ -270,16 +277,20 @@ max-width: 640px;
   color: #721C24;
 } */
 
-.view-invoices-container .status-badge.status-unpaid .status-dot {
-  background: #DC3545;
+.view-invoices-container .status-unpaid .status-dot {
+  background: #F39;
 }
 
-.view-invoices-container .status-badge.status-created {
+.view-invoices-container .status-pending .status-dot {
+  background: orange;
+}
+
+.view-invoices-container .status-created {
   background: #D1ECF1;
   color: #0C5460;
 }
 
-.view-invoices-container .status-badge.status-created .status-dot {
+.view-invoices-container .status-badge-created .status-dot {
   background: #17A2B8;
 }
 

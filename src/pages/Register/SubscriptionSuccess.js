@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { userLogin } from '../../redux'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -13,17 +13,26 @@ const SubscriptionSuccess = () => {
   const [pollingAttempt, setPollingAttempt] = useState(0)
   const [status, setStatus] = useState('Verifying payment...')
   
+  // ✅ Get user from Redux to determine correct dashboard
+  const { user } = useSelector((state) => state.user)
+  
   const MAX_POLLING_ATTEMPTS = 15 // 30 seconds (15 attempts × 2 seconds)
   const POLLING_INTERVAL = 2000 // 2 seconds
   const INITIAL_DELAY = 2000 // Wait 2 seconds before first check
 
+  // ✅ Helper to get correct dashboard path
+  const getDashboardPath = () => {
+    const userRole = user?.user?.role_id || parseInt(localStorage.getItem('role'))
+    if (userRole === 2 || userRole === 3) {
+      return '/admin-dashboard'
+    }
+    return '/dashboard'
+  }
+
   const refreshUserData = async () => {
     try {
-      
       const response = await axiosInstance.get('/users')
-      
       await dispatch(userLogin())
-      
       return response.data
     } catch (error) {
       throw error
@@ -47,7 +56,6 @@ const SubscriptionSuccess = () => {
         }
       )
 
-      
       if (response.data.success) {
         return {
           subscription_status: 'active',
@@ -65,7 +73,6 @@ const SubscriptionSuccess = () => {
       }
       
     } catch (error) {
-      
       if (error.response?.status === 404) {
         return await refreshUserData()
       }
@@ -75,7 +82,6 @@ const SubscriptionSuccess = () => {
   }
 
   const pollSubscriptionStatus = (sessionId) => {
-    
     let attempts = 0
 
     const poll = async () => {
@@ -91,16 +97,16 @@ const SubscriptionSuccess = () => {
           data.stripe_subscription_id
 
         if (hasActiveSubscription) {
-          
           setStatus('Subscription activated! Refreshing your account...')
           
           await refreshUserData()
           
           toast.success('🎉 Subscription activated successfully!')
           
+          // ✅ Use window.location.href for full page reload to correct dashboard
           setTimeout(() => {
             setLoading(false)
-            history.push('/dashboard')
+            window.location.href = getDashboardPath()
           }, 2000)
           
           return 
@@ -122,9 +128,10 @@ const SubscriptionSuccess = () => {
           if (finalUserData.subscription_status === 'active' && finalUserData.stripe_subscription_id) {
             toast.success('🎉 Subscription activated successfully!')
             
+            // ✅ Use window.location.href for full page reload
             setTimeout(() => {
               setLoading(false)
-              history.push('/dashboard')
+              window.location.href = getDashboardPath()
             }, 2000)
           } else {
             toast.warning(
@@ -132,9 +139,10 @@ const SubscriptionSuccess = () => {
               { autoClose: 8000 }
             )
             
+            // ✅ Use window.location.href for full page reload
             setTimeout(() => {
               setLoading(false)
-              history.push('/dashboard')
+              window.location.href = getDashboardPath()
             }, 3000)
           }
         }
@@ -153,9 +161,10 @@ const SubscriptionSuccess = () => {
           setStatus('Error verifying subscription')
           toast.error('Unable to verify subscription. Please refresh the page or contact support.')
           
+          // ✅ Use window.location.href for full page reload
           setTimeout(() => {
             setLoading(false)
-            history.push('/dashboard')
+            window.location.href = getDashboardPath()
           }, 3000)
         }
       }
@@ -167,12 +176,10 @@ const SubscriptionSuccess = () => {
   }
 
   useEffect(() => {
-    
     const handleSuccess = () => {
       try {
         const params = new URLSearchParams(location.search)
         const sessionId = params.get('session_id')
-        
         
         if (!sessionId) {
           toast.error('Invalid payment confirmation. Redirecting...')
@@ -197,9 +204,10 @@ const SubscriptionSuccess = () => {
         
         toast.error('Payment completed, but there was an issue. Please contact support.')
         
+        // ✅ Use window.location.href for full page reload
         setTimeout(() => {
           setLoading(false)
-          history.push('/dashboard')
+          window.location.href = getDashboardPath()
         }, 5000)
       }
     }
@@ -301,7 +309,7 @@ const SubscriptionSuccess = () => {
                 className="btn btn-sm btn-primary"
                 onClick={() => {
                   setLoading(false)
-                  history.push('/')
+                  window.location.href = getDashboardPath() // ✅ Use window.location.href
                 }}
               >
                 Continue to Dashboard

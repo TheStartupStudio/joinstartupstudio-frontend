@@ -14,6 +14,8 @@ import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import './index.css';
 import LiveQA from '../../assets/images/LiveQ&A.jpg'
+import NotificationBell from '../../components/NotificationBell'
+
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch();
@@ -22,6 +24,9 @@ export default function BeyondYourCourse() {
   const [startVideoIndex, setStartVideoIndex] = useState(0);
   const [endVideoIndex, setEndVideoIndex] = useState(5);
   const [width, setWidth] = useState(window.innerWidth);
+
+      const { user } = useSelector((state) => state.user.user)
+      const userRole = user?.role_id || localStorage.getItem('role')
 
   useEffect(() => {
     // Only fetch if we don't have the data
@@ -166,7 +171,7 @@ export default function BeyondYourCourse() {
       <div id="main-body">
         <div className="row">
           <div>
-            <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+            <div className="col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
               <div className="account-page-padding d-flex justify-content-between flex-col-tab align-start-tab">
                 <div>
                   <h3 className="page-title bold-page-title text-black mb-0">
@@ -179,12 +184,15 @@ export default function BeyondYourCourse() {
                 </div>
                
               </div>
-              <img
-                    src={MenuIcon}
-                    alt='menu'
-                    className='menu-icon-cie self-start-tab cursor-pointer'
-                    onClick={() => dispatch(toggleCollapse())}
-                  />
+             <div className="d-flex align-items-center justify-content-center">
+                         {userRole === 2 ? <NotificationBell /> : null}
+                         <img
+                           src={MenuIcon}
+                           alt='menu'
+                           className='menu-icon-cie self-start-tab cursor-pointer'
+                           onClick={() => dispatch(toggleCollapse())}
+                         />
+                       </div>
             </div>
             <div className="gradient-background-master">
               <div className="videos-container">
