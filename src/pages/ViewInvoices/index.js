@@ -17,6 +17,9 @@ import ManagePaymentModal from '../../components/UserManagment/ManagePaymentModa
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import './index.css'
+import NotificationBell from '../../components/NotificationBell'
+import axiosInstance from '../../utils/AxiosInstance'
+
 
 const ViewInvoices = ({ isArchiveMode = false }) => {
   const history = useHistory()
@@ -276,7 +279,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       setInvoicesLoading(true)
       toast.info('Downloading invoice...')
       
-      // ✅ Try backend PDF download first (if available)
       try {
         const response = await invoiceApi.downloadInvoice(invoice.id)
         
@@ -293,13 +295,11 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
         return
       } catch (backendError) {
-        // ✅ If backend download fails, open modal for client-side PDF generation
         console.log('Backend PDF not available, using client-side generation')
         setSelectedInvoice(invoice)
         setInvoiceMode('view')
         setShowEditInvoiceModal(true)
         
-        // Wait for modal to render, then trigger download
         setTimeout(() => {
           const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
           if (downloadBtn) {
@@ -323,7 +323,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
     try {
       setInvoicesLoading(true)
-      // ✅ Send invoice email
       await invoiceApi.sendInvoiceEmail(invoice.id, {
         subject: `Invoice ${invoice.invoiceNumber}`,
         message: 'Please find attached your invoice.'
@@ -346,12 +345,10 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     try {
       setInvoicesLoading(true)
       
-      // ✅ Archive invoice using POST /invoices/:invoiceId/archive
       const response = await invoiceApi.archiveInvoice(invoice.id, null)
       
       toast.success(response.message || `Invoice ${invoice.invoiceNumber} archived successfully!`)
       
-      // Refresh the invoice list
       await fetchInvoices(currentPage, debouncedSearchQuery)
     } catch (error) {
       console.error('❌ Error archiving invoice:', error)
@@ -371,12 +368,10 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     try {
       setInvoicesLoading(true)
       
-      // ✅ Unarchive invoice using DELETE /invoices/:invoiceId/unarchive
       const response = await invoiceApi.unarchiveInvoice(invoice.id)
       
       toast.success(response.message || `Invoice ${invoice.invoiceNumber} unarchived successfully!`)
       
-      // Refresh the archive list
       await fetchInvoices(currentPage, debouncedSearchQuery)
     } catch (error) {
       console.error('❌ Error unarchiving invoice:', error)
@@ -387,7 +382,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }
 
-  // ✅ Add bulk archive functionality
   const handleBulkArchiveInvoices = async () => {
     if (selectedInvoices.length === 0) {
       toast.warning('Please select at least one invoice')
@@ -397,7 +391,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     try {
       setInvoicesLoading(true)
       
-      // ✅ Use bulk archive endpoint
       const invoiceIds = selectedInvoices.map(inv => inv.id)
       const response = await invoiceApi.bulkArchiveInvoices(invoiceIds)
       
@@ -417,11 +410,9 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setDeleteLoading(true)
     try {
       if (selectedInvoice?.id) {
-        // ✅ Delete single invoice
         await invoiceApi.deleteInvoice(selectedInvoice.id)
         toast.success(`Invoice ${selectedInvoice.invoiceNumber} deleted successfully!`)
       } else if (selectedInvoices.length > 0) {
-        // ✅ Delete multiple invoices
         const deletePromises = selectedInvoices
           .filter(invoice => invoice.id)
           .map(invoice => invoiceApi.deleteInvoice(invoice.id))
@@ -442,7 +433,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }
 
-  // ✅ Add bulk send functionality
   const handleBulkSendInvoices = async () => {
     if (selectedInvoices.length === 0) {
       toast.warning('Please select at least one invoice')
@@ -452,7 +442,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     try {
       setInvoicesLoading(true)
       
-      // Send all selected invoices
       const sendPromises = selectedInvoices.map(invoice => 
         invoiceApi.sendInvoiceEmail(invoice.id, {
           subject: `Invoice ${invoice.invoiceNumber}`,
@@ -481,17 +470,15 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       setInvoicesLoading(true)
       toast.info('Generating PDF...')
 
-      // ✅ Create a hidden modal container for PDF generation
       const modalContainer = document.createElement('div')
       modalContainer.id = 'hidden-invoice-pdf-container'
       modalContainer.style.position = 'fixed'
       modalContainer.style.top = '-9999px'
       modalContainer.style.left = '-9999px'
-      modalContainer.style.width = '210mm' // A4 width
+      modalContainer.style.width = '210mm' 
       modalContainer.style.background = 'white'
       document.body.appendChild(modalContainer)
 
-      // ✅ Create invoice HTML structure
       modalContainer.innerHTML = `
         <div style="padding: 40px; font-family: 'Montserrat', sans-serif; background: white;">
           <!-- Organization Header -->
@@ -576,10 +563,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         </div>
       `
 
-      // ✅ Wait for fonts to load
       await document.fonts.ready
 
-      // ✅ Generate PDF using html2canvas + jsPDF (same as certificate)
       const canvas = await html2canvas(modalContainer, {
         scale: 2,
         useCORS: true,
@@ -589,10 +574,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         windowHeight: modalContainer.scrollHeight
       })
 
-      // ✅ Remove hidden container
       document.body.removeChild(modalContainer)
 
-      // ✅ Create PDF
       const imgData = canvas.toDataURL('image/png')
       const pdf = new jsPDF({
         orientation: 'portrait',
@@ -617,7 +600,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         imgHeight * ratio
       )
 
-      // ✅ Save PDF
       pdf.save(`Invoice_${invoice.invoiceNumber || 'Export'}.pdf`)
       
       toast.success(`Invoice ${invoice.invoiceNumber} exported successfully!`)
@@ -727,7 +709,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setSelectedInvoices(selectedItems)
   }
 
-  // ✅ Update bulk actions based on mode
   const bulkActions = useMemo(() => {
     if (archiveMode) {
       return [
@@ -835,7 +816,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   return (
     <div className="view-invoices-container">
-      <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+      <div className="col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
         <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
           <div className="d-flex flex-column gap-2">
             <h3 className="text-black mb-0 page-main-title">
@@ -846,12 +827,15 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             </p>
           </div>
         </div>
-        <img
-          src={MenuIcon}
-          alt='menu'
-          className='menu-icon-cie self-start-tab cursor-pointer'
-          onClick={() => dispatch(toggleCollapse())}
-        />
+        <div className="d-flex align-items-center justify-content-center">
+                    {isInstructor ? (<NotificationBell />) : null}
+                    <img
+                      src={MenuIcon}
+                      alt='menu'
+                      className='menu-icon-cie self-start-tab cursor-pointer'
+                      onClick={() => dispatch(toggleCollapse())}
+                    />
+                  </div>
       </div>
 
       <div className="invoices-content-wrapper">

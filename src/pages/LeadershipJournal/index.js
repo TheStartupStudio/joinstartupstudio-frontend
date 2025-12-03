@@ -25,6 +25,8 @@ import store from '../../redux/store'
 import { ModalBody, Modal } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import NotificationBell from '../../components/NotificationBell'
+
 
 const LeadershipJournal = memo(() => {
   const [isReflection, setIsReflection] = useState(false)
@@ -43,6 +45,9 @@ const LeadershipJournal = memo(() => {
   const dispatch = useDispatch()
   const { finishedContent } = useSelector((state) => state.journal)
   const valueRefs = useRef({})
+
+        const { user } = useSelector((state) => state.user.user)
+        const userRole = user?.role_id || localStorage.getItem('role')
 
   const sections = {
     one: [
@@ -416,7 +421,7 @@ const LeadershipJournal = memo(() => {
   return (
     <div className='container-fluid'>
       <div className='row'>
-        <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+        <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
               <h3 className='page-title bold-page-title text-black mb-0'>
@@ -429,12 +434,15 @@ const LeadershipJournal = memo(() => {
               </p>
             </div>
           </div>
-          <img
-            src={MenuIcon}
-            alt='menu'
-            className='menu-icon-cie self-start-tab cursor-pointer'
-            onClick={() => dispatch(toggleCollapse())}
-          />
+          <div className="d-flex align-items-center justify-content-center">
+                                   {userRole === 2 ? <NotificationBell /> : null}
+                                   <img
+                                     src={MenuIcon}
+                                     alt='menu'
+                                     className='menu-icon-cie self-start-tab cursor-pointer'
+                                     onClick={() => dispatch(toggleCollapse())}
+                                   />
+                                 </div>
         </div>
         <div className='academy-dashboard-layout lead-class mb-5'>
           {allTabs.length === 0 ? (

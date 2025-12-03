@@ -59,6 +59,8 @@ import { toast } from 'react-toastify'
 import FoulWords from '../../utils/FoulWords'
 import { JOURNALS } from '../../utils/constants'
 import { NotesButton } from '../../components/Notes'
+import NotificationBell from '../../components/NotificationBell'
+
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
@@ -105,6 +107,8 @@ function LtsJournal(props) {
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
   )
+
+  const userRole = user?.role_id || localStorage.getItem('role')
 
   // console.log('Finished Content:', finishedContent);
 
@@ -1324,7 +1328,7 @@ useEffect(() => {
           <div className='row'>
             <div className='px-0'>
               <div>
-                <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+                <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
                   <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
                     <div>
                       <h3 className='page-title bold-page-title text-black mb-0'>
@@ -1337,12 +1341,15 @@ useEffect(() => {
 
                     {/* <SelectLanguage /> */}
                   </div>
-                  <img
-                    src={MenuIcon}
-                    alt='menu'
-                    className='menu-icon-cie self-start-tab cursor-pointer'
-                    onClick={() => dispatch(toggleCollapse())}
-                  />
+                 <div className="d-flex align-items-center justify-content-center">
+                             {userRole == 'instructor' ? <NotificationBell /> : null}
+                             <img
+                               src={MenuIcon}
+                               alt='menu'
+                               className='menu-icon-cie self-start-tab cursor-pointer'
+                               onClick={() => dispatch(toggleCollapse())}
+                             />
+                           </div>
                 </div>
 
                 <div>

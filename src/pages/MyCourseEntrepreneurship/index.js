@@ -9,12 +9,14 @@ import ReactPlayer from 'react-player'
 import { Modal } from 'react-bootstrap'
 import LtsCourseIntro from '../../assets/json/lts_course_intro.json'
 import { changeSidebarState } from '../../redux'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import './index.css'
 import { EditRecommendationModal } from '../../components/Portfolio/Recommendation/editRecommendationModal'
 import CircleIcon from '../../assets/images/circle-startup-icon.png'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import NotificationBell from '../../components/NotificationBell'
+
 
 function MyCourseEntrepreneurship() {
   const history = useHistory()
@@ -25,6 +27,10 @@ function MyCourseEntrepreneurship() {
   const [playingKeyPointIndex, setPlayingKeyPointIndex] = useState(null)
   const accordionRefs = useRef([])
   const dispatch = useDispatch()
+
+
+    const { user } = useSelector((state) => state.user.user)
+    const userRole = user?.role_id || localStorage.getItem('role')
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
@@ -79,19 +85,23 @@ function MyCourseEntrepreneurship() {
   return (
     <div style={{ minHeight: '100vh' }}>
       <div className='d-flex space-between align-items-center'>
-        <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+        <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
               <h3 className='page-title bold-page-title text-black mb-0'>Intro to the Course</h3>
               <p className='fs-13 fw-light text-black'>Embarking on the Entrepreneurial Journey</p>
             </div>
           </div>
-          <img
-            src={MenuIcon}
-            alt='menu'
-            className='menu-icon-cie self-start-tab cursor-pointer'
-            onClick={() => dispatch(toggleCollapse())}
-          />
+
+          <div className="d-flex align-items-center justify-content-center">
+            {userRole === 2 ? <NotificationBell /> : null}
+            <img
+              src={MenuIcon}
+              alt='menu'
+              className='menu-icon-cie self-start-tab cursor-pointer'
+              onClick={() => dispatch(toggleCollapse())}
+            />
+          </div>
         </div>
       </div>
 

@@ -641,7 +641,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
               </div>
             ) : (
               <div className="bank-info-fields">
-                <div className="alert alert-info">
+                {/* <div className="alert alert-info">
                   <i className="fas fa-info-circle mr-2"></i>
                   <strong>Test Mode - Bank Account Numbers:</strong>
                   <ul className="mb-0 mt-2" style={{ fontSize: '13px' }}>
@@ -649,7 +649,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
                     <li><strong>Account (instant success):</strong> <code>000123456789</code></li>
                     <li><strong>Account (requires verification):</strong> <code>000111111113</code></li>
                   </ul>
-                </div>
+                </div> */}
 
                 <div className="form-group">
                   <label className="field-label">Account Holder Name *</label>

@@ -380,7 +380,8 @@ const AdminDashboard = () => {
           </div>
 
           <div className="d-flex align-items-center justify-content-center">
-            <NotificationBell />
+
+            {userRole === 2 ? (<NotificationBell />) :  null}
             <img
               src={MenuIcon}
               alt='menu'
