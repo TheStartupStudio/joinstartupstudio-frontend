@@ -138,7 +138,13 @@ jobs:
       - name: Notify Slack on Success
         if: success()
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/"/\\"/g')
+          # Get commit message - if it's a merge commit, get the most recent non-merge commit message instead
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          if [[ "$COMMIT_MSG" == "Merge"* ]]; then
+            # Get the most recent non-merge commit message
+            COMMIT_MSG=$(git log --no-merges -1 --pretty=format:"%s")
+          fi
+          COMMIT_MSG=$(echo "$COMMIT_MSG" | tr '\n' ' ' | sed 's/"/\\"/g')
           curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"✅ Deployment Successful!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\"}" \
             ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -147,7 +153,13 @@ jobs:
       - name: Notify Slack on Failure
         if: failure()
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | sed 's/"/\\"/g')
+          # Get commit message - if it's a merge commit, get the most recent non-merge commit message instead
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          if [[ "$COMMIT_MSG" == "Merge"* ]]; then
+            # Get the most recent non-merge commit message
+            COMMIT_MSG=$(git log --no-merges -1 --pretty=format:"%s")
+          fi
+          COMMIT_MSG=$(echo "$COMMIT_MSG" | tr '\n' ' ' | sed 's/"/\\"/g')
           curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"❌ Deployment Failed!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\nView logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
             ${{ secrets.SLACK_WEBHOOK_URL }}
