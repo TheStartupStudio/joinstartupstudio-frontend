@@ -67,8 +67,8 @@ background-color: transparent;
 }
 
 .admin-info-container .info-icon{
-  width: 56px;
-    height: 56px;
+  min-width: 56px;
+    min-height: 56px;
     background-color: #E2E6EC;
     border-radius: 50%;
     display: flex;
@@ -97,6 +97,7 @@ background-color: transparent;
     text-align: center;
     width: 100%;
     border-radius: 8px;
+    height: 100%;
 }
 
 .chart-container {

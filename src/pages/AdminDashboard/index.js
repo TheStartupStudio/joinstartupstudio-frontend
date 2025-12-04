@@ -26,6 +26,9 @@ import organizationLogo2 from '../../assets/images/academy-icons/Nord Anglia Sch
 import potfolioIconDash from '../../assets/images/academy-icons/portfolio-admin-dash.png'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import NotificationBell from '../../components/NotificationBell'
+import axiosInstance from '../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
+import CustomSpinner from '../../components/CustomSpinner'
 
 
 
@@ -42,6 +45,9 @@ ChartJS.register(
 const AdminDashboard = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
+  const [metricsLoading, setMetricsLoading] = useState(true)
+  const [levelStatsLoading, setLevelStatsLoading] = useState(true)
+  const [demographicsLoading, setDemographicsLoading] = useState(true)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [showOrganizationModal, setShowOrganizationModal] = useState(false)
 
@@ -70,19 +76,135 @@ const AdminDashboard = () => {
   }
 
   const [dashboardData, setDashboardData] = useState({
-    paidUsers: 764,
-    totalRevenue: 310982,
-    l1Learners: 379,
-    l2Learners: 289,
-    l3Learners: 212,
-    totalEnrolledLearners: 823,
-    completedL1: 125,
-    completedL2: 98,
-    completedL3: 75,
-    totalCompletedAIE: 298,
+    paidUsers: 0,
+    totalRevenue: 0,
+    churnRate: 0,
+    l1Learners: 0,
+    l2Learners: 0,
+    l3Learners: 0,
+    totalEnrolledLearners: 0,
+    completedL1: 0,
+    completedL2: 0,
+    completedL3: 0,
+    totalCompletedAIE: 0,
+    avgDaysL1: 0,
+    avgDaysL2: 0,
+    avgDaysL3: 0,
+    avgDaysAll: 0,
     totalCreatedPortfolios: 201,
     totalCompletedPortfolios: 150
   })
+
+  const [genderYearData, setGenderYearData] = useState([])
+  const [ageDistributionData, setAgeDistributionData] = useState([])
+  const [countryDistributionData, setCountryDistributionData] = useState([])
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      setMetricsLoading(true)
+      try {
+        const response = await axiosInstance.get('/admin-info/metrics')
+        
+        if (response.data.success) {
+          const { allTimePaidUsers, allTimeTotalRevenue, allTimeChurnRate } = response.data.data
+          
+          setDashboardData(prevData => ({
+            ...prevData,
+            paidUsers: allTimePaidUsers,
+            totalRevenue: parseFloat(allTimeTotalRevenue),
+            churnRate: parseFloat(allTimeChurnRate)
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching admin metrics:', error)
+        toast.error('Failed to load dashboard metrics')
+      } finally {
+        setMetricsLoading(false)
+      }
+    }
+
+    fetchMetrics()
+  }, [])
+
+  useEffect(() => {
+    const fetchLevelStatistics = async () => {
+      setLevelStatsLoading(true)
+      try {
+        const response = await axiosInstance.get('/admin-info/level-statistics')
+        
+        if (response.data.success) {
+          const { totalEnrolledLearners, completedAllLevels, avgDaysToCompleteAll, levelBreakdown } = response.data.data
+          
+          setDashboardData(prevData => ({
+            ...prevData,
+            totalEnrolledLearners: totalEnrolledLearners,
+            l1Learners: levelBreakdown.L1.learnersCompleted,
+            l2Learners: levelBreakdown.L2.learnersCompleted,
+            l3Learners: levelBreakdown.L3.learnersCompleted,
+            completedL1: levelBreakdown.L1.learnersCompleted,
+            completedL2: levelBreakdown.L2.learnersCompleted,
+            completedL3: levelBreakdown.L3.learnersCompleted,
+            totalCompletedAIE: completedAllLevels,
+            avgDaysL1: levelBreakdown.L1.avgDaysToComplete,
+            avgDaysL2: levelBreakdown.L2.avgDaysToComplete,
+            avgDaysL3: levelBreakdown.L3.avgDaysToComplete,
+            avgDaysAll: avgDaysToCompleteAll
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching level statistics:', error)
+        toast.error('Failed to load level statistics')
+      } finally {
+        setLevelStatsLoading(false)
+      }
+    }
+
+    fetchLevelStatistics()
+  }, [])
+
+  useEffect(() => {
+    const fetchDemographicStatistics = async () => {
+      setDemographicsLoading(true)
+      try {
+        const response = await axiosInstance.get('/admin-info/demographic-statistics')
+        
+        if (response.data.success) {
+          const { genderDistribution, ageDistribution, countryDistribution } = response.data.data
+          
+          // Transform gender distribution data
+          const genderData = Object.keys(genderDistribution).map(year => ({
+            year: year,
+            female: genderDistribution[year].Female || 0,
+            male: genderDistribution[year].Male || 0,
+            nonBinary: genderDistribution[year]['Non-binary'] || 0,
+            other: genderDistribution[year].Other || 0
+          }))
+          setGenderYearData(genderData)
+          
+          // Transform age distribution data
+          const ageData = Object.keys(ageDistribution).map(ageGroup => ({
+            ageGroup: ageGroup,
+            count: ageDistribution[ageGroup]
+          }))
+          setAgeDistributionData(ageData)
+          
+          // Transform country distribution data
+          const countryData = Object.keys(countryDistribution).map(country => ({
+            country: country,
+            count: countryDistribution[country]
+          }))
+          setCountryDistributionData(countryData)
+        }
+      } catch (error) {
+        console.error('Error fetching demographic statistics:', error)
+        toast.error('Failed to load demographic statistics')
+      } finally {
+        setDemographicsLoading(false)
+      }
+    }
+
+    fetchDemographicStatistics()
+  }, [])
 
   const organizationData = {
     name: 'Nord Anglia Schools',
@@ -97,29 +219,6 @@ const AdminDashboard = () => {
     logo1: organizationLogo1, 
     logo2: organizationLogo2
   }
-
-  const genderYearData = [
-    { year: '2022', female: 80, male: 124, nonBinary: 5, other: 0 },
-    { year: '2023', female: 92, male: 206, nonBinary: 12, other: 2 },
-    { year: '2024', female: 124, male: 361, nonBinary: 15, other: 4 },
-    { year: '2025', female: 198, male: 424, nonBinary: 13, other: 3 }
-  ]
-
-  const ageDistributionData = [
-    { ageGroup: '0-12', count: 0 },
-    { ageGroup: '13-17', count: 26 },
-    { ageGroup: '18-25', count: 126 },
-    { ageGroup: '26-40', count: 241 },
-    { ageGroup: '41-60', count: 68 },
-    { ageGroup: '61+', count: 3 }
-  ]
-
-  const countryDistributionData = [
-    { country: 'United States', count: 328 },
-    { country: 'EU', count: 129 },
-    { country: 'Kosovo', count: 16 },
-    { country: 'Canada', count: 49 }
-  ]
 
   const createGradientPattern = (ctx, color, isHorizontal = false) => {
     const gradient = ctx.createLinearGradient(
@@ -144,38 +243,6 @@ const AdminDashboard = () => {
 
   const dataLabelsPlugin = {
     id: 'dataLabels',
-    afterDatasetsDraw(chart, args, options) {
-      const { ctx, data } = chart
-      
-      ctx.save()
-      ctx.font = 'bold 11px Arial'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'bottom'
-      ctx.fillStyle = '#333'
-      
-      data.datasets.forEach((dataset, datasetIndex) => {
-        const meta = chart.getDatasetMeta(datasetIndex)
-        
-        meta.data.forEach((bar, index) => {
-          const value = dataset.data[index]
-          if (value > 0) {
-            const isHorizontal = chart.config.options.indexAxis === 'y'
-            
-            if (isHorizontal) {
-              ctx.textAlign = 'left'
-              ctx.textBaseline = 'middle'
-              ctx.fillText(value, bar.x + 5, bar.y)
-            } else {
-              ctx.textAlign = 'center'
-              ctx.textBaseline = 'bottom'
-              ctx.fillText(value, bar.x, bar.y - 5)
-            }
-          }
-        })
-      })
-      
-      ctx.restore()
-    }
   }
 
   const genderChartData = {
@@ -232,9 +299,20 @@ const AdminDashboard = () => {
         data: ageDistributionData.map(item => item.count),
         backgroundColor: function(context) {
           const ctx = context.chart.ctx
-          const colors = ['#E8E8E8', '#FF69B4', '#30C3EC', '#B8DB4F', '#666666', '#333333']
-          const index = context.dataIndex
-          return createGradientPattern(ctx, colors[index])
+          const ageGroup = ageDistributionData[context.dataIndex]?.ageGroup
+          
+          // Define colors for each age group
+          const colorMap = {
+            '0-12': '#B9DFEC',
+            '13-17': '#FF3399',
+            '18-25': '#51C7DF',
+            '26-40': '#99CC33',
+            '41-60': '#000000',
+            '61+': '#AEAEAE'
+          }
+          
+          const color = colorMap[ageGroup] || '#54C7DF'
+          return createGradientPattern(ctx, color)
         },
         borderRadius: 4,
         barThickness: 40,
@@ -250,7 +328,7 @@ const AdminDashboard = () => {
         data: countryDistributionData.map(item => item.count),
         backgroundColor: function(context) {
           const ctx = context.chart.ctx
-          return createGradientPattern(ctx, '#30C3EC', true) 
+          return createGradientPattern(ctx, '#30C3EC', true)
         },
         borderRadius: 4,
         barThickness: 40,
@@ -315,8 +393,8 @@ const AdminDashboard = () => {
       ...chartOptions.scales,
       x: {
         ...chartOptions.scales.x,
-        categoryPercentage: 0.6,
-        barPercentage: 0.8
+        categoryPercentage: 1.0,
+        barPercentage: 1.0         
       }
     }
   }
@@ -406,110 +484,131 @@ const AdminDashboard = () => {
                 View Organization Details
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M4.99984 10H15.4165M15.4165 10L10.4165 5M15.4165 10L10.4165 15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4.99984 10H15.4165M15.4165 10L10.4165 5M15.4165 10L10.4165 15" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             )}
           </div>
-          <div className="d-flex gap-4 flex-wrap">
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={creaditCardIcon} alt="Paid Users Icon" />
-              </div>
-              <p>Paid Users</p>
-              <h3>{dashboardData.paidUsers}</h3>
+
+          {metricsLoading || levelStatsLoading ? (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+              <CustomSpinner />
             </div>
+          ) : (
+            <>
+              <div className="d-flex gap-4 flex-wrap">
+                <div className="info-box">
+                  <div className="info-icon">
+                    <img src={creaditCardIcon} alt="Paid Users Icon" />
+                  </div>
+                  <p>All Time Paid Users</p>
+                  <h3>{dashboardData.paidUsers}</h3>
+                </div>
 
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={dollarIcon} alt="Total Revenue Icon" />
-              </div>
-              <p>Total Revenue</p>
-              <h3>{formatRevenue(dashboardData.totalRevenue)}</h3>
-            </div>
+                <div className="info-box">
+                  <div className="info-icon">
+                    <img src={dollarIcon} alt="Total Revenue Icon" />
+                  </div>
+                  <p>All Time Total Revenue</p>
+                  <h3>{formatRevenue(dashboardData.totalRevenue)}</h3>
+                </div>
 
-{isInstructor ? (
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={totalEntrolledIcon} alt="Group Icon" />
-              </div>
-              <p>Total Enrolled Learners</p>
-              <h3>{dashboardData.totalEnrolledLearners}</h3>
-              <div className='info-box-data'>
-                <p>Total Completed AIE</p>
-                <h3>{dashboardData.totalCompletedAIE}</h3>
-              </div>
-            </div>
-) : null}
-          </div>
+                <div className="info-box">
+                  <div className="info-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M10 18.3334C8.95833 18.3334 7.98278 18.1356 7.07333 17.7401C6.16389 17.3445 5.37222 16.8098 4.69833 16.1359C4.02445 15.462 3.48972 14.6703 3.09417 13.7609C2.69861 12.8514 2.50056 11.8756 2.5 10.8334C2.49945 9.79116 2.6975 8.81561 3.09417 7.90672C3.49083 6.99783 4.02528 6.20616 4.6975 5.53172C5.36972 4.85727 6.16139 4.32255 7.0725 3.92755C7.98361 3.53255 8.95944 3.3345 10 3.33338H10.125L9.41667 2.62505C9.26389 2.47227 9.1875 2.28144 9.1875 2.05255C9.1875 1.82366 9.26389 1.62561 9.41667 1.45838C9.58333 1.29172 9.78139 1.20505 10.0108 1.19838C10.2403 1.19172 10.4381 1.27144 10.6042 1.43755L12.75 3.58338C12.9028 3.73616 12.9792 3.93061 12.9792 4.16672C12.9792 4.40283 12.9028 4.59727 12.75 4.75005L10.6042 6.89588C10.4375 7.06255 10.2397 7.14255 10.0108 7.13588C9.78194 7.12922 9.58389 7.04227 9.41667 6.87505C9.26389 6.70838 9.1875 6.51061 9.1875 6.28172C9.1875 6.05283 9.26389 5.86172 9.41667 5.70838L10.125 5.00005H10C8.375 5.00005 6.99667 5.56616 5.865 6.69838C4.73333 7.83061 4.16722 9.20894 4.16667 10.8334C4.16611 12.4578 4.73222 13.8364 5.865 14.9692C6.99778 16.102 8.37611 16.6678 10 16.6667C11.4722 16.6667 12.7569 16.1876 13.8542 15.2292C14.9514 14.2709 15.5972 13.0626 15.7917 11.6042C15.8194 11.382 15.9167 11.1978 16.0833 11.0517C16.25 10.9056 16.4444 10.8328 16.6667 10.8334C16.8889 10.8339 17.0833 10.9034 17.25 11.0417C17.4167 11.18 17.4861 11.3537 17.4583 11.5626C17.2639 13.4931 16.4583 15.1042 15.0417 16.3959C13.625 17.6875 11.9444 18.3334 10 18.3334Z" fill="black"/>
+                    </svg>
+                  </div>
+                  <p>All Time Total Churn Rate</p>
+                  <h3>{formatRevenue(dashboardData.churnRate)}</h3>
+                </div>
 
-
-          <div className="d-flex gap-4 flex-wrap">
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={groupIcon} alt="Group Icon" />
+                {isInstructor ? (
+                  <div className="info-box">
+                    <div className="info-icon">
+                      <img src={totalEntrolledIcon} alt="Group Icon" />
+                    </div>
+                    <p>Total Enrolled Learners</p>
+                    <h3>{dashboardData.totalEnrolledLearners}</h3>
+                    <div className='info-box-data'>
+                      <p>Total Completed AIE</p>
+                      <h3>{dashboardData.totalCompletedAIE}</h3>
+                    </div>
+                  </div>
+                ) : null}
               </div>
-              <p>L1 Learners</p>
-              <h3>{dashboardData.l1Learners}</h3>
-              <div className='info-box-data'>
-                <p>Completed L1</p>
-                <h3>{dashboardData.completedL1}</h3>
-              </div>
-            </div>
-
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={groupIcon} alt="Group Icon" />
-              </div>
-              <p>L2 Learners</p>
-              <h3>{dashboardData.l2Learners}</h3>
-              <div className='info-box-data'>
-                <p>Completed L2</p>
-                <h3>{dashboardData.completedL2}</h3>
-              </div>
-            </div>
-
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={groupIcon} alt="Group Icon" />
-              </div>
-              <p>L3 Learners</p>
-              <h3>{dashboardData.l3Learners}</h3>
-              <div className='info-box-data'>
-                <p>Completed L3</p>
-                <h3>{dashboardData.completedL3}</h3>
-              </div>
-            </div>
 
 
-            {isInstructor ? (
+              <div className="d-flex gap-4 flex-wrap">
+                <div className="info-box">
+                  <div className="info-icon">
+                    <img src={groupIcon} alt="Group Icon" />
+                  </div>
+                  <p>L1 Learners</p>
+                  <h3>{dashboardData.l1Learners}</h3>
+                  <div className='info-box-data'>
+                    <p>Ave. Time to Completion</p>
+                    <h3>{dashboardData.avgDaysL1} days</h3>
+                  </div>
+                </div>
 
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={potfolioIconDash} alt="Group Icon" />
-              </div>
-              <p>Portfolios Created</p>
-              <h3>{dashboardData.totalCreatedPortfolios}</h3>
-              <div className='info-box-data'>
-                <p>Total Completed Portfolios</p>
-                <h3>{dashboardData.totalCompletedPortfolios}</h3>
-              </div>
-            </div>
-            ) : (
+                <div className="info-box">
+                  <div className="info-icon">
+                    <img src={groupIcon} alt="Group Icon" />
+                  </div>
+                  <p>L2 Learners</p>
+                  <h3>{dashboardData.l2Learners}</h3>
+                  <div className='info-box-data'>
+                    <p>Ave. Time to Completion</p>
+                    <h3>{dashboardData.avgDaysL2} days</h3>
+                  </div>
+                </div>
 
-            <div className="info-box">
-              <div className="info-icon">
-                <img src={totalEntrolledIcon} alt="Group Icon" />
+                <div className="info-box">
+                  <div className="info-icon">
+                    <img src={groupIcon} alt="Group Icon" />
+                  </div>
+                  <p>L3 Learners</p>
+                  <h3>{dashboardData.l3Learners}</h3>
+                  <div className='info-box-data'>
+                    <p>Ave. Time to Completion</p>
+                    <h3>{dashboardData.avgDaysL3} days</h3>
+                  </div>
+                </div>
+
+
+                {isInstructor ? (
+
+                <div className="info-box">
+                  <div className="info-icon">
+                    <img src={potfolioIconDash} alt="Group Icon" />
+                  </div>
+                  <p>Portfolios Created</p>
+                  <h3>{dashboardData.totalCreatedPortfolios}</h3>
+                  <div className='info-box-data'>
+                    <p>Total Completed Portfolios</p>
+                    <h3>{dashboardData.totalCompletedPortfolios}</h3>
+                  </div>
+                </div>
+                ) : (
+
+                <div className="info-box">
+                  <div className="info-icon">
+                    <img src={totalEntrolledIcon} alt="Group Icon" />
+                  </div>
+                  <p>Total Enrolled Learners</p>
+                  <h3>{dashboardData.totalEnrolledLearners}</h3>
+                  <div className='info-box-data'>
+                    <p>Total Completed AIE</p>
+                    <h3>{dashboardData.totalCompletedAIE}</h3>
+                    <p>Ave. Time to Completion</p>
+                    <h3>{dashboardData.avgDaysAll} days</h3>
+                  </div>
+                </div>
+                )}
               </div>
-              <p>Total Enrolled Learners</p>
-              <h3>{dashboardData.totalEnrolledLearners}</h3>
-              <div className='info-box-data'>
-                <p>Total Completed AIE</p>
-                <h3>{dashboardData.totalCompletedAIE}</h3>
-              </div>
-            </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
 
         <div className="admin-info-container">
