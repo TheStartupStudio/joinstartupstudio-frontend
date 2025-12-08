@@ -1,0 +1,30 @@
+.vertical-bar-chart-wrapper {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  user-select: none;
+}
+
+.vertical-bar-chart-container {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.vertical-bar-chart-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.vertical-bar-chart-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.vertical-bar-chart-container::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.vertical-bar-chart-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.chart-legend {
+  user-select: none;
+}

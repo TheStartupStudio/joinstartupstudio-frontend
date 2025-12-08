@@ -1,0 +1,8 @@
+.horizontal-bar-chart-container {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  user-select: none;
+}
+
+.chart-legend {
+  user-select: none;
+}

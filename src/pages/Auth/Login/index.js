@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import CustomLoginInput from './ui/CustomLoginInput'
 import SUSLogo from '../../../assets/images/LTS-logo-horizontal.png'
@@ -45,6 +45,23 @@ const ChooseLogin = () => {
       [name]: value
     }))
   }
+
+
+  useEffect(() => {
+    const trackVisitor = async () => {
+      try {
+        // Get referrer
+        const referrer = document.referrer || ''
+
+        // Send to backend using axiosInstance
+        await axiosInstance.post('/admin-info/track-visitor', { referrer })
+      } catch (error) {
+        console.error('Error tracking visitor:', error)
+      }
+    }
+
+    trackVisitor()
+  }, [])
 
 
   // Helper function to determine dashboard route based on role

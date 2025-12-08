@@ -29,6 +29,10 @@ import NotificationBell from '../../components/NotificationBell'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import CustomSpinner from '../../components/CustomSpinner'
+import VerticalBarChart from '../../components/AdminCharts/VerticalBarChart'
+import HorizontalBarChart from '../../components/AdminCharts/HorizontalBarChart'
+import LineChart from '../../components/AdminCharts/LineChart'
+
 
 
 
@@ -48,12 +52,24 @@ const AdminDashboard = () => {
   const [metricsLoading, setMetricsLoading] = useState(true)
   const [levelStatsLoading, setLevelStatsLoading] = useState(true)
   const [demographicsLoading, setDemographicsLoading] = useState(true)
+  const [userStatusLoading, setUserStatusLoading] = useState(true)
+  const [analyticsLoading, setAnalyticsLoading] = useState(true)
+  const [revenueAnalyticsLoading, setRevenueAnalyticsLoading] = useState(true)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [showOrganizationModal, setShowOrganizationModal] = useState(false)
+  const [activeAnalyticsTab, setActiveAnalyticsTab] = useState('demographics')
 
   const { user } = useSelector((state) => state.user.user)
   const userRole = user?.role_id || localStorage.getItem('role')
   const isInstructor = userRole === 2 || userRole === 'instructor' || userRole === 'trial'
+
+  // Revenue tracking state
+  const [paidUsersData, setPaidUsersData] = useState([])
+  const [revenueData, setRevenueData] = useState([])
+  const [revenueDateRange, setRevenueDateRange] = useState({
+    from: '2025-10-01',
+    to: '2025-12-31'
+  })
 
   useEffect(() => {
     const handleResize = () => {
@@ -63,8 +79,7 @@ const AdminDashboard = () => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
-
-
+  
 
   const formatRevenue = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -92,13 +107,49 @@ const AdminDashboard = () => {
     avgDaysL3: 0,
     avgDaysAll: 0,
     totalCreatedPortfolios: 201,
-    totalCompletedPortfolios: 150
+    totalCompletedPortfolios: 150,
+    trials: 0,
+    paid: 0,
+    cancelled: 0
   })
 
-  const [genderYearData, setGenderYearData] = useState([])
-  const [ageDistributionData, setAgeDistributionData] = useState([])
-  const [countryDistributionData, setCountryDistributionData] = useState([])
+  const [genderDistribution, setGenderDistribution] = useState({})
+  const [ageDistribution, setAgeDistribution] = useState({})
+  const [countryDistribution, setCountryDistribution] = useState({})
 
+  // Analytics data state
+  const [analyticsData, setAnalyticsData] = useState({
+    totalVisitors: 0,
+    browserDistribution: {},
+    deviceDistribution: {},
+    referralDistribution: {},
+    trafficOrigin: {},
+    convertedVisitors: 0,
+    conversionRate: '0%'
+  })
+
+  // Fetch analytics data
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      setAnalyticsLoading(true)
+      try {
+        const response = await axiosInstance.get('/admin-info/analytics')
+        
+        if (response.data.success) {
+          setAnalyticsData(response.data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching analytics:', error)
+        toast.error('Failed to load analytics data')
+      } finally {
+        setAnalyticsLoading(false)
+      }
+    }
+
+    fetchAnalytics()
+  }, [])
+
+  // Fetch metrics
   useEffect(() => {
     const fetchMetrics = async () => {
       setMetricsLoading(true)
@@ -171,39 +222,46 @@ const AdminDashboard = () => {
         if (response.data.success) {
           const { genderDistribution, ageDistribution, countryDistribution } = response.data.data
           
-          // Transform gender distribution data
-          const genderData = Object.keys(genderDistribution).map(year => ({
-            year: year,
-            female: genderDistribution[year].Female || 0,
-            male: genderDistribution[year].Male || 0,
-            nonBinary: genderDistribution[year]['Non-binary'] || 0,
-            other: genderDistribution[year].Other || 0
-          }))
-          setGenderYearData(genderData)
-          
-          // Transform age distribution data
-          const ageData = Object.keys(ageDistribution).map(ageGroup => ({
-            ageGroup: ageGroup,
-            count: ageDistribution[ageGroup]
-          }))
-          setAgeDistributionData(ageData)
-          
-          // Transform country distribution data
-          const countryData = Object.keys(countryDistribution).map(country => ({
-            country: country,
-            count: countryDistribution[country]
-          }))
-          setCountryDistributionData(countryData)
+          setGenderDistribution(genderDistribution)
+          setAgeDistribution(ageDistribution)
+          setCountryDistribution(countryDistribution)
         }
       } catch (error) {
         console.error('Error fetching demographic statistics:', error)
-        toast.error('Failed to load demographic statistics')
+        toast.error('Failed to load demographic data')
       } finally {
         setDemographicsLoading(false)
       }
     }
 
     fetchDemographicStatistics()
+  }, [])
+
+  useEffect(() => {
+    const fetchUserStatus = async () => {
+      setUserStatusLoading(true)
+      try {
+        const response = await axiosInstance.get('/admin-info/user-status')
+        
+        if (response.data.success) {
+          const { trials, paid, cancelled } = response.data.data
+          
+          setDashboardData(prevData => ({
+            ...prevData,
+            trials: trials,
+            paid: paid,
+            cancelled: cancelled
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching user status:', error)
+        toast.error('Failed to load user status data')
+      } finally {
+        setUserStatusLoading(false)
+      }
+    }
+
+    fetchUserStatus()
   }, [])
 
   const organizationData = {
@@ -245,96 +303,96 @@ const AdminDashboard = () => {
     id: 'dataLabels',
   }
 
-  const genderChartData = {
-    labels: genderYearData.map(item => item.year),
-    datasets: [
-      {
-        label: 'Female',
-        data: genderYearData.map(item => item.female),
-        backgroundColor: function(context) {
-          const ctx = context.chart.ctx
-          return createGradientPattern(ctx, '#B8DB4F')
-        },
-        borderRadius: 4,
-        barThickness: 30,  
-      },
-      {
-        label: 'Male',
-        data: genderYearData.map(item => item.male),
-        backgroundColor: function(context) {
-          const ctx = context.chart.ctx
-          return createGradientPattern(ctx, '#30C3EC')
-        },
-        borderRadius: 4,
-        barThickness: 30,  
-      },
-      {
-        label: 'Non-Binary',
-        data: genderYearData.map(item => item.nonBinary),
-        backgroundColor: function(context) {
-          const ctx = context.chart.ctx
-          return createGradientPattern(ctx, '#FF69B4')
-        },
-        borderRadius: 4,
-        barThickness: 30,  
-      },
-      {
-        label: 'Other',
-        data: genderYearData.map(item => item.other),
-        backgroundColor: function(context) {
-          const ctx = context.chart.ctx
-          return createGradientPattern(ctx, '#D3D3D3')
-        },
-        borderRadius: 4,
-        barThickness: 30,  
-      }
-    ]
-  }
+  // const genderChartData = {
+  //   labels: genderYearData.map(item => item.year),
+  //   datasets: [
+  //     {
+  //       label: 'Female',
+  //       data: genderYearData.map(item => item.female),
+  //       backgroundColor: function(context) {
+  //         const ctx = context.chart.ctx
+  //         return createGradientPattern(ctx, '#B8DB4F')
+  //       },
+  //       borderRadius: 4,
+  //       barThickness: 30,  
+  //     },
+  //     {
+  //       label: 'Male',
+  //       data: genderYearData.map(item => item.male),
+  //       backgroundColor: function(context) {
+  //         const ctx = context.chart.ctx
+  //         return createGradientPattern(ctx, '#30C3EC')
+  //       },
+  //       borderRadius: 4,
+  //       barThickness: 30,  
+  //     },
+  //     {
+  //       label: 'Non-Binary',
+  //       data: genderYearData.map(item => item.nonBinary),
+  //       backgroundColor: function(context) {
+  //         const ctx = context.chart.ctx
+  //         return createGradientPattern(ctx, '#FF69B4')
+  //       },
+  //       borderRadius: 4,
+  //       barThickness: 30,  
+  //     },
+  //     {
+  //       label: 'Other',
+  //       data: genderYearData.map(item => item.other),
+  //       backgroundColor: function(context) {
+  //         const ctx = context.chart.ctx
+  //         return createGradientPattern(ctx, '#D3D3D3')
+  //       },
+  //       borderRadius: 4,
+  //       barThickness: 30,  
+  //     }
+  //   ]
+  // }
 
-  const ageChartData = {
-    labels: ageDistributionData.map(item => item.ageGroup),
-    datasets: [
-      {
-        label: 'Age Distribution',
-        data: ageDistributionData.map(item => item.count),
-        backgroundColor: function(context) {
-          const ctx = context.chart.ctx
-          const ageGroup = ageDistributionData[context.dataIndex]?.ageGroup
+  // const ageChartData = {
+  //   labels: ageDistributionData.map(item => item.ageGroup),
+  //   datasets: [
+  //     {
+  //       label: 'Age Distribution',
+  //       data: ageDistributionData.map(item => item.count),
+  //       backgroundColor: function(context) {
+  //         const ctx = context.chart.ctx
+  //         const ageGroup = ageDistributionData[context.dataIndex]?.ageGroup
           
-          // Define colors for each age group
-          const colorMap = {
-            '0-12': '#B9DFEC',
-            '13-17': '#FF3399',
-            '18-25': '#51C7DF',
-            '26-40': '#99CC33',
-            '41-60': '#000000',
-            '61+': '#AEAEAE'
-          }
+  //         // Define colors for each age group
+  //         const colorMap = {
+  //           '0-12': '#B9DFEC',
+  //           '13-17': '#FF3399',
+  //           '18-25': '#51C7DF',
+  //           '26-40': '#99CC33',
+  //           '41-60': '#000000',
+  //           '61+': '#AEAEAE'
+  //         }
           
-          const color = colorMap[ageGroup] || '#54C7DF'
-          return createGradientPattern(ctx, color)
-        },
-        borderRadius: 4,
-        barThickness: 40,
-      }
-    ]
-  }
+  //         const color = colorMap[ageGroup] || '#54C7DF'
+  //         return createGradientPattern(ctx, color)
+  //       },
+  //       borderRadius: 4,
+  //       barThickness: 40,
+  //     }
+  //   ]
+  // }
 
-  const countryChartData = {
-    labels: countryDistributionData.map(item => item.country),
-    datasets: [
-      {
-        label: 'Students',
-        data: countryDistributionData.map(item => item.count),
-        backgroundColor: function(context) {
-          const ctx = context.chart.ctx
-          return createGradientPattern(ctx, '#30C3EC', true)
-        },
-        borderRadius: 4,
-        barThickness: 40,
-      }
-    ]
-  }
+  // const countryChartData = {
+  //   labels: countryDistributionData.map(item => item.country),
+  //   datasets: [
+  //     {
+  //       label: 'Students',
+  //       data: countryDistributionData.map(item => item.count),
+  //       backgroundColor: function(context) {
+  //         const ctx = context.chart.ctx
+  //         return createGradientPattern(ctx, '#30C3EC', true)
+  //       },
+  //       borderRadius: 4,
+  //       barThickness: 40,
+  //     }
+  //   ]
+  // }
 
   const chartOptions = {
     responsive: true,
@@ -443,6 +501,398 @@ const AdminDashboard = () => {
         right: 50
       }
     }
+  }
+
+
+
+
+  const browserChartData = {
+    datasets: [
+      {
+        label: 'Chrome',
+        data: [26],
+        backgroundColor: '#FF3399',
+        borderRadius: 4,
+        barThickness: 40,
+      },
+      {
+        label: 'Safari',
+        data: [126],
+        backgroundColor: '#54C7DF',
+        borderRadius: 4,
+        barThickness: 40,
+      },
+      {
+        label: 'Firefox',
+        data: [241],
+        backgroundColor: '#B8DB4F',
+        borderRadius: 4,
+        barThickness: 40,
+      },
+      {
+        label: 'Other',
+        data: [68],
+        backgroundColor: '#4A4A4A',
+        borderRadius: 4,
+        barThickness: 40,
+      }
+    ]
+  }
+
+  const deviceChartData = {
+    datasets: [
+      {
+        label: 'Desktop',
+        data: [26],
+        backgroundColor: '#FF3399',
+        borderRadius: 4,
+        barThickness: 40,
+      },
+      {
+        label: 'Mobile',
+        data: [126],
+        backgroundColor: '#54C7DF',
+        borderRadius: 4,
+        barThickness: 40,
+      },
+      {
+        label: 'Tablet',
+        data: [241],
+        backgroundColor: '#B8DB4F',
+        borderRadius: 4,
+        barThickness: 40,
+      }
+    ]
+  }
+
+  const referralSourceChartData = {
+    datasets: [
+      {
+        label: 'Google Search',
+        data: [26],
+        backgroundColor: '#FF3399',
+        borderRadius: 4,
+        barThickness: 40,
+      },
+      {
+        label: 'Organic',
+        data: [126],
+        backgroundColor: '#54C7DF',
+        borderRadius: 4,
+        barThickness: 40,
+      },
+      {
+        label: 'Learntostart.com',
+        data: [241],
+        backgroundColor: '#B8DB4F',
+        borderRadius: 4,
+        barThickness: 40,
+      }
+    ]
+  }
+
+  const trafficOriginChartData = {
+    labels: ['United States', 'Canada', 'EU', 'Kosovo'],
+    datasets: [
+      {
+        label: 'Sessions',
+        data: [328, 29, 129, 56],
+        backgroundColor: '#54C7DF',
+        borderRadius: 4,
+        barThickness: 30,
+      }
+    ]
+  }
+
+  // Chart options for Browser, Device, and Referral Source (horizontal)
+  const platformChartOptions = {
+    indexAxis: 'y', // This makes it horizontal
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          padding: 15,
+          font: {
+            size: 12
+          }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label + ': ' + context.parsed.x
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        max: 300,
+        grid: {
+          color: '#f0f0f0'
+        },
+        ticks: {
+          stepSize: 50
+        }
+      },
+      y: {
+        grid: {
+          display: false
+        }
+      }
+    }
+  }
+
+  // Chart options for Traffic Origin (horizontal)
+  const trafficOriginChartOptions = {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return 'Sessions: ' + context.parsed.x
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        max: 400,
+        grid: {
+          color: '#f0f0f0'
+        },
+        ticks: {
+          stepSize: 40
+        }
+      },
+      y: {
+        grid: {
+          display: false
+        }
+      }
+    }
+  }
+
+
+  // Transform gender data for grouped chart
+  const transformGenderDataForGroupedChart = () => {
+    const years = Object.keys(genderDistribution || {})
+    
+    return years.map(year => ({
+      label: year,
+      bars: [
+        {
+          label: 'Female',
+          value: genderDistribution[year]?.Female || 0,
+          color: '#B8DB4F'
+        },
+        {
+          label: 'Male',
+          value: genderDistribution[year]?.Male || 0,
+          color: '#54C7DF'
+        },
+        {
+          label: 'Non-Binary',
+          value: genderDistribution[year]?.['Non-binary'] || 0,
+          color: '#FF3399'
+        },
+        {
+          label: 'Other',
+          value: genderDistribution[year]?.Other || 0,
+          color: '#AEAEAE'
+        }
+      ]
+    }))
+  }
+
+  const transformAgeDistributionData = () => {
+    const ageGroups = ['0-12', '13-17', '18-25', '26-40', '41-60', '61+']
+    const colorMap = {
+      '0-12': '#B9DFEC',
+      '13-17': '#FF3399',
+      '18-25': '#51C7DF',
+      '26-40': '#99CC33',
+      '41-60': '#000000',
+      '61+': '#AEAEAE'
+    }
+
+    return ageGroups.map(ageGroup => ({
+      label: ageGroup,
+      value: ageDistribution[ageGroup] || 0,
+      color: colorMap[ageGroup]
+    }))
+  }
+
+   const transformCountryDistributionData = () => {
+    return Object.entries(countryDistribution || {}).map(([country, count]) => ({
+      label: country,
+      value: count
+    }))
+  }
+
+  // Transform browser data from analytics
+  const transformBrowserData = () => {
+    const colorMap = {
+      'Chrome': '#FF3399',
+      'Safari': '#54C7DF',
+      'Firefox': '#B8DB4F',
+      'Edge': '#FFA500',
+      'Other': '#4A4A4A'
+    }
+
+    return Object.entries(analyticsData.browserDistribution || {}).map(([browser, count]) => ({
+      label: browser,
+      value: count,
+      color: colorMap[browser] || '#AEAEAE'
+    }))
+  }
+
+  // Transform device data from analytics
+  const transformDeviceData = () => {
+    const colorMap = {
+      'Desktop': '#FF3399',
+      'Mobile': '#54C7DF',
+      'Tablet': '#B8DB4F'
+    }
+
+    return Object.entries(analyticsData.deviceDistribution || {}).map(([device, count]) => ({
+      label: device,
+      value: count,
+      color: colorMap[device] || '#AEAEAE'
+    }))
+  }
+
+  // Transform referral source data from analytics
+  const transformReferralSourceData = () => {
+    const colorMap = {
+      'Google Search': '#FF3399',
+      'Direct': '#54C7DF',
+      'Learntostart.com': '#B8DB4F',
+      'Organic': '#FFA500',
+      'Social Media': '#9C27B0'
+    }
+
+    return Object.entries(analyticsData.referralDistribution || {}).map(([source, count]) => ({
+      label: source,
+      value: count,
+      color: colorMap[source] || '#AEAEAE'
+    }))
+  }
+
+  // Transform traffic origin data from analytics
+  const transformTrafficOriginData = () => {
+    return Object.entries(analyticsData.trafficOrigin || {}).map(([country, data]) => ({
+      label: country,
+      value: data.count
+    }))
+  }
+
+  const groupedGenderData = transformGenderDataForGroupedChart()
+  const ageChartData = transformAgeDistributionData()
+  const countryChartData = transformCountryDistributionData()
+  const browserData = transformBrowserData()
+  const deviceData = transformDeviceData()
+  const referralSourceData = transformReferralSourceData()
+  const trafficOriginData = transformTrafficOriginData()
+
+  // Helper function to calculate max Y value with 20% buffer
+  const calculateMaxYValue = (data) => {
+    if (!data || data.length === 0) return 100
+    
+    let maxValue = 0
+    
+    // Check if it's grouped data
+    if (data[0]?.bars) {
+      // For grouped data (gender distribution)
+      maxValue = Math.max(...data.flatMap(group => group.bars.map(bar => bar.value)))
+    } else if (typeof data === 'object' && !Array.isArray(data)) {
+      // For objects like browserDistribution
+      maxValue = Math.max(...Object.values(data))
+    } else {
+      // For regular array data
+      maxValue = Math.max(...data.map(item => item.value))
+    }
+    
+    // Add 20% buffer and round up to nearest 10
+    const bufferedValue = maxValue * 1.1
+    return Math.ceil(bufferedValue / 10) * 10
+  }
+
+  // Fetch revenue analytics data
+  useEffect(() => {
+    const fetchRevenueAnalytics = async () => {
+      setRevenueAnalyticsLoading(true)
+      try {
+        const response = await axiosInstance.get('/admin-info/revenue-analytics', {
+          params: {
+            startDate: revenueDateRange.from,
+            endDate: revenueDateRange.to
+          }
+        })
+        
+        if (response.data.success) {
+          const { paidUsersOverTime, revenueOverTime } = response.data.data
+          
+          // Format paid users data
+          setPaidUsersData(paidUsersOverTime.map(item => ({
+            label: item.label,
+            value: item.value
+          })))
+          
+          // Format revenue data
+          setRevenueData(revenueOverTime.map(item => ({
+            label: item.label,
+            value: parseFloat(item.value)
+          })))
+        }
+      } catch (error) {
+        console.error('Error fetching revenue analytics:', error)
+        toast.error('Failed to load revenue analytics data')
+      } finally {
+        setRevenueAnalyticsLoading(false)
+      }
+    }
+
+    // Only fetch when revenue tab is active
+    if (activeAnalyticsTab === 'revenue') {
+      fetchRevenueAnalytics()
+    }
+  }, [activeAnalyticsTab, revenueDateRange])
+
+  // Handle date range change for revenue charts
+  const handleRevenueDateChange = (dates) => {
+    if (dates.from && dates.to) {
+      setRevenueDateRange({
+        from: dates.from,
+        to: dates.to
+      })
+    }
+  }
+
+  // Calculate max Y value for revenue data
+  const calculateRevenueMaxY = () => {
+    if (revenueData.length === 0) return 35000
+    const maxValue = Math.max(...revenueData.map(item => item.value))
+    const bufferedValue = maxValue * 1.2
+    return Math.ceil(bufferedValue / 1000) * 1000
+  }
+
+  // Calculate max Y value for paid users data
+  const calculatePaidUsersMaxY = () => {
+    if (paidUsersData.length === 0) return 400
+    const maxValue = Math.max(...paidUsersData.map(item => item.value))
+    const bufferedValue = maxValue * 1.2
+    return Math.ceil(bufferedValue / 50) * 50
   }
 
   return (
@@ -611,97 +1061,298 @@ const AdminDashboard = () => {
           )}
         </div>
 
+          {!isInstructor && (
+        <div className="admin-info-container">
+          <div className="container-title">
+            <img src={graphIcon} alt="Core Info Icon" className="core-info-icon" />
+            <p>Trial Information</p>
+          </div>
+          
+          {userStatusLoading || analyticsLoading ? (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+              <CustomSpinner />
+            </div>
+          ) : (
+            <div className="d-flex gap-4 flex-wrap">
+              <div className="info-box">
+                <div className="info-icon">
+                  <img src={groupIcon} alt="Visitors Icon" />
+                </div>
+                <p>Visitors</p>
+                <h3>{analyticsData.totalVisitors}</h3>
+              </div>
+
+              <div className="info-box">
+                <div className="info-icon">
+                  <img src={groupIcon} alt="Trials Icon" />
+                </div>
+                <p>Trials</p>
+                <h3>{dashboardData.trials}</h3>
+              </div>
+
+              <div className="info-box">
+                <div className="info-icon">
+                  <img src={groupIcon} alt="Paid Icon" />
+                </div>
+                <p>Paid</p>
+                <h3>{dashboardData.paid}</h3>
+              </div>
+
+              <div className="info-box">
+                <div className="info-icon">
+                  <img src={totalEntrolledIcon} alt="Cancelled Icon" />
+                </div>
+                <p>Cancelled</p>
+                <h3>{dashboardData.cancelled}</h3>
+              </div>
+            </div>
+          )}
+        </div>
+
+          )}
+
+          {/* Navigation Tabs */}
+          <div className="analytics-nav-tabs" style={{ 
+            display: 'flex', 
+            gap: '10px', 
+            margin: '20px 0px',
+          }}>
+            <button
+              className={`analytics-tab-btn ${activeAnalyticsTab === 'demographics' ? 'active' : ''}`}
+              onClick={() => setActiveAnalyticsTab('demographics')}
+              style={{
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                flex: 1
+              }}
+            >
+              Demographic
+            </button>
+            <button
+              className={`analytics-tab-btn ${activeAnalyticsTab === 'platform' ? 'active' : ''}`}
+              onClick={() => setActiveAnalyticsTab('platform')}
+              style={{
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                flex: 1
+              }}
+            >
+              Platform Analytics
+            </button>
+
+             <button
+              className={`analytics-tab-btn ${activeAnalyticsTab === 'revenue' ? 'active' : ''}`}
+              onClick={() => setActiveAnalyticsTab('revenue')}
+              style={{
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                flex: 1
+              }}
+            >
+              Revenue Tracking
+            </button>
+          </div>
         <div className="admin-info-container">
           <div className="container-title">
             <img src={graphIcon} alt="Core Info Icon" className="core-info-icon" />
             <p>Demographic Information</p>
           </div>
 
-          <div className="d-flex gap-4 flex-wrap">
-            <div style={{
-              boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
-              padding: '20px',
-              flex: 1,
-              borderRadius: '20px',
-              minWidth: '600px'
-            }}>
-              <h4 style={{ marginBottom: '20px', fontSize: '16px' }}>
-                Gender Distribution by Year
-              </h4>
-              <div 
-                className="chart-container" 
-                style={{ 
-                  width: '100%', 
-                  height: '350px',
-                  overflowX: windowWidth <= 1000 ? 'auto' : 'hidden',
-                  overflowY: 'hidden',
-                  WebkitOverflowScrolling: 'touch'
-                }}
-              >
-                <div style={{ 
-                  height: '280px',
-                  minWidth: windowWidth <= 1000 ? '700px' : 'auto',
-                  width: '100%'
-                }}>
-                  <Bar 
-                    data={genderChartData} 
-                    options={{
-                      ...chartOptions,
-                      responsive: windowWidth <= 1000 ? false : true,
-                      maintainAspectRatio: false
-                    }} 
-                    plugins={[dataLabelsPlugin]}
-                    width={windowWidth <= 1000 ? 700 : undefined}
-                    height={280}
-                  />
-                </div>
-              </div>
-            </div>
 
-            <div style={{
-              boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
-              padding: '20px',
-              flex: 1,
-              borderRadius: '20px',
-                minWidth: '600px'
-
-            }}>
-              <h4 style={{ marginBottom: '20px', fontSize: '16px' }}>
-                Age Distribution
-              </h4>
-              <div className="chart-container" style={{ width: '100%', height: '350px' }}>
-                <div style={{ height: '280px' }}>
-                  <Bar 
-                    data={ageChartData} 
-                    options={ageChartOptions} 
-                    plugins={[dataLabelsPlugin]}
-                  />
+          {/* Demographic Information Tab Content */}
+          {activeAnalyticsTab === 'demographics' && (
+            <>
+              {demographicsLoading ? (
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+                  <CustomSpinner />
                 </div>
-              </div>
-            </div>
-          </div>
+              ) : (
+                <>
+                  <div className="d-flex gap-4 flex-wrap">
+                    {/* Gender Distribution Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <h4 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '500', paddingLeft: '20px' }}>
+                        Gender Distribution by Year
+                      </h4>
+                      <VerticalBarChart
+                        isGrouped={true}
+                        groupedData={groupedGenderData}
+                        height={400}
+                        maxYValue={calculateMaxYValue(groupedGenderData)}
+                        barWidth={16}
+                        barGap={2}
+                        groupGap={20}
+                      />
+                    </div>
 
-          <div className="d-flex gap-4 flex-wrap" style={{ marginTop: '20px' }}>
-            <div style={{
-              boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
-              padding: '20px',
-              flex: 1,
-              borderRadius: '20px'
-            }}>
-              <h4 style={{ marginBottom: '20px', fontSize: '16px' }}>
-                Country Distribution
-              </h4>
-              <div className="chart-container" style={{ width: '100%', height: '350px' }}>
-                <div style={{ height: '280px' }}>
-                  <Bar 
-                    data={countryChartData} 
-                    options={countryChartOptions} 
-                    plugins={[dataLabelsPlugin]}
-                  />
+                    {/* Age Distribution Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <h4 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '500', paddingLeft: '20px' }}>
+                        Age Distribution
+                      </h4>
+                      <VerticalBarChart
+                        data={ageChartData}
+                        height={400}
+                        maxYValue={calculateMaxYValue(ageChartData)}
+                        barWidth={45}
+                        barGap={2}
+                        xAxisLabel="Age Groups"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Country Distribution Chart */}
+                  <div className="d-flex gap-4 flex-wrap" style={{ marginTop: '20px' }}>
+                    <div style={{ flex: 1, width: '100%' }}>
+                      <h4 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '500', paddingLeft: '20px' }}>
+                        Country Distribution
+                      </h4>
+                      <HorizontalBarChart
+                        data={countryChartData}
+                        height={350}
+                        showLegend={false}
+                        maxXValue={10}
+                        maxXValue={calculateMaxYValue(countryChartData)}
+                        chartPadding={{ top: 20, right: 70, bottom: 40, left: 200 }}
+                        barColor="#54C7DF"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          )}
+
+          {/* Platform Analytics Tab Content */}
+          {activeAnalyticsTab === 'platform' && (
+            <>
+              {analyticsLoading ? (
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+                  <CustomSpinner />
                 </div>
-              </div>
-            </div>
-          </div>
+              ) : (
+                <>
+                  {/* First Row - Browser and Device */}
+                  <div className="d-flex gap-4 flex-wrap">
+                    {/* Browser Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <h4 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '500', paddingLeft: '20px' }}>
+                        Browser
+                      </h4>
+                      <VerticalBarChart
+                        data={browserData}
+                        height={350}
+                        xAxisLabel="Browser Type"
+                        maxYValue={calculateMaxYValue(browserData)}
+                        barWidth={60}
+                        barGap={10}
+                      />
+                    </div>
+
+                    {/* Device Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <h4 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '500', paddingLeft: '20px' }}>
+                        Device
+                      </h4>
+                      <VerticalBarChart
+                        data={deviceData}
+                        height={350}
+                        xAxisLabel="Device Type"
+                        maxYValue={calculateMaxYValue(deviceData)}
+                        barWidth={60}
+                        barGap={10}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Second Row - Referral Source and Traffic Origin */}
+                  <div className="d-flex gap-4 flex-wrap" style={{ marginTop: '20px' }}>
+                    {/* Referral Source Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <h4 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '500', paddingLeft: '20px' }}>
+                        Referral Source
+                      </h4>
+                      <VerticalBarChart
+                        data={referralSourceData}
+                        height={350}
+                        xAxisLabel="Source"
+                        maxYValue={calculateMaxYValue(referralSourceData)}
+                        barWidth={50}
+                        barGap={8}
+                      />
+                    </div>
+
+                    {/* Traffic Origin Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <h4 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '500', paddingLeft: '20px' }}>
+                        Traffic Origin
+                      </h4>
+                      <HorizontalBarChart
+                        data={trafficOriginData}
+                        height={350}
+                        showLegend={true}
+                        legendLabel="Sessions"
+                        maxXValue={calculateMaxYValue(trafficOriginData)}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          )}
+
+          {activeAnalyticsTab === 'revenue' && (
+            <>
+              {revenueAnalyticsLoading ? (
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+                  <CustomSpinner />
+                </div>
+              ) : (
+                <>
+
+                  <div className="d-flex gap-4 flex-wrap">
+                    {/* Paid Users Over Time Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <LineChart
+                        data={paidUsersData}
+                        title="Paid Users Over Time"
+                        fromDate={revenueDateRange.from}
+                        toDate={revenueDateRange.to}
+                        lineLabel="Paid Users"
+                        lineColor="#60B7FF"
+                        maxYValue={calculatePaidUsersMaxY()}
+                        height={450}
+                        showDatePickers={true}
+                        onDateChange={handleRevenueDateChange}
+                        width="550px"
+                      />
+                    </div>
+
+                    {/* Revenue Over Time Chart */}
+                    <div style={{ flex: 1, minWidth: '45%' }}>
+                      <LineChart
+                      width="550px"
+                        data={revenueData}
+                        title="Revenue Over Time"
+                        fromDate={revenueDateRange.from}
+                        toDate={revenueDateRange.to}
+                        lineLabel="Revenue ($)"
+                        lineColor="#99CC33"
+                        maxYValue={calculateRevenueMaxY()}
+                        height={450}
+                        showDatePickers={true}
+                        onDateChange={handleRevenueDateChange}
+                      />
+                    </div>
+                  </div>
+
+                </>
+              )}
+            </>
+          )}
         </div>
       </div>
 

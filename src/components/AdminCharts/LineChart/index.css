@@ -1,0 +1,39 @@
+.line-chart-wrapper {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.line-chart-container {
+  -webkit-overflow-scrolling: touch;
+}
+
+.line-chart-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.line-chart-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.line-chart-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.line-chart-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Date input styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+input[type="date"]:focus {
+  border-color: #60B7FF;
+  box-shadow: 0 0 0 2px rgba(96, 183, 255, 0.1);
+}

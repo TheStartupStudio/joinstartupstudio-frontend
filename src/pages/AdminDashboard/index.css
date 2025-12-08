@@ -132,6 +132,28 @@ background-color: transparent;
   width: 100% !important;
 }
 
+.analytics-nav-tabs{
+  border-radius: 8px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15);
+  padding: 4px;
+}
+
+.analytics-tab-btn {
+  background: transparent;
+  font-size: 14px;
+    padding: 9px 0px;
+}
+
+.analytics-tab-btn.active{
+  border-radius: 8px;
+  background: rgba(185, 223, 236, 0.20);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15);
+  color: #000;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 @media (min-width: 1200px) {
   .chart-responsive-container {
     height: 400px;
