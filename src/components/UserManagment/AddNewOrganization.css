@@ -60,6 +60,20 @@
   color: #333;
 }
 
+.section-header .section-header{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 0px;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
 .input-icon{
     position: absolute;
     right: 20px;
@@ -423,3 +437,110 @@ input:disabled + .slider {
 }
 
 /* Existing styles remain the same... */
+
+
+.payment-table-container {
+  margin-top: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.payment-table thead {
+  background: #F5F5F5;
+}
+
+.payment-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  letter-spacing: 0.5px;
+}
+
+.payment-date-header {
+  cursor: pointer;
+  color: #000;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.payment-table tbody tr {
+  border-bottom: 1px solid #F0F0F0;
+  transition: background-color 0.2s ease;
+}
+
+.payment-table tbody tr:hover {
+  background-color: #FAFAFA;
+}
+
+.payment-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.payment-table td {
+  padding: 12px 24px;
+  color: #000;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-failed .status-dot {
+  background-color: #FF4757;
+}
+
+.status-completed .status-dot {
+  background-color: #99CC33;
+}
+
+.status-failed {
+  color: #FF4757;
+}
+
+.status-complete {
+  color: #99CC33;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.cursor-pointer:hover {
+  opacity: 0.7;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .payment-table {
+    font-size: 12px;
+  }
+  
+  .payment-table th,
+  .payment-table td {
+    padding: 10px 12px;
+  }
+}

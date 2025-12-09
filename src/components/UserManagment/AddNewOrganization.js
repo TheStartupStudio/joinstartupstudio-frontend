@@ -10,12 +10,15 @@ import spark from '../../assets/images/academy-icons/svg/spark.svg'
 import AcademyBtn from '../AcademyBtn'
 import ViewOrganizationLearnersModal from './ViewOrganizationLearnersModal'
 import PricingChangeModal from './PricingChangeModal'
+import ViewOrganizationInvoicesModal from './ViewOrganizationInvoicesModal'
 
 const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizationData = null }) => {
   const [loading, setLoading] = useState(false)
   const [showLearnersModal, setShowLearnersModal] = useState(false)
+  const [showInvoicesModal, setShowInvoicesModal] = useState(false)
   const [showPricingChangeModal, setShowPricingChangeModal] = useState(false)
   const [pendingSave, setPendingSave] = useState(false)
+  const [invoiceHistory, setInvoiceHistory] = useState([])
   const [originalPricing, setOriginalPricing] = useState({
     organizationPricing: { amount: '', frequency: 'monthly' },
     learnerPricing: []
@@ -72,6 +75,12 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           
           if (response.data.success) {
             const orgData = response.data.data
+            
+            // Set invoice history if available
+            if (orgData.invoices?.history) {
+              setInvoiceHistory(orgData.invoices.history)
+            }
+            
             setFormData({
               id: orgData.id,
               organizationName: orgData.organizationName || '',
@@ -139,6 +148,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           organizationPricing: { amount: '', frequency: 'monthly' },
           learnerPricing: []
         })
+        setInvoiceHistory([])
       }
     }
 
@@ -349,6 +359,14 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
 
   const handleLearnersModalClose = () => {
     setShowLearnersModal(false)
+  }
+
+  const handleViewInvoices = () => {
+    setShowInvoicesModal(true)
+  }
+
+  const handleInvoicesModalClose = () => {
+    setShowInvoicesModal(false)
   }
 
   const isEditMode = mode === 'edit'
@@ -676,6 +694,70 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                     </button>
                   )}
                 </div>
+
+                {/* Payments Section - Only show in view mode */}
+                {isViewMode && (
+                  <div className="form-section">
+                    <div className="section-header d-flex justify-content-between align-items-center">
+                      <div className="d-flex align-items-center gap-2">
+                        <img src={spark} alt="Spark Icon" />
+                        <span>Payments</span>
+                      </div>
+
+                      <div 
+                        className="d-flex align-items-center gap-2 cursor-pointer"
+                        onClick={handleViewInvoices}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <span>View Invoices</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M5.00033 10H15.417M15.417 10L10.417 5M15.417 10L10.417 15" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    <div className="payment-table-container">
+                      <table className="payment-table">
+                        <thead>
+                          <tr>
+                            <th className="payment-date-header">
+                              <div className="d-flex align-items-center gap-2">
+                                PAYMENT DATE
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                  <path d="M4 6L8 10L12 6" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </div>
+                            </th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {invoiceHistory.length > 0 ? (
+                            invoiceHistory.slice(0, 4).map((invoice) => (
+                              <tr key={invoice.id}>
+                                <td>{invoice.paymentDate || invoice.issueDate || 'N/A'}</td>
+                                <td>${parseFloat(invoice.amount).toFixed(2)}</td>
+                                <td>
+                                  <span className={`status-badge status-${invoice.status.toLowerCase()}`}>
+                                    <span className="status-dot"></span>
+                                    {invoice.status}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan="3" style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+                                No payment history available
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -728,6 +810,13 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
       <ViewOrganizationLearnersModal
         show={showLearnersModal}
         onHide={handleLearnersModalClose}
+        organizationName={formData.organizationName}
+        organizationId={formData.id}
+      />
+
+      <ViewOrganizationInvoicesModal
+        show={showInvoicesModal}
+        onHide={handleInvoicesModalClose}
         organizationName={formData.organizationName}
         organizationId={formData.id}
       />
