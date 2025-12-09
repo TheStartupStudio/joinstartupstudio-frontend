@@ -41,6 +41,9 @@ import {
   fetchRevenueAnalytics
 } from '../../redux/adminDashboard/actions'
 
+import ViewFailedPayments from '../../components/UserManagment/ViewFailedPayments/index'
+
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -75,6 +78,7 @@ const AdminDashboard = () => {
 
   const [activeAnalyticsTab, setActiveAnalyticsTab] = useState('demographics')
   const [showOrganizationModal, setShowOrganizationModal] = useState(false)
+    const [showFailedPaymentsModal, setShowFailedPaymentsModal] = useState(false)
   const [revenueDateRange, setRevenueDateRange] = useState({
     from: '2025-01-01',
     to: '2025-12-31'
@@ -112,8 +116,9 @@ const AdminDashboard = () => {
     churnRate: metrics.churnRate,
     ...levelStatistics,
     ...userStatus,
-    totalCreatedPortfolios: 201,
-    totalCompletedPortfolios: 150
+    totalCreatedPortfolios: levelStatistics.portfolioStatistics?.portfoliosCreated || 0,
+    totalCompletedPortfolios: levelStatistics.portfolioStatistics?.totalCompletedPortfolios || 0,
+    portfolioCompletionRate: levelStatistics.portfolioStatistics?.completionRate || 0
   }
 
   const { genderDistribution, ageDistribution, countryDistribution } = demographics
@@ -324,12 +329,22 @@ const AdminDashboard = () => {
           <div className="container-title">
             <img src={graphIcon} alt="Core Info Icon" className="core-info-icon" />
             <p>Core Information</p>
-            {isInstructor && (
+            {isInstructor ? (
               <button 
                 className="view-org-details-btn"
                 onClick={() => setShowOrganizationModal(true)}
               >
                 View Organization Details
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M4.99984 10H15.4165M15.4165 10L10.4165 5M15.4165 10L10.4165 15" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            ) : (
+                <button 
+                className="view-org-details-btn"
+                onClick={() => setShowFailedPaymentsModal(true)}
+              >
+                View Failed Payments
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M4.99984 10H15.4165M15.4165 10L10.4165 5M15.4165 10L10.4165 15" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -714,6 +729,21 @@ const AdminDashboard = () => {
           )}
         </div>
       </div>
+
+      {isInstructor && (
+        <ViewOrganizationModal
+          show={showOrganizationModal}
+          onHide={() => setShowOrganizationModal(false)}
+        />
+      )}
+
+      {!isInstructor && (
+        <ViewFailedPayments
+          show={showFailedPaymentsModal}
+          onHide={() => setShowFailedPaymentsModal(false)}
+        />
+      )}
+      
     </div>
   )
 }

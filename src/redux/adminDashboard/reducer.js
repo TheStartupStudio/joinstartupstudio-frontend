@@ -1,33 +1,32 @@
 import * as types from './types'
 
 const initialState = {
-  // Loading states
   metricsLoading: false,
   levelStatsLoading: false,
   demographicsLoading: false,
   userStatusLoading: false,
   analyticsLoading: false,
   revenueAnalyticsLoading: false,
-
-  // Data states
   metrics: {
     paidUsers: 0,
     totalRevenue: 0,
     churnRate: 0
   },
   levelStatistics: {
-    totalEnrolledLearners: 0,
     l1Learners: 0,
     l2Learners: 0,
     l3Learners: 0,
-    completedL1: 0,
-    completedL2: 0,
-    completedL3: 0,
-    totalCompletedAIE: 0,
     avgDaysL1: 0,
     avgDaysL2: 0,
     avgDaysL3: 0,
-    avgDaysAll: 0
+    totalEnrolledLearners: 0,
+    totalCompletedAIE: 0,
+    avgDaysAll: 0,
+    portfolioStatistics: {
+      portfoliosCreated: 0,
+      totalCompletedPortfolios: 0,
+      completionRate: 0
+    }
   },
   demographics: {
     genderDistribution: {},
@@ -44,26 +43,14 @@ const initialState = {
     browserDistribution: {},
     deviceDistribution: {},
     referralDistribution: {},
-    trafficOrigin: {},
-    convertedVisitors: 0,
-    conversionRate: '0%'
+    trafficOrigin: {}
   },
   revenueAnalytics: {
     paidUsersData: [],
     revenueData: []
   },
-
-  // Portfolio data
-  portfolioData: {
-    totalCreatedPortfolios: 0,
-    totalCompletedPortfolios: 0
-  },
-
-  // Error states
-  error: null,
-  
-  // Cache timestamp
-  lastFetched: null
+  lastFetched: null,
+  error: null
 }
 
 const adminDashboardReducer = (state = initialState, action) => {
@@ -108,18 +95,20 @@ const adminDashboardReducer = (state = initialState, action) => {
         ...state,
         levelStatsLoading: false,
         levelStatistics: {
-          totalEnrolledLearners: payload.data.totalEnrolledLearners,
-          l1Learners: payload.data.levelBreakdown.L1.learnersCompleted,
-          l2Learners: payload.data.levelBreakdown.L2.learnersCompleted,
-          l3Learners: payload.data.levelBreakdown.L3.learnersCompleted,
-          completedL1: payload.data.levelBreakdown.L1.learnersCompleted,
-          completedL2: payload.data.levelBreakdown.L2.learnersCompleted,
-          completedL3: payload.data.levelBreakdown.L3.learnersCompleted,
-          totalCompletedAIE: payload.data.completedAllLevels,
-          avgDaysL1: payload.data.levelBreakdown.L1.avgDaysToComplete,
-          avgDaysL2: payload.data.levelBreakdown.L2.avgDaysToComplete,
-          avgDaysL3: payload.data.levelBreakdown.L3.avgDaysToComplete,
-          avgDaysAll: payload.data.avgDaysToCompleteAll
+          l1Learners: payload.data.levelBreakdown?.L1?.learnersCompleted || 0,
+          l2Learners: payload.data.levelBreakdown?.L2?.learnersCompleted || 0,
+          l3Learners: payload.data.levelBreakdown?.L3?.learnersCompleted || 0,
+          avgDaysL1: payload.data.levelBreakdown?.L1?.avgDaysToComplete || 0,
+          avgDaysL2: payload.data.levelBreakdown?.L2?.avgDaysToComplete || 0,
+          avgDaysL3: payload.data.levelBreakdown?.L3?.avgDaysToComplete || 0,
+          totalEnrolledLearners: payload.data.totalEnrolledLearners || 0,
+          totalCompletedAIE: payload.data.completedAllLevels || 0,
+          avgDaysAll: payload.data.avgDaysToCompleteAll || 0,
+          portfolioStatistics: {
+            portfoliosCreated: payload.data.portfolioStatistics?.portfoliosCreated || 0,
+            totalCompletedPortfolios: payload.data.portfolioStatistics?.totalCompletedPortfolios || 0,
+            completionRate: payload.data.portfolioStatistics?.completionRate || 0
+          }
         },
         lastFetched: Date.now(),
         error: null
