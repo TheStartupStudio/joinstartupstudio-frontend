@@ -19,6 +19,7 @@ import html2canvas from 'html2canvas'
 import './index.css'
 import NotificationBell from '../../components/NotificationBell'
 import axiosInstance from '../../utils/AxiosInstance'
+import PreviewInvoiceEmailModal from '../../components/UserManagment/PreviewInvoiceEmailModal'
 
 
 const ViewInvoices = ({ isArchiveMode = false }) => {
@@ -58,6 +59,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [generateLoading, setGenerateLoading] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [showPreviewEmailModal, setShowPreviewEmailModal] = useState(false)
+  const [invoiceToSend, setInvoiceToSend] = useState(null)
 
   const searchContainerRef = useRef(null)
   const bulkDropdownRef = useRef(null)
@@ -322,16 +325,72 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       return
     }
 
+    // Open preview modal instead of sending directly
+    setInvoiceToSend(invoice)
+    setShowPreviewEmailModal(true)
+  }
+
+  const handleConfirmSendEmail = async (emailData) => {
+    if (!invoiceToSend?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
     try {
       setInvoicesLoading(true)
-      await invoiceApi.sendInvoiceEmail(invoice.id, {
-        subject: `Invoice ${invoice.invoiceNumber}`,
-        message: 'Please find attached your invoice.'
+      
+      await invoiceApi.sendInvoiceEmail(invoiceToSend.id, {
+        subject: emailData.subject,
+        message: emailData.message
       })
-      toast.success(`Invoice ${invoice.invoiceNumber} sent successfully!`)
+      
+      toast.success(`Invoice ${invoiceToSend.invoiceNumber} sent successfully!`)
+      setShowPreviewEmailModal(false)
+      setInvoiceToSend(null)
     } catch (error) {
       console.error('❌ Error sending invoice:', error)
       toast.error(error.response?.data?.message || 'Failed to send invoice')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleConfirmBulkSendEmail = async (emailData) => {
+    if (selectedInvoices.length === 0) {
+      toast.error('No invoices selected')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      const sendPromises = selectedInvoices.map(invoice => 
+        invoiceApi.sendInvoiceEmail(invoice.id, {
+          subject: emailData.subject.replace(selectedInvoices[0].invoiceNumber, invoice.invoiceNumber),
+          message: emailData.message.replace(selectedInvoices[0].organizationName, invoice.organizationName)
+        })
+      )
+      
+      const results = await Promise.allSettled(sendPromises)
+      
+      const succeeded = results.filter(r => r.status === 'fulfilled').length
+      const failed = results.filter(r => r.status === 'rejected').length
+      
+      if (succeeded > 0) {
+        toast.success(`${succeeded} invoice(s) sent successfully!`)
+      }
+      
+      if (failed > 0) {
+        toast.warning(`${failed} invoice(s) failed to send`)
+      }
+      
+      setSelectedInvoices([])
+      setShowPreviewEmailModal(false)
+      setInvoiceToSend(null)
+      
+    } catch (error) {
+      console.error('❌ Error sending invoices:', error)
+      toast.error('Failed to send some invoices')
     } finally {
       setInvoicesLoading(false)
     }
@@ -440,177 +499,40 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       return
     }
 
-    try {
-      setInvoicesLoading(true)
-      
-      const sendPromises = selectedInvoices.map(invoice => 
-        invoiceApi.sendInvoiceEmail(invoice.id, {
-          subject: `Invoice ${invoice.invoiceNumber}`,
-          message: 'Please find attached your invoice.'
-        })
-      )
-      
-      await Promise.all(sendPromises)
-      toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
-      setSelectedInvoices([])
-    } catch (error) {
-      console.error('❌ Error sending invoices:', error)
-      toast.error('Failed to send some invoices')
-    } finally {
-      setInvoicesLoading(false)
-    }
+    // For bulk send, we'll send the first invoice's preview
+    // You can modify this to show a different modal for bulk sends if needed
+    setInvoiceToSend(selectedInvoices[0])
+    setShowPreviewEmailModal(true)
   }
 
-  const handleExportInvoicePDF = async (invoice) => {
-    if (!invoice?.id) {
-      toast.error('Invalid invoice')
-      return
-    }
+  // const handleConfirmBulkSendEmail = async (emailData) => {
+  //   if (selectedInvoices.length === 0) {
+  //     toast.error('No invoices selected')
+  //     return
+  //   }
 
-    try {
-      setInvoicesLoading(true)
-      toast.info('Generating PDF...')
-
-      const modalContainer = document.createElement('div')
-      modalContainer.id = 'hidden-invoice-pdf-container'
-      modalContainer.style.position = 'fixed'
-      modalContainer.style.top = '-9999px'
-      modalContainer.style.left = '-9999px'
-      modalContainer.style.width = '210mm' 
-      modalContainer.style.background = 'white'
-      document.body.appendChild(modalContainer)
-
-      modalContainer.innerHTML = `
-        <div style="padding: 40px; font-family: 'Montserrat', sans-serif; background: white;">
-          <!-- Organization Header -->
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="margin: 0; font-size: 24px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</h2>
-          </div>
-
-          <!-- Issued To & Invoice Details -->
-          <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-            <div style="flex: 1;">
-              <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">ISSUED TO:</p>
-              <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</p>
-              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.organizationAddress || '123 Tech Street'}</p>
-              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.city || 'City'}${invoice.state ? ', ' + invoice.state : ''}${invoice.zip ? ', ' + invoice.zip : ''}</p>
-              
-              <div style="margin-top: 30px;">
-                <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">PAY TO:</p>
-                <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">Learn to Start, LLC</p>
-                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">3100 Corvig-Windermere Road,</p>
-                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">Suite 201 - #132</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">Windermere, FL 34786</p>
-              </div>
-            </div>
-
-            <div style="text-align: right;">
-              <div style="margin-bottom: 12px;">
-                <p style="margin: 0; font-size: 12px; font-weight: 600;">INVOICE #:</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.invoiceNumber || 'N/A'}</p>
-              </div>
-              <div style="margin-bottom: 12px;">
-                <p style="margin: 0; font-size: 12px; font-weight: 600;">DATE:</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.issueDate || invoice.invoiceDate || 'N/A'}</p>
-              </div>
-              <div>
-                <p style="margin: 0; font-size: 12px; font-weight: 600;">DUE DATE:</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.dueDate || 'N/A'}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Items Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-            <thead>
-              <tr style="background: #f5f5f5;">
-                <th style="padding: 12px; text-align: left; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">DESCRIPTION</th>
-                <th style="padding: 12px; text-align: center; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;"># OF ITEMS</th>
-                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">PRICE</th>
-                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">TOTAL</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${(invoice.items || []).map(item => `
-                <tr>
-                  <td style="padding: 12px; font-size: 12px; border-bottom: 1px solid #eee;">${item.description || 'Item'}</td>
-                  <td style="padding: 12px; text-align: center; font-size: 12px; border-bottom: 1px solid #eee;">${item.quantity || 0}</td>
-                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.price || 0).toFixed(2)}</td>
-                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.total || 0).toLocaleString()}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-
-          <!-- Totals -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 40px;">
-            <div style="flex: 1;">
-              <p style="margin: 0; font-size: 16px; font-weight: 600;">SUBTOTAL</p>
-            </div>
-            <div style="min-width: 200px; text-align: right;">
-              <div style="margin-bottom: 8px;">
-                <p style="margin: 0; font-size: 14px;">$${parseFloat(invoice.subtotal || 0).toLocaleString()}</p>
-              </div>
-              <div style="margin-bottom: 8px;">
-                <span style="font-size: 12px; color: #707070;">Tax (7%)</span>
-                <span style="margin-left: 20px; font-size: 14px;">$${parseFloat(invoice.tax || 0).toLocaleString()}</span>
-              </div>
-              <div style="padding-top: 12px; border-top: 2px solid #000;">
-                <span style="font-size: 14px; font-weight: 600;">TOTAL</span>
-                <span style="margin-left: 20px; font-size: 16px; font-weight: 600;">$${parseFloat(invoice.total || 0).toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-
-      await document.fonts.ready
-
-      const canvas = await html2canvas(modalContainer, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: modalContainer.scrollWidth,
-        windowHeight: modalContainer.scrollHeight
-      })
-
-      document.body.removeChild(modalContainer)
-
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      })
-
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
-      const imgWidth = canvas.width
-      const imgHeight = canvas.height
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
-      const imgX = (pdfWidth - imgWidth * ratio) / 2
-      const imgY = 10
-
-      pdf.addImage(
-        imgData, 
-        'PNG', 
-        imgX, 
-        imgY, 
-        imgWidth * ratio, 
-        imgHeight * ratio
-      )
-
-      pdf.save(`Invoice_${invoice.invoiceNumber || 'Export'}.pdf`)
+  //   try {
+  //     setInvoicesLoading(true)
       
-      toast.success(`Invoice ${invoice.invoiceNumber} exported successfully!`)
-    } catch (error) {
-      console.error('❌ Error exporting invoice:', error)
-      toast.error('Failed to export invoice as PDF')
-    } finally {
-      setInvoicesLoading(false)
-    }
-  }
+  //     const sendPromises = selectedInvoices.map(invoice => 
+  //       invoiceApi.sendInvoiceEmail(invoice.id, {
+  //         subject: emailData.subject.replace(selectedInvoices[0].invoiceNumber, invoice.invoiceNumber),
+  //         message: emailData.message.replace(selectedInvoices[0].organizationName, invoice.organizationName)
+  //       })
+  //     )
+      
+  //     await Promise.all(sendPromises)
+  //     toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
+  //     setSelectedInvoices([])
+  //     setShowPreviewEmailModal(false)
+  //     setInvoiceToSend(null)
+  //   } catch (error) {
+  //     console.error('❌ Error sending invoices:', error)
+  //     toast.error('Failed to send some invoices')
+  //   } finally {
+  //     setInvoicesLoading(false)
+  //   }
+  // }
 
   const handleRowAction = (actionType, item) => {
     console.log(`${actionType} action for invoice:`, item)
@@ -1351,6 +1273,16 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           onHide={() => setShowPaymentModal(false)}
           paymentData={null}
           onSave={handleSavePayment}
+        />
+
+        <PreviewInvoiceEmailModal
+          show={showPreviewEmailModal}
+          onHide={() => {
+            setShowPreviewEmailModal(false)
+            setInvoiceToSend(null)
+          }}
+          invoiceData={invoiceToSend}
+          onConfirmSend={selectedInvoices.length > 1 ? handleConfirmBulkSendEmail : handleConfirmSendEmail}
         />
       </div>
     </div>
