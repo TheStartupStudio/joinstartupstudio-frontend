@@ -167,11 +167,28 @@ max-width: 640px;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  height: 100%;
 }
 
 .view-invoices-container .bulk-actions:hover {
   border-color: #51C7DF;
   color: #51C7DF;
+}
+
+.view-invoices-container .bulk-actions-btn {
+  position: relative;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #495057;
+}
+
+.view-invoices-container .bulk-actions-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .view-invoices-container .dropdown-wrapper {
@@ -181,35 +198,44 @@ max-width: 640px;
 .view-invoices-container .dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0;
+  left: -30px;
   background: white;
-  border: 1px solid #E5E7EB;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   min-width: 200px;
   margin-top: 4px;
 }
 
 .view-invoices-container .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 12px 16px;
-  color: #231F20;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
- .view-invoices-container .dropdown-item:hover {
-  background-color: #F9FAFB;
-}
-
-.view-invoices-container .dropdown-item:first-child {
-  border-radius: 8px 8px 0 0;
+.view-invoices-container .dropdown-item:hover {
+  background: transparent;
 }
 
 .view-invoices-container .dropdown-item:last-child {
-  border-radius: 0 0 8px 8px;
+  border-bottom: none;
+}
+
+.view-invoices-container .dropdown-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.view-invoices-container .dropdown-item-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
 }
 
 .view-invoices-container .table-container {

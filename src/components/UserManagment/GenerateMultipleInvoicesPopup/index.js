@@ -1,47 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal } from 'react-bootstrap'
-import { toast } from 'react-toastify'
-import axiosInstance from '../../../utils/AxiosInstance'
 import '../AlertPopup/index.css'
 
 const GenerateMultipleInvoicesPopup = ({ show, onHide, onConfirm, selectedOrganizations = [] }) => {
-  const [loading, setLoading] = useState(false)
-
-  const handleConfirm = async () => {
-    if (selectedOrganizations.length === 0) {
-      toast.error('No organizations selected')
-      return
-    }
-
-    setLoading(true)
-    try {
-      // Generate invoices for each selected organization
-      const generatePromises = selectedOrganizations.map(org =>
-        axiosInstance.post(`/invoices/generate/${org.id}`)
-      )
-
-      const results = await Promise.allSettled(generatePromises)
-      
-      const succeeded = results.filter(r => r.status === 'fulfilled').length
-      const failed = results.filter(r => r.status === 'rejected').length
-
-      if (succeeded > 0) {
-        toast.success(`${succeeded} invoice(s) generated successfully!`)
-      }
-      
-      if (failed > 0) {
-        toast.warning(`${failed} invoice(s) failed to generate`)
-      }
-
-      onConfirm()
-      onHide()
-    } catch (error) {
-      console.error('Error generating invoices:', error)
-      toast.error('Failed to generate invoices')
-    } finally {
-      setLoading(false)
-    }
-  }
+  // Get unique organization IDs count
+  const uniqueOrgIds = [...new Set(selectedOrganizations.map(inv => inv.organizationId).filter(Boolean))]
+  const orgCount = uniqueOrgIds.length
 
   return (
     <Modal
@@ -49,7 +13,7 @@ const GenerateMultipleInvoicesPopup = ({ show, onHide, onConfirm, selectedOrgani
       onHide={onHide}
       backdrop={true}
       keyboard={true}
-      className="generate-multiple-popup"
+      className="user-management-popup-modal"
       centered
     >
       <div className="popup-content">
@@ -72,21 +36,15 @@ const GenerateMultipleInvoicesPopup = ({ show, onHide, onConfirm, selectedOrgani
             type="button"
             className="cancel-btn"
             onClick={onHide}
-            disabled={loading}
           >
             CANCEL
           </button>
           <button
             type="button"
             className="confirm-btn"
-            onClick={handleConfirm}
-            disabled={loading}
+            onClick={onConfirm}
           >
-            {loading ? (
-              <span className="spinner-border spinner-border-sm" />
-            ) : (
-              'YES, GENERATE INVOICES'
-            )}
+            YES, GENERATE INVOICES
           </button>
         </div>
       </div>
