@@ -74,6 +74,7 @@ max-width: 640px;
 .view-invoices-container .search-input-wrapper {
   position: relative;
   width: 100%;
+  margin-bottom: 0px;
 }
 
 .view-invoices-container .search-input {

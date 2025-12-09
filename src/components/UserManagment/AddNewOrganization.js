@@ -544,16 +544,32 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                   <div className="course-access-toggles">
                     {Object.keys(formData.courseAccess).map(course => (
                       <div key={course} className="toggle-item">
-                        <span className="toggle-label">{courseAccessLabels[course]}</span>
-                        <label className="switch">
-                          <input
-                            type="checkbox"
-                            checked={formData.courseAccess[course]}
-                            onChange={() => !isReadOnly && handleCourseAccessChange(course)}
-                            disabled={isReadOnly}
-                          />
-                          <span className="slider round"></span>
-                        </label>
+                        <div className="toggle-label-container">
+                          <span className="toggle-label">{courseAccessLabels[course]}</span>
+                          {(isReadOnly) && (
+                            <div className="course-access-indicator">
+                              {formData.courseAccess[course] ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                  <circle cx="5.5" cy="5.5" r="5.5" fill="#99CC33"/>
+                                </svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                  <circle cx="5.5" cy="5.5" r="5.5" fill="#AEAEAE"/>
+                                </svg>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        {!isReadOnly && (
+                          <label className="switch">
+                            <input
+                              type="checkbox"
+                              checked={formData.courseAccess[course]}
+                              onChange={() => handleCourseAccessChange(course)}
+                            />
+                            <span className="slider round"></span>
+                          </label>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -666,7 +682,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
 
           <div className="modal-actions">
             {isViewMode ? (
-              <div className="full-width-btn">
+              <div className="full-width-btn" style={{width: '100%'}}>
                 <AcademyBtn 
                   title="View Organization Learners"
                   onClick={handleViewLearners}

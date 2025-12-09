@@ -260,6 +260,13 @@
   height: 1rem;
 }
 
+.add-organization-modal .toggle-label-container{
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 10px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .modal-content-wrapper {

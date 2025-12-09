@@ -53,7 +53,6 @@ ChartJS.register(
 const AdminDashboard = () => {
   const dispatch = useDispatch()
   
-  // Redux state
   const {
     metricsLoading,
     levelStatsLoading,
@@ -81,7 +80,6 @@ const AdminDashboard = () => {
     to: '2025-12-31'
   })
 
-  // Initial loading state - only true when NO data exists at all
   const isInitialLoading = !lastFetched && (
     metricsLoading || 
     levelStatsLoading || 
@@ -90,21 +88,24 @@ const AdminDashboard = () => {
     analyticsLoading
   )
 
-  // Fetch data on mount - ALWAYS fetch to get latest data
   useEffect(() => {
     dispatch(fetchMetrics())
     dispatch(fetchLevelStatistics())
     dispatch(fetchDemographicStatistics())
     dispatch(fetchUserStatus())
-    dispatch(fetchAnalytics())
+
+    if(!isInstructor){
+        dispatch(fetchAnalytics())
+    }
   }, [dispatch])
 
-  // Fetch revenue analytics when tab changes or date range changes
   useEffect(() => {
-    dispatch(fetchRevenueAnalytics(revenueDateRange.from, revenueDateRange.to))
+
+    if(!isInstructor){
+      dispatch(fetchRevenueAnalytics(revenueDateRange.from, revenueDateRange.to))
+    }
   }, [revenueDateRange, dispatch])
 
-  // Combine data for display
   const dashboardData = {
     paidUsers: metrics.paidUsers,
     totalRevenue: metrics.totalRevenue,
@@ -209,7 +210,6 @@ const AdminDashboard = () => {
     }))
   }
 
-  // Transform device data from analytics
   const transformDeviceData = () => {
     const colorMap = {
       'Desktop': '#FF3399',
@@ -224,7 +224,6 @@ const AdminDashboard = () => {
     }))
   }
 
-  // Transform referral source data from analytics
   const transformReferralSourceData = () => {
     const colorMap = {
       'Google Search': '#FF3399',
@@ -241,7 +240,6 @@ const AdminDashboard = () => {
     }))
   }
 
-  // Transform traffic origin data from analytics
   const transformTrafficOriginData = () => {
     return Object.entries(analyticsData.trafficOrigin || {}).map(([country, data]) => ({
       label: country,
@@ -257,71 +255,23 @@ const AdminDashboard = () => {
   const referralSourceData = transformReferralSourceData()
   const trafficOriginData = transformTrafficOriginData()
 
-  // Helper function to calculate max Y value with 20% buffer
   const calculateMaxYValue = (data) => {
     if (!data || data.length === 0) return 100
     
     let maxValue = 0
     
-    // Check if it's grouped data
     if (data[0]?.bars) {
-      // For grouped data (gender distribution)
       maxValue = Math.max(...data.flatMap(group => group.bars.map(bar => bar.value)))
     } else if (typeof data === 'object' && !Array.isArray(data)) {
-      // For objects like browserDistribution
       maxValue = Math.max(...Object.values(data))
     } else {
-      // For regular array data
       maxValue = Math.max(...data.map(item => item.value))
     }
     
-    // Add 20% buffer and round up to nearest 10
     const bufferedValue = maxValue * 1.1
     return Math.ceil(bufferedValue / 10) * 10
   }
 
-  // Fetch revenue analytics data
-  // useEffect(() => {
-  //   const fetchRevenueAnalytics = async () => {
-  //     setRevenueAnalyticsLoading(true)
-  //     try {
-  //       const response = await axiosInstance.get('/admin-info/revenue-analytics', {
-  //         params: {
-  //           startDate: revenueDateRange.from,
-  //           endDate: revenueDateRange.to
-  //         }
-  //       })
-        
-  //       if (response.data.success) {
-  //         const { paidUsersOverTime, revenueOverTime } = response.data.data
-          
-  //         // Format paid users data
-  //         setPaidUsersData(paidUsersOverTime.map(item => ({
-  //           label: item.label,
-  //           value: item.value
-  //         })))
-          
-  //         // Format revenue data
-  //         setRevenueData(revenueOverTime.map(item => ({
-  //           label: item.label,
-  //           value: parseFloat(item.value)
-  //         })))
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching revenue analytics:', error)
-  //       toast.error('Failed to load revenue analytics data')
-  //     } finally {
-  //       setRevenueAnalyticsLoading(false)
-  //     }
-  //   }
-
-  //   // Only fetch when revenue tab is active
-  //   if (activeAnalyticsTab === 'revenue') {
-  //     fetchRevenueAnalytics()
-  //   }
-  // }, [activeAnalyticsTab, revenueDateRange])
-
-  // Calculate max Y value for revenue data
   const calculateRevenueMaxY = () => {
     if (revenueData.length === 0) return 35000
     const maxValue = Math.max(...revenueData.map(item => item.value))
@@ -329,7 +279,6 @@ const AdminDashboard = () => {
     return Math.ceil(bufferedValue / 1000) * 1000
   }
 
-  // Calculate max Y value for paid users data
   const calculatePaidUsersMaxY = () => {
     if (paidUsersData.length === 0) return 400
     const maxValue = Math.max(...paidUsersData.map(item => item.value))
@@ -337,14 +286,13 @@ const AdminDashboard = () => {
     return Math.ceil(bufferedValue / 50) * 50
   }
 
-  // Show loader ONLY on initial load when there's no data
-  if (isInitialLoading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-        <CustomSpinner />
-      </div>
-    )
-  }
+  // if (isInitialLoading) {
+  //   return (
+  //     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+  //       <CustomSpinner />
+  //     </div>
+  //   )
+  // }
 
   return (
     <div>
@@ -407,6 +355,7 @@ const AdminDashboard = () => {
               <h3>{formatRevenue(dashboardData.totalRevenue)}</h3>
             </div>
 
+            {!isInstructor ? (
             <div className="info-box">
               <div className="info-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -416,6 +365,7 @@ const AdminDashboard = () => {
               <p>All Time Total Churn Rate</p>
               <h3>{formatRevenue(dashboardData.churnRate)}</h3>
             </div>
+            ) : null}
 
             {isInstructor ? (
               <div className="info-box">
@@ -543,7 +493,8 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Navigation Tabs */}
+        {!isInstructor ? (
+
         <div className="analytics-nav-tabs" style={{ 
           display: 'flex', 
           gap: '10px', 
@@ -587,6 +538,8 @@ const AdminDashboard = () => {
             Revenue Tracking
           </button>
         </div>
+
+          ) : null}
 
         <div className="admin-info-container">
           <div className="container-title">
