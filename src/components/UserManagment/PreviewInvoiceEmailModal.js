@@ -16,14 +16,31 @@ const PreviewInvoiceEmailModal = ({
   const [emailData, setEmailData] = useState({
     subject: `Learn to Start Invoice #${invoiceData?.invoiceNumber || '01234'}`,
     clientName: invoiceData?.organizationName || '[Client Name]',
-    message: `Dear ${invoiceData?.organizationName || '[Client Name]'},
+    message: `Dear ${invoiceData?.organizationName || '[Client Name]'}, <br/><br/>
 
-Please see attached invoice. You may set up a payment method and pay invoices from within your administrative platform.
+Please see attached invoice. You may set up a payment method and pay invoices from within your administrative platform. <br/><br/>
 
-Thank you for partnering with us on this important mission,
+Thank you for partnering with us on this important mission, <br/><br/>
 
 Learn to Start`
   })
+
+  // Update email data when invoiceData changes
+  React.useEffect(() => {
+    if (invoiceData) {
+      setEmailData({
+        subject: `Learn to Start Invoice #${invoiceData.invoiceNumber}`,
+        clientName: invoiceData.organizationName,
+        message: `Dear ${invoiceData.organizationName}, <br/><br/>
+
+Please see attached invoice. You may set up a payment method and pay invoices from within your administrative platform. <br/><br/>
+
+Thank you for partnering with us on this important mission, <br/><br/>
+
+Learn to Start`
+      })
+    }
+  }, [invoiceData])
 
   const quillModules = {
     toolbar: [
@@ -61,21 +78,35 @@ Learn to Start`
   }
 
   const handleSend = async () => {
+    if (loading) return
+
+    if (!emailData.subject.trim()) {
+      toast.error('Please enter an email subject')
+      return
+    }
+
+    if (!emailData.message.trim()) {
+      toast.error('Please enter an email message')
+      return
+    }
+
     setLoading(true)
     
-    // Simulate sending email
-    setTimeout(() => {
+    try {
+      await onConfirmSend(emailData)
+      // ✅ Don't close modal here - let parent component handle it after successful API call
+    } catch (error) {
+      console.error('Error sending email:', error)
+      toast.error('Failed to send email')
+    } finally {
       setLoading(false)
-      toast.success('Invoice email sent successfully!')
-      onHide()
-      if (onConfirmSend) {
-        onConfirmSend(emailData)
-      }
-    }, 1500)
+    }
   }
 
   const handleClose = () => {
     if (loading) return
+    setMode('view') // Reset to view mode when closing
+    setLoading(false) // ✅ Reset loading state
     onHide()
   }
 
@@ -88,14 +119,14 @@ Learn to Start`
     <Modal
       show={show}
       onHide={handleClose}
-      backdrop={true}
-      keyboard={true}
+      backdrop={loading ? 'static' : true}
+      keyboard={!loading}
       className="preview-invoice-email-modal"
       centered
       size="lg"
     >
       <div className="preview-email-modal-content">
-        {/* Header - Same as ViewInvoiceModal */}
+        {/* Header */}
         <div className="preview-email-modal-header">
           <div className="modal-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -109,7 +140,11 @@ Learn to Start`
           <h4 className="preview-email-modal-title">Preview Invoice Email</h4>
 
           <div className="header-icons-nav">
-            <div onClick={handleClose} style={{ cursor: 'pointer' }} title="Go back">
+            <div 
+              onClick={handleClose} 
+              style={{ cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1 }} 
+              title="Go back"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                 <path d="M23.125 15H7.5M7.5 15L15 7.5M7.5 15L15 22.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -117,21 +152,37 @@ Learn to Start`
 
             {mode === 'view' ? (
               <>
-                <div onClick={() => setMode('edit')} style={{ cursor: 'pointer' }} title="Edit email">
+                <div 
+                  onClick={() => !loading && setMode('edit')} 
+                  style={{ cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1 }} 
+                  title="Edit email"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                     <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
 
-                <div onClick={handleSend} style={{ cursor: loading ? 'not-allowed' : 'pointer' }} title="Send email">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                    <path d="M26.25 3.75L13.125 16.875" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M26.25 3.75L17.5 26.25L13.125 16.875L3.75 12.5L26.25 3.75Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                <div 
+                  onClick={handleSend} 
+                  style={{ cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.5 : 1 }} 
+                  title={loading ? 'Sending...' : 'Send email'}
+                >
+                  {loading ? (
+                    <span className='spinner-border spinner-border-sm' style={{ width: '20px', height: '20px' }} />
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                      <path d="M26.25 3.75L13.125 16.875" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M26.25 3.75L17.5 26.25L13.125 16.875L3.75 12.5L26.25 3.75Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
                 </div>
               </>
             ) : (
-              <div onClick={handleSave} style={{ cursor: 'pointer' }} title="Save changes">
+              <div 
+                onClick={handleSave} 
+                style={{ cursor: 'pointer' }} 
+                title="Save changes"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                   <path d="M3.75 24.25V5.75C3.75 4.64543 4.64543 3.75 5.75 3.75H20.4216C20.952 3.75 21.4607 3.96071 21.8358 4.33579L25.6642 8.16421C26.0393 8.53929 26.25 9.04799 26.25 9.57843V24.25C26.25 25.3546 25.3546 26.25 24.25 26.25H5.75C4.64543 26.25 3.75 25.3546 3.75 24.25Z" stroke="black" strokeWidth="1.5"/>
                   <path d="M10.6 11.25H19.4C19.7314 11.25 20 10.9814 20 10.65V4.35C20 4.01863 19.7314 3.75 19.4 3.75H10.6C10.2686 3.75 10 4.01863 10 4.35V10.65C10 10.9814 10.2686 11.25 10.6 11.25Z" stroke="black" strokeWidth="1.5"/>
@@ -151,16 +202,15 @@ Learn to Start`
                 {emailData.subject}
               </div>
             ) : (
-                <>
+              <>
                 <label className="email-field-label">Subject:</label>
-              <input
-                type="text"
-                className="email-subject-input"
-                value={emailData.subject}
-                onChange={(e) => handleChange('subject', e.target.value)}
-                disabled={loading}
-              />
-
+                <input
+                  type="text"
+                  className="email-subject-input"
+                  value={emailData.subject}
+                  onChange={(e) => handleChange('subject', e.target.value)}
+                  disabled={loading}
+                />
               </>
             )}
           </div>
@@ -189,14 +239,13 @@ Learn to Start`
               />
             )}
 
-            <div className="d-flex gap-2 align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M17.8646 9.71885L10.2063 17.3772C9.26809 18.3154 7.99562 18.8425 6.6688 18.8425C5.34198 18.8425 4.0695 18.3154 3.1313 17.3772C2.19309 16.439 1.66602 15.1665 1.66602 13.8397C1.66602 12.5129 2.19309 11.2404 3.1313 10.3022L10.7896 2.64385C11.4151 2.01838 12.2634 1.66699 13.148 1.66699C14.0325 1.66699 14.8808 2.01838 15.5063 2.64385C16.1318 3.26931 16.4831 4.11763 16.4831 5.00218C16.4831 5.88673 16.1318 6.73504 15.5063 7.36051L7.83963 15.0188C7.52689 15.3316 7.10274 15.5073 6.66046 15.5073C6.21819 15.5073 5.79403 15.3316 5.4813 15.0188C5.16856 14.7061 4.99287 14.282 4.99287 13.8397C4.99287 13.3974 5.16856 12.9732 5.4813 12.6605L12.5563 5.59385" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-
-                <label>
-                    [Organization Name] Invoice 01234
-                </label>
+            <div className="d-flex gap-2 align-items-center mt-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M17.8646 9.71885L10.2063 17.3772C9.26809 18.3154 7.99562 18.8425 6.6688 18.8425C5.34198 18.8425 4.0695 18.3154 3.1313 17.3772C2.19309 16.439 1.66602 15.1665 1.66602 13.8397C1.66602 12.5129 2.19309 11.2404 3.1313 10.3022L10.7896 2.64385C11.4151 2.01838 12.2634 1.66699 13.148 1.66699C14.0325 1.66699 14.8808 2.01838 15.5063 2.64385C16.1318 3.26931 16.4831 4.11763 16.4831 5.00218C16.4831 5.88673 16.1318 6.73504 15.5063 7.36051L7.83963 15.0188C7.52689 15.3316 7.10274 15.5073 6.66046 15.5073C6.21819 15.5073 5.79403 15.3316 5.4813 15.0188C5.16856 14.7061 4.99287 14.282 4.99287 13.8397C4.99287 13.3974 5.16856 12.9732 5.4813 12.6605L12.5563 5.59385" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <label style={{ fontSize: '14px', color: '#707070', margin: 0 }}>
+                {invoiceData?.organizationName || '[Organization Name]'} Invoice {invoiceData?.invoiceNumber || '01234'}
+              </label>
             </div>
           </div>
         </div>

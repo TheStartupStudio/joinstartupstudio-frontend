@@ -1,47 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal } from 'react-bootstrap'
-import { toast } from 'react-toastify'
-import axiosInstance from '../../../utils/AxiosInstance'
 import '../AlertPopup/index.css'
 
 const GenerateMultipleInvoicesPopup = ({ show, onHide, onConfirm, selectedOrganizations = [] }) => {
-  const [loading, setLoading] = useState(false)
-
-  const handleConfirm = async () => {
-    if (selectedOrganizations.length === 0) {
-      toast.error('No organizations selected')
-      return
-    }
-
-    setLoading(true)
-    try {
-      // Generate invoices for each selected organization
-      const generatePromises = selectedOrganizations.map(org =>
-        axiosInstance.post(`/invoices/generate/${org.id}`)
-      )
-
-      const results = await Promise.allSettled(generatePromises)
-      
-      const succeeded = results.filter(r => r.status === 'fulfilled').length
-      const failed = results.filter(r => r.status === 'rejected').length
-
-      if (succeeded > 0) {
-        toast.success(`${succeeded} invoice(s) generated successfully!`)
-      }
-      
-      if (failed > 0) {
-        toast.warning(`${failed} invoice(s) failed to generate`)
-      }
-
-      onConfirm()
-      onHide()
-    } catch (error) {
-      console.error('Error generating invoices:', error)
-      toast.error('Failed to generate invoices')
-    } finally {
-      setLoading(false)
-    }
-  }
+  // Get unique organization IDs count
+  const uniqueOrgIds = [...new Set(selectedOrganizations.map(inv => inv.organizationId).filter(Boolean))]
+  const orgCount = uniqueOrgIds.length
 
   return (
     <Modal
@@ -49,44 +13,51 @@ const GenerateMultipleInvoicesPopup = ({ show, onHide, onConfirm, selectedOrgani
       onHide={onHide}
       backdrop={true}
       keyboard={true}
-      className="generate-multiple-popup"
+      className="user-management-popup-modal"
       centered
     >
-      <div className="popup-content">
-        <div className="popup-header">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="24" fill="#FFF4E5"/>
-            <path d="M24 16V26M24 30H24.01" stroke="#FF9800" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <div className="popup-content user-management-popup-content">
+        <div className="popup-icon-container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M16.1256 17.4997H3.87307C2.33504 17.4997 1.37259 15.8361 2.13926 14.5027L8.26554 3.84833C9.03455 2.51092 10.9641 2.51092 11.7332 3.84833L17.8594 14.5027C18.6261 15.8361 17.6637 17.4997 16.1256 17.4997Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 14.1753L10.0083 14.1661" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
 
         <h3 className="popup-title">Generate Multiple Invoices?</h3>
         
         <p className="popup-message">
-          You are about to generate invoices for {selectedOrganizations.length} organization(s). 
-          This will create new invoices based on each organization's current pricing and active user count.
+         Clicking continue will generate invoices for all selected organizations. Once generated, you can view 
+         the invoices by clicking “View Invoices “ above the main Organization list.
         </p>
 
         <div className="popup-actions">
           <button
             type="button"
-            className="cancel-btn"
+            className="confirm-btn"
+            style={{
+              maxWidth: '250px',
+              width: '100%',
+              borderRadius: '8px',
+              background: 'var(--COLORS-Light-Grey, #DEE1E6)',
+              boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+              color: '#000',
+            }}
             onClick={onHide}
-            disabled={loading}
           >
-            CANCEL
+            No, take me back
           </button>
           <button
             type="button"
-            className="confirm-btn"
-            onClick={handleConfirm}
-            disabled={loading}
+            className=" cancel-btn"
+            style={{
+              maxWidth: '250px',
+              width: '100%'
+            }}
+            onClick={onConfirm}
           >
-            {loading ? (
-              <span className="spinner-border spinner-border-sm" />
-            ) : (
-              'YES, GENERATE INVOICES'
-            )}
+            Continue
           </button>
         </div>
       </div>

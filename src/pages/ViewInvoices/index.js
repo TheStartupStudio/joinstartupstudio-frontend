@@ -19,6 +19,7 @@ import html2canvas from 'html2canvas'
 import './index.css'
 import NotificationBell from '../../components/NotificationBell'
 import axiosInstance from '../../utils/AxiosInstance'
+import PreviewInvoiceEmailModal from '../../components/UserManagment/PreviewInvoiceEmailModal'
 
 
 const ViewInvoices = ({ isArchiveMode = false }) => {
@@ -58,8 +59,11 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [generateLoading, setGenerateLoading] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [showPreviewEmailModal, setShowPreviewEmailModal] = useState(false)
+  const [invoiceToSend, setInvoiceToSend] = useState(null)
 
   const searchContainerRef = useRef(null)
+  const bulkDropdownRef = useRef(null)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -321,16 +325,72 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       return
     }
 
+    // Open preview modal instead of sending directly
+    setInvoiceToSend(invoice)
+    setShowPreviewEmailModal(true)
+  }
+
+  const handleConfirmSendEmail = async (emailData) => {
+    if (!invoiceToSend?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
     try {
       setInvoicesLoading(true)
-      await invoiceApi.sendInvoiceEmail(invoice.id, {
-        subject: `Invoice ${invoice.invoiceNumber}`,
-        message: 'Please find attached your invoice.'
+      
+      await invoiceApi.sendInvoiceEmail(invoiceToSend.id, {
+        subject: emailData.subject,
+        message: emailData.message
       })
-      toast.success(`Invoice ${invoice.invoiceNumber} sent successfully!`)
+      
+      toast.success(`Invoice ${invoiceToSend.invoiceNumber} sent successfully!`)
+      setShowPreviewEmailModal(false)
+      setInvoiceToSend(null)
     } catch (error) {
       console.error('❌ Error sending invoice:', error)
       toast.error(error.response?.data?.message || 'Failed to send invoice')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
+  const handleConfirmBulkSendEmail = async (emailData) => {
+    if (selectedInvoices.length === 0) {
+      toast.error('No invoices selected')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      const sendPromises = selectedInvoices.map(invoice => 
+        invoiceApi.sendInvoiceEmail(invoice.id, {
+          subject: emailData.subject.replace(selectedInvoices[0].invoiceNumber, invoice.invoiceNumber),
+          message: emailData.message.replace(selectedInvoices[0].organizationName, invoice.organizationName)
+        })
+      )
+      
+      const results = await Promise.allSettled(sendPromises)
+      
+      const succeeded = results.filter(r => r.status === 'fulfilled').length
+      const failed = results.filter(r => r.status === 'rejected').length
+      
+      if (succeeded > 0) {
+        toast.success(`${succeeded} invoice(s) sent successfully!`)
+      }
+      
+      if (failed > 0) {
+        toast.warning(`${failed} invoice(s) failed to send`)
+      }
+      
+      setSelectedInvoices([])
+      setShowPreviewEmailModal(false)
+      setInvoiceToSend(null)
+      
+    } catch (error) {
+      console.error('❌ Error sending invoices:', error)
+      toast.error('Failed to send some invoices')
     } finally {
       setInvoicesLoading(false)
     }
@@ -439,177 +499,40 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       return
     }
 
-    try {
-      setInvoicesLoading(true)
-      
-      const sendPromises = selectedInvoices.map(invoice => 
-        invoiceApi.sendInvoiceEmail(invoice.id, {
-          subject: `Invoice ${invoice.invoiceNumber}`,
-          message: 'Please find attached your invoice.'
-        })
-      )
-      
-      await Promise.all(sendPromises)
-      toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
-      setSelectedInvoices([])
-    } catch (error) {
-      console.error('❌ Error sending invoices:', error)
-      toast.error('Failed to send some invoices')
-    } finally {
-      setInvoicesLoading(false)
-    }
+    // For bulk send, we'll send the first invoice's preview
+    // You can modify this to show a different modal for bulk sends if needed
+    setInvoiceToSend(selectedInvoices[0])
+    setShowPreviewEmailModal(true)
   }
 
-  const handleExportInvoicePDF = async (invoice) => {
-    if (!invoice?.id) {
-      toast.error('Invalid invoice')
-      return
-    }
+  // const handleConfirmBulkSendEmail = async (emailData) => {
+  //   if (selectedInvoices.length === 0) {
+  //     toast.error('No invoices selected')
+  //     return
+  //   }
 
-    try {
-      setInvoicesLoading(true)
-      toast.info('Generating PDF...')
-
-      const modalContainer = document.createElement('div')
-      modalContainer.id = 'hidden-invoice-pdf-container'
-      modalContainer.style.position = 'fixed'
-      modalContainer.style.top = '-9999px'
-      modalContainer.style.left = '-9999px'
-      modalContainer.style.width = '210mm' 
-      modalContainer.style.background = 'white'
-      document.body.appendChild(modalContainer)
-
-      modalContainer.innerHTML = `
-        <div style="padding: 40px; font-family: 'Montserrat', sans-serif; background: white;">
-          <!-- Organization Header -->
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="margin: 0; font-size: 24px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</h2>
-          </div>
-
-          <!-- Issued To & Invoice Details -->
-          <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-            <div style="flex: 1;">
-              <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">ISSUED TO:</p>
-              <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">${invoice.organizationName || 'Organization Name'}</p>
-              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.organizationAddress || '123 Tech Street'}</p>
-              <p style="margin: 0 0 4px 0; font-size: 12px; color: #707070;">${invoice.city || 'City'}${invoice.state ? ', ' + invoice.state : ''}${invoice.zip ? ', ' + invoice.zip : ''}</p>
-              
-              <div style="margin-top: 30px;">
-                <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #707070;">PAY TO:</p>
-                <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">Learn to Start, LLC</p>
-                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">3100 Corvig-Windermere Road,</p>
-                <p style="margin: 0 0 2px 0; font-size: 12px; color: #707070;">Suite 201 - #132</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">Windermere, FL 34786</p>
-              </div>
-            </div>
-
-            <div style="text-align: right;">
-              <div style="margin-bottom: 12px;">
-                <p style="margin: 0; font-size: 12px; font-weight: 600;">INVOICE #:</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.invoiceNumber || 'N/A'}</p>
-              </div>
-              <div style="margin-bottom: 12px;">
-                <p style="margin: 0; font-size: 12px; font-weight: 600;">DATE:</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.issueDate || invoice.invoiceDate || 'N/A'}</p>
-              </div>
-              <div>
-                <p style="margin: 0; font-size: 12px; font-weight: 600;">DUE DATE:</p>
-                <p style="margin: 0; font-size: 12px; color: #707070;">${invoice.dueDate || 'N/A'}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Items Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-            <thead>
-              <tr style="background: #f5f5f5;">
-                <th style="padding: 12px; text-align: left; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">DESCRIPTION</th>
-                <th style="padding: 12px; text-align: center; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;"># OF ITEMS</th>
-                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">PRICE</th>
-                <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd;">TOTAL</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${(invoice.items || []).map(item => `
-                <tr>
-                  <td style="padding: 12px; font-size: 12px; border-bottom: 1px solid #eee;">${item.description || 'Item'}</td>
-                  <td style="padding: 12px; text-align: center; font-size: 12px; border-bottom: 1px solid #eee;">${item.quantity || 0}</td>
-                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.price || 0).toFixed(2)}</td>
-                  <td style="padding: 12px; text-align: right; font-size: 12px; border-bottom: 1px solid #eee;">$${parseFloat(item.total || 0).toLocaleString()}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-
-          <!-- Totals -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 40px;">
-            <div style="flex: 1;">
-              <p style="margin: 0; font-size: 16px; font-weight: 600;">SUBTOTAL</p>
-            </div>
-            <div style="min-width: 200px; text-align: right;">
-              <div style="margin-bottom: 8px;">
-                <p style="margin: 0; font-size: 14px;">$${parseFloat(invoice.subtotal || 0).toLocaleString()}</p>
-              </div>
-              <div style="margin-bottom: 8px;">
-                <span style="font-size: 12px; color: #707070;">Tax (7%)</span>
-                <span style="margin-left: 20px; font-size: 14px;">$${parseFloat(invoice.tax || 0).toLocaleString()}</span>
-              </div>
-              <div style="padding-top: 12px; border-top: 2px solid #000;">
-                <span style="font-size: 14px; font-weight: 600;">TOTAL</span>
-                <span style="margin-left: 20px; font-size: 16px; font-weight: 600;">$${parseFloat(invoice.total || 0).toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-
-      await document.fonts.ready
-
-      const canvas = await html2canvas(modalContainer, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: modalContainer.scrollWidth,
-        windowHeight: modalContainer.scrollHeight
-      })
-
-      document.body.removeChild(modalContainer)
-
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      })
-
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
-      const imgWidth = canvas.width
-      const imgHeight = canvas.height
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
-      const imgX = (pdfWidth - imgWidth * ratio) / 2
-      const imgY = 10
-
-      pdf.addImage(
-        imgData, 
-        'PNG', 
-        imgX, 
-        imgY, 
-        imgWidth * ratio, 
-        imgHeight * ratio
-      )
-
-      pdf.save(`Invoice_${invoice.invoiceNumber || 'Export'}.pdf`)
+  //   try {
+  //     setInvoicesLoading(true)
       
-      toast.success(`Invoice ${invoice.invoiceNumber} exported successfully!`)
-    } catch (error) {
-      console.error('❌ Error exporting invoice:', error)
-      toast.error('Failed to export invoice as PDF')
-    } finally {
-      setInvoicesLoading(false)
-    }
-  }
+  //     const sendPromises = selectedInvoices.map(invoice => 
+  //       invoiceApi.sendInvoiceEmail(invoice.id, {
+  //         subject: emailData.subject.replace(selectedInvoices[0].invoiceNumber, invoice.invoiceNumber),
+  //         message: emailData.message.replace(selectedInvoices[0].organizationName, invoice.organizationName)
+  //       })
+  //     )
+      
+  //     await Promise.all(sendPromises)
+  //     toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
+  //     setSelectedInvoices([])
+  //     setShowPreviewEmailModal(false)
+  //     setInvoiceToSend(null)
+  //   } catch (error) {
+  //     console.error('❌ Error sending invoices:', error)
+  //     toast.error('Failed to send some invoices')
+  //   } finally {
+  //     setInvoicesLoading(false)
+  //   }
+  // }
 
   const handleRowAction = (actionType, item) => {
     console.log(`${actionType} action for invoice:`, item)
@@ -671,15 +594,74 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   const handleGenerateMultiple = () => {
     if (selectedInvoices.length === 0) {
-      toast.warning('Please select at least one organization')
+      toast.warning('Please select at least one invoice')
       return
     }
+    
+    // Extract unique organization IDs from selected invoices
+    const uniqueOrgIds = [...new Set(selectedInvoices.map(inv => inv.organizationId).filter(Boolean))]
+    
+    if (uniqueOrgIds.length === 0) {
+      toast.error('Selected invoices do not have valid organization information')
+      return
+    }
+    
+    console.log('Unique organization IDs to generate invoices for:', uniqueOrgIds)
     setShowGenerateMultiplePopup(true)
   }
 
   const handleConfirmGenerateMultiple = async () => {
-    await fetchInvoices(currentPage, debouncedSearchQuery)
-    setSelectedInvoices([])
+    try {
+      setGenerateLoading(true)
+      
+      // Extract unique organization IDs from selected invoices
+      const uniqueOrgIds = [...new Set(selectedInvoices.map(inv => inv.organizationId).filter(Boolean))]
+      
+      if (uniqueOrgIds.length === 0) {
+        toast.error('No valid organizations found in selected invoices')
+        setShowGenerateMultiplePopup(false)
+        return
+      }
+
+      console.log('Generating invoices for organizations:', uniqueOrgIds)
+
+      // Generate invoices for each unique organization
+      const generatePromises = uniqueOrgIds.map(orgId =>
+        axiosInstance.post(`/invoices/generate/${orgId}`)
+      )
+
+      const results = await Promise.allSettled(generatePromises)
+      
+      const succeeded = results.filter(r => r.status === 'fulfilled').length
+      const failed = results.filter(r => r.status === 'rejected').length
+
+      if (succeeded > 0) {
+        toast.success(`${succeeded} invoice(s) generated successfully!`)
+      }
+      
+      if (failed > 0) {
+        const failedResults = results.filter(r => r.status === 'rejected')
+        console.error('Failed generations:', failedResults)
+        
+        // Log specific errors
+        failedResults.forEach((result, index) => {
+          console.error(`Failed to generate invoice for org ${uniqueOrgIds[index]}:`, result.reason?.response?.data)
+        })
+        
+        toast.warning(`${failed} invoice(s) failed to generate. Check console for details.`)
+      }
+
+      // Refresh the invoices list
+      await fetchInvoices(currentPage, debouncedSearchQuery)
+      setSelectedInvoices([])
+      setShowGenerateMultiplePopup(false)
+      setShowBulkDropdown(false)
+    } catch (error) {
+      console.error('Error generating invoices:', error)
+      toast.error(error.response?.data?.message || 'Failed to generate invoices')
+    } finally {
+      setGenerateLoading(false)
+    }
   }
 
   const handleViewArchive = () => {
@@ -709,12 +691,47 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     setSelectedInvoices(selectedItems)
   }
 
+  const handleBulkExportInvoices = async () => {
+    if (selectedInvoices.length === 0) {
+      toast.warning('Please select at least one invoice to export')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      
+      // Export each selected invoice as PDF
+      const exportPromises = selectedInvoices.map(invoice =>
+        handleExportInvoicePDF(invoice)
+      )
+
+      await Promise.allSettled(exportPromises)
+      
+      toast.success(`${selectedInvoices.length} invoice(s) exported successfully!`)
+      setSelectedInvoices([])
+      setShowBulkDropdown(false)
+    } catch (error) {
+      console.error('Error exporting invoices:', error)
+      toast.error('Failed to export some invoices')
+    } finally {
+      setInvoicesLoading(false)
+    }
+  }
+
   const bulkActions = useMemo(() => {
     if (archiveMode) {
       return [
         {
           name: 'Unarchive Selected',
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M16.1256 17.4997H3.87307C2.33504 17.4997 1.37259 15.8361 2.13926 14.5027L8.26554 3.84833C9.03455 2.51092 10.9641 2.51092 11.7332 3.84833L17.8594 14.5027C18.6261 15.8361 17.6637 17.4997 16.1256 17.4997Z" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M10 14.1753L10.0083 14.1661" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ),
           action: async () => {
+            console.log('Unarchive Selected clicked', selectedInvoices)
             if (selectedInvoices.length === 0) {
               toast.warning('Please select at least one invoice')
               return
@@ -735,32 +752,122 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
               setInvoicesLoading(false)
             }
           }
-        },
+        }
+      ]
+    }
+
+    // For instructors (role_id === 2), show only Archive and Export
+    if (isInstructor) {
+      return [
         {
-          name: 'Delete Selected',
-          action: () => {
+          name: 'Archive Invoices',
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <path d="M2.5 16.6667C2.04167 16.6667 1.64944 16.5036 1.32333 16.1775C0.997222 15.8514 0.833889 15.4589 0.833333 15V5.60417C0.583333 5.45139 0.381945 5.25361 0.229167 5.01083C0.076389 4.76805 0 4.48667 0 4.16667V1.66667C0 1.20833 0.163333 0.816111 0.49 0.49C0.816667 0.163889 1.20889 0.000555556 1.66667 0H15C15.4583 0 15.8508 0.163333 16.1775 0.49C16.5042 0.816667 16.6672 1.20889 16.6667 1.66667V4.16667C16.6667 4.48611 16.5903 4.7675 16.4375 5.01083C16.2847 5.25417 16.0833 5.45167 15.8333 5.60333V15C15.8333 15.4583 15.6703 15.8508 15.3442 16.1775C15.0181 16.5042 14.6256 16.6672 14.1667 16.6667H2.5ZM2.5 5.83333V15H14.1667V5.83333H2.5ZM1.66667 4.16667H15V1.66667H1.66667V4.16667ZM6.66667 10H10C10.2361 10 10.4342 9.92 10.5942 9.76C10.7542 9.6 10.8339 9.40222 10.8333 9.16667C10.8328 8.93111 10.7528 8.73333 10.5933 8.57333C10.4339 8.41333 10.2361 8.33333 10 8.33333H6.66667C6.43056 8.33333 6.23278 8.41333 6.07333 8.57333C5.91389 8.73333 5.83389 8.93111 5.83333 9.16667C5.83278 9.40222 5.91278 9.60028 6.07333 9.76083C6.23389 9.92139 6.43167 10.0011 6.66667 10Z" fill="black"/>
+            </svg>
+          ),
+          action: async () => {
+            console.log('Archive Invoices clicked', selectedInvoices)
             if (selectedInvoices.length === 0) {
               toast.warning('Please select at least one invoice')
               return
             }
-            setShowDeleteInvoicePopup(true)
+
+            try {
+              setInvoicesLoading(true)
+              const invoiceIds = selectedInvoices.map(inv => inv.id)
+              const response = await invoiceApi.bulkArchiveInvoices(invoiceIds)
+              toast.success(response.message || `${response.archivedCount} invoice(s) archived successfully!`)
+              setSelectedInvoices([])
+              await fetchInvoices(currentPage, debouncedSearchQuery)
+              setShowBulkDropdown(false)
+            } catch (error) {
+              console.error('❌ Error archiving invoices:', error)
+              toast.error(error.response?.data?.message || 'Failed to archive some invoices')
+            } finally {
+              setInvoicesLoading(false)
+            }
           }
+        },
+        {
+          name: 'Export Invoices',
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 16.6667L15 16.6667" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10.0007 3.33325V13.3333M10.0007 13.3333L12.9173 10.4166M10.0007 13.3333L7.08398 10.4166" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          ),
+          action: handleBulkExportInvoices
         }
       ]
     }
 
     return [
       {
-        name: 'Send Selected',
-        action: handleBulkSendInvoices
-      },
-      {
-        name: 'Archive Selected',
-        action: handleBulkArchiveInvoices
-      },
-      {
-        name: 'Delete Selected',
+        name: 'Generate Invoices',
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M18.3327 5.00016V15.0002C18.3327 15.4585 18.1696 15.851 17.8435 16.1777C17.5174 16.5043 17.1249 16.6674 16.666 16.6668H3.33268C2.87435 16.6668 2.48213 16.5038 2.15602 16.1777C1.8299 15.8516 1.66657 15.4591 1.66602 15.0002V5.00016C1.66602 4.54183 1.82935 4.14961 2.15602 3.8235C2.48268 3.49738 2.8749 3.33405 3.33268 3.3335H16.666C17.1243 3.3335 17.5168 3.49683 17.8435 3.8235C18.1702 4.15016 18.3332 4.54238 18.3327 5.00016ZM3.33268 6.66683H16.666V5.00016H3.33268V6.66683ZM3.33268 10.0002V15.0002H16.666V10.0002H3.33268Z" fill="black"/>
+          </svg>
+        ),
         action: () => {
+          console.log('Generate Invoices clicked', selectedInvoices)
+          handleGenerateMultiple()
+        }
+      },
+      {
+        name: 'Archive Invoices',
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+            <path d="M2.5 16.6667C2.04167 16.6667 1.64944 16.5036 1.32333 16.1775C0.997222 15.8514 0.833889 15.4589 0.833333 15V5.60417C0.583333 5.45139 0.381945 5.25361 0.229167 5.01083C0.076389 4.76805 0 4.48667 0 4.16667V1.66667C0 1.20833 0.163333 0.816111 0.49 0.49C0.816667 0.163889 1.20889 0.000555556 1.66667 0H15C15.4583 0 15.8508 0.163333 16.1775 0.49C16.5042 0.816667 16.6672 1.20889 16.6667 1.66667V4.16667C16.6667 4.48611 16.5903 4.7675 16.4375 5.01083C16.2847 5.25417 16.0833 5.45167 15.8333 5.60333V15C15.8333 15.4583 15.6703 15.8508 15.3442 16.1775C15.0181 16.5042 14.6256 16.6672 14.1667 16.6667H2.5ZM2.5 5.83333V15H14.1667V5.83333H2.5ZM1.66667 4.16667H15V1.66667H1.66667V4.16667ZM6.66667 10H10C10.2361 10 10.4342 9.92 10.5942 9.76C10.7542 9.6 10.8339 9.40222 10.8333 9.16667C10.8328 8.93111 10.7528 8.73333 10.5933 8.57333C10.4339 8.41333 10.2361 8.33333 10 8.33333H6.66667C6.43056 8.33333 6.23278 8.41333 6.07333 8.57333C5.91389 8.73333 5.83389 8.93111 5.83333 9.16667C5.83278 9.40222 5.91278 9.60028 6.07333 9.76083C6.23389 9.92139 6.43167 10.0011 6.66667 10Z" fill="black"/>
+          </svg>
+        ),
+        action: async () => {
+          console.log('Archive Invoices clicked', selectedInvoices)
+          if (selectedInvoices.length === 0) {
+            toast.warning('Please select at least one invoice')
+            return
+          }
+
+          try {
+            setInvoicesLoading(true)
+            const invoiceIds = selectedInvoices.map(inv => inv.id)
+            const response = await invoiceApi.bulkArchiveInvoices(invoiceIds)
+            toast.success(response.message || `${response.archivedCount} invoice(s) archived successfully!`)
+            setSelectedInvoices([])
+            await fetchInvoices(currentPage, debouncedSearchQuery)
+            setShowBulkDropdown(false)
+          } catch (error) {
+            console.error('❌ Error archiving invoices:', error)
+            toast.error(error.response?.data?.message || 'Failed to archive some invoices')
+          } finally {
+            setInvoicesLoading(false)
+          }
+        }
+      },
+      // {
+      //   name: 'Export Invoices',
+      //   icon: (
+      //     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      //       <path d="M17.5 12.5V13.3333C17.5 16.6667 16.25 17.9167 12.9167 17.9167H7.08333C3.75 17.9167 2.5 16.6667 2.5 13.3333V12.5C2.5 9.58333 3.41667 8.41667 5.83333 8.125C6.075 8.1 6.33333 8.08333 6.60417 8.08333H13.3958C13.6667 8.08333 13.925 8.1 14.1667 8.125C16.5833 8.41667 17.5 9.58333 17.5 12.5Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      //       <path d="M14.1667 8.125C13.925 8.1 13.6667 8.08333 13.3958 8.08333H6.60417C6.33333 8.08333 6.075 8.1 5.83333 8.125C5.91667 7.875 6.04167 7.63333 6.20833 7.40833L8.325 4.65833C9.35 3.35833 10.65 3.35833 11.675 4.65833L12.8083 6.09167C13.0833 6.44167 13.2917 6.81667 13.4333 7.21667C13.6667 7.48333 13.9333 7.825 14.1667 8.125Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      //       <path d="M5 13.75H8.33333" stroke="black" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+      //       <path d="M9.58301 13.75H15.833" stroke="black" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+      //     </svg>
+      //   ),
+      //   action: handleBulkExportInvoices
+      // },
+      {
+        name: 'Delete Invoices',
+        icon: (
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M16.1256 17.4997H3.87307C2.33504 17.4997 1.37259 15.8361 2.13926 14.5027L8.26554 3.84833C9.03455 2.51092 10.9641 2.51092 11.7332 3.84833L17.8594 14.5027C18.6261 15.8361 17.6637 17.4997 16.1256 17.4997Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 14.1753L10.0083 14.1661" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        ),
+        action: () => {
+          console.log('Delete Invoices clicked', selectedInvoices)
           if (selectedInvoices.length === 0) {
             toast.warning('Please select at least one invoice')
             return
@@ -769,11 +876,14 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         }
       }
     ]
-  }, [selectedInvoices, archiveMode])
+  }, [selectedInvoices, archiveMode, isInstructor])
 
   const handleClickOutside = (event) => {
     if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
       setShowFilters(false)
+    }
+    if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
+      setShowBulkDropdown(false)
     }
   }
 
@@ -910,13 +1020,11 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             <div className="actions-container">
               {isInstructor ? (
                 <>
-
                   <AcademyBtn
                     title="UPDATE PAYMENT METHODS"
                     icon={plusIcon}
                     onClick={handlePaymentModal}
                   />
-
 
                   <AcademyBtn
                     title="VIEW ARCHIVE"
@@ -924,35 +1032,65 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
                     onClick={handleViewArchive}
                   />
 
-                  <div className="dropdown-wrapper" style={{ position: 'relative' }}>
-                    <div 
+                  <div ref={bulkDropdownRef} style={{ position: 'relative', display: 'inline-block' }}>
+                    <button 
                       className="bulk-actions"
-                      onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setShowBulkDropdown(!showBulkDropdown)
+                      }}
+                      disabled={false}
+                      type="button"
                     >
                       <span>BULK ACTIONS</span>
                       <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                         <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                    </div>
+                    </button>
 
-                    {showBulkDropdown && (
-                      <div className="dropdown-menu">
+                    {showBulkDropdown > 0 && (
+                      <div 
+                        className="dropdown-menu show" 
+                        style={{ 
+                          position: 'absolute',
+                          top: 'calc(100% + 5px)',
+                          right: 0,
+                          backgroundColor: 'white',
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                          zIndex: 9999,
+                          width: 'fit-content',
+                          padding: '0'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         {bulkActions.map((action, index) => (
                           <div 
                             key={index}
                             className="dropdown-item"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation()
                               action.action()
                               setShowBulkDropdown(false)
                             }}
+                            style={{
+                              padding: '10px 10px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px',
+                              transition: 'background-color 0.2s'
+                            }}
                           >
-                            {action.name}
+                            {action.icon && <span>{action.icon}</span>}
+                            <span style={{ fontSize: '14px', color: '#333' }}>{action.name}</span>
                           </div>
                         ))}
                       </div>
                     )}
                   </div>
-
                 </>
               ) : (
                 <>
@@ -968,33 +1106,67 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
                     onClick={handleViewArchive}
                   />
 
-                  <div className="dropdown-wrapper" style={{ position: 'relative' }}>
-                    <div 
+                  <div ref={bulkDropdownRef} style={{ position: 'relative', display: 'inline-block' }}>
+                    <button 
                       className="bulk-actions"
-                      onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setShowBulkDropdown(!showBulkDropdown)
+                      }}
+                      type="button"
+                      style={{
+                        cursor: 'pointer'
+                      }}
                     >
                       <span>BULK ACTIONS</span>
                       <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                         <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                    </div>
+                    </button>
 
-                      {showBulkDropdown && (
-                          <div className="dropdown-menu">
-                            {bulkActions.map((action, index) => (
-                              <div 
-                                key={index}
-                                className="dropdown-item"
-                                onClick={() => {
-                                  action.action()
-                                  setShowBulkDropdown(false)
-                                }}
-                              >
-                                {action.name}
-                              </div>
-                            ))}
+                    {showBulkDropdown && (
+                      <div 
+                        className="dropdown-menu show" 
+                        style={{ 
+                          position: 'absolute',
+                          top: 'calc(100% + 4px)',
+                          right: 0,
+                          backgroundColor: 'white',
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                          width: 'fit-content',
+                          zIndex: 9999,
+                          padding: '8px 0'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {bulkActions.map((action, index) => (
+                          <div 
+                            key={index}
+                            className="dropdown-item"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              action.action()
+                              setShowBulkDropdown(false)
+                            }}
+                            style={{
+                              padding: '10px 10px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px',
+                              transition: 'background-color 0.2s',
+                              fontSize: '14px'
+                            }}
+                          >
+                            {action.icon && <span>{action.icon}</span>}
+                            <span style={{ fontSize: '14px', color: '#333' }}>{action.name}</span>
                           </div>
-                        )}
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </>
               )}
@@ -1101,6 +1273,16 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           onHide={() => setShowPaymentModal(false)}
           paymentData={null}
           onSave={handleSavePayment}
+        />
+
+        <PreviewInvoiceEmailModal
+          show={showPreviewEmailModal}
+          onHide={() => {
+            setShowPreviewEmailModal(false)
+            setInvoiceToSend(null)
+          }}
+          invoiceData={invoiceToSend}
+          onConfirmSend={selectedInvoices.length > 1 ? handleConfirmBulkSendEmail : handleConfirmSendEmail}
         />
       </div>
     </div>

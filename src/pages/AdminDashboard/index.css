@@ -67,8 +67,8 @@ background-color: transparent;
 }
 
 .admin-info-container .info-icon{
-  width: 56px;
-    height: 56px;
+  min-width: 56px;
+    min-height: 56px;
     background-color: #E2E6EC;
     border-radius: 50%;
     display: flex;
@@ -97,6 +97,7 @@ background-color: transparent;
     text-align: center;
     width: 100%;
     border-radius: 8px;
+    height: 100%;
 }
 
 .chart-container {
@@ -129,6 +130,28 @@ background-color: transparent;
 .chart-responsive-wrapper {
   height: 280px;
   width: 100% !important;
+}
+
+.analytics-nav-tabs{
+  border-radius: 8px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15);
+  padding: 4px;
+}
+
+.analytics-tab-btn {
+  background: transparent;
+  font-size: 14px;
+    padding: 9px 0px;
+}
+
+.analytics-tab-btn.active{
+  border-radius: 8px;
+  background: rgba(185, 223, 236, 0.20);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15);
+  color: #000;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 @media (min-width: 1200px) {

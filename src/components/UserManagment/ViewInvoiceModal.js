@@ -413,6 +413,9 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                   </svg>
                 </div>
 
+                {!isInstructor && (
+
+<>
                 <div onClick={() => setMode('edit')} style={{ cursor: 'pointer' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                     <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -427,6 +430,9 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                     <path d="M6.25 9.375V8.25C6.25 7.14543 7.14543 6.25 8.25 6.25H25.5C26.6046 6.25 27.5 7.14543 27.5 8.25V21.75C27.5 22.8546 26.6046 23.75 25.5 23.75H8.25C7.14543 23.75 6.25 22.8546 6.25 21.75V20.625" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
+                </>
+
+                )}
                 </>
                 
               ) : mode === 'edit' && !loading ? (

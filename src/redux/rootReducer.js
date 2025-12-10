@@ -20,6 +20,8 @@ import taskLessonReducer from './taskLessons/reducer'
 import backButtonReducer from './backButtonReducer'
 import sidebarReducer from './sidebar/Reducer'
 import trialTimerReducer from './trialTimer/reducer'
+import adminDashboardReducer from './adminDashboard/reducer'
+
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -41,6 +43,8 @@ const rootReducer = combineReducers({
   portfolio: portfolioReducer,
   backButton: backButtonReducer,
   sidebar: sidebarReducer,
-  trialTimer: trialTimerReducer
+  trialTimer: trialTimerReducer,
+  adminDashboard: adminDashboardReducer
+
 })
 export default rootReducer
