@@ -312,7 +312,8 @@ const InstructorSidebar = (props) => {
         </li>
 
         <li className='sub-li'>
-          <Link to='/dashboard'>
+
+          <Link to={user?.role_id === 1 ? '/dashboard' : '/admin-dashboard'}>
             <div className='d-flex w-100' style={{ alignItems: 'center' }}>
               <Col md='2' className='col-2 icon_container'>
                 <img

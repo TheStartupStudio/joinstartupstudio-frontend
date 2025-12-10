@@ -336,7 +336,7 @@ const handleFileChange = (event) => {
                     name='occupation'
                   />
 
-                  {user?.role_id !== 2 && (
+                  {user?.role_id !== 3 && (
                   <ModalInput
                     id={'address'}
                     labelTitle={'Address EX: San Francisco, USA'}
