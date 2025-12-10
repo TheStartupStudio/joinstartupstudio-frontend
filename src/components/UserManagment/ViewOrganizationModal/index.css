@@ -161,42 +161,153 @@ width: 100%;
 
 .view-organization-modal .org-logos {
   display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 40px;
-  padding: 16px 0;
   justify-content: center;
 }
 
-.view-organization-modal .org-logo {
-  object-fit: contain;
-  border-radius: 8px;
-
-    display: flex;
-width: 192px;
-height: 192px;
-padding: 12px 21px;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 12px;
-border-radius: 8px;
-border: 1px solid var(--COLORS-Lightest-Grey, #F0F2F6);
-background: var(--COLORS-White, #FFF);
+.logo-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-.view-organization-modal .org-logo-horizontal {
+.logo-wrapper {
+  position: relative;
+  border: 2px solid #E2E6EC;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.logo-wrapper.editable {
+  cursor: pointer;
+  border: 2px dashed #E2E6EC;
+}
+
+.logo-wrapper.editable:hover {
+  border-color: #54C7DF;
+  box-shadow: 0 4px 12px rgba(84, 199, 223, 0.2);
+}
+
+.logo-wrapper.uploading {
+  background-color: #f8f9fa;
+}
+
+.org-logo {
+  width: 192px;
+  height: 192px;
+  object-fit: contain;
+  display: block;
+}
+
+.org-logo-horizontal {
+  width: 300px;
+  height: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-placeholder {
+  width: 120px;
+  height: 120px;
   display: flex;
-width: 300px;
-height: 200px;
-padding: 12px 21px;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 20px;
-aspect-ratio: 3/2;
-border-radius: 8px;
-border: 1px solid var(--COLORS-Lightest-Grey, #F0F2F6);
-background: var(--COLORS-White, #FFF);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  gap: 8px;
+}
+
+.logo-wrapper.horizontal .logo-placeholder {
+  width: 300px;
+  height: 200px;
+}
+
+.logo-placeholder p {
+  margin: 0;
+  font-size: 12px;
+  text-align: center;
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+  gap: 8px;
+}
+
+.logo-wrapper.editable:hover .logo-overlay {
+  opacity: 1;
+}
+
+.logo-overlay p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.logo-uploading {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.logo-wrapper.horizontal .logo-uploading {
+  width: 200px;
+  height: 80px;
+}
+
+.logo-uploading p {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.remove-logo-btn {
+  background: #ff4444;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position:absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.remove-logo-btn:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
+
+.logo-requirements {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 .view-organization-modal .admin-details {

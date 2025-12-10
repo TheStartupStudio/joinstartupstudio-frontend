@@ -75,6 +75,7 @@ const AdminDashboard = () => {
   const { user } = useSelector((state) => state.user.user)
   const userRole = user?.role_id || localStorage.getItem('role')
   const isInstructor = userRole === 2 || userRole === 'instructor' || userRole === 'trial'
+  const universityId = user?.universityId || user?.University?.id
 
   const [activeAnalyticsTab, setActiveAnalyticsTab] = useState('demographics')
   const [showOrganizationModal, setShowOrganizationModal] = useState(false)
@@ -734,6 +735,7 @@ const AdminDashboard = () => {
         <ViewOrganizationModal
           show={showOrganizationModal}
           onHide={() => setShowOrganizationModal(false)}
+          universityId={universityId}
         />
       )}
 
