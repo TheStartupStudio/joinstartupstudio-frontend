@@ -27,6 +27,8 @@ import warningTriangle from '../../assets/images/academy-icons/warning-triangle.
 import AcademyBtn from '../../components/AcademyBtn'
 import AddCommentModal from './AddCommentModal'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
+
 
 const ForumPostSkeleton = () => {
   return (
@@ -237,7 +239,7 @@ const CommentSection = () => {
             author: {
               id: response.data.author?.id,
               name: response.data.author?.name,
-              avatar: response.data.author?.avatar || 'https://via.placeholder.com/40'
+              avatar: response.data.author?.avatar || blankProfile
             },
             date: response.data.date,
             comments: response.data.comments || 0,
@@ -487,7 +489,7 @@ const CommentSection = () => {
           <div className="forum-post-main">
             <div className="post-avatar-container">
               <img
-                src={comment.author.avatar || 'https://via.placeholder.com/40'}
+                src={comment.author.avatar}
                 alt={comment.author.name}
                 className="post-avatar"
               />

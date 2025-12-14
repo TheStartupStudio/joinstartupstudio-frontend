@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,6 +16,7 @@ import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 import uploadImage from '../../assets/images/academy-icons/svg/upload-image.svg'
+import spark from '../../assets/images/academy-icons/svg/spark.svg'
 import { userUpdate, userUpdateProfileImage } from '../../redux'
 import {
   editSocialMedia,
@@ -30,6 +31,10 @@ import ModalInput from '../ModalInput/ModalInput'
 import ImageCropper from '../ImageCropper'
 import AvatarEditor from 'react-avatar-editor'
 import { setImageCropperData, setCroppedImage } from '../../redux'
+import CustomBirthDateCalendar from '../CustomBirthDateCalendar'
+import { FaRegCalendarAlt } from 'react-icons/fa'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 function EditUserModal({ isOpen, toggle, subToggle }) {
   const [loading, setLoading] = useState(false)
@@ -40,6 +45,12 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
   const [scale, setScale] = useState(1)
   const [rotate, setRotate] = useState(0)
   const editorRef = React.useRef(null)
+
+  // Demographics states
+  const [showStateDropdown, setShowStateDropdown] = useState(false)
+  const [showGenderDropdown, setShowGenderDropdown] = useState(false)
+  const [showCalendar, setShowCalendar] = useState(false)
+  const calendarRef = useRef(null)
 
   // Add null check for user state
   const userState = useSelector((state) => state.user?.user) || {}
@@ -52,7 +63,11 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     bio: user?.bio || '',
     profession: user?.profession || '',
     address: user?.address || '',
-    profile_image: user?.profile_image || ''
+    profile_image: user?.profile_image || '',
+    city: user?.city || '',
+    state: user?.state || '',
+    gender: user?.gender || '',
+    birthDate: user?.birthDate ? new Date(user.birthDate) : null
   })
 
   const [changedMedias, setChangedMedias] = useState({
@@ -65,14 +80,29 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
 
   const dispatch = useDispatch()
 
-const handleFileChange = (event) => {
-  const selectedFile = event.target.files[0];
-  if (validateFile(selectedFile)) {
-    setEditorImage(selectedFile);
-    dispatch(setImageCropperData(true)); // triggers cropper
-  }
-};
+  // Dropdown options
+  const genderOptions = ['Female', 'Male', 'Non-binary', 'Other']
+  
+  const stateOptions = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+    'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
+    'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+    'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
+    'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
+    'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
+    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
+    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
+    'West Virginia', 'Wisconsin', 'Wyoming'
+  ]
 
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (validateFile(selectedFile)) {
+      setEditorImage(selectedFile);
+      dispatch(setImageCropperData(true));
+    }
+  };
 
   const handleDrop = (event) => {
     event.preventDefault()
@@ -99,96 +129,180 @@ const handleFileChange = (event) => {
     return true
   }
 
-  const editUser = async (changedUser, changedMedias, imageFile) => {
-    if (!changedUser?.name) {
-      toast.error(<IntlMessages id='alerts.name_required' />)
-      return
-    }
-    if (!changedUser.email || changedUser.email === '') {
-      toast.error(<IntlMessages id='alerts.email_required' />)
-      return
-    }
-    if (!validateEmail(changedUser.email)) {
-      toast.error(<IntlMessages id='alerts.valid_email' />)
-      return
-    }
+  const handleBirthDateChange = (date) => {
+    setChangedUser((prevData) => ({
+      ...prevData,
+      birthDate: date
+    }))
+    setShowCalendar(false)
+  }
 
-    setLoading(true)
+  const handleDropdownSelect = (field, value) => {
+    setChangedUser(prev => ({
+      ...prev,
+      [field]: value
+    }))
+    setShowGenderDropdown(false)
+    setShowStateDropdown(false)
+  }
 
-    try {
-      let profileImageUrl = changedUser.profile_image
-
-      if (!profileImageUrl) {
-        dispatch(userUpdateProfileImage(profileImageUrl))
-      }
-
-      if (imageFile) {
-        const formData = new FormData()
-        formData.append('img', imageFile)
-
-        const res = await axiosInstance.post('/upload/img', formData)
-
-        if (res.data.success) {
-          profileImageUrl = res.data.fileLocation
-          dispatch(userUpdateProfileImage(profileImageUrl))
-        } else {
-          toast.error('Image upload failed')
-        }
-      }
-
-      const params = {
-        name: changedUser.name,
-        bio: changedUser.bio,
-        profession: changedUser.profession,
-        address: changedUser.address,
-        social_links: changedMedias,
-        profile_image: profileImageUrl,
-        language: changedUser.language,
-        phone_number: changedUser.phone_number,
-        email: changedUser.email
-      }
-
-      const res = await axiosInstance.put('/users', params)
-
-      setLoading(false)
-      const user = JSON.parse(localStorage.getItem('user'))
-      const userProfession = user ? user.user?.profession : null
-
-      if (user.email !== changedUser.email) {
-        dispatch(setEmail(changedUser.email))
-      }
-
-      if (localStorage.getItem('name') !== res.data.name) {
-        localStorage.setItem('name', res.data.name)
-        dispatch(userUpdate(res.data.name))
-      }
-
-      if (userProfession !== res.data.profession) {
-        const updatedUser = {
-          ...user,
-          profession: res.data.profession
-        }
-        localStorage.setItem('user', JSON.stringify(updatedUser))
-        dispatch(userUpdateProfession(res.data.profession))
-      }
-
-      // if (profileImageUrl !== res.data.profile_image) {
-      //   localStorage.setItem('profileImage', res.data.profile_image)
-      //   dispatch(userUpdateProfileImage(res.data.profile_image))
-      // }
-
-      if (user.user.bio !== res.data.bio) {
-        dispatch(setBio(res.data.bio))
-      }
-
-      toast.success(<IntlMessages id='alert.my_account.success_change' />)
-      console.log('social links:', params.social_links)
-      dispatch(editSocialMedia(params.social_links))
-    } catch (err) {
-      toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-      setLoading(false)
+  const handleInputFocus = (inputId) => {
+    const inputElement = document.getElementById(inputId)
+    if (inputElement) {
+      inputElement.focus()
     }
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setShowCalendar(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const editUser = async (changedUser, changedMedias, imageFile) => {
+  if (!changedUser?.name) {
+    toast.error(<IntlMessages id='alerts.name_required' />)
+    return
+  }
+  if (!changedUser.email || changedUser.email === '') {
+    toast.error(<IntlMessages id='alerts.email_required' />)
+    return
+  }
+  if (!validateEmail(changedUser.email)) {
+    toast.error(<IntlMessages id='alerts.valid_email' />)
+    return
+  }
+
+  // Validate demographics for students only
+  if (user?.role_id === 1) {
+    if (!changedUser.address?.trim()) {
+      toast.error('Address is required')
+      return
+    }
+    if (!changedUser.city?.trim()) {
+      toast.error('City is required')
+      return
+    }
+    if (!changedUser.state) {
+      toast.error('State is required')
+      return
+    }
+    if (!changedUser.gender) {
+      toast.error('Gender is required')
+      return
+    }
+    if (!changedUser.birthDate) {
+      toast.error('Birth date is required')
+      return
+    } else {
+      const today = new Date()
+      const selectedDate = new Date(changedUser.birthDate)
+      
+      if (selectedDate > today) {
+        toast.error('Birth date cannot be in the future')
+        return
+      }
+    }
+  }
+
+  setLoading(true)
+
+  try {
+    let profileImageUrl = changedUser.profile_image
+
+    if (!profileImageUrl) {
+      dispatch(userUpdateProfileImage(profileImageUrl))
+    }
+
+    if (imageFile) {
+      const formData = new FormData()
+      formData.append('img', imageFile)
+
+      const res = await axiosInstance.post('/upload/img', formData)
+
+      if (res.data.success) {
+        profileImageUrl = res.data.fileLocation
+        dispatch(userUpdateProfileImage(profileImageUrl))
+      } else {
+        toast.error('Image upload failed')
+      }
+    }
+
+    const params = {
+      name: changedUser.name,
+      bio: changedUser.bio,
+      profession: changedUser.profession,
+      address: changedUser.address,
+      social_links: changedMedias,
+      profile_image: profileImageUrl,
+      language: changedUser.language,
+      phone_number: changedUser.phone_number,
+      email: changedUser.email
+    }
+
+    // Add demographics fields for students - FIXED: Convert Date to ISO string
+    if (user?.role_id === 1) {
+      params.city = changedUser.city
+      params.state = changedUser.state
+      params.gender = changedUser.gender
+      // Convert Date object to ISO string format (YYYY-MM-DD)
+      params.birthDate = changedUser.birthDate 
+        ? (changedUser.birthDate instanceof Date 
+            ? changedUser.birthDate.toISOString().split('T')[0]
+            : changedUser.birthDate)
+        : null
+    }
+
+    const res = await axiosInstance.put('/users', params)
+
+    setLoading(false)
+    const storedUser = JSON.parse(localStorage.getItem('user'))
+    const userProfession = storedUser ? storedUser.user?.profession : null
+
+    if (storedUser.email !== changedUser.email) {
+      dispatch(setEmail(changedUser.email))
+    }
+
+    if (localStorage.getItem('name') !== res.data.name) {
+      localStorage.setItem('name', res.data.name)
+      dispatch(userUpdate(res.data.name))
+    }
+
+    if (userProfession !== res.data.profession) {
+      const updatedUser = {
+        ...storedUser,
+        user: {
+          ...storedUser.user,
+          profession: res.data.profession
+        }
+      }
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+      dispatch(userUpdateProfession(res.data.profession))
+    }
+
+    if (storedUser.user.bio !== res.data.bio) {
+      dispatch(setBio(res.data.bio))
+    }
+
+    toast.success(<IntlMessages id='alert.my_account.success_change' />)
+    dispatch(editSocialMedia(params.social_links))
+    
+    // Close the modal after successful save
+    toggle()
+  } catch (err) {
+    console.error('Error updating user:', err)
+    const errorMessage = err.response?.data?.error || err.response?.data?.message
+    toast.error(errorMessage || <IntlMessages id='alerts.something_went_wrong' />)
+    setLoading(false)
+  }
+}
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -198,7 +312,7 @@ const handleFileChange = (event) => {
 
   const handlePasswordChange = async (event) => {
     event.preventDefault();
-    setResetPasswordDisabled(true); // Disable button at start
+    setResetPasswordDisabled(true);
     setLoading(true);
     
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -241,11 +355,10 @@ const handleFileChange = (event) => {
       toast.error(<IntlMessages id='alerts.something_went_wrong' />);
     } finally {
       setLoading(false);
-      setResetPasswordDisabled(false); // Re-enable button after completion
+      setResetPasswordDisabled(false);
     }
   }
 
-  // After cropping, set the cropped image as imageFile
   useEffect(() => {
     if (general.croppedImage) {
       setImageFile(general.croppedImage)
@@ -255,7 +368,6 @@ const handleFileChange = (event) => {
     }
   }, [general.croppedImage])
 
-  // Show cropper only when imageCropperData is set
   useEffect(() => {
     if (general.imageCropperData) {
       setShowCropper(true)
@@ -276,6 +388,8 @@ const handleFileChange = (event) => {
     }
   }
 
+  const isStudent = user?.role_id === 1
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle}>
@@ -286,15 +400,15 @@ const handleFileChange = (event) => {
                 {user?.role_id === 3 ? 'Edit Admin Details' : 'Edit Personal Details'}
             </h3>
             <div 
-  className={`d-flex gap-2 reset-pass-btn ${resetPasswordDisabled ? 'disabled' : ''}`} 
-  onClick={!resetPasswordDisabled ? handlePasswordChange : undefined}
-  style={{ cursor: resetPasswordDisabled ? 'not-allowed' : 'pointer' }}
->
-  <img src={resetLogo} alt='reset' className='reset-btn-edit' />
-  <h3 className='fs-15' style={{ marginBottom: '0' }}>
-    Reset Password
-  </h3>
-</div>
+              className={`d-flex gap-2 reset-pass-btn ${resetPasswordDisabled ? 'disabled' : ''}`} 
+              onClick={!resetPasswordDisabled ? handlePasswordChange : undefined}
+              style={{ cursor: resetPasswordDisabled ? 'not-allowed' : 'pointer' }}
+            >
+              <img src={resetLogo} alt='reset' className='reset-btn-edit' />
+              <h3 className='fs-15' style={{ marginBottom: '0' }}>
+                Reset Password
+              </h3>
+            </div>
           </div>
 
           <form>
@@ -336,94 +450,473 @@ const handleFileChange = (event) => {
                     name='occupation'
                   />
 
-                  {user?.role_id !== 3 && (
-                  <ModalInput
-                    id={'address'}
-                    labelTitle={'Address EX: San Francisco, USA'}
-                    imgSrc={penIcon}
-                    value={changedUser.address}
-                    onChange={(e) =>
-                      setChangedUser({
-                        ...changedUser,
-                        address: e.target.value
-                      })
-                    }
-                    name='address'
-                  />
+                  {user?.role_id !== 3 && !isStudent && (
+                    <ModalInput
+                      id={'address'}
+                      labelTitle={'Address EX: San Francisco, USA'}
+                      imgSrc={penIcon}
+                      value={changedUser.address}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          address: e.target.value
+                        })
+                      }
+                      name='address'
+                    />
                   )}
                 </div>
               </div>
               <div>
                 <h4 className='fs-15'>Headshot</h4>
                 <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
-  {(imageFile || changedUser.profile_image) ? (
-    <>
-      <img
-        className='trash-icon align-self-end cursor-pointer'
-        src={trashIcon}
-        alt='trash'
-        onClick={() => {
-          setChangedUser({ ...changedUser, profile_image: '' });
-          setImageFile(null);
-        }}
-      />
-      <img
-        className='rounded-circle profile-container-pic'
-        src={
-          imageFile
-            ? URL.createObjectURL(imageFile)
-            : changedUser.profile_image
-        }
-        alt='profile'
-        style={{
-          width: '100px',
-          height: '100px',
-          objectFit: 'cover',
-          borderRadius: '50%'
-        }}
-      />
-    </>
-  ) : (
-    <div
-      className='upload-box text-center cursor-pointer'
-      onClick={() => document.getElementById('fileInput').click()}
-      onDrop={handleDrop}
-      onDragOver={(e) => e.preventDefault()}
-    >
-      <input
-        type='file'
-        id='fileInput'
-        className='d-none'
-        accept='image/png, image/jpeg, image/jpg'
-        onChange={handleFileChange}
-      />
-      <div className='upload-area'>
-        <img
-          src={uploadImage}
-          alt='Upload Icon'
-          className='upload-icon'
-        />
-        <p className='upload-text'>
-          <span className='fw-medium'>Click to upload</span>
-          <br />
-          <span className='text-secondary'>or drag and drop</span>
-        </p>
-        <p className='fs-14'>
-          Only png, jpg, or jpeg file format supported (max. 10Mb)
-        </p>
-      </div>
-    </div>
-  )}
-</div>
-
+                  {(imageFile || changedUser.profile_image) ? (
+                    <>
+                      <img
+                        className='trash-icon align-self-end cursor-pointer'
+                        src={trashIcon}
+                        alt='trash'
+                        onClick={() => {
+                          setChangedUser({ ...changedUser, profile_image: '' });
+                          setImageFile(null);
+                        }}
+                      />
+                      <img
+                        className='rounded-circle profile-container-pic'
+                        src={
+                          imageFile
+                            ? URL.createObjectURL(imageFile)
+                            : changedUser.profile_image
+                        }
+                        alt='profile'
+                        style={{
+                          width: '100px',
+                          height: '100px',
+                          objectFit: 'cover',
+                          borderRadius: '50%'
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <div
+                      className='upload-box text-center cursor-pointer'
+                      onClick={() => document.getElementById('fileInput').click()}
+                      onDrop={handleDrop}
+                      onDragOver={(e) => e.preventDefault()}
+                    >
+                      <input
+                        type='file'
+                        id='fileInput'
+                        className='d-none'
+                        accept='image/png, image/jpeg, image/jpg'
+                        onChange={handleFileChange}
+                      />
+                      <div className='upload-area'>
+                        <img
+                          src={uploadImage}
+                          alt='Upload Icon'
+                          className='upload-icon'
+                        />
+                        <p className='upload-text'>
+                          <span className='fw-medium'>Click to upload</span>
+                          <br />
+                          <span className='text-secondary'>or drag and drop</span>
+                        </p>
+                        <p className='fs-14'>
+                          Only png, jpg, or jpeg file format supported (max. 10Mb)
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
+            {/* Demographics Section - Only for Students */}
+            {isStudent && (
+              <>
+                <div className="mt-5">
+                  <div className="d-flex align-items-center gap-2 mb-3" style={{background: 'rgba(227, 229, 233, 0.50)', padding: '4px'}}>
+                    <img src={spark} alt="Spark Icon" style={{ width: '20px', height: '20px' }} />
+                    <h4 className='fs-15 mb-0'>Demographics</h4>
+                  </div>
 
-                        {/* Only show Social Media Profiles for non-instructor users */}
+                  {/* Address */}
+                  <div className="mb-3" style={{ position: 'relative' }}>
+                    <div 
+                      style={{
+                        borderRadius: '12px',
+                        border: 'none',
+                        padding: '1rem 0.625rem 0.625rem',
+                        boxShadow: '0px 3px 6px #00000029',
+                        background: '#ffffff',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => !loading && handleInputFocus('student-address')}
+                    >
+                      <input
+                        type="text"
+                        value={changedUser.address}
+                        onChange={(e) => !loading && setChangedUser({ ...changedUser, address: e.target.value })}
+                        className="form-input"
+                        placeholder=" "
+                        id="student-address"
+                        disabled={loading}
+                        style={{
+                          width: '100%',
+                          border: 'none',
+                          outline: 'none',
+                          fontSize: '14px',
+                          fontFamily: 'Montserrat',
+                          background: 'transparent'
+                        }}
+                      />
+                      <label 
+                        style={{
+                          position: 'absolute',
+                          top: changedUser.address ? '4px' : '50%',
+                          left: '14px',
+                          fontSize: changedUser.address ? '12px' : '14px',
+                          color: '#6F6F6F',
+                          transition: 'all 0.2s',
+                          pointerEvents: 'none',
+                          transform: changedUser.address ? 'translateY(0)' : 'translateY(-50%)',
+                          fontFamily: 'Montserrat'
+                        }}
+                      >
+                        Student Address
+                      </label>
+                      {!loading && (
+                        <FontAwesomeIcon 
+                          icon={faPencilAlt} 
+                          style={{
+                            position: 'absolute',
+                            right: '14px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#6F6F6F',
+                            fontSize: '14px'
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* City and State Row */}
+                  <div className="d-flex gap-2 mb-3">
+                    {/* City */}
+                    <div style={{ flex: 1, position: 'relative' }}>
+                      <div 
+                        style={{
+                          borderRadius: '12px',
+                          border: 'none',
+                          padding: '1rem 0.625rem 0.625rem',
+                          boxShadow: '0px 3px 6px #00000029',
+                          background: '#ffffff',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => !loading && handleInputFocus('student-city')}
+                      >
+                        <input
+                          type="text"
+                          value={changedUser.city}
+                          onChange={(e) => !loading && setChangedUser({ ...changedUser, city: e.target.value })}
+                          className="form-input"
+                          placeholder=" "
+                          id="student-city"
+                          disabled={loading}
+                          style={{
+                            width: '100%',
+                            border: 'none',
+                            outline: 'none',
+                            fontSize: '14px',
+                            fontFamily: 'Montserrat',
+                            background: 'transparent'
+                          }}
+                        />
+                        <label 
+                          style={{
+                            position: 'absolute',
+                            top: changedUser.city ? '4px' : '50%',
+                            left: '14px',
+                            fontSize: changedUser.city ? '12px' : '14px',
+                            color: '#6F6F6F',
+                            transition: 'all 0.2s',
+                            pointerEvents: 'none',
+                            transform: changedUser.city ? 'translateY(0)' : 'translateY(-50%)',
+                            fontFamily: 'Montserrat'
+                          }}
+                        >
+                          Student City
+                        </label>
+                        {!loading && (
+                          <FontAwesomeIcon 
+                            icon={faPencilAlt} 
+                            style={{
+                              position: 'absolute',
+                              right: '14px',
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              color: '#6F6F6F',
+                              fontSize: '14px'
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* State */}
+                    <div style={{ flex: 1, position: 'relative' }}>
+                      <div
+                        style={{
+                          borderRadius: '12px',
+                          border: 'none',
+                          padding: '1rem 0.625rem 0.625rem',
+                          boxShadow: '0px 3px 6px #00000029',
+                          background: '#ffffff',
+                          cursor: 'pointer',
+                          position: 'relative'
+                        }}
+                        onClick={() => !loading && setShowStateDropdown(!showStateDropdown)}
+                      >
+                        <label 
+                          style={{
+                            position: 'absolute',
+                            top: '4px',
+                            left: '14px',
+                            fontSize: '12px',
+                            color: '#6F6F6F',
+                            fontFamily: 'Montserrat'
+                          }}
+                        >
+                          Student State
+                        </label>
+                        <span style={{
+                          fontSize: '14px',
+                          fontFamily: 'Montserrat',
+                          color: changedUser.state ? '#000' : '#6F6F6F',
+                          display: 'block',
+                        }}>
+                          {changedUser.state || ''}
+                        </span>
+                        <svg 
+                          width="12" 
+                          height="8" 
+                          viewBox="0 0 12 8" 
+                          fill="none"
+                          style={{
+                            position: 'absolute',
+                            right: '14px',
+                            top: '50%',
+                            transform: 'translateY(-50%)'
+                          }}
+                        >
+                          <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      {showStateDropdown && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          marginTop: '4px',
+                          maxHeight: '200px',
+                          overflowY: 'auto',
+                          backgroundColor: '#fff',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+                          zIndex: 1000
+                        }}>
+                          {stateOptions.map((state, index) => (
+                            <div
+                              key={index}
+                              style={{
+                                padding: '10px 14px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontFamily: 'Montserrat',
+                              }}
+                              onClick={() => handleDropdownSelect('state', state)}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                              {state}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Gender and Birth Date Row */}
+                  <div className="d-flex gap-2 mb-3">
+                    {/* Gender */}
+                    <div style={{ flex: 1, position: 'relative' }}>
+                      <div
+                        style={{
+                          borderRadius: '12px',
+                          border: 'none',
+                          padding: '1rem 0.625rem 0.625rem',
+                          boxShadow: '0px 3px 6px #00000029',
+                          background: '#ffffff',
+                          cursor: 'pointer',
+                          position: 'relative'
+                        }}
+                        onClick={() => !loading && setShowGenderDropdown(!showGenderDropdown)}
+                      >
+                        <label 
+                          style={{
+                            position: 'absolute',
+                            top: '8px',
+                            left: '14px',
+                            fontSize: '12px',
+                            color: '#6F6F6F',
+                            fontFamily: 'Montserrat'
+                          }}
+                        >
+                          Gender
+                        </label>
+                        <span style={{
+                          fontSize: '14px',
+                          fontFamily: 'Montserrat',
+                          color: changedUser.gender ? '#000' : '#6F6F6F',
+                          display: 'block',
+                          paddingTop: '8px'
+                        }}>
+                          {changedUser.gender || ''}
+                        </span>
+                        <svg 
+                          width="12" 
+                          height="8" 
+                          viewBox="0 0 12 8" 
+                          fill="none"
+                          style={{
+                            position: 'absolute',
+                            right: '14px',
+                            top: '50%',
+                            transform: 'translateY(-50%)'
+                          }}
+                        >
+                          <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      {showGenderDropdown && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          marginTop: '4px',
+                          backgroundColor: '#fff',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+                          zIndex: 1000
+                        }}>
+                          {genderOptions.map((gender, index) => (
+                            <div
+                              key={index}
+                              style={{
+                                padding: '10px 14px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontFamily: 'Montserrat',
+                              }}
+                              onClick={() => handleDropdownSelect('gender', gender)}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                            >
+                              {gender}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Birth Date */}
+                    <div style={{ flex: 1, position: 'relative' }} ref={calendarRef}>
+                      <div 
+                        style={{
+                          borderRadius: '12px',
+                          border: 'none',
+                          padding: '0.425rem 0.625rem 0.3rem 0.625rem',
+                          boxShadow: '0px 3px 6px #00000029',
+                          background: '#ffffff',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => !loading && setShowCalendar(!showCalendar)}
+                      >
+                        <div className='d-flex align-items-center justify-content-between'>
+                          <div className='d-flex align-items-center gap-2 w-100'>
+                            <FaRegCalendarAlt 
+                              style={{ 
+                                color: '#6F6F6F', 
+                                fontSize: '18px',
+                                marginLeft: '4px'
+                              }} 
+                            />
+                            <div style={{ flex: 1 }}>
+                              <label 
+                                style={{
+                                  fontSize: '12px',
+                                  color: '#6F6F6F',
+                                  display: 'block',
+                                  fontFamily: 'Montserrat'
+                                }}
+                              >
+                                Birth Date
+                              </label>
+                              <span style={{
+                                fontSize: '14px',
+                                fontFamily: 'Montserrat',
+                                color: changedUser.birthDate ? '#000' : '#6F6F6F'
+                              }}>
+                                {changedUser.birthDate
+                                  ? changedUser.birthDate.toLocaleDateString('en-US', {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                    })
+                                  : ''}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {showCalendar && (
+                        <div 
+                          style={{
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            right: 0,
+                            marginTop: '8px',
+                            zIndex: 1000,
+                            background: '#fff',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)'
+                          }}
+                        >
+                          <CustomBirthDateCalendar
+                            selectedDate={changedUser.birthDate}
+                            onDateChange={handleBirthDateChange}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Only show Social Media Profiles for non-instructor users */}
             {user?.role_id !== 2 && (
               <div className='mt-5'>
-                <h4 className='fs-15'>Social Media Profiles</h4>
+                 <div className="d-flex align-items-center gap-2 mb-3" style={{background: 'rgba(227, 229, 233, 0.50)', padding: '4px'}}>
+                    <img src={spark} alt="Spark Icon" style={{ width: '20px', height: '20px' }} />
+                    <h4 className='fs-15 mb-0'>Social Media Profiles</h4>
+                  </div>
                 <div className='d-flex flex-column gap-3'>
                   <ModalInput
                     id={'linkedin'}
@@ -490,7 +983,10 @@ const handleFileChange = (event) => {
             )}
 
             <div className='mt-5'>
-              <h4 className='fs-15'>Personal Bio</h4>
+                  <div className="d-flex align-items-center gap-2 mb-3" style={{background: 'rgba(227, 229, 233, 0.50)', padding: '4px'}}>
+                    <img src={spark} alt="Spark Icon" style={{ width: '20px', height: '20px' }} />
+                    <h4 className='fs-15 mb-0'>Personal Bio</h4>
+                  </div>
               <ReactQuill
                 value={changedUser?.bio}
                 onChange={(content) =>
@@ -535,75 +1031,75 @@ const handleFileChange = (event) => {
           </form>
 
           {showCropper && (
-  <div className="cropper-modal" style={{
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    zIndex: 9999,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }}>
-    <div style={{
-      backgroundColor: '#fff',
-      padding: '24px',
-      borderRadius: '8px',
-      textAlign: 'center',
-      maxWidth: '90%',
-      width: '360px'
-    }}>
-      <h4>Crop Your Profile Picture</h4>
-      <AvatarEditor
-        ref={editorRef}
-        image={editorImage}
-        width={200}
-        height={200}
-        border={50}
-        borderRadius={100}
-        color={[255, 255, 255, 0.8]}
-        scale={scale}
-        rotate={rotate}
-        style={{ backgroundColor: '#f5f5f5' }}
-      />
-      <div className='mt-3 d-flex'>
-        <label>
-          Zoom:
-          <input
-            type="range"
-            min="1"
-            max="3"
-            step="0.01"
-            value={scale}
-            onChange={e => setScale(parseFloat(e.target.value))}
-          />
-        </label>
-        <label >
-        Rotate:
-        <input
-          type="range"
-          min="0"
-          max="180"
-          step="1"
-          value={rotate}
-          onChange={e => setRotate(parseInt(e.target.value, 10))}
-        />
-      </label>
-      </div>
-      <div className='mt-3 d-flex justify-content-center gap-3'>
-        <Button onClick={handleCropSave} color="primary">Save</Button>
-        <Button onClick={() => {
-          setShowCropper(false);
-          setEditorImage(null);
-          setScale(1);
-          setRotate(0);
-        }} color="secondary">Cancel</Button>
-      </div>
-    </div>
-  </div>
-)}
+            <div className="cropper-modal" style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              zIndex: 9999,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                backgroundColor: '#fff',
+                padding: '24px',
+                borderRadius: '8px',
+                textAlign: 'center',
+                maxWidth: '90%',
+                width: '360px'
+              }}>
+                <h4>Crop Your Profile Picture</h4>
+                <AvatarEditor
+                  ref={editorRef}
+                  image={editorImage}
+                  width={200}
+                  height={200}
+                  border={50}
+                  borderRadius={100}
+                  color={[255, 255, 255, 0.8]}
+                  scale={scale}
+                  rotate={rotate}
+                  style={{ backgroundColor: '#f5f5f5' }}
+                />
+                <div className='mt-3 d-flex'>
+                  <label>
+                    Zoom:
+                    <input
+                      type="range"
+                      min="1"
+                      max="3"
+                      step="0.01"
+                      value={scale}
+                      onChange={e => setScale(parseFloat(e.target.value))}
+                    />
+                  </label>
+                  <label >
+                    Rotate:
+                    <input
+                      type="range"
+                      min="0"
+                      max="180"
+                      step="1"
+                      value={rotate}
+                      onChange={e => setRotate(parseInt(e.target.value, 10))}
+                    />
+                  </label>
+                </div>
+                <div className='mt-3 d-flex justify-content-center gap-3'>
+                  <Button onClick={handleCropSave} color="primary">Save</Button>
+                  <Button onClick={() => {
+                    setShowCropper(false);
+                    setEditorImage(null);
+                    setScale(1);
+                    setRotate(0);
+                  }} color="secondary">Cancel</Button>
+                </div>
+              </div>
+            </div>
+          )}
 
         </ModalBody>
       </Modal>

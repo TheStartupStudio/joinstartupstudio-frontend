@@ -23,6 +23,8 @@ import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import editIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import AcademyBtn from '../../components/AcademyBtn'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
+
 
 const StartupForumPage = () => {
   const dispatch = useDispatch()
@@ -542,7 +544,7 @@ useEffect(() => {
                     >
                       <div className="post-avatar-container">
                         <img
-                          src={post.author.avatar || 'https://via.placeholder.com/40'}
+                          src={post.author.avatar || blankProfile}
                           alt={post.author.name}
                           className="post-avatar"
                         />
@@ -609,7 +611,7 @@ useEffect(() => {
                           {post.participants && post.participants.slice(0, 4).map((participant, idx) => (
                             <img
                               key={idx}
-                              src={participant}
+                              src={participant || blankProfile}
                               alt="participant"
                               className="participant-avatar"
                             />

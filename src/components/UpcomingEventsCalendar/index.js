@@ -12,25 +12,25 @@ const UpcomingEventsCalendar = () => {
     {
       id: 1,
       title: 'Team Meeting',
-      start: '2025-07-25T23:00:00',
+      start: '2025-01-25T10:00:00',
       type: 'meeting'
     },
     {
       id: 2,
       title: 'Project Review',
-      start: '2025-07-26T23:30:00',
+      start: '2025-01-26T14:30:00',
       type: 'review'
     },
     {
       id: 3,
       title: 'Client Presentation',
-      start: '2025-07-28T23:00:00',
+      start: '2025-01-28T09:00:00',
       type: 'presentation'
     },
     {
       id: 4,
       title: 'Workshop Session',
-      start: '2025-07-29T23:00:00',
+      start: '2025-01-29T15:00:00',
       type: 'workshop'
     }
   ]
@@ -40,7 +40,7 @@ const UpcomingEventsCalendar = () => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ]
 
-  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+  const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear()
