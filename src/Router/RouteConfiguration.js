@@ -317,8 +317,9 @@ export const mutualRoutes = [
   { path: '/startup-forum/introductions', component: StartupForumPage, exact: true },
   { path: '/startup-forum/announcements', component: StartupForumPage, exact: true },
   { path: '/startup-forum/celebrations', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/ideas-feedback', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/misc-topics', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/ask-for-feedback', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/ask-for-collaboration', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/ask-for-mentorship', component: StartupForumPage, exact: true },
   { path: '/startup-forum/:id', component: StartupForumComments, exact: true },
   {
     path: '/iamr',

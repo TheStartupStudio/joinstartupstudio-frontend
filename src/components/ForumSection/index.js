@@ -39,6 +39,20 @@ const ForumSection = () => {
     }
   }
 
+  // Function to get shortened display name for categories
+  const getCategoryDisplayName = (category) => {
+    switch (category) {
+      case 'Ask for Feedback':
+        return 'Feedback'
+      case 'Ask for Collaboration':
+        return 'Collaboration'
+      case 'Ask for Mentorship':
+        return 'Mentorship'
+      default:
+        return category
+    }
+  }
+
   // Fetch forum data from API
   useEffect(() => {
     const fetchForumData = async () => {
@@ -164,7 +178,7 @@ const ForumSection = () => {
                       alt={post.category}
                       className="category-icon"
                     />
-                    {post.category}
+                    {getCategoryDisplayName(post.category)}
                   </span>
                 </div>
 

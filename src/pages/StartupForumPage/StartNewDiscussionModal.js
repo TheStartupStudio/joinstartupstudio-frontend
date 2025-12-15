@@ -46,14 +46,19 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       icon: partyPopper
     },
     {
-      name: 'Ideas & Feedback',
-      color: '#96CEB4',
+      name: 'Ask for Feedback',
+      color: '#F49AC2',
       icon: lightBulb
     },
     {
-      name: 'Misc. Topics',
-      color: '#FFEAA7',
+      name: 'Ask for Collaboration',
+      color: '#A29BFE',
       icon: speechBalloon
+    },
+    {
+      name: 'Ask for Mentorship',
+      color: '#81ECEC',
+      icon: wavingHand
     }
   ]
 

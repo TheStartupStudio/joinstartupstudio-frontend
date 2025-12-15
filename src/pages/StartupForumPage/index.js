@@ -103,9 +103,10 @@ const params = {
           'Introductions': 'introductions',
           'Announcements': 'announcements',
           'Celebrations': 'celebrations',
-          'Ideas & Feedback': 'ideas-feedback',
-          'Misc. Topics': 'misc-topics',
-          'Following': 'following'
+          'Following': 'following',
+          'Ask for Feedback': 'ask-for-feedback',
+          'Ask for Collaboration': 'ask-for-collaboration',
+          'Ask for Mentorship': 'ask-for-mentorship',
         }
 
         const urlCategory = categoryMapping[category]
@@ -195,8 +196,10 @@ useEffect(() => {
     if (path.includes('announcements')) return 'Announcements'
     if (path.includes('celebrations')) return 'Celebrations'
     if (path.includes('ideas') || path.includes('feedback')) return 'Ideas & Feedback'
-    if (path.includes('misc')) return 'Misc. Topics'
     if (path.includes('following')) return 'Following'
+    if(path.includes('ask-for-feedback')) return 'Ask for Feedback'
+    if(path.includes('ask-for-collaboration')) return 'Ask for Collaboration'
+    if(path.includes('ask-for-mentorship')) return 'Ask for Mentorship'
     return 'All Discussions'
   }
 
@@ -208,30 +211,33 @@ useEffect(() => {
     setCurrentPage(1) 
 
     switch (category) {
-      case 'All Discussions':
-        history.push('/startup-forum')
-        break
-      case 'Following':
-        history.push('/startup-forum/following')
-        break
-      case 'Introductions':
-        history.push('/startup-forum/introductions')
-        break
-      case 'Announcements':
-        history.push('/startup-forum/announcements')
-        break
-      case 'Celebrations':
-        history.push('/startup-forum/celebrations')
-        break
-      case 'Ideas & Feedback':
-        history.push('/startup-forum/ideas-feedback')
-        break
-      case 'Misc. Topics':
-        history.push('/startup-forum/misc-topics')
-        break
-      default:
-        history.push('/startup-forum')
-    }
+          case 'All Discussions':
+            history.push('/startup-forum')
+            break
+          case 'Following':
+            history.push('/startup-forum/following')
+            break
+          case 'Introductions':
+            history.push('/startup-forum/introductions')
+            break
+          case 'Announcements':
+            history.push('/startup-forum/announcements')
+            break
+          case 'Celebrations':
+            history.push('/startup-forum/celebrations')
+            break
+          case 'Ask for Feedback':
+            history.push('/startup-forum/ask-for-feedback')
+            break
+          case 'Ask for Collaboration':
+            history.push('/startup-forum/ask-for-collaboration')
+            break
+          case 'Ask for Mentorship':
+            history.push('/startup-forum/ask-for-mentorship')
+            break
+          default:
+            history.push('/startup-forum')
+        }
   }
 
   const getHeaderContent = () => {
@@ -255,17 +261,26 @@ useEffect(() => {
         title: 'CELEBRATIONS',
         description: 'Celebrate your achievements and the achievements of your peers.'
       }
-    } else if (path.includes('ideas') || path.includes('feedback')) {
+    }
+    else if (path.includes('ask-for-feedback')) {
       return {
         icon: lightBulb,
-        title: 'IDEAS & FEEDBACK',
-        description: 'Share your ideas and get feedback from your peers.'
+        title: 'ASK FOR FEEDBACK',
+        description: 'Request feedback on your ideas, projects, or business plans from the community.'
       }
-    } else if (path.includes('misc')) {
+    }
+    else if (path.includes('ask-for-collaboration')) {
+      return {
+        icon: partyPopper,
+        title: 'ASK FOR COLLABORATION',
+        description: 'Find collaborators for your projects or business ventures within the community.'
+      }
+    }
+    else if (path.includes('ask-for-mentorship')) {
       return {
         icon: speechBalloon,
-        title: 'MISC. TOPICS',
-        description: 'Ask questions and chat about other course or entrepreneurship topics.'
+        title: 'ASK FOR MENTORSHIP',
+        description: 'Seek mentorship and guidance from experienced members of the community.'
       }
     }
     return null
@@ -288,14 +303,28 @@ useEffect(() => {
     }
   }
 
+  const getCategoryDisplayName = (category) => {
+    switch (category) {
+      case 'Ask for Feedback':
+        return 'Feedback'
+      case 'Ask for Collaboration':
+        return 'Collaboration'
+      case 'Ask for Mentorship':
+        return 'Mentorship'
+      default:
+        return category
+    }
+  }
+
   const categories = [
     'All Discussions',
     'Following',
     'Introductions',
     'Announcements',
     'Celebrations',
-    'Ideas & Feedback',
-    'Misc. Topics'
+    'Ask for Feedback',
+    'Ask for Collaboration',
+    'Ask for Mentorship',
   ]
 
 const filterOptions = [
@@ -571,7 +600,7 @@ useEffect(() => {
                               alt={post.category}
                               className="category-icon"
                             />
-                            {post.category}
+                            {getCategoryDisplayName(post.category)}
                           </span>
                         </div>
 
@@ -685,12 +714,13 @@ useEffect(() => {
                       onClick={() => handleCategoryClick(category)}
                     >
                       {category === 'All Discussions' && <img src={message} alt="Speech Bubble Icon" />}
-                      {category === 'Following' && <img src={star} alt="Star Icon" className='icon' />}
-                      {category === 'Introductions' && <img src={wavingHand} alt="Waving Hand Icon" />}
-                      {category === 'Announcements' && <img src={loudSpeaker} alt="Megaphone Icon" />}
-                      {category === 'Celebrations' && <img src={partyPopper} alt="Party Popper Icon" />}
-                      {category === 'Ideas & Feedback' && <img src={lightBulb} alt="Light Bulb Icon" />}
-                      {category === 'Misc. Topics' && <img src={speechBalloon} alt="Speech Bubble Icon" />}
+                                            {category === 'Following' && <img src={star} alt="Star Icon" className='icon' />}
+                                            {category === 'Introductions' && <img src={wavingHand} alt="Waving Hand Icon" />}
+                                            {category === 'Announcements' && <img src={loudSpeaker} alt="Megaphone Icon" />}
+                                            {category === 'Celebrations' && <img src={partyPopper} alt="Party Popper Icon" />}
+                                            {category === 'Ask for Feedback' && <img src={speechBalloon} alt="Light Bulb Icon" />}
+                                            {category === 'Ask for Collaboration' && <img src={wavingHand} alt="Speech Bubble Icon" />}
+                                            {category === 'Ask for Mentorship' && <img src={lightBulb} alt="Speech Bubble Icon" />}
                       <span>{category}</span>
                     </div>
                     {category === 'Following' && <hr style={{ width: '100%', borderColor: 'gray', margin: '8px 0' }} />}

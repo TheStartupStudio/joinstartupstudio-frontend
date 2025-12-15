@@ -364,11 +364,14 @@ const CommentSection = () => {
       case 'Celebrations':
         history.push('/startup-forum/celebrations')
         break
-      case 'Ideas & Feedback':
-        history.push('/startup-forum/ideas-feedback')
+      case 'Ask for Feedback':
+        history.push('/startup-forum/ask-for-feedback')
         break
-      case 'Misc. Topics':
-        history.push('/startup-forum/misc-topics')
+      case 'Ask for Collaboration':
+        history.push('/startup-forum/ask-for-collaboration')
+        break
+      case 'Ask for Mentorship':
+        history.push('/startup-forum/ask-for-mentorship')
         break
       default:
         history.push('/startup-forum')
@@ -489,7 +492,7 @@ const CommentSection = () => {
           <div className="forum-post-main">
             <div className="post-avatar-container">
               <img
-                src={comment.author.avatar}
+                src={comment.author.avatar || blankProfile}
                 alt={comment.author.name}
                 className="post-avatar"
               />
@@ -573,8 +576,9 @@ const CommentSection = () => {
     'Introductions',
     'Announcements',
     'Celebrations',
-    'Ideas & Feedback',
-    'Misc. Topics'
+    'Ask for Feedback',
+    'Ask for Collaboration',
+    'Ask for Mentorship',
   ]
 
   const getCategoryIcon = (category) => {
@@ -684,7 +688,7 @@ const CommentSection = () => {
                     <div key={post.id} className="forum-post-main">
                       <div className="post-avatar-container">
                         <img
-                          src={post.author.avatar}
+                          src={post.author.avatar || blankProfile}
                           alt={post.author.name}
                           className="post-avatar"
                         />
@@ -754,7 +758,7 @@ const CommentSection = () => {
                           {post.participants && post.participants.slice(0, 4).map((participant, idx) => (
                             <img
                               key={idx}
-                              src={participant}
+                              src={participant || blankProfile}
                               alt="participant"
                               className="participant-avatar"
                             />
@@ -857,8 +861,9 @@ const CommentSection = () => {
                       {category === 'Introductions' && <img src={wavingHand} alt="Waving Hand Icon" />}
                       {category === 'Announcements' && <img src={loudSpeaker} alt="Megaphone Icon" />}
                       {category === 'Celebrations' && <img src={partyPopper} alt="Party Popper Icon" />}
-                      {category === 'Ideas & Feedback' && <img src={lightBulb} alt="Light Bulb Icon" />}
-                      {category === 'Misc. Topics' && <img src={speechBalloon} alt="Speech Bubble Icon" />}
+                      {category === 'Ask for Feedback' && <img src={speechBalloon} alt="Light Bulb Icon" />}
+                      {category === 'Ask for Collaboration' && <img src={wavingHand} alt="Speech Bubble Icon" />}
+                      {category === 'Ask for Mentorship' && <img src={lightBulb} alt="Speech Bubble Icon" />}
                       <span>{category}</span>
                     </div>
                     {category === 'Following' && <hr style={{ width: '100%', borderColor: 'gray', margin: '8px 0' }} />}
