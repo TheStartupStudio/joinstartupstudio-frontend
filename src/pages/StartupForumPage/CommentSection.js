@@ -27,6 +27,7 @@ import warningTriangle from '../../assets/images/academy-icons/warning-triangle.
 import AcademyBtn from '../../components/AcademyBtn'
 import AddCommentModal from './AddCommentModal'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
+import ReportPostModal from './ReportPostModal'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 
 
@@ -218,6 +219,8 @@ const CommentSection = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [commentToDelete, setCommentToDelete] = useState(null)
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [showReportModal, setShowReportModal] = useState(false)
+  const [reportingPost, setReportingPost] = useState(null)
   const headerRef = useRef(null)
 
   useEffect(() => {
@@ -512,13 +515,58 @@ const CommentSection = () => {
             </div>
 
             <div className="post-content">
-              <div className='d-flex align-items-center gap-1'>
-                <img src={reply} alt="Reply Icon" style={{ filter: 'brightness(100%) saturate(0%)', width: '16px', height: '16px' }} />
-                <h4 style={{ color: 'gray', fontSize: '16px', margin: 0, lineHeight: 'unset' }}>
-                  Reply by {comment.author.name}
-                  {comment.isEdited && <span style={{ fontSize: '12px', color: '#999', marginLeft: '8px' }}>(edited)</span>}
-                </h4>
-              </div>
+
+              <div className='d-flex align-items-center gap-2 mb-1'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M14.25 14.25V11.25C14.25 10.625 14.0312 10.0938 13.5938 9.65625C13.1562 9.21875 12.625 9 12 9H5.11875L7.81875 11.7L6.75 12.75L2.25 8.25L6.75 3.75L7.81875 4.8L5.11875 7.5H12C13.0375 7.5 13.9219 7.86562 14.6531 8.59688C15.3844 9.32812 15.75 10.2125 15.75 11.25V14.25H14.25Z" fill="#6F6F6F"/>
+                </svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <g clip-path="url(#clip0_4573_24)">
+                              <path d="M4.66699 12V11.3333C4.66699 9.49238 6.15938 8 8.00033 8C9.84128 8 11.3337 9.49238 11.3337 11.3333V12" stroke="black" stroke-width="0.9" stroke-linecap="round"/>
+                              <path d="M8 8C9.10457 8 10 7.10457 10 6C10 4.89543 9.10457 4 8 4C6.89543 4 6 4.89543 6 6C6 7.10457 6.89543 8 8 8Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+                              <circle cx="7.99968" cy="7.9987" r="6.66667" stroke="black" stroke-width="0.9"/>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_4573_24">
+                                <rect width="16" height="16" fill="white"/>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          <span style={{ fontSize: '13px', fontWeight: '300', color: 'black' }}>
+                            {comment.author.name || "Unknown Author"} 
+                          </span>
+                        </div>
+                        <h4 className="post-title">{comment.title}</h4>
+                        <div className='d-flex align-items-center gap-2 mb-2'>
+                          <div className='d-flex align-items-center gap-1'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
+                              <path d="M3.64648 6.25L8.8558 6.25" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M3.64648 4.16797L6.77207 4.16797" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M1.5625 10.5692V2.60436C1.5625 2.02896 2.02896 1.5625 2.60436 1.5625H9.8974C10.4728 1.5625 10.9393 2.02896 10.9393 2.60436V7.81368C10.9393 8.38908 10.4728 8.85554 9.8974 8.85554H4.14697C3.83047 8.85554 3.53113 8.99941 3.33341 9.24655L2.11913 10.7644C1.93456 10.9951 1.5625 10.8646 1.5625 10.5692Z" stroke="black" stroke-width="0.781397"/>
+                            </svg>
+
+                            <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
+                              Posted:
+                              <span style={{ marginLeft: '4px', fontWeight: '600', color: "#6F6F6F" }}>
+                                {comment.createdAt || ' Unknown Date'}
+                              </span>
+                            </p>
+                          </div>
+
+
+                          <div className='d-flex align-items-center gap-1'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                              <path d="M9.5 9.5V7.5C9.5 7.08333 9.35417 6.72917 9.0625 6.4375C8.77083 6.14583 8.41667 6 8 6H3.4125L5.2125 7.8L4.5 8.5L1.5 5.5L4.5 2.5L5.2125 3.2L3.4125 5H8C8.69167 5 9.28125 5.24375 9.76875 5.73125C10.2563 6.21875 10.5 6.80833 10.5 7.5V9.5H9.5Z" fill="#1D1B20"/>
+                            </svg>
+
+                            <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
+                              Latest reply from
+                              <span style={{ marginLeft: '2px', fontWeight: '600', color: "#6F6F6F" }}>
+                                {comment.latestReplyUser || ' Unknown Name'}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
               
               {/* Use dangerouslySetInnerHTML for comment content as well */}
               <div 
@@ -607,6 +655,20 @@ const CommentSection = () => {
     if (showDiscussionModal) {
       setEditingPost(null)
     }
+  }
+
+  const handleReportPost = (event) => {
+    event.stopPropagation()
+    // forumData is an array, get the first element (the discussion)
+    if (forumData && forumData.length > 0 && forumData[0]) {
+      setReportingPost(forumData[0])
+      setShowReportModal(true)
+    }
+  }
+
+  const handleReportSuccess = () => {
+    setReportingPost(null)
+    setShowReportModal(false)
   }
 
   const handleDiscussionSuccess = (discussion, action = 'update') => {
@@ -704,7 +766,54 @@ const CommentSection = () => {
                       </div>
 
                       <div className="post-content">
+                        <div className='d-flex align-items-center gap-2 mb-1'>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <g clip-path="url(#clip0_4573_24)">
+                              <path d="M4.66699 12V11.3333C4.66699 9.49238 6.15938 8 8.00033 8C9.84128 8 11.3337 9.49238 11.3337 11.3333V12" stroke="black" stroke-width="0.9" stroke-linecap="round"/>
+                              <path d="M8 8C9.10457 8 10 7.10457 10 6C10 4.89543 9.10457 4 8 4C6.89543 4 6 4.89543 6 6C6 7.10457 6.89543 8 8 8Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+                              <circle cx="7.99968" cy="7.9987" r="6.66667" stroke="black" stroke-width="0.9"/>
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_4573_24">
+                                <rect width="16" height="16" fill="white"/>
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          <span style={{ fontSize: '13px', fontWeight: '300', color: 'black' }}>
+                            {post.author.name || "Unknown Author"} 
+                          </span>
+                        </div>
                         <h4 className="post-title">{post.title}</h4>
+                        <div className='d-flex align-items-center gap-2 mb-2'>
+                          <div className='d-flex align-items-center gap-1'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
+                              <path d="M3.64648 6.25L8.8558 6.25" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M3.64648 4.16797L6.77207 4.16797" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M1.5625 10.5692V2.60436C1.5625 2.02896 2.02896 1.5625 2.60436 1.5625H9.8974C10.4728 1.5625 10.9393 2.02896 10.9393 2.60436V7.81368C10.9393 8.38908 10.4728 8.85554 9.8974 8.85554H4.14697C3.83047 8.85554 3.53113 8.99941 3.33341 9.24655L2.11913 10.7644C1.93456 10.9951 1.5625 10.8646 1.5625 10.5692Z" stroke="black" stroke-width="0.781397"/>
+                            </svg>
+
+                            <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
+                              Posted:
+                              <span style={{ marginLeft: '4px', fontWeight: '600', color: "#6F6F6F" }}>
+                                {post.date || ' Unknown Date'}
+                              </span>
+                            </p>
+                          </div>
+
+
+                          <div className='d-flex align-items-center gap-1'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                              <path d="M9.5 9.5V7.5C9.5 7.08333 9.35417 6.72917 9.0625 6.4375C8.77083 6.14583 8.41667 6 8 6H3.4125L5.2125 7.8L4.5 8.5L1.5 5.5L4.5 2.5L5.2125 3.2L3.4125 5H8C8.69167 5 9.28125 5.24375 9.76875 5.73125C10.2563 6.21875 10.5 6.80833 10.5 7.5V9.5H9.5Z" fill="#1D1B20"/>
+                            </svg>
+
+                            <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
+                              Latest reply from
+                              <span style={{ marginLeft: '2px', fontWeight: '600', color: "#6F6F6F" }}>
+                                {post.lastReplyUser.name || ' Unknown Name'}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
                         {/* Use dangerouslySetInnerHTML to render HTML content properly */}
                         <div 
                           className="post-description comment-description"
@@ -722,6 +831,9 @@ const CommentSection = () => {
                       </div>
 
                       <div className='d-flex flex-column gap-2'>
+
+                        <div className='d-flex align-items-center gap-2'>
+              
                         <div 
                           className='post-comments-count cursor-pointer'
                           onClick={handleFollowDiscussion}
@@ -752,6 +864,29 @@ const CommentSection = () => {
                               : (isFollowing ? 'Following discussion' : 'Follow discussion')
                             }
                           </span>
+                        </div>
+
+
+                        <div 
+                          className='post-comments-count cursor-pointer'
+                          onClick={handleReportPost}
+                          style={{ 
+                            height: '20px',
+                          }}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                            <path d="M2.40002 12.6001V9.41229M2.40002 9.41229C5.89082 6.68229 8.50922 12.1423 12 9.41229V2.58789C8.50922 5.31789 5.89082 -0.142112 2.40002 2.58789V9.41229Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          <span 
+                            className="post-date-paragraph"
+                            style={{ 
+                              color: 'inherit'
+                            }}
+                          >
+                            Report
+                          </span>
+                        </div>
+
                         </div>
 
                         <div className="post-right-section">
@@ -979,6 +1114,14 @@ const CommentSection = () => {
           </div>
         </div>
       )}
+
+      {/* Report Post Modal */}
+      <ReportPostModal
+        show={showReportModal}
+        onHide={() => setShowReportModal(false)}
+        post={reportingPost}
+        onSuccess={handleReportSuccess}
+      />
     </>
   )
 }

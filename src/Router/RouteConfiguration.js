@@ -320,6 +320,7 @@ export const mutualRoutes = [
   { path: '/startup-forum/ask-for-feedback', component: StartupForumPage, exact: true },
   { path: '/startup-forum/ask-for-collaboration', component: StartupForumPage, exact: true },
   { path: '/startup-forum/ask-for-mentorship', component: StartupForumPage, exact: true },
+  { path: '/startup-forum/reported-posts', component: StartupForumPage, exact: true },
   { path: '/startup-forum/:id', component: StartupForumComments, exact: true },
   {
     path: '/iamr',

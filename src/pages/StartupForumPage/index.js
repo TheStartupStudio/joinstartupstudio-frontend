@@ -23,6 +23,7 @@ import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import editIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import AcademyBtn from '../../components/AcademyBtn'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
+import ReportPostModal from './ReportPostModal'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 
 
@@ -48,6 +49,8 @@ const StartupForumPage = () => {
   const [forumData, setForumData] = useState([])
   const [isFetching, setIsFetching] = useState(false)
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
+  const [showReportModal, setShowReportModal] = useState(false)
+  const [reportingPost, setReportingPost] = useState(null)
 
   const toggleDiscussionModal = () => {
     setShowDiscussionModal(prev => !prev)
@@ -107,6 +110,7 @@ const params = {
           'Ask for Feedback': 'ask-for-feedback',
           'Ask for Collaboration': 'ask-for-collaboration',
           'Ask for Mentorship': 'ask-for-mentorship',
+          'Reported Posts': 'reported-posts',
         }
 
         const urlCategory = categoryMapping[category]
@@ -189,6 +193,21 @@ useEffect(() => {
     setShowDiscussionModal(true)
   }
 
+  const handleViewReportedPosts = () => {
+    handleCategoryClick('Reported Posts')
+  }
+
+  const handleReportPost = (post, event) => {
+    event.stopPropagation()
+    setReportingPost(post)
+    setShowReportModal(true)
+  }
+
+  const handleReportSuccess = () => {
+    setReportingPost(null)
+    setShowReportModal(false)
+  }
+
   const getCurrentCategoryFromUrl = () => {
     const path = location.pathname.toLowerCase()
 
@@ -200,6 +219,7 @@ useEffect(() => {
     if(path.includes('ask-for-feedback')) return 'Ask for Feedback'
     if(path.includes('ask-for-collaboration')) return 'Ask for Collaboration'
     if(path.includes('ask-for-mentorship')) return 'Ask for Mentorship'
+    if(path.includes('reported-posts')) return 'Reported Posts'
     return 'All Discussions'
   }
 
@@ -235,6 +255,9 @@ useEffect(() => {
           case 'Ask for Mentorship':
             history.push('/startup-forum/ask-for-mentorship')
             break
+          case 'Reported Posts':
+            history.push('/startup-forum/reported-posts')
+            break
           default:
             history.push('/startup-forum')
         }
@@ -266,21 +289,21 @@ useEffect(() => {
       return {
         icon: lightBulb,
         title: 'ASK FOR FEEDBACK',
-        description: 'Request feedback on your ideas, projects, or business plans from the community.'
+        description: 'Share your ideas and get feedback from your peers.'
       }
     }
     else if (path.includes('ask-for-collaboration')) {
       return {
         icon: partyPopper,
         title: 'ASK FOR COLLABORATION',
-        description: 'Find collaborators for your projects or business ventures within the community.'
+        description: 'Find a peer to collaborate with.'
       }
     }
     else if (path.includes('ask-for-mentorship')) {
       return {
         icon: speechBalloon,
         title: 'ASK FOR MENTORSHIP',
-        description: 'Seek mentorship and guidance from experienced members of the community.'
+        description: 'Ask for and discover mentorship opportunities'
       }
     }
     return null
@@ -702,6 +725,12 @@ useEffect(() => {
           <div className="forum-sidebar">
             <div className="sidebar-section">
               <div className="categories-list">
+                <div className='mb-3'>
+                  <AcademyBtn
+                    title={'View Reported Posts'}
+                    onClick={handleViewReportedPosts}
+                  />
+                </div>
                 <AcademyBtn
                   title={'Start New Discussion'}
                   onClick={handleNewDiscussion}
@@ -738,6 +767,14 @@ useEffect(() => {
         onHide={closeDiscussionModal}
         editingPost={editingPost}
         onSuccess={handleDiscussionSuccess}
+      />
+
+      {/* Report Post Modal */}
+      <ReportPostModal
+        show={showReportModal}
+        onHide={() => setShowReportModal(false)}
+        post={reportingPost}
+        onSuccess={handleReportSuccess}
       />
     </>
   )
