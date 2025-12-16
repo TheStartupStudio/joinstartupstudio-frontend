@@ -1,0 +1,63 @@
+.user-agreement-modal .modal-content {
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 990px;
+}
+
+.user-agreement-modal .modal-header {
+  align-items:start;
+}
+
+.user-agreement-modal .custom-checkbox {
+  font-size: 15px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.user-agreement-modal a{
+    color: #52C7DE !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+}
+
+.user-agreement-modal .custom-checkbox .form-check-input {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+    background: var(--COLORS-White, #FFF);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+  cursor: pointer;
+}
+
+.user-agreement-modal .form-check .form-check-input {
+    float:none;
+    margin-left: 0em;
+    margin: 0;
+}
+
+.user-agreement-modal .custom-checkbox .form-check-input:checked {
+  background-color: #52C7DE;
+  border-color: #52C7DE;
+}
+
+.user-agreement-modal .custom-checkbox .form-check-label {
+  margin-left: 10px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.user-agreement-modal .agreement-checkboxes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .user-agreement-modal .custom-checkbox{
+    border-radius: 4px;
+    background: var(--COLORS-White, #FFF);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+} */

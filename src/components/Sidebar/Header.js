@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { collapseTrue, toggleCollapse } from '../../redux/sidebar/Actions'
 import CloseBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
@@ -49,10 +50,9 @@ const Header = (props) => {
               </h4>
               <p
                 className='powered white-space-no-wrap lh-1'
-                style={{ fontSize: '.65rem' }}
+                style={{ fontSize: '.55rem' }}
               >
-                Online Academy in <br />
-                Entrepreneurship
+                Powered by Learn to Start
               </p>
             </div>
           )}

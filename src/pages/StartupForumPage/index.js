@@ -634,12 +634,18 @@ useEffect(() => {
                             <img src={message} alt="Message Icon" />
                             <p className='mb-0 pb-0 post-date-paragraph'>Posted: <span>{post.date}</span></p>
                           </div>
-                          <div className='d-flex align-items-center gap-2 justify-content-center'>
-                            <img src={reply} alt="Reply Icon" />
-                            <p className='mb-0 pb-0 post-date-paragraph'>
-                              Latest reply from <span>{post.latestReplyFrom}</span>
-                            </p>
-                          </div>
+
+
+                          {
+                            post.latestReplyFrom && (
+                              <div className='d-flex align-items-center gap-2 justify-content-center'>
+                                <img src={reply} alt="Reply Icon" />
+                                <p className='mb-0 pb-0 post-date-paragraph'>
+                                  Latest reply from <span>{post.latestReplyFrom}</span>
+                                </p>
+                              </div>
+                            )                   
+                          }
                         </div>
 
 

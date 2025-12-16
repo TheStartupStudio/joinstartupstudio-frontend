@@ -197,6 +197,17 @@ const CommentSection = () => {
   
   const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
   
+  // Helper function to format date as MM/DD/YYYY
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Unknown Date'
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return 'Unknown Date'
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const year = date.getFullYear()
+    return `${month}/${day}/${year}`
+  }
+  
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('Latest First')
   const [selectedCategory, setSelectedCategory] = useState('All Discussions')
@@ -548,24 +559,30 @@ const CommentSection = () => {
                             <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
                               Posted:
                               <span style={{ marginLeft: '4px', fontWeight: '600', color: "#6F6F6F" }}>
-                                {comment.createdAt || ' Unknown Date'}
+                                {formatDate(comment.createdAt)}
                               </span>
                             </p>
                           </div>
 
+                          {
+                            comment.latestReplyUser && (
+                              <div className='d-flex align-items-center gap-1'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                  <path d="M9.5 9.5V7.5C9.5 7.08333 9.35417 6.72917 9.0625 6.4375C8.77083 6.14583 8.41667 6 8 6H3.4125L5.2125 7.8L4.5 8.5L1.5 5.5L4.5 2.5L5.2125 3.2L3.4125 5H8C8.69167 5 9.28125 5.24375 9.76875 5.73125C10.2563 6.21875 10.5 6.80833 10.5 7.5V9.5H9.5Z" fill="#1D1B20"/>
+                                </svg>
 
-                          <div className='d-flex align-items-center gap-1'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                              <path d="M9.5 9.5V7.5C9.5 7.08333 9.35417 6.72917 9.0625 6.4375C8.77083 6.14583 8.41667 6 8 6H3.4125L5.2125 7.8L4.5 8.5L1.5 5.5L4.5 2.5L5.2125 3.2L3.4125 5H8C8.69167 5 9.28125 5.24375 9.76875 5.73125C10.2563 6.21875 10.5 6.80833 10.5 7.5V9.5H9.5Z" fill="#1D1B20"/>
-                            </svg>
+                                <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
+                                  Latest reply from
+                                  <span style={{ marginLeft: '2px', fontWeight: '600', color: "#6F6F6F" }}>
+                                    {comment.latestReplyUser || ' Unknown Name'}
+                                  </span>
+                                </p>
+                              </div>
+                            )
+                          }
 
-                            <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
-                              Latest reply from
-                              <span style={{ marginLeft: '2px', fontWeight: '600', color: "#6F6F6F" }}>
-                                {comment.latestReplyUser || ' Unknown Name'}
-                              </span>
-                            </p>
-                          </div>
+
+                          
                         </div>
               
               {/* Use dangerouslySetInnerHTML for comment content as well */}
@@ -795,13 +812,15 @@ const CommentSection = () => {
                             <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
                               Posted:
                               <span style={{ marginLeft: '4px', fontWeight: '600', color: "#6F6F6F" }}>
-                                {post.date || ' Unknown Date'}
+                                {formatDate(post.date)}
                               </span>
                             </p>
                           </div>
 
 
-                          <div className='d-flex align-items-center gap-1'>
+                        {
+                          post.lastReplyUser?.name && (
+                            <div className='d-flex align-items-center gap-1'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
                               <path d="M9.5 9.5V7.5C9.5 7.08333 9.35417 6.72917 9.0625 6.4375C8.77083 6.14583 8.41667 6 8 6H3.4125L5.2125 7.8L4.5 8.5L1.5 5.5L4.5 2.5L5.2125 3.2L3.4125 5H8C8.69167 5 9.28125 5.24375 9.76875 5.73125C10.2563 6.21875 10.5 6.80833 10.5 7.5V9.5H9.5Z" fill="#1D1B20"/>
                             </svg>
@@ -809,10 +828,13 @@ const CommentSection = () => {
                             <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
                               Latest reply from
                               <span style={{ marginLeft: '2px', fontWeight: '600', color: "#6F6F6F" }}>
-                                {post.lastReplyUser.name || ' Unknown Name'}
+                                {post.lastReplyUser?.name}
                               </span>
                             </p>
                           </div>
+                          )
+                        }
+                          
                         </div>
                         {/* Use dangerouslySetInnerHTML to render HTML content properly */}
                         <div 

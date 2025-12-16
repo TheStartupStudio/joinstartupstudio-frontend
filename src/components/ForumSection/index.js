@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import './ForumSection.css'
+import UserAgreementModal from '../UserAgreementModal'
 import mentorship from '../../assets/images/academy-icons/svg/icon.core-mentorship-icon.svg'
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
@@ -21,6 +22,7 @@ const ForumSection = () => {
   const history = useHistory()
   const [forumData, setForumData] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showUserAgreement, setShowUserAgreement] = useState(false)
   const currentUser = useSelector((state) => state.user?.user?.user || state.user?.user)
 
   // Function to get the appropriate icon based on category
@@ -69,10 +71,9 @@ const ForumSection = () => {
         const discussions = response.data.discussions || []
        
         
-        // Map the response data to match the expected structure
         const mappedData = discussions.map(post => ({
           ...post,
-          latestReplyFrom: post.author?.name || 'Unknown' // Use optional chaining for safety
+          latestReplyFrom: post.author?.name 
         }))
         
         setForumData(mappedData)
@@ -108,6 +109,27 @@ const ForumSection = () => {
     console.log('Edit post:', post)
   }
 
+  const handleGoToForum = () => {
+    if (!currentUser?.forumAgreement) {
+      setShowUserAgreement(true)
+      return
+    }
+    history.push('/startup-forum')
+  }
+
+  const handlePostClick = (postId) => {
+    if (!currentUser?.forumAgreement) {
+      setShowUserAgreement(true)
+      return
+    }
+    history.push(`/startup-forum/${postId}`)
+  }
+
+  const handleUserAgreementSuccess = () => {
+    setShowUserAgreement(false)
+    history.push('/startup-forum')
+  }
+
   return (
     <div className="forum-section">
       <div className="forum-header">
@@ -118,7 +140,7 @@ const ForumSection = () => {
         <div
           className='cursor-pointer d-flex gap-2 align-items-center'
           style={{fontWeight: 500}}
-          onClick={() => history.push('/startup-forum')}  
+          onClick={handleGoToForum}  
         >
           <span>Go to Forum</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -139,7 +161,7 @@ const ForumSection = () => {
             <div 
               key={post.id} 
               className="forum-post"
-              onClick={() => history.push(`/startup-forum/${post.id}`)}
+              onClick={() => handlePostClick(post.id)}
             >
               <div className="post-avatar-container">
                 <img
@@ -191,12 +213,17 @@ const ForumSection = () => {
                       Posted: <span>{post.date}</span>
                     </p>
                   </div>
-                  <div className='d-flex align-items-center gap-2 justify-content-center'>
+                  {
+                    post.latestReplyFrom && (
+                      <div className='d-flex align-items-center gap-2 justify-content-center'>
                     <img src={reply} alt="Reply Icon" />
                     <p className='mb-0 pb-0 post-date-paragraph'>
                       Latest reply from <span>{post.latestReplyFrom}</span>
                     </p>
                   </div>
+                    )
+
+                  }
                 </div>
 
                 <div
@@ -248,6 +275,13 @@ const ForumSection = () => {
           </div>
         )}
       </div>
+
+      {/* User Agreement Modal */}
+      <UserAgreementModal 
+        show={showUserAgreement}
+        onSuccess={handleUserAgreementSuccess}
+        onHide={() => setShowUserAgreement(false)}
+      />
     </div>
   )
 }
