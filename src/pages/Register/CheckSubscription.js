@@ -11,6 +11,8 @@ import { userLogout, userLogin } from '../../redux'
 import './index.css'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
+
 
 // const stripePromise = loadStripe(
 //   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
@@ -35,18 +37,18 @@ function CheckSubscription() {
 
   const defaultPlanDetails = {
     monthly: {
-      price: '9.99',
-      total: '9.99',
+      price: '15.00',
+      total: '15.00',
       period: 'month',
       priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID,
-      commitment: '12 months'
+      commitment: '12-months commitment'
     },
     annual: {
-      price: '99.00',
-      total: '99.00',
+      price: '150.00',
+      total: '150.00',
       period: 'year',
       priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID,
-      commitment: 'year'
+      commitment: 'Get 2 months free when you pay for the entire year'
     }
   }
 
@@ -345,13 +347,13 @@ useEffect(() => {
       <div className='d-flex justify-content-center p-5'>
         <div className='d-flex align-items-center flex-column payment-main bck-gradient'>
           <img
-            src={courseLogo}
+            src={StartupStudioLogo}
             alt='course-logo'
             className='course-logo-image'
           />
           
           <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black subscription-title'>
-            {isReturningUser ? 'Resubscribe to Continue' : 'Choose Your Subscription'}
+            {"Choose Your Subscription"}
           </h2>
 
           <div className='subscription-plans mt-4 flex-wrap'>
@@ -413,7 +415,7 @@ useEffect(() => {
             </h3>
             <div className='d-flex mt-5 justify-content-between payment-border'>
               <p className='fs-15 text-black'>
-                Full access to Course in Entrepreneurship
+                Full Access to the Startup Studio
               </p>
               <span>${planDetails[selectedPlan]?.price || '0.00'}</span>
             </div>
