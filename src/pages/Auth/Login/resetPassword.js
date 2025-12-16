@@ -10,6 +10,8 @@ import LTSJourneyEs from '../../../assets/images/lts-journey-es.png'
 import IntlMessages from '../../../utils/IntlMessages'
 import { CustomInput } from '../../../ui/ContentItems'
 import axiosInstance from '../../../utils/AxiosInstance'
+import StartupStudioLogo from '../../../assets/images/Startup Studio Logo v1x1200.png'
+
 
 const ResetPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -124,6 +126,11 @@ const ResetPassword = () => {
         // overflow: 'hidden'
       }}
     >
+      <img
+                        src={StartupStudioLogo}
+                        alt='logo'
+                        style={{ position: 'absolute', top: '40px', left: '40px', zIndex: 1000, height: '40px', width: '250px' }}
+                      />
       <div className='w-100' style={{ marginTop: '-150px' }}>
         <div className='row my-auto'>
           <div

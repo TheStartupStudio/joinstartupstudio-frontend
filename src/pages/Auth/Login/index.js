@@ -16,7 +16,8 @@ import FormWrapper from './ui/FormWrapper'
 import { setLoginLoading } from '../../../redux/user/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
-import StartupStudioLogo from '../../../assets/images/academy-icons/SUS OAE Logox800 1.png'
+// import StartupStudioLogo from '../../../assets/images/academy-icons/SUS OAE Logox800 1.png'
+import StartupStudioLogo from '../../../assets/images/Startup Studio Logo v1x1200.png'
 import facebookLogo from '../../../assets/images/academy-icons/svg/icons8-facebook.svg'
 import googleLogo from '../../../assets/images/academy-icons/svg/icons8-google.svg'
 import microsoftLogo from '../../../assets/images/academy-icons/svg/icons8-microsoft.svg'
@@ -278,12 +279,14 @@ const ChooseLogin = () => {
                 </>
               ) : (
                 <>
-                  <h1 className='login-title text-black'>Welcome...</h1>
+                  <h1 className='login-title text-black'>Welcome back...</h1>
                   <p className='text-black fs-5 fw-light'>
-                    to The Startup Studio Online Academy in Entrepreneurship{' '}
-                    <br className='d-none-mob' /> powered by Learn to Start.
+                    Every time you show up, you grow. <br/>
+                        Step back into the Studio and let’s keep going.
+                        {' '}
+                    {/* <br className='d-none-mob' /> powered by Learn to Start.
                     Please log in or create <br className='d-none-mob' /> an
-                    account.
+                    account. */}
                   </p>
                 </>
               )}

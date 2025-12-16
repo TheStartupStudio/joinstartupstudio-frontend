@@ -5121,8 +5121,8 @@ line-height: normal;
 }
 
 .img-register-login {
-  width: 208px;
-  height: 97px;
+  width: 230px;
+  /* height: 97px; */
 }
 
 .progress-dashboard-card{
@@ -5231,7 +5231,7 @@ line-height: normal;
 
   .img-register-login {
     width: 200px;
-    height: 93.26px;
+    /* height: 93.26px; */
   }
 }
 
@@ -7240,8 +7240,8 @@ _:future,
 }
 
 .header-login .img-register-login {
-  width: 208px;
-  height: 97px;
+  width: 230px;
+  /* height: 97px; */
 }
 
 /* Navigation Styles */
