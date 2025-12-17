@@ -731,12 +731,12 @@ useEffect(() => {
           <div className="forum-sidebar">
             <div className="sidebar-section">
               <div className="categories-list">
-                <div className='mb-3'>
+                {/* <div className='mb-3'>
                   <AcademyBtn
                     title={'View Reported Posts'}
                     onClick={handleViewReportedPosts}
                   />
-                </div>
+                </div> */}
                 <AcademyBtn
                   title={'Start New Discussion'}
                   onClick={handleNewDiscussion}

@@ -25,6 +25,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showContentWarning, setShowContentWarning] = useState(false)
   const [showUserAgreement, setShowUserAgreement] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   
   const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
 
@@ -104,6 +105,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       selectedCategory: categoryName,
       category: categoryName
     }))
+    setIsDropdownOpen(false)
   }
 
   const handleMessageChange = (content) => {
@@ -218,6 +220,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     setShowDeleteConfirm(false)
     setShowContentWarning(false)
     setShowUserAgreement(false)
+    setIsDropdownOpen(false)
     onHide()
   }
 
@@ -298,49 +301,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
         </Modal.Header>
         
         <Modal.Body className="pb-4">
-          {/* Category Selection */}
-          <div className="mb-3">
-            <div className="d-flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <div
-                  key={category.name}
-                  className={`category-selection-btn ${formData.selectedCategory === category.name ? 'selected' : ''}`}
-                  onClick={() => handleCategorySelect(category.name)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 16px',
-                    borderRadius: '20px',
-                    border: formData.selectedCategory === category.name ? `2px solid ${category.color}` : '2px solid #e0e0e0',
-                    backgroundColor: formData.selectedCategory === category.name ? category.color : 'white',
-                    color: formData.selectedCategory === category.name ? 'white' : '#333',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    boxShadow: formData.selectedCategory === category.name ? '0 4px 12px rgba(0, 0, 0, 0.15)' : '0 2px 4px rgba(0, 0, 0, 0.1)',
-                    transform: formData.selectedCategory === category.name ? 'translateY(-1px)' : 'none'
-                  }}
-                >
-                  <img
-                    src={category.icon}
-                    alt={category.name}
-                    style={{
-                      width: '16px',
-                      height: '16px',
-                    }}
-                  />
-                  {category.name}
-                </div>
-              ))}
-            </div>
-            {formSubmitted && !formData.category && (
-              <div className="text-danger mt-2" style={{ fontSize: '12px' }}>
-                Please select a category
-              </div>
-            )}
-          </div>
 
           <div className="mb-3">
             <div 
@@ -374,6 +334,104 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
             {formSubmitted && !formData.title.trim() && (
               <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
                 Please enter a subject line
+              </div>
+            )}
+          </div>
+
+                    {/* Category Selection */}
+          <div className="mb-3" style={{ position: 'relative' }}>
+            <div 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              style={{
+                boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                backgroundColor: 'white',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '14px',
+                color: formData.selectedCategory ? 'black' : '#999',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {formData.selectedCategory && (
+                  <img 
+                    src={categories.find(c => c.name === formData.selectedCategory)?.icon}
+                    alt=""
+                    style={{ width: '18px', height: '18px' }}
+                  />
+                )}
+                <span>{formData.selectedCategory || 'Select a category'}</span>
+              </div>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="12" 
+                height="12" 
+                viewBox="0 0 12 12" 
+                fill="none"
+                style={{
+                  transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.2s ease'
+                }}
+              >
+                <path d="M6 8L2 4H10L6 8Z" fill="#666"/>
+              </svg>
+            </div>
+            
+            {isDropdownOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 4px)',
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'white',
+                  boxShadow: '0 6px 16px 0 rgba(0, 0, 0, 0.25)',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  zIndex: 1000,
+                  maxHeight: '250px',
+                  overflowY: 'auto',
+                  padding: '10px'
+                }}
+              >
+                {categories.map((category) => (
+                  <div
+                    key={category.name}
+                    onClick={() => handleCategorySelect(category.name)}
+                    style={{
+                      padding: '4px',
+                      display: 'flex',
+                      gap: '12px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      transition: 'all 0.2s ease',
+                      backgroundColor: 'transparent',
+                      borderLeft: '3px solid transparent',
+                      flexDirection: 'column',
+                      gap: '4px',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = `#45B7D120`
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent'
+                    }}
+                  >
+                    <span style={{ color: 'black', fontWeight: formData.selectedCategory === category.name ? '600' : '400' }}>
+                      {category.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {formSubmitted && !formData.category && (
+              <div className="text-danger mt-2" style={{ fontSize: '12px' }}>
+                Please select a category
               </div>
             )}
           </div>
