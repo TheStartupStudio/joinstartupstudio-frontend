@@ -13,30 +13,40 @@ function SubscriptionModal({
   toggleCancelModal
 }) {
   const [invoices, setInvoices] = useState([])
+  const [billingInfo, setBillingInfo] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Add null check for user
   const userState = useSelector((state) => state.user?.user) || {}
   const user = userState?.user || {}
 
   useEffect(() => {
-    const fetchInvoices = async () => {
+    const fetchData = async () => {
       try {
         if (!user?.customer_id) return
 
-        const response = await axiosInstance.get(
+        // Fetch invoices
+        const invoicesResponse = await axiosInstance.get(
           `/course-subscription/invoices/${user.customer_id}`
         )
-        setInvoices(response.data)
+        setInvoices(invoicesResponse.data)
+
+        // Fetch billing info (card and address)
+        const billingResponse = await axiosInstance.get(
+          `/course-subscription/manage-billing/${user.customer_id}`
+        )
+        setBillingInfo(billingResponse.data)
+
       } catch (error) {
-        console.error('Error fetching invoices:', error)
+        console.error('Error fetching data:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchInvoices()
-  }, [user?.customer_id])
+    if (subsbsciptionModal) {
+      fetchData()
+    }
+  }, [user?.customer_id, subsbsciptionModal])
 
   return (
     <Modal
@@ -53,77 +63,102 @@ function SubscriptionModal({
         />
         <p className='mb-0 fs-15 fw-medium'>Manage Subscription & Billing</p>
 
-        {/* <form>
+        <form>
           <div className='mt-5'>
             <h4 className='fs-15'>Card Information</h4>
-            <div className='d-flex flex-column gap-3'>
-              <ModalInput
-                id={'creditCardName'}
-                labelTitle={'Name on Credit Card'}
-                imgSrc={penIcon}
-              />
-              <ModalInput
-                id={'cardNumber'}
-                labelTitle={'Card Number'}
-                imgSrc={penIcon}
-              />
-              <div
-                className='d-grid gap-2'
-                style={{ gridTemplateColumns: '2fr 1fr 2fr' }}
-              >
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div className='d-flex flex-column gap-3'>
                 <ModalInput
-                  id={'expiration'}
-                  labelTitle={'Expiration (MM/YY)'}
+                  id={'creditCardName'}
+                  labelTitle={'Name on Credit Card'}
                   imgSrc={penIcon}
+                  value={billingInfo?.paymentMethod?.nameOnCard || ''}
+                  readOnly={true}
                 />
-                <ModalInput id={'CVC'} labelTitle={'CVC'} imgSrc={penIcon} />
                 <ModalInput
-                  id={'zipCode'}
-                  labelTitle={'Zip Code'}
+                  id={'cardNumber'}
+                  labelTitle={'Card Number'}
                   imgSrc={penIcon}
+                  value={billingInfo?.paymentMethod?.cardNumber || ''}
+                  readOnly={true}
                 />
+                <div
+                  className='d-grid gap-2'
+                  style={{ gridTemplateColumns: '2fr 1fr 2fr' }}
+                >
+                  <ModalInput
+                    id={'expiration'}
+                    labelTitle={'Expiration (MM/YY)'}
+                    imgSrc={penIcon}
+                    value={billingInfo?.paymentMethod?.expiration || ''}
+                    readOnly={true}
+                  />
+                  <ModalInput 
+                    id={'CVC'} 
+                    labelTitle={'CVC'} 
+                    imgSrc={penIcon}
+                    value={'•••'}
+                    readOnly={true}
+                  />
+                  <ModalInput
+                    id={'zipCode'}
+                    labelTitle={'Zip Code'}
+                    imgSrc={penIcon}
+                    value={billingInfo?.billingAddress?.postalCode || ''}
+                    readOnly={true}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
+
           <div className='mt-5'>
-            <h4 className='fs-15'>Billing Adress</h4>
-            <div className='d-flex flex-column gap-3'>
-              <ModalInput
-                id={'address'}
-                labelTitle={'Address'}
-                imgSrc={penIcon}
-              />
-              <div
-                className='d-grid gap-2'
-                style={{ gridTemplateColumns: '2fr 1fr 2fr' }}
-              >
-                <ModalInput id={'city'} labelTitle={'City'} imgSrc={penIcon} />
+            <h4 className='fs-15'>Billing Address</h4>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div className='d-flex flex-column gap-3'>
                 <ModalInput
-                  id={'state'}
-                  labelTitle={'State'}
+                  id={'address'}
+                  labelTitle={'Address'}
                   imgSrc={penIcon}
+                  value={billingInfo?.billingAddress?.line1 || ''}
+                  readOnly={true}
                 />
-                <ModalInput
-                  id={'zipCode2'}
-                  labelTitle={'Zip Code'}
-                  imgSrc={penIcon}
-                />
+                <div
+                  className='d-grid gap-2'
+                  style={{ gridTemplateColumns: '2fr 1fr 2fr' }}
+                >
+                  <ModalInput 
+                    id={'city'} 
+                    labelTitle={'City'} 
+                    imgSrc={penIcon}
+                    value={billingInfo?.billingAddress?.city || ''}
+                    readOnly={true}
+                  />
+                  <ModalInput
+                    id={'state'}
+                    labelTitle={'State'}
+                    imgSrc={penIcon}
+                    value={billingInfo?.billingAddress?.state || ''}
+                    readOnly={true}
+                  />
+                  <ModalInput
+                    id={'zipCode2'}
+                    labelTitle={'Zip Code'}
+                    imgSrc={penIcon}
+                    value={billingInfo?.billingAddress?.postalCode || ''}
+                    readOnly={true}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
-          <div className='d-flex gap-3 justify-content-center mt-5'>
-            <Button
-              className='close-btn'
-              onClick={() => setSubscriptionModal((prev) => !prev)}
-            >
-              CANCEL
-            </Button>
-            <button className='modal-save-btn'>SAVE</button>
-          </div>
-        </form> */}
-        <div className='table-responsive'>
+
           <table className='table table-bordered table-striped mt-3 sub-table'>
-            <thead className='table-dark'>
+            <thead className='table-light'>
               <tr>
                 <th>Date</th>
                 <th>Amount</th>
@@ -144,7 +179,7 @@ function SubscriptionModal({
                   <td>$ {data.amount}</td>
                   <td className='text-capitalize'>{data.status}</td>
                   <td>
-                    <a href={data.hosted_invoice_url} target='_blank'>
+                    <a href={data.hosted_invoice_url} target='_blank' rel='noreferrer'>
                       View
                     </a>
                   </td>
@@ -152,13 +187,29 @@ function SubscriptionModal({
               ))}
             </tbody>
           </table>
-        </div>
+
+          <div className='d-flex gap-3 justify-content-center mt-5'>
+            <Button
+              className='close-btn'
+              onClick={() => setSubscriptionModal((prev) => !prev)}
+            >
+              CLOSE
+            </Button>
+
+             <Button
+              className='modal-save-btn'
+              onClick={() => setSubscriptionModal((prev) => !prev)}
+            >
+              Save
+            </Button>
+          </div>
+        </form>
 
         <div
           className='d-flex align-items-center justify-content-center gap-2 cursor-pointer mt-5'
           onClick={toggleCancelModal}
         >
-          <img src={cancelRenewal} alt='credit-card' />
+          <img src={cancelRenewal} alt='cancel-renewal' />
           <p className='mb-0 fs-15 fw-medium'>Cancel Subscription</p>
         </div>
       </ModalBody>

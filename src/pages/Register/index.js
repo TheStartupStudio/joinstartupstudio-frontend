@@ -12,7 +12,9 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox800 1.png'
+// import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox800 1.png'
+import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
+
 import facebookLogo from '../../assets/images/academy-icons/svg/icons8-facebook.svg'
 import googleLogo from '../../assets/images/academy-icons/svg/icons8-google.svg'
 import microsoftLogo from '../../assets/images/academy-icons/svg/icons8-microsoft.svg'
@@ -33,6 +35,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 import CustomBirthDateCalendar from '../../components/CustomBirthDateCalendar'
+
 
 // Initialize Stripe
 // const stripePromise = loadStripe(
@@ -401,12 +404,12 @@ function RegistrationForm() {
 
     <div className="header-login">
             <header className="py-4 px-5 d-flex justify-content-between align-items-start px-1-mob">
-            {/* <img
+            <img
               className="cursor-pointer w-200-mob img-register-login"
               src={StartupStudioLogo}
               alt="course logo"
               onClick={() => window.location.href = '/'}
-            /> */}
+            />
 
             <div>
               
@@ -417,7 +420,7 @@ function RegistrationForm() {
                 <li>
                   <a
                     className="fs-13 fw-medium text-decoration-none text-black"
-                    href="https://academy.learntostart.com/"
+                    href="https://joinstartupstudio.com/"
                   >
                     HOME
                   </a>
@@ -425,7 +428,7 @@ function RegistrationForm() {
                 <li>
                   <a
                     className="fs-13 fw-medium text-decoration-none text-black"
-                    href="https://academy.learntostart.com/contact.html"
+                    href="https://joinstartupstudio.com/contact.html"
                   >
                     CONTACT US
                   </a>
@@ -452,8 +455,10 @@ function RegistrationForm() {
         <section className='px-5 pb-5 p-t-5 register-section'>
           <h1 className='text-center fs-48 fw-light'>
             {/* $15 per month subscription */}
-            Start your free trial today
+            Start your 14-day free trial today
           </h1>
+
+          <p className='text-center fs-5 fw-light'>Start building today for free</p>
 
           {/* Add Google Pay button here - before the form */}
           {paymentRequest && (
@@ -873,9 +878,9 @@ function RegistrationForm() {
                   </div>
 
                   <p className='fs-13 fw-light text-black mt-3'>
-                    After your 14-day free trial, your card will be charged based on the plan you choose. 
-                    You may cancel at any time by going to your account settings page. 
-                    Cancellation must be submitted at least 48 hours prior to renewal.
+                    Your card is stored securely and won’t be charged today. After your 14-day free trial, 
+                    your card will be charged based on the plan you choose. You may cancel at any time by 
+                    going to your account settings page. Cancellation must be submitted at least 48 hours prior to renewal.
                   </p>
                 </div>
               </div>

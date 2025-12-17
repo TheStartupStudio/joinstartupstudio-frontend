@@ -7,7 +7,9 @@ import IntlMessages from '../../../utils/IntlMessages'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { CustomInput } from '../../../ui/ContentItems'
 import './forgotPassword.css'
-import StartupLogo from '../../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+// import StartupLogo from '../../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import StartupLogo from '../../../assets/images/Startup Studio Logo v1x1200.png'
+
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -89,11 +91,12 @@ const ForgotPassword = () => {
   return (
     <div className='gradient-color'>
       <div className='d-flex justify-content-between p-2'>
-        <a href='https://academy.learntostart.com/'>
+        <a href='https://joinstartupstudio.com/'>
           <img
             src={StartupLogo}
             alt='course-logo'
             className='w-200-mob my-3 ms-4'
+            style={{width: '250px'}}
           />
         </a>
       </div>

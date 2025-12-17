@@ -813,8 +813,8 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 }
 
 .header-login .img-register-login {
-  width: 208px;
-  height: 97px;
+  width: 230px;
+  /* height: 97px; */
 }
 
 /* Navigation Styles */

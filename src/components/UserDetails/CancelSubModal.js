@@ -32,7 +32,7 @@ function CancelSubModal({
           hasTrackedRef.current = true
         }
 
-        alert(response.data.message)
+        // alert(response.data.message)
         toggleCancelRenewal()
       }
     } catch (error) {

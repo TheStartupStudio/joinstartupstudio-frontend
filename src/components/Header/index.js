@@ -109,24 +109,24 @@ function Header() {
     }
   }, [user?.id, user?.name])
 
-  useEffect(() => {
-    if (user) {
-      checkIfUserHasVerifiedEmail()
+  // useEffect(() => {
+  //   if (user) {
+  //     checkIfUserHasVerifiedEmail()
 
-      axiosInstance
-        .get(`/notifications/${user.id}`)
-        .then((res) => {
-          if (res?.data.notifications?.length > 0) {
-            setNotifications(res?.data?.notifications)
-          }
+  //     axiosInstance
+  //       .get(`/notifications/${user.id}`)
+  //       .then((res) => {
+  //         if (res?.data.notifications?.length > 0) {
+  //           setNotifications(res?.data?.notifications)
+  //         }
 
-          setUnreadNotifications(res?.data?.unreadNotifications)
-        })
-        .catch((err) => {
-          console.log('err', err)
-        })
-    }
-  }, [user?.id])
+  //         setUnreadNotifications(res?.data?.unreadNotifications)
+  //       })
+  //       .catch((err) => {
+  //         console.log('err', err)
+  //       })
+  //   }
+  // }, [user?.id])
 
   useEffect(
     function () {

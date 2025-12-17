@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Select from 'react-select'
-import AcademyLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+// import AcademyLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import AcademyLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
+
 import profilePic from '../../assets/images/academy-icons/profile.jpeg'
 import CourseProgress from '../../components/CourseProgress/CourseProgress'
 import UserDetails from '../../components/UserDetails/UserDetails'
@@ -25,6 +27,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons'
 import TrialTimerInitializer from '../../components/TrialTimer/TrialTimerInitializer'
 import axios from '../../utils/AxiosInstance'
+import UpcomingEventsCalendar from '../../components/UpcomingEventsCalendar'
+import ForumSection from '../../components/ForumSection'
+import LeaderBoard from '../../components/LeaderBoard'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -36,6 +41,7 @@ function Dashboard() {
   const [chatId, setChatId] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const user = useSelector((state) => state.user.user.user)
+  const finishedContent = useSelector((state) => state.course.finishedContent || [])
   const { trialTimeRemaining, isTrialActive } = useSelector(
     (state) => state.trialTimer
   )
@@ -80,53 +86,61 @@ function Dashboard() {
 
   const handleContinueCourse = async () => {
     try {
+      // Fetch the latest finished content
       await dispatch(fetchLtsCoursefinishedContent());
       
-      if (finishedContent && finishedContent.length > 0) {
-        const lastCompletedId = Math.max(...finishedContent);
-        let nextLessonId = lastCompletedId;
-        let targetLevel;
+      // Wait a bit for Redux to update
+      setTimeout(() => {
+        const currentFinishedContent = finishedContent;
         
-        if (lastCompletedId >= 70) {
-          targetLevel = 2;
-        } else if (lastCompletedId >= 60) {
-          targetLevel = 1;
-        } else {
-          targetLevel = 0;
-        }
-        
-        localStorage.setItem('selectedLesson', JSON.stringify({
-          activeLevel: targetLevel,
-          nextId: lastCompletedId,
-          lessonTitle: "Continue where you left off",
-          currentPlaceholder: "Continue where you left off"
-        }));
-        
-        history.push({
-          pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
-          state: {
+        if (currentFinishedContent && currentFinishedContent.length > 0) {
+          const lastCompletedId = Math.max(...currentFinishedContent);
+          let targetLevel;
+          
+          if (lastCompletedId >= 70) {
+            targetLevel = 2;
+          } else if (lastCompletedId >= 60) {
+            targetLevel = 1;
+          } else {
+            targetLevel = 0;
+          }
+          
+          localStorage.setItem('selectedLesson', JSON.stringify({
             activeLevel: targetLevel,
+            nextId: lastCompletedId,
+            lessonTitle: "Continue where you left off",
             currentPlaceholder: "Continue where you left off"
-          }
-        });
-      } else {
-        localStorage.setItem('selectedLesson', JSON.stringify({
-          activeLevel: 0,
-          nextId: 51,
-          lessonTitle: "The Myths of Entrepreneurship",
-          currentPlaceholder: "The Myths of Entrepreneurship"
-        }));
-        
-        history.push({
-          pathname: '/my-course-in-entrepreneurship/journal/51',
-          state: {
+          }));
+          
+          history.push({
+            pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
+            state: {
+              activeLevel: targetLevel,
+              currentPlaceholder: "Continue where you left off"
+            }
+          });
+        } else {
+          // No progress yet, start from the beginning
+          localStorage.setItem('selectedLesson', JSON.stringify({
             activeLevel: 0,
+            nextId: 51,
+            lessonTitle: "The Myths of Entrepreneurship",
             currentPlaceholder: "The Myths of Entrepreneurship"
-          }
-        });
-      }
+          }));
+          
+          history.push({
+            pathname: '/my-course-in-entrepreneurship/journal/51',
+            state: {
+              activeLevel: 0,
+              currentPlaceholder: "The Myths of Entrepreneurship"
+            }
+          });
+        }
+      }, 100);
     } catch (error) {
       console.error('Navigation error:', error);
+      // Navigate to start of course on error
+      history.push('/my-course-in-entrepreneurship/journal/51');
     }
   }
 
@@ -188,13 +202,15 @@ function Dashboard() {
         </div>
 
         <div className='d-grid academy-new-dashboard-layout bck-dashboard'>
-          <UserDetails
+          {/* <UserDetails
             profilePic={profilePic}
             userName={'Kenia Anders'}
             userProffesion={'Graphic Designer'}
-          />
+          /> */}
 
           <CourseProgress />
+
+          <UpcomingEventsCalendar />
 
           <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between flex-col-mob mb-1rem-tab gap-1rem-mob '>
             <div className='d-flex align-items-center gap-3 flex-col-mob'>
@@ -202,17 +218,20 @@ function Dashboard() {
                 <img src={AcademyLogo} alt='logo' style={{ width: '150px' }} />
               </div>
               <h3 className='page-title bold-page-title text-black mb-0 text-center-mob'>
-                Course in Entrepreneurship
+                STUDIO SESSIONS - BUILDING YOU FIRST
               </h3>
             </div>
             <AcademyBtn
-              title={'Continue Course'}
+              title={'Continue'}
               onClick={handleContinueCourse}
             />
+            </div>
+              <div style={{gridColumn: 'span 2'}}>
+                <ForumSection />
+              </div>
+              </div>
           </div>
         </div>
-      </div>
-    </div>
   )
 }
 

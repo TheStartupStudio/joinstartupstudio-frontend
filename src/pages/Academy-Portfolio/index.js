@@ -93,7 +93,7 @@ function AcademyPortfolio() {
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab gap-3'>
             <div className='d-flex align-items-center gap-3'>
                {!user && (
-              <a href='https://academy.learntostart.com/'>
+              <a href='https://joinstartupstudio.com/'>
                       <img
                         src={StartupStudioLogo}
                         alt='course-logo'

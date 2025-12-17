@@ -1353,7 +1353,7 @@ useEffect(() => {
                 </div>
 
                 <div>
-                  <div className='gradient-background-journal' ref={contentContainer}>
+                  <div className='gradient-background-journal course-in-entrepreneurship' ref={contentContainer}>
                     <div>
                       <div className='levels-container-journal'>
                         {levels.map((level, index) => {
@@ -1433,8 +1433,8 @@ useEffect(() => {
                                 borderRadius: '8px',
                                 background:
                                   'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                                padding: '1px',
-                                height: '58px',
+                                padding: '3px',
+                                // height: '58px',
                                 boxShadow: '0px 4px 10px 0px #00000040'
                               }}
                             >
@@ -1799,8 +1799,8 @@ useEffect(() => {
                     display: 'inline-block',
                     borderRadius: '8px',
                     background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                    padding: '1px',
-                    height: '58px',
+                    padding: '3px',
+                    // height: '58px',
                     boxShadow: '0px 4px 10px 0px #00000040'
                   }}
                 >
@@ -1825,8 +1825,8 @@ useEffect(() => {
                     display: 'inline-block',
                     borderRadius: '8px',
                     background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                    padding: '1px',
-                    height: '58px',
+                    padding: '3px',
+                      // height: '58px',
                     boxShadow: '0px 4px 10px 0px #00000040'
                   }}
                 >

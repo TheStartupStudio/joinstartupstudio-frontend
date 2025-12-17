@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -7,28 +7,120 @@ import AcademyBtn from '../../components/AcademyBtn'
 import courseLogo from '../../assets/images/academy-icons/svg/AIE Logo 3x.png'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { trackSubscribe, trackSignUp } from '../../utils/FacebookPixel'
+import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
 
 const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState('monthly')
+  const [organizationPricing, setOrganizationPricing] = useState(null)
+  const [loadingPricing, setLoadingPricing] = useState(true)
   const history = useHistory()
 
-  const planDetails = {
+  const displayPlans = {
     monthly: {
-      price: '9.99',
-      total: '9.99',
+      price: '15.00',
+      total: '15.00',
       period: 'month',
       priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID || 'price_1RbhmbE4OMqDE3oQyb89B1dy',
-      commitment: '12 months'
+      commitment: '12-months commitment'
     },
     annual: {
-      price: '99.00',
-      total: '99.00',
+      price: '150.00',
+      total: '150.00',
       period: 'year',
       priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID || 'price_1SFxTOE4OMqDE3oQ4QJgzMBZ',
-      commitment: 'year'
+      commitment: 'Get 2 months free when you pay for the entire year'
     }
   }
+
+  const planDetails = organizationPricing || displayPlans
+
+  // Fetch organization pricing based on email
+  useEffect(() => {
+    const fetchOrganizationPricing = async () => {
+      if (!registrationData?.email) {
+        console.log('❌ No email found, using default pricing')
+        setLoadingPricing(false)
+        return
+      }
+
+      try {
+        console.log('📌 Checking organization pricing for email:', registrationData.email)
+        
+        // Try to fetch organization pricing by email (unauthenticated endpoint)
+        const response = await axiosInstance.post('/auth/check-organization-pricing', {
+          email: registrationData.email
+        })
+
+        console.log('✅ Organization pricing response:', response.data)
+
+        if (response.data.success && response.data.hasOrganizationPricing && response.data.pricing) {
+          console.log('✅ Organization pricing found:', response.data.pricing)
+          
+          const orgPricing = {}
+          
+          Object.keys(response.data.pricing).forEach(key => {
+            const pricing = response.data.pricing[key]
+            
+            const periodMap = {
+              'monthly': 'month',
+              'yearly': 'year',
+              'one-time': 'one-time',
+              '6-month': '6 months'
+            }
+            
+            const commitmentMap = {
+              'monthly': '12 months',
+              'yearly': 'year',
+              'one-time': 'one-time payment',
+              '6-month': '6 months'
+            }
+            
+            orgPricing[key] = {
+              price: pricing.amount.toFixed(2),
+              total: pricing.amount.toFixed(2),
+              period: periodMap[pricing.frequency] || pricing.frequency,
+              priceId: pricing.priceId,
+              commitment: commitmentMap[pricing.frequency] || pricing.frequency,
+              description: pricing.description,
+              frequency: pricing.frequency,
+              isOrganizationPrice: true
+            }
+          })
+
+          console.log('✅ Transformed org pricing:', orgPricing)
+          setOrganizationPricing(orgPricing)
+          
+          // Set default selected plan based on available options
+          if (orgPricing.monthly) {
+            setSelectedPlan('monthly')
+          } else if (orgPricing.annual) {
+            setSelectedPlan('annual')
+          } else if (orgPricing['6-month']) {
+            setSelectedPlan('6-month')
+          } else if (orgPricing['one-time']) {
+            setSelectedPlan('one-time')
+          } else {
+            setSelectedPlan(Object.keys(orgPricing)[0])
+          }
+        } else {
+          console.log('ℹ️ Using default pricing')
+          setOrganizationPricing(null)
+        }
+      } catch (error) {
+        console.error('❌ Error fetching organization pricing:', error)
+        console.error('Error response:', error.response?.data)
+        // If endpoint doesn't exist or fails, use default pricing
+        setOrganizationPricing(null)
+      } finally {
+        setLoadingPricing(false)
+      }
+    }
+
+    if (show) {
+      fetchOrganizationPricing()
+    }
+  }, [registrationData, show])
 
   const handleSubscription = async () => {
     if (!registrationData || !registrationData.paymentMethodId) {
@@ -40,10 +132,11 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
     setIsLoading(true)
 
     try {
+      // Don't send priceId - let backend fetch from org 27
       const response = await axiosInstance.post('/auth/register-with-subscription', {
         ...registrationData,
-        selectedPlan: selectedPlan,
-        priceId: planDetails[selectedPlan].priceId
+        selectedPlan: selectedPlan
+        // priceId is OPTIONAL - backend will fetch it from org 27
       })
 
       if (response.data.success) {
@@ -54,12 +147,9 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
           localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
         }
 
-        const subscriptionValue = parseFloat(planDetails[selectedPlan].price)
+        const subscriptionValue = parseFloat(displayPlans[selectedPlan].price)
         
-        // Track user registration
         trackSignUp('email')
-        
-        // Track subscription
         trackSubscribe({
           value: subscriptionValue,
           currency: 'USD',
@@ -93,6 +183,13 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
     >
       
       <Modal.Body>
+        {loadingPricing ? (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading pricing...</span>
+            </div>
+          </div>
+        ) : (
         <div className='d-flex justify-content-center p-sm-5 positon-relative'>
 
           <div className='d-flex align-items-center flex-column payment-main bck-gradient position-relative'>
@@ -103,7 +200,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                     </svg>
                   </div>
                   <img
-                    src={courseLogo}
+                    src={StartupStudioLogo}
                     alt='course-logo'
                     className='course-logo-image'
                   />
@@ -113,43 +210,73 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                   </h2>
         
                   <div className='subscription-plans mt-4'>
-                    <div 
-                      className={`plan-option ${selectedPlan === 'monthly' ? 'selected' : ''}`}
-                      onClick={() => setSelectedPlan('monthly')}
-                    >
-                      <h5>Monthly Plan</h5>
-                      <p className='price'>${planDetails.monthly.price}/month</p>
-                      <p className='commitment'>12-month commitment</p>
-                    </div>
-        
-                    <div 
-                      className={`plan-option ${selectedPlan === 'annual' ? 'selected' : ''}`}
-                      onClick={() => setSelectedPlan('annual')}
-                    >
-                      <h5>Annual Plan</h5>
-                      <p className='price'>${planDetails.annual.price}/year</p>
-                      <p className='commitment'>Get 1 month free when you pay for the entire year! </p>
-                    </div>
+                    {/* Monthly Plan */}
+                    {planDetails.monthly && (
+                      <div 
+                        className={`plan-option ${selectedPlan === 'monthly' ? 'selected' : ''}`}
+                        onClick={() => setSelectedPlan('monthly')}
+                      >
+                        <h5>Monthly Plan</h5>
+                        <p className='price'>${planDetails.monthly.price}/month</p>
+                        <p className='commitment'>12-months commitment</p>
+                      </div>
+                    )}
+
+                    {/* 6-Month Plan */}
+                    {planDetails['6-month'] && (
+                      <div 
+                        className={`plan-option ${selectedPlan === '6-month' ? 'selected' : ''}`}
+                        onClick={() => setSelectedPlan('6-month')}
+                      >
+                        <h5>6-Month Plan</h5>
+                        <p className='price'>${planDetails['6-month'].price}/6 months</p>
+                        <p className='commitment'>{planDetails['6-month'].commitment}</p>
+                      </div>
+                    )}
+
+                    {/* Annual Plan */}
+                    {planDetails.annual && (
+                      <div 
+                        className={`plan-option ${selectedPlan === 'annual' ? 'selected' : ''}`}
+                        onClick={() => setSelectedPlan('annual')}
+                      >
+                        <h5>Builders Plan</h5>
+                        <p className='price'>${planDetails.annual.price}/year</p>
+                        <p className='commitment'>Get 2 months free when you pay for the entire year</p>
+                      </div>
+                    )}
+
+                    {/* One-Time Plan */}
+                    {planDetails['one-time'] && (
+                      <div 
+                        className={`plan-option ${selectedPlan === 'one-time' ? 'selected' : ''}`}
+                        onClick={() => setSelectedPlan('one-time')}
+                      >
+                        <h5>One-Time Payment</h5>
+                        <p className='price'>${planDetails['one-time'].price}</p>
+                        <p className='commitment'>{planDetails['one-time'].commitment}</p>
+                      </div>
+                    )}
                   </div>
         
                   <div className='align-self-start mt-5 mb-5 payment-section mx-auto'>
                     <h3 className='fs-21 fw-medium text-black text-center'>
-                      {selectedPlan === 'annual' ? 'Annual' : 'Monthly'} Subscription to Learn to Start LLC
+                      {selectedPlan === 'annual' ? 'Annual' : 'Monthly'} Subscription to The Startup Studio Powered by Learn to Start
                     </h3>
                     <div className='d-flex mt-5 justify-content-between payment-border'>
                       <p className='fs-15 text-black'>
-                        Full access to Course in Entrepreneurship
+                        Full Access to the Startup Studio
                       </p>
-                      <span>${planDetails[selectedPlan].price}</span>
+                      <span>${planDetails[selectedPlan]?.price || '0.00'}</span>
                     </div>
                     <div className='d-flex justify-content-between mt-3'>
-                      <p className='text-black mb-0 fw-bold'>Total Amount Due Today</p>
-                      <span className="text-black fw-bold">$0</span>
+                      <p className='text-black mb-0 fw-bold'>Trial Period</p>
+                      <span className="text-black fw-bold">$0 (14-day trial)</span>
                     </div>
                   </div>
         
                   <AcademyBtn
-                    disabled={isLoading}
+                    disabled={isLoading || !planDetails[selectedPlan]}
                     title={`${isLoading ? 'Processing...' : 'Subscribe Now'}`}
                     onClick={handleSubscription}
                   />
@@ -181,6 +308,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                   </svg>
                 </div>
               </div>
+        )}
       </Modal.Body>
     </Modal>
   )

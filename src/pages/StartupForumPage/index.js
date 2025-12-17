@@ -23,6 +23,9 @@ import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import editIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import AcademyBtn from '../../components/AcademyBtn'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
+import ReportPostModal from './ReportPostModal'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
+
 
 const StartupForumPage = () => {
   const dispatch = useDispatch()
@@ -46,6 +49,8 @@ const StartupForumPage = () => {
   const [forumData, setForumData] = useState([])
   const [isFetching, setIsFetching] = useState(false)
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
+  const [showReportModal, setShowReportModal] = useState(false)
+  const [reportingPost, setReportingPost] = useState(null)
 
   const toggleDiscussionModal = () => {
     setShowDiscussionModal(prev => !prev)
@@ -101,9 +106,11 @@ const params = {
           'Introductions': 'introductions',
           'Announcements': 'announcements',
           'Celebrations': 'celebrations',
-          'Ideas & Feedback': 'ideas-feedback',
-          'Misc. Topics': 'misc-topics',
-          'Following': 'following'
+          'Following': 'following',
+          'Ask for Feedback': 'ask-for-feedback',
+          'Ask for Collaboration': 'ask-for-collaboration',
+          'Ask for Mentorship': 'ask-for-mentorship',
+          'Reported Posts': 'reported-posts',
         }
 
         const urlCategory = categoryMapping[category]
@@ -186,6 +193,21 @@ useEffect(() => {
     setShowDiscussionModal(true)
   }
 
+  const handleViewReportedPosts = () => {
+    handleCategoryClick('Reported Posts')
+  }
+
+  const handleReportPost = (post, event) => {
+    event.stopPropagation()
+    setReportingPost(post)
+    setShowReportModal(true)
+  }
+
+  const handleReportSuccess = () => {
+    setReportingPost(null)
+    setShowReportModal(false)
+  }
+
   const getCurrentCategoryFromUrl = () => {
     const path = location.pathname.toLowerCase()
 
@@ -193,8 +215,11 @@ useEffect(() => {
     if (path.includes('announcements')) return 'Announcements'
     if (path.includes('celebrations')) return 'Celebrations'
     if (path.includes('ideas') || path.includes('feedback')) return 'Ideas & Feedback'
-    if (path.includes('misc')) return 'Misc. Topics'
     if (path.includes('following')) return 'Following'
+    if(path.includes('ask-for-feedback')) return 'Ask for Feedback'
+    if(path.includes('ask-for-collaboration')) return 'Ask for Collaboration'
+    if(path.includes('ask-for-mentorship')) return 'Ask for Mentorship'
+    if(path.includes('reported-posts')) return 'Reported Posts'
     return 'All Discussions'
   }
 
@@ -206,30 +231,36 @@ useEffect(() => {
     setCurrentPage(1) 
 
     switch (category) {
-      case 'All Discussions':
-        history.push('/startup-forum')
-        break
-      case 'Following':
-        history.push('/startup-forum/following')
-        break
-      case 'Introductions':
-        history.push('/startup-forum/introductions')
-        break
-      case 'Announcements':
-        history.push('/startup-forum/announcements')
-        break
-      case 'Celebrations':
-        history.push('/startup-forum/celebrations')
-        break
-      case 'Ideas & Feedback':
-        history.push('/startup-forum/ideas-feedback')
-        break
-      case 'Misc. Topics':
-        history.push('/startup-forum/misc-topics')
-        break
-      default:
-        history.push('/startup-forum')
-    }
+          case 'All Discussions':
+            history.push('/startup-forum')
+            break
+          case 'Following':
+            history.push('/startup-forum/following')
+            break
+          case 'Introductions':
+            history.push('/startup-forum/introductions')
+            break
+          case 'Announcements':
+            history.push('/startup-forum/announcements')
+            break
+          case 'Celebrations':
+            history.push('/startup-forum/celebrations')
+            break
+          case 'Ask for Feedback':
+            history.push('/startup-forum/ask-for-feedback')
+            break
+          case 'Ask for Collaboration':
+            history.push('/startup-forum/ask-for-collaboration')
+            break
+          case 'Ask for Mentorship':
+            history.push('/startup-forum/ask-for-mentorship')
+            break
+          case 'Reported Posts':
+            history.push('/startup-forum/reported-posts')
+            break
+          default:
+            history.push('/startup-forum')
+        }
   }
 
   const getHeaderContent = () => {
@@ -253,17 +284,26 @@ useEffect(() => {
         title: 'CELEBRATIONS',
         description: 'Celebrate your achievements and the achievements of your peers.'
       }
-    } else if (path.includes('ideas') || path.includes('feedback')) {
+    }
+    else if (path.includes('ask-for-feedback')) {
       return {
         icon: lightBulb,
-        title: 'IDEAS & FEEDBACK',
+        title: 'ASK FOR FEEDBACK',
         description: 'Share your ideas and get feedback from your peers.'
       }
-    } else if (path.includes('misc')) {
+    }
+    else if (path.includes('ask-for-collaboration')) {
+      return {
+        icon: partyPopper,
+        title: 'ASK FOR COLLABORATION',
+        description: 'Find a peer to collaborate with.'
+      }
+    }
+    else if (path.includes('ask-for-mentorship')) {
       return {
         icon: speechBalloon,
-        title: 'MISC. TOPICS',
-        description: 'Ask questions and chat about other course or entrepreneurship topics.'
+        title: 'ASK FOR MENTORSHIP',
+        description: 'Ask for and discover mentorship opportunities'
       }
     }
     return null
@@ -286,14 +326,28 @@ useEffect(() => {
     }
   }
 
+  const getCategoryDisplayName = (category) => {
+    switch (category) {
+      case 'Ask for Feedback':
+        return 'Feedback'
+      case 'Ask for Collaboration':
+        return 'Collaboration'
+      case 'Ask for Mentorship':
+        return 'Mentorship'
+      default:
+        return category
+    }
+  }
+
   const categories = [
     'All Discussions',
     'Following',
     'Introductions',
     'Announcements',
     'Celebrations',
-    'Ideas & Feedback',
-    'Misc. Topics'
+    'Ask for Feedback',
+    'Ask for Collaboration',
+    'Ask for Mentorship',
   ]
 
 const filterOptions = [
@@ -542,7 +596,7 @@ useEffect(() => {
                     >
                       <div className="post-avatar-container">
                         <img
-                          src={post.author.avatar || 'https://via.placeholder.com/40'}
+                          src={post.author.avatar || blankProfile}
                           alt={post.author.name}
                           className="post-avatar"
                         />
@@ -569,7 +623,7 @@ useEffect(() => {
                               alt={post.category}
                               className="category-icon"
                             />
-                            {post.category}
+                            {getCategoryDisplayName(post.category)}
                           </span>
                         </div>
 
@@ -580,12 +634,18 @@ useEffect(() => {
                             <img src={message} alt="Message Icon" />
                             <p className='mb-0 pb-0 post-date-paragraph'>Posted: <span>{post.date}</span></p>
                           </div>
-                          <div className='d-flex align-items-center gap-2 justify-content-center'>
-                            <img src={reply} alt="Reply Icon" />
-                            <p className='mb-0 pb-0 post-date-paragraph'>
-                              Latest reply from <span>{post.latestReplyFrom}</span>
-                            </p>
-                          </div>
+
+
+                          {
+                            post.latestReplyFrom && (
+                              <div className='d-flex align-items-center gap-2 justify-content-center'>
+                                <img src={reply} alt="Reply Icon" />
+                                <p className='mb-0 pb-0 post-date-paragraph'>
+                                  Latest reply from <span>{post.latestReplyFrom}</span>
+                                </p>
+                              </div>
+                            )                   
+                          }
                         </div>
 
 
@@ -609,7 +669,7 @@ useEffect(() => {
                           {post.participants && post.participants.slice(0, 4).map((participant, idx) => (
                             <img
                               key={idx}
-                              src={participant}
+                              src={participant || blankProfile}
                               alt="participant"
                               className="participant-avatar"
                             />
@@ -671,6 +731,12 @@ useEffect(() => {
           <div className="forum-sidebar">
             <div className="sidebar-section">
               <div className="categories-list">
+                {/* <div className='mb-3'>
+                  <AcademyBtn
+                    title={'View Reported Posts'}
+                    onClick={handleViewReportedPosts}
+                  />
+                </div> */}
                 <AcademyBtn
                   title={'Start New Discussion'}
                   onClick={handleNewDiscussion}
@@ -683,12 +749,13 @@ useEffect(() => {
                       onClick={() => handleCategoryClick(category)}
                     >
                       {category === 'All Discussions' && <img src={message} alt="Speech Bubble Icon" />}
-                      {category === 'Following' && <img src={star} alt="Star Icon" className='icon' />}
-                      {category === 'Introductions' && <img src={wavingHand} alt="Waving Hand Icon" />}
-                      {category === 'Announcements' && <img src={loudSpeaker} alt="Megaphone Icon" />}
-                      {category === 'Celebrations' && <img src={partyPopper} alt="Party Popper Icon" />}
-                      {category === 'Ideas & Feedback' && <img src={lightBulb} alt="Light Bulb Icon" />}
-                      {category === 'Misc. Topics' && <img src={speechBalloon} alt="Speech Bubble Icon" />}
+                                            {category === 'Following' && <img src={star} alt="Star Icon" className='icon' />}
+                                            {category === 'Introductions' && <img src={wavingHand} alt="Waving Hand Icon" />}
+                                            {category === 'Announcements' && <img src={loudSpeaker} alt="Megaphone Icon" />}
+                                            {category === 'Celebrations' && <img src={partyPopper} alt="Party Popper Icon" />}
+                                            {category === 'Ask for Feedback' && <img src={speechBalloon} alt="Light Bulb Icon" />}
+                                            {category === 'Ask for Collaboration' && <img src={wavingHand} alt="Speech Bubble Icon" />}
+                                            {category === 'Ask for Mentorship' && <img src={lightBulb} alt="Speech Bubble Icon" />}
                       <span>{category}</span>
                     </div>
                     {category === 'Following' && <hr style={{ width: '100%', borderColor: 'gray', margin: '8px 0' }} />}
@@ -706,6 +773,14 @@ useEffect(() => {
         onHide={closeDiscussionModal}
         editingPost={editingPost}
         onSuccess={handleDiscussionSuccess}
+      />
+
+      {/* Report Post Modal */}
+      <ReportPostModal
+        show={showReportModal}
+        onHide={() => setShowReportModal(false)}
+        post={reportingPost}
+        onSuccess={handleReportSuccess}
       />
     </>
   )

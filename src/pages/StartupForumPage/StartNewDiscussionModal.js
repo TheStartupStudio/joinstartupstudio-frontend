@@ -6,6 +6,9 @@ import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import axiosInstance from '../../utils/AxiosInstance'
+import foulWords from '../../assets/json/foul-words.json'
+import { useSelector } from 'react-redux'
+import UserAgreementModal from '../../components/UserAgreementModal'
 
 import wavingHand from '../../assets/images/academy-icons/svg/Waving Hand.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
@@ -20,6 +23,11 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showContentWarning, setShowContentWarning] = useState(false)
+  const [showUserAgreement, setShowUserAgreement] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  
+  const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -46,14 +54,19 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       icon: partyPopper
     },
     {
-      name: 'Ideas & Feedback',
-      color: '#96CEB4',
+      name: 'Ask for Feedback',
+      color: '#F49AC2',
       icon: lightBulb
     },
     {
-      name: 'Misc. Topics',
-      color: '#FFEAA7',
+      name: 'Ask for Collaboration',
+      color: '#A29BFE',
       icon: speechBalloon
+    },
+    {
+      name: 'Ask for Mentorship',
+      color: '#81ECEC',
+      icon: wavingHand
     }
   ]
 
@@ -92,6 +105,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       selectedCategory: categoryName,
       category: categoryName
     }))
+    setIsDropdownOpen(false)
   }
 
   const handleMessageChange = (content) => {
@@ -109,11 +123,36 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     return true
   }
 
+  const containsFoulLanguage = (text) => {
+    if (!text) return false
+    
+    // Strip HTML tags from content
+    const strippedText = text.replace(/<[^>]*>/g, ' ').toLowerCase()
+    
+    // Check if any foul word exists in the text
+    return foulWords.some(word => {
+      const regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'i')
+      return regex.test(strippedText)
+    })
+  }
+
   const handleSubmit = async () => {
     setFormSubmitted(true)
     
     if (!validateForm()) {
       toast.error('Please fill in all fields')
+      return
+    }
+
+    // Check if user needs to agree to terms
+    if (!currentUser?.forumAgreement) {
+      setShowUserAgreement(true)
+      return
+    }
+
+    // Check for foul language
+    if (containsFoulLanguage(formData.title) || containsFoulLanguage(formData.content)) {
+      setShowContentWarning(true)
       return
     }
 
@@ -179,7 +218,18 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     setFormSubmitted(false)
     setLoading(false)
     setShowDeleteConfirm(false)
+    setShowContentWarning(false)
+    setShowUserAgreement(false)
+    setIsDropdownOpen(false)
     onHide()
+  }
+
+  const handleUserAgreementSuccess = () => {
+    setShowUserAgreement(false)
+    // Retry submission after agreement
+    setTimeout(() => {
+      handleSubmit()
+    }, 300)
   }
 
   const handleDelete = async () => {
@@ -251,49 +301,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
         </Modal.Header>
         
         <Modal.Body className="pb-4">
-          {/* Category Selection */}
-          <div className="mb-3">
-            <div className="d-flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <div
-                  key={category.name}
-                  className={`category-selection-btn ${formData.selectedCategory === category.name ? 'selected' : ''}`}
-                  onClick={() => handleCategorySelect(category.name)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 16px',
-                    borderRadius: '20px',
-                    border: formData.selectedCategory === category.name ? `2px solid ${category.color}` : '2px solid #e0e0e0',
-                    backgroundColor: formData.selectedCategory === category.name ? category.color : 'white',
-                    color: formData.selectedCategory === category.name ? 'white' : '#333',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    boxShadow: formData.selectedCategory === category.name ? '0 4px 12px rgba(0, 0, 0, 0.15)' : '0 2px 4px rgba(0, 0, 0, 0.1)',
-                    transform: formData.selectedCategory === category.name ? 'translateY(-1px)' : 'none'
-                  }}
-                >
-                  <img
-                    src={category.icon}
-                    alt={category.name}
-                    style={{
-                      width: '16px',
-                      height: '16px',
-                    }}
-                  />
-                  {category.name}
-                </div>
-              ))}
-            </div>
-            {formSubmitted && !formData.category && (
-              <div className="text-danger mt-2" style={{ fontSize: '12px' }}>
-                Please select a category
-              </div>
-            )}
-          </div>
 
           <div className="mb-3">
             <div 
@@ -327,6 +334,104 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
             {formSubmitted && !formData.title.trim() && (
               <div className="text-danger mt-1" style={{ fontSize: '12px' }}>
                 Please enter a subject line
+              </div>
+            )}
+          </div>
+
+                    {/* Category Selection */}
+          <div className="mb-3" style={{ position: 'relative' }}>
+            <div 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              style={{
+                boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                backgroundColor: 'white',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '14px',
+                color: formData.selectedCategory ? 'black' : '#999',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {formData.selectedCategory && (
+                  <img 
+                    src={categories.find(c => c.name === formData.selectedCategory)?.icon}
+                    alt=""
+                    style={{ width: '18px', height: '18px' }}
+                  />
+                )}
+                <span>{formData.selectedCategory || 'Select a category'}</span>
+              </div>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="12" 
+                height="12" 
+                viewBox="0 0 12 12" 
+                fill="none"
+                style={{
+                  transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.2s ease'
+                }}
+              >
+                <path d="M6 8L2 4H10L6 8Z" fill="#666"/>
+              </svg>
+            </div>
+            
+            {isDropdownOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 4px)',
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'white',
+                  boxShadow: '0 6px 16px 0 rgba(0, 0, 0, 0.25)',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  zIndex: 1000,
+                  maxHeight: '250px',
+                  overflowY: 'auto',
+                  padding: '10px'
+                }}
+              >
+                {categories.map((category) => (
+                  <div
+                    key={category.name}
+                    onClick={() => handleCategorySelect(category.name)}
+                    style={{
+                      padding: '4px',
+                      display: 'flex',
+                      gap: '12px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      transition: 'all 0.2s ease',
+                      backgroundColor: 'transparent',
+                      borderLeft: '3px solid transparent',
+                      flexDirection: 'column',
+                      gap: '4px',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = `#45B7D120`
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent'
+                    }}
+                  >
+                    <span style={{ color: 'black', fontWeight: formData.selectedCategory === category.name ? '600' : '400' }}>
+                      {category.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {formSubmitted && !formData.category && (
+              <div className="text-danger mt-2" style={{ fontSize: '12px' }}>
+                Please select a category
               </div>
             )}
           </div>
@@ -473,6 +578,63 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
           </div>
         </div>
       )}
+
+      {showContentWarning && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999
+          }}
+          onClick={() => setShowContentWarning(false)}
+        >
+          <div 
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'white',
+              padding: '30px',
+              borderRadius: '24px',
+              textAlign: 'center',
+              width: '100%',
+              maxWidth: '742px',
+              margin: '0px 15px',
+              position: 'relative'
+            }}
+            className="delete-new-discussion-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-100 text-start">
+              <div style={{position: 'absolute', top: 0, right: 0, padding:'17px', borderRadius: "0 24px", boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)', cursor: 'pointer' }} onClick={() => setShowContentWarning(false)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                  <path d="M9.78105 16.25L15.9061 22.375C16.1561 22.625 16.2761 22.9167 16.2661 23.25C16.2561 23.5833 16.1256 23.875 15.8748 24.125C15.6248 24.3542 15.3331 24.4742 14.9998 24.485C14.6665 24.4958 14.3748 24.3758 14.1248 24.125L5.8748 15.875C5.7498 15.75 5.66105 15.6146 5.60855 15.4687C5.55605 15.3229 5.53064 15.1667 5.5323 15C5.53397 14.8333 5.56022 14.6771 5.61105 14.5312C5.66189 14.3854 5.75022 14.25 5.87605 14.125L14.1261 5.875C14.3552 5.64583 14.6419 5.53125 14.9861 5.53125C15.3302 5.53125 15.6269 5.64583 15.8761 5.875C16.1261 6.125 16.2511 6.42208 16.2511 6.76625C16.2511 7.11042 16.1261 7.40708 15.8761 7.65625L9.78105 13.75H23.7498C24.104 13.75 24.4011 13.87 24.6411 14.11C24.8811 14.35 25.0006 14.6467 24.9998 15C24.999 15.3533 24.879 15.6504 24.6398 15.8913C24.4006 16.1321 24.104 16.2517 23.7498 16.25H9.78105Z" fill="black"/>
+                </svg>
+              </div>
+              <div style={{padding: '5px', borderRadius: '50%', backgroundColor: '#E2E6EC', width: '36px', height:'36px', display:'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
+              </div>
+              <h5 style={{ margin: '16px 0px', fontSize:'15px', fontWeight: '600' }}>Content Warning</h5>
+            </div>
+            <p style={{ margin: '10px 0px 0px 0px', textAlign: 'center', fontSize: '14px', lineHeight: '1.6' }}>
+              Please remember that this forum is to be used in a professional manner. Profanity, bullying, harassment, and inappropriate content are not allowed. Posting such content may result in you being banned from posting.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* User Agreement Modal */}
+      <UserAgreementModal 
+        show={showUserAgreement}
+        onSuccess={handleUserAgreementSuccess}
+        onHide={() => setShowUserAgreement(false)}
+      />
     </>
   )
 }

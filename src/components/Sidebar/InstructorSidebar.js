@@ -79,7 +79,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'intro-course',
-    title: 'Intro to course',
+    title: 'Intro to the Studio',
     srcImage: IntroToIcon,
     to: '/my-course-in-entrepreneurship',
     roles: [2, 1],
@@ -87,7 +87,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'course-entrepreneurship',
-    title: 'Course in entrepreneurship',
+    title: 'Studio Sessions',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
     roles: [2, 1],

@@ -8,7 +8,8 @@ function ModalInput({
   type = 'text',
   value,
   onChange,
-  autoComplete
+  autoComplete,
+  readOnly
 }) {
   return (
     <div className='relative w-100 d-flex justify-content-between input-container-modal'>
@@ -20,6 +21,7 @@ function ModalInput({
         value={value}
         onChange={onChange}
         autoComplete={autoComplete}
+        readOnly={readOnly}
       />
       <label htmlFor={id} className='label-style'>
         {labelTitle}

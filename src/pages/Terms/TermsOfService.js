@@ -3,7 +3,7 @@ import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox80
 const TermsOfService = () => {
   return (
     <>
-        <a href='https://academy.learntostart.com/' className='logo-register'>
+        <a href='https://joinstartupstudio.com/' className='logo-register'>
         <img
           src={StartupStudioLogo}
           alt='course-logo'
@@ -17,7 +17,7 @@ const TermsOfService = () => {
       <h2 className='text-xl font-semibold mt-6 mb-2'>1. Welcome to Learn to Start!</h2>
       <p className='mb-4'>
         These Terms of Service ("Terms") govern your use of products and services provided by Learn to Start Inc. ("Learn to Start," "we," "us," "our").
-        By using our website <a href='https://academy.learntostart.com'> <strong>https://academy.learntostart.com</strong></a>, or our other Services, you agree to these Terms. PLEASE READ THESE TERMS CAREFULLY, especially Section 10 (Binding Arbitration; Class Action Waiver).
+        By using our website <a href='https://joinstartupstudio.com'> <strong>https://joinstartupstudio.com</strong></a>, or our other Services, you agree to these Terms. PLEASE READ THESE TERMS CAREFULLY, especially Section 10 (Binding Arbitration; Class Action Waiver).
       </p>
 
       <h2 className='text-xl font-semibold mt-6 mb-2'>1.2 Modifications to Terms of Service</h2>
