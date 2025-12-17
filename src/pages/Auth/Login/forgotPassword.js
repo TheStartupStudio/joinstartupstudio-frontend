@@ -91,7 +91,7 @@ const ForgotPassword = () => {
   return (
     <div className='gradient-color'>
       <div className='d-flex justify-content-between p-2'>
-        <a href='https://academy.learntostart.com/'>
+        <a href='https:// joinstartupstudio.com/'>
           <img
             src={StartupLogo}
             alt='course-logo'

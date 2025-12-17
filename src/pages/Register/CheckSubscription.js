@@ -461,7 +461,7 @@ useEffect(() => {
               The Startup Studio
             </p>
             <p className='fs-13 fw-medium text-black'>
-              https://academy.learntostart.com/
+              https:// joinstartupstudio.com/
             </p>
           </div>
         </div>

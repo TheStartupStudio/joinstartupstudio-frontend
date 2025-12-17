@@ -226,7 +226,7 @@ const ChooseLogin = () => {
           <li>
             <a
               className="fs-13 fw-medium text-decoration-none text-black"
-              href="https://academy.learntostart.com/"
+              href="https:// joinstartupstudio.com/"
             >
               HOME
             </a>
@@ -234,7 +234,7 @@ const ChooseLogin = () => {
           <li>
             <a
               className="fs-13 fw-medium text-decoration-none text-black"
-              href="https://academy.learntostart.com/contact.html"
+              href="https:// joinstartupstudio.com/contact.html"
             >
               CONTACT US
             </a>
