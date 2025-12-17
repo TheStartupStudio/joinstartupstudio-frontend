@@ -41,6 +41,7 @@ function Dashboard() {
   const [chatId, setChatId] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const user = useSelector((state) => state.user.user.user)
+  const finishedContent = useSelector((state) => state.course.finishedContent || [])
   const { trialTimeRemaining, isTrialActive } = useSelector(
     (state) => state.trialTimer
   )
@@ -85,53 +86,61 @@ function Dashboard() {
 
   const handleContinueCourse = async () => {
     try {
+      // Fetch the latest finished content
       await dispatch(fetchLtsCoursefinishedContent());
       
-      if (finishedContent && finishedContent.length > 0) {
-        const lastCompletedId = Math.max(...finishedContent);
-        let nextLessonId = lastCompletedId;
-        let targetLevel;
+      // Wait a bit for Redux to update
+      setTimeout(() => {
+        const currentFinishedContent = finishedContent;
         
-        if (lastCompletedId >= 70) {
-          targetLevel = 2;
-        } else if (lastCompletedId >= 60) {
-          targetLevel = 1;
-        } else {
-          targetLevel = 0;
-        }
-        
-        localStorage.setItem('selectedLesson', JSON.stringify({
-          activeLevel: targetLevel,
-          nextId: lastCompletedId,
-          lessonTitle: "Continue where you left off",
-          currentPlaceholder: "Continue where you left off"
-        }));
-        
-        history.push({
-          pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
-          state: {
+        if (currentFinishedContent && currentFinishedContent.length > 0) {
+          const lastCompletedId = Math.max(...currentFinishedContent);
+          let targetLevel;
+          
+          if (lastCompletedId >= 70) {
+            targetLevel = 2;
+          } else if (lastCompletedId >= 60) {
+            targetLevel = 1;
+          } else {
+            targetLevel = 0;
+          }
+          
+          localStorage.setItem('selectedLesson', JSON.stringify({
             activeLevel: targetLevel,
+            nextId: lastCompletedId,
+            lessonTitle: "Continue where you left off",
             currentPlaceholder: "Continue where you left off"
-          }
-        });
-      } else {
-        localStorage.setItem('selectedLesson', JSON.stringify({
-          activeLevel: 0,
-          nextId: 51,
-          lessonTitle: "The Myths of Entrepreneurship",
-          currentPlaceholder: "The Myths of Entrepreneurship"
-        }));
-        
-        history.push({
-          pathname: '/my-course-in-entrepreneurship/journal/51',
-          state: {
+          }));
+          
+          history.push({
+            pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
+            state: {
+              activeLevel: targetLevel,
+              currentPlaceholder: "Continue where you left off"
+            }
+          });
+        } else {
+          // No progress yet, start from the beginning
+          localStorage.setItem('selectedLesson', JSON.stringify({
             activeLevel: 0,
+            nextId: 51,
+            lessonTitle: "The Myths of Entrepreneurship",
             currentPlaceholder: "The Myths of Entrepreneurship"
-          }
-        });
-      }
+          }));
+          
+          history.push({
+            pathname: '/my-course-in-entrepreneurship/journal/51',
+            state: {
+              activeLevel: 0,
+              currentPlaceholder: "The Myths of Entrepreneurship"
+            }
+          });
+        }
+      }, 100);
     } catch (error) {
       console.error('Navigation error:', error);
+      // Navigate to start of course on error
+      history.push('/my-course-in-entrepreneurship/journal/51');
     }
   }
 
@@ -209,11 +218,11 @@ function Dashboard() {
                 <img src={AcademyLogo} alt='logo' style={{ width: '150px' }} />
               </div>
               <h3 className='page-title bold-page-title text-black mb-0 text-center-mob'>
-                Course in Entrepreneurship
+                STUDIO SESSIONS - BUILDING YOU FIRST
               </h3>
             </div>
             <AcademyBtn
-              title={'Continue Course'}
+              title={'Continue'}
               onClick={handleContinueCourse}
             />
             </div>
