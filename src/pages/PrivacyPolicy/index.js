@@ -3,7 +3,7 @@ import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox80
 const PrivacyPolicy = () => {
   return (
      <>
-      <a href='https:// joinstartupstudio.com/' className='logo-register'>
+      <a href='https://joinstartupstudio.com/' className='logo-register'>
         <img
           src={StartupStudioLogo}
           alt='course-logo'
@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
       <p className='text-sm text-gray-500 mb-8'>Effective Date: May 19, 2025</p>
 
       <p className='mb-4'>
-        Learn to Start, Inc. ("Learn to Start," "we," "us," or "our") respects your privacy and is committed to protecting it through our compliance with this Privacy Policy. This policy describes the types of information we may collect from you or that you may provide when you visit our website <a href='https:// joinstartupstudio.com'> <strong>https:// joinstartupstudio.com</strong></a> (the "Website") and our practices for collecting, using, maintaining, protecting, and disclosing that information.
+        Learn to Start, Inc. ("Learn to Start," "we," "us," or "our") respects your privacy and is committed to protecting it through our compliance with this Privacy Policy. This policy describes the types of information we may collect from you or that you may provide when you visit our website <a href='https://joinstartupstudio.com'> <strong>https://joinstartupstudio.com</strong></a> (the "Website") and our practices for collecting, using, maintaining, protecting, and disclosing that information.
       </p>
 
       <p className='mb-4'>

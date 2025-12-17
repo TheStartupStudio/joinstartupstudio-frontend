@@ -14,7 +14,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
     >
       <img
         onClick={() =>
-          (window.location.href = 'https:// joinstartupstudio.com/')
+          (window.location.href = 'https://joinstartupstudio.com/')
         }
         className='cursor-pointer'
         src={courseLogo}
@@ -26,7 +26,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
           <li className={`${platformClass}`}>
             <a
               className={`fs-13 fw-medium `}
-              href='https:// joinstartupstudio.com/explore-the-platform-1.html'
+              href='https://joinstartupstudio.com/explore-the-platform-1.html'
               style={{ color: '#000000' }}
             >
               EXPLORE THE PLATFORM
@@ -35,7 +35,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
           <li className={`${courseClass}`}>
             <a
               className='fs-13 fw-medium'
-              href='https:// joinstartupstudio.com/explore-the-course.html'
+              href='https://joinstartupstudio.com/explore-the-course.html'
               style={{ color: '#000000' }}
             >
               EXPLORE THE COURSE
@@ -53,7 +53,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
           <li>
             <a
               className='fs-13 fw-medium'
-              href='https:// joinstartupstudio.com/contact.html'
+              href='https://joinstartupstudio.com/contact.html'
               style={{ color: '#000000' }}
             >
               CONTACT
