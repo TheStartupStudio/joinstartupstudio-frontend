@@ -751,3 +751,343 @@ outline: none;
     width: 100%;
   }
 }
+
+
+.view-organization-modal .saveContinue-btn{
+  width: 100%;
+}
+
+/* ==========================================
+   EDIT LOGO MODAL STYLES
+   ========================================== */
+
+.edit-logo-modal .modal-dialog {
+  max-width: 800px;
+  margin: 1.75rem auto;
+}
+
+.edit-logo-modal .modal-content {
+  border-radius: 24px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+.edit-logo-modal-body {
+  padding: 40px;
+}
+
+.edit-logo-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.edit-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(200, 205, 216, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.edit-logo-title {
+  color: #231F20;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.logo-upload-section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px;
+  background: rgba(227, 229, 233, 0.50);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.section-title span {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.section-description {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.logo-upload-container {
+  width: 100%;
+}
+
+.upload-area-wrapper {
+  width: 100%;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 20px;
+}
+
+.upload-label {
+  flex: 1;
+  color: #6F6F6F;
+  font-family: Montserrat;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.upload-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 12px;
+}
+
+.upload-area {
+  flex: 1;
+  width: 192px;
+  height: 192px;
+  min-height: 250px;
+  border: 2px dashed #E2E6EC;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #FAFBFC;
+  padding: 20px;
+  position: relative;
+}
+
+.upload-area.horizontal {
+  max-height: 250px;
+}
+
+.upload-area:hover {
+  border-color: #54C7DF;
+  background: #F0F9FB;
+}
+
+.upload-area.uploading {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.upload-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-spinner p {
+  color: #6F6F6F;
+  font-family: Montserrat;
+  font-size: 13px;
+  margin: 0;
+}
+
+.uploaded-logo-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.uploaded-logo-preview img {
+  max-width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+}
+
+.uploaded-logo-preview.horizontal img {
+  max-height: 160px;
+}
+
+.remove-uploaded-logo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff4444;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.remove-uploaded-logo:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  color: #6F6F6F;
+}
+
+.upload-text {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.upload-subtext {
+  color: #6F6F6F;
+  font-family: Montserrat;
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0 0 12px 0;
+}
+
+.upload-format {
+  color: #999;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.example-area {
+  flex: 1;
+  max-height: 250px;
+  border: 2px solid #E2E6EC;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FAFBFC;
+  padding: 20px;
+}
+
+.example-area.horizontal {
+  max-height: 250px;
+}
+
+.example-image {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  object-fit: contain;
+}
+
+.upload-requirements {
+  color: #999;
+  font-family: Montserrat;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+}
+
+.edit-logo-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #E2E6EC;
+}
+
+.btn-cancel-logo,
+.btn-save-logo {
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: none;
+  font-family: Montserrat;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel-logo {
+  background: #DEE1E6;
+  color: #000;
+}
+
+.btn-cancel-logo:hover {
+  background: #C9CDD4;
+}
+
+.btn-save-logo {
+  background: #51C7DF;
+  color: #FFF;
+}
+
+.btn-save-logo:hover {
+  background: #3DA8BF;
+}
+
+/* Responsive styles for edit logo modal */
+@media (max-width: 768px) {
+  .edit-logo-modal .modal-dialog {
+    max-width: 95%;
+    margin: 0.5rem;
+  }
+
+  .edit-logo-modal-body {
+    padding: 24px;
+  }
+
+  .upload-row {
+    flex-direction: column;
+  }
+
+  .label-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .example-area {
+    min-height: 150px;
+  }
+
+  .edit-logo-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel-logo,
+  .btn-save-logo {
+    width: 100%;
+  }
+}

@@ -392,7 +392,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
             </h4>
 
             <div className="header-icons-nav">
-              <div onClick={handleClose} style={{ cursor: 'pointer' }}>
+              <div onClick={handleClose} style={{ cursor: 'pointer' }} title="Go Back">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                   <path d="M23.125 15H7.5M7.5 15L15 7.5M7.5 15L15 22.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -416,13 +416,13 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                 {!isInstructor && (
 
 <>
-                <div onClick={() => setMode('edit')} style={{ cursor: 'pointer' }}>
+                <div onClick={() => setMode('edit')} style={{ cursor: 'pointer' }} title="Edit Invoice">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                     <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
 
-                <div onClick={handleSendInvoice} style={{ cursor: loading ? 'not-allowed' : 'pointer' }}>
+                <div onClick={handleSendInvoice} style={{ cursor: loading ? 'not-allowed' : 'pointer' }} title="Send Invoice via Email">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                     <path d="M11.25 11.25L16.875 15L22.5 11.25" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M3.75 16.875H6.25" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -436,7 +436,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                 </>
                 
               ) : mode === 'edit' && !loading ? (
-                <div onClick={handleSave} style={{ cursor: loading ? 'not-allowed' : 'pointer' }}>
+                <div onClick={handleSave} style={{ cursor: loading ? 'not-allowed' : 'pointer' }} title="Save Changes">
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                     <path d="M3.75 24.25V5.75C3.75 4.64543 4.64543 3.75 5.75 3.75H20.4216C20.952 3.75 21.4607 3.96071 21.8358 4.33579L25.6642 8.16421C26.0393 8.53929 26.25 9.04799 26.25 9.57843V24.25C26.25 25.3546 25.3546 26.25 24.25 26.25H5.75C4.64543 26.25 3.75 25.3546 3.75 24.25Z" stroke="black" strokeWidth="1.5"/>
                     <path d="M10.6 11.25H19.4C19.7314 11.25 20 10.9814 20 10.65V4.35C20 4.01863 19.7314 3.75 19.4 3.75H10.6C10.2686 3.75 10 4.01863 10 4.35V10.65C10 10.9814 10.2686 11.25 10.6 11.25Z" stroke="black" strokeWidth="1.5"/>
