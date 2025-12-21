@@ -194,7 +194,7 @@ useEffect(() => {
   }
 
   const handleViewReportedPosts = () => {
-    handleCategoryClick('Reported Posts')
+    history.push('/reported-posts')
   }
 
   const handleReportPost = (post, event) => {
@@ -214,7 +214,6 @@ useEffect(() => {
     if (path.includes('introductions')) return 'Introductions'
     if (path.includes('announcements')) return 'Announcements'
     if (path.includes('celebrations')) return 'Celebrations'
-    if (path.includes('ideas') || path.includes('feedback')) return 'Ideas & Feedback'
     if (path.includes('following')) return 'Following'
     if(path.includes('ask-for-feedback')) return 'Ask for Feedback'
     if(path.includes('ask-for-collaboration')) return 'Ask for Collaboration'
@@ -731,12 +730,14 @@ useEffect(() => {
           <div className="forum-sidebar">
             <div className="sidebar-section">
               <div className="categories-list">
-                {/* <div className='mb-3'>
-                  <AcademyBtn
-                    title={'View Reported Posts'}
-                    onClick={handleViewReportedPosts}
-                  />
-                </div> */}
+                {currentUser?.role_id === 3 && (
+                  <div className='mb-3'>
+                    <AcademyBtn
+                      title={'View Reported Posts'}
+                      onClick={handleViewReportedPosts}
+                    />
+                  </div>
+                )}
                 <AcademyBtn
                   title={'Start New Discussion'}
                   onClick={handleNewDiscussion}

@@ -485,9 +485,9 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {loading ? (
+                {/* {loading ? (
                   <span className="spinner-border spinner-border-sm me-2" />
-                ) : null}
+                ) : null} */}
                 {loading ? (editingPost ? 'UPDATING...' : 'SUBMITTING...') : (editingPost ? 'UPDATE' : 'SUBMIT')}
               </button>
             </div>
@@ -569,9 +569,9 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
                   fontWeight: '600'
                 }}
               >
-                {loading ? (
+                {/* {loading ? (
                   <span className="spinner-border spinner-border-sm me-2" />
-                ) : null}
+                ) : null} */}
                 {loading ? 'DELETING...' : 'DELETE DISCUSSION'}
               </Button>
             </div>

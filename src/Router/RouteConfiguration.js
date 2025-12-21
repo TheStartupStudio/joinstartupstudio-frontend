@@ -205,6 +205,9 @@ const LeadershipJournalManagement = React.lazy(() =>
   import('../pages/LeadershipJournalManagement')
 )
 
+const ReportedPosts = React.lazy(() =>
+  import('../pages/ReportedPosts')
+)
 
 const ViewInvoices = React.lazy(() => import('../pages/ViewInvoices'))
 
@@ -250,6 +253,12 @@ export const adminRoutes = [
     breadcrumb: 'Leadership Journal Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
     requiresUniversitySetting: 'hasLeadershipJournal'
+  },
+  {
+    path: '/reported-posts',
+    component: ReportedPosts,
+    breadcrumb: 'Reported Posts',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
     path: '/my-school/:page?',

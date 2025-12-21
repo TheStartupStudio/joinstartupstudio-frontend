@@ -29,6 +29,7 @@ import AddCommentModal from './AddCommentModal'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
 import ReportPostModal from './ReportPostModal'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
+import arrowLeft from '../../assets/images/academy-icons/left-arrow.png'
 
 
 const ForumPostSkeleton = () => {
@@ -742,6 +743,10 @@ const CommentSection = () => {
       </div>
 
       <div className="forum-page">
+        <div className='d-flex align-items-center gap-2' style={{ color: '#52C7DE', cursor: 'pointer', fontWeight: '500',  }} onClick={() => history.goBack()}>
+          <img src={arrowLeft} alt="Go Back" width={16} height={16} style={{ filter: 'invert(47%) sepia(68%) saturate(478%) hue-rotate(166deg) brightness(94%) contrast(89%)' }} />
+          Go Back
+        </div>    
         <div className="forum-page-container">
           <div className="forum-main-content">
 

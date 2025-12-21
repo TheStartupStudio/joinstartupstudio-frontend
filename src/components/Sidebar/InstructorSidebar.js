@@ -25,6 +25,7 @@ import CertificateModal from '../UserDetails/CertificateModal'
 import EditUserModal from '../UserDetails/EditUserModal'
 import SubscriptionModal from '../UserDetails//SubscriptionModal'
 import InvoiceIcon from '../../assets/images/academy-icons/hand-card.png'
+import ForumIcon from '../../assets/images/academy-icons/svg/material-symbols_forum-outline-rounded.svg'
 
 const SIDEBAR_MENU_ITEMS = [
   {
@@ -110,6 +111,15 @@ const SIDEBAR_MENU_ITEMS = [
     roles: [2, 1],
     requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal') ? 'active' : ''
+  },
+  {
+    id: 'forum',
+    title: 'Startup Forum',
+    srcImage: ForumIcon,
+    to: '/startup-forum',
+    roles: [3, 1],
+    requiresUniversitySetting: 'hasForumAccess',
+    className: (pathname) => pathname.includes('startup-forum') ? 'active' : ''
   },
   {
     id: 'my-portfolio',

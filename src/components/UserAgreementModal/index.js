@@ -116,7 +116,7 @@ const UserAgreementModal = ({ show, onSuccess, onHide }) => {
           >
             {loading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" />
+                {/* <span className="spinner-border spinner-border-sm me-2" /> */}
                 Processing...
               </>
             ) : (

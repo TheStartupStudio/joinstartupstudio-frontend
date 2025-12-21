@@ -1,0 +1,415 @@
+import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
+import DataTable from '../../components/DataTable'
+import AcademyBtn from '../../components/AcademyBtn'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
+
+import './ReportedPosts.css'
+
+const ReportedPosts = () => {
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showBulkDropdown, setShowBulkDropdown] = useState(false)
+  const [reportsData, setReportsData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const bulkDropdownRef = useRef(null)
+
+  useEffect(() => {
+    // Mock data - you'll replace this with actual API call
+    setReportsData([
+      {
+        id: 1,
+        reportDate: '12/15/2024',
+        status: 'pending',
+        reportType: 'Spam',
+        resolution: 'Pending Review',
+        postTitle: 'Inappropriate Content Post',
+        reportedBy: 'John Doe'
+      },
+      {
+        id: 2,
+        reportDate: '12/14/2024',
+        status: 'resolved',
+        reportType: 'Harassment',
+        resolution: 'Post Removed',
+        postTitle: 'Offensive Language',
+        reportedBy: 'Jane Smith'
+      },
+      {
+        id: 3,
+        reportDate: '12/13/2024',
+        status: 'pending',
+        reportType: 'Misinformation',
+        resolution: 'Under Investigation',
+        postTitle: 'False Claims About Product',
+        reportedBy: 'Mike Johnson'
+      },
+      {
+        id: 4,
+        reportDate: '12/12/2024',
+        status: 'resolved',
+        reportType: 'Spam',
+        resolution: 'Warning Issued',
+        postTitle: 'Duplicate Promotional Post',
+        reportedBy: 'Sarah Williams'
+      },
+      {
+        id: 5,
+        reportDate: '12/11/2024',
+        status: 'archived',
+        reportType: 'Off-topic',
+        resolution: 'No Action Taken',
+        postTitle: 'Unrelated Discussion',
+        reportedBy: 'Tom Brown'
+      }
+    ])
+  }, [])
+
+  const columns = useMemo(() => [
+    {
+      key: 'reportDate',
+      title: 'REPORT DATE',
+      sortable: true,
+      filterable: true,
+      width: '15%',
+      render: (value) => <span>{value}</span>
+    },
+    {
+      key: 'status',
+      title: 'STATUS',
+      sortable: true,
+      filterable: true,
+      width: '15%',
+      render: (value) => (
+        <span className={`status-badge status-${value}`}>
+          {value.charAt(0).toUpperCase() + value.slice(1)}
+        </span>
+      )
+    },
+    {
+      key: 'reportType',
+      title: 'REPORT TYPE',
+      sortable: true,
+      filterable: true,
+      width: '15%',
+      render: (value) => <span>{value}</span>
+    },
+    {
+      key: 'resolution',
+      title: 'RESOLUTION',
+      sortable: true,
+      filterable: true,
+      width: '25%',
+      render: (value) => <span>{value}</span>
+    }
+  ], [])
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value)
+  }
+
+  const handleRowAction = (actionType, item) => {
+    console.log(`${actionType} action for:`, item)
+    
+    switch (actionType) {
+      case 'view':
+        toast.info(`Viewing report #${item.id}`)
+        // Navigate to report details or open modal
+        break
+      case 'archive':
+        toast.success(`Report #${item.id} archived`)
+        // API call to archive
+        break
+      case 'delete':
+        toast.success(`Report #${item.id} deleted`)
+        // API call to delete
+        break
+      case 'export':
+        toast.success(`Exporting report #${item.id}`)
+        // API call to export
+        break
+      default:
+        break
+    }
+  }
+
+  const handleBulkArchive = () => {
+    toast.success('Bulk archive action triggered')
+    setShowBulkDropdown(false)
+  }
+
+  const handleBulkDelete = () => {
+    toast.success('Bulk delete action triggered')
+    setShowBulkDropdown(false)
+  }
+
+  const handleBulkExport = () => {
+    toast.success('Bulk export action triggered')
+    setShowBulkDropdown(false)
+  }
+
+  const handleViewArchive = () => {
+    toast.info('Viewing archived reports')
+    // Navigate to archive view or filter archived reports
+  }
+
+  const handleReturnToForum = () => {
+    history.push('/startup-forum')
+  }
+
+  const bulkOptions = [
+    {
+      name: 'Archive Reports',
+      action: handleBulkArchive,
+      svg: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M16.667 8.33301V15.833C16.667 16.7535 15.9208 17.4997 15.0003 17.4997H5.00033C4.07985 17.4997 3.33366 16.7535 3.33366 15.833V8.33301" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M18.3337 4.16699H1.66699V8.33366H18.3337V4.16699Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M8.33301 11.667H11.6663" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )
+    },
+    {
+      name: 'Delete Reports',
+      action: handleBulkDelete,
+      svg: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M2.5 5H4.16667H17.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M15.8337 4.99967V16.6663C15.8337 17.108 15.6581 17.5316 15.3455 17.8441C15.033 18.1567 14.6094 18.3323 14.167 18.3323H5.83366C5.39163 18.3323 4.96807 18.1567 4.65551 17.8441C4.34295 17.5316 4.16699 17.108 4.16699 16.6663V4.99967M6.66699 4.99967V3.33301C6.66699 2.89098 6.84295 2.46742 7.15551 2.15486C7.46807 1.8423 7.89163 1.66634 8.33366 1.66634H11.667C12.109 1.66634 12.5326 1.8423 12.8451 2.15486C13.1577 2.46742 13.3337 2.89098 13.3337 3.33301V4.99967" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )
+    },
+    {
+      name: 'Export Reports',
+      action: handleBulkExport,
+      svg: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M5.83301 8.33301L9.99967 12.4997L14.1663 8.33301" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10 12.5V2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )
+    }
+  ]
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
+        setShowBulkDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  return (
+    <div className="reported-posts-page">
+      <div>
+        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
+            <div className="d-flex flex-column gap-2">
+              <h3 className="text-black mb-0"
+                style={{
+                  color: '#231F20',
+                  fontFamily: 'Montserrat',
+                  fontSize: '23px',
+                  fontStyle: 'normal',
+                  fontWeight: 700,
+                  lineHeight: 'normal',
+                }}
+              >
+                REPORTED POSTS MANAGEMENT
+              </h3>
+              <p
+                style={{
+                  color: '#AEAEAE',
+                  fontFamily: 'Montserrat',
+                  fontSize: '15px',
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  lineHeight: '20px',
+                  marginBottom: '0px',
+                }}
+              >
+                Review and manage reported forum posts
+              </p>
+            </div>
+          </div>
+          <img
+            src={MenuIcon}
+            alt='menu'
+            className='menu-icon-cie self-start-tab cursor-pointer'
+            onClick={() => dispatch(toggleCollapse())}
+          />
+        </div>
+      </div>
+      
+      <div className="reported-posts-container position-relative">
+        <img 
+          src={blueManagerBG} 
+          className='position-absolute' 
+          style={{
+            top: 0, 
+            left: '50%', 
+            transform: 'translateX(-50%)',
+            zIndex: 0,
+            pointerEvents: 'none',
+            width: '100dvw',
+            height: '100dvh'
+          }} 
+          alt="Decorative background"
+          aria-hidden="true"
+        />
+
+        <div className='main-search-table-container'>
+          <div className="search-actions-bar">
+            <div className='d-flex align-items-center gap-2' style={{fontSize: "15px", fontWeight: "500", cursor: "pointer"}} onClick={handleReturnToForum}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M6.52005 10.8333L10.6034 14.9167C10.7701 15.0833 10.8501 15.2778 10.8434 15.5C10.8367 15.7222 10.7498 15.9167 10.5826 16.0833C10.4159 16.2361 10.2214 16.3161 9.99922 16.3233C9.777 16.3306 9.58255 16.2506 9.41588 16.0833L3.91588 10.5833C3.83255 10.5 3.77338 10.4097 3.73838 10.3125C3.70338 10.2153 3.68644 10.1111 3.68755 10C3.68866 9.88889 3.70616 9.78472 3.74005 9.6875C3.77394 9.59028 3.83283 9.5 3.91672 9.41667L9.41672 3.91667C9.5695 3.76389 9.76061 3.6875 9.99005 3.6875C10.2195 3.6875 10.4173 3.76389 10.5834 3.91667C10.7501 4.08333 10.8334 4.28139 10.8334 4.51083C10.8334 4.74028 10.7501 4.93806 10.5834 5.10417L6.52005 9.16667H15.8326C16.0687 9.16667 16.2667 9.24667 16.4267 9.40667C16.5867 9.56667 16.6664 9.76444 16.6659 10C16.6653 10.2356 16.5853 10.4336 16.4259 10.5942C16.2664 10.7547 16.0687 10.8344 15.8326 10.8333H6.52005Z" fill="black"/>
+                </svg>
+                Return to Forum
+            </div>
+            <div className="search-container">
+              <div className="search-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Search reports"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  className="search-input"
+                />
+                <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="actions-container">
+
+              <div>
+                <AcademyBtn
+                  title="View Archive"
+                  onClick={handleViewArchive}
+                />
+              </div>
+
+              <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
+                <div 
+                  className="bulk-actions"
+                  onClick={() => {
+                    setShowBulkDropdown(!showBulkDropdown)
+                  }}
+                >
+                  <span>BULK ACTIONS</span>
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+
+                {showBulkDropdown && (
+                  <div 
+                    className="dropdown-menu"
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      background: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      zIndex: 9999,
+                      marginTop: '4px',
+                      minWidth: '200px',
+                      display: 'block'
+                    }}
+                  >
+                    {bulkOptions.map((option, index) => (
+                      <div 
+                        key={index}
+                        className="dropdown-item"
+                        style={{
+                          padding: '12px 16px',
+                          color: 'black',
+                          fontFamily: 'Montserrat',
+                          fontSize: '12px',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                        onClick={() => {
+                          option.action()
+                        }}
+                      >
+                        {option.svg}
+                        <span>{option.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="table-container">
+            <DataTable 
+              columns={columns}
+              data={reportsData}
+              searchQuery={searchQuery}
+              onRowAction={handleRowAction}
+              showCheckbox={true}
+              activeTab="Reports"
+              customActions={[
+                { type: 'view', label: 'View Report' },
+                { type: 'archive', label: 'Archive Report' },
+                { type: 'delete', label: 'Delete Report' },
+                { type: 'export', label: 'Export Report' }
+              ]}
+            />
+          </div>
+
+          <div className="pagination-container">
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <span className="pagination-info">1 / 1</span>
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button className="pagination-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default ReportedPosts
