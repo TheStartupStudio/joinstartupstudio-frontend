@@ -6,8 +6,10 @@ import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import DataTable from '../../components/DataTable'
 import AcademyBtn from '../../components/AcademyBtn'
+import ViewReportedContentModal from '../../components/Modals/ViewReportedContentModal'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
+import axiosInstance from '../../utils/AxiosInstance'
 
 import './ReportedPosts.css'
 
@@ -18,58 +20,71 @@ const ReportedPosts = () => {
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [reportsData, setReportsData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [selectedReports, setSelectedReports] = useState([])
+  const [showViewModal, setShowViewModal] = useState(false)
+  const [selectedReportId, setSelectedReportId] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [limit] = useState(10)
+  const [isArchiveView, setIsArchiveView] = useState(false)
   const bulkDropdownRef = useRef(null)
 
   useEffect(() => {
-    // Mock data - you'll replace this with actual API call
-    setReportsData([
-      {
-        id: 1,
-        reportDate: '12/15/2024',
-        status: 'pending',
-        reportType: 'Spam',
-        resolution: 'Pending Review',
-        postTitle: 'Inappropriate Content Post',
-        reportedBy: 'John Doe'
-      },
-      {
-        id: 2,
-        reportDate: '12/14/2024',
-        status: 'resolved',
-        reportType: 'Harassment',
-        resolution: 'Post Removed',
-        postTitle: 'Offensive Language',
-        reportedBy: 'Jane Smith'
-      },
-      {
-        id: 3,
-        reportDate: '12/13/2024',
-        status: 'pending',
-        reportType: 'Misinformation',
-        resolution: 'Under Investigation',
-        postTitle: 'False Claims About Product',
-        reportedBy: 'Mike Johnson'
-      },
-      {
-        id: 4,
-        reportDate: '12/12/2024',
-        status: 'resolved',
-        reportType: 'Spam',
-        resolution: 'Warning Issued',
-        postTitle: 'Duplicate Promotional Post',
-        reportedBy: 'Sarah Williams'
-      },
-      {
-        id: 5,
-        reportDate: '12/11/2024',
-        status: 'archived',
-        reportType: 'Off-topic',
-        resolution: 'No Action Taken',
-        postTitle: 'Unrelated Discussion',
-        reportedBy: 'Tom Brown'
-      }
-    ])
-  }, [])
+    fetchReports()
+  }, [currentPage, isArchiveView])
+
+  const fetchReports = async () => {
+    try {
+      setLoading(true)
+      const endpoint = isArchiveView 
+        ? `/forum/reports/archived?page=${currentPage}&limit=${limit}`
+        : `/forum/reports?page=${currentPage}&limit=${limit}`
+      
+      const response = await axiosInstance.get(endpoint)
+      
+      console.log('API Response:', response.data)
+      
+      // Get reports from the new backend structure
+      const reports = response.data.data?.reports || response.data.reports || []
+      
+      console.log('Reports found:', reports)
+      
+      // Transform the reports data to match table format
+      const transformedData = reports.map(report => ({
+        id: report.id,
+        reportDate: report.reportDate || 'N/A',
+        status: report.status || 'pending',
+        reportType: report.reasonFlagged || report.reportType || 'N/A',
+        resolution: report.resolution || (
+          report.status === 'resolved' ? 'Resolved' : 
+          report.status === 'archived' ? 'Archived' :
+          report.status === 'dismissed' ? 'Dismissed' : 
+          'Pending Review'
+        ),
+        postTitle: report.postTitle || report.title || 'N/A',
+        postContent: report.postContent || report.description || 'N/A',
+        reportedBy: report.reportedBy || 'Unknown',
+        email: report.email || 'N/A',
+        postedBy: report.postedBy || 'Unknown',
+        reasonFlagged: report.reasonFlagged || report.reportType || 'N/A',
+        additionalDetails: report.additionalDetails || 'No additional details provided',
+        rawData: report // Keep raw data for reference
+      }))
+      
+      console.log('Transformed data:', transformedData)
+      
+      setReportsData(transformedData)
+      
+      const total = response.data.data?.total || response.data.total || reports.length
+      const totalPagesCount = response.data.data?.totalPages || response.data.totalPages || Math.ceil(total / limit) || 1
+      setTotalPages(totalPagesCount)
+    } catch (error) {
+      console.error('Error fetching reports:', error)
+      toast.error('Failed to fetch reports')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const columns = useMemo(() => [
     {
@@ -114,58 +129,193 @@ const ReportedPosts = () => {
     setSearchQuery(e.target.value)
   }
 
-  const handleRowAction = (actionType, item) => {
+  const handleSelectionChange = (selectedItems) => {
+    setSelectedReports(selectedItems)
+  }
+
+  const handleRowAction = async (actionType, item) => {
     console.log(`${actionType} action for:`, item)
     
     switch (actionType) {
       case 'view':
-        toast.info(`Viewing report #${item.id}`)
-        // Navigate to report details or open modal
+        setSelectedReportId(item.id)
+        setShowViewModal(true)
         break
       case 'archive':
-        toast.success(`Report #${item.id} archived`)
-        // API call to archive
+        await handleSingleArchive(item.id)
         break
       case 'delete':
-        toast.success(`Report #${item.id} deleted`)
-        // API call to delete
+        await handleSingleDelete(item.id)
         break
       case 'export':
-        toast.success(`Exporting report #${item.id}`)
-        // API call to export
+        await handleSingleExport(item.id)
         break
       default:
         break
     }
   }
 
-  const handleBulkArchive = () => {
-    toast.success('Bulk archive action triggered')
-    setShowBulkDropdown(false)
+  const handleSingleArchive = async (reportId) => {
+    try {
+      if (isArchiveView) {
+        await axiosInstance.put(`/forum/reports/${reportId}/unarchive`)
+        toast.success(`Report #${reportId} unarchived`)
+      } else {
+        await axiosInstance.put(`/forum/reports/${reportId}/archive`)
+        toast.success(`Report #${reportId} archived`)
+      }
+      fetchReports()
+    } catch (error) {
+      console.error(`Error ${isArchiveView ? 'unarchiving' : 'archiving'} report:`, error)
+      toast.error(`Failed to ${isArchiveView ? 'unarchive' : 'archive'} report`)
+    }
   }
 
-  const handleBulkDelete = () => {
-    toast.success('Bulk delete action triggered')
-    setShowBulkDropdown(false)
+  const handleSingleDelete = async (reportId) => {
+    try {
+      await axiosInstance.delete(`/forum/reports/${reportId}/delete`)
+      toast.success(`Report #${reportId} deleted`)
+      fetchReports()
+    } catch (error) {
+      console.error('Error deleting report:', error)
+      toast.error('Failed to delete report')
+    }
   }
 
-  const handleBulkExport = () => {
-    toast.success('Bulk export action triggered')
-    setShowBulkDropdown(false)
+  const handleSingleExport = async (reportId) => {
+    try {
+      const response = await axiosInstance.get(`/forum/reports/${reportId}/export`, {
+        responseType: 'blob'
+      })
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `report_${reportId}_${new Date().getTime()}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      
+      toast.success(`Report #${reportId} exported`)
+    } catch (error) {
+      console.error('Error exporting report:', error)
+      toast.error('Failed to export report')
+    }
+  }
+
+  const handleModalSubmit = async (data) => {
+    // The modal now handles the API call itself
+    // Just refresh the reports list after action
+    fetchReports()
+  }
+
+  const handleBulkArchive = async () => {
+    if (selectedReports.length === 0) {
+      toast.warning(`Please select reports to ${isArchiveView ? 'unarchive' : 'archive'}`)
+      return
+    }
+    
+    try {
+      const reportIds = selectedReports.map(report => report.id)
+      
+      if (isArchiveView) {
+        await axiosInstance.post('/forum/reports/bulk-unarchive', { reportIds })
+        toast.success(`${selectedReports.length} report(s) unarchived`)
+      } else {
+        await axiosInstance.post('/forum/reports/bulk-archive', { reportIds })
+        toast.success(`${selectedReports.length} report(s) archived`)
+      }
+      
+      setShowBulkDropdown(false)
+      setSelectedReports([])
+      fetchReports()
+    } catch (error) {
+      console.error(`Error ${isArchiveView ? 'unarchiving' : 'archiving'} reports:`, error)
+      toast.error(`Failed to ${isArchiveView ? 'unarchive' : 'archive'} reports`)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedReports.length === 0) {
+      toast.warning('Please select reports to delete')
+      return
+    }
+    
+    try {
+      const reportIds = selectedReports.map(report => report.id)
+      await axiosInstance.post('/forum/reports/bulk-delete', { reportIds })
+      
+      toast.success(`${selectedReports.length} report(s) deleted`)
+      setShowBulkDropdown(false)
+      setSelectedReports([])
+      fetchReports()
+    } catch (error) {
+      console.error('Error deleting reports:', error)
+      toast.error('Failed to delete reports')
+    }
+  }
+
+  const handleBulkExport = async () => {
+    if (selectedReports.length === 0) {
+      toast.warning('Please select reports to export')
+      return
+    }
+    
+    try {
+      const reportIds = selectedReports.map(report => report.id)
+      const response = await axiosInstance.post('/forum/reports/bulk-export', 
+        { reportIds },
+        { responseType: 'blob' }
+      )
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `reports_export_${new Date().getTime()}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      
+      toast.success(`Exporting ${selectedReports.length} report(s)`)
+      setShowBulkDropdown(false)
+    } catch (error) {
+      console.error('Error exporting reports:', error)
+      toast.error('Failed to export reports')
+    }
   }
 
   const handleViewArchive = () => {
-    toast.info('Viewing archived reports')
-    // Navigate to archive view or filter archived reports
+    setIsArchiveView(!isArchiveView)
+    setCurrentPage(1)
+    setSelectedReports([])
   }
 
   const handleReturnToForum = () => {
-    history.push('/startup-forum')
+    if (isArchiveView) {
+      // Return to current reports from archive view
+      setIsArchiveView(false)
+      setCurrentPage(1)
+      setSelectedReports([])
+    } else {
+      // Return to forum from current reports view
+      history.push('/startup-forum')
+    }
   }
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage)
+    }
+  }
+
+  const handleFirstPage = () => handlePageChange(1)
+  const handleLastPage = () => handlePageChange(totalPages)
+  const handlePrevPage = () => handlePageChange(currentPage - 1)
+  const handleNextPage = () => handlePageChange(currentPage + 1)
 
   const bulkOptions = [
     {
-      name: 'Archive Reports',
+      name: isArchiveView ? 'Unarchive Reports' : 'Archive Reports',
       action: handleBulkArchive,
       svg: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -228,7 +378,7 @@ const ReportedPosts = () => {
                   lineHeight: 'normal',
                 }}
               >
-                REPORTED POSTS MANAGEMENT
+                {isArchiveView ? 'REPORTED CONTENT ARCHIVE' : 'REPORTED POSTS MANAGEMENT'}
               </h3>
               <p
                 style={{
@@ -241,7 +391,7 @@ const ReportedPosts = () => {
                   marginBottom: '0px',
                 }}
               >
-                Review and manage reported forum posts
+                {isArchiveView ? 'View and manage archived reported content' : 'Review and manage reported forum posts'}
               </p>
             </div>
           </div>
@@ -277,7 +427,7 @@ const ReportedPosts = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M6.52005 10.8333L10.6034 14.9167C10.7701 15.0833 10.8501 15.2778 10.8434 15.5C10.8367 15.7222 10.7498 15.9167 10.5826 16.0833C10.4159 16.2361 10.2214 16.3161 9.99922 16.3233C9.777 16.3306 9.58255 16.2506 9.41588 16.0833L3.91588 10.5833C3.83255 10.5 3.77338 10.4097 3.73838 10.3125C3.70338 10.2153 3.68644 10.1111 3.68755 10C3.68866 9.88889 3.70616 9.78472 3.74005 9.6875C3.77394 9.59028 3.83283 9.5 3.91672 9.41667L9.41672 3.91667C9.5695 3.76389 9.76061 3.6875 9.99005 3.6875C10.2195 3.6875 10.4173 3.76389 10.5834 3.91667C10.7501 4.08333 10.8334 4.28139 10.8334 4.51083C10.8334 4.74028 10.7501 4.93806 10.5834 5.10417L6.52005 9.16667H15.8326C16.0687 9.16667 16.2667 9.24667 16.4267 9.40667C16.5867 9.56667 16.6664 9.76444 16.6659 10C16.6653 10.2356 16.5853 10.4336 16.4259 10.5942C16.2664 10.7547 16.0687 10.8344 15.8326 10.8333H6.52005Z" fill="black"/>
                 </svg>
-                Return to Forum
+                {isArchiveView ? 'Return to Current Reports' : 'Return to Forum'}
             </div>
             <div className="search-container">
               <div className="search-input-wrapper">
@@ -296,12 +446,14 @@ const ReportedPosts = () => {
 
             <div className="actions-container">
 
-              <div>
-                <AcademyBtn
-                  title="View Archive"
-                  onClick={handleViewArchive}
-                />
-              </div>
+              {!isArchiveView && (
+                <div>
+                  <AcademyBtn
+                    title={isArchiveView ? "View Active Reports" : "View Archive"}
+                    onClick={handleViewArchive}
+                  />
+                </div>
+              )}
 
               <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
                 <div 
@@ -355,7 +507,7 @@ const ReportedPosts = () => {
                         }}
                       >
                         {option.svg}
-                        <span>{option.name}</span>
+                        {option.name}
                       </div>
                     ))}
                   </div>
@@ -372,9 +524,11 @@ const ReportedPosts = () => {
               onRowAction={handleRowAction}
               showCheckbox={true}
               activeTab="Reports"
+              selectedItems={selectedReports}
+              onSelectionChange={handleSelectionChange}
+              loading={loading}
               customActions={[
-                { type: 'view', label: 'View Report' },
-                { type: 'archive', label: 'Archive Report' },
+                { type: 'archive', label: isArchiveView ? 'Unarchive Report' : 'Archive Report' },
                 { type: 'delete', label: 'Delete Report' },
                 { type: 'export', label: 'Export Report' }
               ]}
@@ -382,24 +536,24 @@ const ReportedPosts = () => {
           </div>
 
           <div className="pagination-container">
-            <button className="pagination-btn">
+            <button className="pagination-btn" onClick={handleFirstPage} disabled={currentPage === 1}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <button className="pagination-btn">
+            <button className="pagination-btn" onClick={handlePrevPage} disabled={currentPage === 1}>
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                 <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <span className="pagination-info">1 / 1</span>
-            <button className="pagination-btn">
+            <span className="pagination-info">{currentPage} / {totalPages}</span>
+            <button className="pagination-btn" onClick={handleNextPage} disabled={currentPage === totalPages}>
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                 <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <button className="pagination-btn">
+            <button className="pagination-btn" onClick={handleLastPage} disabled={currentPage === totalPages}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -408,6 +562,16 @@ const ReportedPosts = () => {
           </div>
         </div>
       </div>
+
+      <ViewReportedContentModal
+        isOpen={showViewModal}
+        toggle={() => {
+          setShowViewModal(false)
+          setSelectedReportId(null)
+        }}
+        reportId={selectedReportId}
+        onSubmit={handleModalSubmit}
+      />
     </div>
   )
 }

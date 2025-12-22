@@ -255,6 +255,12 @@ export const adminRoutes = [
     requiresUniversitySetting: 'hasLeadershipJournal'
   },
   {
+    path: '/startup-forum/:id',
+    component: StartupForumComments,
+    breadcrumb: 'Reported Posts',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
+  },
+  {
     path: '/reported-posts',
     component: ReportedPosts,
     breadcrumb: 'Reported Posts',
