@@ -255,9 +255,9 @@ export const adminRoutes = [
     requiresUniversitySetting: 'hasLeadershipJournal'
   },
   {
-    path: '/startup-forum/:id',
+    path: '/startup-forum/post/:id',
     component: StartupForumComments,
-    breadcrumb: 'Reported Posts',
+    breadcrumb: 'Forum Discussion',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
@@ -328,15 +328,8 @@ export const mutualRoutes = [
   },
   { path: '/leader-board', component: LeaderBoardPage, exact: true },
   { path: '/startup-forum', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/following', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/introductions', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/announcements', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/celebrations', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/ask-for-feedback', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/ask-for-collaboration', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/ask-for-mentorship', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/reported-posts', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/:id', component: StartupForumComments, exact: true },
+  { path: '/startup-forum/post/:id', component: StartupForumComments, exact: true },
+  { path: '/startup-forum/:categorySlug', component: StartupForumPage, exact: true },
   {
     path: '/iamr',
     component: IamrCertificationSystem,

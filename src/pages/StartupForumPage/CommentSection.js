@@ -362,34 +362,12 @@ const CommentSection = () => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)
-    
-    switch (category) {
-      case 'All Discussions':
-        history.push('/startup-forum')
-        break
-      case 'Following':
-        history.push('/startup-forum/following')
-        break
-      case 'Introductions':
-        history.push('/startup-forum/introductions')
-        break
-      case 'Announcements':
-        history.push('/startup-forum/announcements')
-        break
-      case 'Celebrations':
-        history.push('/startup-forum/celebrations')
-        break
-      case 'Ask for Feedback':
-        history.push('/startup-forum/ask-for-feedback')
-        break
-      case 'Ask for Collaboration':
-        history.push('/startup-forum/ask-for-collaboration')
-        break
-      case 'Ask for Mentorship':
-        history.push('/startup-forum/ask-for-mentorship')
-        break
-      default:
-        history.push('/startup-forum')
+  const handleCategoryClickFromComments = (category) => {
+    if (category === 'All Discussions') {
+      history.push('/startup-forum')
+    } else {
+      const slug = category.toLowerCase().replace(/\s+/g, '-')
+      history.push(`/startup-forum/${slug}`)
     }
   }
 
@@ -1151,6 +1129,7 @@ const CommentSection = () => {
       />
     </>
   )
+}
 }
 
 export default CommentSection

@@ -31,7 +31,11 @@ const SidebarItem = ({
       e.preventDefault()
       setDropdownOpen((prev) => !prev)
     } else if (onClick) {
-      onClick()
+      const shouldNavigate = onClick()
+      // If onClick returns false, prevent navigation
+      if (shouldNavigate === false) {
+        e.preventDefault()
+      }
     }
   }
 

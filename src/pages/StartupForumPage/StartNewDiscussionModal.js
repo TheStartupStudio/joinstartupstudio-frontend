@@ -19,7 +19,7 @@ import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
 
 
-const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
+const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCategories = [] }) => {
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -34,50 +34,44 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     description: '',
     content: '',
     category: '', 
-    selectedCategory: ''
+    selectedCategory: '',
+    categoryId: null
   })
 
-  const categories = [
-    {
-      name: 'Introductions',
-      color: '#FF6B6B',
-      icon: wavingHand
-    },
-    {
-      name: 'Announcements',
-      color: '#4ECDC4',
-      icon: loudSpeaker
-    },
-    {
-      name: 'Celebrations',
-      color: '#45B7D1',
-      icon: partyPopper
-    },
-    {
-      name: 'Ask for Feedback',
-      color: '#F49AC2',
-      icon: lightBulb
-    },
-    {
-      name: 'Ask for Collaboration',
-      color: '#A29BFE',
-      icon: speechBalloon
-    },
-    {
-      name: 'Ask for Mentorship',
-      color: '#81ECEC',
-      icon: wavingHand
+  // Map static category names to their icons
+  const getCategoryIcon = (categoryName) => {
+    const iconMap = {
+      'Introductions': wavingHand,
+      'Announcements': loudSpeaker,
+      'Celebrations': partyPopper,
+      'Ask for Feedback': lightBulb,
+      'Ask for Collaboration': speechBalloon,
+      'Ask for Mentorship': wavingHand
     }
-  ]
+    return iconMap[categoryName] || speechBalloon // Default icon if not found
+  }
+
+  // Filter out non-posting categories and map categories with icons
+  const categories = dbCategories
+    .filter(cat => cat.is_active && cat.name !== 'All Discussions' && cat.name !== 'Following' && cat.name !== 'Reported Posts')
+    .map(cat => ({
+      name: cat.name,
+      icon: getCategoryIcon(cat.name)
+    }))
 
   useEffect(() => {
     if (editingPost) {
+      // Find the category ID from dbCategories if category name is provided
+      const categoryId = editingPost.categoryId || editingPost.category_id || 
+        (editingPost.category ? dbCategories.find(cat => cat.name === editingPost.category)?.id : null)
+      
       setFormData({
         title: editingPost.title || '',
         description: editingPost.description || '',
         content: editingPost.content || editingPost.description || '',
         category: editingPost.category || '', 
-        selectedCategory: editingPost.category || ''
+        selectedCategory: editingPost.category || '',
+        categoryId: categoryId
       })
     } else {
       setFormData({
@@ -85,10 +79,11 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
         description: '',
         content: '',
         category: '',
-        selectedCategory: ''
+        selectedCategory: '',
+        categoryId: null
       })
     }
-  }, [editingPost])
+  }, [editingPost, dbCategories])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -100,10 +95,12 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
   }
 
   const handleCategorySelect = (categoryName) => {
+    const selectedCat = dbCategories.find(cat => cat.name === categoryName)
     setFormData(prevState => ({
       ...prevState,
       selectedCategory: categoryName,
-      category: categoryName
+      category: categoryName,
+      categoryId: selectedCat?.id || null
     }))
     setIsDropdownOpen(false)
   }
@@ -162,7 +159,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       const payload = {
         title: formData.title.trim(),
         content: formData.content,
-        category: formData.category
+        categoryId: formData.categoryId
       }
 
       let response
@@ -193,7 +190,8 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
           description: '',
           content: '',
           category: '',
-          selectedCategory: ''
+          selectedCategory: '',
+          categoryId: null
         })
         setFormSubmitted(false)
       }, 100)
@@ -213,7 +211,8 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       description: '',
       content: '',
       category: '',
-      selectedCategory: ''
+      selectedCategory: '',
+      categoryId: null
     })
     setFormSubmitted(false)
     setLoading(false)
@@ -359,7 +358,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {formData.selectedCategory && (
                   <img 
-                    src={categories.find(c => c.name === formData.selectedCategory)?.icon}
+                    src={getCategoryIcon(formData.selectedCategory)}
                     alt=""
                     style={{ width: '18px', height: '18px' }}
                   />

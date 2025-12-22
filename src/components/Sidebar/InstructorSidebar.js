@@ -26,6 +26,7 @@ import EditUserModal from '../UserDetails/EditUserModal'
 import SubscriptionModal from '../UserDetails//SubscriptionModal'
 import InvoiceIcon from '../../assets/images/academy-icons/hand-card.png'
 import ForumIcon from '../../assets/images/academy-icons/svg/material-symbols_forum-outline-rounded.svg'
+import UserAgreementModal from '../UserAgreementModal'
 
 const SIDEBAR_MENU_ITEMS = [
   {
@@ -151,6 +152,8 @@ const InstructorSidebar = (props) => {
   const [certificate, setCertificate] = useState(false)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
   const hoverTimeout = useRef(null)
+  const [showAgreementModal, setShowAgreementModal] = useState(false)
+  const [hasCheckedAgreement, setHasCheckedAgreement] = useState(false)
 
   // Function to check if user has permission to see menu item
   const hasPermission = (itemRoles, userRoleId) => {
@@ -222,6 +225,13 @@ const InstructorSidebar = (props) => {
     return () => window.removeEventListener('resize', checkTouch)
   }, [])
 
+  // Remove auto-show on load - only show when accessing forum
+  useEffect(() => {
+    if (user) {
+      setHasCheckedAgreement(true)
+    }
+  }, [user])
+
   const handleMouseEnter = () => {
     if (isTouchDevice) return
     clearTimeout(hoverTimeout.current)
@@ -260,6 +270,42 @@ const InstructorSidebar = (props) => {
       })
   }
 
+  const handleAgreementSuccess = () => {
+    setShowAgreementModal(false)
+    // Optionally refresh user data or update state
+  }
+
+  const handleAgreementHide = () => {
+    // Don't allow closing without agreement if forum access is enabled
+    const university = user?.University
+    const hasForumAccess = university?.hasForumAccess
+    const forumAgreement = user?.forumAgreement
+    
+    if (hasForumAccess && !forumAgreement) {
+      // Keep modal open
+      return
+    }
+    setShowAgreementModal(false)
+  }
+
+  const handleMenuItemClick = (item) => {
+    // Check if it's the forum item
+    if (item.id === 'forum') {
+      const forumAgreement = user?.forumAgreement
+      
+      // If user hasn't agreed to terms, show modal and prevent navigation
+      if (!forumAgreement) {
+        setShowAgreementModal(true)
+        return false // Return false to prevent navigation
+      }
+    }
+    
+    // Default behavior for all items
+    dispatch(setAccordionToggled(false))
+    props.props.hideHeaderIcons()
+    return true // Return true to allow navigation
+  }
+
   const navHeight = props.navHeight
 
   return (
@@ -275,10 +321,7 @@ const InstructorSidebar = (props) => {
         {getVisibleMenuItems().map((item) => (
           <SidebarItem
             key={item.id}
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              props.props.hideHeaderIcons()
-            }}
+            onClick={() => handleMenuItemClick(item)}
             to={item.to}
             className={typeof item.className === 'function' ? item.className(location.pathname) : item.className}
             srcImage={item.srcImage}
@@ -378,6 +421,11 @@ const InstructorSidebar = (props) => {
       <CancelRenewalModal
         canceledRenewal={canceledRenewal}
         setCanceledRenewal={setCanceledRenewal}
+      />
+      <UserAgreementModal
+        show={showAgreementModal}
+        onSuccess={handleAgreementSuccess}
+        onHide={handleAgreementHide}
       />
     </div>
   )
