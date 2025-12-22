@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import './ForumPage.css'
 import IntlMessages from '../../utils/IntlMessages'
@@ -32,6 +32,7 @@ import CategoryManagementModal from './CategoryManagementModal'
 const StartupForumPage = () => {
   const dispatch = useDispatch()
   const location = useLocation()
+  const history = useHistory()
 
   const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
 
@@ -160,7 +161,21 @@ const params = {
     }
   }
 
-
+      const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'Introductions':
+        return wavingHand
+      case 'Announcements':
+        return loudSpeaker
+      case 'Celebrations':
+        return partyPopper
+      case 'Ideas & Feedback':
+        return lightBulb
+      default:
+        return speechBalloon
+    }
+  }
+  
 useEffect(() => {
   if (!selectedCategory) return
 
@@ -234,8 +249,14 @@ useEffect(() => {
   }
 
   const getHeaderContent = () => {
+    // Skip header for All Discussions and Following
+    if (selectedCategory === 'All Discussions' || selectedCategory === 'Following') {
+      return null
+    }
+
     const category = selectedCategory.toLowerCase()
 
+    // Predefined categories with descriptions
     if (category === 'introductions') {
       return {
         icon: wavingHand,
@@ -254,47 +275,35 @@ useEffect(() => {
         title: 'CELEBRATIONS',
         description: 'Celebrate your achievements and the achievements of your peers.'
       }
-    }
-    else if (category === 'ask for feedback') {
+    } else if (category === 'ask for feedback') {
       return {
         icon: lightBulb,
         title: 'ASK FOR FEEDBACK',
         description: 'Share your ideas and get feedback from your peers.'
       }
-    }
-    else if (category === 'ask for collaboration') {
+    } else if (category === 'ask for collaboration') {
       return {
         icon: partyPopper,
         title: 'ASK FOR COLLABORATION',
         description: 'Find a peer to collaborate with.'
       }
-    }
-    else if (category === 'ask for mentorship') {
+    } else if (category === 'ask for mentorship') {
       return {
         icon: speechBalloon,
         title: 'ASK FOR MENTORSHIP',
         description: 'Ask for and discover mentorship opportunities'
       }
     }
-    return null
+    
+    // For any other category, show just the icon and title (no description)
+    return {
+      icon: getCategoryIcon(selectedCategory),
+      title: selectedCategory.toUpperCase(),
+      description: null
+    }
   }
 
   const headerContent = getHeaderContent()
-
-  const getCategoryIcon = (category) => {
-    switch (category) {
-      case 'Introductions':
-        return wavingHand
-      case 'Announcements':
-        return loudSpeaker
-      case 'Celebrations':
-        return partyPopper
-      case 'Ideas & Feedback':
-        return lightBulb
-      default:
-        return speechBalloon
-    }
-  }
 
   const getCategoryDisplayName = (category) => {
     switch (category) {
@@ -329,14 +338,14 @@ useEffect(() => {
       console.log('Fetched DB Categories:', dbCats)
       setDbCategories(dbCats)
       
-      // Merge static categories with database categories (exclude duplicates)
-      const dbCategoryNames = dbCats
+      // Sort all categories by their order field from the database
+      const sortedCategories = dbCats
         .filter(cat => cat.is_active)
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(cat => cat.name)
-        .filter(name => !staticCategories.includes(name))
       
-      console.log('All Categories:', [...staticCategories, ...dbCategoryNames])
-      setAllCategories([...staticCategories, ...dbCategoryNames])
+      console.log('All Categories (sorted by order):', sortedCategories)
+      setAllCategories(sortedCategories)
     } catch (error) {
       console.error('Error fetching categories:', error)
       // If fetch fails, just use static categories
@@ -569,7 +578,9 @@ useEffect(() => {
                   <img src={headerContent.icon} alt={`${headerContent.title} Icon`} style={{ width: '24px', height: '24px' }} />
                   <span className='fs-21 fw-bold'>{headerContent.title}</span>
                 </div>
-                <p className='fs-15 fw-light'>{headerContent.description}</p>
+                {headerContent.description && (
+                  <p className='fs-15 fw-light'>{headerContent.description}</p>
+                )}
               </div>
             )}
 

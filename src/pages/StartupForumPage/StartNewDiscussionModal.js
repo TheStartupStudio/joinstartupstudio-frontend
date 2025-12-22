@@ -159,7 +159,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
       const payload = {
         title: formData.title.trim(),
         content: formData.content,
-        categoryId: formData.categoryId
+        category_id: formData.categoryId
       }
 
       let response

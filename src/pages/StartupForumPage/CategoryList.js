@@ -68,10 +68,12 @@ const CategoryList = ({
         <div
           className="category-item"
           onClick={onEditCategories}
-          style={{ cursor: 'pointer', marginTop: '8px' }}
+          style={{ cursor: 'pointer', marginTop: '8px', fontSize: 15, fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          <img src={editIcon} alt="Edit Icon" style={{ width: '20px' }} />
           <span>Edit Categories</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4.99984 10H15.4165M15.4165 10L10.4165 5M15.4165 10L10.4165 15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
       )}
     </div>

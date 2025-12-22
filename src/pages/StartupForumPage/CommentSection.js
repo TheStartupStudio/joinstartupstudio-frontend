@@ -362,6 +362,8 @@ const CommentSection = () => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)
+  }
+
   const handleCategoryClickFromComments = (category) => {
     if (category === 'All Discussions') {
       history.push('/startup-forum')
@@ -1129,7 +1131,6 @@ const CommentSection = () => {
       />
     </>
   )
-}
 }
 
 export default CommentSection
