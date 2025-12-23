@@ -1,0 +1,140 @@
+.contact-lts-modal .modal-content {
+  border-radius: 8px;
+  border: none;
+  padding: 30px;
+  border-radius: 24px;
+}
+
+.contact-lts-modal-header {
+  border-bottom: none;
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 45px;
+}
+
+.contact-lts-modal-header .modal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #E2E6EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-lts-modal-header .modal-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  flex: 1;
+  color: #231F20;
+}
+
+.contact-lts-modal-header .btn-close {
+  opacity: 1;
+}
+
+.contact-lts-modal-body {
+  padding: 20px;
+  border-radius: 24px;
+background: var(--Glassy-White, rgba(255, 255, 255, 0.10));
+
+/* Drop+Blur Boxes */
+box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.25);
+backdrop-filter: blur(60px);
+}
+
+.contact-lts-modal-body .modal-description {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.contact-lts-modal-body .form-group {
+  margin-bottom: 20px;
+}
+
+.contact-lts-modal-body .form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.contact-lts-modal-body .form-control {
+  width: 100%;
+  padding: 12px;
+  border:none;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  border-radius: 12px;
+    background: var(--COLORS-White, #FFF);
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.contact-lts-modal-body .form-control:focus {
+  outline: none;
+}
+
+.contact-lts-modal-body .form-control:disabled {
+  background-color: #F5F5F5;
+  cursor: not-allowed;
+}
+
+.contact-lts-modal-body textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-lts-modal-body .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 32px;
+  align-items: center;
+}
+
+.contact-lts-modal-body .btn-cancel,
+.contact-lts-modal-body .btn-send {
+    width: 200px;
+height: 54px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 8px;
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.contact-lts-modal-body .btn-cancel {
+  background: #F5F5F5;
+  color: #333;
+}
+
+.contact-lts-modal-body .btn-cancel:hover:not(:disabled) {
+  background: #E5E5E5;
+}
+
+.contact-lts-modal-body .btn-send {
+  background: #52C7DE;
+  color: white;
+}
+
+.contact-lts-modal-body .btn-send:hover:not(:disabled) {
+  background: #3FB5D0;
+}
+
+.contact-lts-modal-body .btn-cancel:disabled,
+.contact-lts-modal-body .btn-send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

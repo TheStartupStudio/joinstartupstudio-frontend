@@ -89,6 +89,7 @@ font-size: 15px;
 font-style: normal;
 font-weight: 500;
 line-height: normal;
+align-items: center;
 }
 
 .view-organization-modal .org-section .section-header .edit-btn {
@@ -876,7 +877,7 @@ outline: none;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #FAFBFC;
+  background: white;
   padding: 20px;
   position: relative;
 }
@@ -990,7 +991,7 @@ outline: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FAFBFC;
+  background: white;
   padding: 20px;
 }
 

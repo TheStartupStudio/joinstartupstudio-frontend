@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faPencilAlt, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faPencilAlt, faTrash, faPlus, faMail } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
@@ -10,6 +10,7 @@ import AcademyBtn from '../../AcademyBtn'
 import PricingChangeModal from '../PricingChangeModal'
 import ManagePaymentModal from '../ManagePaymentModal'
 import PayInvoiceModal from '../PayInvoiceModal'
+import ContactLTSModal from '../ContactLTSModal'
 import StartupStudioLogo from '../../../assets/images/Startup Studio Logo v1x1200.png'
 import AcademyBulb from '../../../../public/academy-logo-192.png'
 
@@ -26,6 +27,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const [uploadingLogo1, setUploadingLogo1] = useState(false)
   const [uploadingLogo2, setUploadingLogo2] = useState(false)
   const [showEditLogoModal, setShowEditLogoModal] = useState(false)
+  const [showContactLTSModal, setShowContactLTSModal] = useState(false)
   const [tempLogo1, setTempLogo1] = useState(null)
   const [tempLogo2, setTempLogo2] = useState(null)
   const logo1InputRef = useRef(null)
@@ -87,7 +89,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   }
 
   const handleEditClick = () => {
-    setIsEditMode(true)
+    setIsEditMode('full')
   }
 
   const handleBackClick = () => {
@@ -192,12 +194,45 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   }
 
   const handleSaveChanges = async () => {
+    if (isEditMode === 'adminOnly') {
+      await performSaveAdminOnly()
+      return
+    }
+
     if (hasPricingChanged()) {
       setShowPricingChangeModal(true)
       return
     }
 
     await performSave(false)
+  }
+
+  const performSaveAdminOnly = async () => {
+    setLoading(true)
+    try {
+      const payload = {
+        adminName: formData.adminName,
+        adminEmail: formData.adminEmail
+      }
+
+      const { data } = await axiosInstance.patch(`/admin-info/organization/${universityId}`, payload)
+      
+      if (data.success) {
+        toast.success('Administrator details updated successfully!')
+        setIsEditMode(false)
+        
+        // Update original data after successful save
+        setOriginalData(JSON.parse(JSON.stringify(formData)))
+        
+        // Refresh data
+        await fetchOrganizationData()
+      }
+    } catch (error) {
+      console.error('Error saving administrator details:', error)
+      toast.error(error.response?.data?.message || 'Failed to update administrator details')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const performSave = async (applyToCurrentUsers) => {
@@ -282,7 +317,17 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
       billingZipCode: '34761',
       paymentMethod: 'credit-card'
     })
+    onHide()
     setShowManagePaymentModal(true)
+  }
+
+  const handleEditAdminDetails = () => {
+    setIsEditMode('adminOnly')
+  }
+
+  const handleContactLTS = () => {
+    onHide()
+    setShowContactLTSModal(true)
   }
 
   const handleSavePaymentInfo = async (paymentInfo) => {
@@ -366,7 +411,6 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
 
   const handleTempLogoUpload = async (file, logoType) => {
     const setUploading = logoType === 'logo1' ? setUploadingLogo1 : setUploadingLogo2
-    const setTempLogo = logoType === 'logo1' ? setTempLogo1 : setTempLogo2
 
     if (!file) return
 
@@ -385,17 +429,21 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
 
     setUploading(true)
     try {
-      const formData = new FormData()
-      formData.append('file', file)
+      const formDataToUpload = new FormData()
+      formDataToUpload.append('img', file)
 
-      const response = await axiosInstance.post('/university/upload-logo', formData, {
+      const response = await axiosInstance.post('/upload/img-transform', formDataToUpload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
 
-      if (response.data.success) {
-        setTempLogo(response.data.logoUrl)
+      if (response.data.fileLocation) {
+        if (logoType === 'logo1') {
+          setTempLogo1(response.data.fileLocation)
+        } else {
+          setTempLogo2(response.data.fileLocation)
+        }
         toast.success('Logo uploaded successfully')
       }
     } catch (error) {
@@ -509,7 +557,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                   <span>Organization Details</span>
                 </div>
                 <div className="org-details">
-                  {isEditMode ? (
+                  {isEditMode === 'full' ? (
                     <>
                       <input
                         type="text"
@@ -528,15 +576,15 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                     </>
                   ) : (
                     <>
-                      <div className="org-name">{formData.name}</div>
-                      <div className="org-address">{formData.address}</div>
+                      <div className="org-name" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>{formData.name}</div>
+                      <div className="org-address" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>{formData.address}</div>
                     </>
                   )}
                 </div>
               </div>
 
               {/* Logo Section - UPDATED */}
-              <div className="org-section">
+              <div className="org-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
                 <div className="section-header">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <g clipPath="url(#clip0_3587_14757)">
@@ -670,10 +718,12 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                     </g>
                   </svg>
                   <span>Administrator Details</span>
-                    <button className="edit-btn">
+                  {!isEditMode && (
+                    <button className="edit-btn" onClick={handleEditAdminDetails}>
                       <span>Edit Administrator Details</span>
                       <FontAwesomeIcon icon={faPencilAlt} />
                     </button>
+                  )}
                 </div>
                 <div className="admin-details">
                   {isEditMode ? (
@@ -702,7 +752,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                 </div>
               </div>
 
-              <div className="org-section">
+              <div className="org-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
                 <div className="section-header">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <g clipPath="url(#clip0_3587_14757)">
@@ -713,7 +763,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                 </div>
                 <div className="domain-details">
                   <label className="pricing-label-small">Domain URL:</label>
-                  {isEditMode ? (
+                  {isEditMode === 'full' ? (
                     <>
                       <input
                         type="text"
@@ -730,7 +780,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
               </div>
 
               {/* NEW: Organizational Pricing Section */}
-              <div className="org-section pricing-section">
+              <div className="org-section pricing-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
                 <div className="section-header">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <g clipPath="url(#clip0_3587_14757)">
@@ -738,13 +788,15 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                     </g>
                   </svg>
                   <span>Organizational Pricing</span>
-                    <button className="edit-btn">
-                      <span>Edit Organizational Pricing</span>
+                  {!isEditMode && (
+                    <button className="edit-btn" onClick={handleEditPricingClick}>
+                      <span>Edit Payment Method</span>
                       <FontAwesomeIcon icon={faPencilAlt} />
                     </button>
+                  )}
                 </div>
-                <div className={`pricing-details ${isEditMode ? 'edit-mode' : ''}`}>
-                  {isEditMode ? (
+                <div className={`pricing-details ${isEditMode === 'full' ? 'edit-mode' : ''}`}>
+                  {isEditMode === 'full' ? (
                     <>
                       {formData.orgPrice.map((price, index) => (
                         <div key={index} className="pricing-item-edit">
@@ -814,7 +866,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                 </div>
               </div>
 
-              <div className="org-section pricing-section">
+              <div className="org-section pricing-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
                 <div className="section-header">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <g clipPath="url(#clip0_3587_14757)">
@@ -823,14 +875,17 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                   </svg>
                   <span>Pricing Details</span>
                   {!isEditMode && (
-                    <button className="edit-btn" onClick={handleEditPricingClick}>
-                      <span>Edit Pricing Details</span>
-                      <FontAwesomeIcon icon={faPencilAlt} />
+                    <button className="edit-btn" onClick={handleContactLTS}>
+                      <span>Contact LTS to Make Changes</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5.83301 7.49984L9.99968 10.4165L14.1663 7.49984" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M1.66699 13.8332V6.1665C1.66699 5.06193 2.56242 4.1665 3.66699 4.1665H16.3337C17.4382 4.1665 18.3337 5.06194 18.3337 6.16651V13.8332C18.3337 14.9377 17.4382 15.8332 16.3337 15.8332H3.66699C2.56242 15.8332 1.66699 14.9377 1.66699 13.8332Z" stroke="black" stroke-width="1.5"/>
+                      </svg>
                     </button>
                   )}
                 </div>
-                <div className={`pricing-details ${isEditMode ? 'edit-mode' : ''}`}>
-                  {isEditMode ? (
+                <div className={`pricing-details ${isEditMode === 'full' ? 'edit-mode' : ''}`}>
+                  {isEditMode === 'full' ? (
                     <>
                       {formData.pricing.map((price, index) => (
                         <div key={index} className="pricing-item-edit">
@@ -952,6 +1007,11 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
         onHide={() => setShowManagePaymentModal(false)}
         paymentData={paymentData}
         onSave={handleSavePaymentInfo}
+      />
+
+      <ContactLTSModal
+        show={showContactLTSModal}
+        onHide={() => setShowContactLTSModal(false)}
       />
 
       {/* Edit Logo Modal */}
