@@ -379,12 +379,12 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
             </div>
           </div>
 
-          {/* Course Progress Section */}
+          {/* My Studio Section */}
           <div className="course-progress-section">
             <div className="section-header-view-progress">
               <div className="header-left">
-                <img src={spark} alt="Course Progress" />
-                <span>Course Progress</span>
+                <img src={spark} alt="My Studio" />
+                <span>My Studio</span>
               </div>
               <button className="view-details-link" onClick={handleViewDetails}>
                 View Details

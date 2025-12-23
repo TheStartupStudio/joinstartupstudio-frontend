@@ -140,7 +140,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
           color: '#000000'
         }}>
           The Startup Studio's
-          <br /> Course in Entrepreneurship & Innovation
+          <br /> Studio Sessions
         </p>
         <p style={{
           fontSize: '20px',
@@ -277,7 +277,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
         pdf.setFontSize(32);
         pdf.text(name, 600, 300, { align: 'center' });
         pdf.setFontSize(18);
-        pdf.text('Course in Entrepreneurship & Innovation', 600, 400, { align: 'center' });
+        pdf.text('Studio Sessions', 600, 400, { align: 'center' });
         pdf.text(completionDate, 600, 500, { align: 'center' });
 
         pdf.save(`Certificate-${name}.pdf`);
@@ -299,7 +299,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
       const response = await axiosInstance.post('/dashboard/generate-certificate-html', {
         name,
         completionDate,
-        courseTitle: 'Course in Entrepreneurship & Innovation',
+        courseTitle: 'Studio Sessions',
         action: "print"
       });
 
@@ -423,7 +423,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
               </p>
               <p className='certificate-reason'>
                 The Startup Studio's
-                <br /> Course in Entrepreneurship & Innovation
+                <br /> Studio Sessions
               </p>
               <p className='certification-paragraph'>
                 {completionDate || 'Course not completed'}
