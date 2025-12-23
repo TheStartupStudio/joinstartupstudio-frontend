@@ -28,6 +28,7 @@ import AcademyBtn from '../../components/AcademyBtn'
 import AddCommentModal from './AddCommentModal'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
 import ReportPostModal from './ReportPostModal'
+import CategoryList from './CategoryList'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import arrowLeft from '../../assets/images/academy-icons/left-arrow.png'
 
@@ -233,6 +234,8 @@ const CommentSection = () => {
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [showReportModal, setShowReportModal] = useState(false)
   const [reportingPost, setReportingPost] = useState(null)
+  const [dbCategories, setDbCategories] = useState([])
+  const [allCategories, setAllCategories] = useState([])
   const headerRef = useRef(null)
 
   useEffect(() => {
@@ -362,6 +365,15 @@ const CommentSection = () => {
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category)
+    // Navigate to forum page with selected category
+    if (category === 'All Discussions') {
+      history.push('/startup-forum')
+    } else if (category === 'Following') {
+      history.push('/startup-forum/following')
+    } else {
+      const slug = category.toLowerCase().replace(/\s+/g, '-')
+      history.push(`/startup-forum/${slug}`)
+    }
   }
 
   const handleCategoryClickFromComments = (category) => {
@@ -513,10 +525,10 @@ const CommentSection = () => {
                   <path d="M14.25 14.25V11.25C14.25 10.625 14.0312 10.0938 13.5938 9.65625C13.1562 9.21875 12.625 9 12 9H5.11875L7.81875 11.7L6.75 12.75L2.25 8.25L6.75 3.75L7.81875 4.8L5.11875 7.5H12C13.0375 7.5 13.9219 7.86562 14.6531 8.59688C15.3844 9.32812 15.75 10.2125 15.75 11.25V14.25H14.25Z" fill="#6F6F6F"/>
                 </svg>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <g clip-path="url(#clip0_4573_24)">
-                              <path d="M4.66699 12V11.3333C4.66699 9.49238 6.15938 8 8.00033 8C9.84128 8 11.3337 9.49238 11.3337 11.3333V12" stroke="black" stroke-width="0.9" stroke-linecap="round"/>
-                              <path d="M8 8C9.10457 8 10 7.10457 10 6C10 4.89543 9.10457 4 8 4C6.89543 4 6 4.89543 6 6C6 7.10457 6.89543 8 8 8Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
-                              <circle cx="7.99968" cy="7.9987" r="6.66667" stroke="black" stroke-width="0.9"/>
+                            <g clipPath="url(#clip0_4573_24)">
+                              <path d="M4.66699 12V11.3333C4.66699 9.49238 6.15938 8 8.00033 8C9.84128 8 11.3337 9.49238 11.3337 11.3333V12" stroke="black" strokeWidth="0.9" strokeLinecap="round"/>
+                              <path d="M8 8C9.10457 8 10 7.10457 10 6C10 4.89543 9.10457 4 8 4C6.89543 4 6 4.89543 6 6C6 7.10457 6.89543 8 8 8Z" stroke="black" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round"/>
+                              <circle cx="7.99968" cy="7.9987" r="6.66667" stroke="black" strokeWidth="0.9"/>
                             </g>
                             <defs>
                               <clipPath id="clip0_4573_24">
@@ -532,9 +544,9 @@ const CommentSection = () => {
                         <div className='d-flex align-items-center gap-2 mb-2'>
                           <div className='d-flex align-items-center gap-1'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
-                              <path d="M3.64648 6.25L8.8558 6.25" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path d="M3.64648 4.16797L6.77207 4.16797" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path d="M1.5625 10.5692V2.60436C1.5625 2.02896 2.02896 1.5625 2.60436 1.5625H9.8974C10.4728 1.5625 10.9393 2.02896 10.9393 2.60436V7.81368C10.9393 8.38908 10.4728 8.85554 9.8974 8.85554H4.14697C3.83047 8.85554 3.53113 8.99941 3.33341 9.24655L2.11913 10.7644C1.93456 10.9951 1.5625 10.8646 1.5625 10.5692Z" stroke="black" stroke-width="0.781397"/>
+                              <path d="M3.64648 6.25L8.8558 6.25" stroke="black" strokeWidth="0.781397" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M3.64648 4.16797L6.77207 4.16797" stroke="black" strokeWidth="0.781397" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M1.5625 10.5692V2.60436C1.5625 2.02896 2.02896 1.5625 2.60436 1.5625H9.8974C10.4728 1.5625 10.9393 2.02896 10.9393 2.60436V7.81368C10.9393 8.38908 10.4728 8.85554 9.8974 8.85554H4.14697C3.83047 8.85554 3.53113 8.99941 3.33341 9.24655L2.11913 10.7644C1.93456 10.9951 1.5625 10.8646 1.5625 10.5692Z" stroke="black" strokeWidth="0.781397"/>
                             </svg>
 
                             <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
@@ -616,7 +628,8 @@ const CommentSection = () => {
     )
   }
 
-  const categories = [
+  // Static categories that cannot be removed
+  const staticCategories = [
     'All Discussions',
     'Following',
     'Introductions',
@@ -626,6 +639,32 @@ const CommentSection = () => {
     'Ask for Collaboration',
     'Ask for Mentorship',
   ]
+
+  // Fetch database categories
+  const fetchCategories = async () => {
+    try {
+      const response = await axiosInstance.get('/forum/categories')
+      const dbCats = response.data || []
+      setDbCategories(dbCats)
+      
+      // Sort all categories by their order field from the database
+      const sortedCategories = dbCats
+        .filter(cat => cat.is_active)
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(cat => cat.name)
+      
+      setAllCategories(sortedCategories)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      // If fetch fails, just use static categories
+      setAllCategories(staticCategories)
+    }
+  }
+
+  // Fetch categories on mount
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   const getCategoryIcon = (category) => {
     switch (category) {
@@ -770,10 +809,10 @@ const CommentSection = () => {
                       <div className="post-content">
                         <div className='d-flex align-items-center gap-2 mb-1'>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <g clip-path="url(#clip0_4573_24)">
-                              <path d="M4.66699 12V11.3333C4.66699 9.49238 6.15938 8 8.00033 8C9.84128 8 11.3337 9.49238 11.3337 11.3333V12" stroke="black" stroke-width="0.9" stroke-linecap="round"/>
-                              <path d="M8 8C9.10457 8 10 7.10457 10 6C10 4.89543 9.10457 4 8 4C6.89543 4 6 4.89543 6 6C6 7.10457 6.89543 8 8 8Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
-                              <circle cx="7.99968" cy="7.9987" r="6.66667" stroke="black" stroke-width="0.9"/>
+                            <g clipPath="url(#clip0_4573_24)">
+                              <path d="M4.66699 12V11.3333C4.66699 9.49238 6.15938 8 8.00033 8C9.84128 8 11.3337 9.49238 11.3337 11.3333V12" stroke="black" strokeWidth="0.9" strokeLinecap="round"/>
+                              <path d="M8 8C9.10457 8 10 7.10457 10 6C10 4.89543 9.10457 4 8 4C6.89543 4 6 4.89543 6 6C6 7.10457 6.89543 8 8 8Z" stroke="black" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round"/>
+                              <circle cx="7.99968" cy="7.9987" r="6.66667" stroke="black" strokeWidth="0.9"/>
                             </g>
                             <defs>
                               <clipPath id="clip0_4573_24">
@@ -789,9 +828,9 @@ const CommentSection = () => {
                         <div className='d-flex align-items-center gap-2 mb-2'>
                           <div className='d-flex align-items-center gap-1'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
-                              <path d="M3.64648 6.25L8.8558 6.25" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path d="M3.64648 4.16797L6.77207 4.16797" stroke="black" stroke-width="0.781397" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path d="M1.5625 10.5692V2.60436C1.5625 2.02896 2.02896 1.5625 2.60436 1.5625H9.8974C10.4728 1.5625 10.9393 2.02896 10.9393 2.60436V7.81368C10.9393 8.38908 10.4728 8.85554 9.8974 8.85554H4.14697C3.83047 8.85554 3.53113 8.99941 3.33341 9.24655L2.11913 10.7644C1.93456 10.9951 1.5625 10.8646 1.5625 10.5692Z" stroke="black" stroke-width="0.781397"/>
+                              <path d="M3.64648 6.25L8.8558 6.25" stroke="black" strokeWidth="0.781397" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M3.64648 4.16797L6.77207 4.16797" stroke="black" strokeWidth="0.781397" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M1.5625 10.5692V2.60436C1.5625 2.02896 2.02896 1.5625 2.60436 1.5625H9.8974C10.4728 1.5625 10.9393 2.02896 10.9393 2.60436V7.81368C10.9393 8.38908 10.4728 8.85554 9.8974 8.85554H4.14697C3.83047 8.85554 3.53113 8.99941 3.33341 9.24655L2.11913 10.7644C1.93456 10.9951 1.5625 10.8646 1.5625 10.5692Z" stroke="black" strokeWidth="0.781397"/>
                             </svg>
 
                             <p style={{ fontSize: '13px', fontWeight: '300', color: 'black', marginBottom: 0 }}>
@@ -882,7 +921,7 @@ const CommentSection = () => {
                           }}
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
-                            <path d="M2.40002 12.6001V9.41229M2.40002 9.41229C5.89082 6.68229 8.50922 12.1423 12 9.41229V2.58789C8.50922 5.31789 5.89082 -0.142112 2.40002 2.58789V9.41229Z" stroke="black" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2.40002 12.6001V9.41229M2.40002 9.41229C5.89082 6.68229 8.50922 12.1423 12 9.41229V2.58789C8.50922 5.31789 5.89082 -0.142112 2.40002 2.58789V9.41229Z" stroke="black" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                           <span 
                             className="post-date-paragraph"
@@ -986,32 +1025,18 @@ const CommentSection = () => {
           {/* Sidebar */}
           <div className="forum-sidebar">
             <div className="sidebar-section">
-              <div className="categories-list">
-                <AcademyBtn
-                  title={'ADD REPLY'}
-                  onClick={handleNewComment}
-                />
-
-                {categories.map((category, index) => (
-                  <div key={category}>
-                    <div
-                      className={`category-item ${selectedCategory === category ? 'active' : ''}`}
-                      onClick={() => handleCategoryClick(category)}
-                    >
-                      {category === 'All Discussions' && <img src={message} alt="Speech Bubble Icon" />}
-                      {category === 'Following' && <img src={star} alt="Star Icon" className='icon' />}
-                      {category === 'Introductions' && <img src={wavingHand} alt="Waving Hand Icon" />}
-                      {category === 'Announcements' && <img src={loudSpeaker} alt="Megaphone Icon" />}
-                      {category === 'Celebrations' && <img src={partyPopper} alt="Party Popper Icon" />}
-                      {category === 'Ask for Feedback' && <img src={speechBalloon} alt="Light Bulb Icon" />}
-                      {category === 'Ask for Collaboration' && <img src={wavingHand} alt="Speech Bubble Icon" />}
-                      {category === 'Ask for Mentorship' && <img src={lightBulb} alt="Speech Bubble Icon" />}
-                      <span>{category}</span>
-                    </div>
-                    {category === 'Following' && <hr style={{ width: '100%', borderColor: 'gray', margin: '8px 0' }} />}
-                  </div>
-                ))}
-              </div>
+              <AcademyBtn
+                title={'ADD REPLY'}
+                onClick={handleNewComment}
+              />
+              
+              <CategoryList
+                categories={allCategories}
+                selectedCategory={selectedCategory}
+                onCategoryClick={handleCategoryClick}
+                dbCategories={dbCategories}
+                staticCategories={staticCategories}
+              />
             </div>
           </div>
         </div>
