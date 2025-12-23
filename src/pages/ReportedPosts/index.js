@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { Modal, ModalBody } from 'reactstrap'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import DataTable from '../../components/DataTable'
@@ -27,6 +28,8 @@ const ReportedPosts = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [limit] = useState(10)
   const [isArchiveView, setIsArchiveView] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const bulkDropdownRef = useRef(null)
 
   useEffect(() => {
@@ -53,7 +56,7 @@ const ReportedPosts = () => {
       const transformedData = reports.map(report => ({
         id: report.id,
         reportDate: report.reportDate || 'N/A',
-        status: report.status || 'pending',
+        status: (report.status === 'resolved' || report.status === 'dismissed' || report.status === 'archived') ? 'complete' : 'incomplete',
         reportType: report.reasonFlagged || report.reportType || 'N/A',
         resolution: report.resolution || (
           report.status === 'resolved' ? 'Resolved' : 
@@ -102,8 +105,9 @@ const ReportedPosts = () => {
       filterable: true,
       width: '15%',
       render: (value) => (
-        <span className={`status-badge status-${value}`}>
-          {value.charAt(0).toUpperCase() + value.slice(1)}
+        <span className={`status-with-dot status-${value}`}>
+          <span className="status-dot"></span>
+          {value === 'complete' ? 'Complete' : 'Incomplete'}
         </span>
       )
     },
@@ -171,10 +175,17 @@ const ReportedPosts = () => {
     }
   }
 
-  const handleSingleDelete = async (reportId) => {
+  const handleSingleDelete = (reportId) => {
+    setDeleteTarget({ type: 'single', id: reportId })
+    setShowDeleteModal(true)
+  }
+
+  const confirmSingleDelete = async (reportId) => {
     try {
       await axiosInstance.delete(`/forum/reports/${reportId}/delete`)
       toast.success(`Report #${reportId} deleted`)
+      setShowDeleteModal(false)
+      setDeleteTarget(null)
       fetchReports()
     } catch (error) {
       console.error('Error deleting report:', error)
@@ -209,6 +220,31 @@ const ReportedPosts = () => {
     fetchReports()
   }
 
+  const handleDeleteConfirm = async () => {
+    if (deleteTarget?.type === 'single') {
+      await confirmSingleDelete(deleteTarget.id)
+    } else if (deleteTarget?.type === 'bulk') {
+      await confirmBulkDelete()
+    }
+  }
+
+  const handleArchiveInstead = async () => {
+    if (deleteTarget?.type === 'single') {
+      await handleSingleArchive(deleteTarget.id)
+      setShowDeleteModal(false)
+      setDeleteTarget(null)
+    } else if (deleteTarget?.type === 'bulk') {
+      await handleBulkArchive()
+      setShowDeleteModal(false)
+      setDeleteTarget(null)
+    }
+  }
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false)
+    setDeleteTarget(null)
+  }
+
   const handleBulkArchive = async () => {
     if (selectedReports.length === 0) {
       toast.warning(`Please select reports to ${isArchiveView ? 'unarchive' : 'archive'}`)
@@ -235,12 +271,16 @@ const ReportedPosts = () => {
     }
   }
 
-  const handleBulkDelete = async () => {
+  const handleBulkDelete = () => {
     if (selectedReports.length === 0) {
       toast.warning('Please select reports to delete')
       return
     }
-    
+    setDeleteTarget({ type: 'bulk', reports: selectedReports })
+    setShowDeleteModal(true)
+  }
+
+  const confirmBulkDelete = async () => {
     try {
       const reportIds = selectedReports.map(report => report.id)
       await axiosInstance.post('/forum/reports/bulk-delete', { reportIds })
@@ -248,6 +288,8 @@ const ReportedPosts = () => {
       toast.success(`${selectedReports.length} report(s) deleted`)
       setShowBulkDropdown(false)
       setSelectedReports([])
+      setShowDeleteModal(false)
+      setDeleteTarget(null)
       fetchReports()
     } catch (error) {
       console.error('Error deleting reports:', error)
@@ -572,6 +614,45 @@ const ReportedPosts = () => {
         reportId={selectedReportId}
         onSubmit={handleModalSubmit}
       />
+
+      <Modal isOpen={showDeleteModal} toggle={handleDeleteCancel} className="delete-confirmation-modal" size="md">
+        <ModalBody>
+          <div className="delete-modal-content">
+          <div className='d-flex align-items-start gap-4 flex-column w-100'>
+
+          
+            <div className="delete-modal-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.1256 17.4987H3.87307C2.33504 17.4987 1.37259 15.8351 2.13926 14.5018L8.26554 3.84736C9.03455 2.50995 10.9641 2.50995 11.7332 3.84736L17.8594 14.5018C18.6261 15.8351 17.6637 17.4987 16.1256 17.4987Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M10 14.1763L10.0083 14.167" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            
+            <h2 className="delete-modal-title">Delete Report{deleteTarget?.type === 'bulk' ? '(s)' : ''}?</h2>
+
+            </div>
+            
+            <p className="delete-modal-message">
+              Are you sure you want to delete the report{deleteTarget?.type === 'bulk' ? '(s)' : ''}? This cannot be undone.
+              <br />
+              Alternatively, you can archive the report{deleteTarget?.type === 'bulk' ? '(s)' : ''} instead.
+            </p>
+            
+            <div className="delete-modal-actions">
+              <button className="delete-modal-btn delete-modal-btn-archive" onClick={handleArchiveInstead}>
+                Archive Report{deleteTarget?.type === 'bulk' ? 's' : ''}
+              </button>
+              <button className="delete-modal-btn delete-modal-btn-cancel" onClick={handleDeleteCancel}>
+                No, Take Me Back
+              </button>
+              <button className="delete-modal-btn delete-modal-btn-delete" onClick={handleDeleteConfirm}>
+                Delete Report{deleteTarget?.type === 'bulk' ? 's' : ''}
+              </button>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
   )
 }

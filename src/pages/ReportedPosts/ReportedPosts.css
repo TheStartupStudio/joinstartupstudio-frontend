@@ -140,30 +140,127 @@
   padding: 0 12px;
 }
 
-/* Status Badge Styles */
-.reported-posts-page .status-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 600;
+/* Status with Dot Styles */
+.reported-posts-page .status-with-dot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 400;
   font-family: 'Montserrat', sans-serif;
-  text-transform: capitalize;
 }
 
-.reported-posts-page .status-badge.status-pending {
-  background-color: #FEF3C7;
-  color: #92400E;
+.reported-posts-page .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.reported-posts-page .status-badge.status-resolved {
-  background-color: #D1FAE5;
-  color: #065F46;
+.reported-posts-page .status-with-dot.status-complete .status-dot {
+  background-color: #99CC33;
 }
 
-.reported-posts-page .status-badge.status-archived {
-  background-color: #E5E7EB;
-  color: #374151;
+.reported-posts-page .status-with-dot.status-incomplete .status-dot {
+  background-color: #F59E0B;
+}
+
+/* Delete Confirmation Modal Styles */
+.delete-confirmation-modal .modal-content {
+  border-radius: 16px;
+  border: none;
+}
+
+.delete-modal-content {
+  padding: 22px 24px 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.delete-modal-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #E2E6EC;
+  border-radius: 50%;
+}
+
+.delete-confirmation-modal .delete-modal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1F2937;
+  margin-bottom: 12px;
+  color: #231F20;
+}
+
+.delete-modal-message {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6B7280;
+  line-height: 1.6;
+  margin: 32px 0px;
+  text-align: center;
+  color: #000;
+}
+
+.delete-modal-actions {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.delete-modal-btn {
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  min-width: 140px;
+}
+
+.delete-modal-btn-archive {
+  background-color: #52C7DE;
+  color: white;
+  box-shadow: 0 4px 10px 0 rgba(82, 199, 222, 0.25);
+  grid-column: span 2;
+}
+
+.delete-modal-btn-archive:hover {
+  background-color: #3FA8BE;
+}
+
+.delete-modal-btn-cancel {
+  background-color: #DEE1E6;
+  color: #1F2937;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.delete-modal-btn-cancel:hover {
+  background-color: #CBD5E0;
+}
+
+.delete-modal-btn-delete {
+  background-color: #EF4444;
+  color: white;
+  box-shadow: 0 4px 10px 0 rgba(239, 68, 68, 0.25);
+}
+
+.delete-modal-btn-delete:hover {
+  background-color: #DC2626;
 }
 
 /* Responsive Design */
@@ -192,6 +289,10 @@
 
   .reported-posts-page .bulk-actions {
     justify-content: center;
+    width: 100%;
+  }
+
+  .delete-modal-btn {
     width: 100%;
   }
 }

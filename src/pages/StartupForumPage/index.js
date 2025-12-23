@@ -214,9 +214,7 @@ useEffect(() => {
   }
 
   const handleViewReportedPosts = () => {
-    setSelectedCategory('Reported Posts')
-    setSearchTerm('')
-    setCurrentPage(1)
+    history.push('/reported-posts')
   }
 
   const handleReportPost = (post, event) => {
