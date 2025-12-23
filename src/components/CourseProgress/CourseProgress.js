@@ -415,7 +415,7 @@ function CourseProgress() {
             <img src={rightArrow} alt='right-arr' />
           </div>
         </div>
-        <div className='d-flex gap-4 align-items-center justify-content-around flex-col-mob mt-2rem-mob'>
+        <div className='d-flex gap-4 justify-content-around flex-col-mob mt-2rem-mob'>
           <div className='d-flex flex-column gap-4'>
             <CircularProgress
               percentage={levelProgress?.level1?.percentage || 0}

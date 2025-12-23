@@ -230,6 +230,8 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       if (res.data.success) {
         profileImageUrl = res.data.fileLocation
         dispatch(userUpdateProfileImage(profileImageUrl))
+        // Update local state with new image URL
+        setChangedUser(prev => ({ ...prev, profile_image: profileImageUrl }))
       } else {
         toast.error('Image upload failed')
       }
@@ -294,6 +296,9 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     toast.success(<IntlMessages id='alert.my_account.success_change' />)
     dispatch(editSocialMedia(params.social_links))
     
+    // Reset image file state
+    setImageFile(null)
+    
     // Close the modal after successful save
     toggle()
   } catch (err) {
@@ -307,7 +312,6 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
   function handleSubmit(e) {
     e.preventDefault()
     editUser(changedUser, changedMedias, imageFile)
-    toggle()
   }
 
   const handlePasswordChange = async (event) => {
@@ -1024,7 +1028,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                   onClick={handleSubmit}
                   disabled={loading}
                 >
-                  {loading ? '...' : 'SAVE'}
+                  {loading ? 'SAVING...' : 'SAVE'}
                 </button>
               </div>
             </div>
