@@ -256,18 +256,13 @@ const InstructorSidebar = (props) => {
 
   const handleLogout = async () => {
     dispatch(setGeneralLoading(true))
-    await dispatch(userLogout())
-      .then(() => {
-        localStorage.clear()
-        window.location.href = '/'
-      })
-      .catch((error) => {
-        console.log('error', error)
-      })
-      .finally(() => {
-        window.location.href = '/'
-        dispatch(setGeneralLoading(false))
-      })
+    try {
+      await dispatch(userLogout())
+      localStorage.clear()
+    } catch (error) {
+      console.log('error', error)
+      dispatch(setGeneralLoading(false))
+    }
   }
 
   const handleAgreementSuccess = () => {

@@ -129,7 +129,7 @@ const ResetPassword = () => {
       <img
                         src={StartupStudioLogo}
                         alt='logo'
-                        style={{ position: 'absolute', top: '40px', left: '40px', zIndex: 1000, height: '40px', width: '250px' }}
+                        style={{ position: 'absolute', top: '40px', left: '40px', zIndex: 1000, width: '250px' }}
                       />
       <div className='w-100' style={{ marginTop: '-150px' }}>
         <div className='row my-auto'>

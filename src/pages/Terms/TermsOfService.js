@@ -1,4 +1,6 @@
-import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox800 1.png'
+// import StartupStudioLogo from '../../assets/images/academy-icons/SUS OAE Logox800 1.png'
+import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
+
 
 const TermsOfService = () => {
   return (
