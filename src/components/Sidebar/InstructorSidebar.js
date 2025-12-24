@@ -361,7 +361,14 @@ const InstructorSidebar = (props) => {
           </div>
         </li>
 
-        <li className='sub-li'>
+        <li className='sub-li'
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            dispatch(collapseTrue())
+            props.props.hideHeaderIcons()
+            toggle()
+          }}
+        >
 
           <Link to={user?.role_id === 1 ? '/dashboard' : '/admin-dashboard'}>
             <div className='d-flex w-100' style={{ alignItems: 'center' }}>
