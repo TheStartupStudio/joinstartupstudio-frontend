@@ -259,6 +259,8 @@ const InstructorSidebar = (props) => {
     try {
       await dispatch(userLogout())
       localStorage.clear()
+      dispatch(setGeneralLoading(false))
+      // Router will automatically redirect to login when isAuthenticated becomes false
     } catch (error) {
       console.log('error', error)
       dispatch(setGeneralLoading(false))

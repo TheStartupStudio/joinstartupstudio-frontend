@@ -34,7 +34,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   const [formData, setFormData] = useState({
     learnerName: '',
     email: '',
-    password: '********',
+    password: 'Learntostart1!',
     address: '',
     city: '',
     state: '',
@@ -56,10 +56,10 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     if (show) {
       if (mode === 'edit' && learnerData?.id) {
         fetchLearnerData(learnerData.id)
-      } else if (isClient && mode === 'add') {
+      } else if (mode === 'add') {
         setFormData(prev => ({
           ...prev,
-          organization: currentUser.universityId || currentUser.University?.id,
+          organization: isClient ? (currentUser.universityId || currentUser.University?.id) : '',
           password: 'Learntostart1!'
         }))
       }
@@ -96,7 +96,10 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
         state: data.state || '',
         gender: data.gender || '',
         learnerType: data.courseLevel || '',
-        birthDate: data.birthDate ? new Date(data.birthDate) : null,
+        birthDate: data.birthDate ? (() => {
+          const [year, month, day] = data.birthDate.split('-')
+          return new Date(year, month - 1, day, 12, 0, 0)
+        })() : null,
         organization: data.University?.id || data.organizationId || '',
         roleId: data.role_id || 1,
         subscriptionExempt: data.subscription_exempt || false
@@ -269,7 +272,12 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
         city: formData.city,
         state: formData.state,
         gender: formData.gender,
-        birthDate: formData.birthDate ? formData.birthDate.toISOString().split('T')[0] : null,
+        birthDate: formData.birthDate ? (() => {
+          const year = formData.birthDate.getFullYear()
+          const month = String(formData.birthDate.getMonth() + 1).padStart(2, '0')
+          const day = String(formData.birthDate.getDate()).padStart(2, '0')
+          return `${year}-${month}-${day}`
+        })() : null,
         universityId: formData.organization || null,
         activeStatus: isUserActive ? 1 : 0,
         role_id: formData.roleId
@@ -287,7 +295,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
         await axiosInstance.put(`/super-admin/learners/${learnerData.id}`, payload)
         toast.success('Learner updated successfully!')
       } else {
-        payload.password = formData.password
+        payload.password = 'Learntostart1!'
         await axiosInstance.post('/super-admin/learners', payload)
         toast.success('Learner added successfully!')
       }
@@ -299,7 +307,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
         setFormData({
           learnerName: '',
           email: '',
-          password: '',
+          password: 'Learntostart1!',
           address: '',
           city: '',
           state: '',

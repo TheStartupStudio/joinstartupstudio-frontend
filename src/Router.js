@@ -24,6 +24,7 @@ import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
 import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
 import SubscriptionSuccess from './pages/Register/SubscriptionSuccess'
 import { filterRoutesByAccess, getDefaultDashboard } from './utils/routeHelpers'
+import AdminDashboardPage from './pages/AdminDashboard'
 
 
 function Router(props) {
@@ -62,6 +63,7 @@ function Router(props) {
         { path: '/subscribe', component: CheckSubscription, exact: true },
         { path: '/cancel-payment', component: CancelSubscription, exact: true },
         { path: '/payment', component: Payment, exact: true },
+        { path: '/admin-dashboard', component: AdminDashboardPage, exact: true },
         { path: '/dashboard', component: Dashboard, exact: true },
         { path: '/course', component: Dashboard, exact: true },
         // {
