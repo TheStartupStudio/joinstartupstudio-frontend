@@ -119,23 +119,30 @@ const ResetPassword = () => {
 
   return (
     <div
-      className=' md-px-5 ps-md-5 d-flex align-items-center justify-content-center choose-login_container'
+      className='md-px-5 ps-md-5 d-flex align-items-center justify-content-center choose-login_container'
       style={{
         backgroundColor: '#e4e9f4',
-        minHeight: 'calc(100vh - 42px)'
-        // overflow: 'hidden'
+        minHeight: 'calc(100vh - 42px)',
+        padding: '20px'
       }}
     >
       <img
-                        src={StartupStudioLogo}
-                        alt='logo'
-                        style={{ position: 'absolute', top: '40px', left: '40px', zIndex: 1000, width: '250px' }}
-                      />
-      <div className='w-100' style={{ marginTop: '-150px' }}>
+        src={StartupStudioLogo}
+        alt='logo'
+        className='d-none d-md-block'
+        style={{ position: 'absolute', top: '40px', left: '40px', zIndex: 1000, width: '250px' }}
+      />
+      <img
+        src={StartupStudioLogo}
+        alt='logo'
+        className='d-block d-md-none'
+        style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, width: '250px' }}
+      />
+      <div className='w-100' style={{ marginTop: '0' }}>
         <div className='row my-auto'>
           <div
-            className='col-md-8 col-lg-4 mx-auto p-4 public-page-form'
-            style={{ backgroundColor: '#ffff' }}
+            className='col-12 col-md-8 col-lg-4 mx-auto p-3 p-md-4 public-page-form'
+            style={{ backgroundColor: '#ffff', marginTop: '60px' }}
           >
             <h3 className='text-center fw-bold'>
               <IntlMessages id='reset_password.title' />
@@ -171,9 +178,9 @@ const ResetPassword = () => {
               )}
             </FormattedMessage>
             <button
-              className='mt-3 float-end'
+              className='mt-3 w-100 w-md-auto float-md-end'
               onClick={(event) => handleSubmit(event)}
-              style={{ width: '136px', height: '44px' }}
+              style={{ height: '44px', minWidth: '136px' }}
             >
               {loading ? (
                 <span className='spinner-border spinner-border-sm' />
