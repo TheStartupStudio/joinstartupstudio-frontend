@@ -205,6 +205,9 @@ const LeadershipJournalManagement = React.lazy(() =>
   import('../pages/LeadershipJournalManagement')
 )
 
+const ReportedPosts = React.lazy(() =>
+  import('../pages/ReportedPosts')
+)
 
 const ViewInvoices = React.lazy(() => import('../pages/ViewInvoices'))
 
@@ -250,6 +253,18 @@ export const adminRoutes = [
     breadcrumb: 'Leadership Journal Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
     requiresUniversitySetting: 'hasLeadershipJournal'
+  },
+  {
+    path: '/startup-forum/post/:id',
+    component: StartupForumComments,
+    breadcrumb: 'Forum Discussion',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
+  },
+  {
+    path: '/reported-posts',
+    component: ReportedPosts,
+    breadcrumb: 'Reported Posts',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
     path: '/my-school/:page?',
@@ -313,15 +328,8 @@ export const mutualRoutes = [
   },
   { path: '/leader-board', component: LeaderBoardPage, exact: true },
   { path: '/startup-forum', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/following', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/introductions', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/announcements', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/celebrations', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/ask-for-feedback', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/ask-for-collaboration', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/ask-for-mentorship', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/reported-posts', component: StartupForumPage, exact: true },
-  { path: '/startup-forum/:id', component: StartupForumComments, exact: true },
+  { path: '/startup-forum/post/:id', component: StartupForumComments, exact: true },
+  { path: '/startup-forum/:categorySlug', component: StartupForumPage, exact: true },
   {
     path: '/iamr',
     component: IamrCertificationSystem,

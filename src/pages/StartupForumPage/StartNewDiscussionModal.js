@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import axiosInstance from '../../utils/AxiosInstance'
-import foulWords from '../../assets/json/foul-words.json'
+import { checkContent } from '../../utils/contentFilter'
 import { useSelector } from 'react-redux'
 import UserAgreementModal from '../../components/UserAgreementModal'
 
@@ -19,13 +19,15 @@ import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
 
 
-const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
+const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCategories = [] }) => {
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showContentWarning, setShowContentWarning] = useState(false)
   const [showUserAgreement, setShowUserAgreement] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [contentFilterLevel, setContentFilterLevel] = useState(null)
+  const [acknowledgeWarning, setAcknowledgeWarning] = useState(false)
   
   const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
 
@@ -34,61 +36,58 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     description: '',
     content: '',
     category: '', 
-    selectedCategory: ''
+    selectedCategory: '',
+    categoryId: null
   })
 
-  const categories = [
-    {
-      name: 'Introductions',
-      color: '#FF6B6B',
-      icon: wavingHand
-    },
-    {
-      name: 'Announcements',
-      color: '#4ECDC4',
-      icon: loudSpeaker
-    },
-    {
-      name: 'Celebrations',
-      color: '#45B7D1',
-      icon: partyPopper
-    },
-    {
-      name: 'Ask for Feedback',
-      color: '#F49AC2',
-      icon: lightBulb
-    },
-    {
-      name: 'Ask for Collaboration',
-      color: '#A29BFE',
-      icon: speechBalloon
-    },
-    {
-      name: 'Ask for Mentorship',
-      color: '#81ECEC',
-      icon: wavingHand
+  // Map static category names to their icons
+  const getCategoryIcon = (categoryName) => {
+    const iconMap = {
+      'Introductions': wavingHand,
+      'Announcements': loudSpeaker,
+      'Celebrations': partyPopper,
+      'Ask for Feedback': lightBulb,
+      'Ask for Collaboration': speechBalloon,
+      'Ask for Mentorship': wavingHand
     }
-  ]
+    return iconMap[categoryName] || speechBalloon // Default icon if not found
+  }
+
+  // Filter out non-posting categories and map categories with icons
+  const categories = dbCategories
+    .filter(cat => cat.is_active && cat.name !== 'All Discussions' && cat.name !== 'Following' && cat.name !== 'Reported Posts')
+    .map(cat => ({
+      name: cat.name,
+      icon: getCategoryIcon(cat.name)
+    }))
 
   useEffect(() => {
-    if (editingPost) {
-      setFormData({
-        title: editingPost.title || '',
-        description: editingPost.description || '',
-        content: editingPost.content || editingPost.description || '',
-        category: editingPost.category || '', 
-        selectedCategory: editingPost.category || ''
-      })
-    } else {
-      setFormData({
-        title: '',
-        description: '',
-        content: '',
-        category: '',
-        selectedCategory: ''
-      })
+    if (show) {
+      if (editingPost) {
+        // Find the category ID from dbCategories if category name is provided
+        const categoryId = editingPost.categoryId || editingPost.category_id || 
+          (editingPost.category ? dbCategories.find(cat => cat.name === editingPost.category)?.id : null)
+        
+        setFormData({
+          title: editingPost.title || '',
+          description: editingPost.description || '',
+          content: editingPost.content || editingPost.description || '',
+          category: editingPost.category || '', 
+          selectedCategory: editingPost.category || '',
+          categoryId: categoryId
+        })
+      } else {
+        setFormData({
+          title: '',
+          description: '',
+          content: '',
+          category: '',
+          selectedCategory: '',
+          categoryId: null
+        })
+      }
     }
-  }, [editingPost])
+  }, [show, editingPost])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -100,10 +99,12 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
   }
 
   const handleCategorySelect = (categoryName) => {
+    const selectedCat = dbCategories.find(cat => cat.name === categoryName)
     setFormData(prevState => ({
       ...prevState,
       selectedCategory: categoryName,
-      category: categoryName
+      category: categoryName,
+      categoryId: selectedCat?.id || null
     }))
     setIsDropdownOpen(false)
   }
@@ -123,17 +124,19 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     return true
   }
 
-  const containsFoulLanguage = (text) => {
-    if (!text) return false
+  const checkContentFilter = () => {
+    const titleCheck = checkContent(formData.title)
+    const contentCheck = checkContent(formData.content)
     
-    // Strip HTML tags from content
-    const strippedText = text.replace(/<[^>]*>/g, ' ').toLowerCase()
+    // Return the highest severity level found
+    if (titleCheck && titleCheck.level === 1) return titleCheck
+    if (contentCheck && contentCheck.level === 1) return contentCheck
+    if (titleCheck && titleCheck.level === 2) return titleCheck
+    if (contentCheck && contentCheck.level === 2) return contentCheck
+    if (titleCheck && titleCheck.level === 3) return titleCheck
+    if (contentCheck && contentCheck.level === 3) return contentCheck
     
-    // Check if any foul word exists in the text
-    return foulWords.some(word => {
-      const regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'i')
-      return regex.test(strippedText)
-    })
+    return null
   }
 
   const handleSubmit = async () => {
@@ -150,10 +153,24 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       return
     }
 
-    // Check for foul language
-    if (containsFoulLanguage(formData.title) || containsFoulLanguage(formData.content)) {
-      setShowContentWarning(true)
-      return
+    // Check for inappropriate content
+    const filterResult = checkContentFilter()
+    
+    if (filterResult) {
+      if (filterResult.level === 1) {
+        // Level 1: Block submission, show non-dismissible warning
+        setContentFilterLevel(1)
+        setShowContentWarning(true)
+        return
+      } else if (filterResult.level === 2 || filterResult.level === 3) {
+        // Level 2 & 3: Show warning with acknowledgment option
+        if (!acknowledgeWarning) {
+          setContentFilterLevel(filterResult.level)
+          setShowContentWarning(true)
+          return
+        }
+        // If acknowledged, proceed with submission
+      }
     }
 
     setLoading(true)
@@ -162,7 +179,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       const payload = {
         title: formData.title.trim(),
         content: formData.content,
-        category: formData.category
+        category_id: formData.categoryId
       }
 
       let response
@@ -176,6 +193,20 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
           published: true
         })
         toast.success('Discussion created successfully!')
+        
+        // Check if Level 2 content needs admin notification
+        const filterCheck = checkContentFilter()
+        if (filterCheck && filterCheck.level === 2 && response.data?.id) {
+          try {
+            await axiosInstance.post(`/forum/discussion/${response.data.id}/report`, {
+              reportType: 'auto report',
+              reason: 'Auto-flagged for review - Level 2 content detected',
+              flagged_words: filterCheck.found
+            })
+          } catch (notifyError) {
+            console.error('Failed to notify admin:', notifyError)
+          }
+        }
       }
 
       // Call onSuccess callback FIRST
@@ -193,7 +224,8 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
           description: '',
           content: '',
           category: '',
-          selectedCategory: ''
+          selectedCategory: '',
+          categoryId: null
         })
         setFormSubmitted(false)
       }, 100)
@@ -213,7 +245,8 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
       description: '',
       content: '',
       category: '',
-      selectedCategory: ''
+      selectedCategory: '',
+      categoryId: null
     })
     setFormSubmitted(false)
     setLoading(false)
@@ -221,6 +254,8 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
     setShowContentWarning(false)
     setShowUserAgreement(false)
     setIsDropdownOpen(false)
+    setContentFilterLevel(null)
+    setAcknowledgeWarning(false)
     onHide()
   }
 
@@ -359,7 +394,7 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {formData.selectedCategory && (
                   <img 
-                    src={categories.find(c => c.name === formData.selectedCategory)?.icon}
+                    src={getCategoryIcon(formData.selectedCategory)}
                     alt=""
                     style={{ width: '18px', height: '18px' }}
                   />
@@ -485,9 +520,9 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {loading ? (
+                {/* {loading ? (
                   <span className="spinner-border spinner-border-sm me-2" />
-                ) : null}
+                ) : null} */}
                 {loading ? (editingPost ? 'UPDATING...' : 'SUBMITTING...') : (editingPost ? 'UPDATE' : 'SUBMIT')}
               </button>
             </div>
@@ -569,9 +604,9 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
                   fontWeight: '600'
                 }}
               >
-                {loading ? (
+                {/* {loading ? (
                   <span className="spinner-border spinner-border-sm me-2" />
-                ) : null}
+                ) : null} */}
                 {loading ? 'DELETING...' : 'DELETE DISCUSSION'}
               </Button>
             </div>
@@ -593,7 +628,11 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
             justifyContent: 'center',
             zIndex: 9999
           }}
-          onClick={() => setShowContentWarning(false)}
+          onClick={() => {
+            setShowContentWarning(false)
+            setAcknowledgeWarning(false)
+            setContentFilterLevel(null)
+          }}
         >
           <div 
             style={{
@@ -612,19 +651,100 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-100 text-start">
-              <div style={{position: 'absolute', top: 0, right: 0, padding:'17px', borderRadius: "0 24px", boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)', cursor: 'pointer' }} onClick={() => setShowContentWarning(false)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                  <path d="M9.78105 16.25L15.9061 22.375C16.1561 22.625 16.2761 22.9167 16.2661 23.25C16.2561 23.5833 16.1256 23.875 15.8748 24.125C15.6248 24.3542 15.3331 24.4742 14.9998 24.485C14.6665 24.4958 14.3748 24.3758 14.1248 24.125L5.8748 15.875C5.7498 15.75 5.66105 15.6146 5.60855 15.4687C5.55605 15.3229 5.53064 15.1667 5.5323 15C5.53397 14.8333 5.56022 14.6771 5.61105 14.5312C5.66189 14.3854 5.75022 14.25 5.87605 14.125L14.1261 5.875C14.3552 5.64583 14.6419 5.53125 14.9861 5.53125C15.3302 5.53125 15.6269 5.64583 15.8761 5.875C16.1261 6.125 16.2511 6.42208 16.2511 6.76625C16.2511 7.11042 16.1261 7.40708 15.8761 7.65625L9.78105 13.75H23.7498C24.104 13.75 24.4011 13.87 24.6411 14.11C24.8811 14.35 25.0006 14.6467 24.9998 15C24.999 15.3533 24.879 15.6504 24.6398 15.8913C24.4006 16.1321 24.104 16.2517 23.7498 16.25H9.78105Z" fill="black"/>
-                </svg>
-              </div>
+              {contentFilterLevel !== 1 && (
+                <div 
+                  style={{position: 'absolute', top: 0, right: 0, padding:'17px', borderRadius: "0 24px", boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)', cursor: 'pointer' }} 
+                  onClick={() => {
+                    setShowContentWarning(false)
+                    setAcknowledgeWarning(false)
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                    <path d="M9.78105 16.25L15.9061 22.375C16.1561 22.625 16.2761 22.9167 16.2661 23.25C16.2561 23.5833 16.1256 23.875 15.8748 24.125C15.6248 24.3542 15.3331 24.4742 14.9998 24.485C14.6665 24.4958 14.3748 24.3758 14.1248 24.125L5.8748 15.875C5.7498 15.75 5.66105 15.6146 5.60855 15.4687C5.55605 15.3229 5.53064 15.1667 5.5323 15C5.53397 14.8333 5.56022 14.6771 5.61105 14.5312C5.66189 14.3854 5.75022 14.25 5.87605 14.125L14.1261 5.875C14.3552 5.64583 14.6419 5.53125 14.9861 5.53125C15.3302 5.53125 15.6269 5.64583 15.8761 5.875C16.1261 6.125 16.2511 6.42208 16.2511 6.76625C16.2511 7.11042 16.1261 7.40708 15.8761 7.65625L9.78105 13.75H23.7498C24.104 13.75 24.4011 13.87 24.6411 14.11C24.8811 14.35 25.0006 14.6467 24.9998 15C24.999 15.3533 24.879 15.6504 24.6398 15.8913C24.4006 16.1321 24.104 16.2517 23.7498 16.25H9.78105Z" fill="black"/>
+                  </svg>
+                </div>
+              )}
               <div style={{padding: '5px', borderRadius: '50%', backgroundColor: '#E2E6EC', width: '36px', height:'36px', display:'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
               </div>
               <h5 style={{ margin: '16px 0px', fontSize:'15px', fontWeight: '600' }}>Content Warning</h5>
             </div>
-            <p style={{ margin: '10px 0px 0px 0px', textAlign: 'center', fontSize: '14px', lineHeight: '1.6' }}>
-              Please remember that this forum is to be used in a professional manner. Profanity, bullying, harassment, and inappropriate content are not allowed. Posting such content may result in you being banned from posting.
+            <p style={{ margin: '10px 0px 20px 0px', textAlign: 'center', fontSize: '14px', lineHeight: '1.6' }}>
+              {contentFilterLevel === 1 ? (
+                'This content contains inappropriate language that violates our community guidelines and cannot be posted. Please edit your message to remove offensive content.'
+              ) : (
+                'Please remember that this forum is to be used in a professional manner. Profanity, bullying, harassment, and inappropriate content are not allowed. Posting such content may result in you being banned from posting.'
+              )}
             </p>
+            
+            {/* {contentFilterLevel === 1 && (
+              <Button
+                onClick={() => {
+                  setShowContentWarning(false)
+                  setContentFilterLevel(null)
+                  setAcknowledgeWarning(false)
+                }}
+                style={{
+                  padding: '12px 24px',
+                  fontWeight: '600',
+                  borderRadius: '8px',
+                  backgroundColor: '#DEE1E6',
+                  border: 'none',
+                  color: '#333',
+                  cursor: 'pointer'
+                }}
+              >
+                GO BACK AND EDIT
+              </Button>
+            )} */}
+            
+            {(contentFilterLevel === 2 || contentFilterLevel === 3) && (
+              <>
+                <div 
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '15px',
+                    justifyContent:'center',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setAcknowledgeWarning(!acknowledgeWarning)}
+                >
+                  <input
+                    type="checkbox"
+                    checked={acknowledgeWarning}
+                    onChange={(e) => setAcknowledgeWarning(e.target.checked)}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  <label style={{ margin: 0, cursor: 'pointer', fontSize: '14px' }}>
+                    I understand
+                  </label>
+                </div>
+                
+                <Button
+                  onClick={() => {
+                    setShowContentWarning(false)
+                    handleSubmit()
+                  }}
+                  disabled={!acknowledgeWarning}
+                  style={{
+                    padding: '12px 24px',
+                    fontWeight: '600',
+                    borderRadius: '8px',
+                    backgroundColor: acknowledgeWarning ? '#52C7DE' : '#DEE1E6',
+                    border: 'none',
+                    color: acknowledgeWarning ? 'white' : '#6C757D',
+                    cursor: acknowledgeWarning ? 'pointer' : 'not-allowed',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  POST
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}

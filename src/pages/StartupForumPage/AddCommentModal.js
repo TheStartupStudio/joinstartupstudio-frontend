@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import axiosInstance from '../../utils/AxiosInstance'
-import foulWords from '../../assets/json/foul-words.json'
+import { checkContent } from '../../utils/contentFilter'
 import { useSelector } from 'react-redux'
 import UserAgreementModal from '../../components/UserAgreementModal'
 import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
@@ -22,6 +22,8 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showContentWarning, setShowContentWarning] = useState(false)
   const [showUserAgreement, setShowUserAgreement] = useState(false)
+  const [contentFilterLevel, setContentFilterLevel] = useState(null)
+  const [acknowledgeWarning, setAcknowledgeWarning] = useState(false)
   
   const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
   
@@ -55,17 +57,8 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
     return true
   }
 
-  const containsFoulLanguage = (text) => {
-    if (!text) return false
-    
-    // Strip HTML tags from content
-    const strippedText = text.replace(/<[^>]*>/g, ' ').toLowerCase()
-    
-    // Check if any foul word exists in the text
-    return foulWords.some(word => {
-      const regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'i')
-      return regex.test(strippedText)
-    })
+  const checkContentFilter = () => {
+    return checkContent(formData.message)
   }
 
   const handleSubmit = async () => {
@@ -82,10 +75,24 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
       return
     }
 
-    // Check for foul language
-    if (containsFoulLanguage(formData.message)) {
-      setShowContentWarning(true)
-      return
+    // Check for inappropriate content
+    const filterResult = checkContentFilter()
+    
+    if (filterResult) {
+      if (filterResult.level === 1) {
+        // Level 1: Block submission, show non-dismissible warning
+        setContentFilterLevel(1)
+        setShowContentWarning(true)
+        return
+      } else if (filterResult.level === 2 || filterResult.level === 3) {
+        // Level 2 & 3: Show warning with acknowledgment option
+        if (!acknowledgeWarning) {
+          setContentFilterLevel(filterResult.level)
+          setShowContentWarning(true)
+          return
+        }
+        // If acknowledged, proceed with submission
+      }
     }
 
     setLoading(true)
@@ -105,6 +112,21 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
       } else {
         response = await axiosInstance.post(`/forum/discussion/${originalPost.id}/replies`, payload)
         toast.success('Reply added successfully!')
+        
+        // Check if Level 2 content needs admin notification
+        const filterCheck = checkContentFilter()
+        if (filterCheck && filterCheck.level === 2 && originalPost?.id) {
+          try {
+            await axiosInstance.post(`/forum/discussion/${originalPost.id}/report`, {
+              reportType: 'auto report',
+              reason: 'Auto-flagged for review - Level 2 content detected',
+              flagged_words: filterCheck.found,
+              reply_id: response.data?.id
+            })
+          } catch (notifyError) {
+            console.error('Failed to notify admin:', notifyError)
+          }
+        }
       }
 
       setFormData({ message: '' })
@@ -137,6 +159,8 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
     setShowDeleteConfirm(false)
     setShowContentWarning(false)
     setShowUserAgreement(false)
+    setContentFilterLevel(null)
+    setAcknowledgeWarning(false)
     onHide()
   }
 
@@ -545,7 +569,11 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
             justifyContent: 'center',
             zIndex: 9999
           }}
-          onClick={() => setShowContentWarning(false)}
+          onClick={() => {
+            setShowContentWarning(false)
+            setAcknowledgeWarning(false)
+            setContentFilterLevel(null)
+          }}
         >
           <div 
             style={{
@@ -563,19 +591,100 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-100 text-start">
-              <div style={{position: 'absolute', top: 0, right: 0, padding:'17px', borderRadius: "0 24px", boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)', cursor: 'pointer' }} onClick={() => setShowContentWarning(false)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                  <path d="M9.78105 16.25L15.9061 22.375C16.1561 22.625 16.2761 22.9167 16.2661 23.25C16.2561 23.5833 16.1256 23.875 15.8748 24.125C15.6248 24.3542 15.3331 24.4742 14.9998 24.485C14.6665 24.4958 14.3748 24.3758 14.1248 24.125L5.8748 15.875C5.7498 15.75 5.66105 15.6146 5.60855 15.4687C5.55605 15.3229 5.53064 15.1667 5.5323 15C5.53397 14.8333 5.56022 14.6771 5.61105 14.5312C5.66189 14.3854 5.75022 14.25 5.87605 14.125L14.1261 5.875C14.3552 5.64583 14.6419 5.53125 14.9861 5.53125C15.3302 5.53125 15.6269 5.64583 15.8761 5.875C16.1261 6.125 16.2511 6.42208 16.2511 6.76625C16.2511 7.11042 16.1261 7.40708 15.8761 7.65625L9.78105 13.75H23.7498C24.104 13.75 24.4011 13.87 24.6411 14.11C24.8811 14.35 25.0006 14.6467 24.9998 15C24.999 15.3533 24.879 15.6504 24.6398 15.8913C24.4006 16.1321 24.104 16.2517 23.7498 16.25H9.78105Z" fill="black"/>
-                </svg>
-              </div>
+              {contentFilterLevel !== 1 && (
+                <div 
+                  style={{position: 'absolute', top: 0, right: 0, padding:'17px', borderRadius: "0 24px", boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)', cursor: 'pointer' }} 
+                  onClick={() => {
+                    setShowContentWarning(false)
+                    setAcknowledgeWarning(false)
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                    <path d="M9.78105 16.25L15.9061 22.375C16.1561 22.625 16.2761 22.9167 16.2661 23.25C16.2561 23.5833 16.1256 23.875 15.8748 24.125C15.6248 24.3542 15.3331 24.4742 14.9998 24.485C14.6665 24.4958 14.3748 24.3758 14.1248 24.125L5.8748 15.875C5.7498 15.75 5.66105 15.6146 5.60855 15.4687C5.55605 15.3229 5.53064 15.1667 5.5323 15C5.53397 14.8333 5.56022 14.6771 5.61105 14.5312C5.66189 14.3854 5.75022 14.25 5.87605 14.125L14.1261 5.875C14.3552 5.64583 14.6419 5.53125 14.9861 5.53125C15.3302 5.53125 15.6269 5.64583 15.8761 5.875C16.1261 6.125 16.2511 6.42208 16.2511 6.76625C16.2511 7.11042 16.1261 7.40708 15.8761 7.65625L9.78105 13.75H23.7498C24.104 13.75 24.4011 13.87 24.6411 14.11C24.8811 14.35 25.0006 14.6467 24.9998 15C24.999 15.3533 24.879 15.6504 24.6398 15.8913C24.4006 16.1321 24.104 16.2517 23.7498 16.25H9.78105Z" fill="black"/>
+                  </svg>
+                </div>
+              )}
               <div style={{padding: '5px', borderRadius: '50%', backgroundColor: '#E2E6EC', width: '36px', height:'36px', display:'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <img src={warningTriangle} alt="Warning Icon" style={{ width: '16px', height: '16px' }} />
               </div>
               <h5 style={{ margin: '16px 0px', fontSize:'15px', fontWeight: '600' }}>Content Warning</h5>
             </div>
-            <p style={{ margin: '10px 0px 0px 0px', textAlign: 'center', fontSize: '14px', lineHeight: '1.6' }}>
-              Please remember that this forum is to be used in a professional manner. Profanity, bullying, harassment, and inappropriate content are not allowed. Posting such content may result in you being banned from posting.
+            <p style={{ margin: '10px 0px 20px 0px', textAlign: 'center', fontSize: '14px', lineHeight: '1.6' }}>
+              {contentFilterLevel === 1 ? (
+                'This content contains inappropriate language that violates our community guidelines and cannot be posted. Please edit your message to remove offensive content.'
+              ) : (
+                'Please remember that this forum is to be used in a professional manner. Profanity, bullying, harassment, and inappropriate content are not allowed. Posting such content may result in you being banned from posting.'
+              )}
             </p>
+            
+            {/* {contentFilterLevel === 1 && (
+              <Button
+                onClick={() => {
+                  setShowContentWarning(false)
+                  setContentFilterLevel(null)
+                  setAcknowledgeWarning(false)
+                }}
+                style={{
+                  padding: '12px 24px',
+                  fontWeight: '600',
+                  borderRadius: '8px',
+                  backgroundColor: '#DEE1E6',
+                  border: 'none',
+                  color: '#333',
+                  cursor: 'pointer'
+                }}
+              >
+                GO BACK AND EDIT
+              </Button>
+            )} */}
+            
+            {(contentFilterLevel === 2 || contentFilterLevel === 3) && (
+              <>
+                <div 
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent:'center',
+                    gap: '10px',
+                    padding: '15px',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setAcknowledgeWarning(!acknowledgeWarning)}
+                >
+                  <input
+                    type="checkbox"
+                    checked={acknowledgeWarning}
+                    onChange={(e) => setAcknowledgeWarning(e.target.checked)}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  <label style={{ margin: 0, cursor: 'pointer', fontSize: '14px' }}>
+                    I understand
+                  </label>
+                </div>
+                
+                <Button
+                  onClick={() => {
+                    setShowContentWarning(false)
+                    handleSubmit()
+                  }}
+                  disabled={!acknowledgeWarning}
+                  style={{
+                    padding: '12px 24px',
+                    fontWeight: '600',
+                    borderRadius: '8px',
+                    backgroundColor: acknowledgeWarning ? '#52C7DE' : '#DEE1E6',
+                    border: 'none',
+                    color: acknowledgeWarning ? 'white' : '#6C757D',
+                    cursor: acknowledgeWarning ? 'pointer' : 'not-allowed',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  POST
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}

@@ -25,6 +25,8 @@ import AcademyBtn from '../../components/AcademyBtn'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
 import ReportPostModal from './ReportPostModal'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
+import CategoryList from './CategoryList'
+import CategoryManagementModal from './CategoryManagementModal'
 
 
 const StartupForumPage = () => {
@@ -51,6 +53,9 @@ const StartupForumPage = () => {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
   const [showReportModal, setShowReportModal] = useState(false)
   const [reportingPost, setReportingPost] = useState(null)
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [dbCategories, setDbCategories] = useState([])
+  const [allCategories, setAllCategories] = useState([])
 
   const toggleDiscussionModal = () => {
     setShowDiscussionModal(prev => !prev)
@@ -102,22 +107,37 @@ const params = {
 
 
       if (category && category !== 'All Discussions') {
-        const categoryMapping = {
-          'Introductions': 'introductions',
-          'Announcements': 'announcements',
-          'Celebrations': 'celebrations',
-          'Following': 'following',
-          'Ask for Feedback': 'ask-for-feedback',
-          'Ask for Collaboration': 'ask-for-collaboration',
-          'Ask for Mentorship': 'ask-for-mentorship',
-          'Reported Posts': 'reported-posts',
-        }
+        // Try to find the category in dbCategories first
+        const dbCategory = dbCategories.find(cat => cat.name === category)
+        
+        if (dbCategory && dbCategory.slug) {
+          // Use slug from database
+          endpoint = `/forum/${dbCategory.slug}`
+        } else {
+          // Fallback to hardcoded mapping for static categories
+          const categoryMapping = {
+            'Introductions': 'introductions',
+            'Announcements': 'announcements',
+            'Celebrations': 'celebrations',
+            'Following': 'following',
+            'Ask for Feedback': 'ask-for-feedback',
+            'Ask for Collaboration': 'ask-for-collaboration',
+            'Ask for Mentorship': 'ask-for-mentorship',
+            'Reported Posts': 'reported-posts',
+          }
 
-        const urlCategory = categoryMapping[category]
-        if (urlCategory) {
-          endpoint = `/forum/${urlCategory}`
+          const urlCategory = categoryMapping[category]
+          if (urlCategory) {
+            endpoint = `/forum/${urlCategory}`
+          } else {
+            // If not in mapping, create slug from category name
+            const slug = category.toLowerCase().replace(/\s+/g, '-')
+            endpoint = `/forum/${slug}`
+          }
         }
       }
+
+      console.log('API Endpoint:', endpoint, 'Category:', category)
 
       const response = await axiosInstance.get(endpoint, { params })
 
@@ -141,21 +161,21 @@ const params = {
     }
   }
 
-
-useEffect(() => {
-  const category = getCurrentCategoryFromUrl()
-  setSelectedCategory(category)
-}, [])
-
-useEffect(() => {
-  const category = getCurrentCategoryFromUrl()
-  if (category !== selectedCategory) {
-    setSelectedCategory(category)
-    setSearchTerm('') 
-    setCurrentPage(1)
+      const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'Introductions':
+        return wavingHand
+      case 'Announcements':
+        return loudSpeaker
+      case 'Celebrations':
+        return partyPopper
+      case 'Ideas & Feedback':
+        return lightBulb
+      default:
+        return speechBalloon
+    }
   }
-}, [location.pathname])
-
+  
 useEffect(() => {
   if (!selectedCategory) return
 
@@ -194,7 +214,7 @@ useEffect(() => {
   }
 
   const handleViewReportedPosts = () => {
-    handleCategoryClick('Reported Posts')
+    history.push('/reported-posts')
   }
 
   const handleReportPost = (post, event) => {
@@ -208,19 +228,14 @@ useEffect(() => {
     setShowReportModal(false)
   }
 
-  const getCurrentCategoryFromUrl = () => {
-    const path = location.pathname.toLowerCase()
+  const handleEditCategories = () => {
+    setShowCategoryModal(true)
+  }
 
-    if (path.includes('introductions')) return 'Introductions'
-    if (path.includes('announcements')) return 'Announcements'
-    if (path.includes('celebrations')) return 'Celebrations'
-    if (path.includes('ideas') || path.includes('feedback')) return 'Ideas & Feedback'
-    if (path.includes('following')) return 'Following'
-    if(path.includes('ask-for-feedback')) return 'Ask for Feedback'
-    if(path.includes('ask-for-collaboration')) return 'Ask for Collaboration'
-    if(path.includes('ask-for-mentorship')) return 'Ask for Mentorship'
-    if(path.includes('reported-posts')) return 'Reported Posts'
-    return 'All Discussions'
+  const handleCategoryManagementSuccess = () => {
+    // Refresh categories and forum data
+    fetchCategories()
+    fetchForumData(currentPage, selectedCategory, searchTerm, selectedFilter)
   }
 
   const handleCategoryClick = (category) => {
@@ -228,103 +243,65 @@ useEffect(() => {
     
     setSelectedCategory(category)
     setSearchTerm('') 
-    setCurrentPage(1) 
-
-    switch (category) {
-          case 'All Discussions':
-            history.push('/startup-forum')
-            break
-          case 'Following':
-            history.push('/startup-forum/following')
-            break
-          case 'Introductions':
-            history.push('/startup-forum/introductions')
-            break
-          case 'Announcements':
-            history.push('/startup-forum/announcements')
-            break
-          case 'Celebrations':
-            history.push('/startup-forum/celebrations')
-            break
-          case 'Ask for Feedback':
-            history.push('/startup-forum/ask-for-feedback')
-            break
-          case 'Ask for Collaboration':
-            history.push('/startup-forum/ask-for-collaboration')
-            break
-          case 'Ask for Mentorship':
-            history.push('/startup-forum/ask-for-mentorship')
-            break
-          case 'Reported Posts':
-            history.push('/startup-forum/reported-posts')
-            break
-          default:
-            history.push('/startup-forum')
-        }
+    setCurrentPage(1)
   }
 
   const getHeaderContent = () => {
-    const path = location.pathname.toLowerCase()
+    // Skip header for All Discussions and Following
+    if (selectedCategory === 'All Discussions' || selectedCategory === 'Following') {
+      return null
+    }
 
-    if (path.includes('introductions')) {
+    const category = selectedCategory.toLowerCase()
+
+    // Predefined categories with descriptions
+    if (category === 'introductions') {
       return {
         icon: wavingHand,
         title: 'INTRODUCTIONS',
         description: 'Welcome to our newest members. Please share a little about yourself, what brought you to the Academy in Entrepreneurship, and what your goal or vision is.'
       }
-    } else if (path.includes('announcements')) {
+    } else if (category === 'announcements') {
       return {
         icon: loudSpeaker,
         title: 'ANNOUNCEMENTS',
         description: 'Find announcements, news, and updates about the platform and Learn to Start.'
       }
-    } else if (path.includes('celebrations')) {
+    } else if (category === 'celebrations') {
       return {
         icon: partyPopper,
         title: 'CELEBRATIONS',
         description: 'Celebrate your achievements and the achievements of your peers.'
       }
-    }
-    else if (path.includes('ask-for-feedback')) {
+    } else if (category === 'ask for feedback') {
       return {
         icon: lightBulb,
         title: 'ASK FOR FEEDBACK',
         description: 'Share your ideas and get feedback from your peers.'
       }
-    }
-    else if (path.includes('ask-for-collaboration')) {
+    } else if (category === 'ask for collaboration') {
       return {
         icon: partyPopper,
         title: 'ASK FOR COLLABORATION',
         description: 'Find a peer to collaborate with.'
       }
-    }
-    else if (path.includes('ask-for-mentorship')) {
+    } else if (category === 'ask for mentorship') {
       return {
         icon: speechBalloon,
         title: 'ASK FOR MENTORSHIP',
         description: 'Ask for and discover mentorship opportunities'
       }
     }
-    return null
+    
+    // For any other category, show just the icon and title (no description)
+    return {
+      icon: getCategoryIcon(selectedCategory),
+      title: selectedCategory.toUpperCase(),
+      description: null
+    }
   }
 
   const headerContent = getHeaderContent()
-
-  const getCategoryIcon = (category) => {
-    switch (category) {
-      case 'Introductions':
-        return wavingHand
-      case 'Announcements':
-        return loudSpeaker
-      case 'Celebrations':
-        return partyPopper
-      case 'Ideas & Feedback':
-        return lightBulb
-      default:
-        return speechBalloon
-    }
-  }
 
   const getCategoryDisplayName = (category) => {
     switch (category) {
@@ -339,7 +316,8 @@ useEffect(() => {
     }
   }
 
-  const categories = [
+  // Static categories that cannot be removed
+  const staticCategories = [
     'All Discussions',
     'Following',
     'Introductions',
@@ -349,6 +327,34 @@ useEffect(() => {
     'Ask for Collaboration',
     'Ask for Mentorship',
   ]
+
+  // Fetch database categories
+  const fetchCategories = async () => {
+    try {
+      const response = await axiosInstance.get('/forum/categories')
+      const dbCats = response.data || []
+      console.log('Fetched DB Categories:', dbCats)
+      setDbCategories(dbCats)
+      
+      // Sort all categories by their order field from the database
+      const sortedCategories = dbCats
+        .filter(cat => cat.is_active)
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(cat => cat.name)
+      
+      console.log('All Categories (sorted by order):', sortedCategories)
+      setAllCategories(sortedCategories)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      // If fetch fails, just use static categories
+      setAllCategories(staticCategories)
+    }
+  }
+
+  // Fetch categories on mount
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
 const filterOptions = [
   { value: 'My posts', label: 'My posts' },
@@ -570,7 +576,9 @@ useEffect(() => {
                   <img src={headerContent.icon} alt={`${headerContent.title} Icon`} style={{ width: '24px', height: '24px' }} />
                   <span className='fs-21 fw-bold'>{headerContent.title}</span>
                 </div>
-                <p className='fs-15 fw-light'>{headerContent.description}</p>
+                {headerContent.description && (
+                  <p className='fs-15 fw-light'>{headerContent.description}</p>
+                )}
               </div>
             )}
 
@@ -591,7 +599,7 @@ useEffect(() => {
                   return (
                     <div key={post.id} className="forum-post"
                       onClick={() => {
-                        history.push(`/startup-forum/${post.id}`)
+                        history.push(`/startup-forum/post/${post.id}`)
                       }}
                     >
                       <div className="post-avatar-container">
@@ -730,38 +738,28 @@ useEffect(() => {
           {/* Sidebar */}
           <div className="forum-sidebar">
             <div className="sidebar-section">
-              <div className="categories-list">
-                {/* <div className='mb-3'>
+              {currentUser?.role_id === 3 && (
+                <div className='mb-3'>
                   <AcademyBtn
                     title={'View Reported Posts'}
                     onClick={handleViewReportedPosts}
                   />
-                </div> */}
-                <AcademyBtn
-                  title={'Start New Discussion'}
-                  onClick={handleNewDiscussion}
-                />
+                </div>
+              )}
+              <AcademyBtn
+                title={'Start New Discussion'}
+                onClick={handleNewDiscussion}
+              />
 
-                {categories.map((category, index) => (
-                  <div key={category}>
-                    <div
-                      className={`category-item ${selectedCategory === category ? 'active' : ''}`}
-                      onClick={() => handleCategoryClick(category)}
-                    >
-                      {category === 'All Discussions' && <img src={message} alt="Speech Bubble Icon" />}
-                                            {category === 'Following' && <img src={star} alt="Star Icon" className='icon' />}
-                                            {category === 'Introductions' && <img src={wavingHand} alt="Waving Hand Icon" />}
-                                            {category === 'Announcements' && <img src={loudSpeaker} alt="Megaphone Icon" />}
-                                            {category === 'Celebrations' && <img src={partyPopper} alt="Party Popper Icon" />}
-                                            {category === 'Ask for Feedback' && <img src={speechBalloon} alt="Light Bulb Icon" />}
-                                            {category === 'Ask for Collaboration' && <img src={wavingHand} alt="Speech Bubble Icon" />}
-                                            {category === 'Ask for Mentorship' && <img src={lightBulb} alt="Speech Bubble Icon" />}
-                      <span>{category}</span>
-                    </div>
-                    {category === 'Following' && <hr style={{ width: '100%', borderColor: 'gray', margin: '8px 0' }} />}
-                  </div>
-                ))}
-              </div>
+              <CategoryList
+                categories={allCategories}
+                staticCategories={staticCategories}
+                dbCategories={dbCategories}
+                selectedCategory={selectedCategory}
+                onCategoryClick={handleCategoryClick}
+                isAdmin={currentUser?.role_id === 3}
+                onEditCategories={handleEditCategories}
+              />
             </div>
           </div>
         </div>
@@ -773,6 +771,7 @@ useEffect(() => {
         onHide={closeDiscussionModal}
         editingPost={editingPost}
         onSuccess={handleDiscussionSuccess}
+        dbCategories={dbCategories}
       />
 
       {/* Report Post Modal */}
@@ -781,6 +780,13 @@ useEffect(() => {
         onHide={() => setShowReportModal(false)}
         post={reportingPost}
         onSuccess={handleReportSuccess}
+      />
+
+      {/* Category Management Modal */}
+      <CategoryManagementModal
+        show={showCategoryModal}
+        onHide={() => setShowCategoryModal(false)}
+        onSuccess={handleCategoryManagementSuccess}
       />
     </>
   )

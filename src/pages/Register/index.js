@@ -509,7 +509,7 @@ function RegistrationForm() {
                         onChange={handleInputChange}
                       />
                       {errors.fullName && (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                        <p className='invalid-feedback mt-0 mt-0 d-block position-absolute fs-10'>
                           {errors.fullName}
                         </p>
                       )}
@@ -546,11 +546,6 @@ function RegistrationForm() {
                           />
                         </div>
                       </div>
-                      {errors.password && (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
-                          {errors.password}
-                        </p>
-                      )}
                     </div>
 
                     {/* Email */}
@@ -563,7 +558,7 @@ function RegistrationForm() {
                         autoComplete={'new-email'}
                       />
                       {errors.emailAddress && (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                        <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
                           {errors.emailAddress}
                         </p>
                       )}
@@ -604,9 +599,9 @@ function RegistrationForm() {
                           />
                         </div>
                       </div>
-                      {errors.confirmPassword ? (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
-                          {errors.confirmPassword}
+                      {errors.password || errors.confirmPassword ? (
+                        <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
+                          {errors.password || errors.confirmPassword}
                         </p>
                       ) : (
                         <div className='position-absolute password-register'>
@@ -696,7 +691,7 @@ function RegistrationForm() {
                       )}
 
                       {errors.birthDate && (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                        <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
                           {errors.birthDate}
                         </p>
                       )}
@@ -718,7 +713,7 @@ function RegistrationForm() {
                         onChange={handleInputChange}
                       />
                       {errors.address && (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                        <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
                           {errors.address}
                         </p>
                       )}
@@ -735,7 +730,7 @@ function RegistrationForm() {
                           onChange={handleInputChange}
                         />
                         {errors.city && (
-                          <p className='invalid-feedback d-block position-absolute fs-10'>
+                          <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
                             {errors.city}
                           </p>
                         )}
@@ -748,7 +743,7 @@ function RegistrationForm() {
                           onChange={handleInputChange}
                         />
                         {errors.state && (
-                          <p className='invalid-feedback d-block position-absolute fs-10'>
+                          <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
                             {errors.state}
                           </p>
                         )}
@@ -778,7 +773,7 @@ function RegistrationForm() {
                       onChange={handleInputChange}
                     />
                     {errors.nameOn && (
-                      <p className='invalid-feedback d-block position-absolute fs-10'>
+                      <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
                         {errors.nameOn}
                       </p>
                     )}
@@ -870,7 +865,7 @@ function RegistrationForm() {
                         onChange={handleInputChange}
                       />
                       {errors.zipC && (
-                        <p className='invalid-feedback d-block position-absolute fs-10'>
+                        <p className='invalid-feedback mt-0 d-block position-absolute fs-10'>
                           {errors.zipC}
                         </p>
                       )}

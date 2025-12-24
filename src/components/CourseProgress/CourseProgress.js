@@ -405,7 +405,7 @@ function CourseProgress() {
         <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 gap-2'>
           <div className='d-flex gap-3 align-items-center'>
             <img src={courseLogo} alt='course' />
-            <h4 className='fs-9 my-details-header'>Course Progress</h4>
+            <h4 className='fs-9 my-details-header'>My Studio Progress</h4>
           </div>
           <div
             className='progress-details cursor-pointer'
@@ -415,7 +415,7 @@ function CourseProgress() {
             <img src={rightArrow} alt='right-arr' />
           </div>
         </div>
-        <div className='d-flex gap-4 align-items-center justify-content-around flex-col-mob mt-2rem-mob'>
+        <div className='d-flex gap-4 justify-content-around flex-col-mob mt-2rem-mob'>
           <div className='d-flex flex-column gap-4'>
             <CircularProgress
               percentage={levelProgress?.level1?.percentage || 0}

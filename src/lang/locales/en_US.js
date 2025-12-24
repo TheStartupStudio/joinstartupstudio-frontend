@@ -931,7 +931,7 @@ const EnLangs = {
   // 'alert.check_email_redirect':
   //   'Please check your email for the reset password link!',
   'alert.check_email_redirect':
-    'Please check your email for the verification code!',
+    'Please check your email!',
   'alerts.something_went_wrong': 'Something went wrong, please try again!',
   'alert.my_account.success_change': 'Your data has been changed successfully',
   'alert.my_account.password_change_success':

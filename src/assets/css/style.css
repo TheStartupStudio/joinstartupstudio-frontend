@@ -4383,7 +4383,7 @@ wave > wave:first-child {
   padding-inline: 1.5rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   border-radius: 20px;
-  gap: 20px;
+  /* gap: 20px; */
 }
 
 .progress-details {

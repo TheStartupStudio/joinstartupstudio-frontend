@@ -88,7 +88,7 @@ function MyCourseEntrepreneurship() {
         <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
-              <h3 className='page-title bold-page-title text-black mb-0'>Intro to the Course</h3>
+              <h3 className='page-title bold-page-title text-black mb-0'>Intro to the STUDIO</h3>
               <p className='fs-13 fw-light text-black'>Embarking on the Entrepreneurial Journey</p>
             </div>
           </div>

@@ -155,7 +155,7 @@ line-height: normal;
 .manage-payment-modal .billing-address-fields {
   display: flex;
   flex-direction: column;
-  /* gap: 16px; */
+  gap: 16px;
 }
 
 .manage-payment-modal .form-group {

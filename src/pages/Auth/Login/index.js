@@ -100,6 +100,7 @@ const ChooseLogin = () => {
           dispatch(userLogin(user.password))
             .then((res) => {
               if (res === 'passwordResetRequired') {
+                dispatch(setLoginLoading(false))
                 history.push('/password-change-required')
               } else if (!res) {
                 toast.error('Wrong email or password!')
@@ -111,11 +112,15 @@ const ChooseLogin = () => {
                 
                 // Redirect based on role
                 const dashboardRoute = getDashboardRoute(roleId)
+                // Loading will be cleared after navigation
+                dispatch(setLoginLoading(false))
                 history.push(dashboardRoute)
               }
             })
             .catch((err) => {
               console.log('err', err)
+              dispatch(setLoginLoading(false))
+              toast.error('An error occurred during login. Please try again.')
             })
         })
         .catch((error) => {

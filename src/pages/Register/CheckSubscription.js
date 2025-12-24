@@ -14,12 +14,12 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
 
 
-// const stripePromise = loadStripe(
-//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-// )
+const stripePromise = loadStripe(
+  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
+)
 
 
-const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+// const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
 
 
 function CheckSubscription() {
@@ -388,7 +388,7 @@ useEffect(() => {
                 className={`plan-option ${selectedPlan === 'annual' ? 'selected' : ''}`}
                 onClick={() => setSelectedPlan('annual')}
               >
-                <h5>Annual Plan</h5>
+                <h5>Builders Plan</h5>
                 <p className='price'>${planDetails.annual.price}/year</p>
                 <p className='commitment'>{planDetails.annual.commitment}</p>
                 
@@ -411,7 +411,7 @@ useEffect(() => {
 
           <div className='align-self-start mt-5 mb-5 payment-section mx-auto'>
             <h3 className='fs-21 fw-medium text-black text-center'>
-              {selectedPlan === 'annual' ? 'Annual' : 'Monthly'} Subscription to Learn to Start LLC
+              {selectedPlan === 'annual' ? 'Annual' : 'Monthly'} Subscription to The Startup Studio Powered by Learn to Start
             </h3>
             <div className='d-flex mt-5 justify-content-between payment-border'>
               <p className='fs-15 text-black'>

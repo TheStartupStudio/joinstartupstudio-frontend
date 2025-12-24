@@ -429,6 +429,131 @@ const DataTable = ({
           </div>
         </div>
       )
+    } else if (activeTab === 'Reports') {
+      return (
+        <div className="action-buttons">
+           <button
+            className="action-btn view-btn"
+            onClick={() => handleActionClick('view', item)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M2.5 10.8335C5.5 4.16683 14.5 4.16683 17.5 10.8335" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10 14.1665C8.61929 14.1665 7.5 13.0472 7.5 11.6665C7.5 10.2858 8.61929 9.1665 10 9.1665C11.3807 9.1665 12.5 10.2858 12.5 11.6665C12.5 13.0472 11.3807 14.1665 10 14.1665Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            View
+          </button>
+          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
+            <button
+              className="action-btn more-actions-btn"
+              onClick={(e) => handleMoreActionsClick(item.id, e)}
+              title="More Actions"
+            >
+              <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
+                <circle cx="2" cy="2" r="2" fill="currentColor" />
+                <circle cx="8" cy="2" r="2" fill="currentColor" />
+                <circle cx="14" cy="2" r="2" fill="currentColor" />
+              </svg>
+            </button>
+            
+            {openMoreActionsDropdown === item.id && (
+              <div 
+                className="more-actions-dropdown-menu"
+                style={{
+                  position: 'fixed',
+                  top: dropdownPosition.top + 30,
+                  left: dropdownPosition.left - 170,
+                  background: 'white',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  zIndex: 9999,
+                  minWidth: '200px',
+                  display: 'block'
+                }}
+              >
+                <div 
+                  className="more-actions-dropdown-item"
+                  style={{
+                    padding: '12px 16px',
+                    color: 'black',
+                    fontFamily: 'Montserrat',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                  onClick={() => {
+                    handleActionClick('archive', item)
+                    setOpenMoreActionsDropdown(null)
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M2.5 6.66699V15.0003C2.5 15.442 2.67559 15.8656 2.98816 16.1782C3.30072 16.4907 3.72464 16.6663 4.16667 16.6663H15.8333C16.2754 16.6663 16.6993 16.4907 17.0118 16.1782C17.3244 15.8656 17.5 15.442 17.5 15.0003V6.66699" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M18.3337 3.33301H1.66699V6.66634H18.3337V3.33301Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8.33301 10H11.6663" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Archive Report
+                </div>
+
+                <div 
+                  className="more-actions-dropdown-item"
+                  style={{
+                    padding: '12px 16px',
+                    color: '#DC3545',
+                    fontFamily: 'Montserrat',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                  onClick={() => {
+                    handleActionClick('delete', item)
+                    setOpenMoreActionsDropdown(null)
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M2.5 5H4.16667H17.5" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M15.8337 4.99967V16.6663C15.8337 17.108 15.6581 17.5316 15.3455 17.8441C15.033 18.1567 14.6094 18.3323 14.167 18.3323H5.83366C5.39163 18.3323 4.96807 18.1567 4.65551 17.8441C4.34295 17.5316 4.16699 17.108 4.16699 16.6663V4.99967M6.66699 4.99967V3.33301C6.66699 2.89098 6.84295 2.46742 7.15551 2.15486C7.46807 1.8423 7.89163 1.66634 8.33366 1.66634H11.667C12.109 1.66634 12.5326 1.8423 12.8451 2.15486C13.1577 2.46742 13.3337 2.89098 13.3337 3.33301V4.99967" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Delete Report
+                </div>
+
+                <div 
+                  className="more-actions-dropdown-item"
+                  style={{
+                    padding: '12px 16px',
+                    color: 'black',
+                    fontFamily: 'Montserrat',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                  onClick={() => {
+                    handleActionClick('export', item)
+                    setOpenMoreActionsDropdown(null)
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M5.83301 8.33301L9.99967 12.4997L14.1663 8.33301" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M10 12.5V2.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Export Report
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )
     } else if (activeTab === 'Organizations') {
       return (
         <div className="action-buttons">

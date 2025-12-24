@@ -307,7 +307,7 @@ const AdminDashboard = () => {
           <div className="account-page-padding d-flex justify-content-between flex-col-tab align-start-tab">
             <div>
               <h3 className="page-title bold-page-title text-black mb-0">
-                Organizational Admin Dashboard
+                {userRole == 3 ? 'Super Admin Dashboard' : 'Organizational Admin Dashboard'}
               </h3>
             </div>
           </div>
