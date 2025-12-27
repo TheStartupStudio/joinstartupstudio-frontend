@@ -6,14 +6,31 @@
 
 import foulWords from '../assets/json/foul-words.json'
 
+// Additional violence/threat words that should be Level 1 (Auto-Remove)
+const violenceWords = [
+  'kill',
+  'shoot',
+  'bomb',
+  'knife',
+  'gun',
+  'attack',
+  'threat',
+  'kys',
+  'kill yourself',
+  'murder',
+  'stab',
+  'strangle',
+  'rape'
+]
+
 const contentFilterData = {
-  level1: foulWords, // Use all words from foul-words.json as Level 1 (blocking)
+  level1: [...foulWords, ...violenceWords], // Combine foul words with violence words as Level 1 (blocking)
   
   level2: [
-    // Profanity
+    // Profanity (mild)
     'jerk',
     
-    // Violence
+    // Violence (less severe than level 1)
     'die',
     'self-harm',
     
@@ -28,18 +45,19 @@ const contentFilterData = {
     'fat',
     'anorexic',
     'pathetic',
+    'worthless',
+    'shut up',
+    'go away',
+    
+    // Contextual phrases
     'you\'re worthless',
     'you\'re nothing',
-    'shut up',
     'nobody likes you',
-    'go away',
     'you\'re annoying',
     'you\'ll never make it',
     'you\'re fake',
     'this sucks',
     'this is stupid',
-    
-    // Contextual
     'go die',
     'no one likes you',
     'you don\'t belong here',
@@ -49,7 +67,7 @@ const contentFilterData = {
   ],
   
   level3: [
-    // Sensitive
+    // Sensitive mental health terms
     'depressed',
     'anxious',
     'panic',
@@ -64,9 +82,8 @@ const contentFilterData = {
     'crying',
     'mental breakdown',
     'suicide',
-    'worthless',
     
-    // Contextual
+    // Contextual self-harm phrases
     'I hate myself',
     'I want to die',
     'I want to hurt myself',
@@ -82,15 +99,34 @@ export const checkContent = (text) => {
   if (!text) return null
   
   // Strip HTML tags and normalize text
-  const strippedText = text.replace(/<[^>]*>/g, ' ').toLowerCase()
+  const strippedText = text.replace(/<[^>]*>/g, ' ').toLowerCase().trim()
   
-  // Check Level 1 (highest severity) first - all foul words
+  if (!strippedText) return null
+  
+  // Helper function to create safe regex pattern
+  const createPattern = (word) => {
+    // Escape special regex characters
+    const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    // Replace spaces with flexible whitespace matcher
+    const withWhitespace = escaped.replace(/\s+/g, '\\s+')
+    return withWhitespace
+  }
+  
+  // Helper function to check if a word/phrase matches in text
+  const matchesInText = (word, text) => {
+    const pattern = createPattern(word)
+    // Use word boundaries for single words, but not for phrases
+    const hasSpaces = word.includes(' ')
+    const regex = hasSpaces 
+      ? new RegExp(`(^|\\s)${pattern}($|\\s)`, 'i')
+      : new RegExp(`\\b${pattern}\\b`, 'i')
+    return regex.test(text)
+  }
+  
+  // Check Level 1 (highest severity) first - all foul words + violence words
   const level1Found = []
   for (const word of contentFilterData.level1) {
-    // Escape special regex characters except spaces
-    const escapedWord = word.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+')
-    const regex = new RegExp(`\\b${escapedWord}\\b`, 'i')
-    if (regex.test(strippedText)) {
+    if (matchesInText(word, strippedText)) {
       level1Found.push(word)
     }
   }
@@ -102,8 +138,7 @@ export const checkContent = (text) => {
   // Check Level 2
   const level2Found = []
   for (const phrase of contentFilterData.level2) {
-    const regex = new RegExp(phrase.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-    if (regex.test(strippedText)) {
+    if (matchesInText(phrase, strippedText)) {
       level2Found.push(phrase)
     }
   }
@@ -115,8 +150,7 @@ export const checkContent = (text) => {
   // Check Level 3
   const level3Found = []
   for (const phrase of contentFilterData.level3) {
-    const regex = new RegExp(phrase.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
-    if (regex.test(strippedText)) {
+    if (matchesInText(phrase, strippedText)) {
       level3Found.push(phrase)
     }
   }

@@ -115,7 +115,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'forum',
-    title: 'Startup Forum',
+    title: 'Studio Forum',
     srcImage: ForumIcon,
     to: '/startup-forum',
     roles: [3, 1],

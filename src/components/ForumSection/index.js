@@ -135,7 +135,7 @@ const ForumSection = () => {
       <div className="forum-header">
         <div className="forum-title-container">
           <div className="forum-icon"><img src={mentorship} alt="Mentorship Icon" /></div>
-          <h4 className='fs-9 my-details-header'>Startup Forum</h4>
+          <h4 className='fs-9 my-details-header'>Studio Forum</h4>
         </div>
         <div
           className='cursor-pointer d-flex gap-2 align-items-center'

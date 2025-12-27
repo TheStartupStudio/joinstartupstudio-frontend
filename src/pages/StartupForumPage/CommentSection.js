@@ -247,9 +247,17 @@ const CommentSection = () => {
         const response = await axiosInstance.get(`/forum/discussion/${id}`)
         if (response.data) {
           // The API now returns the exact format we need
+          // Normalize category to always be a string
+          const category = typeof response.data.category === 'object' && response.data.category !== null
+            ? response.data.category.name
+            : response.data.category
+          
           const formattedData = {
             id: response.data.id,
-            category: response.data.category,
+            category: category,
+            categoryId: typeof response.data.category === 'object' && response.data.category !== null
+              ? response.data.category.id
+              : response.data.categoryId || response.data.category_id,
             isNew: response.data.isNew,
             title: response.data.title,
             description: response.data.description,
@@ -287,7 +295,18 @@ const CommentSection = () => {
 
   useEffect(() => {
     if (location.state?.discussionData) {
-      setForumData([location.state.discussionData])
+      // Normalize category to string if it's an object
+      const data = location.state.discussionData
+      const normalizedData = {
+        ...data,
+        category: typeof data.category === 'object' && data.category !== null
+          ? data.category.name
+          : data.category,
+        categoryId: typeof data.category === 'object' && data.category !== null
+          ? data.category.id
+          : data.categoryId || data.category_id
+      }
+      setForumData([normalizedData])
       setLoading(false)
     }
   }, [location.state])
@@ -667,7 +686,12 @@ const CommentSection = () => {
   }, [])
 
   const getCategoryIcon = (category) => {
-    switch (category) {
+    // Handle if category is an object with id and name properties
+    const categoryName = typeof category === 'object' && category !== null 
+      ? category.name 
+      : category
+    
+    switch (categoryName) {
       case 'Introductions':
         return wavingHand
       case 'Announcements':
@@ -683,7 +707,19 @@ const CommentSection = () => {
 
   const handleEditPost = (post, event) => {
     event.stopPropagation()
-    setEditingPost(post)
+    
+    // Normalize the post object to ensure category is a string
+    const normalizedPost = {
+      ...post,
+      category: typeof post.category === 'object' && post.category !== null 
+        ? post.category.name 
+        : post.category,
+      categoryId: typeof post.category === 'object' && post.category !== null
+        ? post.category.id
+        : post.categoryId || post.category_id
+    }
+    
+    setEditingPost(normalizedPost)
     setShowDiscussionModal(true)
   }
 
@@ -713,6 +749,11 @@ const CommentSection = () => {
       history.push('/startup-forum')
     } else if (action === 'update') {
       // Update with the new API format while preserving existing data
+      // Normalize category to string if it's an object
+      const normalizedCategory = typeof discussion.category === 'object' && discussion.category !== null
+        ? discussion.category.name
+        : discussion.category
+      
       setForumData(prevData => 
         prevData.map(post => 
           post.id === discussion.id 
@@ -721,7 +762,7 @@ const CommentSection = () => {
                 title: discussion.title || post.title,
                 description: discussion.description || post.description,
                 content: discussion.content || post.content,
-                category: discussion.category || post.category,
+                category: normalizedCategory || post.category,
                 // Preserve other fields from the original API response
                 author: post.author, // Keep original author data
                 date: post.date, // Keep original date
@@ -748,7 +789,7 @@ const CommentSection = () => {
         <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
              <div>
-              <h3 className='page-title bold-page-title text-black mb-0'>Startup Forum</h3>
+              <h3 className='page-title bold-page-title text-black mb-0'>Studio Forum</h3>
               <p className='fs-13 fw-light text-black'>Connect with others and Share Your Achievements</p>
             </div>
           </div>
@@ -997,23 +1038,45 @@ const CommentSection = () => {
                   
                   {/* Pagination for replies */}
                   {totalPages > 1 && (
-                    <div className="forum-pagination d-flex justify-content-center mt-4">
+                    <div className="pagination-container">
                       <button 
-                        className="btn btn-outline-primary me-2"
+                        className="pagination-btn"
+                        onClick={() => fetchReplies(1)}
                         disabled={currentPage === 1}
-                        onClick={() => fetchReplies(currentPage - 1)}
                       >
-                        Previous
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                       </button>
-                      <span className="align-self-center mx-2">
-                        Page {currentPage} of {totalPages}
-                      </span>
                       <button 
-                        className="btn btn-outline-primary ms-2"
-                        disabled={currentPage === totalPages}
-                        onClick={() => fetchReplies(currentPage + 1)}
+                        className="pagination-btn"
+                        onClick={() => fetchReplies(currentPage - 1)}
+                        disabled={currentPage === 1}
                       >
-                        Next
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                          <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      <span className="pagination-info">{currentPage} / {totalPages}</span>
+                      <button 
+                        className="pagination-btn"
+                        onClick={() => fetchReplies(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                          <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      <button 
+                        className="pagination-btn"
+                        onClick={() => fetchReplies(totalPages)}
+                        disabled={currentPage === totalPages}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                       </button>
                     </div>
                   )}

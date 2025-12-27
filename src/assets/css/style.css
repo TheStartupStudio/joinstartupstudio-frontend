@@ -1607,10 +1607,10 @@ input[type='file'] {
   width: 2rem;
   height: 2rem;
   vertical-align: text-bottom;
-  border: 0.25em solid white;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
+  border: 0.25em solid white;
 }
 
 .spinner-border-primary {

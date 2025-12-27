@@ -64,16 +64,21 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
   useEffect(() => {
     if (show) {
       if (editingPost) {
+        // Extract category name if it's an object
+        const categoryName = typeof editingPost.category === 'object' && editingPost.category !== null
+          ? editingPost.category.name
+          : editingPost.category
+        
         // Find the category ID from dbCategories if category name is provided
         const categoryId = editingPost.categoryId || editingPost.category_id || 
-          (editingPost.category ? dbCategories.find(cat => cat.name === editingPost.category)?.id : null)
+          (categoryName ? dbCategories.find(cat => cat.name === categoryName)?.id : null)
         
         setFormData({
           title: editingPost.title || '',
           description: editingPost.description || '',
           content: editingPost.content || editingPost.description || '',
-          category: editingPost.category || '', 
-          selectedCategory: editingPost.category || '',
+          category: categoryName || '', 
+          selectedCategory: categoryName || '',
           categoryId: categoryId
         })
       } else {
