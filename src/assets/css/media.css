@@ -119,13 +119,13 @@
 }
 
 @media (min-width: 2200px) and (max-width: 2600px) {
-  #content {
+  /* #content {
     width: calc(100% - 450px);
   }
 
   #sidebar {
     width: 450px;
-  }
+  } */
 
   /* 
   .sidebar-header img {

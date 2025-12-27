@@ -42,7 +42,7 @@ function Layout({ children }) {
       )}
       {originalToken && <ImpersonationNavbar originalToken={originalToken} />}
       <div
-        className='wrapper d-flex flex-column'
+        className='wrapper'
         style={{
           ...(originalToken && { marginTop: '32px' }),
           ...(isAdmin && { minHeight: '110dvh' })
