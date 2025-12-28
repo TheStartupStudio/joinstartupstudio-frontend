@@ -116,7 +116,7 @@ export const invoiceApi = {
    * Bulk archive invoices
    */
   bulkArchiveInvoices: async (invoiceIds) => {
-    const response = await axiosInstance.post('/invoices/bulk-archive', { invoiceIds })
+    const response = await axiosInstance.post('/client/invoices/bulk-archive', { invoiceIds })
     return response.data
   },
 

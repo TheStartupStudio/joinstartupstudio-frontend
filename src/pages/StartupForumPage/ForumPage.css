@@ -604,16 +604,16 @@
  }
 }
 
-.pagination-container {
+.forum-page-container .pagination-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 0px;
   padding: 16px 0;
+  background-color: transparent;
 }
 
-.pagination-btn {
-  width: 36px;
+.forum-page-container .pagination-btn {
   height: 36px;
   display: flex;
   align-items: center;
@@ -626,15 +626,15 @@
   border: none;
 }
 
-.pagination-btn:hover {
+.forum-page-container .pagination-btn:hover {
   background: #f9fafb;
   border-color: #51C7DF;
 }
 
-.pagination-info {
+.forum-page-container .pagination-info {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 500;
   color: #000;
-  padding: 0 12px;
+  padding: 0 5px;
 }

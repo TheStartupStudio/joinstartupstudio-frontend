@@ -329,6 +329,7 @@ margin-bottom: 0px;
   background-color: #F5F5F5 !important;
   border-radius: 8px;
   margin-bottom: 0;
+  margin-bottom: 20px;
 }
 
 .header-cell {
@@ -347,6 +348,7 @@ margin-bottom: 0px;
   padding: 20px 42px;
   background-color: #FFFFFF;
   align-items: center;
+  padding: 0px 42px 20px 30px;
 }
 
 .invoice-item-row.add-item-row {
@@ -667,6 +669,248 @@ background: rgba(255, 255, 255, 0.10);
   height: 16px;
 }
 
+/* Responsive Design - Mobile First Approach */
+/* Tablets (iPad, etc.) */
+@media (max-width: 1024px) {
+  .edit-invoice-modal .modal-dialog {
+    max-width: 90%;
+    margin: 1rem auto;
+  }
+
+  .invoice-modal-header {
+    padding: 20px 24px;
+  }
+
+  .header-icons-nav {
+    gap: 20px;
+    padding: 14px;
+  }
+
+  .organization-header {
+    font-size: 24px;
+    padding: 0px 16px;
+  }
+
+  .invoice-top-section {
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 16px;
+  }
+
+  .invoice-items-header,
+  .invoice-item-row {
+    padding: 16px 24px;
+  }
+
+  .invoice-totals-section {
+    flex-direction: column;
+    padding: 16px 24px;
+  }
+
+  .totals-row {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .totals-label {
+    width: auto;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 768px) {
+  .edit-invoice-modal .modal-dialog {
+    max-width: 95%;
+    margin: 0.5rem auto;
+  }
+
+  .invoice-modal-header {
+    padding: 16px;
+  }
+
+  .header-icons-nav {
+    gap: 12px;
+    padding: 10px;
+    top: -12px;
+    right: -12px;
+  }
+
+  .header-icons-nav svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .invoice-modal-title {
+    font-size: 14px;
+  }
+
+  .organization-header {
+    font-size: 20px;
+    padding: 0px 12px;
+  }
+
+  .invoice-top-section {
+    padding: 0 12px;
+    gap: 20px;
+  }
+
+  .section-label {
+    font-size: 18px;
+  }
+
+  .name-section-label {
+    font-size: 14px;
+  }
+
+  .address-section-label,
+  .city-section-label {
+    font-size: 13px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+  }
+
+  .detail-row p {
+    width: 100%;
+    text-align: left !important;
+  }
+
+  .detail-row .name-section-label {
+    text-align: left;
+  }
+
+  /* Invoice Items - Simplified for Mobile */
+  .invoice-items-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+    font-size: 10px;
+  }
+
+  .invoice-item-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  /* Hide Quantity column on very small screens */
+  .invoice-items-header .header-cell:nth-child(2),
+  .invoice-item-row .item-cell.qty-col {
+    display: none;
+  }
+
+  /* Adjust remaining columns */
+  .invoice-items-header {
+    grid-template-columns: 2fr 1fr 1.5fr;
+  }
+
+  .invoice-item-row {
+    grid-template-columns: 2fr 1fr 1.5fr;
+  }
+
+  .item-cell {
+    font-size: 13px;
+  }
+
+  .item-description {
+    font-size: 13px;
+    word-break: break-word;
+  }
+
+  .item-quantity,
+  .item-price,
+  .item-total {
+    font-size: 12px;
+  }
+
+  .item-cell input {
+    height: 44px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .edit-btn svg,
+  .delete-btn svg,
+  .confirm-btn svg,
+  .cancel-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .invoice-totals-section {
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .totals-row {
+    gap: 20px;
+  }
+
+  .totals-label {
+    font-size: 13px;
+    width: auto;
+  }
+
+  .totals-value {
+    font-size: 13px;
+  }
+
+  .add-new-item-btn {
+    font-size: 12px;
+    padding: 12px;
+  }
+
+  .instructor-payment-info {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .payment-info-text {
+    font-size: 12px;
+  }
+}
+
+/* Extra Small Phones (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .header-icons-nav {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .organization-header {
+    font-size: 18px;
+  }
+
+  .section-label {
+    font-size: 16px;
+  }
+
+  .invoice-items-header,
+  .invoice-item-row {
+    padding: 8px;
+  }
+
+  .item-description {
+    font-size: 12px;
+  }
+
+  .item-price,
+  .item-total {
+    font-size: 11px;
+  }
+
+  .totals-label,
+  .totals-value {
+    font-size: 12px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .invoice-top-section {
@@ -709,8 +953,19 @@ background: rgba(255, 255, 255, 0.10);
   .delete-btn,
   .confirm-btn,
   .cancel-btn,
-  .add-new-item-btn {
+  .add-new-item-btn,
+  .header-icons-nav {
     display: none !important;
+  }
+
+  .organization-header {
+    margin-bottom: 20px !important;
+  }
+
+  .section-label {
+    margin-top: 10px !important;
+    margin-bottom: 12px !important;
+    line-height: 1.5 !important;
   }
 }
 
@@ -718,4 +973,29 @@ background: rgba(255, 255, 255, 0.10);
 .invoice-modal-content {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
+  color-adjust: exact;
+}
+
+/* ✅ Force consistent rendering for PDF generation */
+.invoice-modal-content * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ✅ Ensure proper layout during PDF capture */
+.invoice-modal-content.pdf-capture {
+  width: 1200px !important;
+  max-width: 1200px !important;
+  overflow: visible !important;
+}
+
+.invoice-modal-content.pdf-capture .header-icons-nav,
+.invoice-modal-content.pdf-capture .instructor-payment-info,
+.invoice-modal-content.pdf-capture .edit-btn,
+.invoice-modal-content.pdf-capture .delete-btn,
+.invoice-modal-content.pdf-capture .confirm-btn,
+.invoice-modal-content.pdf-capture .cancel-btn,
+.invoice-modal-content.pdf-capture .add-new-item-btn {
+  display: none !important;
 }

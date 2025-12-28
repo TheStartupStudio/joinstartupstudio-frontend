@@ -5132,6 +5132,9 @@ line-height: normal;
 }
 
 @media (max-width: 1135px) {
+  .wrapper{
+    display: flex;
+  }
   .my-notes-content {
     padding: 10px;
   }

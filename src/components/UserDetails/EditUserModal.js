@@ -588,7 +588,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                           fontFamily: 'Montserrat'
                         }}
                       >
-                        Student Address
+                        Address
                       </label>
                       {!loading && (
                         <FontAwesomeIcon 
@@ -651,7 +651,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                             fontFamily: 'Montserrat'
                           }}
                         >
-                          Student City
+                          City
                         </label>
                         {!loading && (
                           <FontAwesomeIcon 
@@ -693,7 +693,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                             fontFamily: 'Montserrat'
                           }}
                         >
-                          Student State
+                          State
                         </label>
                         <span style={{
                           fontSize: '14px',

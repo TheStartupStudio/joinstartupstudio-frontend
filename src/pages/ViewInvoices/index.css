@@ -284,7 +284,7 @@ max-width: 640px;
 }
 
 .view-invoices-container .status-scheduled .status-dot {
-  background: rgb(99, 195, 255);
+  background: #51C7DF;
 }
 
 .view-invoices-container .status-failed .status-dot {
@@ -309,7 +309,7 @@ max-width: 640px;
 }
 
 .view-invoices-container .status-pending .status-dot {
-  background: orange;
+  background:  #FF3399;
 }
 
 .view-invoices-container .status-created {
