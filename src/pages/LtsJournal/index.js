@@ -1553,7 +1553,7 @@ useEffect(() => {
                                 />
                                 <h6>Level 1: Entrepreneurship and You</h6>
                               </div>
-                              <p className='pt-3'>Entrepreneurship is a mindset, and in the first level of this program, you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship. You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values, your purpose,your mindset, and your skillset. The first step in creating this proof is developing content that solidifies your statement of "I Am". Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.</p>
+                              <p className='pt-3'>Entrepreneurship is a mindset, and in the first level of this program, you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship. You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values, your purpose, your mindset, and your skillset. The first step in creating this proof is developing content that solidifies your statement of "I Am". Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.</p>
 
 
                             </div>

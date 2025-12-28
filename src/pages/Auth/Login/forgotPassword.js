@@ -62,7 +62,7 @@ const ForgotPassword = () => {
               email: userEmail
             })
             .then(() => {
-              toast.success(<IntlMessages id='alert.check_email_redirect' />)
+              toast.success("Please check your email to reset your password!")
               setLoading(false)
               setTimeout(() => {
                 window.location.href = `/`

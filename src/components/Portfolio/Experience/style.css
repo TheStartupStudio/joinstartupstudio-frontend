@@ -101,7 +101,7 @@
 }
 
 .edit-experience-modal input[type='checkbox']:checked:before {
-  background-color: #2196f3;
+  background-color: #51C7DF;
   color: white !important;
   border: 0;
   padding: 3px;
