@@ -10,6 +10,15 @@ import partyPopper from '../../assets/images/academy-icons/svg/Party Popper.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 
+// Icon library for selection
+const ICON_LIBRARY = [
+  { name: 'Waving Hand', path: wavingHand },
+  { name: 'Loudspeaker', path: loudSpeaker },
+  { name: 'Party Popper', path: partyPopper },
+  { name: 'Speech Balloon', path: speechBalloon },
+  { name: 'Light Bulb', path: lightBulb }
+]
+
 const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
@@ -18,6 +27,10 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
   const [draggedItem, setDraggedItem] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [categoryToDelete, setCategoryToDelete] = useState(null)
+  const [selectedIcon, setSelectedIcon] = useState(speechBalloon) // Default icon
+  const [showIconPicker, setShowIconPicker] = useState(false)
+  const [showAddIconPicker, setShowAddIconPicker] = useState(false)
+  const [editingIconForCategory, setEditingIconForCategory] = useState(null)
   
   // Track pending changes
   const [pendingChanges, setPendingChanges] = useState({
@@ -34,7 +47,14 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
   ]
 
   // Get icon for category
-  const getCategoryIcon = (categoryName) => {
+  const getCategoryIcon = (category) => {
+    // If category is an object with icons property, use it
+    if (typeof category === 'object' && category.icons) {
+      return category.icons
+    }
+    
+    // If it's just a name string, use fallback
+    const categoryName = typeof category === 'string' ? category : category?.name
     const iconMap = {
       'Introductions': wavingHand,
       'Announcements': loudSpeaker,
@@ -61,6 +81,11 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
         added: [],
         reordered: false
       })
+      // Reset icon picker state
+      setShowIconPicker(false)
+      setEditingIconForCategory(null)
+      setShowAddIconPicker(false)
+      setSelectedIcon(speechBalloon)
     }
   }, [show])
 
@@ -120,7 +145,7 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     setCategories(updatedCategories)
   }
 
-  const handleEditCategory = (categoryId, newName) => {
+  const handleEditCategory = (categoryId, newName, newIcon = null) => {
     if (!newName.trim()) {
       toast.error('Category name cannot be empty')
       return
@@ -132,7 +157,12 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     setCategories(prev => 
       prev.map(cat => 
         cat.id === categoryId 
-          ? { ...cat, name: newName, slug: newName.toLowerCase().replace(/\s+/g, '-') }
+          ? { 
+              ...cat, 
+              name: newName, 
+              slug: newName.toLowerCase().replace(/\s+/g, '-'),
+              icons: newIcon !== null ? newIcon : cat.icons
+            }
           : cat
       )
     )
@@ -146,13 +176,15 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
         updatedList[existingIndex] = {
           ...category,
           name: newName,
-          slug: newName.toLowerCase().replace(/\s+/g, '-')
+          slug: newName.toLowerCase().replace(/\s+/g, '-'),
+          icons: newIcon !== null ? newIcon : category.icons
         }
       } else {
         updatedList.push({
           ...category,
           name: newName,
-          slug: newName.toLowerCase().replace(/\s+/g, '-')
+          slug: newName.toLowerCase().replace(/\s+/g, '-'),
+          icons: newIcon !== null ? newIcon : category.icons
         })
       }
       
@@ -180,6 +212,7 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
       slug: newCategoryName.toLowerCase().replace(/\s+/g, '-'),
       order: categories.length + 2,
       is_active: true,
+      icons: selectedIcon,
       isNew: true
     }
     
@@ -193,6 +226,7 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     }))
     
     setNewCategoryName('')
+    setSelectedIcon(speechBalloon) // Reset to default
   }
 
   const handleDeleteCategory = (categoryId) => {
@@ -252,7 +286,8 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
           name: category.name,
           slug: category.slug,
           order: category.order,
-          is_active: category.is_active
+          is_active: category.is_active,
+          icons: category.icons
         })
       }
       
@@ -261,7 +296,8 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
         await axiosInstance.put(`/forum/categories/${category.id}`, {
           ...category,
           name: category.name,
-          slug: category.slug
+          slug: category.slug,
+          icons: category.icons
         })
       }
       
@@ -402,12 +438,13 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
                     flex: 1, 
                     display: 'flex', 
                     flexDirection: 'column', 
-                    gap: '4px',
+                    // gap: '4px',
                     border: '1px solid #E5E7EB', 
                     padding: '8px 18px',
-                      borderRadius: '12px',
-                      background: '#FFF',
-                      boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)'
+                    borderRadius: '12px',
+                    background: '#FFF',
+                    boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+                    position: 'relative'
                   }}>
                     <div style={{ 
                       fontSize: '12px', 
@@ -442,12 +479,80 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
                         fontSize: '14px',
                         fontWeight: '500'
                       }}>
-                        <img 
-                          src={getCategoryIcon(category.name)} 
-                          alt="category icon" 
-                          style={{ width: '20px', height: '20px' }}
-                        />
+                        {/* Icon selector button for editing */}
+                        <button
+                          onClick={() => {
+                            setEditingIconForCategory(category.id)
+                            setShowIconPicker(!showIconPicker)
+                            setShowAddIconPicker(false)
+                          }}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <img
+                            src={getCategoryIcon(category)}
+                            alt="category icon"
+                            style={{ width: '20px', height: '20px' }}
+                          />
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9L12 15L18 9" stroke="#6F6F6F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </button>
                         <span>{category.name}</span>
+                        
+                        {/* Icon picker for editing existing category */}
+                        {editingIconForCategory === category.id && showIconPicker && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            zIndex: 1000,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '4px',
+                            padding: '8px',
+                            backgroundColor: 'white',
+                            borderRadius: '8px',
+                            border: '1px solid #E5E7EB',
+                            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                            minWidth: '120px'
+                          }}>
+                            {ICON_LIBRARY.map((icon) => (
+                              <button
+                                key={icon.name}
+                                onClick={() => {
+                                  handleEditCategory(category.id, category.name, icon.path)
+                                  setEditingIconForCategory(null)
+                                  setShowIconPicker(false)
+                                }}
+                                style={{
+                                  background: category.icons === icon.path ? '#E0F2FE' : 'white',
+                                  border: category.icons === icon.path ? '2px solid #52C7DE' : '1px solid #E5E7EB',
+                                  borderRadius: '6px',
+                                  padding: '8px',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  transition: 'all 0.2s',
+                                  gap: '8px'
+                                }}
+                                title={icon.name}
+                              >
+                                <img src={icon.path} alt={icon.name} style={{ width: '20px', height: '20px' }} />
+                                {/* <span style={{ fontSize: '12px', color: '#6F6F6F' }}>{icon.name}</span> */}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -511,74 +616,149 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
               {/* Add New Category Input */}
               <div
                 style={{
+                  position: 'relative',
                   marginLeft:'35px',
                   backgroundColor: 'white',
                   boxShadow: 'rgba(0, 0, 0, 0.25) 0px 4px 10px 0px',
                   borderRadius: '12px',
                   padding: '14px 16px',
                   display: 'flex',
-                  alignItems: 'center',
+                  flexDirection: 'column',
                   gap: '12px'
                 }}
               >
-                
-                <input
-                  type="text"
-                  placeholder="Add New Category Name..."
-                  value={newCategoryName}
-                  onChange={(e) => setNewCategoryName(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      handleAddCategory()
-                    }
-                  }}
-                  style={{
-                    backgroundColor: 'transparent',
-                    flex: 1,
-                    border: 'none',
-                    outline: 'none',
-                    fontSize: '14px',
-                    color: '#6B7280'
-                  }}
-                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {/* Icon selector button */}
+                  <button
+                    onClick={() => {
+                      setShowAddIconPicker(!showAddIconPicker)
+                      setEditingIconForCategory(null)
+                      setShowIconPicker(false)
+                    }}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <img
+                      src={selectedIcon}
+                      alt="Selected icon"
+                      style={{ width: '20px', height: '20px' }}
+                    />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 9L12 15L18 9" stroke="#6F6F6F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
 
-                {newCategoryName ? (
-                  <button
-                    onClick={handleAddCategory}
-                    disabled={false}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: '#52C7DE'
+                  <input
+                    type="text"
+                    placeholder="Add New Category Name..."
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAddCategory()
+                      }
                     }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleAddCategory}
-                    disabled={true}
                     style={{
-                      background: 'transparent',
+                      backgroundColor: 'transparent',
+                      flex: 1,
                       border: 'none',
-                      cursor: 'pointer',
-                      padding: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: '#6F6F6F',
-                      opacity: 0.5
+                      outline: 'none',
+                      fontSize: '14px',
+                      color: '#6B7280'
                     }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
+                  />
+
+                  {newCategoryName ? (
+                    <button
+                      onClick={handleAddCategory}
+                      disabled={false}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: '#52C7DE'
+                      }}
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleAddCategory}
+                      disabled={true}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        color: '#6F6F6F',
+                        opacity: 0.5
+                      }}
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* Icon picker dropdown */}
+                {showAddIconPicker && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    zIndex: 1000,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    padding: '8px',
+                    backgroundColor: 'white',
+                    borderRadius: '8px',
+                    border: '1px solid #E5E7EB',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    minWidth: '120px'
+                  }}>
+                    {ICON_LIBRARY.map((icon) => (
+                      <button
+                        key={icon.name}
+                        onClick={() => {
+                          setSelectedIcon(icon.path)
+                          setShowAddIconPicker(false)
+                        }}
+                        style={{
+                          background: selectedIcon === icon.path ? '#E0F2FE' : 'white',
+                          border: selectedIcon === icon.path ? '2px solid #52C7DE' : '1px solid #E5E7EB',
+                          borderRadius: '6px',
+                          padding: '8px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.2s',
+                          gap: '8px'
+                        }}
+                        title={icon.name}
+                      >
+                        <img src={icon.path} alt={icon.name} style={{ width: '20px', height: '20px' }} />
+                        {/* <span style={{ fontSize: '12px', color: '#6F6F6F' }}>{icon.name}</span> */}
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
@@ -590,7 +770,8 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
           display: 'flex', 
           gap: '16px', 
           justifyContent: 'center',
-          marginTop: '32px'
+          marginTop: '60px',
+          marginBottom: '10px'
         }}>
           <Button
             onClick={onHide}

@@ -18,10 +18,10 @@ const CategoryList = ({
   staticCategories = []
 }) => {
   const getCategoryIcon = (categoryName) => {
-    // Check if it's a database category with an icon
+    // Check if it's a database category with an icons field
     const dbCategory = dbCategories.find(cat => cat.name === categoryName)
-    if (dbCategory?.icon) {
-      return dbCategory.icon
+    if (dbCategory?.icons) {
+      return dbCategory.icons
     }
     
     // Fallback to hardcoded icons for static categories
@@ -30,19 +30,8 @@ const CategoryList = ({
         return message
       case 'Following':
         return star
-      case 'Introductions':
-        return wavingHand
-      case 'Announcements':
-        return loudSpeaker
-      case 'Celebrations':
-        return partyPopper
-      case 'Ask for Feedback':
-        return speechBalloon
-      case 'Ask for Collaboration':
-        return wavingHand
-      case 'Ask for Mentorship':
-        return lightBulb
       default:
+        // Default fallback icon for any category without an icon
         return speechBalloon
     }
   }

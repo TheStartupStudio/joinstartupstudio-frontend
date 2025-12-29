@@ -23,10 +23,34 @@ const ForumSection = () => {
   const [forumData, setForumData] = useState([])
   const [loading, setLoading] = useState(true)
   const [showUserAgreement, setShowUserAgreement] = useState(false)
+  const [dbCategories, setDbCategories] = useState([])
   const currentUser = useSelector((state) => state.user?.user?.user || state.user?.user)
+
+  // Fetch database categories
+  const fetchCategories = async () => {
+    try {
+      const response = await axiosInstance.get('/forum/categories')
+      setDbCategories(response.data || [])
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      setDbCategories([])
+    }
+  }
+
+  // Fetch categories on mount
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   // Function to get the appropriate icon based on category
   const getCategoryIcon = (category) => {
+    // Check if category exists in dbCategories and has an icon
+    const dbCategory = dbCategories.find(cat => cat.name === category)
+    if (dbCategory?.icons) {
+      return dbCategory.icons
+    }
+    
+    // Fallback to hardcoded icons for categories without database icons
     switch (category) {
       case 'Introductions':
         return wavingHand

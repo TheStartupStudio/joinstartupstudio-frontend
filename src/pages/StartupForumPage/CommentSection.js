@@ -691,7 +691,18 @@ const CommentSection = () => {
       ? category.name 
       : category
     
+    // Check if category exists in dbCategories and has an icon
+    const dbCategory = dbCategories.find(cat => cat.name === categoryName)
+    if (dbCategory?.icons) {
+      return dbCategory.icons
+    }
+    
+    // Fallback to hardcoded icons for categories without database icons
     switch (categoryName) {
+      case 'All Discussions':
+        return speechBalloon
+      case 'Following':
+        return speechBalloon
       case 'Introductions':
         return wavingHand
       case 'Announcements':
