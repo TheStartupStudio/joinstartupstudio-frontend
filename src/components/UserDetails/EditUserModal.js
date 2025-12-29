@@ -166,6 +166,22 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     }
   }, [])
 
+  // Cleanup when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setShowCropper(false)
+      setEditorImage(null)
+      setScale(1)
+      setRotate(0)
+      setShowStateDropdown(false)
+      setShowGenderDropdown(false)
+      setShowCalendar(false)
+      // Clean up Redux state
+      dispatch(setImageCropperData(null))
+      dispatch(setCroppedImage(null))
+    }
+  }, [isOpen])
+
   const editUser = async (changedUser, changedMedias, imageFile) => {
   if (!changedUser?.name) {
     toast.error(<IntlMessages id='alerts.name_required' />)
@@ -388,6 +404,8 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
         setEditorImage(null)
         setScale(1)
         setRotate(0)
+        // Clean up Redux state to prevent modal reopening
+        dispatch(setImageCropperData(null))
       }, 'image/png')
     }
   }
@@ -396,7 +414,12 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
 
   return (
     <>
-      <Modal isOpen={isOpen} toggle={toggle}>
+      <Modal 
+        isOpen={isOpen} 
+        toggle={toggle}
+        keyboard={false}
+        onClick={(e) => e.stopPropagation()}
+      >
         <ModalBody>
           <img src={userIcon} alt='user' className='mb-3' />
           <div className='d-flex justify-content-between align-items-center'>
@@ -483,6 +506,9 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                         onClick={() => {
                           setChangedUser({ ...changedUser, profile_image: '' });
                           setImageFile(null);
+                          // Reset file input to allow selecting the same file again
+                          const fileInput = document.getElementById('fileInput');
+                          if (fileInput) fileInput.value = '';
                         }}
                       />
                       <img
@@ -1099,6 +1125,11 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                     setEditorImage(null);
                     setScale(1);
                     setRotate(0);
+                    // Clean up Redux state
+                    dispatch(setImageCropperData(null));
+                    // Reset file input
+                    const fileInput = document.getElementById('fileInput');
+                    if (fileInput) fileInput.value = '';
                   }} color="secondary">Cancel</Button>
                 </div>
               </div>
