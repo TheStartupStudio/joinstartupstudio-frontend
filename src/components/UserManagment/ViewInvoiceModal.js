@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
 import './ViewInvoiceModal.css'
 import PreviewInvoiceEmailModal from './PreviewInvoiceEmailModal'
 import { invoiceApi } from '../../utils/invoiceApi'
@@ -383,123 +381,37 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     }).format(value || 0)
   }
 
-  // ✅ Download invoice as PDF with consistent rendering across all devices
+  // ✅ Download invoice as PDF from backend
   const handleDownloadInvoice = async () => {
-    if (!invoiceContentRef.current) {
-      toast.error('Invoice content not ready')
+    if (!formData.id) {
+      toast.error('Invoice ID not available')
       return
     }
 
     setIsDownloading(true)
-    toast.success('Generating PDF...')
+    toast.success('Downloading invoice...')
 
     try {
-      // Create a clone of the invoice content for PDF generation
-      const element = invoiceContentRef.current
-      
-      // Add class for PDF capture styling
-      element.classList.add('pdf-capture')
-      
-      // Temporarily hide action buttons and edit mode elements
-      const editButtons = element.querySelectorAll('.edit-btn, .delete-btn, .confirm-btn, .cancel-btn, .add-new-item-btn')
-      const instructorInfo = element.querySelector('.instructor-payment-info')
-      const headerNav = element.querySelector('.header-icons-nav')
-      
-      editButtons.forEach(btn => btn.style.display = 'none')
-      if (instructorInfo) instructorInfo.style.display = 'none'
-      if (headerNav) headerNav.style.display = 'none'
-
-      // Store original dimensions
-      const originalWidth = element.style.width
-      const originalMaxWidth = element.style.maxWidth
-      
-      // Set fixed width for consistent rendering across devices
-      element.style.width = '1200px'
-      element.style.maxWidth = '1200px'
-
-      // Small delay to ensure styles are applied
-      await new Promise(resolve => setTimeout(resolve, 100))
-
-      // Capture the element as canvas with high quality settings
-      const canvas = await html2canvas(element, {
-        scale: 2, // Higher quality
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: 1200, // Fixed width for consistency
-        windowHeight: element.scrollHeight,
-        width: 1200,
-        height: element.scrollHeight,
-        // Ensure proper rendering on mobile devices
-        onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.querySelector('.invoice-modal-content')
-          if (clonedElement) {
-            clonedElement.style.width = '1200px'
-            clonedElement.style.maxWidth = '1200px'
-            clonedElement.style.transform = 'scale(1)'
-          }
-        }
-      })
-
-      // Restore hidden elements and original dimensions
-      element.classList.remove('pdf-capture')
-      editButtons.forEach(btn => btn.style.display = '')
-      if (instructorInfo) instructorInfo.style.display = ''
-      if (headerNav) headerNav.style.display = ''
-      element.style.width = originalWidth
-      element.style.maxWidth = originalMaxWidth
-
-      // Create PDF with consistent dimensions
-      const imgData = canvas.toDataURL('image/png', 1.0)
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-        compress: true
-      })
-
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
-      const imgWidth = canvas.width
-      const imgHeight = canvas.height
-      
-      // Calculate proper scaling to fit A4 with margins
-      const margin = 10
-      const availableWidth = pdfWidth - (margin * 2)
-      const availableHeight = pdfHeight - (margin * 2)
-      
-      const ratio = Math.min(availableWidth / imgWidth, availableHeight / imgHeight)
-      const scaledWidth = imgWidth * ratio
-      const scaledHeight = imgHeight * ratio
-      
-      // Center the image
-      const imgX = (pdfWidth - scaledWidth) / 2
-      const imgY = margin
-
-      pdf.addImage(
-        imgData, 
-        'PNG', 
-        imgX, 
-        imgY, 
-        scaledWidth, 
-        scaledHeight,
-        undefined,
-        'FAST'
-      )
-
-      // Save the PDF
-      pdf.save(`Invoice_${formData.invoiceNumber || 'Document'}.pdf`)
+      if (isOrgClient) {
+        await invoiceApi.downloadClientInvoice(formData.id)
+      } else {
+        const response = await invoiceApi.downloadInvoice(formData.id)
+        
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `Invoice_${formData.invoiceNumber}.pdf`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      }
       
       toast.success('Invoice downloaded successfully!')
     } catch (error) {
-      console.error('Error generating PDF:', error)
-      toast.error('Failed to generate PDF. Please try again.')
-      
-      // Ensure cleanup even on error
-      const element = invoiceContentRef.current
-      if (element) {
-        element.classList.remove('pdf-capture')
-      }
+      console.error('Error downloading invoice:', error)
+      toast.error('Failed to download invoice')
     } finally {
       setIsDownloading(false)
     }
@@ -639,8 +551,8 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                     <label className="section-label">PAY TO:</label>
                     <div className="pay-to-details">
                       <p className="name-section-label">Learn to Start, LLC</p>
-                      <p>3100 Corvig-Windermere Road,</p>
-                      <p>Suite 201 - #132</p>
+                      <p>9100 Conroy Windermere Road,</p>
+                      <p>Suite 200 - #132</p>
                       <p>Windermere, FL 34786</p>
                     </div>
                   </div>

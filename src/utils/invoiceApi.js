@@ -77,7 +77,7 @@ export const invoiceApi = {
    * Download invoice PDF
    */
   downloadInvoice: async (invoiceId) => {
-    const response = await axiosInstance.get(`/invoices/${invoiceId}/download`, {
+    const response = await axiosInstance.get(`/client/invoices/${invoiceId}/download`, {
       responseType: 'blob'
     })
     return response

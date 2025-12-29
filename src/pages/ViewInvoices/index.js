@@ -322,17 +322,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       toast.info('Downloading invoice...')
       
       try {
-        const response = await invoiceApi.downloadInvoice(invoice.id)
-        
-        const blob = new Blob([response.data], { type: 'application/pdf' })
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = `Invoice_${invoice.invoiceNumber}.pdf`
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
+        await invoiceApi.downloadClientInvoice(invoice.id)
         
         toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
         return

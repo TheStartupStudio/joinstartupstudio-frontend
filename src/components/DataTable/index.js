@@ -10,6 +10,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { FaTimes } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { invoiceApi } from '../../utils/invoiceApi'
 
 const DataTable = ({ 
   columns, 
@@ -325,7 +327,33 @@ const DataTable = ({
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                   onClick={() => {
-                    handleActionClick('export-invoice-pdf', item)
+                    // Direct API call for PDF export
+                    const exportPDF = async () => {
+                      try {
+                        toast.success('Downloading invoice...')
+                        if (user?.role_id === 2) {
+                          // Client/Instructor
+                          await invoiceApi.downloadClientInvoice(item.id)
+                        } else {
+                          // Admin
+                          const response = await invoiceApi.downloadInvoice(item.id)
+                          const blob = new Blob([response.data], { type: 'application/pdf' })
+                          const url = window.URL.createObjectURL(blob)
+                          const link = document.createElement('a')
+                          link.href = url
+                          link.download = `Invoice_${item.invoiceNumber}.pdf`
+                          document.body.appendChild(link)
+                          link.click()
+                          document.body.removeChild(link)
+                          window.URL.revokeObjectURL(url)
+                        }
+                        toast.success('Invoice downloaded successfully!')
+                      } catch (error) {
+                        console.error('Error downloading invoice:', error)
+                        toast.error('Failed to download invoice')
+                      }
+                    }
+                    exportPDF()
                     setOpenMoreActionsDropdown(null)
                   }}
                 >
