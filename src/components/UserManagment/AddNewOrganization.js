@@ -248,6 +248,21 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     return true
   }
 
+  const isDetailsValid = () => {
+    const { organizationName, administratorName, administratorEmail, domainURL } = formData
+    
+    if (!organizationName.trim() || !administratorName.trim() || !administratorEmail.trim() || !domainURL.trim()) {
+      return false
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(administratorEmail)) {
+      return false
+    }
+
+    return true
+  }
+
   const hasPricingChanged = () => {
     if (mode !== 'edit') return false
     
@@ -269,6 +284,12 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   }
 
   const handleSubmit = async () => {
+    if (activeTab === 'details') {
+      if (!validateForm()) return
+      setActiveTab('pricing')
+      return
+    }
+
     if (!validateForm()) return
 
     if (mode === 'edit' && hasPricingChanged()) {
@@ -784,12 +805,16 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                   type="button"
                   className="add-btn"
                   onClick={handleSubmit}
-                  disabled={loading}
+                  disabled={loading || (activeTab === 'details' && !isDetailsValid()) || (activeTab === 'pricing' && !isDetailsValid())}
                 >
                   {loading ? (
                     <span className="spinner-border spinner-border-sm" />
                   ) : (
-                    isEditMode ? 'SAVE CHANGES' : 'ADD ORGANIZATION'
+                    activeTab === 'details' 
+                      ? 'SAVE AND CONTINUE' 
+                      : isEditMode 
+                        ? 'SAVE CHANGES' 
+                        : 'ADD ORGANIZATION'
                   )}
                 </button>
               </>

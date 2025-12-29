@@ -71,7 +71,6 @@ padding: 4px;
 
 .search-input {
   width: 100%;
-  padding: 12px 40px 12px 18px;
   border-radius: 8px;
   background: #ffffff;
   transition: border-color 0.2s ease;
@@ -371,6 +370,62 @@ padding: 4px;
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 400;
+}
+
+.user-management-container .search-filter{
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  height: 100%;
+  outline: none;
+  border: none;
+  width: 100px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 8px 0px 0px 8px;
+  background: #ffffff;
+  border-right: 1px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: #000000;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.filter-arrow {
+  width: 12px;
+  height: 8px;
+}
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100px;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.filter-option {
+  padding: 8px 12px;
+  color: #000000;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: none;
+}
+
+.filter-option:hover {
+  color: rgb(81, 199, 223);
+  background-color: transparent;
 }
 
 

@@ -105,6 +105,8 @@ const UserManagement = () => {
 
   const [selectedUsers, setSelectedUsers] = useState([])
   const [selectedOrganizations, setSelectedOrganizations] = useState([])
+  const [searchFilter, setSearchFilter] = useState('all')
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -159,14 +161,15 @@ const UserManagement = () => {
     }
   }
 
-  const fetchUsers = async (page = 1, search = '') => {
+  const fetchUsers = async (page = 1, search = '', role = 'all') => {
     setUsersLoading(true)
     try {
       const response = await axiosInstance.get('/super-admin/users', {
         params: {
           page,
           limit: 10,
-          search: search || undefined
+          search: search || undefined,
+          role: role !== 'all' ? role : undefined
         }
       })
 
@@ -198,11 +201,11 @@ const UserManagement = () => {
 
   useEffect(() => {
     if (activeTab === 'Users') {
-      fetchUsers(currentPage, debouncedSearchQuery)
+      fetchUsers(currentPage, debouncedSearchQuery, searchFilter)
     } else if (activeTab === 'Organizations') {
       fetchOrganizations(currentPage, debouncedSearchQuery)
     }
-  }, [activeTab, currentPage, debouncedSearchQuery])
+  }, [activeTab, currentPage, debouncedSearchQuery, searchFilter])
 
   const organizationsColumns = useMemo(() => [
     {
@@ -863,6 +866,7 @@ const UserManagement = () => {
 
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
+  const filterRef = useRef(null)
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -872,6 +876,10 @@ const UserManagement = () => {
       
       if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
         setShowBulkDropdown(false)
+      }
+
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setShowFilterDropdown(false)
       }
     }
 
@@ -990,6 +998,7 @@ const UserManagement = () => {
                 setActiveTab('Organizations')
                 setCurrentPage(1)
                 setSearchQuery('')
+                setSearchFilter('all')
               }}
             >
               Organizations
@@ -1000,6 +1009,7 @@ const UserManagement = () => {
                 setActiveTab('Users')
                 setCurrentPage(1)
                 setSearchQuery('')
+                setSearchFilter('all')
               }}
             >
               Users
@@ -1016,7 +1026,31 @@ const UserManagement = () => {
                 value={searchQuery}
                 onChange={handleSearch}
                 className="search-input"
+                style={{
+                  padding: activeTab === 'Organizations' ? "12px 40px 12px 18px" : "12px 40px 12px 120px",
+                }}
               />
+              {activeTab === 'Users' && (
+                <div className="search-filter-container" ref={filterRef}>
+                  <div
+                    className="search-filter"
+                    onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                  >
+                    {searchFilter === 'all' ? 'All' : searchFilter.charAt(0).toUpperCase() + searchFilter.slice(1)}
+                    <svg className="filter-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                      <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  {showFilterDropdown && (
+                    <div className="filter-dropdown">
+                      <div className="filter-option" onClick={() => { setSearchFilter('all'); setShowFilterDropdown(false); }}>All</div>
+                      <div className="filter-option" onClick={() => { setSearchFilter('admin'); setShowFilterDropdown(false); }}>Admin</div>
+                      <div className="filter-option" onClick={() => { setSearchFilter('client'); setShowFilterDropdown(false); }}>Client</div>
+                      <div className="filter-option" onClick={() => { setSearchFilter('learner'); setShowFilterDropdown(false); }}>Learner</div>
+                    </div>
+                  )}
+                </div>
+              )}
               <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M17 17L21 21" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M3 11C3 15.4183 6.58172 19 11 19C13.213 19 15.2161 18.1015 16.6644 16.6493C18.1077 15.2022 19 13.2053 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

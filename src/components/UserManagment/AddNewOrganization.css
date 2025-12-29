@@ -269,6 +269,31 @@
   cursor: not-allowed;
 }
 
+.previous-btn {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid #51c7df;
+  background: white;
+  color: #51c7df;
+  border-radius: 8px;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 10px;
+}
+
+.previous-btn:hover {
+  background: #51c7df;
+  color: white;
+}
+
+.previous-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .spinner-border-sm {
   width: 1rem;
   height: 1rem;
