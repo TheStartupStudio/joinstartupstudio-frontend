@@ -1154,7 +1154,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
                     {showBulkDropdown && (
                       <div 
-                        className="dropdown-menu show" 
+                        className="show" 
                         style={{ 
                           position: 'absolute',
                           top: 'calc(100% + 4px)',
@@ -1164,7 +1164,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
                           borderRadius: '8px',
                           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                           width: 'fit-content',
-                          zIndex: 9999,
+                          zIndex: 10000,
                           padding: '8px 0'
                         }}
                         onClick={(e) => e.stopPropagation()}

@@ -168,6 +168,7 @@ max-width: 640px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   height: 100%;
+  width: unset;
 }
 
 .view-invoices-container .bulk-actions:hover {
