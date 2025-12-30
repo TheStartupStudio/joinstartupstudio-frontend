@@ -55,8 +55,8 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'content-management',
-    title: 'Content Management',
-    srcImage: groupIcon,
+    title: 'Course Management',
+    srcImage: CoursEnIcon,
     to: '/content-management',
     roles: [3],
     className: (pathname) => pathname.includes('content-management') ? 'active' : ''
@@ -64,7 +64,7 @@ const SIDEBAR_MENU_ITEMS = [
   {
     id: 'master-class-management',
     title: 'Master Class Management',
-    srcImage: groupIcon,
+    srcImage: MasterIcon,
     to: '/master-class-management',
     roles: [3],
     requiresUniversitySetting: 'hasMasterClasses',
@@ -73,7 +73,7 @@ const SIDEBAR_MENU_ITEMS = [
   {
     id: 'leadership-journal-management',
     title: 'Leadership Journal Management',
-    srcImage: groupIcon,
+    srcImage: LeadershipIcon,
     to: '/leadership-journal-management',
     roles: [3],
     requiresUniversitySetting: 'hasLeadershipJournal',
@@ -100,7 +100,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Master classes',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
   },
