@@ -14,7 +14,7 @@ export const setLoading = () => ({
 export const getAllPodcast = () => async (dispatch) => {
   try {
     dispatch(setLoading())
-    const response = await axiosInstance.get('/podcast?page=0&size=100')
+    const response = await axiosInstance.get('/contents/by-type/podcast')
     dispatch({
       type: GET_ALL_PODCAST,
       payload: response.data

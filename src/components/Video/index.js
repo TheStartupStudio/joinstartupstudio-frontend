@@ -121,7 +121,7 @@ export default function VideoView(props) {
                 }}>
                   <IntlMessages id={props.title} />
                 </h5>
-                {videoData?.type === 'master' && (
+                {videoData?.type === 'master' && props.description && (
                   <p
                     className='card-text'
                     style={{
@@ -133,7 +133,7 @@ export default function VideoView(props) {
                     by <IntlMessages id={props.description} />
                   </p>
                 )}
-                {videoData?.type === 'podcast' && (
+                {videoData?.type === 'podcast' && props.description && (
                   <p
                     className='card-text'
                     style={{

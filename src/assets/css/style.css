@@ -1610,7 +1610,7 @@ input[type='file'] {
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
-  border: 0.25em solid white;
+  /* border: 0.25em solid white; */
 }
 
 .spinner-border-primary {
@@ -1618,7 +1618,7 @@ input[type='file'] {
   width: 20px;
   height: 20px;
   vertical-align: text-bottom;
-  border: 0.25em solid #007bff;
+  border: 0.25em solid #51c7df;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
