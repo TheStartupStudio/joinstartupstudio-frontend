@@ -20,7 +20,7 @@ const baseStyle = {
 }
 
 const focusedStyle = {
-  borderColor: '#2196f3'
+  borderColor: '#51C7DF'
 }
 
 const acceptStyle = {

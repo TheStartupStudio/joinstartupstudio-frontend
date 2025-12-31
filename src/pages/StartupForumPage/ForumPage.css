@@ -603,3 +603,38 @@
   gap: 15px !important;
  }
 }
+
+.forum-page-container .pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  padding: 16px 0;
+  background-color: transparent;
+}
+
+.forum-page-container .pagination-btn {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  /* border: 1px solid #e5e7eb; */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.forum-page-container .pagination-btn:hover {
+  background: #f9fafb;
+  border-color: #51C7DF;
+}
+
+.forum-page-container .pagination-info {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  padding: 0 5px;
+}

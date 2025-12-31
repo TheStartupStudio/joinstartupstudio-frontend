@@ -168,6 +168,7 @@ max-width: 640px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   height: 100%;
+  width: unset;
 }
 
 .view-invoices-container .bulk-actions:hover {
@@ -284,7 +285,7 @@ max-width: 640px;
 }
 
 .view-invoices-container .status-scheduled .status-dot {
-  background: rgb(99, 195, 255);
+  background: #51C7DF;
 }
 
 .view-invoices-container .status-failed .status-dot {
@@ -309,7 +310,7 @@ max-width: 640px;
 }
 
 .view-invoices-container .status-pending .status-dot {
-  background: orange;
+  background:  #FF3399;
 }
 
 .view-invoices-container .status-created {

@@ -10,6 +10,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { FaTimes } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { invoiceApi } from '../../utils/invoiceApi'
 
 const DataTable = ({ 
   columns, 
@@ -121,19 +123,19 @@ const DataTable = ({
             </svg>
           )
         },
-        { 
-          name: 'Generate Invoice', 
-          action: 'generate-invoice',
-          icon: (
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-              <path d="M3.33301 17.7337V2.26699C3.33301 1.93562 3.60164 1.66699 3.93301 1.66699H13.5011C13.6603 1.66699 13.8129 1.73021 13.9254 1.84273L16.4906 4.40792C16.6031 4.52044 16.6663 4.67306 16.6663 4.83219V17.7337C16.6663 18.065 16.3977 18.3337 16.0663 18.3337H3.93301C3.60164 18.3337 3.33301 18.065 3.33301 17.7337Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6.66699 8.33301H13.3337" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6.66699 15H13.3337" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M6.66699 11.667H10.0003" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M13.333 1.66699V4.40033C13.333 4.7317 13.6016 5.00033 13.933 5.00033H16.6663" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          )
-        },
+        // { 
+        //   name: 'Generate Invoice', 
+        //   action: 'generate-invoice',
+        //   icon: (
+        //     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+        //       <path d="M3.33301 17.7337V2.26699C3.33301 1.93562 3.60164 1.66699 3.93301 1.66699H13.5011C13.6603 1.66699 13.8129 1.73021 13.9254 1.84273L16.4906 4.40792C16.6031 4.52044 16.6663 4.67306 16.6663 4.83219V17.7337C16.6663 18.065 16.3977 18.3337 16.0663 18.3337H3.93301C3.60164 18.3337 3.33301 18.065 3.33301 17.7337Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        //       <path d="M6.66699 8.33301H13.3337" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        //       <path d="M6.66699 15H13.3337" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        //       <path d="M6.66699 11.667H10.0003" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        //       <path d="M13.333 1.66699V4.40033C13.333 4.7317 13.6016 5.00033 13.933 5.00033H16.6663" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        //     </svg>
+        //   )
+        // },
         { 
           name: 'Archive Invoice', 
           action: 'archive-invoice',
@@ -325,7 +327,33 @@ const DataTable = ({
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                   onClick={() => {
-                    handleActionClick('export-invoice-pdf', item)
+                    // Direct API call for PDF export
+                    const exportPDF = async () => {
+                      try {
+                        toast.success('Downloading invoice...')
+                        if (user?.role_id === 2) {
+                          // Client/Instructor
+                          await invoiceApi.downloadClientInvoice(item.id)
+                        } else {
+                          // Admin
+                          const response = await invoiceApi.downloadInvoice(item.id)
+                          const blob = new Blob([response.data], { type: 'application/pdf' })
+                          const url = window.URL.createObjectURL(blob)
+                          const link = document.createElement('a')
+                          link.href = url
+                          link.download = `Invoice_${item.invoiceNumber}.pdf`
+                          document.body.appendChild(link)
+                          link.click()
+                          document.body.removeChild(link)
+                          window.URL.revokeObjectURL(url)
+                        }
+                        toast.success('Invoice downloaded successfully!')
+                      } catch (error) {
+                        console.error('Error downloading invoice:', error)
+                        toast.error('Failed to download invoice')
+                      }
+                    }
+                    exportPDF()
                     setOpenMoreActionsDropdown(null)
                   }}
                 >
@@ -338,7 +366,7 @@ const DataTable = ({
                 </div>
 
                 {/* ✅ Generate Invoice */}
-                <div 
+                {/* <div 
                   className="more-actions-dropdown-item"
                   style={{
                     padding: '12px 16px',
@@ -365,7 +393,7 @@ const DataTable = ({
                     <path d="M13.333 1.66699V4.40033C13.333 4.7317 13.6016 5.00033 13.933 5.00033H16.6663" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                   Generate Invoice
-                </div>
+                </div> */}
 
                 {/* ✅ Archive Invoice */}
                 <div 

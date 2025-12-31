@@ -9,6 +9,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
   const [selectedAction, setSelectedAction] = useState('ignore')
   const [reportDetails, setReportDetails] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isResolved, setIsResolved] = useState(false)
 
   // Function to strip HTML tags from text
   const stripHtmlTags = (html) => {
@@ -16,13 +17,26 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
     return html.replace(/<[^>]*>/g, '').trim()
   }
 
+  // Function to get action from resolution
+  const getActionFromResolution = (resolution) => {
+    if (resolution === 'Post deleted by administrator') return 'delete'
+    if (resolution === 'User restricted from posting in forum') return 'restrict'
+    if (resolution === 'Report reviewed and dismissed by administrator') return 'ignore'
+    return 'ignore' // default
+  }
+
   useEffect(() => {
     if (isOpen) {
       setSelectedAction('ignore')
+      setIsResolved(false)
       if (reportId) {
         fetchReportDetails()
       } else if (reportData) {
         setReportDetails(reportData)
+        setIsResolved(reportData.status === 'resolved')
+        if (reportData.status === 'resolved') {
+          setSelectedAction(getActionFromResolution(reportData.resolution))
+        }
       }
     }
   }, [isOpen, reportId, reportData])
@@ -50,11 +64,19 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
         postContent: data.postContent || data.description || 'N/A',
         postedBy: data.postedBy || 'Unknown',
         reasonFlagged: data.reasonFlagged || data.reportType || 'N/A',
-        additionalDetails: data.additionalDetails || 'No additional details provided'
+        additionalDetails: data.additionalDetails || 'No additional details provided',
+        status: data.status || 'pending',
+        resolution: data.resolution || null,
+        resolvedAt: data.resolvedAt || null,
+        resolver: data.resolver || null
       }
       
       console.log('Transformed report:', transformedReport)
       setReportDetails(transformedReport)
+      setIsResolved(transformedReport.status === 'resolved')
+      if (transformedReport.status === 'resolved') {
+        setSelectedAction(getActionFromResolution(transformedReport.resolution))
+      }
     } catch (error) {
       console.error('Error fetching report details:', error)
       toast.error('Failed to fetch report details')
@@ -69,8 +91,13 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
         postContent: 'Failed to load content',
         postedBy: 'Unknown',
         reasonFlagged: 'N/A',
-        additionalDetails: 'Error loading details'
+        additionalDetails: 'Error loading details',
+        status: 'pending',
+        resolution: null,
+        resolvedAt: null,
+        resolver: null
       })
+      setIsResolved(false)
     } finally {
       setLoading(false)
     }
@@ -92,13 +119,13 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       if (response.data.success) {
         switch (selectedAction) {
           case 'ignore':
-            toast.info('Report dismissed')
+            toast.success('Report dismissed')
             break
           case 'delete':
             toast.success('Post deleted successfully')
             break
           case 'restrict':
-            toast.warning('User has been restricted from posting')
+            toast.success('User has been restricted from posting')
             break
           default:
             toast.success('Action completed')
@@ -249,6 +276,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="ignore"
                     checked={selectedAction === 'ignore'}
                     onChange={(e) => setSelectedAction(e.target.value)}
+                    disabled={isResolved}
                   />
                   <label htmlFor="ignore-report" className="radio-label">
                     <div className="radio-label-content">
@@ -265,6 +293,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="delete"
                     checked={selectedAction === 'delete'}
                     onChange={(e) => setSelectedAction(e.target.value)}
+                    disabled={isResolved}
                   />
                   <label htmlFor="delete-post" className="radio-label">
                     <div className="radio-label-content">
@@ -281,6 +310,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="restrict"
                     checked={selectedAction === 'restrict'}
                     onChange={(e) => setSelectedAction(e.target.value)}
+                    disabled={isResolved}
                   />
                   <label htmlFor="restrict-user" className="radio-label">
                     <div className="radio-label-content">
@@ -324,7 +354,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                 alignItems: "center",
                 gap: "12px",
                 borderRadius: 8,
-                background: "#51C7DF",
+                background: isResolved ? "#ccc" : "#51C7DF",
                 boxShadow: "0 4px 10px 0 rgba(0, 0, 0, 0.25)",
                 color: "#FFF",
                 fontSize: 17,
@@ -332,6 +362,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                 outline: "none",
                 border: "none",
               }}
+              disabled={isResolved}
             onClick={handleSubmit}>
               Submit
             </button>

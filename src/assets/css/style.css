@@ -93,10 +93,12 @@ label:focus,
 .wrapper {
   
   min-height: 100vh;
-  display: flex;
+  /* display: flex; */
   /* flex-direction: column; */
   width: 100%;
   position: relative;
+  display: grid;
+  grid-template-columns: 75px 1fr;
 }
 
 /* .content {
@@ -104,10 +106,10 @@ label:focus,
 } */
 
 #content {
-  width: calc(100% - 75px);
+  /* width: calc(100% - 75px); */
   display: flex;
   flex-direction: column;
-  flex: 1 0 auto;
+  /* flex: 1 0 auto; */
   /* width: 100%; */
   padding: 0px;
   min-height: 100vh;
@@ -118,9 +120,9 @@ label:focus,
   background: #fff;
 }
 
-.auth-content {
+/* .auth-content {
   margin-left: 75px;
-}
+} */
 
 #content.active {
   width: 100%;
@@ -216,8 +218,8 @@ label:focus,
   backdrop-filter: blur(10px)!important;
 } */
 nav#sidebar {
-  position: absolute;
-  height: 100%;
+  /* position: absolute; */
+  /* height: 100%; */
   border-radius: 10px;
   -webkit-box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
   box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
@@ -1605,10 +1607,10 @@ input[type='file'] {
   width: 2rem;
   height: 2rem;
   vertical-align: text-bottom;
-  border: 0.25em solid white;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
+  /* border: 0.25em solid white; */
 }
 
 .spinner-border-primary {
@@ -1616,7 +1618,7 @@ input[type='file'] {
   width: 20px;
   height: 20px;
   vertical-align: text-bottom;
-  border: 0.25em solid #007bff;
+  border: 0.25em solid #51c7df;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
@@ -5130,6 +5132,9 @@ line-height: normal;
 }
 
 @media (max-width: 1135px) {
+  .wrapper{
+    display: flex;
+  }
   .my-notes-content {
     padding: 10px;
   }

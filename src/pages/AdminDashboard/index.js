@@ -406,7 +406,7 @@ const AdminDashboard = () => {
               <p>L1 Learners</p>
               <h3>{dashboardData.l1Learners}</h3>
               <div className='info-box-data'>
-                <p>Ave. Time to Completion</p>
+                <p>Completed L1 (All Time)</p>
                 <h3>{dashboardData.avgDaysL1} days</h3>
               </div>
             </div>
@@ -418,7 +418,7 @@ const AdminDashboard = () => {
               <p>L2 Learners</p>
               <h3>{dashboardData.l2Learners}</h3>
               <div className='info-box-data'>
-                <p>Ave. Time to Completion</p>
+                <p>Completed L2 (All Time)</p>
                 <h3>{dashboardData.avgDaysL2} days</h3>
               </div>
             </div>
@@ -430,7 +430,7 @@ const AdminDashboard = () => {
               <p>L3 Learners</p>
               <h3>{dashboardData.l3Learners}</h3>
               <div className='info-box-data'>
-                <p>Ave. Time to Completion</p>
+                <p>Completed L3 (All Time)</p>
                 <h3>{dashboardData.avgDaysL3} days</h3>
               </div>
             </div>

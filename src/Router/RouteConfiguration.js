@@ -14,9 +14,11 @@ import CheckSubscription from '../pages/Register/CheckSubscription'
 import CancelSubscription from '../pages/Register/CancelSubscription'
 import AuthSuccess from '../pages/Auth/Social-Login/AuthSuccess'
 import PrivacyPolicy from '../pages/PrivacyPolicy'
+import path from 'path-browserify'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const TermsOfService = React.lazy(() => import('../pages/Terms/TermsOfService'))
+const ForumGuidelines = React.lazy(() => import('../pages/Terms/ForumGuidelines'))
 const MyEvaluation = React.lazy(() => import('../pages/MyEvaluation'))
 const MyInbox = React.lazy(() => import('../pages/MyInbox'))
 const MyNotes = React.lazy(() => import('../pages/MyNotes'))
@@ -345,6 +347,7 @@ export const mutualRoutes = [
     component: IamrCertificationSystem
   },
   { path: '/terms', component: TermsOfService },
+  { path: '/forum-guidelines', component: ForumGuidelines, exact: true },
   // { path: '/my-spark/archive', component: MySparkArchivePage, exact: true },
   // { path: '/my-spark/widgets', component: MySpark, exact: true },
   // { path: '/my-spark/widgets/:widgetName', component: MySparkWidgetDetails },
@@ -577,6 +580,7 @@ export const publicRoutes = [
   { path: '/reset-password', component: ResetPassword, exact: true },
   { path: '/create-account', component: CreateAccount, exact: true },
   { path: '/terms', component: TermsOfService, exact: true },
+  { path: '/forum-guidelines', component: ForumGuidelines, exact: true },
   { path: '/my-immersion', component: MyImmersion, exact: false },
   { path: '/verify', component: VerifyEmail, exact: false },
   { path: '/', component: Login, exact: true },

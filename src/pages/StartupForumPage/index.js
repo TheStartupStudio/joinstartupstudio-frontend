@@ -71,7 +71,19 @@ const StartupForumPage = () => {
 
   const handleEditPost = (post, event) => {
     event.stopPropagation()
-    setEditingPost(post)
+    
+    // Normalize the post object to ensure category is a string
+    const normalizedPost = {
+      ...post,
+      category: typeof post.category === 'object' && post.category !== null 
+        ? post.category.name 
+        : post.category,
+      categoryId: typeof post.category === 'object' && post.category !== null
+        ? post.category.id
+        : post.categoryId || post.category_id
+    }
+    
+    setEditingPost(normalizedPost)
     setShowDiscussionModal(true)
   }
 
@@ -142,7 +154,18 @@ const params = {
       const response = await axiosInstance.get(endpoint, { params })
 
       if (response.data) {
-        setForumData(response.data.discussions)
+        // Normalize the data to ensure category is always a string
+        const normalizedDiscussions = (response.data.discussions || []).map(post => ({
+          ...post,
+          category: typeof post.category === 'object' && post.category !== null
+            ? post.category.name
+            : post.category,
+          categoryId: typeof post.category === 'object' && post.category !== null
+            ? post.category.id
+            : post.categoryId || post.category_id
+        }))
+        
+        setForumData(normalizedDiscussions)
         setTotalCount(response.data.totalCount)
         setCurrentPage(response.data.currentPage)
         setTotalPages(response.data.totalPages)
@@ -162,7 +185,23 @@ const params = {
   }
 
       const getCategoryIcon = (category) => {
-    switch (category) {
+    // Handle if category is an object with id and name properties
+    const categoryName = typeof category === 'object' && category !== null 
+      ? category.name 
+      : category
+    
+    // Check if category exists in dbCategories and has an icon
+    const dbCategory = dbCategories.find(cat => cat.name === categoryName)
+    if (dbCategory?.icons) {
+      return dbCategory.icons
+    }
+    
+    // Fallback to hardcoded icons for categories without database icons
+    switch (categoryName) {
+      case 'All Discussions':
+        return speechBalloon
+      case 'Following':
+        return speechBalloon
       case 'Introductions':
         return wavingHand
       case 'Announcements':
@@ -197,9 +236,20 @@ useEffect(() => {
     } else if (action === 'create') {
       fetchForumData(currentPage, selectedCategory, searchTerm, selectedFilter)
     } else {
+      // Normalize category to string if it's an object
+      const normalizedDiscussion = {
+        ...discussion,
+        category: typeof discussion.category === 'object' && discussion.category !== null
+          ? discussion.category.name
+          : discussion.category,
+        categoryId: typeof discussion.category === 'object' && discussion.category !== null
+          ? discussion.category.id
+          : discussion.categoryId || discussion.category_id
+      }
+      
       setForumData(prevData =>
         prevData.map(post =>
-          post.id === discussion.id ? { ...post, ...discussion } : post
+          post.id === discussion.id ? { ...post, ...normalizedDiscussion } : post
         )
       )
     }
@@ -304,7 +354,12 @@ useEffect(() => {
   const headerContent = getHeaderContent()
 
   const getCategoryDisplayName = (category) => {
-    switch (category) {
+    // Handle if category is an object with id and name properties
+    const categoryName = typeof category === 'object' && category !== null 
+      ? category.name 
+      : category
+    
+    switch (categoryName) {
       case 'Ask for Feedback':
         return 'Feedback'
       case 'Ask for Collaboration':
@@ -312,7 +367,7 @@ useEffect(() => {
       case 'Ask for Mentorship':
         return 'Mentorship'
       default:
-        return category
+        return categoryName
     }
   }
 
@@ -390,7 +445,7 @@ useEffect(() => {
         <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
-              <h3 className='page-title bold-page-title text-black mb-0'>Startup Forum</h3>
+              <h3 className='page-title bold-page-title text-black mb-0'>Studio Forum</h3>
               <p className='fs-13 fw-light text-black'>Connect with others and Share Your Achievements</p>
             </div>
           </div>
@@ -586,7 +641,7 @@ useEffect(() => {
             <div className="forum-posts-section">
               {loading ? (
                 <div className="text-center py-4">
-                  <div className="spinner-border" role="status">
+                  <div className="spinner-border" style={{border: "0.25em solid #51C7DF", borderRightColor: "transparent", borderRadius: "50%"}} role="status">
                   </div>
                 </div>
               ) : forumData.length === 0 ? (
@@ -703,33 +758,61 @@ useEffect(() => {
               )}
             </div>
 
-            {/* Add pagination if needed */}
+            {/* Pagination */}
             {totalPages > 1 && (
-              <div className="forum-pagination d-flex justify-content-center mt-4">
-                <button
-                  className="btn btn-outline-primary me-2"
+              <div className="pagination-container">
+                <button 
+                  className="pagination-btn"
+                  onClick={() => {
+                    setCurrentPage(1)
+                    fetchForumData(1, selectedCategory, searchTerm, selectedFilter)
+                  }}
                   disabled={currentPage === 1}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button 
+                  className="pagination-btn"
                   onClick={() => {
                     const newPage = currentPage - 1
                     setCurrentPage(newPage)
                     fetchForumData(newPage, selectedCategory, searchTerm, selectedFilter)
                   }}
+                  disabled={currentPage === 1}
                 >
-                  Previous
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                    <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </button>
-                <span className="align-self-center mx-2">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  className="btn btn-outline-primary ms-2"
-                  disabled={currentPage === totalPages}
+                <span className="pagination-info">{currentPage} / {totalPages}</span>
+                <button 
+                  className="pagination-btn"
                   onClick={() => {
                     const newPage = currentPage + 1
                     setCurrentPage(newPage)
                     fetchForumData(newPage, selectedCategory, searchTerm, selectedFilter)
                   }}
+                  disabled={currentPage === totalPages}
                 >
-                  Next
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                    <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button 
+                  className="pagination-btn"
+                  onClick={() => {
+                    setCurrentPage(totalPages)
+                    fetchForumData(totalPages, selectedCategory, searchTerm, selectedFilter)
+                  }}
+                  disabled={currentPage === totalPages}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </button>
               </div>
             )}

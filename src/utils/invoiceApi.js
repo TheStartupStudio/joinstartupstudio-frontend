@@ -77,7 +77,7 @@ export const invoiceApi = {
    * Download invoice PDF
    */
   downloadInvoice: async (invoiceId) => {
-    const response = await axiosInstance.get(`/invoices/${invoiceId}/download`, {
+    const response = await axiosInstance.get(`/client/invoices/${invoiceId}/download`, {
       responseType: 'blob'
     })
     return response
@@ -116,7 +116,7 @@ export const invoiceApi = {
    * Bulk archive invoices
    */
   bulkArchiveInvoices: async (invoiceIds) => {
-    const response = await axiosInstance.post('/invoices/bulk-archive', { invoiceIds })
+    const response = await axiosInstance.post('/client/invoices/bulk-archive', { invoiceIds })
     return response.data
   },
 

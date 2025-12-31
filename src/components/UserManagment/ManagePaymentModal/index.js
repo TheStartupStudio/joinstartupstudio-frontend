@@ -410,7 +410,7 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
         {showVerificationInfo && existingPaymentMethod?.us_bank_account && (
           <div className="alert alert-info mb-4" style={{
             backgroundColor: '#e3f2fd',
-            border: '1px solid #2196F3',
+            border: '1px solid #51C7DF',
             borderRadius: '8px',
             padding: '16px'
           }}>

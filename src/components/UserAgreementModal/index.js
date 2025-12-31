@@ -71,7 +71,7 @@ const UserAgreementModal = ({ show, onSuccess, onHide }) => {
       
       <Modal.Body className="pt-3 pb-4">
         <p style={{ fontSize: '15px', textAlign:'center', fontWeight: '400' , color: '#000', lineHeight: '1.6', margin: '40px 20px' }}>
-          Prior to accessing the Community Forum for the first time, please read the <a>Community Guidelines</a> and <a>Safety Pledge</a>. Then, check the boxes below to indicate that you agree to the Safety Pledge and will abide by the Community Guidelines.
+          Prior to accessing the Community Forum for the first time, please read the <a href="/forum-guidelines" target="_blank" rel="noopener noreferrer">Community Guidelines</a> and <a href="/forum-guidelines" target="_blank" rel="noopener noreferrer">Safety Pledge</a>. Then, check the boxes below to indicate that you agree to the Safety Pledge and will abide by the Community Guidelines.
         </p>
 
         <div className="agreement-checkboxes" style={{ marginBottom: '30px' }}>

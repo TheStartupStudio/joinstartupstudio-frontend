@@ -273,6 +273,44 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     ]
   }, [isInstructor])
 
+  const handleExportInvoicePDF = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setInvoicesLoading(true)
+      toast.success('Generating PDF...')
+
+      // Open the modal to trigger PDF generation
+      setSelectedInvoice(invoice)
+      setInvoiceMode('view')
+      setShowEditInvoiceModal(true)
+
+      // Wait for modal to render, then trigger download
+      setTimeout(() => {
+        const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
+        if (downloadBtn) {
+          downloadBtn.click()
+          // Close modal after brief delay
+          setTimeout(() => {
+            setShowEditInvoiceModal(false)
+          }, 5000)
+        } else {
+          toast.error('Unable to generate PDF. Please try again.')
+        }
+      }, 800)
+    } catch (error) {
+      console.error('❌ Error exporting invoice PDF:', error)
+      toast.error('Failed to export invoice')
+    } finally {
+      setTimeout(() => {
+        setInvoicesLoading(false)
+      }, 1500)
+    }
+  }
+
   const handleDownloadInvoice = async (invoice) => {
     if (!invoice?.id) {
       toast.error('Invalid invoice')
@@ -284,17 +322,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       toast.info('Downloading invoice...')
       
       try {
-        const response = await invoiceApi.downloadInvoice(invoice.id)
-        
-        const blob = new Blob([response.data], { type: 'application/pdf' })
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = `Invoice_${invoice.invoiceNumber}.pdf`
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
+        await invoiceApi.downloadClientInvoice(invoice.id)
         
         toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
         return
@@ -444,7 +472,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   const handleBulkArchiveInvoices = async () => {
     if (selectedInvoices.length === 0) {
-      toast.warning('Please select at least one invoice')
+      toast.error('Please select at least one invoice!')
       return
     }
 
@@ -495,7 +523,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   const handleBulkSendInvoices = async () => {
     if (selectedInvoices.length === 0) {
-      toast.warning('Please select at least one invoice')
+      toast.error('Please select at least one invoice!')
       return
     }
 
@@ -581,7 +609,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   }
 
   const handleGenerateInvoiceSubmit = async (generatedInvoice) => {
-    toast.success('Invoice generated successfully!')
     setShowGenerateModal(false)
     await fetchInvoices(currentPage, debouncedSearchQuery)
     
@@ -594,7 +621,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   const handleGenerateMultiple = () => {
     if (selectedInvoices.length === 0) {
-      toast.warning('Please select at least one invoice')
+      toast.error('Please select at least one invoice!')
       return
     }
     
@@ -693,7 +720,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   const handleBulkExportInvoices = async () => {
     if (selectedInvoices.length === 0) {
-      toast.warning('Please select at least one invoice to export')
+      toast.error('Please select at least one invoice to export!')
       return
     }
 
@@ -733,7 +760,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           action: async () => {
             console.log('Unarchive Selected clicked', selectedInvoices)
             if (selectedInvoices.length === 0) {
-              toast.warning('Please select at least one invoice')
+              toast.error('Please select at least one invoice!')
               return
             }
             
@@ -769,7 +796,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
           action: async () => {
             console.log('Archive Invoices clicked', selectedInvoices)
             if (selectedInvoices.length === 0) {
-              toast.warning('Please select at least one invoice')
+              toast.error('Please select at least one invoice!')
               return
             }
 
@@ -825,7 +852,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         action: async () => {
           console.log('Archive Invoices clicked', selectedInvoices)
           if (selectedInvoices.length === 0) {
-            toast.warning('Please select at least one invoice')
+            toast.error('Please select at least one invoice!')
             return
           }
 
@@ -869,7 +896,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         action: () => {
           console.log('Delete Invoices clicked', selectedInvoices)
           if (selectedInvoices.length === 0) {
-            toast.warning('Please select at least one invoice')
+            toast.error('Please select at least one invoice!')
             return
           }
           setShowDeleteInvoicePopup(true)
@@ -1127,7 +1154,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
                     {showBulkDropdown && (
                       <div 
-                        className="dropdown-menu show" 
+                        className="show" 
                         style={{ 
                           position: 'absolute',
                           top: 'calc(100% + 4px)',
@@ -1137,7 +1164,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
                           borderRadius: '8px',
                           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                           width: 'fit-content',
-                          zIndex: 9999,
+                          zIndex: 10000,
                           padding: '8px 0'
                         }}
                         onClick={(e) => e.stopPropagation()}

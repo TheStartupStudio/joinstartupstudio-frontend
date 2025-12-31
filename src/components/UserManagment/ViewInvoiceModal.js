@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
 import './ViewInvoiceModal.css'
 import PreviewInvoiceEmailModal from './PreviewInvoiceEmailModal'
 import { invoiceApi } from '../../utils/invoiceApi'
@@ -47,6 +45,13 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
 
   const [formData, setFormData] = useState(defaultDummyData)
   const [newItemData, setNewItemData] = useState({
+    description: '',
+    quantity: '',
+    price: '',
+    total: 0
+  })
+  const [editingItemIndex, setEditingItemIndex] = useState(null)
+  const [editingItemData, setEditingItemData] = useState({
     description: '',
     quantity: '',
     price: '',
@@ -110,13 +115,71 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
   }
 
   const handleEditItem = (index) => {
-    console.log('Edit item:', index)
-    toast.info('Edit item functionality coming soon!')
+    const item = formData.items[index]
+    setEditingItemIndex(index)
+    setEditingItemData({
+      description: item.description,
+      quantity: item.quantity,
+      price: item.price,
+      total: parseFloat(item.total)
+    })
+  }
+
+  const handleEditingItemChange = (field, value) => {
+    const updatedItem = { ...editingItemData, [field]: value }
+    
+    if (field === 'quantity' || field === 'price') {
+      const qty = parseFloat(field === 'quantity' ? value : editingItemData.quantity) || 0
+      const price = parseFloat(field === 'price' ? value : editingItemData.price) || 0
+      updatedItem.total = qty * price
+    }
+    
+    setEditingItemData(updatedItem)
+  }
+
+  const handleConfirmEditItem = () => {
+    if (!editingItemData.description || !editingItemData.quantity || !editingItemData.price) {
+      toast.warning('Please fill in all item fields')
+      return
+    }
+
+    const updatedItems = [...formData.items]
+    updatedItems[editingItemIndex] = {
+      ...editingItemData,
+      quantity: editingItemData.quantity.toString(),
+      price: parseFloat(editingItemData.price).toFixed(2)
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      items: updatedItems
+    }))
+    calculateTotals(updatedItems)
+    
+    setEditingItemIndex(null)
+    setEditingItemData({
+      description: '',
+      quantity: '',
+      price: '',
+      total: 0
+    })
+    
+    toast.success('Item updated successfully!')
+  }
+
+  const handleCancelEditItem = () => {
+    setEditingItemIndex(null)
+    setEditingItemData({
+      description: '',
+      quantity: '',
+      price: '',
+      total: 0
+    })
   }
 
   const handleDeleteItem = (index) => {
     if (formData.items.length === 1) {
-      toast.warning('At least one item is required')
+      toast.error('At least one item is required!')
       return
     }
 
@@ -143,7 +206,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
 
   const handleConfirmNewItem = () => {
     if (!newItemData.description || !newItemData.quantity || !newItemData.price) {
-      toast.warning('Please fill in all item fields')
+      toast.error('Please fill in all item fields')
       return
     }
 
@@ -201,6 +264,33 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     if (!formData.id) {
       toast.error('Cannot save invoice without ID')
       return
+    }
+
+    // If user is editing an item but forgot to confirm, auto-save it if fields are complete
+    if (editingItemIndex !== null) {
+      if (editingItemData.description && editingItemData.quantity && editingItemData.price) {
+        const updatedItems = [...formData.items]
+        updatedItems[editingItemIndex] = {
+          ...editingItemData,
+          quantity: editingItemData.quantity.toString(),
+          price: parseFloat(editingItemData.price).toFixed(2)
+        }
+        
+        setFormData(prev => ({
+          ...prev,
+          items: updatedItems
+        }))
+        calculateTotals(updatedItems)
+      }
+      
+      // Clear editing state
+      setEditingItemIndex(null)
+      setEditingItemData({
+        description: '',
+        quantity: '',
+        price: '',
+        total: 0
+      })
     }
 
     setLoading(true)
@@ -291,73 +381,37 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     }).format(value || 0)
   }
 
-  // ✅ Download invoice as PDF
+  // ✅ Download invoice as PDF from backend
   const handleDownloadInvoice = async () => {
-    if (!invoiceContentRef.current) {
-      toast.error('Invoice content not ready')
+    if (!formData.id) {
+      toast.error('Invoice ID not available')
       return
     }
 
     setIsDownloading(true)
-    toast.info('Generating PDF...')
+    toast.success('Downloading invoice...')
 
     try {
-      // Create a clone of the invoice content for PDF generation
-      const element = invoiceContentRef.current
-      
-      // Temporarily hide action buttons and edit mode elements
-      const editButtons = element.querySelectorAll('.edit-btn, .delete-btn, .confirm-btn, .cancel-btn, .add-new-item-btn')
-      const instructorInfo = element.querySelector('.instructor-payment-info')
-      
-      editButtons.forEach(btn => btn.style.display = 'none')
-      if (instructorInfo) instructorInfo.style.display = 'none'
-
-      // Capture the element as canvas
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight
-      })
-
-      // Restore hidden elements
-      editButtons.forEach(btn => btn.style.display = '')
-      if (instructorInfo) instructorInfo.style.display = ''
-
-      // Create PDF
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      })
-
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
-      const imgWidth = canvas.width
-      const imgHeight = canvas.height
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
-      const imgX = (pdfWidth - imgWidth * ratio) / 2
-      const imgY = 10
-
-      pdf.addImage(
-        imgData, 
-        'PNG', 
-        imgX, 
-        imgY, 
-        imgWidth * ratio, 
-        imgHeight * ratio
-      )
-
-      // Save the PDF
-      pdf.save(`Invoice_${formData.invoiceNumber || 'Document'}.pdf`)
+      if (isOrgClient) {
+        await invoiceApi.downloadClientInvoice(formData.id)
+      } else {
+        const response = await invoiceApi.downloadInvoice(formData.id)
+        
+        const blob = new Blob([response.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `Invoice_${formData.invoiceNumber}.pdf`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      }
       
       toast.success('Invoice downloaded successfully!')
     } catch (error) {
-      console.error('Error generating PDF:', error)
-      toast.error('Failed to generate PDF')
+      console.error('Error downloading invoice:', error)
+      toast.error('Failed to download invoice')
     } finally {
       setIsDownloading(false)
     }
@@ -375,7 +429,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
         size="lg"
       >
         {/* ✅ Wrap the content in a ref for PDF generation */}
-        <div className="invoice-modal-content" ref={invoiceContentRef}>
+        <div className="invoice-modal-content">
           {/* Header */}
           <div className="invoice-modal-header">
             <div className="modal-icon">
@@ -478,7 +532,7 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
           )}
 
           {/* Invoice Body */}
-            <div className="invoice-modal-body">
+            <div className="invoice-modal-body" ref={invoiceContentRef}>
               {/* Organization Name Header */}
               <div className="organization-header">
                 <h2>{formData.organizationName}</h2>
@@ -497,8 +551,8 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                     <label className="section-label">PAY TO:</label>
                     <div className="pay-to-details">
                       <p className="name-section-label">Learn to Start, LLC</p>
-                      <p>3100 Corvig-Windermere Road,</p>
-                      <p>Suite 201 - #132</p>
+                      <p>9100 Conroy Windermere Road,</p>
+                      <p>Suite 200 - #132</p>
                       <p>Windermere, FL 34786</p>
                     </div>
                   </div>
@@ -531,33 +585,79 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
 
                 {formData?.items?.map((item, index) => (
                   <div key={index} className="invoice-item-row">
-                    <div className="item-cell description-col">
-                      <span className="item-description">{item.description}</span>
-                    </div>
-                    <div className="item-cell qty-col">
-                      <span className="item-quantity">{item.quantity}</span>
-                    </div>
-                    <div className="item-cell price-col">
-                      <span className="item-price">${item.price}</span>
-                    </div>
-                    <div className="item-cell total-col">
-                      <span className="item-total">${parseFloat(item.total).toLocaleString()}</span>
-                      {mode === 'edit' && (
-                        <>
-                          <button className="edit-btn" onClick={() => handleEditItem(index)}>
+                    {editingItemIndex === index ? (
+                      // Editing mode for this item
+                      <>
+                        <div className="item-cell description-col">
+                          <input 
+                            type="text" 
+                            className="add-description-input"
+                            value={editingItemData.description}
+                            onChange={(e) => handleEditingItemChange('description', e.target.value)}
+                          />
+                        </div>
+                        <div className="item-cell qty-col">
+                          <input 
+                            type="number" 
+                            className="add-qty-input"
+                            value={editingItemData.quantity}
+                            onChange={(e) => handleEditingItemChange('quantity', e.target.value)}
+                          />
+                        </div>
+                        <div className="item-cell price-col">
+                          <input 
+                            type="number" 
+                            className="add-price-input"
+                            value={editingItemData.price}
+                            onChange={(e) => handleEditingItemChange('price', e.target.value)}
+                          />
+                        </div>
+                        <div className="item-cell total-col">
+                          <span className="item-total">${editingItemData.total?.toLocaleString()}</span>
+                          <button className="confirm-btn" onClick={handleConfirmEditItem}>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                              <path d="M11.333 2.00004C11.5081 1.82494 11.7169 1.68605 11.9457 1.59129C12.1745 1.49653 12.4191 1.44775 12.6663 1.44775C12.9135 1.44775 13.1581 1.49653 13.3869 1.59129C13.6157 1.68605 13.8245 1.82494 13.9997 2.00004C14.1748 2.17513 14.3137 2.38393 14.4084 2.61272C14.5032 2.84151 14.552 3.08615 14.552 3.33337C14.552 3.58059 14.5032 3.82524 14.4084 4.05403C14.3137 4.28282 14.1748 4.49161 13.9997 4.66671L5.33301 13.3334L1.33301 14.6667L2.66634 10.6667L11.333 2.00004Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M13.3337 4L6.00033 11.3333L2.66699 8" stroke="#51C7DF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                           </button>
-                          <button className="delete-btn" onClick={() => handleDeleteItem(index)}>
+                          <button className="cancel-btn" onClick={handleCancelEditItem}>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                              <path d="M2 4H3.33333H14" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M5.33301 4.00004V2.66671C5.33301 2.31309 5.47348 1.97395 5.72353 1.7239C5.97358 1.47385 6.31272 1.33337 6.66634 1.33337H9.33301C9.68663 1.33337 10.0258 1.47385 10.2758 1.7239C10.5259 1.97395 10.6663 2.31309 10.6663 2.66671V4.00004M12.6663 4.00004V13.3334C12.6663 13.687 12.5259 14.0261 12.2758 14.2762C12.0258 14.5262 11.6866 14.6667 11.333 14.6667H4.66634C4.31272 14.6667 3.97358 14.5262 3.72353 14.2762C3.47348 14.0261 3.33301 13.687 3.33301 13.3334V4.00004H12.6663Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M12 4L4 12M4 4L12 12" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                           </button>
-                        </>
-                      )}
-                    </div>
+                        </div>
+                      </>
+                    ) : (
+                      // View mode for this item
+                      <>
+                        <div className="item-cell description-col">
+                          <span className="item-description">{item.description}</span>
+                        </div>
+                        <div className="item-cell qty-col">
+                          <span className="item-quantity">{item.quantity}</span>
+                        </div>
+                        <div className="item-cell price-col">
+                          <span className="item-price">${item.price}</span>
+                        </div>
+                        <div className="item-cell total-col">
+                          <span className="item-total">${parseFloat(item.total).toLocaleString()}</span>
+                          {mode === 'edit' && (
+                            <>
+                              <button className="edit-btn" onClick={() => handleEditItem(index)}>
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                  <path d="M11.333 2.00004C11.5081 1.82494 11.7169 1.68605 11.9457 1.59129C12.1745 1.49653 12.4191 1.44775 12.6663 1.44775C12.9135 1.44775 13.1581 1.49653 13.3869 1.59129C13.6157 1.68605 13.8245 1.82494 13.9997 2.00004C14.1748 2.17513 14.3137 2.38393 14.4084 2.61272C14.5032 2.84151 14.552 3.08615 14.552 3.33337C14.552 3.58059 14.5032 3.82524 14.4084 4.05403C14.3137 4.28282 14.1748 4.49161 13.9997 4.66671L5.33301 13.3334L1.33301 14.6667L2.66634 10.6667L11.333 2.00004Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </button>
+                              <button className="delete-btn" onClick={() => handleDeleteItem(index)}>
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                  <path d="M2 4H3.33333H14" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M5.33301 4.00004V2.66671C5.33301 2.31309 5.47348 1.97395 5.72353 1.7239C5.97358 1.47385 6.31272 1.33337 6.66634 1.33337H9.33301C9.68663 1.33337 10.0258 1.47385 10.2758 1.7239C10.5259 1.97395 10.6663 2.31309 10.6663 2.66671V4.00004M12.6663 4.00004V13.3334C12.6663 13.687 12.5259 14.0261 12.2758 14.2762C12.0258 14.5262 11.6866 14.6667 11.333 14.6667H4.66634C4.31272 14.6667 3.97358 14.5262 3.72353 14.2762C3.47348 14.0261 3.33301 13.687 3.33301 13.3334V4.00004H12.6663Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
 
@@ -605,16 +705,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                       </button>
                     </div>
                   </div>
-                )}
-
-                {/* Add New Item Button - Only show in edit mode */}
-                {mode === 'edit' && (
-                  <button className="add-new-item-btn">
-                    Add New Item
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M8 3.33337V12.6667M3.33333 8H12.6667" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
                 )}
 
                 {/* Totals Section */}
