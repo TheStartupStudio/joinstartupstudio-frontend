@@ -95,6 +95,7 @@
   padding: 6px 0px;
   cursor: pointer;
   transition: background-color 0.2s;
+  position: relative;
 }
 
 /* .notification-item:hover {
@@ -103,6 +104,16 @@
 
 .notification-item:last-child {
   border-bottom: none;
+}
+
+.unread-indicator {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: #FF4444;
+  border-radius: 50%;
 }
 
 .notification-title {

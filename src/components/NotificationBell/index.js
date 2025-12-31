@@ -110,6 +110,7 @@ const NotificationBell = () => {
                   className={`notification-item ${!notification.read ? 'unread' : ''}`}
                   onClick={() => handleNotificationClick(notification)}
                 >
+                  {!notification.read && <span className="unread-indicator"></span>}
                   <h4 className="notification-title">
                     {notification.date}: {notification.title}
                   </h4>
