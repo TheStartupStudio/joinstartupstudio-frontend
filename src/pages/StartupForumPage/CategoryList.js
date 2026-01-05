@@ -8,6 +8,16 @@ import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import editIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 
+const ICON_MAP = {
+  'wavingHand': wavingHand,
+  'loudSpeaker': loudSpeaker,
+  'partyPopper': partyPopper,
+  'speechBalloon': speechBalloon,
+  'lightBulb': lightBulb,
+  'message': message,
+  'star': star
+}
+
 const CategoryList = ({ 
   categories, 
   selectedCategory, 
@@ -18,20 +28,26 @@ const CategoryList = ({
   staticCategories = []
 }) => {
   const getCategoryIcon = (categoryName) => {
-    // Check if it's a database category with an icons field
     const dbCategory = dbCategories.find(cat => cat.name === categoryName)
     if (dbCategory?.icons) {
+      if (typeof dbCategory.icons === 'string') {
+        if (ICON_MAP[dbCategory.icons]) {
+          return ICON_MAP[dbCategory.icons]
+        }
+        if (dbCategory.icons.startsWith('/')) {
+          const baseURL = process.env.REACT_APP_SERVER_BASE_URL || ''
+          return `${baseURL.replace(/\/$/, '')}${dbCategory.icons}`
+        }
+      }
       return dbCategory.icons
     }
     
-    // Fallback to hardcoded icons for static categories
     switch (categoryName) {
       case 'All Discussions':
         return message
       case 'Following':
         return star
       default:
-        // Default fallback icon for any category without an icon
         return speechBalloon
     }
   }

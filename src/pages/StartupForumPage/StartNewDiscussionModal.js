@@ -17,7 +17,18 @@ import loudSpeaker from '../../assets/images/academy-icons/svg/Loudspeaker.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 import messageText from '../../assets/images/academy-icons/svg/message-text.svg'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
+import message from '../../assets/images/academy-icons/svg/message-text.svg'
+import star from '../../assets/images/academy-icons/svg/star.svg'
 
+const ICON_MAP = {
+  'wavingHand': wavingHand,
+  'loudSpeaker': loudSpeaker,
+  'partyPopper': partyPopper,
+  'speechBalloon': speechBalloon,
+  'lightBulb': lightBulb,
+  'message': message,
+  'star': star
+}
 
 const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCategories = [] }) => {
   const [loading, setLoading] = useState(false)
@@ -42,6 +53,26 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
 
   // Map static category names to their icons
   const getCategoryIcon = (categoryName) => {
+    // Check if category exists in dbCategories and has an icon
+    const dbCategory = dbCategories.find(cat => cat.name === categoryName)
+    if (dbCategory?.icons) {
+      // If icons is a string (icon name from DB), map it to the imported icon
+      if (typeof dbCategory.icons === 'string') {
+        // Check if it's an icon name (not a path)
+        if (ICON_MAP[dbCategory.icons]) {
+          return ICON_MAP[dbCategory.icons]
+        }
+        // Fallback: if it's a path (starts with /), construct full URL (for backward compatibility)
+        if (dbCategory.icons.startsWith('/')) {
+          const baseURL = process.env.REACT_APP_SERVER_BASE_URL || ''
+          return `${baseURL.replace(/\/$/, '')}${dbCategory.icons}`
+        }
+      }
+      // If it's already an imported module, return as is
+      return dbCategory.icons
+    }
+    
+    // Fallback to hardcoded icons for categories without database icons
     const iconMap = {
       'Introductions': wavingHand,
       'Announcements': loudSpeaker,
@@ -443,16 +474,15 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
                     key={category.name}
                     onClick={() => handleCategorySelect(category.name)}
                     style={{
-                      padding: '4px',
+                      padding: '8px 8px',
                       display: 'flex',
+                      alignItems: 'center',
                       gap: '12px',
                       cursor: 'pointer',
                       fontSize: '14px',
                       transition: 'all 0.2s ease',
                       backgroundColor: 'transparent',
-                      borderLeft: '3px solid transparent',
-                      flexDirection: 'column',
-                      gap: '4px',
+                      borderRadius: '8px',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = `#45B7D120`
@@ -461,6 +491,11 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
                       e.currentTarget.style.backgroundColor = 'transparent'
                     }}
                   >
+                    <img 
+                      src={category.icon} 
+                      alt={category.name}
+                      style={{ width: '18px', height: '18px' }}
+                    />
                     <span style={{ color: 'black', fontWeight: formData.selectedCategory === category.name ? '600' : '400' }}>
                       {category.name}
                     </span>
