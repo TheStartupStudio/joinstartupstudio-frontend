@@ -5984,6 +5984,7 @@ strong {
 }
 
 .journal-entries__video-thumbnail {
+  aspect-ratio: 16/9;
   position: relative;
   /*max-width: 300px;*/
   margin: 0 auto;
@@ -6037,6 +6038,8 @@ strong {
   max-width: 100%;
   /* border: 1px solid #333d3d29; */
   vertical-align: bottom;
+  width: 100%;
+  height: 100%;
 }
 
 .journal-entries__video-thumbnail-icon {

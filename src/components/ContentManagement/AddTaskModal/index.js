@@ -25,6 +25,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   ])
   const [currentMode, setCurrentMode] = useState(mode)
   const [loading, setLoading] = useState(false)
+  const [isLoadingData, setIsLoadingData] = useState(false)
   const dropdownRef = useRef(null)
 
   const isViewMode = currentMode === 'view'
@@ -58,30 +59,50 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }, [mode])
 
   useEffect(() => {
-    if ((isEditMode || isViewMode) && taskData) {
+    // Only load data when taskData changes, not when mode changes
+    if (taskData && taskData.id) {
+      console.log('Loading taskData in modal:', taskData)
+      console.log('Current mode:', currentMode)
+      console.log('Current reflectionItems before loading:', reflectionItems)
+      console.log('isLoadingData:', isLoadingData)
+
+      setIsLoadingData(true)
+
       setTaskTitle(taskData.title || '')
       setSelectedLevel(taskData.level || '')
       setActiveTab(taskData.contentType || 'video')
       setInformation(taskData.information || '')
-      
-      if (taskData.reflectionItems && taskData.reflectionItems.length > 0) {
+
+      // CRITICAL: Only update reflection items if we have valid data
+      // This prevents reflection items from being reset during mode switches or loading
+      if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
+        console.log('Setting reflection items from taskData:', taskData.reflectionItems)
         setReflectionItems(taskData.reflectionItems)
-      } else if (isLeadership && !taskData.reflectionItems) {
-        setReflectionItems([
-          { id: 1, question: '', instructions: '' },
-          { id: 2, question: '', instructions: '' },
-          { id: 3, question: '', instructions: '' }
-        ])
+      } else if (currentMode === 'add') {
+        // Only reset for new items in add mode
+        console.log('Resetting reflection items for add mode')
+        if (isLeadership) {
+          setReflectionItems([
+            { id: 1, question: '', instructions: '' },
+            { id: 2, question: '', instructions: '' },
+            { id: 3, question: '', instructions: '' }
+          ])
+        } else {
+          setReflectionItems([{ id: 1, question: '', instructions: '' }])
+        }
       }
-      
+      // For edit/view modes, NEVER reset reflection items - preserve them
+
       if (taskData.videoUrl) {
         setVideoPreview(taskData.videoUrl)
       }
       if (taskData.thumbnailUrl) {
         setThumbnailPreview(taskData.thumbnailUrl)
       }
+
+      setIsLoadingData(false)
     }
-  }, [currentMode, taskData, isEditMode, isViewMode, isLeadership])
+  }, [taskData?.id, taskData?.reflectionItems]) // Only depend on specific taskData properties
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -177,9 +198,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
       let response
       if (isEditMode && taskData?.id) {
-        // Update existing journal
+        // Update existing journal using new edit endpoint
         toast.info('Updating task...')
-        response = await axiosInstance.put(`/LtsJournals/${taskData.id}/update-with-content`, payload)
+        response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
         toast.success('Task updated successfully!')
       } else {
         // Create new journal
@@ -232,7 +253,28 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }
 
   const handleSwitchToEditMode = () => {
+    console.log('Switching to edit mode, current reflection items:', reflectionItems)
+    console.log('Current taskData:', taskData)
+
+    // When switching from view to edit, preserve all current data
+    // Update the taskData to reflect the current state before switching modes
+    if (taskData) {
+      const updatedTaskData = {
+        ...taskData,
+        reflectionItems: reflectionItems, // Preserve current reflection items
+        information: information, // Preserve current information
+        title: taskTitle,
+        level: selectedLevel,
+        contentType: activeTab,
+        videoUrl: videoPreview,
+        thumbnailUrl: thumbnailPreview
+      }
+      console.log('Updated taskData for edit mode:', updatedTaskData)
+      // Note: We can't directly update taskData prop, but we can ensure the state is preserved
+    }
+
     setCurrentMode('edit')
+    setActiveTab("video")
   }
 
   const handleDelete = async () => {

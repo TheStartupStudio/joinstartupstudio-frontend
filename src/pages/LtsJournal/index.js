@@ -155,7 +155,6 @@ function LtsJournal(props) {
             }))
           }
         })
-        console.log('Fetched lessons by level:', transformedLessons)
         setLessonsByLevel(transformedLessons)
       }
     } catch (error) {
@@ -245,7 +244,7 @@ function LtsJournal(props) {
         });
       }
     }
-  }, [journalId, lessonsByLevel]);
+  }, [journalId, lessonsByLevel, activeLevel]);
 
   const handleJournalSearch = (e) => {
     const keyword = e.target.value.toLowerCase()
@@ -756,7 +755,6 @@ const handleSaveAndContinue = async () => {
         return;
       }
 
-      console.log( `Saving reflection for journalId: ${journalId}, journalEntryId: ${journalEntryId}, entryId: ${entryId}`);
       const endpoint = !entryId
         ? `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`
         : `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`;
@@ -1192,8 +1190,15 @@ useEffect(() => {
                           const { journalId } = renderProps.match.params
 
                           if (!isContentAccessible(journalId)) {
-                            // Redirect to the first lesson in the list (level 0, first lesson)
-                            const firstLessonId = lessonsByLevel[0]?.[0]?.id || 51;
+                            // Wait for lessons to load before redirecting
+                            if (lessonsLoading || !lessonsByLevel[0] || !Array.isArray(lessonsByLevel[0]) || lessonsByLevel[0].length === 0) {
+                              // Lessons are still loading, return null to wait
+                              return null;
+                            }
+                            
+                            // Lessons are loaded, get the first lesson ID
+                            const firstLessonId = lessonsByLevel[0][0].id;
+                            
                             return <Redirect to={`${props.match.url}/${firstLessonId}`} />
                           }
 

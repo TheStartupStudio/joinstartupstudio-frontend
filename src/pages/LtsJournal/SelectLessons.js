@@ -28,8 +28,10 @@ function SelectLessons({
   const getLessonTitleByRedirectId = (redirectId) => {
     if (!redirectId) return null;
 
-    // All levels now have flat structure
-    const found = options.find(option => option.redirectId === redirectId);
+    // Check both value (lesson.id) and redirectId to find the lesson
+    const found = options.find(option => 
+      option.value === redirectId || option.redirectId === redirectId
+    );
     if (found) return found.label;
     
     return null;
@@ -85,7 +87,8 @@ function SelectLessons({
   const currentSelection = options?.find(option => {
     if (journalId) {
       const numericId = parseInt(journalId);
-      return option.redirectId === numericId;
+      // Check both value (lesson.id) and redirectId to match the URL
+      return option.value === numericId || option.redirectId === numericId;
     }
     return option.value === selectedCourse?.value;
   });

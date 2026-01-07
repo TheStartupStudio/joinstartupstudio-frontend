@@ -38,6 +38,14 @@ const ContentManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
+  // Debug editingTask changes
+  useEffect(() => {
+    if (editingTask) {
+      console.log('editingTask changed:', editingTask)
+      console.log('editingTask reflectionItems:', editingTask.reflectionItems)
+    }
+  }, [editingTask])
+
   // Fetch levels on component mount
   useEffect(() => {
     fetchLevels()
@@ -160,48 +168,13 @@ const ContentManagement = () => {
     
     switch (actionType) {
       case 'view':
+        // Fetch complete journal data using new view endpoint for view mode
+        handleViewEditJournal(item.id, actionType)
+        break
       case 'edit':
-        const journal = item.journalData
-        
-        // Get video URL from various possible locations
-        let videoUrl = null
-        if (journal.video?.link) {
-          videoUrl = journal.video.link
-        } else if (journal.video?.url) {
-          videoUrl = journal.video.url
-        } else if (journal.videos && journal.videos.length > 0) {
-          videoUrl = journal.videos[0].url || journal.videos[0].link
-        }
-
-        // Get thumbnail URL from various possible locations
-        let thumbnailUrl = null
-        if (journal.JournalImg?.link) {
-          thumbnailUrl = journal.JournalImg.link
-        } else if (journal.JournalImg?.url) {
-          thumbnailUrl = journal.JournalImg.url
-        } else if (journal.video?.thumbnail) {
-          thumbnailUrl = journal.video.thumbnail
-        }
-
-        const taskData = {
-          id: journal.id,
-          title: journal.title,
-          level: activeLevel,
-          contentType: journal.entries && journal.entries.length > 0 ? 'reflection' : 'video',
-          videoUrl: videoUrl,
-          thumbnailUrl: thumbnailUrl,
-          information: journal.content || journal.paragraph || '',
-          reflectionItems: journal.entries ? journal.entries.map(entry => ({
-            id: entry.id,
-            question: entry.title || '',
-            instructions: entry.parentTitle || ''
-          })) : [{ id: 1, question: '', instructions: '' }],
-          order: journal.order
-        }
-        
-        setEditingTask(taskData)
-        setModalMode(actionType)
-        setShowAddTaskModal(true)
+        // For edit mode, always fetch fresh data to ensure we have the latest information
+        console.log('Fetching fresh data for edit mode')
+        handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
         setSelectedTask(item)
@@ -222,21 +195,32 @@ const ContentManagement = () => {
     try {
       const updatedData = newOrderedData.map((item, index) => ({
         ...item,
-        order: index + 1
+        order: index // Use 0-based indexing (order 0 comes first)
       }))
       
       setTasksData(updatedData)
+  
+      // Update order in database for each task
+      const reorderPromises = updatedData.map(task =>
+        axiosInstance.put(`/LtsJournals/${task.id}/order`, {
+          order: task.order
+        })
+      )
+      await Promise.all(reorderPromises)
 
-      // TODO: Add API call to update task order
-      // const reorderPromises = updatedData.map(task => 
-      //   axiosInstance.put(`/LtsJournals/${task.id}`, { order: task.order })
-      // )
-      // await Promise.all(reorderPromises)
-
+      // Log the list of ids and names after reordering
+      const reorderedItems = updatedData.map(item => ({
+        id: item.id,
+        name: item.name
+      }))
+      console.log('Reordered items:', reorderedItems)
+  
       toast.success('Task order updated successfully!')
     } catch (error) {
       console.error('Error reordering tasks:', error)
       toast.error('Failed to update task order')
+      // Revert local state on error
+      fetchTasksByLevel()
     } finally {
       setLoading(false)
     }
@@ -269,15 +253,71 @@ const ContentManagement = () => {
     setShowBulkDropdown(false)
   }
 
+  const handleViewEditJournal = async (journalId, mode) => {
+    try {
+      setLoading(true)
+
+      // Use the new view endpoint to get complete journal data
+      const response = await axiosInstance.get(`/LtsJournals/${journalId}/view-with-content`)
+
+      const journal = response.data
+
+      // Debug the journal data structure
+      console.log('Journal data from API:', journal)
+      console.log('Journal reflectionItems:', journal.reflectionItems)
+
+      // Format data for the modal - ensure reflection items are properly structured
+      const formattedReflectionItems = journal.reflectionItems && Array.isArray(journal.reflectionItems) && journal.reflectionItems.length > 0
+        ? journal.reflectionItems.map(item => ({
+            id: item.id || Date.now() + Math.random(),
+            question: item.question || '',
+            instructions: item.instructions || ''
+          }))
+        : (journal.category === 'leadership')
+          ? [
+              { id: 1, question: '', instructions: '' },
+              { id: 2, question: '', instructions: '' },
+              { id: 3, question: '', instructions: '' }
+            ]
+          : (journal.contentType === 'reflection')
+            ? [{ id: 1, question: '', instructions: '' }]
+            : []
+
+      const taskData = {
+        id: journal.id,
+        title: journal.title,
+        level: activeLevel,
+        contentType: formattedReflectionItems.length > 0 ? 'video' : 'video',
+        videoUrl: journal.videoUrl,
+        thumbnailUrl: journal.thumbnailUrl,
+        information: journal.information || '',
+        reflectionItems: formattedReflectionItems,
+        order: journal.order
+      }
+
+      console.log('Formatted task data for modal:', taskData)
+      console.log('Final reflectionItems:', taskData.reflectionItems)
+
+      setEditingTask(taskData)
+      setModalMode(mode)
+      setShowAddTaskModal(true)
+    } catch (error) {
+      console.error('Error fetching journal data:', error)
+      toast.error('Failed to load journal data')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleSaveTask = (journalData) => {
     console.log('Journal data received:', journalData)
-    
+
     // Handle delete case
     if (journalData.deleted) {
       setTasksData(prevTasks => prevTasks.filter(task => task.id !== journalData.id))
       return
     }
-    
+
     // Refresh the tasks list to get the latest data
     fetchTasksByLevel()
   }
