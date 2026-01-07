@@ -16,7 +16,8 @@ import AssignTasksModal from '../../components/ContentManagement/AssignTasksModa
 
 const ContentManagement = () => {
   const dispatch = useDispatch()
-  const [activeLevel, setActiveLevel] = useState('Level 1: Entrepreneurship and You')
+  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
+  const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
@@ -37,86 +38,101 @@ const ContentManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levels, setLevels] = useState([
-    'Level 1: Entrepreneurship and You',
-    'Level 2: Understanding Learn to Start',
-    'Level 3: The Journey of Entrepreneurship'
-  ])
-
+  // Fetch levels on component mount
   useEffect(() => {
-    setTasksData([
-      {
-        id: 1,
-        name: 'Myths of Entrepreneurship',
-        status: 'unpublished',
-        hasContent: true,
-        order: 1
-      },
-      {
-        id: 2,
-        name: 'Choose My Team Path Task',
-        status: 'published',
-        hasContent: false,
-        order: 2
-      },
-      {
-        id: 3,
-        name: 'Industry Analysis Task',
-        status: 'published',
-        hasContent: false,
-        order: 3
-      },
-      {
-        id: 4,
-        name: 'Market Analysis Task',
-        status: 'unpublished',
-        hasContent: true,
-        order: 4
-      },
-      {
-        id: 5,
-        name: 'AIE Task',
-        status: 'unpublished',
-        hasContent: true,
-        order: 5
-      },
-      {
-        id: 6,
-        name: 'AIE Task',
-        status: 'unpublished',
-        hasContent: true,
-        order: 6
-      },
-      {
-        id: 7,
-        name: 'AIE Task',
-        status: 'unpublished',
-        hasContent: true,
-        order: 7
-      },
-      {
-        id: 8,
-        name: 'AIE Task',
-        status: 'unpublished',
-        hasContent: true,
-        order: 8
-      },
-      {
-        id: 9,
-        name: 'AIE Task',
-        status: 'unpublished',
-        hasContent: true,
-        order: 9
-      },
-      {
-        id: 10,
-        name: 'AIE Task',
-        status: 'unpublished',
-        hasContent: true,
-        order: 10
-      }
-    ])
+    fetchLevels()
   }, [])
+
+  // Fetch tasks when active level changes
+  useEffect(() => {
+    if (activeLevel && levelsData.length > 0) {
+      const activeLevelObj = levelsData.find(l => l.title === activeLevel)
+      if (activeLevelObj) {
+        fetchTasksByLevel()
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeLevel])
+
+  // Fetch all entrepreneurship levels from API
+  const fetchLevels = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/entrepreneurship/levels')
+      
+      // Response: [{ id, title, order, published, category }]
+      setLevelsData(response.data)
+      
+      // Set first level as active
+      if (response.data.length > 0) {
+        setActiveLevel(response.data[0].title)
+      }
+    } catch (error) {
+      console.error('Error fetching levels:', error)
+      toast.error('Failed to fetch levels')
+      
+      // Fallback to default levels
+      const defaultLevels = [
+        { id: 1, title: 'Level 1: Entrepreneurship and You', order: 1, published: true },
+        { id: 2, title: 'Level 2: Understanding Learn to Start', order: 2, published: true },
+        { id: 3, title: 'Level 3: The Journey of Entrepreneurship', order: 3, published: true }
+      ]
+      setLevelsData(defaultLevels)
+      setActiveLevel(defaultLevels[0].title)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch tasks by level
+  const fetchTasksByLevel = async () => {
+    try {
+      setLoading(true)
+      
+      // Find the level ID from the active level title
+      const activeLevelObj = levelsData.find(l => l.title === activeLevel)
+      if (!activeLevelObj) {
+        setTasksData([])
+        return
+      }
+
+      const response = await axiosInstance.get('/LtsJournals/content-by-level', {
+        params: {
+          category: 'entrepreneurship',
+          levelId: activeLevelObj.id
+        }
+      })
+
+      // Transform API data to match table format
+      const transformedTasks = response.data.map(journal => {
+        // Check for content in various possible locations
+        const hasVideoContent = journal.videoId || 
+                               journal.videoIds || 
+                               (journal.videos && journal.videos.length > 0) ||
+                               (journal.video && journal.video.id)
+        
+        const hasReflectionContent = journal.entries && journal.entries.length > 0
+
+        return {
+          id: journal.id,
+          name: journal.title,
+          status: journal.published ? 'published' : 'unpublished',
+          hasContent: hasVideoContent || hasReflectionContent,
+          order: journal.order,
+          // Store full journal data for editing
+          journalData: journal
+        }
+      })
+
+      setTasksData(transformedTasks)
+    } catch (error) {
+      console.error('Error fetching tasks by level:', error)
+      toast.error('Failed to fetch tasks')
+      setTasksData([])
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const columns = useMemo(() => [
     {
@@ -144,45 +160,47 @@ const ContentManagement = () => {
     
     switch (actionType) {
       case 'view':
-        const taskDataForView = {
-          id: item.id,
-          title: item.name,
-          level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>What did you learn from this lesson?</p>',
-              instructions: '<p>Please watch the video and answer the questions below.</p>'
-            }
-          ]
-        }
-        
-        setEditingTask(taskDataForView)
-        setModalMode('view')
-        setShowAddTaskModal(true)
-        break
       case 'edit':
-        const taskDataForEdit = {
-          id: item.id,
-          title: item.name,
+        const journal = item.journalData
+        
+        // Get video URL from various possible locations
+        let videoUrl = null
+        if (journal.video?.link) {
+          videoUrl = journal.video.link
+        } else if (journal.video?.url) {
+          videoUrl = journal.video.url
+        } else if (journal.videos && journal.videos.length > 0) {
+          videoUrl = journal.videos[0].url || journal.videos[0].link
+        }
+
+        // Get thumbnail URL from various possible locations
+        let thumbnailUrl = null
+        if (journal.JournalImg?.link) {
+          thumbnailUrl = journal.JournalImg.link
+        } else if (journal.JournalImg?.url) {
+          thumbnailUrl = journal.JournalImg.url
+        } else if (journal.video?.thumbnail) {
+          thumbnailUrl = journal.video.thumbnail
+        }
+
+        const taskData = {
+          id: journal.id,
+          title: journal.title,
           level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>Sample question for this task</p>',
-              instructions: '<p>Sample instructions for this task</p>'
-            }
-          ]
+          contentType: journal.entries && journal.entries.length > 0 ? 'reflection' : 'video',
+          videoUrl: videoUrl,
+          thumbnailUrl: thumbnailUrl,
+          information: journal.content || journal.paragraph || '',
+          reflectionItems: journal.entries ? journal.entries.map(entry => ({
+            id: entry.id,
+            question: entry.title || '',
+            instructions: entry.parentTitle || ''
+          })) : [{ id: 1, question: '', instructions: '' }],
+          order: journal.order
         }
         
-        setEditingTask(taskDataForEdit)
-        setModalMode('edit')
+        setEditingTask(taskData)
+        setModalMode(actionType)
         setShowAddTaskModal(true)
         break
       case 'publish':
@@ -209,15 +227,16 @@ const ContentManagement = () => {
       
       setTasksData(updatedData)
 
-      const reorderedTasks = updatedData.map(task => ({
-        id: task.id
-      }))
+      // TODO: Add API call to update task order
+      // const reorderPromises = updatedData.map(task => 
+      //   axiosInstance.put(`/LtsJournals/${task.id}`, { order: task.order })
+      // )
+      // await Promise.all(reorderPromises)
 
       toast.success('Task order updated successfully!')
     } catch (error) {
       console.error('Error reordering tasks:', error)
-      toast.success('Task order updated successfully!')
-      
+      toast.error('Failed to update task order')
     } finally {
       setLoading(false)
     }
@@ -250,34 +269,23 @@ const ContentManagement = () => {
     setShowBulkDropdown(false)
   }
 
-  const handleSaveTask = (taskData) => {
-    console.log('Task data:', taskData)
+  const handleSaveTask = (journalData) => {
+    console.log('Journal data received:', journalData)
     
-    if (modalMode === 'edit') {
-      setTasksData(prevTasks => 
-        prevTasks.map(task => 
-          task.id === editingTask.id 
-            ? { ...task, name: taskData.title, ...taskData }
-            : task
-        )
-      )
-      toast.success('Task updated successfully!')
-    } else {
-      const newTask = {
-        id: tasksData.length + 1,
-        name: taskData.title,
-        status: 'unpublished',
-        hasContent: true,
-        order: tasksData.length + 1
-      }
-      setTasksData(prevTasks => [...prevTasks, newTask])
-      toast.success('Task created successfully!')
+    // Handle delete case
+    if (journalData.deleted) {
+      setTasksData(prevTasks => prevTasks.filter(task => task.id !== journalData.id))
+      return
     }
+    
+    // Refresh the tasks list to get the latest data
+    fetchTasksByLevel()
   }
 
-  const handleSaveLevels = (newLevels) => {
-    setLevels(newLevels)
-    toast.success('Levels updated successfully!')
+  const handleSaveLevels = async () => {
+    // The modal now handles all API calls directly
+    // This function is just called to refresh the levels list
+    await fetchLevels()
   }
 
   const handleSaveAssignments = (assignments) => {
@@ -307,7 +315,10 @@ const ContentManagement = () => {
   const handleConfirmPublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Update the journal's published status
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
+        published: true
+      })
       
       setTasksData(prevTasks =>
         prevTasks.map(task =>
@@ -321,6 +332,7 @@ const ContentManagement = () => {
       setShowPublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error publishing task:', error)
       toast.error('Failed to publish task')
     } finally {
       setLoading(false)
@@ -330,7 +342,10 @@ const ContentManagement = () => {
   const handleConfirmUnpublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Update the journal's published status
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
+        published: false
+      })
       
       setTasksData(prevTasks =>
         prevTasks.map(task =>
@@ -344,6 +359,7 @@ const ContentManagement = () => {
       setShowUnpublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error unpublishing task:', error)
       toast.error('Failed to unpublish task')
     } finally {
       setLoading(false)
@@ -510,13 +526,13 @@ const ContentManagement = () => {
         aria-hidden="true"
       />
         <div className="header-tabs d-flex justify-content-between gap-3">
-          {levels.map((level, index) => (
+          {levelsData.map((level) => (
             <button
-              key={index}
-              className={`tab-button ${activeLevel === level ? 'active' : ''}`}
-              onClick={() => setActiveLevel(level)}
+              key={level.id}
+              className={`tab-button ${activeLevel === level.title ? 'active' : ''}`}
+              onClick={() => setActiveLevel(level.title)}
             >
-              {level}
+              {level.title}
             </button>
           ))}
         </div>
@@ -680,7 +696,7 @@ const ContentManagement = () => {
           setModalMode('add')
         }}
         onSave={handleSaveTask}
-        levels={levels}
+        levels={levelsData}
         mode={modalMode}
         taskData={editingTask}
       />
@@ -689,7 +705,7 @@ const ContentManagement = () => {
         show={showAddLevelModal}
         onHide={() => setShowAddLevelModal(false)}
         onSave={handleSaveLevels}
-        existingLevels={levels}
+        existingLevels={levelsData}
       />
 
       <AssignTasksModal

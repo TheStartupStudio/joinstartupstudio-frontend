@@ -15,54 +15,42 @@ function SelectLessons({
   const location = useLocation();
   const { journalId } = useParams();
   const isRootPath = location.pathname === '/my-course-in-entrepreneurship/journal';
-   const firstLesson = location.pathname === '/my-course-in-entrepreneurship/journal/51';
+  
+  // Get the first lesson ID from options (first lesson in the list)
+  // Check both value (lesson.id) and redirectId to handle different URL formats
+  const firstLessonId = options?.[0]?.value;
+  const firstLessonRedirectId = options?.[0]?.redirectId;
+  const firstLesson = journalId && (
+    (firstLessonId && parseInt(journalId) === firstLessonId) ||
+    (firstLessonRedirectId && parseInt(journalId) === firstLessonRedirectId)
+  );
 
   const getLessonTitleByRedirectId = (redirectId) => {
     if (!redirectId) return null;
 
-    if (activeLevel === 2) {
-      for (const section of options) {
-        if (section.children) {
-          const found = section.children.find(child => child.redirectId === redirectId);
-          if (found) return found.label;
-        }
-      }
-    } else {
-      const found = options.find(option => option.redirectId === redirectId);
-      if (found) return found.label;
-    }
+    // All levels now have flat structure
+    const found = options.find(option => option.redirectId === redirectId);
+    if (found) return found.label;
+    
     return null;
   };
 
   useEffect(() => {
     if (isRootPath) {
       setCurrentPlaceholder("Welcome to Level 1");
-    }else if(firstLesson){
-      setCurrentPlaceholder("The Myths of Entrepreneurship");
+    } else if (firstLesson && options?.[0]) {
+      // Use the first lesson's label from options
+      setCurrentPlaceholder(options[0].label);
     } else if (journalId) {
       const numericId = parseInt(journalId);
-
-      switch (numericId) {
-        case 51:
-          setCurrentPlaceholder("The Myths of Entrepreneurship");
-          break;
-        case 60:
-          setCurrentPlaceholder("The Journey of Entrepreneurship");
-          break;
-        case 70:
-          setCurrentPlaceholder("Business Story");
-          break;
-        default: {
-          const lessonTitle = getLessonTitleByRedirectId(numericId);
-          if (lessonTitle) {
-            setCurrentPlaceholder(lessonTitle);
-          } else {
-            setCurrentPlaceholder(placeholder);
-          }
-        }
+      const lessonTitle = getLessonTitleByRedirectId(numericId);
+      if (lessonTitle) {
+        setCurrentPlaceholder(lessonTitle);
+      } else {
+        setCurrentPlaceholder(placeholder);
       }
     }
-  }, [isRootPath, journalId, placeholder, activeLevel, setCurrentPlaceholder]);
+  }, [isRootPath, journalId, placeholder, activeLevel, setCurrentPlaceholder, firstLesson, options]);
 
   useEffect(() => {
     const savedSelection = localStorage.getItem('selectedLesson');

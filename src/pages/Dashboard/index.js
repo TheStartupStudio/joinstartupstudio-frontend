@@ -26,7 +26,7 @@ import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../re
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons'
 import TrialTimerInitializer from '../../components/TrialTimer/TrialTimerInitializer'
-import axios from '../../utils/AxiosInstance'
+import axiosInstance from '../../utils/AxiosInstance'
 import UpcomingEventsCalendar from '../../components/UpcomingEventsCalendar'
 import ForumSection from '../../components/ForumSection'
 import LeaderBoard from '../../components/LeaderBoard'
@@ -89,6 +89,22 @@ function Dashboard() {
       // Fetch the latest finished content
       await dispatch(fetchLtsCoursefinishedContent());
       
+      // Fetch lessons to get the first lesson ID and title dynamically
+      let firstLessonId = 51; // Fallback
+      let firstLessonTitle = "The Myths of Entrepreneurship"; // Fallback
+      try {
+        const lessonsResponse = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons');
+        if (lessonsResponse.data && lessonsResponse.data[0] && lessonsResponse.data[0].length > 0) {
+          // Get the first lesson from level 0 (first level)
+          const firstLesson = lessonsResponse.data[0][0];
+          firstLessonId = firstLesson.id || firstLesson.redirectId || 51;
+          firstLessonTitle = firstLesson.title || firstLessonTitle;
+        }
+      } catch (lessonsError) {
+        console.error('Error fetching lessons:', lessonsError);
+        // Use fallback values
+      }
+      
       // Wait a bit for Redux to update
       setTimeout(() => {
         const currentFinishedContent = finishedContent;
@@ -111,6 +127,8 @@ function Dashboard() {
             lessonTitle: "Continue where you left off",
             currentPlaceholder: "Continue where you left off"
           }));
+
+          console.log('lastCompletedId', lastCompletedId);
           
           history.push({
             pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
@@ -120,27 +138,37 @@ function Dashboard() {
             }
           });
         } else {
-          // No progress yet, start from the beginning
+          // No progress yet, start from the beginning - use first lesson dynamically
           localStorage.setItem('selectedLesson', JSON.stringify({
             activeLevel: 0,
-            nextId: 51,
-            lessonTitle: "The Myths of Entrepreneurship",
-            currentPlaceholder: "The Myths of Entrepreneurship"
+            nextId: firstLessonId,
+            lessonTitle: firstLessonTitle,
+            currentPlaceholder: firstLessonTitle
           }));
           
           history.push({
-            pathname: '/my-course-in-entrepreneurship/journal/51',
+            pathname: `/my-course-in-entrepreneurship/journal/${firstLessonId}`,
             state: {
               activeLevel: 0,
-              currentPlaceholder: "The Myths of Entrepreneurship"
+              currentPlaceholder: firstLessonTitle
             }
           });
         }
       }, 100);
     } catch (error) {
       console.error('Navigation error:', error);
-      // Navigate to start of course on error
-      history.push('/my-course-in-entrepreneurship/journal/51');
+      // Navigate to start of course on error - try to get first lesson, fallback to 51
+      let firstLessonId = 51;
+      try {
+        const lessonsResponse = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons');
+        if (lessonsResponse.data && lessonsResponse.data[0] && lessonsResponse.data[0].length > 0) {
+          const firstLesson = lessonsResponse.data[0][0];
+          firstLessonId = firstLesson.id || firstLesson.redirectId || 51;
+        }
+      } catch (lessonsError) {
+        console.error('Error fetching lessons for error fallback:', lessonsError);
+      }
+      history.push(`/my-course-in-entrepreneurship/journal/${firstLessonId}`);
     }
   }
 

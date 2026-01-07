@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileLines, faPencilAlt, faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { toast } from 'react-toastify'
+import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
 const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null, source = 'content' }) => {
@@ -22,6 +24,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     { id: 3, question: '', instructions: '' }
   ])
   const [currentMode, setCurrentMode] = useState(mode)
+  const [loading, setLoading] = useState(false)
   const dropdownRef = useRef(null)
 
   const isViewMode = currentMode === 'view'
@@ -93,20 +96,116 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     }
   }, [])
 
-  const handleSave = () => {
-    const data = {
-      title: taskTitle,
-      level: selectedLevel,
-      contentType: activeTab,
-      video: videoFile,
-      thumbnail: thumbnailFile,
-      videoUrl: videoPreview,
-      thumbnailUrl: thumbnailPreview,
-      information: information,
-      reflectionItems: reflectionItems
+  const handleSave = async () => {
+    if (!taskTitle || !selectedLevel) {
+      toast.error('Please fill in all required fields')
+      return
     }
-    onSave(data)
-    handleClose()
+
+    setLoading(true)
+    try {
+      let videoUrl = videoPreview
+      let thumbnailUrl = thumbnailPreview
+
+      // Step 1: Upload video file if it's a new file (not a URL)
+      if (videoFile && videoFile instanceof File) {
+        toast.info('Uploading video...')
+        const videoFormData = new FormData()
+        videoFormData.append('video', videoFile)
+        
+        const videoUploadResponse = await axiosInstance.post('/upload/journal-video', videoFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        
+        if (videoUploadResponse.data.success) {
+          videoUrl = videoUploadResponse.data.fileLocation
+          toast.success('Video uploaded successfully!')
+        }
+      }
+
+      // Step 2: Upload thumbnail file if it's a new file (not a URL)
+      if (thumbnailFile && thumbnailFile instanceof File) {
+        toast.info('Uploading thumbnail...')
+        const thumbnailFormData = new FormData()
+        thumbnailFormData.append('img', thumbnailFile)
+        
+        const thumbnailUploadResponse = await axiosInstance.post('/upload/journal-img', thumbnailFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        
+        if (thumbnailUploadResponse.data.success) {
+          thumbnailUrl = thumbnailUploadResponse.data.fileLocation
+          toast.success('Thumbnail uploaded successfully!')
+        }
+      }
+
+      // Step 3: Find the level ID from the selected level title
+      const selectedLevelObj = levels.find(l => {
+        const levelTitle = typeof l === 'string' ? l : l.title
+        return levelTitle === selectedLevel
+      })
+      const levelId = selectedLevelObj && typeof selectedLevelObj !== 'string' ? selectedLevelObj.id : null
+
+      // Step 4: Prepare reflection items (filter out empty questions)
+      const filteredReflectionItems = (activeTab === 'reflection' || isLeadership) 
+        ? reflectionItems.filter(item => {
+            // Remove HTML tags to check if question is truly empty
+            const tempDiv = document.createElement('div')
+            tempDiv.innerHTML = item.question
+            const textContent = tempDiv.textContent || tempDiv.innerText || ''
+            return textContent.trim() !== ''
+          })
+        : []
+
+      // Step 5: Create or update the journal
+      const payload = {
+        title: taskTitle,
+        category: isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship',
+        journalLevel: levelId,
+        platform: 'instructor',
+        order: taskData?.order || 0,
+        parentId: null,
+        videoUrl: videoUrl || null,
+        thumbnailUrl: thumbnailUrl || null,
+        information: (isLeadership || isMasterClass) ? (information || null) : null,
+        reflectionItems: filteredReflectionItems
+      }
+
+      let response
+      if (isEditMode && taskData?.id) {
+        // Update existing journal
+        toast.info('Updating task...')
+        response = await axiosInstance.put(`/LtsJournals/${taskData.id}/update-with-content`, payload)
+        toast.success('Task updated successfully!')
+      } else {
+        // Create new journal
+        toast.info('Creating task...')
+        response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
+        toast.success('Task created successfully!')
+      }
+
+      // Response structure:
+      // {
+      //   success: true,
+      //   message: "LTS Journal created/updated successfully",
+      //   journal: {
+      //     id, title, content, videoIds, JournalImage,
+      //     entries: [...], video: {...}, videos: [...], JournalImg: {...}
+      //   }
+      // }
+
+      onSave(response.data.journal)
+      handleClose()
+    } catch (error) {
+      console.error('Error saving journal:', error)
+      toast.error(error.response?.data?.message || 'Failed to save journal')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleClose = () => {
@@ -134,6 +233,26 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const handleSwitchToEditMode = () => {
     setCurrentMode('edit')
+  }
+
+  const handleDelete = async () => {
+    if (!taskData?.id) return
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete "${taskTitle}"? This action cannot be undone.`)
+    if (!confirmDelete) return
+
+    setLoading(true)
+    try {
+      await axiosInstance.delete(`/LtsJournals/${taskData.id}/delete-with-content`)
+      toast.success('Task deleted successfully!')
+      onSave({ deleted: true, id: taskData.id })
+      handleClose()
+    } catch (error) {
+      console.error('Error deleting task:', error)
+      toast.error(error.response?.data?.message || 'Failed to delete task')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleVideoUpload = (e) => {
@@ -172,7 +291,8 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const handleLevelSelect = (level) => {
     if (isViewMode) return
-    setSelectedLevel(level)
+    // Store the level object or title depending on what's passed
+    setSelectedLevel(typeof level === 'string' ? level : level.title)
     setIsDropdownOpen(false)
   }
 
@@ -295,15 +415,18 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             
             {isDropdownOpen && !isViewMode && (
               <div className="level-dropdown-menu">
-                {levels.map((level, index) => (
-                  <div
-                    key={index}
-                    className="level-dropdown-item"
-                    onClick={() => handleLevelSelect(level)}
-                  >
-                    {level}
-                  </div>
-                ))}
+                {levels.map((level, index) => {
+                  const levelTitle = typeof level === 'string' ? level : level.title
+                  return (
+                    <div
+                      key={typeof level === 'string' ? index : level.id}
+                      className="level-dropdown-item"
+                      onClick={() => handleLevelSelect(level)}
+                    >
+                      {levelTitle}
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -637,7 +760,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         {!isViewMode && (
           <div className="modal-actions">
             {isEditMode && (
-              <div className="delete-action">
+              <div className="delete-action" onClick={handleDelete} style={{ cursor: 'pointer' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
                   <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
@@ -648,11 +771,11 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             )}
 
             <div className="d-flex gap-2">
-              <button className="btn-cancel" onClick={handleClose}>
+              <button className="btn-cancel" onClick={handleClose} disabled={loading}>
                 CANCEL
               </button>
-              <button className="btn-save" onClick={handleSave}>
-                {isEditMode ? 'UPDATE AND CLOSE' : 'SAVE AND CLOSE'}
+              <button className="btn-save" onClick={handleSave} disabled={loading}>
+                {loading ? 'SAVING...' : (isEditMode ? 'UPDATE AND CLOSE' : 'SAVE AND CLOSE')}
               </button>
             </div>
           </div>
