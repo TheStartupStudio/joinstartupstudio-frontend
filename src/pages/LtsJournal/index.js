@@ -151,7 +151,8 @@ function LtsJournal(props) {
               id: lesson.id || lesson.redirectId || 0, // Keep id for backward compatibility
               title: lesson.title || '',
               status: lesson.status || 'notStarted',
-              redirectId: lesson.redirectId || parseInt(lesson.id) || 0
+              redirectId: lesson.redirectId || parseInt(lesson.id) || 0,
+              separate: lesson.separate || false // Add separate property
             }))
           }
         })
@@ -322,11 +323,17 @@ function LtsJournal(props) {
     localStorage.removeItem('selectedLesson');
     setCurrentPlaceholder(levelPlaceholders[clickedLevel]);
 
-    // Get the first lesson's id for each level
+    // Get the first non-separator lesson's id for each level
+    const getFirstNonSeparatorLesson = (levelLessons) => {
+      if (!levelLessons) return null;
+      const firstNonSeparator = levelLessons.find(lesson => !lesson.separate);
+      return firstNonSeparator?.id || null;
+    };
+
     const welcomeLessonIds = {
-      0: lessonsByLevel[0]?.[0]?.id || 51,
-      1: lessonsByLevel[1]?.[0]?.id || 60,
-      2: lessonsByLevel[2]?.[0]?.id || 70
+      0: getFirstNonSeparatorLesson(lessonsByLevel[0]) || 51,
+      1: getFirstNonSeparatorLesson(lessonsByLevel[1]) || 60,
+      2: getFirstNonSeparatorLesson(lessonsByLevel[2]) || 70
     };
 
     const welcomeLessonId = welcomeLessonIds[clickedLevel];
@@ -426,6 +433,20 @@ function LtsJournal(props) {
           lesson.id,
           lessonsByLevel[activeLevel]
         )
+
+        // Handle separate lessons differently
+        if (lesson.separate) {
+          return {
+            value: lesson.id,
+            label: lesson.title,
+            icon: null, // No icon for separators
+            textColor: 'text-dark', // Normal text color for separators
+            disabled: false, // Separators are clickable but do nothing
+            isSeparator: true, // Mark as separator
+            redirectId: lesson.redirectId,
+            lessonId: lesson.id
+          }
+        }
 
         return {
           value: lesson.id, // Use lesson.id as value for URLs
@@ -592,10 +613,17 @@ function LtsJournal(props) {
         return null;
       }
 
-      // If lesson found and not the last one, return next lesson's id
+      // If lesson found and not the last one, find the next non-separator lesson
       if (currentIndex < lessons.length - 1) {
-        const nextLesson = lessons[currentIndex + 1];
-        return { nextId: nextLesson.id };
+        // Find the next lesson that is not a separator
+        for (let i = currentIndex + 1; i < lessons.length; i++) {
+          const potentialNextLesson = lessons[i];
+          if (!potentialNextLesson.separate) {
+            return { nextId: potentialNextLesson.id };
+          }
+        }
+        // If all remaining lessons are separators, return null
+        return null;
       }
 
       // If it's the last lesson of the course (level 3, lesson 126)
@@ -703,10 +731,17 @@ const handleSaveAndContinue = async () => {
         return null;
       }
 
-      // If lesson found and not the last one, return next lesson's id
+      // If lesson found and not the last one, find the next non-separator lesson
       if (currentIndex < lessons.length - 1) {
-        const nextLesson = lessons[currentIndex + 1];
-        return { nextId: nextLesson.id };
+        // Find the next lesson that is not a separator
+        for (let i = currentIndex + 1; i < lessons.length; i++) {
+          const potentialNextLesson = lessons[i];
+          if (!potentialNextLesson.separate) {
+            return { nextId: potentialNextLesson.id };
+          }
+        }
+        // If all remaining lessons are separators, return null
+        return null;
       }
 
       // If it's the last lesson of the course (level 3, lesson 126)
@@ -946,8 +981,14 @@ useEffect(() => {
   };
 
   const handleContinue = () => {
-    // Use the first lesson's id from level 0
-    const firstLessonId = lessonsByLevel[0]?.[0]?.id || 51;
+    // Use the first non-separator lesson's id from level 0
+    const getFirstNonSeparatorLesson = (levelLessons) => {
+      if (!levelLessons) return null;
+      const firstNonSeparator = levelLessons.find(lesson => !lesson.separate);
+      return firstNonSeparator?.id || null;
+    };
+
+    const firstLessonId = getFirstNonSeparatorLesson(lessonsByLevel[0]) || 51;
     history.push(`/my-course-in-entrepreneurship/journal/${firstLessonId}`);
   };
 

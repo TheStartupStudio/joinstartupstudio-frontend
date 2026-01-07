@@ -28,6 +28,10 @@ const ContentManagement = () => {
   const [editingTask, setEditingTask] = useState(null)
   const [tasksData, setTasksData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
@@ -265,15 +269,84 @@ const ContentManagement = () => {
       // Debug the journal data structure
       console.log('Journal data from API:', journal)
       console.log('Journal reflectionItems:', journal.reflectionItems)
+      console.log('Journal entries:', journal.journalData?.entries)
 
       // Format data for the modal - ensure reflection items are properly structured
-      const formattedReflectionItems = journal.reflectionItems && Array.isArray(journal.reflectionItems) && journal.reflectionItems.length > 0
-        ? journal.reflectionItems.map(item => ({
-            id: item.id || Date.now() + Math.random(),
-            question: item.question || '',
-            instructions: item.instructions || ''
-          }))
-        : (journal.category === 'leadership')
+      let formattedReflectionItems = []
+
+      // Prioritize parsing from entries HTML, as that's the source of truth
+      if (journal.journalData && journal.journalData.entries && Array.isArray(journal.journalData.entries)) {
+        console.log('Parsing entries from journalData:', journal.journalData.entries)
+
+        formattedReflectionItems = journal.journalData.entries.map(entry => {
+          let question = ''
+          let instructions = ''
+
+          console.log('Parsing entry title:', entry.title)
+
+          // Parse the title HTML to extract question and instructions
+          if (entry.title) {
+            console.log('Full entry title:', entry.title)
+
+            // Create a temporary div to parse the HTML safely
+            const tempDiv = document.createElement('div')
+            tempDiv.innerHTML = entry.title
+
+            // Extract question from <h2> tag
+            const h2Element = tempDiv.querySelector('h2')
+            if (h2Element) {
+              question = h2Element.textContent || h2Element.innerText || ''
+              console.log('Extracted question from h2:', question)
+            } else {
+              // Fallback to regex if querySelector doesn't work
+              const h2Match = entry.title.match(/<h2[^>]*>(.*?)<\/h2>/i)
+              if (h2Match && h2Match[1]) {
+                const h2TempDiv = document.createElement('div')
+                h2TempDiv.innerHTML = h2Match[1]
+                question = h2TempDiv.textContent || h2TempDiv.innerText || h2Match[1]
+                console.log('Extracted question from regex:', question)
+              }
+            }
+
+            // Extract instructions from <p> tag
+            const pElement = tempDiv.querySelector('p')
+            if (pElement) {
+              instructions = pElement.textContent || pElement.innerText || ''
+              console.log('Extracted instructions from p:', instructions)
+            } else {
+              // Fallback to regex if querySelector doesn't work
+              const pMatch = entry.title.match(/<p[^>]*>(.*?)<\/p>/i)
+              if (pMatch && pMatch[1]) {
+                const pTempDiv = document.createElement('div')
+                pTempDiv.innerHTML = pMatch[1]
+                instructions = pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
+                console.log('Extracted instructions from regex:', instructions)
+              }
+            }
+          }
+
+          const result = {
+            id: entry.id || Date.now() + Math.random(),
+            question: question.trim(),
+            instructions: instructions.trim()
+          }
+
+          console.log('Final parsed result:', result)
+          return result
+        })
+      }
+      // Fallback to reflectionItems if entries don't exist
+      else if (journal.reflectionItems && Array.isArray(journal.reflectionItems) && journal.reflectionItems.length > 0) {
+        console.log('Using reflectionItems as fallback')
+        formattedReflectionItems = journal.reflectionItems.map(item => ({
+          id: item.id || Date.now() + Math.random(),
+          question: item.question || '',
+          instructions: item.instructions || ''
+        }))
+      }
+      // Default fallback for different content types
+      else {
+        formattedReflectionItems = (journal.category === 'leadership')
           ? [
               { id: 1, question: '', instructions: '' },
               { id: 2, question: '', instructions: '' },
@@ -282,6 +355,7 @@ const ContentManagement = () => {
           : (journal.contentType === 'reflection')
             ? [{ id: 1, question: '', instructions: '' }]
             : []
+      }
 
       const taskData = {
         id: journal.id,
@@ -297,6 +371,15 @@ const ContentManagement = () => {
 
       console.log('Formatted task data for modal:', taskData)
       console.log('Final reflectionItems:', taskData.reflectionItems)
+
+      // Debug each reflection item parsing
+      taskData.reflectionItems.forEach((item, index) => {
+        console.log(`Reflection item ${index}:`, {
+          id: item.id,
+          question: item.question,
+          instructions: item.instructions
+        })
+      })
 
       setEditingTask(taskData)
       setModalMode(mode)

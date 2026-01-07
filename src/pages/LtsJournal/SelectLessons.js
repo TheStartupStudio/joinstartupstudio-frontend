@@ -70,6 +70,11 @@ function SelectLessons({
   }, [activeLevel, selectedCourse, setSelectedCourse]);
 
   const handleChange = (selectedOption) => {
+    // If it's a separator, do nothing
+    if (selectedOption?.isSeparator) {
+      return;
+    }
+
     if (selectedOption?.disabled) {
       setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
       setShowLockModal(true);
@@ -105,7 +110,7 @@ function SelectLessons({
     >
       <div className='d-flex align-items-center gap-2'>
         {data.icon && <img className='accordion-icons' src={data.icon} alt='icon' />}
-        <span className={`accordion-content-modal ${data.textColor}`}>
+        <span className={`accordion-content-modal ${data.textColor || ''}`}>
           {data.label}
         </span>
       </div>
