@@ -263,7 +263,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }
 
 .content-management .task-name-cell .status-dot.unpublished {
-  background-color: var(--COLORS-Grey, #AEAEAE);
+  /* background-color: var(--COLORS-Grey, #AEAEAE); */
+  background-color: #9C3;
 box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }
 

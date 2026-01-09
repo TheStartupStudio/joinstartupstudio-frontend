@@ -26,7 +26,7 @@ import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../re
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons'
 import TrialTimerInitializer from '../../components/TrialTimer/TrialTimerInitializer'
-import axios from '../../utils/AxiosInstance'
+import axiosInstance from '../../utils/AxiosInstance'
 import UpcomingEventsCalendar from '../../components/UpcomingEventsCalendar'
 import ForumSection from '../../components/ForumSection'
 import LeaderBoard from '../../components/LeaderBoard'
@@ -86,61 +86,93 @@ function Dashboard() {
 
   const handleContinueCourse = async () => {
     try {
-      // Fetch the latest finished content
-      await dispatch(fetchLtsCoursefinishedContent());
+      // Fetch the latest finished content and lessons in parallel
+      const [finishedContentResponse, lessonsResponse] = await Promise.all([
+        axiosInstance.get('/ltsJournals/LtsCoursefinishedContent'),
+        axiosInstance.get('/LtsJournals/entrepreneurship/lessons')
+      ]);
       
-      // Wait a bit for Redux to update
-      setTimeout(() => {
-        const currentFinishedContent = finishedContent;
+      const currentFinishedContent = finishedContentResponse.data?.finishedContent || [];
+      const lessonsByLevel = lessonsResponse.data || {};
+      
+      // Get all lessons from all levels in order
+      const allLessons = [];
+      if (lessonsByLevel[0]) allLessons.push(...lessonsByLevel[0]);
+      if (lessonsByLevel[1]) allLessons.push(...lessonsByLevel[1]);
+      if (lessonsByLevel[2]) allLessons.push(...lessonsByLevel[2]);
+      
+      // Convert finishedContent to numbers for proper comparison
+      const finishedContentIds = currentFinishedContent.map(id => Number(id));
+      
+      // Find the first lesson that is NOT in finishedContent
+      let nextLessonId = null;
+      let nextLessonTitle = "Continue where you left off";
+      let targetLevel = 0;
+      
+      // First, try to find the first incomplete lesson
+      for (let i = 0; i < allLessons.length; i++) {
+        const lesson = allLessons[i];
+        const lessonId = Number(lesson.id || lesson.redirectId);
         
-        if (currentFinishedContent && currentFinishedContent.length > 0) {
-          const lastCompletedId = Math.max(...currentFinishedContent);
-          let targetLevel;
-          
-          if (lastCompletedId >= 70) {
-            targetLevel = 2;
-          } else if (lastCompletedId >= 60) {
-            targetLevel = 1;
-          } else {
-            targetLevel = 0;
-          }
-          
-          localStorage.setItem('selectedLesson', JSON.stringify({
-            activeLevel: targetLevel,
-            nextId: lastCompletedId,
-            lessonTitle: "Continue where you left off",
-            currentPlaceholder: "Continue where you left off"
-          }));
-          
-          history.push({
-            pathname: `/my-course-in-entrepreneurship/journal/${lastCompletedId}`,
-            state: {
-              activeLevel: targetLevel,
-              currentPlaceholder: "Continue where you left off"
-            }
-          });
-        } else {
-          // No progress yet, start from the beginning
-          localStorage.setItem('selectedLesson', JSON.stringify({
-            activeLevel: 0,
-            nextId: 51,
-            lessonTitle: "The Myths of Entrepreneurship",
-            currentPlaceholder: "The Myths of Entrepreneurship"
-          }));
-          
-          history.push({
-            pathname: '/my-course-in-entrepreneurship/journal/51',
-            state: {
-              activeLevel: 0,
-              currentPlaceholder: "The Myths of Entrepreneurship"
-            }
-          });
+        // Check which level this lesson belongs to
+        if (lessonsByLevel[0]?.some(l => Number(l.id || l.redirectId) === lessonId)) {
+          targetLevel = 0;
+        } else if (lessonsByLevel[1]?.some(l => Number(l.id || l.redirectId) === lessonId)) {
+          targetLevel = 1;
+        } else if (lessonsByLevel[2]?.some(l => Number(l.id || l.redirectId) === lessonId)) {
+          targetLevel = 2;
         }
-      }, 100);
+        
+        // If this lesson is not completed, this is the next one to show
+        if (!finishedContentIds.includes(lessonId)) {
+          nextLessonId = lessonId;
+          nextLessonTitle = lesson.title || nextLessonTitle;
+          break;
+        }
+      }
+      
+      // If all lessons are completed, go to the first lesson in the course
+      if (!nextLessonId && allLessons.length > 0) {
+        const firstLesson = allLessons[0];
+        nextLessonId = Number(firstLesson.id || firstLesson.redirectId);
+        nextLessonTitle = firstLesson.title || "Continue where you left off";
+        targetLevel = 0; // First lesson is always in level 0
+      }
+      
+      // Fallback to 51 if nothing found
+      if (!nextLessonId) {
+        nextLessonId = 51;
+        nextLessonTitle = "The Myths of Entrepreneurship";
+      }
+      
+      localStorage.setItem('selectedLesson', JSON.stringify({
+        activeLevel: targetLevel,
+        nextId: nextLessonId,
+        lessonTitle: nextLessonTitle,
+        currentPlaceholder: nextLessonTitle
+      }));
+      
+      history.push({
+        pathname: `/my-course-in-entrepreneurship/journal/${nextLessonId}`,
+        state: {
+          activeLevel: targetLevel,
+          currentPlaceholder: nextLessonTitle
+        }
+      });
     } catch (error) {
       console.error('Navigation error:', error);
-      // Navigate to start of course on error
-      history.push('/my-course-in-entrepreneurship/journal/51');
+      // Navigate to start of course on error - try to get first lesson, fallback to 51
+      let firstLessonId = 51;
+      try {
+        const lessonsResponse = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons');
+        if (lessonsResponse.data && lessonsResponse.data[0] && lessonsResponse.data[0].length > 0) {
+          const firstLesson = lessonsResponse.data[0][0];
+          firstLessonId = firstLesson.id || firstLesson.redirectId || 51;
+        }
+      } catch (lessonsError) {
+        console.error('Error fetching lessons for error fallback:', lessonsError);
+      }
+      history.push(`/my-course-in-entrepreneurship/journal/${firstLessonId}`);
     }
   }
 

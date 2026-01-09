@@ -112,365 +112,59 @@ function LtsJournal(props) {
 
   // console.log('Finished Content:', finishedContent);
 
-  const levels = [
-    {
-      title: 'Level 1: Entrepreneurship and You',
-      description: 'Welcome to Level 1',
-      active: true
-    },
-    {
-      title: 'Level 2: Understanding Learn to Start',
-      description: 'Welcome to Level 2',
-      active: false
-    },
-    {
-      title: 'Level 3: The Journey of Entrepreneurship',
-      description: 'Welcome to Level 3',
-      active: false
+  const [levels, setLevels] = useState([])
+  const [lessonsByLevel, setLessonsByLevel] = useState({})
+  const [lessonsLoading, setLessonsLoading] = useState(true)
+
+  // Fetch levels from API
+  const fetchLevels = async () => {
+    try {
+      const response = await axiosInstance.get('/LtsJournals/entrepreneurship/levels')
+      if (response.data && Array.isArray(response.data)) {
+        // Map API response to match expected format
+        const mappedLevels = response.data.map((level, index) => ({
+          title: level.title || `Level ${index + 1}`,
+          description: level.description || `Welcome to Level ${index + 1}`,
+          active: index === 0 // Set first level as active by default
+        }))
+        setLevels(mappedLevels)
+      }
+    } catch (error) {
+      console.error('Error fetching levels:', error)
+      // Keep default values on error
     }
-  ]
-  const lessonsByLevel = {
-    0: [
-      {
-        id: 'myths',
-        title: 'Myths of Entrepreneurship',
-        status: 'done',
-        redirectId: 51
-      },
-      {
-        id: 'definition',
-        title: 'Definition of Entrepreneurship',
-        status: 'done',
-        redirectId: 52
-      },
-      {
-        id: 'reasons',
-        title: 'Reasons Why Startups Fail',
-        status: 'inProgress',
-        redirectId: 53
-      },
-      {
-        id: 'skills',
-        title: 'Skills and Traits of Effective Entrepreneurs',
-        status: 'notStarted',
-        redirectId: 54
-      },
-      {
-        id: 'people',
-        title: 'People Buy Into People',
-        status: 'notStarted',
-        redirectId: 55
-      },
-      {
-        id: 'selfBrand',
-        title: 'Creating Your Self Brand First',
-        status: 'notStarted',
-        redirectId: 56
-      },
-      {
-        id: 'task1',
-        title: 'Task #1: Create your Individual Value Proposition',
-        status: 'notStarted',
-        redirectId: 57
-      },
-      {
-        id: 'task2',
-        title: 'Task #2: Create your I Am Video',
-        status: 'notStarted',
-        redirectId: 58
+  }
+
+  // Fetch lessons from API
+  const fetchLessons = async () => {
+    try {
+      setLessonsLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons')
+      if (response.data) {
+        // Convert string keys to numeric keys and ensure proper structure
+        const transformedLessons = {}
+        Object.keys(response.data).forEach(key => {
+          const numericKey = parseInt(key)
+          if (!isNaN(numericKey)) {
+            // Ensure each lesson has the required fields - use redirectId as the primary identifier
+            transformedLessons[numericKey] = (response.data[key] || []).map(lesson => ({
+              id: lesson.id || lesson.redirectId || 0, // Keep id for backward compatibility
+              title: lesson.title || '',
+              status: lesson.status || 'notStarted',
+              redirectId: lesson.redirectId || parseInt(lesson.id) || 0,
+              separate: lesson.separate || false // Add separate property
+            }))
+          }
+        })
+        setLessonsByLevel(transformedLessons)
       }
-    ],
-    1: [
-      {
-        id: 'journey',
-        title: 'Welcome to Level 2 & The Journey of Entrepreneurship',
-        status: 'notStarted',
-        redirectId: 60
-      },
-      {
-        id: 'intro',
-        title: 'An Introduction to the LTS Model and Four Environments',
-        status: 'notStarted',
-        redirectId: 61
-      },
-      {
-        id: 'coreSkills',
-        title: 'The Core Skills and LEARN Stage of the LTS Model',
-        status: 'notStarted',
-        redirectId: 62
-      },
-      {
-        id: 'develop',
-        title: 'The DEVELOP Stage of the LTS Model',
-        status: 'notStarted',
-        redirectId: 63
-      },
-      {
-        id: 'start',
-        title: 'Understanding START & the Test Metrics of LTS',
-        status: 'notStarted',
-        redirectId: 65
-      },
-      {
-        id: 'task3',
-        title: 'Task #1: Evaluate Your Mindset and Skill Set',
-        status: 'notStarted',
-        redirectId: 66
-      },
-      {
-        id: 'process',
-        title: 'The Process of Entrepreneurship',
-        status: 'notStarted',
-        redirectId: 67
-      },
-      {
-        id: 'task4',
-        title: 'Task #2: Build Your Team and Find Your Mentor',
-        status: 'notStarted',
-        redirectId: 68
-      }
-    ],
-    2: [
-      {
-        id: '3.1',
-        title: 'Level 3.1: The Journey of Entrepreneurship',
-        isParent: true,
-        children: [
-          {
-            id: 'journey31',
-            title: 'Welcome to Level 3 & Business Story',
-            status: 'notStarted',
-            redirectId: 70
-          },
-          {
-            id: 'process31',
-            title: 'The Process and Skill of Storytelling',
-            redirectId: 71
-          },
-          { id: 'relevancy', title: 'Relevancy in World 4.0', redirectId: 72 },
-          { id: 'learn', title: 'The LEARN Stage', redirectId: 73 },
-          { id: 'problems', title: 'Problems Worth Solving', redirectId: 74 },
-          {
-            id: 'task5',
-            title:
-              'Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends',
-            redirectId: 75
-          },
-          {
-            id: 'task6',
-            title: 'Task #6: Conduct an Industry Analysis',
-            redirectId: 76
-          }
-        ]
-      },
-      {
-        id: '3.2',
-        title: 'Level 3.2: The Develop Stage',
-        isParent: true,
-        children: [
-          { id: 'solution', title: 'Finding the Solution', redirectId: 78 },
-          {
-            id: 'value',
-            title: "Creating Your Startup's Value Proposition",
-            redirectId: 79
-          },
-          {
-            id: 'task7',
-            title: "Task #7: Create Your Startup's Value Proposition",
-            redirectId: 80
-          },
-          {
-            id: 'testing',
-            title: "Testing Your Startup's Value Proposition",
-            redirectId: 81
-          },
-          {
-            id: 'task8',
-            title:
-              "Task #8: Conduct Market Validation for Your Startup's Value Proposition",
-            redirectId: 82
-          },
-          {
-            id: 'inovation',
-            title: 'Understanding Innovation and Its Enemies',
-            redirectId: 85
-          },
-          {
-            id: 'skills',
-            title: 'The Five Skills of Innovation',
-            redirectId: 86
-          },
-          { id: 'develop', title: 'The DEVELOP Stage', redirectId: 87 },
-          {
-            id: 'task9',
-            title: "Task #9: Develop Your Startup's Business Model",
-            redirectId: 88
-          },
-          {
-            id: 'task10',
-            title: "Write Your Startup's Concept Plan",
-            redirectId: 89
-          }
-        ]
-      },
-      {
-        id: '3.3',
-        title: 'Level 3.3: The Develop Stage',
-        isParent: true,
-        children: [
-          { id: 'brand', title: 'Definition of Brand', redirectId: 91 },
-          { id: 'branding', title: 'Branding Strategies', redirectId: 92 },
-          {
-            id: 'relation',
-            title: 'The Relationship Between Story and Brand',
-            redirectId: 93
-          },
-          {
-            id: 'charter',
-            title:
-              "The Brand Charter&Task #11: Creating Your Startup's Brand Charter",
-            redirectId: 94
-          },
-          { id: 'vehicles', title: 'The Brand Vehicles', redirectId: 95 },
-          {
-            id: 'task12',
-            title: "Task #12: Create Your Startup's Brand Vehicles",
-            redirectId: 96
-          },
-          {
-            id: 'fundamental',
-            title: 'The Fundamental Elements of Story',
-            redirectId: 97
-          },
-          {
-            id: 'bussines',
-            title: 'Stories Your Business Can Tell',
-            redirectId: 98
-          },
-          {
-            id: 'storyteller',
-            title: 'Embracing Your Inner Storyteller',
-            redirectId: 99
-          },
-          {
-            id: 'task13',
-            title: 'Task #13: Conduct Focus Groups',
-            redirectId: 100
-          },
-          { id: 'marketing', title: 'The Marketing Plan', redirectId: 101 },
-          {
-            id: 'task14',
-            title: "Task #14: Creating Your Startup's Marketing Plan",
-            redirectId: 102
-          }
-        ]
-      },
-      {
-        id: '3.4',
-        title: 'Level 3.4: The Start Stage',
-        isParent: true,
-        children: [
-          {
-            id: 'brand1',
-            title: 'Introduction to the Business Plan',
-            redirectId: 104
-          },
-          {
-            id: 'branding',
-            title: 'The Business Development Management Map',
-            redirectId: 105
-          },
-          {
-            id: 'relation',
-            title:
-              "Task #15: Create Your Startup's Business Development Management Map",
-            redirectId: 106
-          },
-          {
-            id: 'charter',
-            title: 'The Test Metric of Sustainability',
-            redirectId: 107
-          },
-          {
-            id: 'creating',
-            title: 'Task #16: Test The Sustainability of Your Startup',
-            redirectId: 108
-          },
-          {
-            id: 'vehicles',
-            title: 'The Process of Entrepreneurship Reintroduction',
-            redirectId: 109
-          },
-          { id: 'task12', title: 'Parts of a Business Plan', redirectId: 110 },
-          {
-            id: 'fundamental',
-            title: "Task #17: Write Your Startup's Business Plan",
-            redirectId: 111
-          },
-          {
-            id: 'bussines',
-            title: 'The Test Metric of Efficiency',
-            redirectId: 112
-          },
-          {
-            id: 'storyteller',
-            title: 'Task #18: Test the Efficiency of Your Startup',
-            redirectId: 113
-          },
-          {
-            id: 'task13',
-            title: 'An Introduction to the Financial Plan',
-            redirectId: 114
-          },
-          {
-            id: 'marketing',
-            title: "Task #19: Create Your Startup's Financial Plan",
-            redirectId: 115
-          },
-          {
-            id: 'task14',
-            title: 'The Test Metric of Profitability',
-            redirectId: 116
-          },
-          {
-            id: 'profitability',
-            title: 'Task #20: Test the Potential Profitability of Your Startup',
-            redirectId: 117
-          },
-          { id: 'generation', title: 'Brand Generation', redirectId: 118 },
-          { id: 'plan', title: 'Business Plan Musts', redirectId: 119 },
-          {
-            id: 'executive',
-            title:
-              "Task #21: Write the Executive Summary of Your Startup's Business",
-            redirectId: 120
-          },
-          {
-            id: 'introductory',
-            title: "Task #22: Create Your Startup's Brand Introductory Video",
-            redirectId: 121
-          },
-          { id: 'selling', title: 'Selling You', redirectId: 122 },
-          { id: 'pitching', title: 'Pitching Yourself', redirectId: 123 },
-          {
-            id: 'reminders',
-            title: 'Reminders Going Forwards',
-            redirectId: 124
-          },
-          {
-            id: 'final',
-            title: 'Task #23: Create Your Final I Am Video',
-            redirectId: 125
-          },
-          // { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor",redirectId:126},
-          {
-            id: 'task24',
-            title: "Task #24: Build Your Startup's Final Pitch",
-            redirectId: 126
-          }
-        ]
-      }
-    ]
+    } catch (error) {
+      console.error('Error fetching lessons:', error)
+      // Set empty object on error
+      setLessonsByLevel({})
+    } finally {
+      setLessonsLoading(false)
+    }
   }
 
   async function getJournals(redir = true) {
@@ -506,6 +200,9 @@ function LtsJournal(props) {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
+    // Fetch levels and lessons from API
+    fetchLevels()
+    fetchLessons()
     if (isRootPath) {
       getJournals()
     }
@@ -516,42 +213,39 @@ function LtsJournal(props) {
   }, [dispatch])
 
   useEffect(() => {
-    if (journalId) {
+    if (journalId && Object.keys(lessonsByLevel).length > 0) {
       const numericId = parseInt(journalId);
 
-      let foundLesson = null;
-
-      if (activeLevel === 2) {
-        lessonsByLevel[2].some(section => {
-          const found = section.children?.find(child => child.redirectId === numericId);
-          if (found) {
-            foundLesson = {
-              value: `${section.id}_${found.id}`,
-              label: found.title,
-              redirectId: found.redirectId
-            };
-            return true;
-          }
-          return false;
-        });
-      } else {
-        const found = lessonsByLevel[activeLevel]?.find(
-          lesson => lesson.redirectId === numericId
+      // Search across all levels to find the lesson by id
+      let found = null;
+      let foundLevel = activeLevel;
+      
+      for (let level = 0; level <= 2; level++) {
+        const lesson = lessonsByLevel[level]?.find(
+          lesson => lesson.id === numericId
         );
-        if (found) {
-          foundLesson = {
-            value: found.id,
-            label: found.title,
-            redirectId: found.redirectId
-          };
+        if (lesson) {
+          found = lesson;
+          foundLevel = level;
+          break;
         }
       }
-
-      if (foundLesson) {
-        setSelectedLesson(foundLesson);
+      
+      if (found) {
+        // Update activeLevel if the lesson is in a different level
+        if (foundLevel !== activeLevel) {
+          setActiveLevel(foundLevel);
+        }
+        
+        setSelectedLesson({
+          value: found.id, // Use id as value to match options
+          label: found.title,
+          redirectId: found.redirectId,
+          lessonId: found.id
+        });
       }
     }
-  }, [journalId, activeLevel]);
+  }, [journalId, lessonsByLevel, activeLevel]);
 
   const handleJournalSearch = (e) => {
     const keyword = e.target.value.toLowerCase()
@@ -573,7 +267,9 @@ function LtsJournal(props) {
     if (clickedLevel === 0) {
       setActiveLevel(clickedLevel);
       setCurrentPlaceholder("Welcome to Level 1 & The Myths of Entrepreneurship");
-      history.push('/my-course-in-entrepreneurship/journal/51');
+      // Use the first lesson's id from level 0, or fallback to 51
+      const firstLessonId = lessonsByLevel[0]?.[0]?.id || 51;
+      history.push(`/my-course-in-entrepreneurship/journal/${firstLessonId}`);
       return;
     }
 
@@ -598,13 +294,17 @@ function LtsJournal(props) {
     }
 
     // Check level completion requirements (for paid users/exempt users after trial)
-    if (clickedLevel === 1 && !finishedContent.includes(58)) {
+    // Find the last lesson of level 0 by its id (58)
+    const level0LastLesson = lessonsByLevel[0]?.find(l => l.id === 58)
+    if (clickedLevel === 1 && level0LastLesson && !finishedContent.includes(58)) {
       setLockModalMessage('This lesson is currently locked. You must complete Level 1 (Task #2: Create your I Am Video) before you can access Level 2.');
       setShowLockModal(true);
       return;
     }
 
-    if (clickedLevel === 2 && !finishedContent.includes(68)) {
+    // Find the last lesson of level 1 by its id (68)
+    const level1LastLesson = lessonsByLevel[1]?.find(l => l.id === 68)
+    if (clickedLevel === 2 && level1LastLesson && !finishedContent.includes(68)) {
       setLockModalMessage('This lesson is currently locked. You must complete Level 2 (Task #2: Build Your Team and Find Your Mentor) before you can access Level 3.');
       setShowLockModal(true);
       return;
@@ -623,10 +323,17 @@ function LtsJournal(props) {
     localStorage.removeItem('selectedLesson');
     setCurrentPlaceholder(levelPlaceholders[clickedLevel]);
 
+    // Get the first non-separator lesson's id for each level
+    const getFirstNonSeparatorLesson = (levelLessons) => {
+      if (!levelLessons) return null;
+      const firstNonSeparator = levelLessons.find(lesson => !lesson.separate);
+      return firstNonSeparator?.id || null;
+    };
+
     const welcomeLessonIds = {
-      0: 51,
-      1: 60,
-      2: 70
+      0: getFirstNonSeparatorLesson(lessonsByLevel[0]) || 51,
+      1: getFirstNonSeparatorLesson(lessonsByLevel[1]) || 60,
+      2: getFirstNonSeparatorLesson(lessonsByLevel[2]) || 70
     };
 
     const welcomeLessonId = welcomeLessonIds[clickedLevel];
@@ -648,11 +355,13 @@ function LtsJournal(props) {
   }, [journalId])
 
   useEffect(() => {
+    if (!lessonsByLevel[activeLevel]) return
+    
     const levelVideos = videos.filter((video) => {
       const levelRedirectIds = lessonsByLevel[activeLevel]?.map(
         (lesson) => lesson.redirectId
-      )
-      return levelRedirectIds?.includes(video.redirectId)
+      ) || []
+      return levelRedirectIds.includes(video.redirectId)
     })
     setVideos(levelVideos)
   }, [activeLevel])
@@ -669,69 +378,79 @@ function LtsJournal(props) {
     }
   }
 
-  const getOptionStatus = (redirectId, lessons, isLevel3 = false) => {
-    if (isLevel3) {
-      const allLevel3Content = lessonsByLevel[2]
-        .flatMap((section) => section.children)
-        .sort((a, b) => a.redirectId - b.redirectId)
-
-      const index = allLevel3Content.findIndex(
-        (item) => item.redirectId === redirectId
-      )
-      const lastCompletedIndex = allLevel3Content.findIndex((item) => {
-        const nextItem = allLevel3Content[allLevel3Content.indexOf(item) + 1]
-        return (
-          finishedContent.includes(item.redirectId) &&
-          (!nextItem || !finishedContent.includes(nextItem.redirectId))
-        )
-      })
-
-      if (finishedContent.includes(redirectId)) {
-        return { status: 'done', disabled: false }
-      } else if (index === lastCompletedIndex + 1) {
-        return { status: 'inProgress', disabled: false }
-      } else {
-        return { status: 'notStarted', disabled: true }
+  const getOptionStatus = (lessonId, lessons) => {
+    // Find the lesson by id
+    const lesson = lessons.find(l => l.id === lessonId)
+    if (!lesson) {
+      return { status: 'notStarted', disabled: true }
+    }
+    
+    const index = lessons.findIndex(
+      (l) => l.id === lessonId
+    )
+    
+    // Find the first lesson that is NOT in finishedContent
+    // This will be the first incomplete lesson that should be unlocked
+    let firstIncompleteIndex = -1
+    for (let i = 0; i < lessons.length; i++) {
+      if (!finishedContent.includes(lessons[i].id)) {
+        firstIncompleteIndex = i
+        break
       }
     }
-
-    const index = lessons.findIndex(
-      (lesson) => lesson.redirectId === redirectId
-    )
-    const lastCompletedIndex = lessons.findIndex((lesson) => {
-      const nextItemIndex = lessons.indexOf(lesson) + 1
-      return (
-        finishedContent.includes(lesson.redirectId) &&
-        (!lessons[nextItemIndex] ||
-          !finishedContent.includes(lessons[nextItemIndex].redirectId))
-      )
-    })
-
-    if (finishedContent.includes(redirectId)) {
+    
+    // If all lessons are completed, unlock all of them
+    if (firstIncompleteIndex === -1) {
+      // All lessons are completed
+      if (finishedContent.includes(lessonId)) {
+        return { status: 'done', disabled: false }
+      }
       return { status: 'done', disabled: false }
-    } else if (index === lastCompletedIndex + 1) {
+    }
+
+    // Strict sequential locking:
+    // - Lessons before the first incomplete one should be unlocked (they're completed)
+    // - The first incomplete lesson should be unlocked (in progress)
+    // - Lessons after the first incomplete one should be LOCKED (even if completed)
+    
+    if (index < firstIncompleteIndex) {
+      // This lesson comes before the first incomplete one - it should be completed and unlocked
+      return { status: 'done', disabled: false }
+    } else if (index === firstIncompleteIndex) {
+      // This is the first incomplete lesson - unlock it (in progress)
       return { status: 'inProgress', disabled: false }
     } else {
+      // This lesson is after the first incomplete one - LOCK IT (even if it's completed)
       return { status: 'notStarted', disabled: true }
     }
   }
 
-  const options = lessonsByLevel[activeLevel]?.flatMap((lesson, index) => {
-    if (activeLevel === 2) {
-      const parentOption = {
-        value: `${lesson.id}_parent`,
-        label: lesson.title,
-        textColor: 'text-dark',
-        fontWeight: 'bolder',
-        disabled: false
-      }
+  // Generate options for the active level, ensuring lessonsByLevel[activeLevel] exists
+  // Use lesson.id as the value since that's what's used in URLs
+  const options = (lessonsByLevel[activeLevel] && Array.isArray(lessonsByLevel[activeLevel])) 
+    ? lessonsByLevel[activeLevel].map((lesson) => {
+        const status = getOptionStatus(
+          lesson.id,
+          lessonsByLevel[activeLevel]
+        )
 
-      const childOptions = lesson.children?.map((child) => {
-        const status = getOptionStatus(child.redirectId, lesson.children, true)
+        // Handle separate lessons differently
+        if (lesson.separate) {
+          return {
+            value: lesson.id,
+            label: lesson.title,
+            icon: null, // No icon for separators
+            textColor: 'text-dark', // Normal text color for separators
+            disabled: false, // Separators are clickable but do nothing
+            isSeparator: true, // Mark as separator
+            redirectId: lesson.redirectId,
+            lessonId: lesson.id
+          }
+        }
 
         return {
-          value: `${lesson.id}_${child.id}`,
-          label: child.title,
+          value: lesson.id, // Use lesson.id as value for URLs
+          label: lesson.title,
           icon:
             status.status === 'done'
               ? tickSign
@@ -741,82 +460,38 @@ function LtsJournal(props) {
           textColor:
             status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
           disabled: status.disabled,
-          redirectId: child.redirectId,
-          parentId: lesson.id
+          redirectId: lesson.redirectId, // Keep redirectId for next lesson navigation
+          lessonId: lesson.id
         }
       })
-
-      return [parentOption, ...(childOptions || [])]
-    }
-
-    const status = getOptionStatus(
-      lesson.redirectId,
-      lessonsByLevel[activeLevel]
-    )
-
-    return {
-      value: lesson.id,
-      label: lesson.title,
-      icon:
-        status.status === 'done'
-          ? tickSign
-          : status.status === 'inProgress'
-            ? circleSign
-            : lockSign,
-      textColor:
-        status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
-      disabled: status.disabled,
-      redirectId: lesson.redirectId
-    }
-  })
+    : []
 
   const isContentAccessible = (journalId) => {
     const numericId = parseInt(journalId)
 
-    if (finishedContent.includes(numericId)) {
-      return true
-    }
-
-    const lastCompletedId = Math.max(...finishedContent)
-
-    if (numericId === 70) {
-      const lastLevel2Item = lessonsByLevel[1][lessonsByLevel[1].length - 1]
-      return finishedContent.includes(lastLevel2Item.redirectId)
-    }
-
+    // Find the lesson by id to check its completion in finishedContent
     for (let level = 0; level <= 2; level++) {
       const lessons = lessonsByLevel[level]
       if (!lessons) continue
 
-      if (level === 2) {
-        for (const section of lessons) {
-          const children = section.children || []
-          for (let i = 0; i < children.length; i++) {
-            if (children[i].redirectId === numericId) {
-              if (i === 0 && section === lessons[0]) {
-                const lastLevel2Item =
-                  lessonsByLevel[1][lessonsByLevel[1].length - 1]
-                return finishedContent.includes(lastLevel2Item.redirectId)
-              }
-              return (
-                i === 0 || finishedContent.includes(children[i - 1].redirectId)
-              )
-            }
+      for (let i = 0; i < lessons.length; i++) {
+        if (lessons[i].id === numericId) {
+          // finishedContent tracks by lesson.id
+          if (finishedContent.includes(lessons[i].id)) {
+            return true
           }
-        }
-      } else {
-        for (let i = 0; i < lessons.length; i++) {
-          if (lessons[i].redirectId === numericId) {
-            if (i === 0 && level === 0) return true
 
-            if (i === 0) {
-              const prevLevelLessons = lessonsByLevel[level - 1]
-              const lastItemPrevLevel =
-                prevLevelLessons[prevLevelLessons.length - 1]
-              return finishedContent.includes(lastItemPrevLevel.redirectId)
-            }
-            return finishedContent.includes(lessons[i - 1].redirectId)
+          if (i === 0 && level === 0) return true
+
+          if (i === 0) {
+            const prevLevelLessons = lessonsByLevel[level - 1]
+            if (!prevLevelLessons || prevLevelLessons.length === 0) return false
+            const lastItemPrevLevel = prevLevelLessons[prevLevelLessons.length - 1]
+            // Check using lesson.id
+            return finishedContent.includes(lastItemPrevLevel.id)
           }
+          // Check previous lesson using lesson.id
+          return finishedContent.includes(lessons[i - 1].id)
         }
       }
     }
@@ -859,7 +534,7 @@ function LtsJournal(props) {
       setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
       setShowSubscriptionModal(true);
       setSaving(false);
-      return;
+      return null;
     }
 
     // Check if user is still in free trial period for level transitions
@@ -874,81 +549,90 @@ function LtsJournal(props) {
       }
       setShowSubscriptionModal(true);
       setSaving(false);
-      return;
+      return null;
     }
 
     // For paid users, check level completion
     if (!isInFreeTrial) {
-      // Trying to access Level 2 without completing Level 1
-      if (numericId >= 60 && numericId < 70 && !finishedContent.includes(58)) {
-        setLockModalMessage('You must complete Level 1 before accessing Level 2.');
-        setShowLockModal(true);
-        setSaving(false);
-        return;
-      }
-      
-      // Trying to access Level 3 without completing Level 2
-      if (numericId >= 70 && !finishedContent.includes(68)) {
-        setLockModalMessage('You must complete Level 2 before accessing Level 3.');
-        setShowLockModal(true);
-        setSaving(false);
-        return;
-      }
+        // Trying to access Level 2 without completing Level 1
+        if (numericId >= 60 && numericId < 70 && !finishedContent.includes(58)) {
+          setLockModalMessage('You must complete Level 1 before accessing Level 2.');
+          setShowLockModal(true);
+          setSaving(false);
+          return null;
+        }
+        
+        // Trying to access Level 3 without completing Level 2
+        if (numericId >= 70 && !finishedContent.includes(68)) {
+          setLockModalMessage('You must complete Level 2 before accessing Level 3.');
+          setShowLockModal(true);
+          setSaving(false);
+          return null;
+        }
     }
 
     // Handle special case for lesson 63 -> 65
     if (numericId === 63) return { nextId: 65 };
     
-    // Handle level transitions
-    const levelTransitions = {
-      58: { nextId: 60, nextLevel: 1 },
-      68: { nextId: 70, nextLevel: 2 }
-    };
+      // Handle level transitions
+      const levelTransitions = {
+        58: { nextId: 60, nextLevel: 1 },
+        68: { nextId: 70, nextLevel: 2 }
+      };
     
     if (levelTransitions[numericId]) {
       return levelTransitions[numericId];
     }
 
-    // Find which level the current lesson belongs to
-    let currentLevel = activeLevel;
-    
-    for (let level = 0; level <= 2; level++) {
-      if (level === 2) {
-        const allLevel3Lessons = lessonsByLevel[2].flatMap(section => section.children || []);
-        const foundInLevel3 = allLevel3Lessons.find(lesson => lesson.redirectId === numericId);
-        if (foundInLevel3) {
-          currentLevel = 2;
-          break;
-        }
-      } else {
-        const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.redirectId === numericId);
+      // Find which level the current lesson belongs to by id
+      let currentLevel = activeLevel;
+      
+      for (let level = 0; level <= 2; level++) {
+        const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.id === numericId);
         if (foundInCurrentLevel) {
           currentLevel = level;
           break;
         }
       }
-    }
 
-    // Get lessons for the determined level
-    const lessons = currentLevel === 2
-      ? lessonsByLevel[2].flatMap(section => section.children || [])
-      : lessonsByLevel[currentLevel] || [];
+      // Get lessons for the determined level
+      const lessons = lessonsByLevel[currentLevel] || [];
 
-    // Find current lesson index
-    const currentIndex = lessons.findIndex(lesson => lesson.redirectId === numericId);
+      // If lessons array is empty, the data might not be loaded yet
+      if (lessons.length === 0) {
+        console.warn('Lessons not loaded for level:', currentLevel, lessonsByLevel);
+        return null;
+      }
 
-    // If lesson found and not the last one, return next lesson
-    if (currentIndex !== -1 && currentIndex < lessons.length - 1) {
-      const nextLesson = lessons[currentIndex + 1];
-      return { nextId: nextLesson.redirectId };
-    }
+      // Find current lesson index by id
+      const currentIndex = lessons.findIndex(lesson => lesson.id === numericId);
 
-    // If it's the last lesson of the course
-    if (numericId === 126) {
+      // If lesson not found, return null
+      if (currentIndex === -1) {
+        console.warn('Lesson not found:', numericId, 'in level:', currentLevel);
+        return null;
+      }
+
+      // If lesson found and not the last one, find the next non-separator lesson
+      if (currentIndex < lessons.length - 1) {
+        // Find the next lesson that is not a separator
+        for (let i = currentIndex + 1; i < lessons.length; i++) {
+          const potentialNextLesson = lessons[i];
+          if (!potentialNextLesson.separate) {
+            return { nextId: potentialNextLesson.id };
+          }
+        }
+        // If all remaining lessons are separators, return null
+        return null;
+      }
+
+      // If it's the last lesson of the course (level 3, lesson 126)
+      if (numericId === 126) {
+        return null;
+      }
+
+      // If it's the last lesson of a level but not the last lesson overall, return null
       return null;
-    }
-
-    return null;
   };
 
 const handleSaveAndContinue = async () => {
@@ -1018,45 +702,55 @@ const handleSaveAndContinue = async () => {
         return levelTransitions[numericId];
       }
 
-      // Find which level the current lesson belongs to
+      // Find which level the current lesson belongs to by id
       let currentLevel = activeLevel;
       
       for (let level = 0; level <= 2; level++) {
-        if (level === 2) {
-          const allLevel3Lessons = lessonsByLevel[2].flatMap(section => section.children || []);
-          const foundInLevel3 = allLevel3Lessons.find(lesson => lesson.redirectId === numericId);
-          if (foundInLevel3) {
-            currentLevel = 2;
-            break;
-          }
-        } else {
-          const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.redirectId === numericId);
-          if (foundInCurrentLevel) {
-            currentLevel = level;
-            break;
-          }
+        const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.id === numericId);
+        if (foundInCurrentLevel) {
+          currentLevel = level;
+          break;
         }
       }
 
       // Get lessons for the determined level
-      const lessons = currentLevel === 2
-        ? lessonsByLevel[2].flatMap(section => section.children || [])
-        : lessonsByLevel[currentLevel] || [];
+      const lessons = lessonsByLevel[currentLevel] || [];
 
-      // Find current lesson index
-      const currentIndex = lessons.findIndex(lesson => lesson.redirectId === numericId);
-
-      // If lesson found and not the last one, return next lesson
-      if (currentIndex !== -1 && currentIndex < lessons.length - 1) {
-        const nextLesson = lessons[currentIndex + 1];
-        return { nextId: nextLesson.redirectId };
+      // If lessons array is empty, the data might not be loaded yet
+      if (lessons.length === 0) {
+        console.warn('Lessons not loaded for level:', currentLevel, lessonsByLevel);
+        return null;
       }
 
-      // If it's the last lesson of the course
+      // Find current lesson index by id
+      const currentIndex = lessons.findIndex(lesson => lesson.id === numericId);
+
+      // If lesson not found, return null
+      if (currentIndex === -1) {
+        console.warn('Lesson not found:', numericId, 'in level:', currentLevel);
+        return null;
+      }
+
+      // If lesson found and not the last one, find the next non-separator lesson
+      if (currentIndex < lessons.length - 1) {
+        // Find the next lesson that is not a separator
+        for (let i = currentIndex + 1; i < lessons.length; i++) {
+          const potentialNextLesson = lessons[i];
+          if (!potentialNextLesson.separate) {
+            return { nextId: potentialNextLesson.id };
+          }
+        }
+        // If all remaining lessons are separators, return null
+        return null;
+      }
+
+      // If it's the last lesson of the course (level 3, lesson 126)
       if (numericId === 126) {
         return null;
       }
 
+      // If it's the last lesson of a level but not the last lesson overall, return null
+      // (This shouldn't happen, but handle it gracefully)
       return null;
     };
 
@@ -1067,13 +761,8 @@ const handleSaveAndContinue = async () => {
         case 60: return "The Journey of Entrepreneurship";
         case 70: return "Business Story";
         default:
-          for (const section of lessonsByLevel[2] || []) {
-            const found = section.children?.find(child => child.redirectId === lessonId);
-            if (found) return found.title;
-          }
-          
-          for (let level = 0; level <= 1; level++) {
-            const found = lessonsByLevel[level]?.find(lesson => lesson.redirectId === lessonId);
+          for (let level = 0; level <= 2; level++) {
+            const found = lessonsByLevel[level]?.find(lesson => lesson.id === lessonId);
             if (found) return found.title;
           }
           
@@ -1101,7 +790,6 @@ const handleSaveAndContinue = async () => {
         return;
       }
 
-      console.log( `Saving reflection for journalId: ${journalId}, journalEntryId: ${journalEntryId}, entryId: ${entryId}`);
       const endpoint = !entryId
         ? `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`
         : `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`;
@@ -1116,21 +804,19 @@ const handleSaveAndContinue = async () => {
     const navigateToNextLesson = async () => {
       const nextLessonInfo = findNextLesson(currentJournalId);
       
-      // If findNextLesson returned early due to trial/subscription check, don't continue
-      if (!nextLessonInfo) {
+      // If findNextLesson returned null (course completed) or undefined (error), handle appropriately
+      if (nextLessonInfo === null) {
+        toast.success('Course completed!');
         return;
       }
       
-      const nextLessonId = nextLessonInfo?.nextId;
-
-      if (!nextLessonId) {
-        if (hasEmptyReflections) {
-          toast.error('Please complete all reflections before continuing');
-        } else if (nextLessonInfo === null) {
-          toast.success('Course completed!');
-        }
+      if (!nextLessonInfo || !nextLessonInfo.nextId) {
+        // If there's no next lesson info, it might be due to subscription/trial check
+        // Those cases are already handled in findNextLesson, so just return
         return;
       }
+      
+      const nextLessonId = nextLessonInfo.nextId;
 
       if (nextLessonInfo.nextLevel !== undefined) {
         setActiveLevel(nextLessonInfo.nextLevel);
@@ -1143,28 +829,23 @@ const handleSaveAndContinue = async () => {
       const targetLevel = nextLessonInfo.nextLevel !== undefined ? nextLessonInfo.nextLevel : activeLevel;
       let nextLesson = null;
 
-      if (targetLevel === 2) {
-        for (const section of lessonsByLevel[2]) {
-          const found = section.children?.find(c => c.redirectId === nextLessonId);
-          if (found) {
-            nextLesson = {
-              value: `${section.id}_${found.id}`,
-              label: found.title,
-              redirectId: nextLessonId
-            };
-            break;
-          }
-        }
-      } else {
-        const found = lessonsByLevel[targetLevel]?.find(
-          l => l.redirectId === nextLessonId
+      // Search across all levels to find the lesson by id (in case activeLevel wasn't updated yet)
+      for (let level = 0; level <= 2; level++) {
+        const found = lessonsByLevel[level]?.find(
+          l => l.id === nextLessonId
         );
         if (found) {
           nextLesson = {
-            value: found.id,
+            value: nextLessonId, // Use id as value to match options
             label: found.title,
-            redirectId: nextLessonId
+            redirectId: found.redirectId,
+            lessonId: found.id
           };
+          // Update activeLevel if we found it in a different level
+          if (level !== activeLevel) {
+            setActiveLevel(level);
+          }
+          break;
         }
       }
 
@@ -1173,6 +854,9 @@ const handleSaveAndContinue = async () => {
         // Ensure we have latest finishedContent before navigation
         await dispatch(fetchLtsCoursefinishedContent());
         history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
+      } else {
+        console.error('Next lesson not found in lessonsByLevel:', nextLessonId, lessonsByLevel);
+        toast.error('Unable to find next lesson. Please try selecting it manually.');
       }
     };
 
@@ -1261,18 +945,11 @@ useEffect(() => {
   const getLessonTitle = (journalId) => {
     const numericId = parseInt(journalId);
 
-    if (activeLevel === 2) {
-      for (const section of lessonsByLevel[2]) {
-        const found = section.children?.find(child => child.redirectId === numericId);
-        if (found) return found.title;
-      }
-    }
-
     for (let level = 0; level <= 2; level++) {
       const lessons = lessonsByLevel[level];
       if (!lessons) continue;
 
-      const found = lessons.find(lesson => lesson.redirectId === numericId);
+      const found = lessons.find(lesson => lesson.id === numericId);
       if (found) return found.title;
     }
 
@@ -1284,30 +961,16 @@ useEffect(() => {
 
     const numericId = parseInt(journalId);
 
-    if (activeLevel === 2) {
-      for (const section of lessonsByLevel[2]) {
-        const found = section.children?.find(child => child.redirectId === numericId);
-        if (found) return found.title;
-      }
-    } else {
-      const found = lessonsByLevel[activeLevel]?.find(
-        lesson => lesson.redirectId === numericId
-      );
-      if (found) return found.title;
-    }
+    const found = lessonsByLevel[activeLevel]?.find(
+      lesson => lesson.id === numericId
+    );
+    if (found) return found.title;
 
     for (let level = 0; level <= 2; level++) {
-      if (level === 2) {
-        for (const section of lessonsByLevel[2]) {
-          const found = section.children?.find(child => child.redirectId === numericId);
-          if (found) return found.title;
-        }
-      } else {
-        const found = lessonsByLevel[level]?.find(
-          lesson => lesson.redirectId === numericId
-        );
-        if (found) return found.title;
-      }
+      const found = lessonsByLevel[level]?.find(
+        lesson => lesson.id === numericId
+      );
+      if (found) return found.title;
     }
 
     if (selectedLesson?.label) {
@@ -1318,7 +981,15 @@ useEffect(() => {
   };
 
   const handleContinue = () => {
-    history.push('/my-course-in-entrepreneurship/journal/51');
+    // Use the first non-separator lesson's id from level 0
+    const getFirstNonSeparatorLesson = (levelLessons) => {
+      if (!levelLessons) return null;
+      const firstNonSeparator = levelLessons.find(lesson => !lesson.separate);
+      return firstNonSeparator?.id || null;
+    };
+
+    const firstLessonId = getFirstNonSeparatorLesson(lessonsByLevel[0]) || 51;
+    history.push(`/my-course-in-entrepreneurship/journal/${firstLessonId}`);
   };
 
   return (
@@ -1362,10 +1033,9 @@ useEffect(() => {
                             levelClass = 'active-level-journal';
                           } else if (index === 1 && finishedContent.includes(58)) {
                             levelClass = 'accessible-level-journal';
-
                           } else if (index === 2 && finishedContent.includes(68)) {
                             levelClass = 'accessible-level-journal';
-                          } else if (!isContentAccessible(lessonsByLevel[index]?.[0]?.redirectId)) {
+                          } else if (!isContentAccessible(lessonsByLevel[index]?.[0]?.id)) {
                             levelClass = 'inactive-level-journal';
                           } else {
                             levelClass = 'accessible-level-journal';
@@ -1393,29 +1063,24 @@ useEffect(() => {
 
                                 setSelectedLesson(selectedOption);
 
-                                if (activeLevel === 2) {
-                                  const [parentId, childId] = selectedOption.value.split('_');
-                                  if (childId === 'parent') return;
-
-                                  const selectedSection = lessonsByLevel[2].find(
-                                    section => section.id === parentId
+                                // selectedOption.value is now lesson.id, so use it directly
+                                const lessonId = selectedOption.value;
+                                
+                                // Search across all levels to find the lesson and update activeLevel
+                                for (let level = 0; level <= 2; level++) {
+                                  const lesson = lessonsByLevel[level]?.find(
+                                    lesson => lesson.id === lessonId
                                   );
-                                  const selectedLesson = selectedSection?.children?.find(
-                                    child => child.id === childId
-                                  );
-
-                                  if (selectedLesson?.redirectId) {
-                                    history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
-                                  }
-                                } else {
-                                  const selectedLesson = lessonsByLevel[activeLevel]?.find(
-                                    lesson => lesson.id === selectedOption.value
-                                  );
-
-                                  if (selectedLesson?.redirectId) {
-                                    history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
+                                  if (lesson) {
+                                    // Update activeLevel if the lesson is in a different level
+                                    if (level !== activeLevel) {
+                                      setActiveLevel(level);
+                                    }
+                                    break;
                                   }
                                 }
+
+                                history.push(`/my-course-in-entrepreneurship/journal/${lessonId}`);
                               }}
                               setShowLockModal={setShowLockModal}
                               setLockModalMessage={setLockModalMessage}
@@ -1566,7 +1231,16 @@ useEffect(() => {
                           const { journalId } = renderProps.match.params
 
                           if (!isContentAccessible(journalId)) {
-                            return <Redirect to={`${props.match.url}/51`} />
+                            // Wait for lessons to load before redirecting
+                            if (lessonsLoading || !lessonsByLevel[0] || !Array.isArray(lessonsByLevel[0]) || lessonsByLevel[0].length === 0) {
+                              // Lessons are still loading, return null to wait
+                              return null;
+                            }
+                            
+                            // Lessons are loaded, get the first lesson ID
+                            const firstLessonId = lessonsByLevel[0][0].id;
+                            
+                            return <Redirect to={`${props.match.url}/${firstLessonId}`} />
                           }
 
                           return (
@@ -1580,11 +1254,11 @@ useEffect(() => {
                               noteButtonProps={{
                                 from: "entrepreneurshipJournal",
                                 data: {
-                                  id: selectedLesson?.redirectId || renderProps.match.params.journalId,
+                                  id: selectedLesson?.lessonId || renderProps.match.params.journalId,
                                   title: getLessonTitle(renderProps.match.params.journalId) || 'My Note',
                                 },
                                 createdFrom: getLessonTitle(renderProps.match.params.journalId) || 'My Note',
-                                journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
+                                journalId: selectedLesson?.lessonId || renderProps.match.params.journalId
                               }}
                             />
                           )

@@ -10,14 +10,47 @@ import partyPopper from '../../assets/images/academy-icons/svg/Party Popper.svg'
 import speechBalloon from '../../assets/images/academy-icons/svg/Speech Balloon.svg'
 import lightBulb from '../../assets/images/academy-icons/svg/Light Bulb.svg'
 
-// Icon library for selection
+const ICON_MAP = {
+  'wavingHand': wavingHand,
+  'loudSpeaker': loudSpeaker,
+  'partyPopper': partyPopper,
+  'speechBalloon': speechBalloon,
+  'lightBulb': lightBulb
+}
+
 const ICON_LIBRARY = [
-  { name: 'Waving Hand', path: wavingHand },
-  { name: 'Loudspeaker', path: loudSpeaker },
-  { name: 'Party Popper', path: partyPopper },
-  { name: 'Speech Balloon', path: speechBalloon },
-  { name: 'Light Bulb', path: lightBulb }
+  { name: 'Waving Hand', dbName: 'wavingHand', path: wavingHand },
+  { name: 'Loudspeaker', dbName: 'loudSpeaker', path: loudSpeaker },
+  { name: 'Party Popper', dbName: 'partyPopper', path: partyPopper },
+  { name: 'Speech Balloon', dbName: 'speechBalloon', path: speechBalloon },
+  { name: 'Light Bulb', dbName: 'lightBulb', path: lightBulb }
 ]
+
+const getIconName = (icon) => {
+  if (!icon) return null
+  if (typeof icon === 'string' && !icon.startsWith('/') && !icon.startsWith('http')) {
+    return icon
+  }
+  for (const [name, path] of Object.entries(ICON_MAP)) {
+    if (icon === path) {
+      return name
+    }
+  }
+  return null
+}
+
+const iconsMatch = (icon1, icon2) => {
+  if (!icon1 || !icon2) return false
+  
+  const name1 = getIconName(icon1)
+  const name2 = getIconName(icon2)
+  
+  if (name1 && name2) {
+    return name1 === name2
+  }
+  
+  return icon1 === icon2
+}
 
 const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
   const [categories, setCategories] = useState([])
@@ -27,12 +60,11 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
   const [draggedItem, setDraggedItem] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [categoryToDelete, setCategoryToDelete] = useState(null)
-  const [selectedIcon, setSelectedIcon] = useState(speechBalloon) // Default icon
+  const [selectedIcon, setSelectedIcon] = useState('speechBalloon') 
   const [showIconPicker, setShowIconPicker] = useState(false)
   const [showAddIconPicker, setShowAddIconPicker] = useState(false)
   const [editingIconForCategory, setEditingIconForCategory] = useState(null)
   
-  // Track pending changes
   const [pendingChanges, setPendingChanges] = useState({
     updated: [], // { id, name, slug, order }
     deleted: [], // category ids
@@ -40,20 +72,25 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     reordered: false
   })
 
-  // Static categories that cannot be removed or reordered
   const staticCategories = [
     'All Discussions',
     'Following'
   ]
 
-  // Get icon for category
   const getCategoryIcon = (category) => {
-    // If category is an object with icons property, use it
     if (typeof category === 'object' && category.icons) {
+      if (typeof category.icons === 'string') {
+        if (ICON_MAP[category.icons]) {
+          return ICON_MAP[category.icons]
+        }
+        if (category.icons.startsWith('/')) {
+          const baseURL = process.env.REACT_APP_SERVER_BASE_URL || ''
+          return `${baseURL.replace(/\/$/, '')}${category.icons}`
+        }
+      }
       return category.icons
     }
     
-    // If it's just a name string, use fallback
     const categoryName = typeof category === 'string' ? category : category?.name
     const iconMap = {
       'Introductions': wavingHand,
@@ -70,22 +107,19 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     return staticCategories.includes(categoryName)
   }
 
-  // Fetch categories when modal opens
   useEffect(() => {
     if (show) {
       fetchCategories()
-      // Reset pending changes when modal opens
       setPendingChanges({
         updated: [],
         deleted: [],
         added: [],
         reordered: false
       })
-      // Reset icon picker state
       setShowIconPicker(false)
       setEditingIconForCategory(null)
       setShowAddIconPicker(false)
-      setSelectedIcon(speechBalloon)
+      setSelectedIcon('speechBalloon')
     }
   }, [show])
 
@@ -105,7 +139,6 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     }
   }
 
-  // Drag and drop handlers
   const handleDragStart = (e, index) => {
     setDraggedItem(index)
     e.dataTransfer.effectAllowed = 'move'
@@ -127,7 +160,6 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
   const handleDragEnd = () => {
     if (draggedItem === null) return
 
-    // Update order for all categories, starting from order 2 (after All Discussions and Following)
     const updatedCategories = categories.map((cat, index) => ({
       ...cat,
       order: index + 2
@@ -135,13 +167,11 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
 
     setDraggedItem(null)
     
-    // Mark that reordering has occurred
     setPendingChanges(prev => ({
       ...prev,
       reordered: true
     }))
 
-    // Update local state immediately for UI
     setCategories(updatedCategories)
   }
 
@@ -153,7 +183,13 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
 
     const category = categories.find(cat => cat.id === categoryId)
     
-    // Update local state
+    let iconName = null
+    if (newIcon !== null) {
+      iconName = getIconName(newIcon) || newIcon
+    } else if (category.icons) {
+      iconName = typeof category.icons === 'string' ? category.icons : getIconName(category.icons)
+    }
+    
     setCategories(prev => 
       prev.map(cat => 
         cat.id === categoryId 
@@ -161,13 +197,12 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
               ...cat, 
               name: newName, 
               slug: newName.toLowerCase().replace(/\s+/g, '-'),
-              icons: newIcon !== null ? newIcon : cat.icons
+              icons: iconName !== null ? iconName : cat.icons
             }
           : cat
       )
     )
     
-    // Track the change
     setPendingChanges(prev => {
       const existingIndex = prev.updated.findIndex(u => u.id === categoryId)
       const updatedList = [...prev.updated]
@@ -177,14 +212,14 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
           ...category,
           name: newName,
           slug: newName.toLowerCase().replace(/\s+/g, '-'),
-          icons: newIcon !== null ? newIcon : category.icons
+          icons: iconName !== null ? iconName : category.icons
         }
       } else {
         updatedList.push({
           ...category,
           name: newName,
           slug: newName.toLowerCase().replace(/\s+/g, '-'),
-          icons: newIcon !== null ? newIcon : category.icons
+          icons: iconName !== null ? iconName : category.icons
         })
       }
       
@@ -204,7 +239,8 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
       return
     }
 
-    // Create temporary ID for new category
+    const iconName = typeof selectedIcon === 'string' ? selectedIcon : getIconName(selectedIcon) || 'speechBalloon'
+
     const tempId = `temp-${Date.now()}`
     const newCategory = {
       id: tempId,
@@ -212,21 +248,19 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
       slug: newCategoryName.toLowerCase().replace(/\s+/g, '-'),
       order: categories.length + 2,
       is_active: true,
-      icons: selectedIcon,
+      icons: iconName,
       isNew: true
     }
     
-    // Update local state
     setCategories(prev => [...prev, newCategory])
     
-    // Track the new category
     setPendingChanges(prev => ({
       ...prev,
       added: [...prev.added, newCategory]
     }))
     
     setNewCategoryName('')
-    setSelectedIcon(speechBalloon) // Reset to default
+    setSelectedIcon('speechBalloon') 
   }
 
   const handleDeleteCategory = (categoryId) => {
@@ -237,7 +271,6 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
       return
     }
 
-    // Show delete confirmation modal
     setCategoryToDelete(categoryId)
     setShowDeleteModal(true)
   }
@@ -246,27 +279,21 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     const categoryId = categoryToDelete
     const category = categories.find(cat => cat.id === categoryId)
 
-    // Update local state
     setCategories(prev => prev.filter(cat => cat.id !== categoryId))
     
-    // Track the deletion
     if (category.isNew) {
-      // If it's a new category that hasn't been saved yet, just remove it from added list
       setPendingChanges(prev => ({
         ...prev,
         added: prev.added.filter(cat => cat.id !== categoryId)
       }))
     } else {
-      // Track deletion for existing category
       setPendingChanges(prev => ({
         ...prev,
         deleted: [...prev.deleted, categoryId],
-        // Remove from updated list if it was there
         updated: prev.updated.filter(cat => cat.id !== categoryId)
       }))
     }
 
-    // Close modal
     setShowDeleteModal(false)
     setCategoryToDelete(null)
   }
@@ -275,12 +302,10 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     setLoading(true)
     
     try {
-      // Process deletions
       for (const categoryId of pendingChanges.deleted) {
         await axiosInstance.delete(`/forum/categories/${categoryId}`)
       }
       
-      // Process additions
       for (const category of pendingChanges.added) {
         await axiosInstance.post('/forum/categories', {
           name: category.name,
@@ -301,9 +326,7 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
         })
       }
       
-      // Process reordering if it occurred
       if (pendingChanges.reordered) {
-        // Get only real categories (not the newly added ones that haven't been saved yet)
         const realCategories = categories.filter(cat => !cat.isNew)
         await Promise.all(
           realCategories.map(cat =>
@@ -314,7 +337,6 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
       
       toast.success('Changes saved successfully')
       
-      // Reset pending changes
       setPendingChanges({
         updated: [],
         deleted: [],
@@ -534,8 +556,8 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
                                   setShowIconPicker(false)
                                 }}
                                 style={{
-                                  background: category.icons === icon.path ? '#E0F2FE' : 'white',
-                                  border: category.icons === icon.path ? '2px solid #52C7DE' : '1px solid #E5E7EB',
+                                  background: (category.icons === icon.dbName || iconsMatch(category.icons, icon.path)) ? '#E0F2FE' : 'white',
+                                  border: (category.icons === icon.dbName || iconsMatch(category.icons, icon.path)) ? '2px solid #52C7DE' : '1px solid #E5E7EB',
                                   borderRadius: '6px',
                                   padding: '8px',
                                   cursor: 'pointer',
@@ -647,7 +669,7 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
                     }}
                   >
                     <img
-                      src={selectedIcon}
+                      src={typeof selectedIcon === 'string' && ICON_MAP[selectedIcon] ? ICON_MAP[selectedIcon] : selectedIcon}
                       alt="Selected icon"
                       style={{ width: '20px', height: '20px' }}
                     />
@@ -672,7 +694,8 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
                       border: 'none',
                       outline: 'none',
                       fontSize: '14px',
-                      color: '#6B7280'
+                      color: 'black',
+                      fontWeight: '500'
                     }}
                   />
 
@@ -737,12 +760,12 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
                       <button
                         key={icon.name}
                         onClick={() => {
-                          setSelectedIcon(icon.path)
+                          setSelectedIcon(icon.dbName)
                           setShowAddIconPicker(false)
                         }}
                         style={{
-                          background: selectedIcon === icon.path ? '#E0F2FE' : 'white',
-                          border: selectedIcon === icon.path ? '2px solid #52C7DE' : '1px solid #E5E7EB',
+                          background: (selectedIcon === icon.dbName || selectedIcon === icon.path) ? '#E0F2FE' : 'white',
+                          border: (selectedIcon === icon.dbName || selectedIcon === icon.path) ? '2px solid #52C7DE' : '1px solid #E5E7EB',
                           borderRadius: '6px',
                           padding: '8px',
                           cursor: 'pointer',

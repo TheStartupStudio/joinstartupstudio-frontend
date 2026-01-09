@@ -416,31 +416,31 @@ function CourseProgress() {
           </div>
         </div>
         <div className='d-flex gap-4 justify-content-around flex-col-mob mt-2rem-mob'>
-          <div className='d-flex flex-column gap-4'>
+          <div className='d-flex flex-column gap-4 progress-circular-container'>
             <CircularProgress
               percentage={levelProgress?.level1?.percentage || 0}
               level={1}
             />
             <p className='text-center'>
-              Entrepreneurship <br /> & You
+              Entrepreneurship & You
             </p>
           </div>
-          <div className='d-flex flex-column gap-4'>
+          <div className='d-flex flex-column gap-4 progress-circular-container'>
             <CircularProgress
               percentage={levelProgress?.level2?.percentage || 0}
               level={2}
             />
             <p className='text-center'>
-              Understanding <br /> Learn to Start
+              Understanding Learn to Start
             </p>
           </div>
-          <div className='d-flex flex-column gap-4'>
+          <div className='d-flex flex-column gap-4 progress-circular-container'>
             <CircularProgress
               percentage={levelProgress?.level3?.percentage || 0}
               level={3}
             />
             <p className='text-center'>
-              The Journey of <br /> Entrepreneurship
+              The Journey of Entrepreneurship
             </p>
           </div>
         </div>

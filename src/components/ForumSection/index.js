@@ -18,6 +18,16 @@ import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 import axiosInstance from '../../utils/AxiosInstance'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 
+const ICON_MAP = {
+  'wavingHand': wavingHand,
+  'loudSpeaker': loudSpeaker,
+  'partyPopper': partyPopper,
+  'speechBalloon': speechBalloon,
+  'lightBulb': lightBulb,
+  'message': message,
+  'star': star
+}
+
 const ForumSection = () => {
   const history = useHistory()
   const [forumData, setForumData] = useState([])
@@ -26,7 +36,6 @@ const ForumSection = () => {
   const [dbCategories, setDbCategories] = useState([])
   const currentUser = useSelector((state) => state.user?.user?.user || state.user?.user)
 
-  // Fetch database categories
   const fetchCategories = async () => {
     try {
       const response = await axiosInstance.get('/forum/categories')
@@ -37,21 +46,30 @@ const ForumSection = () => {
     }
   }
 
-  // Fetch categories on mount
   useEffect(() => {
     fetchCategories()
   }, [])
 
-  // Function to get the appropriate icon based on category
   const getCategoryIcon = (category) => {
-    // Check if category exists in dbCategories and has an icon
     const dbCategory = dbCategories.find(cat => cat.name === category)
     if (dbCategory?.icons) {
+      if (typeof dbCategory.icons === 'string') {
+        if (ICON_MAP[dbCategory.icons]) {
+          return ICON_MAP[dbCategory.icons]
+        }
+        if (dbCategory.icons.startsWith('/')) {
+          const baseURL = process.env.REACT_APP_SERVER_BASE_URL || ''
+          return `${baseURL.replace(/\/$/, '')}${dbCategory.icons}`
+        }
+      }
       return dbCategory.icons
     }
     
-    // Fallback to hardcoded icons for categories without database icons
     switch (category) {
+      case 'All Discussions':
+        return message
+      case 'Following':
+        return star
       case 'Introductions':
         return wavingHand
       case 'Announcements':
@@ -65,7 +83,6 @@ const ForumSection = () => {
     }
   }
 
-  // Function to get shortened display name for categories
   const getCategoryDisplayName = (category) => {
     switch (category) {
       case 'Ask for Feedback':
@@ -79,7 +96,6 @@ const ForumSection = () => {
     }
   }
 
-  // Fetch forum data from API
   useEffect(() => {
     const fetchForumData = async () => {
       setLoading(true)
@@ -112,7 +128,6 @@ const ForumSection = () => {
     fetchForumData()
   }, [])
 
-  // Skeleton component for loading state
   const ForumPostSkeleton = () => (
     <div className="forum-post-section-skeleton">
       <div className="skeleton-avatar-container">
@@ -129,7 +144,6 @@ const ForumSection = () => {
 
   const handleEditPost = (post, event) => {
     event.stopPropagation()
-    // Handle edit functionality if needed for dashboard
     console.log('Edit post:', post)
   }
 
@@ -146,7 +160,7 @@ const ForumSection = () => {
       setShowUserAgreement(true)
       return
     }
-    history.push(`/startup-forum/${postId}`)
+    history.push(`/startup-forum/post/${postId}`)
   }
 
   const handleUserAgreementSuccess = () => {
@@ -175,12 +189,10 @@ const ForumSection = () => {
 
       <div className="forum-content">
         {loading ? (
-          // Show skeleton loading state
           Array.from({ length: 5 }, (_, index) => (
             <ForumPostSkeleton key={index} />
           ))
         ) : forumData.length > 0 ? (
-          // Show actual forum data with exact same structure as StartupForumPage
           forumData.map((post) => (
             <div 
               key={post.id} 
@@ -275,7 +287,7 @@ const ForumSection = () => {
                       className="participant-avatar"
                     />
                   ))}
-                  {currentUser &&
+                  {/* {currentUser &&
                     post.author &&
                     currentUser.id &&
                     post.author.id &&
@@ -283,7 +295,7 @@ const ForumSection = () => {
                       <div className="participant-more" onClick={(e) => handleEditPost(post, e)}>
                         <img src={threeDots} alt="More Options" />
                       </div>
-                    )}
+                    )} */}
                 </div>
                 <div className="post-comments-count">
                   <img src={chatBubble} alt="Comments Icon" className="comments-icon" />

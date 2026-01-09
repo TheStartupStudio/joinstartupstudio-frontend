@@ -4,21 +4,65 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { FaTimes } from 'react-icons/fa'
 import './index.css'
 
-const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef }) => {
+const InvoiceFilters = ({ show, onHide, onApplyFilters, anchorRef, initialFilters }) => {
   const [organizationName, setOrganizationName] = useState('')
   const [dateFrom, setDateFrom] = useState(null)
   const [dateTo, setDateTo] = useState(null)
+  const [isInitialized, setIsInitialized] = useState(false)
   const panelRef = useRef(null)
 
+  // Initialize filters from props when component mounts or initialFilters change
   useEffect(() => {
-    if (onApplyFilters) {
-      onApplyFilters({
-        organizationName,
-        dateFrom,
-        dateTo
-      })
+    if (initialFilters && !isInitialized) {
+      setOrganizationName(initialFilters.organizationName || '')
+      setDateFrom(initialFilters.dateFrom)
+      setDateTo(initialFilters.dateTo)
+      setIsInitialized(true)
     }
-  }, [organizationName, dateFrom, dateTo])
+  }, [initialFilters, isInitialized])
+
+  // Reset filters when the filter panel is closed
+  useEffect(() => {
+    if (!show) {
+      console.log('InvoiceFilters: Panel closed, resetting filters')
+      setOrganizationName('')
+      setDateFrom(null)
+      setDateTo(null)
+      // Reset isInitialized so filters can be re-initialized if reopened
+      setIsInitialized(false)
+
+      // Trigger reset in parent component
+      if (onApplyFilters) {
+        console.log('InvoiceFilters: Resetting parent filters')
+        onApplyFilters({
+          organizationName: '',
+          dateFrom: null,
+          dateTo: null
+        })
+      }
+    }
+  }, [show, onApplyFilters])
+
+  // Apply filters whenever they change (only after initialization)
+  useEffect(() => {
+    if (onApplyFilters && isInitialized) {
+      // Check if filters have actually changed from initial values
+      const hasChanged =
+        organizationName !== (initialFilters?.organizationName || '') ||
+        dateFrom !== initialFilters?.dateFrom ||
+        dateTo !== initialFilters?.dateTo
+
+      if (hasChanged) {
+        const filterData = {
+          organizationName,
+          dateFrom,
+          dateTo
+        }
+        console.log('InvoiceFilters: Applying filters:', filterData)
+        onApplyFilters(filterData)
+      }
+    }
+  }, [organizationName, dateFrom, dateTo, onApplyFilters, isInitialized, initialFilters])
 
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -91,14 +91,20 @@ label:focus,
 }
 
 .wrapper {
-  
+
   min-height: 100vh;
   /* display: flex; */
   /* flex-direction: column; */
   width: 100%;
   position: relative;
   display: grid;
-  grid-template-columns: 75px 1fr;
+  grid-template-columns: minmax(0, 75px) 1fr;
+}
+
+@media (max-width: 1135px) {
+  .wrapper {
+    display: flex;
+  }
 }
 
 /* .content {
@@ -114,10 +120,11 @@ label:focus,
   padding: 0px;
   min-height: 100vh;
   transition: all 0.3s;
-  position: inherit;
-  top: 0;
-  right: 0;
+  /* position: inherit; */
+  /* top: 0; */
+  /* right: 0; */
   background: #fff;
+  grid-column: 2; /* Always place #content in the second (right) column */
 }
 
 /* .auth-content {
@@ -4395,6 +4402,20 @@ wave > wave:first-child {
   color: #51c7df;
 }
 
+.progress-circular-container p{
+  max-width: 142px;
+}
+
+@media (max-width: 770px) {
+  .progress-circular-container{
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+}
+
 .academy-dashboard-bottom {
   grid-column: span 2;
   padding-block: 0.9rem;
@@ -5133,7 +5154,8 @@ line-height: normal;
 
 @media (max-width: 1135px) {
   .wrapper{
-    display: flex;
+    /* Keep grid layout for responsive design */
+    /* display: flex; */
   }
   .my-notes-content {
     padding: 10px;
@@ -5479,6 +5501,13 @@ line-height: normal;
   align-items: center;
   
 }
+
+@media (max-width: 900px) {
+  .demographics-edit-user-data-rows{
+    flex-direction: column;
+  }
+}
+
 
 @media (max-width: 1190px) {
   .certskills-grid {
@@ -5984,6 +6013,7 @@ strong {
 }
 
 .journal-entries__video-thumbnail {
+  aspect-ratio: 16/9;
   position: relative;
   /*max-width: 300px;*/
   margin: 0 auto;
@@ -6037,6 +6067,8 @@ strong {
   max-width: 100%;
   /* border: 1px solid #333d3d29; */
   vertical-align: bottom;
+  width: 100%;
+  height: 100%;
 }
 
 .journal-entries__video-thumbnail-icon {

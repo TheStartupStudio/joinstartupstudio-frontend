@@ -459,6 +459,7 @@ backdrop-filter: blur(60.064998626708984px);
 .add-task-content-management-modal .reflection-quill-editor {
   border: none;
   min-height: 120px;
+  padding: 10px 0px;
 }
 
 .add-task-content-management-modal .reflection-quill-editor .ql-toolbar {

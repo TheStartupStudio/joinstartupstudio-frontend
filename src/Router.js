@@ -25,6 +25,8 @@ import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
 import SubscriptionSuccess from './pages/Register/SubscriptionSuccess'
 import { filterRoutesByAccess, getDefaultDashboard } from './utils/routeHelpers'
 import AdminDashboardPage from './pages/AdminDashboard'
+import TermsOfService from './pages/Terms/TermsOfService'
+import ForumGuidelines from './pages/Terms/ForumGuidelines'
 
 
 function Router(props) {
@@ -81,6 +83,8 @@ function Router(props) {
           component: PublicPortfolio2024,
           exact: true
         },
+        { path: '/terms', component: TermsOfService },
+        { path: '/forum-guidelines', component: ForumGuidelines },
         { path: '/logout', component: () => import('./pages/Auth/LogOut'), exact: false },
         { path: '/my-account', component: () => import('./pages/MyAccount'), exact: true },
         { path: '*', component: CheckSubscription }

@@ -633,7 +633,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                   </div>
 
                   {/* City and State Row */}
-                  <div className="d-flex gap-2 mb-3">
+                  <div className="d-flex gap-2 mb-3 demographics-edit-user-data-rows">
                     {/* City */}
                     <div style={{ flex: 1, position: 'relative' }}>
                       <div 
@@ -780,7 +780,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                   </div>
 
                   {/* Gender and Birth Date Row */}
-                  <div className="d-flex gap-2 mb-3">
+                  <div className="d-flex gap-2 mb-3 demographics-edit-user-data-rows">
                     {/* Gender */}
                     <div style={{ flex: 1, position: 'relative' }}>
                       <div

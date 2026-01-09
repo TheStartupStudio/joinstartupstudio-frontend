@@ -28,6 +28,15 @@ import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import CategoryList from './CategoryList'
 import CategoryManagementModal from './CategoryManagementModal'
 
+const ICON_MAP = {
+  'wavingHand': wavingHand,
+  'loudSpeaker': loudSpeaker,
+  'partyPopper': partyPopper,
+  'speechBalloon': speechBalloon,
+  'lightBulb': lightBulb,
+  'message': message,
+  'star': star
+}
 
 const StartupForumPage = () => {
   const dispatch = useDispatch()
@@ -193,15 +202,28 @@ const params = {
     // Check if category exists in dbCategories and has an icon
     const dbCategory = dbCategories.find(cat => cat.name === categoryName)
     if (dbCategory?.icons) {
+      // If icons is a string (icon name from DB), map it to the imported icon
+      if (typeof dbCategory.icons === 'string') {
+        // Check if it's an icon name (not a path)
+        if (ICON_MAP[dbCategory.icons]) {
+          return ICON_MAP[dbCategory.icons]
+        }
+        // Fallback: if it's a path (starts with /), construct full URL (for backward compatibility)
+        if (dbCategory.icons.startsWith('/')) {
+          const baseURL = process.env.REACT_APP_SERVER_BASE_URL || ''
+          return `${baseURL.replace(/\/$/, '')}${dbCategory.icons}`
+        }
+      }
+      // If it's already an imported module, return as is
       return dbCategory.icons
     }
     
     // Fallback to hardcoded icons for categories without database icons
     switch (categoryName) {
       case 'All Discussions':
-        return speechBalloon
+        return message
       case 'Following':
-        return speechBalloon
+        return star
       case 'Introductions':
         return wavingHand
       case 'Announcements':
