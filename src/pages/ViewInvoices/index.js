@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
@@ -40,6 +40,14 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [selectedInvoices, setSelectedInvoices] = useState([])
   const [showFilters, setShowFilters] = useState(false)
+  const [filters, setFilters] = useState({
+    organizationName: '',
+    dateFrom: null,
+    dateTo: null
+  })
+
+  // Memoize filters to prevent unnecessary re-renders
+  const memoizedFilters = useMemo(() => filters, [filters.organizationName, filters.dateFrom, filters.dateTo])
   
   const [invoicesData, setInvoicesData] = useState([])
   const [invoicesLoading, setInvoicesLoading] = useState(false)
@@ -82,41 +90,58 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     }
   }
 
-  const fetchInvoices = async (page = 1, search = '') => {
+  const fetchInvoices = async (page = 1, search = '', appliedFilters = filters) => {
     setInvoicesLoading(true)
     try {
-      console.log('Fetching invoices with params:', { page, search, archiveMode, userRole: user?.role_id })
+      console.log('Fetching invoices with params:', { page, search, archiveMode, filters: appliedFilters, userRole: user?.role_id })
+
+      // Build query parameters including filters
+      const queryParams = {
+        page,
+        limit: 10,
+        search
+      }
+
+      // Add filter parameters
+      if (appliedFilters.organizationName && appliedFilters.organizationName.trim()) {
+        queryParams.organizationName = appliedFilters.organizationName.trim()
+        console.log('Adding organizationName filter:', queryParams.organizationName)
+      }
+
+      if (appliedFilters.dateFrom) {
+        // Convert Date object to YYYY-MM-DD format
+        const dateFromStr = appliedFilters.dateFrom instanceof Date
+          ? appliedFilters.dateFrom.toISOString().split('T')[0]
+          : appliedFilters.dateFrom
+        queryParams.dateFrom = dateFromStr
+        console.log('Adding dateFrom filter:', queryParams.dateFrom)
+      }
+
+      if (appliedFilters.dateTo) {
+        // Convert Date object to YYYY-MM-DD format
+        const dateToStr = appliedFilters.dateTo instanceof Date
+          ? appliedFilters.dateTo.toISOString().split('T')[0]
+          : appliedFilters.dateTo
+        queryParams.dateTo = dateToStr
+        console.log('Adding dateTo filter:', queryParams.dateTo)
+      }
+
+      console.log('Final query params:', queryParams)
 
       let response
 
       if (archiveMode) {
         // ✅ Fetch archived invoices from /invoices/archived
-        response = await invoiceApi.getArchivedInvoices({
-          page,
-          limit: 10,
-          search
-        })
+        response = await invoiceApi.getArchivedInvoices(queryParams)
       } else {
         // ✅ Fetch regular invoices
         if (isInstructor) {
-          response = await invoiceApi.getClientInvoices({ 
-            page, 
-            limit: 10, 
-            search 
-          })
+          response = await invoiceApi.getClientInvoices(queryParams)
         } else if (isSuperAdmin) {
-          response = await invoiceApi.getAllInvoices({ 
-            page, 
-            limit: 10, 
-            search 
-          })
+          response = await invoiceApi.getAllInvoices(queryParams)
         } else {
           // For other roles (if any)
-          response = await invoiceApi.getClientInvoices({ 
-            page, 
-            limit: 10, 
-            search 
-          })
+          response = await invoiceApi.getClientInvoices(queryParams)
         }
       }
 
@@ -154,9 +179,9 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   useEffect(() => {
     if (user) {
       console.log('User changed, fetching invoices:', user)
-      fetchInvoices(currentPage, debouncedSearchQuery)
+      fetchInvoices(currentPage, debouncedSearchQuery, filters)
     }
-  }, [currentPage, debouncedSearchQuery, archiveMode, user])
+  }, [currentPage, debouncedSearchQuery, archiveMode, user, filters])
 
   const invoicesColumns = useMemo(() => {
     if (isInstructor) {
@@ -437,7 +462,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       
       toast.success(response.message || `Invoice ${invoice.invoiceNumber} archived successfully!`)
       
-      await fetchInvoices(currentPage, debouncedSearchQuery)
+      await fetchInvoices(currentPage, debouncedSearchQuery, filters)
     } catch (error) {
       console.error('❌ Error archiving invoice:', error)
       const errorMessage = error.response?.data?.message || 'Failed to archive invoice'
@@ -460,7 +485,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       
       toast.success(response.message || `Invoice ${invoice.invoiceNumber} unarchived successfully!`)
       
-      await fetchInvoices(currentPage, debouncedSearchQuery)
+      await fetchInvoices(currentPage, debouncedSearchQuery, filters)
     } catch (error) {
       console.error('❌ Error unarchiving invoice:', error)
       const errorMessage = error.response?.data?.message || 'Failed to unarchive invoice'
@@ -484,7 +509,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       
       toast.success(response.message || `${response.archivedCount} invoice(s) archived successfully!`)
       setSelectedInvoices([])
-      await fetchInvoices(currentPage, debouncedSearchQuery)
+      await fetchInvoices(currentPage, debouncedSearchQuery, filters)
     } catch (error) {
       console.error('❌ Error archiving invoices:', error)
       const errorMessage = error.response?.data?.message || 'Failed to archive some invoices'
@@ -512,7 +537,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       
       setShowDeleteInvoicePopup(false)
       setSelectedInvoice(null)
-      await fetchInvoices(currentPage, debouncedSearchQuery)
+      await fetchInvoices(currentPage, debouncedSearchQuery, filters)
     } catch (error) {
       console.error('❌ Error deleting invoice:', error)
       toast.error(error.response?.data?.message || 'Failed to delete invoice(s)')
@@ -610,7 +635,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
   const handleGenerateInvoiceSubmit = async (generatedInvoice) => {
     setShowGenerateModal(false)
-    await fetchInvoices(currentPage, debouncedSearchQuery)
+    await fetchInvoices(currentPage, debouncedSearchQuery, filters)
     
     if (generatedInvoice && generatedInvoice.id) {
       setSelectedInvoice(generatedInvoice)
@@ -679,7 +704,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       }
 
       // Refresh the invoices list
-      await fetchInvoices(currentPage, debouncedSearchQuery)
+      await fetchInvoices(currentPage, debouncedSearchQuery, filters)
       setSelectedInvoices([])
       setShowGenerateMultiplePopup(false)
       setShowBulkDropdown(false)
@@ -717,6 +742,22 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const handleSelectionChange = (selectedItems) => {
     setSelectedInvoices(selectedItems)
   }
+
+  const handleFiltersChange = useCallback((newFilters) => {
+    console.log('Filters changed:', newFilters)
+    setFilters(prevFilters => {
+      // Only update if filters actually changed
+      if (
+        prevFilters.organizationName !== newFilters.organizationName ||
+        prevFilters.dateFrom !== newFilters.dateFrom ||
+        prevFilters.dateTo !== newFilters.dateTo
+      ) {
+        return newFilters
+      }
+      return prevFilters
+    })
+    setCurrentPage(1) // Reset to first page when filters change
+  }, [])
 
   const handleBulkExportInvoices = async () => {
     if (selectedInvoices.length === 0) {
@@ -772,7 +813,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
               await Promise.all(promises)
               toast.success(`${selectedInvoices.length} invoice(s) unarchived successfully!`)
               setSelectedInvoices([])
-              await fetchInvoices(currentPage, debouncedSearchQuery)
+              await fetchInvoices(currentPage, debouncedSearchQuery, filters)
             } catch (error) {
               toast.error('Failed to unarchive some invoices')
             } finally {
@@ -806,7 +847,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
               const response = await invoiceApi.bulkArchiveInvoices(invoiceIds)
               toast.success(response.message || `${response.archivedCount} invoice(s) archived successfully!`)
               setSelectedInvoices([])
-              await fetchInvoices(currentPage, debouncedSearchQuery)
+              await fetchInvoices(currentPage, debouncedSearchQuery, filters)
               setShowBulkDropdown(false)
             } catch (error) {
               console.error('❌ Error archiving invoices:', error)
@@ -862,7 +903,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             const response = await invoiceApi.bulkArchiveInvoices(invoiceIds)
             toast.success(response.message || `${response.archivedCount} invoice(s) archived successfully!`)
             setSelectedInvoices([])
-            await fetchInvoices(currentPage, debouncedSearchQuery)
+            await fetchInvoices(currentPage, debouncedSearchQuery, filters)
             setShowBulkDropdown(false)
           } catch (error) {
             console.error('❌ Error archiving invoices:', error)
@@ -1039,6 +1080,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
                 show={showFilters}
                 onHide={() => setShowFilters(false)}
                 anchorRef={searchContainerRef}
+                onApplyFilters={handleFiltersChange}
+                initialFilters={filters}
               />
             )}
           </div>
@@ -1265,7 +1308,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             setInvoiceMode('view')
           }}
           onSuccess={() => {
-            fetchInvoices(currentPage, debouncedSearchQuery)
+            fetchInvoices(currentPage, debouncedSearchQuery, filters)
           }}
           invoiceData={selectedInvoice}
           mode={invoiceMode}

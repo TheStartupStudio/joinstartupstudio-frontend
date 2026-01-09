@@ -5,9 +5,9 @@ export const invoiceApi = {
    * Get ALL invoices (super admin only)
    */
   getAllInvoices: async (params = {}) => {
-    const { page = 1, limit = 10, status, search = '' } = params
+    const { page = 1, limit = 10, status, search = '', organizationName, dateFrom, dateTo } = params
     const response = await axiosInstance.get('/invoices', {
-      params: { page, limit, status, search }
+      params: { page, limit, status, search, organizationName, dateFrom, dateTo }
     })
     return response.data
   },
@@ -89,9 +89,9 @@ export const invoiceApi = {
    * Get all archived invoices for current user
    */
   getArchivedInvoices: async (params = {}) => {
-    const { page = 1, limit = 10, search = '' } = params
+    const { page = 1, limit = 10, search = '', organizationName, dateFrom, dateTo } = params
     const response = await axiosInstance.get('/client/invoices/archived', {
-      params: { page, limit, search }
+      params: { page, limit, search, organizationName, dateFrom, dateTo }
     })
     return response.data
   },
@@ -135,9 +135,9 @@ export const invoiceApi = {
    * Get all invoices for the logged-in client's organization
    */
   getClientInvoices: async (params = {}) => {
-    const { page = 1, limit = 10, search = '' } = params
-    const response = await axiosInstance.get('/client/invoices', { 
-      params: { page, limit, search } 
+    const { page = 1, limit = 10, search = '', organizationName, dateFrom, dateTo } = params
+    const response = await axiosInstance.get('/client/invoices', {
+      params: { page, limit, search, organizationName, dateFrom, dateTo }
     })
     return response.data
   },
