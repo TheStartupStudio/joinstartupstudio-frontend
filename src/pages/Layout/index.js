@@ -22,7 +22,7 @@ function Layout({ children }) {
   const dispatch = useDispatch()
   const location = useLocation()
 
-  const hideSidebarRoutes = ['/terms']
+  const hideSidebarRoutes = ['/terms', '/forum-guidelines']
   const shouldHideSidebar = hideSidebarRoutes.includes(location.pathname)
 
   const toggleBackdrop = () => {

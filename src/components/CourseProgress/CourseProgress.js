@@ -31,49 +31,51 @@ function CourseProgress() {
 
   const toggleModal = () => setModal((prev) => !prev)
 
-  // Fetch user progress from API
   const fetchUserProgress = async () => {
-    if (!user?.id) return
-
     try {
       setProgressLoading(true)
-      const response = await axiosInstance.get(`/super-admin/user-level-progress/${user.id}`)
+
+      const response = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent')
+
       if (response.data) {
-        setFinishedContent(response.data.finishedContent || [])
-        setLevelProgress({
+        const finishedContentData = response.data.finishedContent || []
+        const levelProgressData = {
           level1: response.data.levelProgress?.level1 || { percentage: 0, completed: 0, total: 8 },
           level2: response.data.levelProgress?.level2 || { percentage: 0, completed: 0, total: 8 },
           level3: response.data.levelProgress?.level3 || { percentage: 0, completed: 0, total: 52 }
-        })
+        }
+
+
+        setFinishedContent(finishedContentData)
+        setLevelProgress(levelProgressData)
+      } else {
+        console.log('No data in response')
       }
+
     } catch (error) {
       console.error('Error fetching user progress:', error)
-      // Keep default values on error
+      console.log('API call failed, this might be due to authentication or API issues')
     } finally {
       setProgressLoading(false)
     }
   }
 
-  // Fetch lessons from API
   const fetchLessons = async () => {
     try {
       setLessonsLoading(true)
       const response = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons')
       if (response.data) {
-        // Convert string keys to numeric keys and ensure proper structure
         const transformedLessons = {}
         Object.keys(response.data).forEach(key => {
           const numericKey = parseInt(key)
           if (!isNaN(numericKey)) {
             if (numericKey === 2) {
-              // Special handling for level 2 - transform flat array into nested structure
               const level2Lessons = response.data[key] || []
               const nestedLessons = []
               let currentSection = null
 
               level2Lessons.forEach(lesson => {
                 if (lesson.separate) {
-                  // This is a section header
                   if (currentSection) {
                     nestedLessons.push(currentSection)
                   }
@@ -84,7 +86,6 @@ function CourseProgress() {
                     children: []
                   }
                 } else {
-                  // This is a regular lesson
                   if (currentSection) {
                     currentSection.children.push({
                       id: lesson.id || lesson.redirectId || 0,
@@ -93,7 +94,6 @@ function CourseProgress() {
                       redirectId: lesson.redirectId || parseInt(lesson.id) || 0
                     })
                   } else {
-                    // If no section yet, add as regular lesson
                     nestedLessons.push({
                       id: lesson.id || lesson.redirectId || 0,
                       title: lesson.title || '',
@@ -104,16 +104,14 @@ function CourseProgress() {
                 }
               })
 
-              // Add the last section if it exists
               if (currentSection) {
                 nestedLessons.push(currentSection)
               }
 
               transformedLessons[numericKey] = nestedLessons
             } else {
-              // For levels 0 and 1, keep the flat structure
               transformedLessons[numericKey] = (response.data[key] || []).map(lesson => ({
-                id: lesson.id || lesson.redirectId || 0, // Keep id for backward compatibility
+                id: lesson.id || lesson.redirectId || 0,
                 title: lesson.title || '',
                 status: lesson.status || 'notStarted',
                 redirectId: lesson.redirectId || parseInt(lesson.id) || 0
@@ -125,7 +123,6 @@ function CourseProgress() {
       }
     } catch (error) {
       console.error('Error fetching lessons:', error)
-      // Set empty object on error
       setLessonsByLevel({})
     } finally {
       setLessonsLoading(false)
@@ -135,11 +132,8 @@ function CourseProgress() {
   const accordionRefs = useRef([])
 
   useEffect(() => {
-    // Fetch lessons and user progress from API
     fetchLessons()
-    if (user?.id) {
-      fetchUserProgress()
-    }
+    fetchUserProgress()
   }, [user?.id])
 
   useEffect(() => {
@@ -161,15 +155,13 @@ function CourseProgress() {
 
 
   const isLevelAccessible = (level) => {
-    if (level === 0) return true // Level 1 is always accessible
+    if (level === 0) return true
 
     if (level === 1) {
-      // Level 2 requires completing lesson 58 (last lesson of level 1)
       return finishedContent.includes(58)
     }
 
     if (level === 2) {
-      // Level 3 requires completing lesson 68 (last lesson of level 2)
       return finishedContent.includes(68)
     }
 
@@ -181,23 +173,18 @@ function CourseProgress() {
       return 'done'
     }
 
-    // If we have the level lessons array, find the first incomplete lesson in order
     if (levelLessons && Array.isArray(levelLessons)) {
-      // Find the first lesson that is NOT completed
       for (let i = 0; i < levelLessons.length; i++) {
         const lesson = levelLessons[i]
         if (!finishedContent.includes(lesson.id)) {
-          // This is the first incomplete lesson
           if (lesson.id === lessonId) {
             return 'inProgress'
           }
-          // If we haven't reached the current lesson yet, it's not started
           return 'notStarted'
         }
       }
     }
 
-    // Fallback to the old logic if no level lessons provided
     const nextAvailableId =
       finishedContent.length > 0
         ? Math.max(...finishedContent) + 1
@@ -209,6 +196,7 @@ function CourseProgress() {
 
     return 'notStarted'
   }
+
 
   return (
     <>
