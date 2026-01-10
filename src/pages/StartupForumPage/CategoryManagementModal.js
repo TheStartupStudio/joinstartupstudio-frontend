@@ -182,6 +182,15 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
     }
 
     const category = categories.find(cat => cat.id === categoryId)
+
+    // Check if another category with same name already exists (excluding current category)
+    const existingCategory = categories.find(cat =>
+      cat.id !== categoryId && cat.name.toLowerCase() === newName.trim().toLowerCase()
+    )
+    if (existingCategory) {
+      toast.error('A category with this name already exists')
+      return
+    }
     
     let iconName = null
     if (newIcon !== null) {
@@ -236,6 +245,15 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
 
     if (isStaticCategory(newCategoryName)) {
       toast.error('Cannot create a category with the same name as a static category')
+      return
+    }
+
+    // Check if category with same name already exists
+    const existingCategory = categories.find(cat =>
+      cat.name.toLowerCase() === newCategoryName.trim().toLowerCase()
+    )
+    if (existingCategory) {
+      toast.error('A category with this name already exists')
       return
     }
 
@@ -300,55 +318,143 @@ const CategoryManagementModal = ({ show, onHide, onSuccess }) => {
 
   const handleSaveChanges = async () => {
     setLoading(true)
-    
-    try {
-      for (const categoryId of pendingChanges.deleted) {
-        await axiosInstance.delete(`/forum/categories/${categoryId}`)
+
+    // Automatically create category if there's text in the input
+    if (newCategoryName.trim()) {
+      console.log('Creating category automatically:', newCategoryName.trim())
+
+      // Validate before API call
+      if (isStaticCategory(newCategoryName)) {
+        console.log('Failed: is static category')
+        toast.error('Cannot create a category with the same name as a static category')
+        setLoading(false)
+        return
       }
-      
-      for (const category of pendingChanges.added) {
-        await axiosInstance.post('/forum/categories', {
-          name: category.name,
-          slug: category.slug,
-          order: category.order,
-          is_active: category.is_active,
-          icons: category.icons
+
+      // Check if category with same name already exists
+      const existingCategory = categories.find(cat =>
+        cat.name.toLowerCase() === newCategoryName.trim().toLowerCase()
+      )
+      if (existingCategory) {
+        console.log('Failed: duplicate category found:', existingCategory.name)
+        toast.error('A category with this name already exists')
+        setLoading(false)
+        return
+      }
+
+      try {
+        console.log('Making API call to create category...')
+
+        const iconName = typeof selectedIcon === 'string' ? selectedIcon : getIconName(selectedIcon) || 'speechBalloon'
+
+        // Calculate the next order (find max order + 1)
+        const maxOrder = categories.length > 0 ? Math.max(...categories.map(cat => cat.order || 0)) : 0
+        const nextOrder = maxOrder + 1
+
+        const response = await axiosInstance.post('/forum/categories', {
+          name: newCategoryName.trim(),
+          slug: newCategoryName.toLowerCase().replace(/\s+/g, '-'),
+          order: nextOrder,
+          is_active: true,
+          icons: iconName
         })
+
+        console.log('Category created successfully:', response.data)
+
+        // Add the created category to the local state
+        setCategories(prev => {
+          const newCategories = [...prev, response.data]
+          console.log('Updated categories state with created category:', newCategories)
+          return newCategories
+        })
+
+        // Clear the input after successful creation
+        setNewCategoryName('')
+        setSelectedIcon('speechBalloon')
+
+      } catch (error) {
+        console.error('Error creating category:', error)
+        const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Failed to create category'
+        toast.error(`Failed to create category: ${errorMessage}`)
+        setLoading(false)
+        return
       }
-      
+    }
+
+    try {
+      // Delete categories
+      for (const categoryId of pendingChanges.deleted) {
+        try {
+          await axiosInstance.delete(`/forum/categories/${categoryId}`)
+        } catch (deleteError) {
+          console.error(`Error deleting category ${categoryId}:`, deleteError)
+          throw new Error(`Failed to delete category: ${deleteError.response?.data?.error || deleteError.message}`)
+        }
+      }
+
+      // Add new categories
+      for (const category of pendingChanges.added) {
+        try {
+          await axiosInstance.post('/forum/categories', {
+            name: category.name,
+            slug: category.slug,
+            order: category.order,
+            is_active: category.is_active,
+            icons: category.icons
+          })
+        } catch (addError) {
+          console.error(`Error adding category "${category.name}":`, addError)
+          const errorMessage = addError.response?.data?.error || addError.response?.data?.message || 'Failed to add category'
+          throw new Error(`Failed to add category "${category.name}": ${errorMessage}`)
+        }
+      }
+
       // Process updates
       for (const category of pendingChanges.updated) {
-        await axiosInstance.put(`/forum/categories/${category.id}`, {
-          ...category,
-          name: category.name,
-          slug: category.slug,
-          icons: category.icons
-        })
+        try {
+          await axiosInstance.put(`/forum/categories/${category.id}`, {
+            ...category,
+            name: category.name,
+            slug: category.slug,
+            icons: category.icons
+          })
+        } catch (updateError) {
+          console.error(`Error updating category "${category.name}":`, updateError)
+          const errorMessage = updateError.response?.data?.error || updateError.response?.data?.message || 'Failed to update category'
+          throw new Error(`Failed to update category "${category.name}": ${errorMessage}`)
+        }
       }
-      
+
+      // Handle reordering
       if (pendingChanges.reordered) {
-        const realCategories = categories.filter(cat => !cat.isNew)
-        await Promise.all(
-          realCategories.map(cat =>
-            axiosInstance.put(`/forum/categories/${cat.id}`, { order: cat.order })
+        try {
+          const realCategories = categories.filter(cat => !cat.isNew)
+          await Promise.all(
+            realCategories.map(cat =>
+              axiosInstance.put(`/forum/categories/${cat.id}`, { order: cat.order })
+            )
           )
-        )
+        } catch (reorderError) {
+          console.error('Error reordering categories:', reorderError)
+          throw new Error(`Failed to reorder categories: ${reorderError.response?.data?.error || reorderError.message}`)
+        }
       }
-      
+
       toast.success('Changes saved successfully')
-      
+
       setPendingChanges({
         updated: [],
         deleted: [],
         added: [],
         reordered: false
       })
-      
+
       if (onSuccess) onSuccess()
       onHide()
     } catch (error) {
       console.error('Error saving changes:', error)
-      toast.error(error.response?.data?.message || 'Failed to save changes')
+      const errorMessage = error.message || error.response?.data?.message || error.response?.data?.error || 'Failed to save changes'
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
