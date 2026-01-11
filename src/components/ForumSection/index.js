@@ -148,6 +148,13 @@ const ForumSection = () => {
   }
 
   const handleGoToForum = () => {
+    const isSubscribed = currentUser?.stripe_subscription_id || currentUser?.subscription_exempt
+
+    if (!isSubscribed) {
+      history.push('/startup-forum')
+      return
+    }
+
     if (!currentUser?.forumAgreement) {
       setShowUserAgreement(true)
       return
@@ -156,6 +163,13 @@ const ForumSection = () => {
   }
 
   const handlePostClick = (postId) => {
+    const isSubscribed = currentUser?.stripe_subscription_id || currentUser?.subscription_exempt
+
+    if (!isSubscribed) {
+      history.push(`/startup-forum/post/${postId}`)
+      return
+    }
+
     if (!currentUser?.forumAgreement) {
       setShowUserAgreement(true)
       return

@@ -69,29 +69,27 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
       return
     }
 
-    // Check if user needs to agree to terms
-    if (!currentUser?.forumAgreement) {
+    const isSubscribed = currentUser?.stripe_subscription_id || currentUser?.subscription_exempt
+
+    if (!isSubscribed) {
+    } else if (!currentUser?.forumAgreement) {
       setShowUserAgreement(true)
       return
     }
 
-    // Check for inappropriate content
     const filterResult = checkContentFilter()
     
     if (filterResult) {
       if (filterResult.level === 1) {
-        // Level 1: Block submission, show non-dismissible warning
         setContentFilterLevel(1)
         setShowContentWarning(true)
         return
       } else if (filterResult.level === 2 || filterResult.level === 3) {
-        // Level 2 & 3: Show warning with acknowledgment option
         if (!acknowledgeWarning) {
           setContentFilterLevel(filterResult.level)
           setShowContentWarning(true)
           return
         }
-        // If acknowledged, proceed with submission
       }
     }
 
@@ -113,7 +111,6 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
         response = await axiosInstance.post(`/forum/discussion/${originalPost.id}/replies`, payload)
         toast.success('Reply added successfully!')
         
-        // Check if Level 2 content needs admin notification
         const filterCheck = checkContentFilter()
         if (filterCheck && filterCheck.level === 2 && originalPost?.id) {
           try {
@@ -132,12 +129,10 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
       setFormData({ message: '' })
       setFormSubmitted(false)
       
-      // Call onSuccess callback FIRST
       if (onSuccess) {
         onSuccess(response?.data, editingComment ? 'update' : 'create')
       }
       
-      // Then immediately close modal using setTimeout to ensure state updates
       setTimeout(() => {
         onHide()
       }, 100)
@@ -152,7 +147,6 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
   }
 
   const handleCancel = () => {
-    // Reset all states
     setFormData({ message: '' })
     setFormSubmitted(false)
     setLoading(false)
@@ -166,7 +160,6 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
 
   const handleUserAgreementSuccess = () => {
     setShowUserAgreement(false)
-    // Retry submission after agreement
     setTimeout(() => {
       handleSubmit()
     }, 300)
@@ -183,15 +176,12 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
       setFormData({ message: '' })
       setFormSubmitted(false)
       
-      // Call onSuccess callback FIRST
       if (onSuccess) {
         onSuccess(null, 'delete')
       }
       
-      // Close delete confirmation immediately
       setShowDeleteConfirm(false)
       
-      // Then close main modal using setTimeout
       setTimeout(() => {
         onHide()
       }, 100)
