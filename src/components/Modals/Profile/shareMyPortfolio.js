@@ -40,7 +40,7 @@ const ShareMyPortfolio = (props) => {
               className="form-control my-2 py-2 px-2  portfolio-modal-border-remove"
               style={{ outline: '0 !important', backgroundColor: '#ffff' }}
               value={
-                window.location.origin + '/user-portfolio/' + props.userLink
+                window.location.origin + '/public-portfolio/' + encodeURIComponent(props.userLink)
               }
               disabled
               placeholder={placeholder}
@@ -53,7 +53,7 @@ const ShareMyPortfolio = (props) => {
           onClick={() => {
             toast.success(<IntlMessages id="general.copy" />)
             navigator.clipboard.writeText(
-              window.location.origin + '/user-portfolio/' + props.userLink
+              window.location.origin + '/public-portfolio/' + encodeURIComponent(props.userLink)
             )
           }}
         >

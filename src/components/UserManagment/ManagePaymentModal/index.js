@@ -306,7 +306,17 @@ const ManagePaymentModalContent = ({ show, onHide, onSave }) => {
       
       // Refresh payment method data
       await fetchPaymentMethod()
-      
+
+      // Refresh invoices data after payment method is saved
+      try {
+        await axiosInstance.get('/client/invoices?page=1&limit=10&search=')
+        // Note: This refreshes the invoices data, but doesn't store the response
+        // The parent component should handle refreshing its invoice list
+      } catch (invoiceError) {
+        console.error('Error refreshing invoices:', invoiceError)
+        // Don't show error toast for invoice refresh failure as it's not critical
+      }
+
       // Don't close modal if verification is needed
       if (!response.data.data.needsVerification) {
         onHide()

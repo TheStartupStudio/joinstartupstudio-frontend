@@ -19,6 +19,7 @@ import InProggresCourse from '../../CourseProgress/InProggresCourse'
 import ProgressDone from '../../CourseProgress/ProgressDone'
 import { Collapse } from 'bootstrap'
 import axiosInstance from '../../../utils/AxiosInstance'
+import lockSign from '../../../assets/images/academy-icons/lock.png'
 
 const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const [showEmailModal, setShowEmailModal] = useState(false)
@@ -36,11 +37,14 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   })
   const [finishedContent, setFinishedContent] = useState([])
   const [loading, setLoading] = useState(false)
+  const [lessonsByLevel, setLessonsByLevel] = useState({})
+  const [lessonsLoading, setLessonsLoading] = useState(true)
 
   useEffect(() => {
     if (show && learner?.id) {
       fetchLearnerData()
       fetchLevelProgress()
+      fetchLessons()
     }
   }, [show, learner?.id])
 
@@ -61,13 +65,13 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   try {
     const response = await axiosInstance.get(`/super-admin/user-level-progress/${learner.id}`)
     const progressData = response.data
-    
-    setLevelProgress({
-      level1: progressData.level1 || { percentage: 0, completed: 0, total: 8 },
-      level2: progressData.level2 || { percentage: 0, completed: 0, total: 8 },
-      level3: progressData.level3 || { percentage: 0, completed: 0, total: 52 }
-    })
 
+    setFinishedContent(progressData.finishedContent || [])
+    setLevelProgress({
+      level1: progressData.levelProgress?.level1 || { percentage: 0, completed: 0, total: 8 },
+      level2: progressData.levelProgress?.level2 || { percentage: 0, completed: 0, total: 8 },
+      level3: progressData.levelProgress?.level3 || { percentage: 0, completed: 0, total: 52 }
+    })
 
   } catch (error) {
     console.error('Error fetching level progress:', error)
@@ -75,54 +79,100 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   }
 }
 
-  const lessonsByLevel = {
-    0: [
-      { id: 'myths', title: 'Myths of Entrepreneurship', status: 'done', redirectId: 51 },
-      { id: 'definition', title: 'Definition of Entrepreneurship', status: 'done', redirectId: 52 },
-      { id: 'reasons', title: 'Reasons Why Startups Fail', status: 'inProgress', redirectId: 53 },
-      { id: 'skills', title: 'Skills and Traits of Effective Entrepreneurs', status: 'notStarted', redirectId: 54 },
-      { id: 'people', title: 'People Buy Into People', status: 'notStarted', redirectId: 55 },
-      { id: 'selfBrand', title: 'Creating Your Self Brand First', status: 'notStarted', redirectId: 56 },
-      { id: 'task1', title: 'Task #1: Create your Individual Value Proposition', status: 'notStarted', redirectId: 57 },
-      { id: 'task2', title: 'Task #2: Create your I Am Video', status: 'notStarted', redirectId: 58 }
-    ],
-    1: [
-      { id: 'journey', title: 'The Journey of Entrepreneurship', status: 'notStarted', redirectId: 60 },
-      { id: 'intro', title: 'An Introduction to the LTS Model and Four Environments', status: 'notStarted', redirectId: 61 },
-      { id: 'coreSkills', title: 'The Core Skills and LEARN Stage of the LTS Model', status: 'notStarted', redirectId: 62 },
-      { id: 'develop', title: 'The DEVELOP Stage of the LTS Model', status: 'notStarted', redirectId: 63 },
-      { id: 'start', title: 'Understanding START & the Test Metrics of LTS', status: 'notStarted', redirectId: 65 },
-      { id: 'task3', title: 'Task #1: Evaluate Your Mindset and Skill Set', status: 'notStarted', redirectId: 66 },
-      { id: 'process', title: 'The Process of Entrepreneurship', status: 'notStarted', redirectId: 67 },
-      { id: 'task4', title: 'Task #2: Build Your Team and Find Your Mentor', status: 'notStarted', redirectId: 68 }
-    ],
-    2: [
-      {
-        id: '3.1',
-        title: 'Level 3.1: The Journey of Entrepreneurship',
-        isParent: true,
-        children: [
-          { id: 'journey31', title: 'The Journey of Entrepreneurship', status: 'notStarted', redirectId: 70 },
-          { id: 'process31', title: 'The Process and Skill of Storytelling', redirectId: 71 },
-          { id: 'relevancy', title: 'Relevancy in World 4.0', redirectId: 72 },
-          { id: 'learn', title: 'The LEARN Stage', redirectId: 73 },
-          { id: 'problems', title: 'Problems Worth Solving', redirectId: 74 },
-          { id: 'task5', title: 'Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends', redirectId: 75 },
-          { id: 'task6', title: 'Task #6: Conduct an Industry Analysis', redirectId: 76 }
-        ]
-      },
-      {
-        id: '3.2',
-        title: 'Level 3.2: The Develop Stage',
-        isParent: true,
-        children: [
-          { id: 'solution', title: 'Finding the Solution', redirectId: 78 },
-          { id: 'value', title: "Creating Your Startup's Value Proposition", redirectId: 79 },
-          { id: 'task7', title: "Task #7: Create Your Startup's Value Proposition", redirectId: 80 }
-        ]
+  // Fetch lessons from API
+  const fetchLessons = async () => {
+    try {
+      setLessonsLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons')
+      if (response.data) {
+        // Convert string keys to numeric keys and ensure proper structure
+        const transformedLessons = {}
+        Object.keys(response.data).forEach(key => {
+          const numericKey = parseInt(key)
+          if (!isNaN(numericKey)) {
+            if (numericKey === 2) {
+              // Special handling for level 2 - transform flat array into nested structure
+              const level2Lessons = response.data[key] || []
+              const nestedLessons = []
+              let currentSection = null
+
+              level2Lessons.forEach(lesson => {
+                if (lesson.separate) {
+                  // This is a section header
+                  if (currentSection) {
+                    nestedLessons.push(currentSection)
+                  }
+                  currentSection = {
+                    id: lesson.id || lesson.redirectId || 0,
+                    title: lesson.title || '',
+                    isParent: true,
+                    children: []
+                  }
+                } else {
+                  // This is a regular lesson
+                  if (currentSection) {
+                    currentSection.children.push({
+                      id: lesson.id || lesson.redirectId || 0,
+                      title: lesson.title || '',
+                      status: lesson.status || 'notStarted',
+                      redirectId: lesson.redirectId || parseInt(lesson.id) || 0
+                    })
+                  } else {
+                    // If no section yet, add as regular lesson
+                    nestedLessons.push({
+                      id: lesson.id || lesson.redirectId || 0,
+                      title: lesson.title || '',
+                      status: lesson.status || 'notStarted',
+                      redirectId: lesson.redirectId || parseInt(lesson.id) || 0
+                    })
+                  }
+                }
+              })
+
+              // Add the last section if it exists
+              if (currentSection) {
+                nestedLessons.push(currentSection)
+              }
+
+              transformedLessons[numericKey] = nestedLessons
+            } else {
+              // For levels 0 and 1, keep the flat structure
+              transformedLessons[numericKey] = (response.data[key] || []).map(lesson => ({
+                id: lesson.id || lesson.redirectId || 0, // Keep id for backward compatibility
+                title: lesson.title || '',
+                status: lesson.status || 'notStarted',
+                redirectId: lesson.redirectId || parseInt(lesson.id) || 0
+              }))
+            }
+          }
+        })
+        setLessonsByLevel(transformedLessons)
       }
-    ]
+    } catch (error) {
+      console.error('Error fetching lessons:', error)
+      // Set empty object on error
+      setLessonsByLevel({})
+    } finally {
+      setLessonsLoading(false)
+    }
   }
+
+  const isLevelAccessible = (level) => {
+    if (level === 0) return true // Level 1 is always accessible
+
+    if (level === 1) {
+      // Level 2 requires completing lesson 58 (last lesson of level 1)
+      return finishedContent.includes(58)
+    }
+
+    if (level === 2) {
+      // Level 3 requires completing lesson 68 (last lesson of level 2)
+      return finishedContent.includes(68)
+    }
+
+    return false
+  }
+
 
   useEffect(() => {
     accordionRefs.current.forEach((ref) => {
@@ -141,17 +191,34 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
     }
   }
 
-  const getCourseStatus = (redirectId) => {
-    if (finishedContent.includes(redirectId)) {
+  const getCourseStatus = (lessonId, levelLessons = null) => {
+    if (finishedContent.includes(lessonId)) {
       return 'done'
     }
 
+    // If we have the level lessons array, find the first incomplete lesson in order
+    if (levelLessons && Array.isArray(levelLessons)) {
+      // Find the first lesson that is NOT completed
+      for (let i = 0; i < levelLessons.length; i++) {
+        const lesson = levelLessons[i]
+        if (!finishedContent.includes(lesson.id)) {
+          // This is the first incomplete lesson
+          if (lesson.id === lessonId) {
+            return 'inProgress'
+          }
+          // If we haven't reached the current lesson yet, it's not started
+          return 'notStarted'
+        }
+      }
+    }
+
+    // Fallback to the old logic if no level lessons provided
     const nextAvailableId =
       finishedContent.length > 0
-        ? Math.min(...finishedContent.map((id) => id + 1))
+        ? Math.max(...finishedContent) + 1
         : 51
 
-    if (redirectId === nextAvailableId) {
+    if (lessonId === nextAvailableId) {
       return 'inProgress'
     }
 
@@ -209,7 +276,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   }
 
   const handleViewPortfolio = () => {
-    window.open(`/user-portfolio/${displayData.username || learner.id}`, '_blank')
+    window.open(`/public-portfolio/${encodeURIComponent(displayData.username || learner.id)}`, '_blank')
   }
 
   const handleViewPerformanceData = () => {
@@ -557,16 +624,22 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                     />
                   </div>
                   <div className='d-flex flex-column gap-3'>
-                    {lessonsByLevel[0].map((lesson, index) => {
-                      const status = getCourseStatus(lesson.redirectId)
-                      return status === 'done' ? (
-                        <ProgressDone key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
-                      ) : status === 'inProgress' ? (
-                        <InProggresCourse key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
-                      ) : (
-                        <CourseNotStarted key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
-                      )
-                    })}
+                    {lessonsLoading ? (
+                      <div className='text-center text-secondary'>Loading lessons...</div>
+                    ) : lessonsByLevel[0] && lessonsByLevel[0].length > 0 ? (
+                      lessonsByLevel[0].map((lesson, index) => {
+                        const status = getCourseStatus(lesson.id, lessonsByLevel[0])
+                        return status === 'done' ? (
+                          <ProgressDone key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
+                        ) : status === 'inProgress' ? (
+                          <InProggresCourse key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
+                        ) : (
+                          <CourseNotStarted key={`lesson-0-${lesson.id}-${index}`} title={lesson.title} />
+                        )
+                      })
+                    ) : (
+                      <div className='text-center text-secondary'>No lessons available</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -599,16 +672,31 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                     />
                   </div>
                   <div className='d-flex flex-column gap-3'>
-                    {lessonsByLevel[1].map((lesson, index) => {
-                      const status = getCourseStatus(lesson.redirectId)
-                      return status === 'done' ? (
-                        <ProgressDone key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
-                      ) : status === 'inProgress' ? (
-                        <InProggresCourse key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
-                      ) : (
-                        <CourseNotStarted key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
-                      )
-                    })}
+                    {lessonsLoading ? (
+                      <div className='text-center text-secondary'>Loading lessons...</div>
+                    ) : lessonsByLevel[1] && lessonsByLevel[1].length > 0 ? (
+                      lessonsByLevel[1].map((lesson, index) => {
+                        const status = getCourseStatus(lesson.id, lessonsByLevel[1])
+                        if (!isLevelAccessible(1)) {
+                          // Level is locked, show all lessons as locked
+                          return (
+                            <div key={`lesson-1-${lesson.id}-${index}`} style={{ position: 'relative', opacity: 0.6 }}>
+                              <CourseNotStarted title={lesson.title} />
+                            
+                            </div>
+                          )
+                        }
+                        return status === 'done' ? (
+                          <ProgressDone key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
+                        ) : status === 'inProgress' ? (
+                          <InProggresCourse key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
+                        ) : (
+                          <CourseNotStarted key={`lesson-1-${lesson.id}-${index}`} title={lesson.title} />
+                        )
+                      })
+                    ) : (
+                      <div className='text-center text-secondary'>No lessons available</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -641,21 +729,43 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                     />
                   </div>
                   <div className='d-flex flex-column gap-3 text-black'>
-                    {lessonsByLevel[2].map((section, sectionIndex) => (
-                      <React.Fragment key={`section-${section.id}-${sectionIndex}`}>
-                        <p className='mb-0'>{section.title}</p>
-                        {section.children?.map((lesson, lessonIndex) => {
-                          const status = getCourseStatus(lesson.redirectId)
-                          return status === 'done' ? (
-                            <ProgressDone key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
-                          ) : status === 'inProgress' ? (
-                            <InProggresCourse key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
-                          ) : (
-                            <CourseNotStarted key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
-                          )
-                        })}
-                      </React.Fragment>
-                    ))}
+                    {lessonsLoading ? (
+                      <div className='text-center text-secondary'>Loading lessons...</div>
+                    ) : lessonsByLevel[2] && lessonsByLevel[2].length > 0 ? (
+                      (() => {
+                        // Flatten level 2 lessons for status calculation
+                        const allLevel2Lessons = lessonsByLevel[2].flatMap(section =>
+                          section.children ? section.children : []
+                        )
+
+                        return lessonsByLevel[2].map((section, sectionIndex) => (
+                          <React.Fragment key={`section-${section.id}-${sectionIndex}`}>
+                            <p className='mb-0'>{section.title}</p>
+                            {section.children && section.children.map((lesson, lessonIndex) => {
+                              const status = getCourseStatus(lesson.id, allLevel2Lessons)
+                              if (!isLevelAccessible(2)) {
+                                // Level is locked, show all lessons as locked
+                                return (
+                                  <div key={`lesson-2-${lesson.id}-${lessonIndex}`} style={{ position: 'relative', opacity: 0.6 }}>
+                                    <CourseNotStarted title={lesson.title} />
+                                    
+                                  </div>
+                                )
+                              }
+                              return status === 'done' ? (
+                                <ProgressDone key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
+                              ) : status === 'inProgress' ? (
+                                <InProggresCourse key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
+                              ) : (
+                                <CourseNotStarted key={`lesson-2-${lesson.id}-${lessonIndex}`} title={lesson.title} />
+                              )
+                            })}
+                          </React.Fragment>
+                        ))
+                      })()
+                    ) : (
+                      <div className='text-center text-secondary'>No lessons available</div>
+                    )}
                   </div>
                 </div>
               </div>

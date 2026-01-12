@@ -79,7 +79,7 @@ export const allMenuItems = [
     requiresUniversitySetting: 'hasLeadershipJournal'
   },
   {
-    title: 'Master Classes',
+    title: 'Studio Guidence',
     to: '/beyond-your-course',
     icon: LibraryIcon,
     hoverIcon: LibraryHoverIcon,

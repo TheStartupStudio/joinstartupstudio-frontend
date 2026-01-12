@@ -217,7 +217,7 @@ function EditPortfolio() {
                 )}
               </div>
               <p className='page-description'>
-                {`${clientBaseURL}/public-portfolio/${user.username}`}
+                {`${clientBaseURL}/public-portfolio/${encodeURIComponent(user.username)}`}
               </p>
               <div className='mt-3'>
                 <p

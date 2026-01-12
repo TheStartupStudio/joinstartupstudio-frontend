@@ -51,28 +51,21 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
     categoryId: null
   })
 
-  // Map static category names to their icons
   const getCategoryIcon = (categoryName) => {
-    // Check if category exists in dbCategories and has an icon
     const dbCategory = dbCategories.find(cat => cat.name === categoryName)
     if (dbCategory?.icons) {
-      // If icons is a string (icon name from DB), map it to the imported icon
       if (typeof dbCategory.icons === 'string') {
-        // Check if it's an icon name (not a path)
         if (ICON_MAP[dbCategory.icons]) {
           return ICON_MAP[dbCategory.icons]
         }
-        // Fallback: if it's a path (starts with /), construct full URL (for backward compatibility)
         if (dbCategory.icons.startsWith('/')) {
           const baseURL = process.env.REACT_APP_SERVER_BASE_URL || ''
           return `${baseURL.replace(/\/$/, '')}${dbCategory.icons}`
         }
       }
-      // If it's already an imported module, return as is
       return dbCategory.icons
     }
     
-    // Fallback to hardcoded icons for categories without database icons
     const iconMap = {
       'Introductions': wavingHand,
       'Announcements': loudSpeaker,
@@ -84,7 +77,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
     return iconMap[categoryName] || speechBalloon // Default icon if not found
   }
 
-  // Filter out non-posting categories and map categories with icons
   const categories = dbCategories
     .filter(cat => cat.is_active && cat.name !== 'All Discussions' && cat.name !== 'Following' && cat.name !== 'Reported Posts')
     .map(cat => ({
@@ -95,12 +87,10 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
   useEffect(() => {
     if (show) {
       if (editingPost) {
-        // Extract category name if it's an object
         const categoryName = typeof editingPost.category === 'object' && editingPost.category !== null
           ? editingPost.category.name
           : editingPost.category
         
-        // Find the category ID from dbCategories if category name is provided
         const categoryId = editingPost.categoryId || editingPost.category_id || 
           (categoryName ? dbCategories.find(cat => cat.name === categoryName)?.id : null)
         
@@ -164,7 +154,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
     const titleCheck = checkContent(formData.title)
     const contentCheck = checkContent(formData.content)
     
-    // Return the highest severity level found
     if (titleCheck && titleCheck.level === 1) return titleCheck
     if (contentCheck && contentCheck.level === 1) return contentCheck
     if (titleCheck && titleCheck.level === 2) return titleCheck
@@ -183,29 +172,27 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
       return
     }
 
-    // Check if user needs to agree to terms
-    if (!currentUser?.forumAgreement) {
+    const isSubscribed = currentUser?.stripe_subscription_id || currentUser?.subscription_exempt
+
+    if (!isSubscribed) {
+    } else if (!currentUser?.forumAgreement) {
       setShowUserAgreement(true)
       return
     }
 
-    // Check for inappropriate content
     const filterResult = checkContentFilter()
     
     if (filterResult) {
       if (filterResult.level === 1) {
-        // Level 1: Block submission, show non-dismissible warning
         setContentFilterLevel(1)
         setShowContentWarning(true)
         return
       } else if (filterResult.level === 2 || filterResult.level === 3) {
-        // Level 2 & 3: Show warning with acknowledgment option
         if (!acknowledgeWarning) {
           setContentFilterLevel(filterResult.level)
           setShowContentWarning(true)
           return
         }
-        // If acknowledged, proceed with submission
       }
     }
 
@@ -230,7 +217,6 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
         })
         toast.success('Discussion created successfully!')
         
-        // Check if Level 2 content needs admin notification
         const filterCheck = checkContentFilter()
         if (filterCheck && filterCheck.level === 2 && response.data?.id) {
           try {
@@ -245,15 +231,12 @@ const StartNewDiscussionModal = ({ show, onHide, editingPost, onSuccess, dbCateg
         }
       }
 
-      // Call onSuccess callback FIRST
       if (onSuccess) {
         onSuccess(response.data)
       }
       
-      // Close modal IMMEDIATELY
       onHide()
       
-      // Reset form state after a delay to avoid conflicts
       setTimeout(() => {
         setFormData({
           title: '',

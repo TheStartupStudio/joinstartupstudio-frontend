@@ -19,7 +19,7 @@ function Student({ student, subject, setSelectedUser, journalSelected }) {
         // }`}
         onClick={() => {
           if (subject == 'PORTFOLIO') {
-            history.push(`/user-portfolio/${student.username}`)
+            history.push(`/public-portfolio/${student.username}`)
           } else if (subject == 'CERTIFICATE') {
             history.push(`/student-iamr/${student.id}`)
           } else {

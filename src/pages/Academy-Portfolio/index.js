@@ -134,8 +134,21 @@ function AcademyPortfolio() {
           )}
         </div>
         <div className='academy-dashboard-layout lead-class mb-5 bck-dashboard'>
-          <AboutMe 
-            user={publicPortfolio?.user || user || {}} // Provide empty object as fallback
+          <AboutMe
+            user={{
+              ...(publicPortfolio?.user || user || {
+                name: "Test User",
+                profession: "Student"
+              }),
+              social_links: {
+                twitter: "",
+                website: "",
+                facebook: "",
+                linkedIn: "",
+                instagram: "",
+                ...(publicPortfolio?.user?.social_links || user?.social_links || {})
+              }
+            }} // Ensure social_links always exists
             portfolioData={publicPortfolio?.portfolio || {}} // Provide empty object as fallback
           />
 

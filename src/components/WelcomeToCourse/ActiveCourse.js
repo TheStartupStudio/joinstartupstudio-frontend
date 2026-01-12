@@ -6,20 +6,20 @@ import GaryPicture from '../../assets/images/academy-icons/1. Course in Entrepre
 import LJ from '../../assets/images/academy-icons/3. Leadereship Journal - Leslie.jpg'
 
 function ActiveCourse() {
-  const [activeTab, setActiveTab] = useState('Master Classes')
+  const [activeTab, setActiveTab] = useState('Studio Guidence')
 
   const tabs = [
-    'Master Classes',
+    'Studio Guidence',
     'Encouragement and Guidance',
     'Leadership Journal',
     'Story in Motion'
   ]
 
   const content = {
-    'Master Classes': {
-      title: 'Master Classes',
+    'Studio Guidence': {
+      title: 'Studio Guidence',
       subtitle: 'Meet Some of Our Market Experts',
-      text: 'The Startup Studio’s Master Classes bring experts from every industry directly to you. These sessions are built on specific industry knowledge and experience, providing you with leadership from top professionals.',
+      text: 'The Startup Studio’s Studio Guidence bring experts from every industry directly to you. These sessions are built on specific industry knowledge and experience, providing you with leadership from top professionals.',
       video:
         'https://d5tx03iw7t69i.cloudfront.net/Master-Classes/Cindy-Schooler-Becoming-a-Fear-Less-Leader.mov',
       image: MasterClass

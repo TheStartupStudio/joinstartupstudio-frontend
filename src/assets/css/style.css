@@ -105,6 +105,10 @@ label:focus,
   .wrapper {
     display: flex;
   }
+
+  .sub-li-logout-button{
+    margin-bottom: 80px !important;
+  }
 }
 
 /* .content {

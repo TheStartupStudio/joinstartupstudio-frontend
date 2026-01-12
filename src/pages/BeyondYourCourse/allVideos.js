@@ -119,17 +119,17 @@ function GuidanceEncouragement({ intl }) {
   useEffect(() => {
     switch(activeLevel) {
       case 0: // Encouragement Videos
-        setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS')
+        setPageTitle('Studio Guidence | ENCOURAGEMENT VIDEOS')
         setPageDescription('beyond_your_course.encouragement_description')
         getEncouragementVideos()
         break;
       case 1: // Career Guidance Videos
-        setPageTitle('MASTER CLASSES | CAREER GUIDANCE')
+        setPageTitle('Studio Guidence | CAREER GUIDANCE')
         setPageDescription('beyond_your_course.master_classes_description')
         getMasterClassVideos()
         break;
       case 2: // Story in Motion Podcast Episodes
-        setPageTitle('MASTER CLASSES | STORY IN MOTION PODCAST EPISODES')
+        setPageTitle('Studio Guidence | STORY IN MOTION PODCAST EPISODES')
         setPageDescription('startup_live.startup_archive_description')
         getStartupLiveVideos()
         break;
@@ -218,7 +218,7 @@ function GuidanceEncouragement({ intl }) {
               >
                 <div style={{margin:'0 1rem'}}>
                   <div style={{marginBottom:'2rem'}}>
-                    <Link to='/beyond-your-course' style={{color:'#000000'}}>Master Classes &gt; </Link>
+                    <Link to='/beyond-your-course' style={{color:'#000000'}}>Studio Guidence &gt; </Link>
                     <span>{getSubtitle()}</span>
                   </div>
                  <div className='d-flex justify-content-between gap-2 master-class-responsive'>

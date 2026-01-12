@@ -97,7 +97,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'master-classes',
-    title: 'Master classes',
+    title: 'Studio Guidence',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
     roles: [2, 1],
@@ -109,7 +109,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Leadership journal',
     srcImage: LeadershipIcon,
     to: '/leadership-journal',
-    roles: [2, 1],
+    roles: [2, 1, 3],
     requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal') ? 'active' : ''
   },
@@ -155,13 +155,11 @@ const InstructorSidebar = (props) => {
   const [showAgreementModal, setShowAgreementModal] = useState(false)
   const [hasCheckedAgreement, setHasCheckedAgreement] = useState(false)
 
-  // Function to check if user has permission to see menu item
   const hasPermission = (itemRoles, userRoleId) => {
     if (itemRoles.includes('all')) return true
     return itemRoles.includes(userRoleId)
   }
 
-  // Filter menu items based on user role AND university settings
   const getVisibleMenuItems = () => {
     const userRoleId = user?.role_id || 1
     const university = user?.University
@@ -170,7 +168,6 @@ const InstructorSidebar = (props) => {
       // Check role permission
       if (!hasPermission(item.roles, userRoleId)) return false
 
-      // Check university setting requirement
       if (item.requiresUniversitySetting) {
         const setting = university?.[item.requiresUniversitySetting]
         if (!setting) return false
@@ -225,7 +222,6 @@ const InstructorSidebar = (props) => {
     return () => window.removeEventListener('resize', checkTouch)
   }, [])
 
-  // Remove auto-show on load - only show when accessing forum
   useEffect(() => {
     if (user) {
       setHasCheckedAgreement(true)
@@ -260,7 +256,6 @@ const InstructorSidebar = (props) => {
       await dispatch(userLogout())
       localStorage.clear()
       dispatch(setGeneralLoading(false))
-      // Router will automatically redirect to login when isAuthenticated becomes false
     } catch (error) {
       console.log('error', error)
       dispatch(setGeneralLoading(false))
@@ -269,38 +264,40 @@ const InstructorSidebar = (props) => {
 
   const handleAgreementSuccess = () => {
     setShowAgreementModal(false)
-    // Optionally refresh user data or update state
   }
 
   const handleAgreementHide = () => {
-    // Don't allow closing without agreement if forum access is enabled
     const university = user?.University
     const hasForumAccess = university?.hasForumAccess
     const forumAgreement = user?.forumAgreement
     
     if (hasForumAccess && !forumAgreement) {
-      // Keep modal open
       return
     }
     setShowAgreementModal(false)
   }
 
   const handleMenuItemClick = (item) => {
-    // Check if it's the forum item
     if (item.id === 'forum') {
+      const isSubscribed = user?.stripe_subscription_id || user?.subscription_exempt
+
+      if (!isSubscribed) {
+        dispatch(setAccordionToggled(false))
+        props.props.hideHeaderIcons()
+        return true // Allow navigation
+      }
+
       const forumAgreement = user?.forumAgreement
-      
-      // If user hasn't agreed to terms, show modal and prevent navigation
+
       if (!forumAgreement) {
         setShowAgreementModal(true)
-        return false // Return false to prevent navigation
+        return false 
       }
     }
-    
-    // Default behavior for all items
+
     dispatch(setAccordionToggled(false))
     props.props.hideHeaderIcons()
-    return true // Return true to allow navigation
+    return true 
   }
 
   const navHeight = props.navHeight
@@ -392,7 +389,7 @@ const InstructorSidebar = (props) => {
           </Link>
         </li>
 
-        <li className='sub-li' onClick={handleLogout}>
+        <li className='sub-li sub-li-logout-button' onClick={handleLogout}>
           <div className='logout-button'>
             <div className='d-flex w-100' style={{ alignItems: 'center' }}>
               <Col md='2' className='col-2 icon_container'>

@@ -109,15 +109,24 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
     // ✅ Validate that date is not in the past
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     const selectedDate = new Date(date)
     selectedDate.setHours(0, 0, 0, 0)
-    
+
     if (selectedDate < today) {
       toast.error('Payment date must be in the future')
       return
     }
-    
+
+    // ✅ Validate that date is not past the invoice due date
+    const dueDate = new Date(invoiceData?.dueDate)
+    dueDate.setHours(23, 59, 59, 999) // Set to end of due date
+
+    if (selectedDate > dueDate) {
+      toast.error(`Payment date cannot be past the invoice due date (${invoiceData?.dueDate || 'due date'})`)
+      return
+    }
+
     setSendDate(date)
     setShowCalendar(false)
   }
@@ -297,7 +306,7 @@ const PayInvoiceModal = ({ show, onHide, invoiceData, onPay }) => {
             )}
             {!sendDate && (
               <p className="payment-note mt-2">
-                Leave empty to pay immediately
+                Leave empty to pay immediately. Scheduled payments must be before the due date ({invoiceData?.dueDate || 'due date'}).
               </p>
             )}
             <div className="date-input-wrapper" style={{width: 'fit-content', position: 'relative'}}>

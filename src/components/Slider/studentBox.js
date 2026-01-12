@@ -26,7 +26,7 @@ export default function StudentBox(props) {
         <button
           className='d-block mx-auto'
           onClick={() =>
-            navigate.push(`/user-portfolio/${props.data.username}`)
+            navigate.push(`/public-portfolio/${encodeURIComponent(props.data.username)}`)
           }
         >
           PORTFOLIO

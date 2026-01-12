@@ -89,14 +89,13 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
       })
       
       setIsPublishedVisible(prev => !prev)
-      toast.success(isPublishedVisible ? 
-        'Portfolio unpublished successfully' : 
+      toast.success(isPublishedVisible ?
+        'Portfolio unpublished successfully' :
         'Portfolio published successfully!')
-      
-      // If publishing, show share modal
-      if (!isPublishedVisible) {
-        setSharePortfolio(true)
-      }
+
+      // if (!isPublishedVisible) {
+      //   setSharePortfolio(true)
+      // }
     } catch (error) {
       toast.error('Error updating portfolio status')
       console.error('Error:', error)
@@ -112,7 +111,8 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
 
   // Update click handler for share
   const handleShareClick = () => {
-    const portfolioUrl = portfolioData?.url || `${window.location.origin}/public-portfolio/${user.username}`
+    // Always generate the URL dynamically using the username for reliability
+    const portfolioUrl = `${window.location.origin}/public-portfolio/${encodeURIComponent(user.username)}`
     setContent(portfolioUrl)
     setSharePortfolio(true)
   }
@@ -133,44 +133,44 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
               >
                 {isPublishedVisible ? (
                   <>
-                    <div className='d-flex gap-2 align-items-center cursor-pointer'>
+                    <div className='d-flex gap-2 align-items-center cursor-pointer' title='Click to unpublish' onClick={handleVisibilityClick}>
                       <img
                         src={internet}
                         alt='internet'
                         className='internet-class'
                       />
-                      <Tooltip text={'Click to unpublish'}>
+                      {/* <Tooltip text={'Click to unpublish'}> */}
                         <p
                           className='mb-0 fs-15 fw-medium portfolio-u text-black'
-                          onClick={handleVisibilityClick}
+                          
                         >
                           {isPublishing ? 'Updating...' : 'Portfolio published'}
                         </p>
-                      </Tooltip>
+                      {/* </Tooltip> */}
                     </div>
-                    <div className='d-flex gap-2 align-items-center cursor-pointer'>
+                    <div className='d-flex gap-2 align-items-center cursor-pointer' title='Click to get link' onClick={handleShareClick}>
                       <img src={ShareLink} alt='sharelink' />
-                      <Tooltip text={'Click to get link'}>
+                      {/* <Tooltip text={'Click to get link'}> */}
                         <p
                           className='mb-0 fs-15 fw-medium portfolio-u  text-black'
-                          onClick={handleShareClick}
                         >
                           Share link to portfolio
                         </p>
-                      </Tooltip>
+                      {/* </Tooltip> */}
                     </div>
                   </>
                 ) : (
                   <div
                     className='d-flex gap-2 align-items-center cursor-pointer'
                     onClick={handleVisibilityClick}
+                    title='Click to publish'
                   >
                     <img src={internet} alt='internet' />
-                    <Tooltip text={'Click to publish'}>
+                    {/* <Tooltip text={'Click to publish'}> */}
                       <p className='mb-0 fs-15 fw-medium portfolio-u'>
                         {isPublishing ? 'Publishing...' : 'Portfolio unpublished'}
                       </p>
-                    </Tooltip>
+                    {/* </Tooltip> */}
                   </div>
                 )}
               </div>

@@ -16,7 +16,7 @@ function PortfolioContent({
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
+  const shortText = fullText && fullText.length > 200 ? fullText.slice(0, 200) : (fullText || '')
 
   // Add this helper function at the top of the component
   const truncateUrl = (url, maxLength = 50) => {
@@ -26,6 +26,13 @@ function PortfolioContent({
     const start = url.substring(0, maxLength / 2)
     const end = url.substring(url.length - 20)
     return `${start}...${end}`
+  }
+
+  const formatURL = (url) => {
+    if (!url) return '#'
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https://${url}`
   }
 
   return (
@@ -52,13 +59,14 @@ function PortfolioContent({
           <p className='mb-0 fs-15 fw-medium'>{institution}</p>
           <p className='mb-0 fs-15 fw-medium'>{duration}</p>
           <div className='d-flex gap-3 align-items-center mt-2'>
-            <img src={blueInternet} alt='blue-internet' />
+
             <a
-              href={link}
+              href={formatURL(link)}
               target='blank'
-              className='mb-0 fs-15 blue-color fw-medium word-break-portfolio'
-              title={link} // Show full URL on hover
+              className='mb-0 fs-15 blue-color fw-medium word-break-portfolio d-flex align-items-center gap-1'
+              title={formatURL(link)} // Show full URL on hover
             >
+              <img src={blueInternet} alt='blue-internet' />
               {truncateUrl(link)}
             </a>
           </div>
@@ -72,14 +80,14 @@ function PortfolioContent({
                 __html: DOMPurify.sanitize(
                   isExpanded
                     ? fullText
-                    : fullText.length > 200
+                    : (fullText && fullText.length > 200)
                     ? `${shortText}...`
                     : shortText
                 )
               }}
             />
 
-            {fullText.length > 200 && (
+            {fullText && fullText.length > 200 && (
               <span
                 className='blue-color ml-2 fw-medium cursor-pointer'
                 onClick={() => setIsExpanded(!isExpanded)}

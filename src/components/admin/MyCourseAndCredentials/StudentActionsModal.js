@@ -326,7 +326,7 @@
 //                 </div>
 //               </div>
 
-//               <a href={`/user-portfolio/${formData.username}`}>
+//               <a href={`/public-portfolio/${formData.username}`}>
 //                 <FontAwesomeIcon icon={faIdBadge} className='me-2' /> View
 //                 Student Portfolio
 //               </a>

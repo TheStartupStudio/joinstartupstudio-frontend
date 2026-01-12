@@ -67,7 +67,7 @@ export default function ConnectionBox(props) {
             <button
               className="d-block mx-auto"
               onClick={() =>
-                navigate.push(`/user-portfolio/${props.data.username}`, {
+                navigate.push(`/public-portfolio/${encodeURIComponent(props.data.username)}`, {
                   isPeerView: true
                 })
               }
@@ -84,11 +84,11 @@ export default function ConnectionBox(props) {
               onClick={
                 props.from == 'PublishedProject' || props.from == 'PreviewPage'
                   ? () =>
-                      navigate.push(`/user-portfolio/${props.data.username}`, {
+                      navigate.push(`/public-portfolio/${props.data.username}`, {
                         isPeerView: true
                       })
                   : () =>
-                      navigate.push(`/user-portfolio/${props.data.username}`, {
+                      navigate.push(`/public-portfolio/${props.data.username}`, {
                         isPeerView: true
                       })
               }
