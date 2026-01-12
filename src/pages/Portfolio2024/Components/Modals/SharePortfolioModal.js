@@ -37,7 +37,7 @@ function SharePortfolioModal(props) {
       portfolioUrl = '/public-portfolio/'
     }
 
-    let url = window.location.origin + portfolioUrl + loggedUser?.username
+    let url = window.location.origin + portfolioUrl + encodeURIComponent(loggedUser?.username)
     return url
   }
 

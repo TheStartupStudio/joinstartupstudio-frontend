@@ -276,7 +276,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   }
 
   const handleViewPortfolio = () => {
-    window.open(`/user-portfolio/${displayData.username || learner.id}`, '_blank')
+    window.open(`/public-portfolio/${encodeURIComponent(displayData.username || learner.id)}`, '_blank')
   }
 
   const handleViewPerformanceData = () => {

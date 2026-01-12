@@ -1,9 +1,16 @@
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 
 function MarketCard({ imgSrc, title, description, url, uploaded, setIsOpen, isUserPortfolio }) {
+  const formatURL = (url) => {
+    if (!url) return '#'
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https://${url}`
+  }
+
   return (
     <div className="market-card">
-      <a href={url} target='_blank' rel='noopener noreferrer' className='text-decoration-none'>
+      <a href={formatURL(url)} target='_blank' rel='noopener noreferrer' className='text-decoration-none'>
         <img src={imgSrc} alt={title} className='w-100 project-img' />
       </a>
       <div className="content">
