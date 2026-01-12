@@ -188,12 +188,12 @@ useEffect(() => {
               onClick={() => dispatch(toggleCollapse())}
               style={{ position: 'absolute', right: '1rem' }}
             />
+            <Link to="/beyond-your-course" style={{ color: '#000000' }}>
             <div style={{ marginBottom: '2rem' }}>
-              <Link to="/beyond-your-course" style={{ color: '#000000' }}>
                 <FontAwesomeIcon icon={faArrowLeft} />
-              </Link>
               <span style={{ marginLeft: '0.5rem' }}>{getSubtitle()}</span>
             </div>
+            </Link>
 
             <h3 className="page-title">{pageTitle}</h3>
             <p className="page-description">{pageDescription}</p>
