@@ -984,7 +984,8 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const handleSavePayment = async (paymentData) => {
     try {
       console.log('Saving payment data:', paymentData)
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Refresh invoices after payment method is saved
+      await fetchInvoices(currentPage, debouncedSearchQuery, filters)
       toast.success('Payment information updated successfully!')
     } catch (error) {
       console.error('Error saving payment:', error)
