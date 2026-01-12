@@ -89,14 +89,13 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
       })
       
       setIsPublishedVisible(prev => !prev)
-      toast.success(isPublishedVisible ? 
-        'Portfolio unpublished successfully' : 
+      toast.success(isPublishedVisible ?
+        'Portfolio unpublished successfully' :
         'Portfolio published successfully!')
-      
-      // If publishing, show share modal
-      if (!isPublishedVisible) {
-        setSharePortfolio(true)
-      }
+
+      // if (!isPublishedVisible) {
+      //   setSharePortfolio(true)
+      // }
     } catch (error) {
       toast.error('Error updating portfolio status')
       console.error('Error:', error)
@@ -112,7 +111,8 @@ function AboutMe({ user = {}, portfolioData = {} }) { // Add default empty objec
 
   // Update click handler for share
   const handleShareClick = () => {
-    const portfolioUrl = portfolioData?.url || `${window.location.origin}/public-portfolio/${encodeURIComponent(user.username)}`
+    // Always generate the URL dynamically using the username for reliability
+    const portfolioUrl = `${window.location.origin}/public-portfolio/${encodeURIComponent(user.username)}`
     setContent(portfolioUrl)
     setSharePortfolio(true)
   }
