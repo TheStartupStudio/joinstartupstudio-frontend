@@ -63,7 +63,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     financialLiteracyJournal: 'Financial Literacy Journal',
     forumAccess: 'Forum Access',
     leadershipJournal: 'Leadership Journal',
-    masterClasses: 'Studio Guidence'
+    masterClasses: 'Studio Guidance'
   }
 
   useEffect(() => {

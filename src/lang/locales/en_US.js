@@ -317,7 +317,7 @@ const EnLangs = {
   'register.my_portfolio_text':
     'Every LTS participant creates a Learn to Start portfolio inside of the Learn to Start e-learning platform that features their outcomes of empowerment, performance, and wellness. The portfolio can be used to promote every LTS participant’s personal brand as well as allowing each participant to gain feedback from multiple sources as part of engaging in the program.',
   'register.beyond_learn_to_start':
-    'LTS participants gain access to powerful content, including encouragement and guidance from The Startup Studio’s CEO and founder, who created this series to offer his experiences and expertise. They also gain access to powerful Studio Guidence from our exclusive community of Global Ambassadors ™.',
+    'LTS participants gain access to powerful content, including encouragement and guidance from The Startup Studio’s CEO and founder, who created this series to offer his experiences and expertise. They also gain access to powerful Studio Guidance from our exclusive community of Global Ambassadors ™.',
   'register.spotlight': 'SPOTLIGHT®',
   'portfolio.my_portfolio_edit':
     'Share your empowerment, wellness, and performance with the global community',
@@ -510,10 +510,10 @@ const EnLangs = {
     'Encouragement and guidance to help you on your journey.',
   'beyond_your_course.encouragement_videos': 'Encouragement Videos',
   'beyond_your_course.encouragement_no_videos': 'Encouragement',
-  'beyond_your_course.master_classes': 'Studio Guidence',
+  'beyond_your_course.master_classes': 'Studio Guidance',
   'beyond_your_course.Career_Guidance': 'Career Guidance',
   'beyond_your_course.startup_live': 'Story in Motion Podcast Episodes',
-  'beyond_your_course.master_classes_upper': 'Studio Guidence',
+  'beyond_your_course.master_classes_upper': 'Studio Guidance',
   'beyond_your_course.encouragement': 'Encouragement',
   'beyond_your_course.encouragement_description':
     'Videos from the founder and CEO of The Startup Studio to help you on your journey.',
