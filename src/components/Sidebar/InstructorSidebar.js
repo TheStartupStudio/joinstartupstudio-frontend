@@ -389,7 +389,7 @@ const InstructorSidebar = (props) => {
           </Link>
         </li>
 
-        <li className='sub-li' onClick={handleLogout}>
+        <li className='sub-li sub-li-logout-button' onClick={handleLogout}>
           <div className='logout-button'>
             <div className='d-flex w-100' style={{ alignItems: 'center' }}>
               <Col md='2' className='col-2 icon_container'>

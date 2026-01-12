@@ -53,6 +53,10 @@ function Sidebar(props) {
   }, [])
 
   const getClass = () => {
+    // On mobile, use full height to allow scrolling
+    if (windowWidth <= 1135) {
+      return 'h-100'
+    }
     if (navHeight > 2100) {
       return 'h-99'
     } else {
@@ -61,6 +65,10 @@ function Sidebar(props) {
   }
 
   const getNavClass = () => {
+    // On mobile, don't constrain height to allow scrolling
+    if (windowWidth <= 1135) {
+      return ''
+    }
     if (navHeight > 2100) {
       return ''
     } else if (navHeight > 830) {
@@ -75,6 +83,10 @@ function Sidebar(props) {
   }
 
   const getOtherNavClass = () => {
+    // On mobile, don't constrain height to allow scrolling
+    if (windowWidth <= 1135) {
+      return ''
+    }
     if (navHeight > 2100) {
       return 'h-101'
     } else if (navHeight > 1960) {
