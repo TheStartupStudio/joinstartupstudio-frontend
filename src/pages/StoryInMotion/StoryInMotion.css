@@ -664,7 +664,7 @@
   font-weight: 700;
 }
 
-/* For Studio Guidence page (pink theme) */
+/* For Studio Guidance page (pink theme) */
 .gradient-background-master .course-level:hover {
   background-color: #FF339933;
   transform: translateY(-1px);

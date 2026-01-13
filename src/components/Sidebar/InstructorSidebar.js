@@ -97,7 +97,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'master-classes',
-    title: 'Studio Guidence',
+    title: 'Studio Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
     roles: [2, 1],

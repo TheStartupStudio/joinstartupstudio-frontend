@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -11,6 +11,13 @@ const UserAgreementModal = ({ show, onSuccess, onHide }) => {
   const [agreedToGuidelines, setAgreedToGuidelines] = useState(false)
   const [agreedToPledge, setAgreedToPledge] = useState(false)
   const dispatch = useDispatch()
+  const isMountedRef = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
   const handleAccept = async () => {
     if (!agreedToGuidelines || !agreedToPledge) {
@@ -37,7 +44,9 @@ const UserAgreementModal = ({ show, onSuccess, onHide }) => {
                           'Failed to accept agreement. Please try again.'
       toast.error(errorMessage)
     } finally {
-      setLoading(false)
+      if (isMountedRef.current) {
+        setLoading(false)
+      }
     }
   }
 
