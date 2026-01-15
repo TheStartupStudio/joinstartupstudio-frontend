@@ -16,7 +16,7 @@ import AssignTasksModal from '../../components/ContentManagement/AssignTasksModa
 
 const ContentManagement = () => {
   const dispatch = useDispatch()
-  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
+  const [levelsData, setLevelsData] = useState([]) 
   const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
@@ -42,20 +42,15 @@ const ContentManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  // Debug editingTask changes
   useEffect(() => {
     if (editingTask) {
-      console.log('editingTask changed:', editingTask)
-      console.log('editingTask reflectionItems:', editingTask.reflectionItems)
     }
   }, [editingTask])
 
-  // Fetch levels on component mount
   useEffect(() => {
     fetchLevels()
   }, [])
 
-  // Fetch tasks when active level changes
   useEffect(() => {
     if (activeLevel && levelsData.length > 0) {
       const activeLevelObj = levelsData.find(l => l.title === activeLevel)
@@ -63,19 +58,15 @@ const ContentManagement = () => {
         fetchTasksByLevel()
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLevel])
 
-  // Fetch all entrepreneurship levels from API
   const fetchLevels = async () => {
     try {
       setLoading(true)
       const response = await axiosInstance.get('/LtsJournals/entrepreneurship/levels')
       
-      // Response: [{ id, title, order, published, category }]
       setLevelsData(response.data)
       
-      // Set first level as active
       if (response.data.length > 0) {
         setActiveLevel(response.data[0].title)
       }
@@ -83,7 +74,6 @@ const ContentManagement = () => {
       console.error('Error fetching levels:', error)
       toast.error('Failed to fetch levels')
       
-      // Fallback to default levels
       const defaultLevels = [
         { id: 1, title: 'Level 1: Entrepreneurship and You', order: 1, published: true },
         { id: 2, title: 'Level 2: Understanding Learn to Start', order: 2, published: true },
@@ -96,12 +86,10 @@ const ContentManagement = () => {
     }
   }
 
-  // Fetch tasks by level
   const fetchTasksByLevel = async () => {
     try {
       setLoading(true)
       
-      // Find the level ID from the active level title
       const activeLevelObj = levelsData.find(l => l.title === activeLevel)
       if (!activeLevelObj) {
         setTasksData([])
@@ -115,9 +103,7 @@ const ContentManagement = () => {
         }
       })
 
-      // Transform API data to match table format
       const transformedTasks = response.data.map(journal => {
-        // Check for content in various possible locations
         const hasVideoContent = journal.videoId || 
                                journal.videoIds || 
                                (journal.videos && journal.videos.length > 0) ||
@@ -131,7 +117,6 @@ const ContentManagement = () => {
           status: journal.published ? 'published' : 'unpublished',
           hasContent: hasVideoContent || hasReflectionContent,
           order: journal.order,
-          // Store full journal data for editing
           journalData: journal
         }
       })
@@ -168,16 +153,12 @@ const ContentManagement = () => {
   }
 
   const handleRowAction = (actionType, item) => {
-    console.log(`${actionType} action for:`, item)
     
     switch (actionType) {
       case 'view':
-        // Fetch complete journal data using new view endpoint for view mode
         handleViewEditJournal(item.id, actionType)
         break
       case 'edit':
-        // For edit mode, always fetch fresh data to ensure we have the latest information
-        console.log('Fetching fresh data for edit mode')
         handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
@@ -199,12 +180,11 @@ const ContentManagement = () => {
     try {
       const updatedData = newOrderedData.map((item, index) => ({
         ...item,
-        order: index // Use 0-based indexing (order 0 comes first)
+        order: index 
       }))
       
       setTasksData(updatedData)
   
-      // Update order in database for each task
       const reorderPromises = updatedData.map(task =>
         axiosInstance.put(`/LtsJournals/${task.id}/order`, {
           order: task.order
@@ -212,18 +192,15 @@ const ContentManagement = () => {
       )
       await Promise.all(reorderPromises)
 
-      // Log the list of ids and names after reordering
       const reorderedItems = updatedData.map(item => ({
         id: item.id,
         name: item.name
       }))
-      console.log('Reordered items:', reorderedItems)
   
       toast.success('Task order updated successfully!')
     } catch (error) {
       console.error('Error reordering tasks:', error)
       toast.error('Failed to update task order')
-      // Revert local state on error
       fetchTasksByLevel()
     } finally {
       setLoading(false)
@@ -261,66 +238,46 @@ const ContentManagement = () => {
     try {
       setLoading(true)
 
-      // Use the new view endpoint to get complete journal data
       const response = await axiosInstance.get(`/LtsJournals/${journalId}/view-with-content`)
 
       const journal = response.data
 
-      // Debug the journal data structure
-      console.log('Journal data from API:', journal)
-      console.log('Journal reflectionItems:', journal.reflectionItems)
-      console.log('Journal entries:', journal.journalData?.entries)
-
-      // Format data for the modal - ensure reflection items are properly structured
       let formattedReflectionItems = []
 
-      // Prioritize parsing from entries HTML, as that's the source of truth
       if (journal.journalData && journal.journalData.entries && Array.isArray(journal.journalData.entries)) {
-        console.log('Parsing entries from journalData:', journal.journalData.entries)
 
         formattedReflectionItems = journal.journalData.entries.map(entry => {
           let question = ''
           let instructions = ''
-
-          console.log('Parsing entry title:', entry.title)
-
-          // Parse the title HTML to extract question and instructions
           if (entry.title) {
-            console.log('Full entry title:', entry.title)
 
-            // Create a temporary div to parse the HTML safely
             const tempDiv = document.createElement('div')
             tempDiv.innerHTML = entry.title
 
-            // Extract question from <h2> tag
-            const h2Element = tempDiv.querySelector('h2')
-            if (h2Element) {
-              question = h2Element.textContent || h2Element.innerText || ''
-              console.log('Extracted question from h2:', question)
+            const headingElement = tempDiv.querySelector('h1, h2, h3, h4, h5, h6')
+            if (headingElement) {
+              question = headingElement.textContent || headingElement.innerText || ''
             } else {
-              // Fallback to regex if querySelector doesn't work
-              const h2Match = entry.title.match(/<h2[^>]*>(.*?)<\/h2>/i)
-              if (h2Match && h2Match[1]) {
-                const h2TempDiv = document.createElement('div')
-                h2TempDiv.innerHTML = h2Match[1]
-                question = h2TempDiv.textContent || h2TempDiv.innerText || h2Match[1]
-                console.log('Extracted question from regex:', question)
+              let headingMatch = entry.title.match(/<h3[^>]*>(.*?)<\/h3>/i)
+              if (!headingMatch) {
+                headingMatch = entry.title.match(/<h2[^>]*>(.*?)<\/h2>/i)
+              }
+              if (headingMatch && headingMatch[1]) {
+                const headingTempDiv = document.createElement('div')
+                headingTempDiv.innerHTML = headingMatch[1]
+                question = headingTempDiv.textContent || headingTempDiv.innerText || headingMatch[1]
               }
             }
 
-            // Extract instructions from <p> tag
             const pElement = tempDiv.querySelector('p')
             if (pElement) {
               instructions = pElement.textContent || pElement.innerText || ''
-              console.log('Extracted instructions from p:', instructions)
             } else {
-              // Fallback to regex if querySelector doesn't work
               const pMatch = entry.title.match(/<p[^>]*>(.*?)<\/p>/i)
               if (pMatch && pMatch[1]) {
                 const pTempDiv = document.createElement('div')
                 pTempDiv.innerHTML = pMatch[1]
                 instructions = pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
-                console.log('Extracted instructions from regex:', instructions)
               }
             }
           }
@@ -331,20 +288,16 @@ const ContentManagement = () => {
             instructions: instructions.trim()
           }
 
-          console.log('Final parsed result:', result)
           return result
         })
       }
-      // Fallback to reflectionItems if entries don't exist
       else if (journal.reflectionItems && Array.isArray(journal.reflectionItems) && journal.reflectionItems.length > 0) {
-        console.log('Using reflectionItems as fallback')
         formattedReflectionItems = journal.reflectionItems.map(item => ({
           id: item.id || Date.now() + Math.random(),
           question: item.question || '',
           instructions: item.instructions || ''
         }))
       }
-      // Default fallback for different content types
       else {
         formattedReflectionItems = (journal.category === 'leadership')
           ? [
@@ -369,17 +322,6 @@ const ContentManagement = () => {
         order: journal.order
       }
 
-      console.log('Formatted task data for modal:', taskData)
-      console.log('Final reflectionItems:', taskData.reflectionItems)
-
-      // Debug each reflection item parsing
-      taskData.reflectionItems.forEach((item, index) => {
-        console.log(`Reflection item ${index}:`, {
-          id: item.id,
-          question: item.question,
-          instructions: item.instructions
-        })
-      })
 
       setEditingTask(taskData)
       setModalMode(mode)
@@ -393,26 +335,20 @@ const ContentManagement = () => {
   }
 
   const handleSaveTask = (journalData) => {
-    console.log('Journal data received:', journalData)
 
-    // Handle delete case
     if (journalData.deleted) {
       setTasksData(prevTasks => prevTasks.filter(task => task.id !== journalData.id))
       return
     }
 
-    // Refresh the tasks list to get the latest data
     fetchTasksByLevel()
   }
 
   const handleSaveLevels = async () => {
-    // The modal now handles all API calls directly
-    // This function is just called to refresh the levels list
     await fetchLevels()
   }
 
   const handleSaveAssignments = (assignments) => {
-    console.log('Task assignments:', assignments)
   }
 
   const handlePublishCancel = () => {
@@ -438,7 +374,6 @@ const ContentManagement = () => {
   const handleConfirmPublish = async () => {
     setLoading(true)
     try {
-      // Update the journal's published status
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
         published: true
       })
@@ -465,7 +400,6 @@ const ContentManagement = () => {
   const handleConfirmUnpublish = async () => {
     setLoading(true)
     try {
-      // Update the journal's published status
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
         published: false
       })
@@ -782,7 +716,7 @@ const ContentManagement = () => {
           />
         </div>
 
-        <div className="pagination-container">
+        {/* <div className="pagination-container">
           <button className="pagination-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -806,7 +740,7 @@ const ContentManagement = () => {
               <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
 
               </div>

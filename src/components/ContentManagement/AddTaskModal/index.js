@@ -59,12 +59,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }, [mode])
 
   useEffect(() => {
-    // Only load data when taskData changes, not when mode changes
     if (taskData && taskData.id) {
-      console.log('Loading taskData in modal:', taskData)
-      console.log('Current mode:', currentMode)
-      console.log('Current reflectionItems before loading:', reflectionItems)
-      console.log('isLoadingData:', isLoadingData)
 
       setIsLoadingData(true)
 
@@ -73,14 +68,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       setActiveTab(taskData.contentType || 'video')
       setInformation(taskData.information || '')
 
-      // CRITICAL: Only update reflection items if we have valid data
-      // This prevents reflection items from being reset during mode switches or loading
       if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
-        console.log('Setting reflection items from taskData:', taskData.reflectionItems)
         setReflectionItems(taskData.reflectionItems)
       } else if (currentMode === 'add') {
-        // Only reset for new items in add mode
-        console.log('Resetting reflection items for add mode')
         if (isLeadership) {
           setReflectionItems([
             { id: 1, question: '', instructions: '' },
@@ -91,7 +81,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           setReflectionItems([{ id: 1, question: '', instructions: '' }])
         }
       }
-      // For edit/view modes, NEVER reset reflection items - preserve them
 
       if (taskData.videoUrl) {
         setVideoPreview(taskData.videoUrl)
@@ -102,7 +91,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
       setIsLoadingData(false)
     }
-  }, [taskData?.id, taskData?.reflectionItems]) // Only depend on specific taskData properties
+  }, [taskData?.id, taskData?.reflectionItems]) 
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -128,7 +117,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       let videoUrl = videoPreview
       let thumbnailUrl = thumbnailPreview
 
-      // Step 1: Upload video file if it's a new file (not a URL)
       if (videoFile && videoFile instanceof File) {
         toast.info('Uploading video...')
         const videoFormData = new FormData()
@@ -146,7 +134,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         }
       }
 
-      // Step 2: Upload thumbnail file if it's a new file (not a URL)
       if (thumbnailFile && thumbnailFile instanceof File) {
         toast.info('Uploading thumbnail...')
         const thumbnailFormData = new FormData()
@@ -164,17 +151,14 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         }
       }
 
-      // Step 3: Find the level ID from the selected level title
       const selectedLevelObj = levels.find(l => {
         const levelTitle = typeof l === 'string' ? l : l.title
         return levelTitle === selectedLevel
       })
       const levelId = selectedLevelObj && typeof selectedLevelObj !== 'string' ? selectedLevelObj.id : null
 
-      // Step 4: Prepare reflection items (filter out empty questions)
       const filteredReflectionItems = (activeTab === 'reflection' || isLeadership) 
         ? reflectionItems.filter(item => {
-            // Remove HTML tags to check if question is truly empty
             const tempDiv = document.createElement('div')
             tempDiv.innerHTML = item.question
             const textContent = tempDiv.textContent || tempDiv.innerText || ''
@@ -182,7 +166,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           })
         : []
 
-      // Step 5: Create or update the journal
       const payload = {
         title: taskTitle,
         category: isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship',
@@ -198,12 +181,10 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
       let response
       if (isEditMode && taskData?.id) {
-        // Update existing journal using new edit endpoint
         toast.info('Updating task...')
         response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
         toast.success('Task updated successfully!')
       } else {
-        // Create new journal
         toast.info('Creating task...')
         response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
         toast.success('Task created successfully!')
@@ -253,24 +234,18 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }
 
   const handleSwitchToEditMode = () => {
-    console.log('Switching to edit mode, current reflection items:', reflectionItems)
-    console.log('Current taskData:', taskData)
 
-    // When switching from view to edit, preserve all current data
-    // Update the taskData to reflect the current state before switching modes
     if (taskData) {
       const updatedTaskData = {
         ...taskData,
-        reflectionItems: reflectionItems, // Preserve current reflection items
-        information: information, // Preserve current information
+        reflectionItems: reflectionItems, 
+        information: information, 
         title: taskTitle,
         level: selectedLevel,
         contentType: activeTab,
         videoUrl: videoPreview,
         thumbnailUrl: thumbnailPreview
       }
-      console.log('Updated taskData for edit mode:', updatedTaskData)
-      // Note: We can't directly update taskData prop, but we can ensure the state is preserved
     }
 
     setCurrentMode('edit')
@@ -333,7 +308,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const handleLevelSelect = (level) => {
     if (isViewMode) return
-    // Store the level object or title depending on what's passed
     setSelectedLevel(typeof level === 'string' ? level : level.title)
     setIsDropdownOpen(false)
   }

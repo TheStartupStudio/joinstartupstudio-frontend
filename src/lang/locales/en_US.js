@@ -320,7 +320,7 @@ const EnLangs = {
     'LTS participants gain access to powerful content, including encouragement and guidance from The Startup Studio’s CEO and founder, who created this series to offer his experiences and expertise. They also gain access to powerful Studio Guidance from our exclusive community of Global Ambassadors ™.',
   'register.spotlight': 'SPOTLIGHT®',
   'portfolio.my_portfolio_edit':
-    'Share my empowerment, wellness, and performance with the global community',
+    'Sharing my empowerment, wellness, and performance with the global community',
   'register.spotlight_text':
     'LTS participants gain access to our pitch platform to apply for funding and mentorship from our LTS Alliance.',
   'register.coming_spring': '- COMING SPRING 2022 -',
@@ -421,7 +421,7 @@ const EnLangs = {
   'journal.header': 'Leadership Journal',
   'portfolio.header': 'My Portfolio',
   'portfolio.content':
-    'Share my empowerment, wellness, and performance with the global community',
+    'Sharing my empowerment, wellness, and performance with the global community',
 
   //Portfolio
   'portfolio.edit_page_Summary_first': 'Summary ',
@@ -476,7 +476,7 @@ const EnLangs = {
   'portfolio.publish_checkbox':
     'Publish your portfolio to share your story with the global community.',
   'portfolio.my_portfolio_edit':
-    'Share my empowerment, wellness, and performance with the global community',
+    'Sharing my empowerment, wellness, and performance with the global community',
   'portfolio.edit_top_skills': 'EDIT TOP SKILLS',
   'portfolio.skills_title': 'TOP SKILLS',
   'portfolio.add_personal_skill_error': 'You have alredy this skill',
