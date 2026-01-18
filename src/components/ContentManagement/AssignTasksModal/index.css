@@ -156,13 +156,17 @@ backdrop-filter: var(--dropblur-boxes-backdrop-filter, blur(60px));
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
   color: var(--colors-black, #000000);
   text-align: center;
-  font-family: 'Montserrat-SemiBold', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
   position: relative;
   outline: none;
   border: none;
   cursor: pointer;
+
+
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
 .assign-tasks-modal .btn-cancel:hover {
@@ -187,13 +191,16 @@ backdrop-filter: var(--dropblur-boxes-backdrop-filter, blur(60px));
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
   color: var(--colors-white, #ffffff);
   text-align: center;
-  font-family: 'Montserrat-SemiBold', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
   position: relative;
   outline: none;
   border: none;
   cursor: pointer;
+
+  font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
 }
 
 .assign-tasks-modal .btn-save:hover {

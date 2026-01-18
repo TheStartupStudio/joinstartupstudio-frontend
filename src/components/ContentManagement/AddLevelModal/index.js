@@ -332,8 +332,8 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
         </div>
 
         <div className="modal-actions">
-          <button className="btn-cancel" onClick={handleClose} disabled={loading}>
-            CLOSE
+          <button className="btn-cancel" style={{ fontSize: '14px' }} onClick={handleClose} disabled={loading}>
+            CANCEL
           </button>
           {hasNewLevel && (
             <button className="btn-save" onClick={handleSaveAndContinue} disabled={loading}>

@@ -6,6 +6,7 @@ import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import AcademyBtn from '../../components/AcademyBtn'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
 import DataTable from '../../components/DataTable'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -631,13 +632,13 @@ const ContentManagement = () => {
                 title="Add New Content"
                 icon={faPlus}
                 onClick={addNewContent}
-              />
+            />
             </div>
 
             <div>
               <AcademyBtn
                 title="View Uncategorized Tasks"
-                icon={faPlus}
+                icon={btnIcon}
                 onClick={viewUncategorizedTasks}
               />
             </div>

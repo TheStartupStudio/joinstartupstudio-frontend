@@ -12,6 +12,8 @@ import AddLevelModal from '../../components/ContentManagement/AddLevelModal/inde
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 import pinkMaster from '../../assets/images/academy-icons/ping-master-class.png'
+import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
+
 
 const MasterClassManagement = () => {
   const dispatch = useDispatch()
@@ -546,7 +548,7 @@ const MasterClassManagement = () => {
               <div>
                 <AcademyBtn
                   title="View Uncategorized Videos"
-                  icon={faPlus}
+                  icon={btnIcon}
                   onClick={viewUncategorizedTasks}
                 />
               </div>
