@@ -6,10 +6,26 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
+const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = 'entrepreneurship' }) => {
   const [levels, setLevels] = useState([])
   const [hasNewLevel, setHasNewLevel] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  // Helper function to get the correct API endpoint based on category
+  const getApiEndpoint = (action, id = null) => {
+    const basePath = category === 'masterclass' ? 'contents' : 'LtsJournals'
+    const categoryPath = category === 'masterclass' ? 'masterclass' : 'entrepreneurship'
+    switch (action) {
+      case 'create':
+        return `/${basePath}/${categoryPath}/levels`
+      case 'update':
+        return `/${basePath}/${categoryPath}/levels/${id}`
+      case 'delete':
+        return `/${basePath}/${categoryPath}/levels/${id}`
+      default:
+        return `/${basePath}/${categoryPath}/levels`
+    }
+  }
 
   // Initialize levels when modal opens or existingLevels changes
   useEffect(() => {
@@ -57,7 +73,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
       // Saving the edit - update via API
       setLoading(true)
       try {
-        await axiosInstance.put(`/LtsJournals/entrepreneurship/levels/${id}`, {
+        await axiosInstance.put(getApiEndpoint('update', id), {
           title: level.title,
           order: level.order
         })
@@ -98,7 +114,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
     setLoading(true)
     try {
       // Create new level via API
-      const response = await axiosInstance.post('/LtsJournals/entrepreneurship/levels', {
+      const response = await axiosInstance.post(getApiEndpoint('create'), {
         title: newTitle,
         order: newOrder,
         published: true
@@ -134,13 +150,13 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
 
         // Update order in backend for existing levels (not the newly created one)
         if (!level.isNew && level.order !== levelNumber) {
-          await axiosInstance.put(`/LtsJournals/entrepreneurship/levels/${level.id}`, {
+          await axiosInstance.put(getApiEndpoint('update', level.id), {
             title: newTitle,
             order: levelNumber
           })
         } else if (level.isNew && level.id === newLevel.id && newTitle !== response.data.title) {
           // Update the newly created level's title if renumbered
-          await axiosInstance.put(`/LtsJournals/entrepreneurship/levels/${level.id}`, {
+          await axiosInstance.put(getApiEndpoint('update', level.id), {
             title: newTitle,
             order: levelNumber
           })
@@ -172,7 +188,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
     setLoading(true)
     try {
       // Delete level via API
-      await axiosInstance.delete(`/LtsJournals/entrepreneurship/levels/${id}`)
+      await axiosInstance.delete(getApiEndpoint('delete', id))
 
       const filteredLevels = levels.filter(level => level.id !== id)
       
@@ -192,7 +208,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [] }) => {
 
         // Update order in backend
         if (level.order !== levelNumber || level.title !== newTitle) {
-          await axiosInstance.put(`/LtsJournals/entrepreneurship/levels/${level.id}`, {
+          await axiosInstance.put(getApiEndpoint('update', level.id), {
             title: newTitle,
             order: levelNumber
           })

@@ -7,6 +7,7 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import AcademyBtn from '../../components/AcademyBtn'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import DataTable from '../../components/DataTable'
+import axiosInstance from '../../utils/AxiosInstance'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
@@ -38,12 +39,49 @@ const MasterClassManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levels, setLevels] = useState([
-    'Encouragement Videos',
-    'Career Guidance Videos',
-    'Story in Motion Podcasts Episodes',
-    'Live Q&A Episodes'
-  ])
+  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
+  const [levels, setLevels] = useState([]) // Array of level titles for compatibility
+
+  // Fetch masterclass levels on component mount
+  useEffect(() => {
+    fetchLevels()
+  }, [])
+
+  // Fetch masterclass levels from API
+  const fetchLevels = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/contents/masterclass/levels')
+
+      // Response: [{ id, title, order, published, category }]
+      setLevelsData(response.data)
+
+      // Extract level titles for backward compatibility
+      const levelTitles = response.data.map(level => level.title)
+      setLevels(levelTitles)
+
+      // Set first level as active if available
+      if (response.data.length > 0) {
+        setActiveLevel(response.data[0].title)
+      }
+    } catch (error) {
+      console.error('Error fetching masterclass levels:', error)
+      toast.error('Failed to fetch levels')
+
+      // Fallback to default levels
+      const defaultLevels = [
+        'Encouragement Videos',
+        'Career Guidance Videos',
+        'Story in Motion Podcasts Episodes',
+        'Live Q&A Episodes'
+      ]
+      setLevels(defaultLevels)
+      setActiveLevel(defaultLevels[0])
+    } finally {
+      setLoading(false)
+    }
+  }
+
 
   useEffect(() => {
     setTasksData([
@@ -274,9 +312,10 @@ const MasterClassManagement = () => {
     }
   }
 
-  const handleSaveLevels = (newLevels) => {
-    setLevels(newLevels)
-    toast.success('Levels updated successfully!')
+  const handleSaveLevels = async () => {
+    // The modal now handles all API calls directly
+    // This function just refreshes the levels list
+    await fetchLevels()
   }
 
   const handleSaveAssignments = (assignments) => {
@@ -673,7 +712,8 @@ const MasterClassManagement = () => {
         show={showAddLevelModal}
         onHide={() => setShowAddLevelModal(false)}
         onSave={handleSaveLevels}
-        existingLevels={levels}
+        existingLevels={levelsData}
+        category="masterclass"
       />
 
       <AssignTasksModal
