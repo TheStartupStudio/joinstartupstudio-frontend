@@ -4,12 +4,15 @@ import { Button, Modal, ModalBody } from 'reactstrap'
 import { setGeneralLoading } from '../../redux/general/Actions'
 import cancelRenewal from '../../assets/images/academy-icons/cancel-renewal.png'
 import { userLogout } from '../../redux'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
+
 
 function CancelRenewalModal({ canceledRenewal, setCanceledRenewal }) {
   const dispatch = useDispatch()
 
   const handleLogout = async () => {
     dispatch(setGeneralLoading(true))
+    dispatch(toggleCollapse())
     await dispatch(userLogout())
       .then(() => {
         localStorage.clear()
