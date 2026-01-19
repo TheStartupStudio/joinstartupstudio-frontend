@@ -66,7 +66,10 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       setTaskTitle(taskData.title || '')
       setSelectedLevel(taskData.level || '')
       setActiveTab(taskData.contentType || 'video')
-      setInformation(taskData.information || '')
+
+      // Handle different field names for masterclass vs entrepreneurship
+      const infoField = isMasterClass ? (taskData.journalData?.description || taskData.information || '') : (taskData.information || '')
+      setInformation(infoField)
 
       if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
         setReflectionItems(taskData.reflectionItems)
@@ -82,11 +85,15 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         }
       }
 
-      if (taskData.videoUrl) {
-        setVideoPreview(taskData.videoUrl)
+      // Handle different field names for video/thumbnail URLs
+      const videoUrlField = isMasterClass ? (taskData.journalData?.url || taskData.videoUrl || '') : (taskData.videoUrl || '')
+      const thumbnailUrlField = isMasterClass ? (taskData.journalData?.thumbnail || taskData.thumbnailUrl || '') : (taskData.thumbnailUrl || '')
+
+      if (videoUrlField) {
+        setVideoPreview(videoUrlField)
       }
-      if (taskData.thumbnailUrl) {
-        setThumbnailPreview(taskData.thumbnailUrl)
+      if (thumbnailUrlField) {
+        setThumbnailPreview(thumbnailUrlField)
       }
 
       setIsLoadingData(false)
@@ -173,20 +180,28 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         platform: 'instructor',
         order: taskData?.order || 0,
         parentId: null,
-        videoUrl: videoUrl || null,
-        thumbnailUrl: thumbnailUrl || null,
-        information: (isLeadership || isMasterClass) ? (information || null) : null,
+        url: videoUrl || null,  // Changed from videoUrl to url
+        thumbnail: thumbnailUrl || null,  // Changed from thumbnailUrl to thumbnail
+        description: (isLeadership || isMasterClass) ? (information || null) : null,  // Changed from information to description
         reflectionItems: filteredReflectionItems
       }
 
       let response
       if (isEditMode && taskData?.id) {
         toast.info('Updating task...')
-        response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
+        if (isMasterClass) {
+          response = await axiosInstance.put(`/contents/${taskData.id}`, payload)
+        } else {
+          response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
+        }
         toast.success('Task updated successfully!')
       } else {
         toast.info('Creating task...')
-        response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
+        if (isMasterClass) {
+          response = await axiosInstance.post('/contents', payload)
+        } else {
+          response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
+        }
         toast.success('Task created successfully!')
       }
 
@@ -200,7 +215,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       //   }
       // }
 
-      onSave(response.data.journal)
+      onSave(isMasterClass ? response.data : response.data.journal || response.data)
       handleClose()
     } catch (error) {
       console.error('Error saving journal:', error)
@@ -260,7 +275,11 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
     setLoading(true)
     try {
-      await axiosInstance.delete(`/LtsJournals/${taskData.id}/delete-with-content`)
+      if (isMasterClass) {
+        await axiosInstance.delete(`/contents/${taskData.id}`)
+      } else {
+        await axiosInstance.delete(`/LtsJournals/${taskData.id}/delete-with-content`)
+      }
       toast.success('Task deleted successfully!')
       onSave({ deleted: true, id: taskData.id })
       handleClose()
