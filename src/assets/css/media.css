@@ -2427,3 +2427,8 @@
     padding-bottom: 7px;
   }
 }
+
+
+.videoPlayerModal img{
+  aspect-ratio: 16/9;
+}

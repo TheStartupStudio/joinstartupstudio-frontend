@@ -15,12 +15,16 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
 import '../../pages/BeyondYourCourse/index.css';
+import axiosInstance from '../../utils/AxiosInstance';
+import EnLangs from '../../lang/locales/en_US.js';
  
 function StoryInMotion({ intl }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const { podcasts, guidanceVideos, masterclassVideos, loading } = useSelector(state => state.podcast);
 
+  const [levels, setLevels] = useState([]);
+  const [levelContents, setLevelContents] = useState({});
   const [activeLevel, setActiveLevel] = useState(2);
   const [pageTitle, setPageTitle] = useState('');
   const [pageDescription, setPageDescription] = useState('');
@@ -35,9 +39,25 @@ function StoryInMotion({ intl }) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [pageLoading, setPageLoading] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [forcePage, setForcePage] = useState(0); // Add this state
+  const [forcePage, setForcePage] = useState(0);
 
   const titleRef = useRef(null);
+
+  // Helper function to translate video title keys
+  const translateVideoTitle = (titleKey) => {
+    if (titleKey && titleKey.startsWith('video.')) {
+      return EnLangs[titleKey] || titleKey
+    }
+    return titleKey
+  }
+
+  // Helper function to translate description keys
+  const translateDescription = (descKey) => {
+    if (descKey && descKey.startsWith('video.')) {
+      return EnLangs[descKey] || descKey
+    }
+    return descKey
+  }
 
   const filters = [
     { value: 'tl', label: 'Title' },
@@ -46,7 +66,77 @@ function StoryInMotion({ intl }) {
 
   const handleFilter = (selectedFilter) => {
     setFilterBy(selectedFilter);
-  };
+  }
+
+  // Fetch masterclass levels and content on component mount
+  useEffect(() => {
+    fetchMasterclassData();
+  }, []);
+
+  const fetchMasterclassData = async () => {
+    try {
+      // Fetch levels
+      const levelsResponse = await axiosInstance.get('/contents/masterclass/levels');
+      const levelsData = levelsResponse.data;
+
+      // Sort levels by order
+      const sortedLevels = levelsData.sort((a, b) => a.order - b.order);
+      setLevels(sortedLevels);
+
+      // Fetch content for each level
+      const contentPromises = sortedLevels.map(async (level) => {
+        try {
+          const contentResponse = await axiosInstance.get(`/contents/by-journal-level/${level.id}`);
+          const transformedContent = (contentResponse.data.data || []).map(item => ({
+            ...item,
+            title: translateVideoTitle(item.title),
+            description: translateDescription(item.description)
+          }));
+
+          return {
+            levelId: level.id,
+            content: transformedContent
+          };
+        } catch (error) {
+          console.error(`Error fetching content for level ${level.id}:`, error);
+          return {
+            levelId: level.id,
+            content: []
+          };
+        }
+      });
+
+      const contentResults = await Promise.all(contentPromises);
+
+      // Create a map of level ID to content
+      const contentsMap = {};
+      contentResults.forEach(({ levelId, content }) => {
+        contentsMap[levelId] = content;
+      });
+
+      setLevelContents(contentsMap);
+
+      // Set initial content based on activeLevel
+      if (sortedLevels.length > 0) {
+        const initialLevel = sortedLevels[activeLevel];
+        if (initialLevel) {
+          const initialContent = contentsMap[initialLevel.id] || [];
+          setPageVideos(initialContent);
+          const firstPageVideos = initialContent.slice(0, videosPerPage);
+          setCurrentPageVideos(firstPageVideos);
+          setPageCount(Math.ceil(initialContent.length / videosPerPage));
+        }
+      }
+
+      setIsInitialLoad(false);
+      setInitialLoading(false);
+
+    } catch (error) {
+      console.error('Error fetching masterclass data:', error);
+      setIsInitialLoad(false);
+      setInitialLoading(false);
+    }
+  };;
 
   useEffect(() => {
     titleRef.current?.scrollIntoView({ behavior: 'instant' });
@@ -84,29 +174,20 @@ useEffect(() => {
 }, [location.pathname, location.search]);
 
   useEffect(() => {
-    if (!loading && !isInitialLoad) {
-      let newVideos = [];
-      switch (activeLevel) {
-        case 0:
-          newVideos = guidanceVideos;
-          break;
-        case 1:
-          newVideos = masterclassVideos;
-          break;
-        case 2:
-          newVideos = podcasts;
-          break;
-        default:
-          break;
+    if (levels.length > 0 && !isInitialLoad) {
+      const currentLevel = levels[activeLevel];
+      if (currentLevel) {
+        // Use dynamic content from API
+        const newVideos = levelContents[currentLevel.id] || [];
+        setPageVideos(newVideos);
+        // Reset to first page of new content
+        const firstPageVideos = newVideos.slice(0, videosPerPage);
+        setCurrentPageVideos(firstPageVideos);
+        setPageCount(Math.ceil(newVideos.length / videosPerPage));
+        setItemOffset(0);
       }
-      setPageVideos(newVideos);
-      // Reset to first page of new content
-      const firstPageVideos = newVideos.slice(0, videosPerPage);
-      setCurrentPageVideos(firstPageVideos);
-      setPageCount(Math.ceil(newVideos.length / videosPerPage));
-      setItemOffset(0);
     }
-  }, [activeLevel, loading, isInitialLoad, guidanceVideos, masterclassVideos, podcasts, videosPerPage]);
+  }, [activeLevel, levels, levelContents, isInitialLoad, videosPerPage]);
 
   useEffect(() => {
     const endOffset = itemOffset + videosPerPage;
@@ -165,12 +246,8 @@ useEffect(() => {
   };
 
   const getSubtitle = () => {
-    if (activeLevel === 0) {
-      return 'Encouragement Videos';
-    } else if (activeLevel === 1) {
-      return 'Career Guidance';
-    } else if (activeLevel === 2) {
-      return 'Story in Motion Podcast Episodes';
+    if (levels.length > 0 && activeLevel >= 0 && activeLevel < levels.length) {
+      return levels[activeLevel].title;
     }
     return '';
   };
@@ -201,27 +278,15 @@ useEffect(() => {
 
           <div className="gradient-background-story">
             <div className="level-navigation">
-              <div
-                className={`course-level ${activeLevel === 0 ? 'active-level-master' : ''
-                  }`}
-                onClick={() => handleLevelChange(0)}
-              >
-                Encouragement Videos
-              </div>
-              <div
-                className={`course-level ${activeLevel === 1 ? 'active-level-master' : ''
-                  }`}
-                onClick={() => handleLevelChange(1)}
-              >
-                Career Guidance Videos
-              </div>
-              <div
-                className={`course-level ${activeLevel === 2 ? 'active-level-master' : ''
-                  }`}
-                onClick={() => handleLevelChange(2)}
-              >
-                Story in Motion Podcast Episodes
-              </div>
+              {levels.map((level, index) => (
+                <div
+                  key={level.id}
+                  className={`course-level ${activeLevel === index ? 'active-level-master' : ''}`}
+                  onClick={() => handleLevelChange(index)}
+                >
+                  {level.title}
+                </div>
+              ))}
             </div>
 
             <div className="d-flex justify-content-between"></div>
@@ -244,7 +309,7 @@ useEffect(() => {
                         thumbnail={video.thumbnail || storyInMotionPodcast}
                         title={video.title}
                         description={video.description}
-                        page={activeLevel === 2 ? 'podcast' : activeLevel === 1 ? 'master-classes' : 'encouragement'}
+                        page={levels[activeLevel] ? levels[activeLevel].title.toLowerCase().replace(/\s+/g, '-').replace(':', '') : 'default'}
                         videoData={video}
                       />
                     ))}
