@@ -109,7 +109,9 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const addNewLevelAfter = async (afterId) => {
     const insertIndex = levels.findIndex(level => level.id === afterId)
     const newOrder = insertIndex + 2
-    const newTitle = `Level ${newOrder}: Add Level title...`
+    const newTitle = category === 'masterclass' 
+      ? 'Add Level title...' 
+      : `Level ${newOrder}: Add Level title...`
     
     setLoading(true)
     try {
@@ -140,7 +142,9 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         const level = updatedLevels[i]
         const levelNumber = i + 1
         const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
-        const newTitle = `Level ${levelNumber}: ${titleWithoutNumber}`
+        const newTitle = category === 'masterclass' 
+          ? titleWithoutNumber 
+          : `Level ${levelNumber}: ${titleWithoutNumber}`
         
         renumberedLevels.push({
           ...level,
@@ -198,7 +202,9 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         const level = filteredLevels[i]
         const levelNumber = i + 1
         const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
-        const newTitle = `Level ${levelNumber}: ${titleWithoutNumber}`
+        const newTitle = category === 'masterclass' 
+          ? titleWithoutNumber 
+          : `Level ${levelNumber}: ${titleWithoutNumber}`
         
         renumberedLevels.push({
           ...level,
