@@ -12,6 +12,8 @@ import AddLevelModal from '../../components/ContentManagement/AddLevelModal/inde
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 import greenLeader from '../../assets/images/academy-icons/green-leadership-journal.png'
+import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
+
 
 const LeadershipJournalManagement = () => {
   const dispatch = useDispatch()
@@ -545,7 +547,7 @@ const LeadershipJournalManagement = () => {
               <div>
                 <AcademyBtn
                   title="View Uncategorized Tasks"
-                  icon={faPlus}
+                  icon={btnIcon}
                   onClick={viewUncategorizedTasks}
                 />
               </div>

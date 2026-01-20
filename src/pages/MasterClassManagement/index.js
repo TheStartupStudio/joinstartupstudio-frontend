@@ -7,15 +7,19 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import AcademyBtn from '../../components/AcademyBtn'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import DataTable from '../../components/DataTable'
+import axiosInstance from '../../utils/AxiosInstance'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 import pinkMaster from '../../assets/images/academy-icons/ping-master-class.png'
+import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
+import EnLangs from '../../lang/locales/en_US.js'
+
 
 const MasterClassManagement = () => {
   const dispatch = useDispatch()
-  const [activeLevel, setActiveLevel] = useState('Encouragement Videos')
+  const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
@@ -36,87 +40,141 @@ const MasterClassManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levels, setLevels] = useState([
-    'Encouragement Videos',
-    'Career Guidance Videos',
-    'Story in Motion Podcasts Episodes',
-    'Live Q&A Episodes'
-  ])
+  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
+  const [levels, setLevels] = useState([]) // Array of level titles for compatibility
 
+  // Fetch masterclass levels on component mount
   useEffect(() => {
-    setTasksData([
-      {
-        id: 1,
-        name: 'From Nothing to Demand',
-        status: 'unpublished',
-        hasContent: true,
-        order: 1
-      },
-      {
-        id: 2,
-        name: 'Taking a New Perspective',
-        status: 'published',
-        hasContent: false,
-        order: 2
-      },
-      {
-        id: 3,
-        name: 'Give Yourself a Break',
-        status: 'published',
-        hasContent: false,
-        order: 3
-      },
-      {
-        id: 4,
-        name: 'Happiness is Overrated',
-        status: 'unpublished',
-        hasContent: true,
-        order: 4
-      },
-      {
-        id: 5,
-        name: 'Encouragement Video',
-        status: 'unpublished',
-        hasContent: true,
-        order: 5
-      },
-      {
-        id: 6,
-        name: 'Encouragement Video',
-        status: 'unpublished',
-        hasContent: true,
-        order: 6
-      },
-      {
-        id: 7,
-        name: 'Encouragement Video',
-        status: 'unpublished',
-        hasContent: true,
-        order: 7
-      },
-      {
-        id: 8,
-        name: 'Encouragement Video',
-        status: 'unpublished',
-        hasContent: true,
-        order: 8
-      },
-      {
-        id: 9,
-        name: 'Encouragement Video',
-        status: 'unpublished',
-        hasContent: true,
-        order: 9
-      },
-      {
-        id: 10,
-        name: 'Encouragement Video',
-        status: 'unpublished',
-        hasContent: true,
-        order: 10
-      }
-    ])
+    fetchLevels()
   }, [])
+
+  // Fetch content when active level changes
+  useEffect(() => {
+    if (activeLevel && levelsData.length > 0) {
+      fetchContentByLevel()
+    }
+  }, [activeLevel]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fetch masterclass levels from API
+  const fetchLevels = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/contents/masterclass/levels')
+
+      // Response: [{ id, title, order, published, category }]
+      setLevelsData(response.data)
+
+      // Extract level titles for backward compatibility
+      const levelTitles = response.data.map(level => level.title)
+      setLevels(levelTitles)
+
+      // Set first level as active if available
+      if (response.data.length > 0) {
+        setActiveLevel(response.data[0].title)
+      }
+    } catch (error) {
+      console.error('Error fetching masterclass levels:', error)
+      toast.error('Failed to fetch levels')
+
+      // Fallback to default levels
+      const defaultLevels = [
+        'Encouragement Videos',
+        'Career Guidance Videos',
+        'Story in Motion Podcasts Episodes',
+        'Live Q&A Episodes'
+      ]
+      setLevels(defaultLevels)
+      setActiveLevel(defaultLevels[0])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Helper function to translate video title keys
+  const translateVideoTitle = (titleKey) => {
+    // If the title is already a translation key, look it up
+    if (titleKey && titleKey.startsWith('video.')) {
+      return EnLangs[titleKey] || titleKey
+    }
+    // If it's already a readable title, return as is
+    return titleKey
+  }
+
+  // Fetch single content by ID for viewing/editing
+  const handleViewContent = async (contentId, mode) => {
+    try {
+      setLoading(true)
+
+      const response = await axiosInstance.get(`/contents/${contentId}`)
+      const content = response.data
+
+      // Transform API data for the modal
+      const taskData = {
+        id: content.id,
+        title: translateVideoTitle(content.title),
+        level: activeLevel,
+        contentType: 'video',
+        videoUrl: content.url,
+        thumbnailUrl: content.thumbnail,
+        information: content.description || '',
+        reflectionItems: [], // Masterclass content might not have reflection items
+        journalData: content
+      }
+
+      setEditingTask(taskData)
+      setModalMode(mode)
+      setShowAddTaskModal(true)
+    } catch (error) {
+      console.error('Error fetching content:', error)
+      toast.error('Failed to load content')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch content by level
+  const fetchContentByLevel = async () => {
+    try {
+      setLoading(true)
+
+      // Find the level ID from the active level title
+      const activeLevelObj = levelsData.find(l => l.title === activeLevel)
+      if (!activeLevelObj) {
+        setTasksData([])
+        return
+      }
+
+      const response = await axiosInstance.get(`/contents/by-journal-level/${activeLevelObj.id}`)
+
+      // Transform API data to match table format
+      const transformedContent = response.data.data.map(content => {
+        // Check for content availability (videos, etc.)
+        const hasVideoContent = content.videoId ||
+                               content.videoIds ||
+                               (content.videos && content.videos.length > 0) ||
+                               (content.video && content.video.id)
+
+        return {
+          id: content.id,
+          name: translateVideoTitle(content.title),
+          status: content.published ? 'published' : 'unpublished',
+          hasContent: hasVideoContent,
+          order: content.order || 0,
+          journalData: content
+        }
+      })
+
+      setTasksData(transformedContent)
+    } catch (error) {
+      console.error('Error fetching content by level:', error)
+      toast.error('Failed to fetch content')
+      setTasksData([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
 
   const columns = useMemo(() => [
     {
@@ -142,46 +200,10 @@ const MasterClassManagement = () => {
     
     switch (actionType) {
       case 'view':
-        const taskDataForView = {
-          id: item.id,
-          title: item.name,
-          level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>What did you learn from this master class?</p>',
-              instructions: '<p>Please watch the video and answer the questions below.</p>'
-            }
-          ]
-        }
-        
-        setEditingTask(taskDataForView)
-        setModalMode('view')
-        setShowAddTaskModal(true)
+        handleViewContent(item.id, 'view')
         break
       case 'edit':
-        const taskDataForEdit = {
-          id: item.id,
-          title: item.name,
-          level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>Sample question for this master class</p>',
-              instructions: '<p>Sample instructions for this master class</p>'
-            }
-          ]
-        }
-        
-        setEditingTask(taskDataForEdit)
-        setModalMode('edit')
-        setShowAddTaskModal(true)
+        handleViewContent(item.id, 'edit')
         break
       case 'publish':
         setSelectedTask(item)
@@ -272,9 +294,10 @@ const MasterClassManagement = () => {
     }
   }
 
-  const handleSaveLevels = (newLevels) => {
-    setLevels(newLevels)
-    toast.success('Levels updated successfully!')
+  const handleSaveLevels = async () => {
+    // The modal now handles all API calls directly
+    // This function just refreshes the levels list
+    await fetchLevels()
   }
 
   const handleSaveAssignments = (assignments) => {
@@ -546,7 +569,7 @@ const MasterClassManagement = () => {
               <div>
                 <AcademyBtn
                   title="View Uncategorized Videos"
-                  icon={faPlus}
+                  icon={btnIcon}
                   onClick={viewUncategorizedTasks}
                 />
               </div>
@@ -625,31 +648,6 @@ const MasterClassManagement = () => {
             />
           </div>
 
-          <div className="pagination-container">
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button className="pagination-btn">
-             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            </button>
-            <span className="pagination-info">1 / 2</span>
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -661,7 +659,7 @@ const MasterClassManagement = () => {
           setModalMode('add')
         }}
         onSave={handleSaveTask}
-        levels={levels}
+        levels={levelsData}
         mode={modalMode}
         taskData={editingTask}
         source="masterclass"
@@ -671,7 +669,8 @@ const MasterClassManagement = () => {
         show={showAddLevelModal}
         onHide={() => setShowAddLevelModal(false)}
         onSave={handleSaveLevels}
-        existingLevels={levels}
+        existingLevels={levelsData}
+        category="masterclass"
       />
 
       <AssignTasksModal

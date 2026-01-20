@@ -1052,7 +1052,7 @@ const EsLangs = {
   'portfolio.page_description':
     'Comparte tu empoderamiento rendimiento y bienestar con la comunidad global',
   'portfolio.my_portfolio_edit':
-    'Share my empowerment, wellness, and performance with the global community',
+    'Sharing my empowerment, wellness, and performance with the global community',
   'portfolio.preview': 'Vista preliminar',
   'portfolio.user_bio':
     'John Smith comenzó su carrera trabajando para varias compañías, aumentando sus destrezas en diseño UI. Mientras ampliaba sus habilidades, descubrió que quería tener un mayor impacto en su comunidad y comenzó a buscar oportunidades que le ayudarían a sentirse más empoderado, formar una empresa impactante y crear más bienestar al comprender cómo lograr una mayor repercusión en mundo a su alrededor. Tras descubrir el Programa de Emprendimiento Learn to Start, él supo que había encontrado exactamente lo que estaba buscando.',
