@@ -13,11 +13,14 @@ import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 import greenLeader from '../../assets/images/academy-icons/green-leadership-journal.png'
 import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
+import axiosInstance from '../../utils/AxiosInstance'
 
 
 const LeadershipJournalManagement = () => {
   const dispatch = useDispatch()
-  const [activeLevel, setActiveLevel] = useState('Section One: Who am I?')
+  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
+  const [levels, setLevels] = useState([]) // Array of level titles for compatibility
+  const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
@@ -38,86 +41,96 @@ const LeadershipJournalManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levels, setLevels] = useState([
-    'Section One: Who am I?',
-    'Section Two: What can I do?',
-    'Section Three: How do I prove it?'
-  ])
+  // Fetch leadership journal content for the active level
+  const fetchContentByLevel = async (levelId) => {
+    if (!levelId) return
 
-  useEffect(() => {
-    setTasksData([
-      {
-        id: 1,
-        name: 'Introduction to Leadership',
-        status: 'unpublished',
-        hasContent: true,
-        order: 1
-      },
-      {
-        id: 2,
-        name: 'Building Your Leadership Style',
-        status: 'published',
-        hasContent: false,
-        order: 2
-      },
-      {
-        id: 3,
-        name: 'Team Management Strategies',
-        status: 'published',
-        hasContent: false,
-        order: 3
-      },
-      {
-        id: 4,
-        name: 'Effective Communication',
-        status: 'unpublished',
-        hasContent: true,
-        order: 4
-      },
-      {
-        id: 5,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 5
-      },
-      {
-        id: 6,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 6
-      },
-      {
-        id: 7,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 7
-      },
-      {
-        id: 8,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 8
-      },
-      {
-        id: 9,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 9
-      },
-      {
-        id: 10,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 10
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/content-by-level', {
+        params: {
+          category: 'student-leadership',
+          levelId: levelId
+        }
+      })
+
+      // Transform API response to match expected format
+      const transformedData = response.data.map((journal, index) => ({
+        id: journal.id,
+        name: journal.title,
+        status: journal.published ? 'published' : 'unpublished',
+        hasContent: journal.entries && journal.entries.length > 0,
+        order: journal.order || index + 1,
+        // Store full journal data for modal usage
+        fullData: journal
+      }))
+
+      setTasksData(transformedData)
+    } catch (error) {
+      console.error('Error fetching leadership content by level:', error)
+      toast.error('Failed to fetch content for this level')
+      setTasksData([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch leadership journal levels from API
+  const fetchLevels = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/leadership-journal/levels')
+
+      // Response: [{ id, title, order, published, category }]
+      setLevelsData(response.data)
+
+      // Extract level titles for backward compatibility
+      const levelTitles = response.data.map(level => level.title)
+      setLevels(levelTitles)
+
+      // Set first level as active if available
+      if (response.data.length > 0) {
+        setActiveLevel(response.data[0].title)
       }
-    ])
+    } catch (error) {
+      console.error('Error fetching leadership journal levels:', error)
+      toast.error('Failed to fetch levels')
+
+      // Fallback to default levels
+      const defaultLevels = [
+        'Section One: Who am I?',
+        'Section Two: What can I do?',
+        'Section Three: How do I prove it?'
+      ]
+      setLevels(defaultLevels)
+      setActiveLevel(defaultLevels[0])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch leadership journal levels on component mount
+  useEffect(() => {
+    fetchLevels()
   }, [])
+
+  // Fetch content when active level changes
+  useEffect(() => {
+    if (activeLevel && levelsData.length > 0) {
+      // Find the level object by title to get its ID
+      const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+      if (activeLevelObj) {
+        fetchContentByLevel(activeLevelObj.id)
+      }
+    }
+  }, [activeLevel, levelsData])
+
+  // Update handleSaveLevels to refresh levels
+  const handleSaveLevels = async () => {
+    // The modal now handles all API calls directly
+    // This function just refreshes the levels list
+    await fetchLevels()
+  }
 
   const columns = useMemo(() => [
     {
@@ -140,48 +153,28 @@ const LeadershipJournalManagement = () => {
 
   const handleRowAction = (actionType, item) => {
     console.log(`${actionType} action for:`, item)
-    
+
     switch (actionType) {
       case 'view':
-        const taskDataForView = {
-          id: item.id,
-          title: item.name,
-          level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>What leadership principles did you learn?</p>',
-              instructions: '<p>Reflect on the task and answer the questions below.</p>'
-            }
-          ]
-        }
-        
-        setEditingTask(taskDataForView)
-        setModalMode('view')
-        setShowAddTaskModal(true)
-        break
       case 'edit':
-        const taskDataForEdit = {
-          id: item.id,
-          title: item.name,
+        // Transform API journal data to modal format
+        const journalData = item.fullData
+        const taskData = {
+          id: journalData.id,
+          title: journalData.title,
           level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>Sample question for this task</p>',
-              instructions: '<p>Sample instructions for this task</p>'
-            }
-          ]
+          contentType: journalData.contentType || 'video',
+          videoUrl: journalData.videoUrl || '',
+          thumbnailUrl: journalData.thumbnailUrl || '',
+          reflectionItems: journalData.entries ? journalData.entries.map(entry => ({
+            id: entry.id,
+            question: entry.question || '',
+            instructions: entry.instructions || ''
+          })) : []
         }
-        
-        setEditingTask(taskDataForEdit)
-        setModalMode('edit')
+
+        setEditingTask(taskData)
+        setModalMode(actionType)
         setShowAddTaskModal(true)
         break
       case 'publish':
@@ -199,23 +192,33 @@ const LeadershipJournalManagement = () => {
 
   const handleReorder = async (newOrderedData) => {
     setLoading(true)
-    
+
     try {
       const updatedData = newOrderedData.map((item, index) => ({
         ...item,
         order: index + 1
       }))
-      
+
       setTasksData(updatedData)
 
-      const reorderedTasks = updatedData.map(task => ({
-        id: task.id
-      }))
+      const reorderPromises = updatedData.map(task =>
+        axiosInstance.put(`/LtsJournals/${task.id}/order`, {
+          order: task.order
+        })
+      )
+      await Promise.all(reorderPromises)
 
       toast.success('Task order updated successfully!')
     } catch (error) {
       console.error('Error reordering tasks:', error)
-      toast.success('Task order updated successfully!')
+      toast.error('Failed to update task order')
+      // Re-fetch the data to revert changes on error
+      if (activeLevel && levelsData.length > 0) {
+        const activeLevelObj = levelsData.find(l => l.title === activeLevel)
+        if (activeLevelObj) {
+          fetchContentByLevel(activeLevelObj.id)
+        }
+      }
     } finally {
       setLoading(false)
     }
@@ -273,10 +276,6 @@ const LeadershipJournalManagement = () => {
     }
   }
 
-  const handleSaveLevels = (newLevels) => {
-    setLevels(newLevels)
-    toast.success('Levels updated successfully!')
-  }
 
   const handleSaveAssignments = (assignments) => {
     console.log('Task assignments:', assignments)
@@ -626,31 +625,6 @@ const LeadershipJournalManagement = () => {
             />
           </div>
 
-          <div className="pagination-container">
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button className="pagination-btn">
-             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            </button>
-            <span className="pagination-info">1 / 2</span>
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -672,7 +646,8 @@ const LeadershipJournalManagement = () => {
         show={showAddLevelModal}
         onHide={() => setShowAddLevelModal(false)}
         onSave={handleSaveLevels}
-        existingLevels={levels}
+        existingLevels={levelsData}
+        category="leadership"
       />
 
       <AssignTasksModal

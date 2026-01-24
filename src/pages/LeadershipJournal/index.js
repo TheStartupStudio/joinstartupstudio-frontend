@@ -26,6 +26,7 @@ import { ModalBody, Modal } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NotificationBell from '../../components/NotificationBell'
+import { toast } from 'react-toastify'
 
 
 const LeadershipJournal = memo(() => {
@@ -42,12 +43,68 @@ const LeadershipJournal = memo(() => {
   const [currentTitle, setCurrentTitle] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
+  const [levels, setLevels] = useState([])
+  const [lessonsByLevel, setLessonsByLevel] = useState({})
+  const [lessonsLoading, setLessonsLoading] = useState(true)
+
   const dispatch = useDispatch()
   const { finishedContent } = useSelector((state) => state.journal)
   const valueRefs = useRef({})
 
         const { user } = useSelector((state) => state.user.user)
         const userRole = user?.role_id || localStorage.getItem('role')
+
+  // Fetch levels from API
+  const fetchLevels = async () => {
+    try {
+      const response = await axiosInstance.get('/LtsJournals/leadership-journal/levels')
+      if (response.data && Array.isArray(response.data)) {
+        // Map API response to match expected format
+        const mappedLevels = response.data.map((level, index) => ({
+          title: level.title || `Section ${index + 1}`,
+          description: level.description || `Welcome to Section ${index + 1}`,
+          active: index === 0 // Set first level as active by default
+        }))
+        setLevels(mappedLevels)
+      }
+    } catch (error) {
+      console.error('Error fetching leadership levels:', error)
+      // Keep default values on error
+    }
+  }
+
+  // Fetch lessons from API
+  const fetchLessons = async () => {
+    try {
+      setLessonsLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/leadership-journal/lessons')
+      if (response.data) {
+        // Convert string keys to numeric keys and ensure proper structure
+        const transformedLessons = {}
+        Object.keys(response.data).forEach(key => {
+          const numericKey = parseInt(key)
+          if (!isNaN(numericKey)) {
+            // Ensure each lesson has the required fields
+            transformedLessons[numericKey] = (response.data[key] || []).map(lesson => ({
+              id: lesson.id || lesson.redirectId || 0,
+              title: lesson.title || '',
+              status: lesson.status || 'notStarted',
+              redirectId: lesson.redirectId || parseInt(lesson.id) || 0,
+              separate: lesson.separate || false
+            }))
+          }
+        })
+        setLessonsByLevel(transformedLessons)
+      }
+    } catch (error) {
+      console.error('Error fetching leadership lessons:', error)
+      // Set empty object on error
+      setLessonsByLevel({})
+      toast.error('Failed to fetch leadership lessons')
+    } finally {
+      setLessonsLoading(false)
+    }
+  }
 
   const sections = {
     one: [
@@ -158,41 +215,33 @@ const LeadershipJournal = memo(() => {
     ],
   };
 
-  // Initialize allTabs based on sections data
+  // Initialize allTabs based on lessons data from API
   useEffect(() => {
-    const tabs = [
-      {
-        title: 'Section One: Who am I?',
-        options: sections.one.map((section) => ({
-          label: section.title,
-          value: section.title,
-          isNext: false
+    if (Object.keys(lessonsByLevel).length === 0) return;
+
+    const tabs = Object.keys(lessonsByLevel).map((levelKey, index) => {
+      const levelLessons = lessonsByLevel[levelKey] || [];
+      return {
+        title: levels[index]?.title || `Section ${index + 1}`,
+        options: levelLessons.map((lesson) => ({
+          label: lesson.title,
+          value: lesson.title,
+          isNext: false,
+          id: lesson.id,
+          redirectId: lesson.redirectId
         }))
-      },
-      {
-        title: 'Section Two: What can I do?',
-        options: sections.two.map((section) => ({
-          label: section.title,
-          value: section.title,
-          isNext: false
-        }))
-      },
-      {
-        title: 'Section Three: How do I prove it?',
-        options: sections.three.map((section) => ({
-          label: section.title,
-          value: section.title,
-          isNext: false
-        }))
-      }
-    ];
+      };
+    });
 
     setAllTabs(tabs);
-  }, []);
+  }, [lessonsByLevel, levels]);
 
-  // Fetch finished content when component mounts
+  // Fetch finished content, levels and lessons when component mounts
   useEffect(() => {
     dispatch(fetchJournalFinishedContent());
+    // Fetch levels and lessons from API
+    fetchLevels();
+    fetchLessons();
   }, [dispatch]);
 
   // Update isNext flag based on finishedContent
@@ -232,29 +281,12 @@ const LeadershipJournal = memo(() => {
   // Function to check if a section is accessible
   const canAccessSection = (index) => {
     if (index === 0) return true;
-    if (index === 1) {
-      // All of section one must be completed
-      const sectionOneRequired = [
-        'Section One: Who am I?',
-        'Values',
-        'Expertise',
-        'Experiences',
-        'Style'
-      ];
-      return sectionOneRequired.every(item => finishedContent.includes(item));
-    }
-    if (index === 2) {
-      // All of section two must be completed
-      const sectionTwoRequired = [
-        'Section Two: What can I do?',
-        'Teamwork',
-        'Initiative',
-        'Methodology',
-        'Self-Assessment'
-      ];
-      return sectionTwoRequired.every(item => finishedContent.includes(item));
-    }
-    return false;
+
+    // Get lessons for the previous section
+    const prevSectionLessons = lessonsByLevel[index - 1] || [];
+
+    // All lessons from the previous section must be completed
+    return prevSectionLessons.every(lesson => finishedContent.includes(lesson.title));
   };
 
   // Handle save and continue
@@ -264,13 +296,10 @@ const LeadershipJournal = memo(() => {
 
       const currentComponent = valueRefs.current[activeTabData.option?.value];
 
-      // Check if this is an intro section
-      const isIntroSection = [
-        'Welcome to the Leadership Journal',
-        'Section One: Who am I?',
-        'Section Two: What can I do?',
-        'Section Three: How do I prove it?'
-      ].includes(activeTabData.option?.value);
+      // Check if this is an intro section (first lesson of each section)
+      const currentLevelLessons = lessonsByLevel[activeTabData.activeTab] || [];
+      const isIntroSection = currentLevelLessons.length > 0 &&
+        currentLevelLessons[0].title === activeTabData.option?.value;
 
       if (isIntroSection) {
         // Handle intro sections as before...
@@ -343,11 +372,7 @@ const LeadershipJournal = memo(() => {
   // Determine if an option is disabled
   const isOptionDisabled = (option) => {
     // Check if the section is accessible
-    if (activeTabData.activeTab === 1 && !finishedContent.includes('Section One: Who am I?')) {
-      return true;
-    }
-
-    if (activeTabData.activeTab === 2 && !finishedContent.includes('Section Two: What can I do?')) {
+    if (!canAccessSection(activeTabData.activeTab)) {
       return true;
     }
 
@@ -356,20 +381,28 @@ const LeadershipJournal = memo(() => {
     return !finishedContent.includes(option.label) && !option.isNext;
   };
 
+  // Check if current option is an intro section
+  const isIntroSection = useMemo(() => {
+    const currentLevelLessons = lessonsByLevel[activeTabData.activeTab] || [];
+    return currentLevelLessons.length > 0 &&
+      currentLevelLessons[0].title === activeTabData.option?.value;
+  }, [activeTabData, lessonsByLevel]);
+
   // Render the appropriate section based on active tab and option
   const renderedSection = useMemo(() => {
-    if (allTabs.length === 0) return null;
+    if (allTabs.length === 0 || lessonsLoading) return null;
 
-    // Find the component that matches the selected option
+    // Find the component that matches the selected option from the hardcoded sections
+    // Map level index to section key
     const sectionKey = activeTabData.activeTab === 0 ? 'one' :
       activeTabData.activeTab === 1 ? 'two' : 'three';
 
-    const selectedSection = sections[sectionKey].find(
+    const selectedSection = sections[sectionKey]?.find(
       section => section.title === activeTabData.option?.value
     );
 
     return selectedSection ? selectedSection.component : null;
-  }, [activeTabData, allTabs, sections]);
+  }, [activeTabData, allTabs, sections, lessonsLoading]);
 
   // Update current title when option changes
   useEffect(() => {
@@ -388,28 +421,24 @@ const LeadershipJournal = memo(() => {
       return;
     }
 
+    // Get the first lesson from the selected level
+    const levelLessons = lessonsByLevel[index] || [];
+    const firstLesson = levelLessons[0];
+
     let initialOption;
-    switch (index) {
-      case 0:
-        initialOption = {
-          label: 'Welcome to the Leadership Journal',
-          value: 'Welcome to the Leadership Journal'
-        };
-        break;
-      case 1:
-        initialOption = {
-          label: 'Section Two: What can I do?',
-          value: 'Section Two: What can I do?'
-        };
-        break;
-      case 2:
-        initialOption = {
-          label: 'Section Three: How do I prove it?',
-          value: 'Section Three: How do I prove it?'
-        };
-        break;
-      default:
-        initialOption = null;
+    if (firstLesson) {
+      initialOption = {
+        label: firstLesson.title,
+        value: firstLesson.title,
+        id: firstLesson.id,
+        redirectId: firstLesson.redirectId
+      };
+    } else {
+      // Fallback if no lessons available
+      initialOption = {
+        label: levels[index]?.title || `Section ${index + 1}`,
+        value: levels[index]?.title || `Section ${index + 1}`
+      };
     }
 
     setActiveTabData({
@@ -445,7 +474,7 @@ const LeadershipJournal = memo(() => {
                                  </div>
         </div>
         <div className='academy-dashboard-layout lead-class mb-5'>
-          {allTabs.length === 0 ? (
+          {lessonsLoading || allTabs.length === 0 ? (
             <div>Loading...</div>
           ) : (
             <>
@@ -475,21 +504,14 @@ const LeadershipJournal = memo(() => {
                     options={allTabs[activeTabData.activeTab]?.options || []}
                     placeholder={
                       !activeTabData.option ? (
-                        allTabs[activeTabData.activeTab]?.title === 'Welcome to the Leadership Journal' ? 'Welcome to the Leadership Journal' :
-                          allTabs[activeTabData.activeTab]?.title === 'What can I do?' ? 'What can I do?' :
-                            allTabs[activeTabData.activeTab]?.title === 'How do I prove it?' ? 'How do I prove it?' :
-                              'Select Journals to View'
+                        allTabs[activeTabData.activeTab]?.title || 'Select Journals to View'
                       ) : currentTitle || 'Select Journals to View'
                     }
                     isDisabled={isOptionDisabled}
                   />
                 </div>
                 <div className='d-flex gap-3 flex-col-mob align-items-end-mob saveContinue-btn'>
-                  {(isReflection ||
-                    activeTabData.option?.value === 'Welcome to the Leadership Journal' ||
-                    activeTabData.option?.value === 'Section One: Who am I?' ||
-                    activeTabData.option?.value === 'Section Two: What can I do?' ||
-                    activeTabData.option?.value === 'Section Three: How do I prove it?') && (
+                  {(isReflection || isIntroSection) && (
                       <AcademyBtn
                         title={isReflection ? 'Save and Continue' : 'Continue'}
                         icon={isSaving ? faSpinner : faArrowRight}
@@ -548,7 +570,7 @@ const LeadershipJournal = memo(() => {
                       <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                         {isReflection
                           ? 'Save and Continue'
-                          : 'Continue'}
+                          : isIntroSection ? 'Continue' : 'Save and Continue'}
                         <FontAwesomeIcon icon={faArrowRight} />
                       </span>
                     )}

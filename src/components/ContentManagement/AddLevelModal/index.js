@@ -11,8 +11,30 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const [hasNewLevel, setHasNewLevel] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  // Helper function to convert numbers to words
+  const numberToWord = (num) => {
+    const words = [
+      'One', 'Two', 'Three', 'Four', 'Five',
+      'Six', 'Seven', 'Eight', 'Nine', 'Ten'
+    ]
+    return words[num - 1] || num.toString()
+  }
+
   // Helper function to get the correct API endpoint based on category
   const getApiEndpoint = (action, id = null) => {
+    if (category === 'leadership') {
+      switch (action) {
+        case 'create':
+          return '/LtsJournals/leadership-journal/levels'
+        case 'update':
+          return `/LtsJournals/leadership-journal/levels/${id}`
+        case 'delete':
+          return `/LtsJournals/leadership-journal/levels/${id}`
+        default:
+          return '/LtsJournals/leadership-journal/levels'
+      }
+    }
+
     const basePath = category === 'masterclass' ? 'contents' : 'LtsJournals'
     const categoryPath = category === 'masterclass' ? 'masterclass' : 'entrepreneurship'
     switch (action) {
@@ -109,7 +131,13 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const addNewLevelAfter = async (afterId) => {
     const insertIndex = levels.findIndex(level => level.id === afterId)
     const newOrder = insertIndex + 2
-    const newTitle = `Level ${newOrder}: Add Level title...`
+
+    // Use "Section" format for leadership, "Level" format for others
+    const prefix = category === 'leadership' ? 'Section' : 'Level'
+    const suffix = category === 'leadership' ? 'Add Section title...' : 'Add Level title...'
+    const newTitle = category === 'leadership'
+      ? `${prefix} ${numberToWord(newOrder)}: ${suffix}`
+      : `${prefix} ${newOrder}: ${suffix}`
     
     setLoading(true)
     try {
@@ -139,8 +167,11 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       for (let i = 0; i < updatedLevels.length; i++) {
         const level = updatedLevels[i]
         const levelNumber = i + 1
-        const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
-        const newTitle = `Level ${levelNumber}: ${titleWithoutNumber}`
+        const titleWithoutNumber = level.title.replace(/^(Level \d+|Section \w+):\s*/, '')
+        const prefix = category === 'leadership' ? 'Section' : 'Level'
+        const newTitle = category === 'leadership'
+          ? `${prefix} ${numberToWord(levelNumber)}: ${titleWithoutNumber}`
+          : `${prefix} ${levelNumber}: ${titleWithoutNumber}`
         
         renumberedLevels.push({
           ...level,
@@ -197,8 +228,11 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       for (let i = 0; i < filteredLevels.length; i++) {
         const level = filteredLevels[i]
         const levelNumber = i + 1
-        const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
-        const newTitle = `Level ${levelNumber}: ${titleWithoutNumber}`
+        const titleWithoutNumber = level.title.replace(/^(Level \d+|Section \w+):\s*/, '')
+        const prefix = category === 'leadership' ? 'Section' : 'Level'
+        const newTitle = category === 'leadership'
+          ? `${prefix} ${numberToWord(levelNumber)}: ${titleWithoutNumber}`
+          : `${prefix} ${levelNumber}: ${titleWithoutNumber}`
         
         renumberedLevels.push({
           ...level,
