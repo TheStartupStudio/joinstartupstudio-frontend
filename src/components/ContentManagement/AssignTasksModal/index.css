@@ -77,7 +77,7 @@
   border-color: var(--stroke-light-outside, rgba(227, 229, 233, 0.50));
   border-width: 1px;
   padding: 12px 16px;
-  height: 54px;
+  /* height: 54px; */
 }
 
 .assign-tasks-modal .task-actions {

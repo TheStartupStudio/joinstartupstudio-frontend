@@ -163,8 +163,9 @@ const ContentManagement = () => {
         handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
-        setSelectedTask(item)
-        setShowPublishPopup(true)
+        // setSelectedTask(item)
+        // setShowPublishPopup(true)
+        toast.success('Task already published!')
         break
       case 'unpublish':
         setSelectedTask(item)
@@ -230,9 +231,41 @@ const ContentManagement = () => {
     setShowBulkDropdown(false)
   }
 
-  const handleBulkUnpublish = () => {
-    toast.success('Bulk unpublish action triggered')
-    setShowBulkDropdown(false)
+  const handleBulkUnpublish = async () => {
+    const selectedTasks = tasksData.filter(task => task.isSelected)
+
+    if (selectedTasks.length === 0) {
+      toast.warning('Please select tasks to unpublish')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const updatePromises = selectedTasks.map(async (task) => {
+        return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
+          journalLevel: null
+        })
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${selectedTasks.length} tasks unpublished successfully!`)
+
+      // Refresh data
+      await fetchTasksByLevel()
+
+      // Clear selections
+      setTasksData(prevTasks =>
+        prevTasks.map(task => ({ ...task, isSelected: false }))
+      )
+
+    } catch (error) {
+      console.error('Error bulk unpublishing tasks:', error)
+      toast.error('Failed to unpublish tasks')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
+    }
   }
 
   const handleViewEditJournal = async (journalId, mode) => {
@@ -349,7 +382,58 @@ const ContentManagement = () => {
     await fetchLevels()
   }
 
-  const handleSaveAssignments = (assignments) => {
+  const handleSaveAssignments = async (assignments) => {
+    try {
+      setLoading(true)
+
+      console.log('Assignments to process:', assignments)
+
+      // Filter out assignments with invalid level IDs
+      const validAssignments = assignments.filter(assignment => {
+        if (!assignment.levelId || assignment.levelId === '') {
+          console.warn(`Skipping assignment for journal ${assignment.journalId} - invalid levelId:`, assignment.levelId)
+          return false
+        }
+        return true
+      })
+
+      if (validAssignments.length === 0) {
+        toast.warning('No valid assignments to process')
+        setShowAssignModal(false)
+        setLoading(false)
+        return
+      }
+
+      // Update each journal's level assignment using the edit-with-content endpoint
+      const updatePromises = validAssignments.map(async (assignment) => {
+        try {
+          console.log(`Assigning journal ${assignment.journalId} to level ${assignment.levelId}`)
+          return await axiosInstance.put(`/LtsJournals/${assignment.journalId}/edit-with-content`, {
+            journalLevel: assignment.levelId
+          })
+        } catch (individualError) {
+          console.error(`Error assigning journal ${assignment.journalId}:`, individualError)
+          throw individualError // Re-throw to be caught by outer catch
+        }
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${validAssignments.length} journal(s) assigned successfully!`)
+
+      // Refresh data
+      await fetchTasksByLevel()
+      await fetchLevels()
+
+      // Close modal
+      setShowAssignModal(false)
+
+    } catch (error) {
+      console.error('Error assigning journals:', error)
+      // toast.error('Failed to assign journals')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handlePublishCancel = () => {
@@ -378,15 +462,10 @@ const ContentManagement = () => {
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
         published: true
       })
-      
-      setTasksData(prevTasks =>
-        prevTasks.map(task =>
-          task.id === selectedTask.id
-            ? { ...task, status: 'published' }
-            : task
-        )
-      )
-      
+
+      // Refresh data from API
+      await fetchTasksByLevel()
+
       toast.success(`Task "${selectedTask.name}" published successfully!`)
       setShowPublishPopup(false)
       setSelectedTask(null)
@@ -401,18 +480,13 @@ const ContentManagement = () => {
   const handleConfirmUnpublish = async () => {
     setLoading(true)
     try {
-      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
-        published: false
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
+        journalLevel: null
       })
-      
-      setTasksData(prevTasks =>
-        prevTasks.map(task =>
-          task.id === selectedTask.id
-            ? { ...task, status: 'unpublished' }
-            : task
-        )
-      )
-      
+
+      // Refresh data from API
+      await fetchTasksByLevel()
+
       toast.success(`Task "${selectedTask.name}" unpublished successfully!`)
       setShowUnpublishPopup(false)
       setSelectedTask(null)
@@ -706,12 +780,20 @@ const ContentManagement = () => {
         </div>
 
         <div className="table-container">
-          <DataTable 
+          <DataTable
             columns={columns}
             data={tasksData}
             searchQuery={searchQuery}
             onRowAction={handleRowAction}
             onReorder={handleReorder}
+            onSelectionChange={(selectedItems) => {
+              setTasksData(prevTasks =>
+                prevTasks.map(task => ({
+                  ...task,
+                  isSelected: selectedItems.some(selected => selected.id === task.id)
+                }))
+              )
+            }}
             showCheckbox={true}
             activeTab="Content"
           />
@@ -770,11 +852,8 @@ const ContentManagement = () => {
         show={showAssignModal}
         onHide={() => setShowAssignModal(false)}
         onSave={handleSaveAssignments}
-        tasks={[
-          { id: 1, title: 'Applying the LTS Model' },
-          { id: 2, title: 'Why Entrepreneurship Trumps Your Job' },
-          { id: 3, title: 'When to Seek Financing' }
-        ]}
+        type="content"
+        levels={levelsData}
       />
 
       <UserManagementPopup

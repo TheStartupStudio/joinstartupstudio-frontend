@@ -1,50 +1,104 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
+import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const AssignTasksModal = ({ show, onHide, onSave, tasks = [] }) => {
-  const [taskAssignments, setTaskAssignments] = useState(
-    tasks.map(task => ({
-      id: task.id,
-      title: task.title,
-      selectedLevel: ''
-    }))
-  )
+const AssignTasksModal = ({
+  show,
+  onHide,
+  onSave,
+  type = 'content', // 'content', 'masterclass', 'leadership'
+  levels = []
+}) => {
+  const [taskAssignments, setTaskAssignments] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  const handleLevelChange = (taskId, level) => {
+  // Fetch unassigned journals based on type
+  const fetchUnassignedJournals = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      let endpoint = ''
+      if (type === 'content') {
+        endpoint = '/LtsJournals/entrepreneurship/unassigned-journals'
+      } else if (type === 'masterclass') {
+        endpoint = '/masterclass/unassigned-journals'
+      } else if (type === 'leadership') {
+        endpoint = '/LtsJournals/leadership-journal/unassigned-journals'
+      }
+
+      const response = await axiosInstance.get(endpoint)
+
+      // Initialize assignments
+      const assignments = response.data.map(journal => ({
+        id: journal.id,
+        title: journal.title,
+        selectedLevel: '',
+        journalData: journal // Keep full journal data for reference
+      }))
+
+      setTaskAssignments(assignments)
+    } catch (err) {
+      console.error('Error fetching unassigned journals:', err)
+      setError('Failed to load unassigned journals')
+      setTaskAssignments([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch data when modal opens or type changes
+  useEffect(() => {
+    if (show) {
+      fetchUnassignedJournals()
+    }
+  }, [show, type])
+
+  const handleLevelChange = (journalId, levelId) => {
     setTaskAssignments(prevAssignments =>
       prevAssignments.map(assignment =>
-        assignment.id === taskId ? { ...assignment, selectedLevel: level } : assignment
+        assignment.id === journalId ? { ...assignment, selectedLevel: levelId } : assignment
       )
     )
   }
 
-  const handleDelete = (taskId) => {
-    setTaskAssignments(prevAssignments =>
-      prevAssignments.filter(assignment => assignment.id !== taskId)
-    )
+  const handleDelete = async (journalId) => {
+    try {
+      // Make the actual delete API call
+      await axiosInstance.delete(`/LtsJournals/${journalId}/delete-with-content`)
+
+      // Remove from local state after successful deletion
+      setTaskAssignments(prevAssignments =>
+        prevAssignments.filter(assignment => assignment.id !== journalId)
+      )
+
+      // Optional: Show success message
+      console.log(`Journal ${journalId} deleted successfully`)
+
+    } catch (error) {
+      console.error('Error deleting journal:', error)
+      // Optional: Show error message to user
+      alert('Failed to delete journal. Please try again.')
+    }
   }
 
   const handleSaveAndClose = () => {
     const assignments = taskAssignments
       .filter(assignment => assignment.selectedLevel !== '')
       .map(assignment => ({
-        taskId: assignment.id,
-        level: assignment.selectedLevel
+        journalId: assignment.id,
+        levelId: assignment.selectedLevel
       }))
-    
+
     onSave(assignments)
     handleClose()
   }
 
   const handleClose = () => {
-    setTaskAssignments(
-      tasks.map(task => ({
-        id: task.id,
-        title: task.title,
-        selectedLevel: ''
-      }))
-    )
+    setTaskAssignments([])
+    setError(null)
     onHide()
   }
 
@@ -59,32 +113,63 @@ const AssignTasksModal = ({ show, onHide, onSave, tasks = [] }) => {
           </svg>
         </div>
         
-        <h5 className="modal-title">View & Assign Uncategorized Tasks</h5>
+        <h5 className="modal-title">
+          {type === 'content' ? 'Assign Content to Levels' :
+           type === 'masterclass' ? 'Assign Masterclass to Levels' :
+           'Assign Leadership Journal to Levels'}
+        </h5>
 
-        <div className="form-group">
-          <label className="form-label">TASKS TO ASSIGN</label>
-          
-          <div className="tasks-list">
-            {taskAssignments.map((task) => (
-              <div key={task.id} className="task-item">
-                <span className="task-title">{task.title}</span>
-                
-                <div className="task-actions">
-                  <select
-                    className="level-select"
-                    value={task.selectedLevel}
-                    onChange={(e) => handleLevelChange(task.id, e.target.value)}
-                  >
-                    <option value="">Select new level</option>
-                    <option value="level-1">Level 1</option>
-                    <option value="level-2">Level 2</option>
-                    <option value="level-3">Level 3</option>
-                    <option value="level-4">Level 4</option>
-                  </select>
+        {loading && (
+          <div className="text-center py-4">
+            <div className="spinner-border" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+            <p className="mt-2">Loading unassigned journals...</p>
+          </div>
+        )}
 
-                  <button
+        {error && (
+          <div className="alert alert-danger">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && (
+          <div className="form-group">
+            <label className="form-label">
+              {type === 'content' ? 'UNASSIGNED CONTENT JOURNALS' :
+               type === 'masterclass' ? 'UNASSIGNED MASTERCLASS JOURNALS' :
+               'UNASSIGNED LEADERSHIP JOURNALS'}
+            </label>
+
+            {taskAssignments.length === 0 ? (
+              <div className="text-center py-4">
+                <p>No unassigned journals found.</p>
+              </div>
+            ) : (
+              <div className="tasks-list">
+                {taskAssignments.map((journal) => (
+                  <div key={journal.id} className="task-item">
+                    <span className="task-title">{journal.title}</span>
+
+                    <div className="task-actions">
+                      <select
+                        className="level-select"
+                        value={journal.selectedLevel}
+                        onChange={(e) => handleLevelChange(journal.id, e.target.value)}
+                      >
+                        <option value="">Select level</option>
+                        {levels.map((level) => (
+                          <option key={level.id} value={level.id}>
+                            {level.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <button
                     className="delete-task-btn"
-                    onClick={() => handleDelete(task.id)}
+                    onClick={() => handleDelete(journal.id)}
                     type="button"
                   >
                     <svg className="trash" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,20 +177,27 @@ const AssignTasksModal = ({ show, onHide, onSave, tasks = [] }) => {
                       <path d="M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
-                </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        </div>
+        )}
 
-        <div className="modal-actions">
-          <button className="btn-cancel" onClick={handleClose}>
-            CANCEL
-          </button>
-          <button className="btn-save" onClick={handleSaveAndClose}>
-            SAVE AND CLOSE
-          </button>
-        </div>
+        {!loading && (
+          <div className="modal-actions">
+            <button className="btn-cancel" onClick={handleClose}>
+              CANCEL
+            </button>
+            <button
+              className="btn-save"
+              onClick={handleSaveAndClose}
+              disabled={taskAssignments.filter(a => a.selectedLevel !== '').length === 0}
+            >
+              SAVE AND CLOSE
+            </button>
+          </div>
+        )}
       </Modal.Body>
     </Modal>
   )
