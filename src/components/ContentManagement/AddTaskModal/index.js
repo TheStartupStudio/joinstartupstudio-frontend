@@ -164,12 +164,18 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       })
       const levelId = selectedLevelObj && typeof selectedLevelObj !== 'string' ? selectedLevelObj.id : null
 
-      const filteredReflectionItems = (activeTab === 'reflection' || isLeadership) 
+      const filteredReflectionItems = (activeTab === 'reflection' || isLeadership)
         ? reflectionItems.filter(item => {
-            const tempDiv = document.createElement('div')
-            tempDiv.innerHTML = item.question
-            const textContent = tempDiv.textContent || tempDiv.innerText || ''
-            return textContent.trim() !== ''
+            if (isLeadership) {
+              // For leadership journals, question is plain text
+              return item.question && item.question.trim() !== ''
+            } else {
+              // For content management, question might be HTML formatted
+              const tempDiv = document.createElement('div')
+              tempDiv.innerHTML = item.question
+              const textContent = tempDiv.textContent || tempDiv.innerText || ''
+              return textContent.trim() !== ''
+            }
           })
         : []
 
@@ -180,9 +186,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         platform: 'instructor',
         order: taskData?.order || 0,
         parentId: null,
-        url: videoUrl || null,  // Changed from videoUrl to url
-        thumbnail: thumbnailUrl || null,  // Changed from thumbnailUrl to thumbnail
-        description: (isLeadership || isMasterClass) ? (information || null) : null,  // Changed from information to description
+        videoUrl: videoUrl || null,
+        thumbnailUrl: thumbnailUrl || null,
+        information: isLeadership ? (information || null) : null,
         reflectionItems: filteredReflectionItems
       }
 

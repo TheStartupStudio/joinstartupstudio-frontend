@@ -44,8 +44,7 @@ const LeadershipJournal = memo(() => {
   const [isSaving, setIsSaving] = useState(false)
 
   const [levels, setLevels] = useState([])
-  const [lessonsByLevel, setLessonsByLevel] = useState({})
-  const [lessonsLoading, setLessonsLoading] = useState(true)
+  const [lessons, setLessons] = useState({})
 
   const dispatch = useDispatch()
   const { finishedContent } = useSelector((state) => state.journal)
@@ -69,174 +68,118 @@ const LeadershipJournal = memo(() => {
       }
     } catch (error) {
       console.error('Error fetching leadership levels:', error)
-      // Keep default values on error
+      // Fallback to default levels when API fails
+      const defaultLevels = [
+        {
+          title: 'Section One: Who am I?',
+          description: 'Welcome to Section One: Who am I?',
+          active: true
+        },
+        {
+          title: 'Section Two: What can I do?',
+          description: 'Welcome to Section Two: What can I do?',
+          active: false
+        },
+        {
+          title: 'Section Three: How do I prove it?',
+          description: 'Welcome to Section Three: How do I prove it?',
+          active: false
+        }
+      ]
+      setLevels(defaultLevels)
     }
   }
 
   // Fetch lessons from API
   const fetchLessons = async () => {
     try {
-      setLessonsLoading(true)
       const response = await axiosInstance.get('/LtsJournals/leadership-journal/lessons')
       if (response.data) {
-        // Convert string keys to numeric keys and ensure proper structure
-        const transformedLessons = {}
-        Object.keys(response.data).forEach(key => {
-          const numericKey = parseInt(key)
-          if (!isNaN(numericKey)) {
-            // Ensure each lesson has the required fields
-            transformedLessons[numericKey] = (response.data[key] || []).map(lesson => ({
-              id: lesson.id || lesson.redirectId || 0,
-              title: lesson.title || '',
-              status: lesson.status || 'notStarted',
-              redirectId: lesson.redirectId || parseInt(lesson.id) || 0,
-              separate: lesson.separate || false
-            }))
-          }
-        })
-        setLessonsByLevel(transformedLessons)
+        setLessons(response.data)
       }
     } catch (error) {
       console.error('Error fetching leadership lessons:', error)
-      // Set empty object on error
-      setLessonsByLevel({})
-      toast.error('Failed to fetch leadership lessons')
-    } finally {
-      setLessonsLoading(false)
+      // Fallback to empty lessons
+      setLessons({})
     }
   }
 
-  const sections = {
-    one: [
-      { title: 'Welcome to the Leadership Journal', component: <SectionOne setIsReflection={setIsReflection} /> },
-      { title: 'Section One: Who am I?', component: <IntroWhoAmI setIsReflection={setIsReflection} /> },
-      {
-        title: 'Values',
-        component: <Value
-          ref={el => valueRefs.current['Values'] = el}
-          id={1001065}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Expertise',
-        component: <Value
-          ref={el => valueRefs.current['Expertise'] = el}
-          id={1001066}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Experiences',
-        component: <Value
-          ref={el => valueRefs.current['Experiences'] = el}
-          id={1001067}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Style',
-        component: <Value
-          ref={el => valueRefs.current['Style'] = el}
-          id={1001068}
-          setIsReflection={setIsReflection}
-        />
-      },
-    ],
-    two: [
-      { title: 'Section Two: What can I do?', component: <SectionTwo setIsReflection={setIsReflection} /> },
-      {
-        title: 'Teamwork',
-        component: <Value
-          ref={el => valueRefs.current['Teamwork'] = el}
-          id={1001069}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Initiative',
-        component: <Value
-          ref={el => valueRefs.current['Initiative'] = el}
-          id={1001070}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Methodology',
-        component: <Value
-          ref={el => valueRefs.current['Methodology'] = el}
-          id={1001071}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Self-Assessment',
-        component: <Value
-          ref={el => valueRefs.current['Self-Assessment'] = el}
-          id={1001072}
-          setIsReflection={setIsReflection}
-        />
-      },
-    ],
-    three: [
-      { title: 'Section Three: How do I prove it?', component: <SectionThree setIsReflection={setIsReflection} /> },
-      {
-        title: 'Outcomes',
-        component: <Value
-          ref={el => valueRefs.current['Outcomes'] = el}
-          id={1001073}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Feedback',
-        component: <Value
-          ref={el => valueRefs.current['Feedback'] = el}
-          id={1001074}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Iteration',
-        component: <Value
-          ref={el => valueRefs.current['Iteration'] = el}
-          id={1001075}
-          setIsReflection={setIsReflection}
-        />
-      },
-      {
-        title: 'Vision',
-        component: <Value
-          ref={el => valueRefs.current['Vision'] = el}
-          id={1001076}
-          setIsReflection={setIsReflection}
-        />
-      },
-    ],
-  };
 
-  // Initialize allTabs based on lessons data from API
+  // Generate sections dynamically from lessons API
+  const sections = useMemo(() => {
+    const result = {}
+
+    Object.keys(lessons).forEach(levelIndex => {
+      const levelLessons = lessons[levelIndex] || []
+      const sectionKey = levelIndex === '0' ? 'one' : levelIndex === '1' ? 'two' : 'three'
+
+      result[sectionKey] = levelLessons.map(lesson => {
+        // Special handling for specific sections (first 2 lessons are intro sections)
+        const lessonIndex = levelLessons.indexOf(lesson)
+        let component
+
+        if (lessonIndex === 0 && levelIndex === '0') {
+          // First lesson of section 1 - Welcome to Leadership Journal
+          component = <SectionOne setIsReflection={setIsReflection} lessonId={lesson.id} />
+        } else if (lessonIndex === 1 && levelIndex === '0') {
+          // Second lesson of section 1 - Section One: Who am I?
+          component = <IntroWhoAmI setIsReflection={setIsReflection} lessonId={lesson.id} />
+        } else if (lessonIndex === 0 && levelIndex === '1') {
+          // First lesson of section 2 - Section Two: What can I do?
+          component = <SectionTwo setIsReflection={setIsReflection} lessonId={lesson.id} />
+        } else if (lessonIndex === 0 && levelIndex === '2') {
+          // First lesson of section 3 - Section Three: How do I prove it?
+          component = <SectionThree setIsReflection={setIsReflection} lessonId={lesson.id} />
+        } else {
+          // All other lessons use the Value component
+          component = (
+            <Value
+              ref={el => valueRefs.current[lesson.title] = el}
+              id={lesson.id}
+              setIsReflection={setIsReflection}
+            />
+          )
+        }
+
+        return {
+          title: lesson.title,
+          value: lesson.title,
+          id: lesson.id,
+          redirectId: lesson.redirectId,
+          separate: lesson.separate,
+          component: component
+        }
+      })
+    })
+
+    return result
+  }, [lessons, setIsReflection])
+
+  // Initialize allTabs based on dynamic sections and levels from API
   useEffect(() => {
-    if (Object.keys(lessonsByLevel).length === 0) return;
+    if (levels.length === 0 || Object.keys(lessons).length === 0) return;
 
-    const tabs = Object.keys(lessonsByLevel).map((levelKey, index) => {
-      const levelLessons = lessonsByLevel[levelKey] || [];
+    const tabs = levels.map((level, index) => {
+      // Map level index to section key
+      const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
+      const sectionLessons = sections[sectionKey] || [];
+
       return {
-        title: levels[index]?.title || `Section ${index + 1}`,
-        options: levelLessons.map((lesson) => ({
+        title: level.title,
+        options: sectionLessons.map((lesson) => ({
           label: lesson.title,
           value: lesson.title,
           isNext: false,
-          id: lesson.id,
+          id: lesson.id, // Use actual lesson ID from API
           redirectId: lesson.redirectId
         }))
       };
     });
 
     setAllTabs(tabs);
-  }, [lessonsByLevel, levels]);
+  }, [levels, sections, lessons]);
 
-  // Fetch finished content, levels and lessons when component mounts
+  // Fetch finished content, levels, and lessons when component mounts
   useEffect(() => {
     dispatch(fetchJournalFinishedContent());
     // Fetch levels and lessons from API
@@ -269,10 +212,12 @@ const LeadershipJournal = memo(() => {
         });
       };
 
-      // Update each tab's options
-      updatedTabs[0].options = updateNextFlags(updatedTabs[0].options);
-      updatedTabs[1].options = updateNextFlags(updatedTabs[1].options);
-      updatedTabs[2].options = updateNextFlags(updatedTabs[2].options);
+      // Update each tab's options dynamically
+      updatedTabs.forEach((tab, index) => {
+        if (tab && tab.options) {
+          updatedTabs[index].options = updateNextFlags(tab.options);
+        }
+      });
 
       return updatedTabs;
     });
@@ -282,8 +227,9 @@ const LeadershipJournal = memo(() => {
   const canAccessSection = (index) => {
     if (index === 0) return true;
 
-    // Get lessons for the previous section
-    const prevSectionLessons = lessonsByLevel[index - 1] || [];
+    // Get lessons for the previous section from dynamic sections
+    const sectionKey = (index - 1) === 0 ? 'one' : (index - 1) === 1 ? 'two' : 'three';
+    const prevSectionLessons = sections[sectionKey] || [];
 
     // All lessons from the previous section must be completed
     return prevSectionLessons.every(lesson => finishedContent.includes(lesson.title));
@@ -296,10 +242,17 @@ const LeadershipJournal = memo(() => {
 
       const currentComponent = valueRefs.current[activeTabData.option?.value];
 
-      // Check if this is an intro section (first lesson of each section)
-      const currentLevelLessons = lessonsByLevel[activeTabData.activeTab] || [];
-      const isIntroSection = currentLevelLessons.length > 0 &&
-        currentLevelLessons[0].title === activeTabData.option?.value;
+      // Check if this is an intro section
+      const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
+      const currentSectionLessons = sections[sectionKey] || [];
+      const currentLessonIndex = currentSectionLessons.findIndex(
+        lesson => lesson.title === activeTabData.option?.value
+      );
+
+      // For section 1, first 2 lessons are intro sections
+      // For sections 2 and 3, first lesson is intro section
+      const isIntroSection = (activeTabData.activeTab === 0 && (currentLessonIndex === 0 || currentLessonIndex === 1)) ||
+                            (activeTabData.activeTab > 0 && currentLessonIndex === 0);
 
       if (isIntroSection) {
         // Handle intro sections as before...
@@ -383,14 +336,27 @@ const LeadershipJournal = memo(() => {
 
   // Check if current option is an intro section
   const isIntroSection = useMemo(() => {
-    const currentLevelLessons = lessonsByLevel[activeTabData.activeTab] || [];
-    return currentLevelLessons.length > 0 &&
-      currentLevelLessons[0].title === activeTabData.option?.value;
-  }, [activeTabData, lessonsByLevel]);
+    const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
+    const currentSectionLessons = sections[sectionKey] || [];
+
+    if (currentSectionLessons.length === 0) return false;
+
+    const currentLessonIndex = currentSectionLessons.findIndex(
+      lesson => lesson.title === activeTabData.option?.value
+    );
+
+    // For section 1 (index 0), first 2 lessons are intro sections
+    // For sections 2 and 3 (index 1, 2), first lesson is intro section
+    if (activeTabData.activeTab === 0) {
+      return currentLessonIndex === 0 || currentLessonIndex === 1;
+    } else {
+      return currentLessonIndex === 0;
+    }
+  }, [activeTabData, sections]);
 
   // Render the appropriate section based on active tab and option
   const renderedSection = useMemo(() => {
-    if (allTabs.length === 0 || lessonsLoading) return null;
+    if (allTabs.length === 0) return null;
 
     // Find the component that matches the selected option from the hardcoded sections
     // Map level index to section key
@@ -402,7 +368,7 @@ const LeadershipJournal = memo(() => {
     );
 
     return selectedSection ? selectedSection.component : null;
-  }, [activeTabData, allTabs, sections, lessonsLoading]);
+  }, [activeTabData, allTabs, sections]);
 
   // Update current title when option changes
   useEffect(() => {
@@ -421,16 +387,17 @@ const LeadershipJournal = memo(() => {
       return;
     }
 
-    // Get the first lesson from the selected level
-    const levelLessons = lessonsByLevel[index] || [];
-    const firstLesson = levelLessons[0];
+    // Get the first lesson from the dynamic sections
+    const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
+    const sectionLessons = sections[sectionKey] || [];
+    const firstLesson = sectionLessons[0];
 
     let initialOption;
     if (firstLesson) {
       initialOption = {
         label: firstLesson.title,
         value: firstLesson.title,
-        id: firstLesson.id,
+        id: firstLesson.id, // Use actual lesson ID from API
         redirectId: firstLesson.redirectId
       };
     } else {
@@ -474,7 +441,7 @@ const LeadershipJournal = memo(() => {
                                  </div>
         </div>
         <div className='academy-dashboard-layout lead-class mb-5'>
-          {lessonsLoading || allTabs.length === 0 ? (
+          {allTabs.length === 0 ? (
             <div>Loading...</div>
           ) : (
             <>
@@ -482,14 +449,15 @@ const LeadershipJournal = memo(() => {
                 {allTabs.map((tab, index) => (
                   <span
                     key={index}
-                    className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 w-100-mob ${activeTabData.activeTab === index
+                    className={`fs-14 fw-medium text-center p-2 cursor-pointer w-100-mob ${activeTabData.activeTab === index
                       ? 'active-leadership'
                       : ''
                       }`}
                     onClick={() => handleTabClick(index)}
                     style={{
                       color: canAccessSection(index) ? '#000' : '#999',
-                      cursor: canAccessSection(index) ? 'pointer' : 'not-allowed'
+                      cursor: canAccessSection(index) ? 'pointer' : 'not-allowed',
+                      width: '100%'
                     }}
                   >
                     {tab.title}

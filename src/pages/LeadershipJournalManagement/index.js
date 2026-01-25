@@ -157,25 +157,7 @@ const LeadershipJournalManagement = () => {
     switch (actionType) {
       case 'view':
       case 'edit':
-        // Transform API journal data to modal format
-        const journalData = item.fullData
-        const taskData = {
-          id: journalData.id,
-          title: journalData.title,
-          level: activeLevel,
-          contentType: journalData.contentType || 'video',
-          videoUrl: journalData.videoUrl || '',
-          thumbnailUrl: journalData.thumbnailUrl || '',
-          reflectionItems: journalData.entries ? journalData.entries.map(entry => ({
-            id: entry.id,
-            question: entry.question || '',
-            instructions: entry.instructions || ''
-          })) : []
-        }
-
-        setEditingTask(taskData)
-        setModalMode(actionType)
-        setShowAddTaskModal(true)
+        handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
         setSelectedTask(item)
@@ -251,29 +233,101 @@ const LeadershipJournalManagement = () => {
     setShowBulkDropdown(false)
   }
 
-  const handleSaveTask = (taskData) => {
-    console.log('Leadership task data:', taskData)
-    
-    if (modalMode === 'edit') {
-      setTasksData(prevTasks => 
-        prevTasks.map(task => 
-          task.id === editingTask.id 
-            ? { ...task, name: taskData.title, ...taskData }
-            : task
-        )
-      )
-      toast.success('Leadership task updated successfully!')
-    } else {
-      const newTask = {
-        id: tasksData.length + 1,
-        name: taskData.title,
-        status: 'unpublished',
-        hasContent: true,
-        order: tasksData.length + 1
+  const handleViewEditJournal = async (journalId, mode) => {
+    try {
+      setLoading(true)
+
+      const response = await axiosInstance.get(`/LtsJournals/${journalId}`)
+
+      const journal = response.data
+
+      let formattedReflectionItems = []
+
+      if (journal.entries && Array.isArray(journal.entries)) {
+        formattedReflectionItems = journal.entries.map(entry => {
+          let question = ''
+          let instructions = ''
+
+          if (entry.title) {
+            // Check if title contains HTML tags
+            const hasHtmlTags = /<[^>]*>/.test(entry.title)
+
+            if (hasHtmlTags) {
+              // Parse HTML formatted title (like in content management)
+              const tempDiv = document.createElement('div')
+              tempDiv.innerHTML = entry.title
+
+              const headingElement = tempDiv.querySelector('h1, h2, h3, h4, h5, h6')
+              if (headingElement) {
+                question = headingElement.textContent || headingElement.innerText || ''
+              } else {
+                let headingMatch = entry.title.match(/<h3[^>]*>(.*?)<\/h3>/i)
+                if (!headingMatch) {
+                  headingMatch = entry.title.match(/<h2[^>]*>(.*?)<\/h2>/i)
+                }
+                if (headingMatch && headingMatch[1]) {
+                  const headingTempDiv = document.createElement('div')
+                  headingTempDiv.innerHTML = headingMatch[1]
+                  question = headingTempDiv.textContent || headingTempDiv.innerText || headingMatch[1]
+                }
+              }
+
+              const pElement = tempDiv.querySelector('p')
+              if (pElement) {
+                instructions = pElement.textContent || pElement.innerText || ''
+              } else {
+                const pMatch = entry.title.match(/<p[^>]*>(.*?)<\/p>/i)
+                if (pMatch && pMatch[1]) {
+                  const pTempDiv = document.createElement('div')
+                  pTempDiv.innerHTML = pMatch[1]
+                  instructions = pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
+                }
+              }
+            } else {
+              // Plain text title (like in leadership journals) - treat entire title as question
+              question = entry.title
+              instructions = ''
+            }
+          }
+
+          return {
+            id: entry.id || Date.now() + Math.random(),
+            question: question.trim(),
+            instructions: instructions.trim()
+          }
+        })
       }
-      setTasksData(prevTasks => [...prevTasks, newTask])
-      toast.success('Leadership task created successfully!')
+
+      const taskData = {
+        id: journal.id,
+        title: journal.title,
+        level: activeLevel,
+        contentType: formattedReflectionItems.length > 0 ? 'reflection' : 'video',
+        videoUrl: journal.video?.url || journal.videos?.[0]?.url || '',
+        thumbnailUrl: journal.JournalImg?.url || journal.video?.thumbnail || journal.videos?.[0]?.thumbnail || '',
+        information: journal.content || journal.paragraph || '',
+        reflectionItems: formattedReflectionItems,
+        order: journal.order
+      }
+
+      setEditingTask(taskData)
+      setModalMode(mode)
+      setShowAddTaskModal(true)
+    } catch (error) {
+      console.error('Error fetching journal data:', error)
+      toast.error('Failed to load journal data')
+    } finally {
+      setLoading(false)
     }
+  }
+
+  const handleSaveTask = (journalData) => {
+    if (journalData.deleted) {
+      setTasksData(prevTasks => prevTasks.filter(task => task.id !== journalData.id))
+      return
+    }
+
+    fetchContentByLevel(levelsData.find(l => l.title === activeLevel)?.id)
   }
 
 
@@ -304,8 +358,10 @@ const LeadershipJournalManagement = () => {
   const handleConfirmPublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
+        published: true
+      })
+
       setTasksData(prevTasks =>
         prevTasks.map(task =>
           task.id === selectedTask.id
@@ -313,11 +369,12 @@ const LeadershipJournalManagement = () => {
             : task
         )
       )
-      
+
       toast.success(`Task "${selectedTask.name}" published successfully!`)
       setShowPublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error publishing task:', error)
       toast.error('Failed to publish task')
     } finally {
       setLoading(false)
@@ -327,8 +384,10 @@ const LeadershipJournalManagement = () => {
   const handleConfirmUnpublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
+        published: false
+      })
+
       setTasksData(prevTasks =>
         prevTasks.map(task =>
           task.id === selectedTask.id
@@ -336,11 +395,12 @@ const LeadershipJournalManagement = () => {
             : task
         )
       )
-      
+
       toast.success(`Task "${selectedTask.name}" unpublished successfully!`)
       setShowUnpublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error unpublishing task:', error)
       toast.error('Failed to unpublish task')
     } finally {
       setLoading(false)
@@ -350,16 +410,17 @@ const LeadershipJournalManagement = () => {
   const handleConfirmDeleteTask = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      await axiosInstance.delete(`/LtsJournals/${selectedTask.id}/delete-with-content`)
+
       setTasksData(prevTasks =>
         prevTasks.filter(task => task.id !== selectedTask.id)
       )
-      
+
       toast.success(`Task "${selectedTask.name}" deleted successfully!`)
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error deleting task:', error)
       toast.error('Failed to delete task')
     } finally {
       setLoading(false)
@@ -636,7 +697,7 @@ const LeadershipJournalManagement = () => {
           setModalMode('add')
         }}
         onSave={handleSaveTask}
-        levels={levels}
+        levels={levelsData}
         mode={modalMode}
         taskData={editingTask}
         source="leadership"

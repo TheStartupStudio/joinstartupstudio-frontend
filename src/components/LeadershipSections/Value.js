@@ -125,6 +125,86 @@ const Value = forwardRef((props, ref) => {
     zIndex: 99999999
   }
 
+  // Check if this journal has reflection questions
+  const hasEntries = journalData?.entries && journalData.entries.length > 0
+
+  // If no entries, show content-only layout like intro sections
+  if (!hasEntries) {
+    setIsReflection(false)
+    return (
+      <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
+        <div className='w-100'>
+          <div className='row'>
+            <div className='col-12 mb-4'>
+              {journalData?.video && (
+                <div
+                  className="journal-entries__video-thumbnail"
+                  onClick={() => setShowVideo(true)}
+                  style={{
+                    cursor: 'pointer',
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%',
+                    aspectRatio: '16 / 9',
+                    marginBottom: '2rem'
+                  }}
+                >
+                  <img
+                    src={journalData.video.thumbnail || journalData.video.url}
+                    alt="video thumbnail"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <div className="journal-entries__video-thumbnail-icon"
+                    style={{
+                      position: 'absolute',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPlay} />
+                  </div>
+                </div>
+              )}
+
+              {showVideo && journalData?.video && (
+                <MediaLightbox
+                  video={journalData.video}
+                  show={showVideo}
+                  onClose={() => setShowVideo(false)}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        <SectionsWrapper title={journalData?.title}>
+          <div style={{ position: 'relative' }}>
+            <div style={noteButtonStyles}>
+              <NotesButton
+                from="leadershipJournal"
+                data={{
+                  id: currentId,
+                  title: journalData?.title
+                }}
+                createdFrom={journalData?.title || 'Leadership Journal'}
+                journalId={currentId}
+              />
+            </div>
+
+            <div
+              dangerouslySetInnerHTML={{ __html: journalData?.content || journalData?.paragraph }}
+            />
+          </div>
+        </SectionsWrapper>
+      </div>
+    )
+  }
+
+  // If has entries, show normal reflection layout
+  setIsReflection(true)
   return (
     <div className='d-grid grid-col-2 gap-4 grid-col-1-mob'>
       <SectionsWrapper title={journalData?.title}>
