@@ -10,6 +10,7 @@ import AdminDashIcon from '../../assets/images/academy-icons/svg/dashboard.svg' 
 import IntroToIcon from '../../assets/images/academy-icons/svg/intro-to-course.svg'
 import MasterIcon from '../../assets/images/academy-icons/svg/master-classes.svg'
 import LeadershipIcon from '../../assets/images/academy-icons/svg/leadership-journal.svg'
+import ContentSiteIcon from '../../assets/images/academy-icons/svg/course-in-e.svg'
 import PortfolioIcon from '../../assets/images/academy-icons/svg/my-portfolio.svg'
 import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
 import groupIcon from '../../assets/images/group.png'
@@ -80,6 +81,14 @@ const SIDEBAR_MENU_ITEMS = [
     className: (pathname) => pathname.includes('leadership-journal-management') ? 'active' : ''
   },
   {
+    id: 'manage-content-site',
+    title: 'Manage Content Site',
+    srcImage: ContentSiteIcon,
+    to: '/manage-content-site',
+    roles: [3],
+    className: (pathname) => pathname.includes('manage-content-site') ? 'active' : ''
+  },
+  {
     id: 'intro-course',
     title: 'Intro to the Studio',
     srcImage: IntroToIcon,
@@ -92,7 +101,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Sessions',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     className: (pathname) => pathname.includes('my-course-in-entrepreneurship/journal') ? 'active' : ''
   },
   {
@@ -100,7 +109,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
   },
@@ -109,7 +118,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Leadership journal',
     srcImage: LeadershipIcon,
     to: '/leadership-journal',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal') ? 'active' : ''
   },
