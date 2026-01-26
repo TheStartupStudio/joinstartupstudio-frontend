@@ -566,7 +566,7 @@ const MasterClassManagement = () => {
                   lineHeight: 'normal',
                 }}
               >
-                MASTER CLASS MANAGEMENT
+                STUDIO GUIDANCE MANAGEMENT
               </h3>
               <p
                 style={{
@@ -579,7 +579,7 @@ const MasterClassManagement = () => {
                   marginBottom: '0px',
                 }}
               >
-                View and edit Master Class Videos
+                View and edit Studio Guidance Videos
               </p>
             </div>
           </div>

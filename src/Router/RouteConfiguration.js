@@ -248,7 +248,7 @@ export const adminRoutes = [
   {
     path: '/master-class-management',
     component: MasterClassManagement,
-    breadcrumb: 'Master Class Management',
+    breadcrumb: 'Studio Guidance Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
     requiresUniversitySetting: 'hasMasterClasses'
   },

@@ -391,7 +391,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         </div>
         
         <h5 className="modal-title">
-          {isViewMode ? (isMasterClass ? 'View Master Class' : 'View Task') : isEditMode ? (isMasterClass ? 'Edit Master Class' : 'Edit Task') : (isMasterClass ? 'Add New Master Class' : 'Add New Task')}
+          {isViewMode ? (isMasterClass ? 'View Studio Guidance' : 'View Task') : isEditMode ? (isMasterClass ? 'Edit Studio Guidance' : 'Edit Task') : (isMasterClass ? 'Add New Studio Guidance' : 'Add New Task')}
         </h5>
 
         {isViewMode && (
@@ -399,7 +399,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             <div 
               onClick={handleSwitchToEditMode}
               style={{ cursor: 'pointer' }}
-              title={isMasterClass ? "Edit master class" : "Edit task"}
+              title={isMasterClass ? "Edit studio guidance" : "Edit task"}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                 <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -419,12 +419,12 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         )}
 
         <div className="form-group">
-          <label className="form-label">{isMasterClass ? 'MASTER CLASS TITLE:' : 'TASK TITLE:'}</label>
+          <label className="form-label">{isMasterClass ? 'STUDIO GUIDANCE TITLE:' : 'TASK TITLE:'}</label>
           <div className="input-wrapper">
             <input
               type="text"
               className="form-control task-title-input"
-              placeholder={isMasterClass ? "Add master class title here..." : "Add task title here..."}
+              placeholder={isMasterClass ? "Add studio guidance title here..." : "Add task title here..."}
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               readOnly={isViewMode}
@@ -436,7 +436,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         </div>
 
         <div className="form-group">
-          <label className="form-label">{isMasterClass ? 'CONNECTED MASTER CLASS LEVEL' : 'CONNECTED AIE LEVEL'}</label>
+          <label className="form-label">{isMasterClass ? 'CONNECTED STUDIO GUIDANCE LEVEL' : 'CONNECTED AIE LEVEL'}</label>
           <div className="custom-level-dropdown" ref={dropdownRef}>
             <div 
               className="level-dropdown-trigger"
@@ -444,7 +444,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
               style={isViewMode ? { cursor: 'not-allowed', opacity: 0.7 } : { cursor: 'pointer' }}
             >
               <span className={selectedLevel ? 'selected-text' : 'placeholder-text'}>
-                {selectedLevel || (isMasterClass ? 'Select master class level' : 'Select AIE level')}
+                {selectedLevel || (isMasterClass ? 'Select studio guidance level' : 'Select AIE level')}
               </span>
               {!isViewMode && (
                 <FontAwesomeIcon 
@@ -807,7 +807,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                   <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
                   <path d="M10 14.1743L10.0083 14.1651" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span>{isMasterClass ? 'Delete Master Class' : 'Delete Task'}</span>
+                <span>{isMasterClass ? 'Delete Studio Guidance' : 'Delete Task'}</span>
               </div>
             )}
 
