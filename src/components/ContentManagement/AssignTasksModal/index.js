@@ -7,14 +7,13 @@ const AssignTasksModal = ({
   show,
   onHide,
   onSave,
-  type = 'content', // 'content', 'masterclass', 'leadership'
+  type = 'content', 
   levels = []
 }) => {
   const [taskAssignments, setTaskAssignments] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Fetch unassigned journals based on type
   const fetchUnassignedJournals = async () => {
     try {
       setLoading(true)
@@ -24,19 +23,25 @@ const AssignTasksModal = ({
       if (type === 'content') {
         endpoint = '/LtsJournals/entrepreneurship/unassigned-journals'
       } else if (type === 'masterclass') {
-        endpoint = '/masterclass/unassigned-journals'
+        endpoint = '/contents/master-class/unassigned-content'
       } else if (type === 'leadership') {
         endpoint = '/LtsJournals/leadership-journal/unassigned-journals'
       }
 
       const response = await axiosInstance.get(endpoint)
 
-      // Initialize assignments
-      const assignments = response.data.map(journal => ({
+      let journalsData = []
+      if (type === 'masterclass') {
+        journalsData = response.data.data
+      } else {
+        journalsData = response.data
+      }
+
+      const assignments = journalsData.map(journal => ({
         id: journal.id,
         title: journal.title,
         selectedLevel: '',
-        journalData: journal // Keep full journal data for reference
+        journalData: journal 
       }))
 
       setTaskAssignments(assignments)
@@ -49,7 +54,6 @@ const AssignTasksModal = ({
     }
   }
 
-  // Fetch data when modal opens or type changes
   useEffect(() => {
     if (show) {
       fetchUnassignedJournals()
@@ -64,23 +68,23 @@ const AssignTasksModal = ({
     )
   }
 
-  const handleDelete = async (journalId) => {
+  const handleDelete = async (contentId) => {
     try {
-      // Make the actual delete API call
-      await axiosInstance.delete(`/LtsJournals/${journalId}/delete-with-content`)
+      const endpoint = type === 'masterclass'
+        ? `/contents/${contentId}`
+        : `/LtsJournals/${contentId}/delete-with-content`
 
-      // Remove from local state after successful deletion
+      await axiosInstance.delete(endpoint)
+
       setTaskAssignments(prevAssignments =>
-        prevAssignments.filter(assignment => assignment.id !== journalId)
+        prevAssignments.filter(assignment => assignment.id !== contentId)
       )
 
-      // Optional: Show success message
-      console.log(`Journal ${journalId} deleted successfully`)
+      console.log(`${type} content ${contentId} deleted successfully`)
 
     } catch (error) {
-      console.error('Error deleting journal:', error)
-      // Optional: Show error message to user
-      alert('Failed to delete journal. Please try again.')
+      console.error(`Error deleting ${type} content:`, error)
+      alert(`Failed to delete ${type} content. Please try again.`)
     }
   }
 
@@ -88,7 +92,8 @@ const AssignTasksModal = ({
     const assignments = taskAssignments
       .filter(assignment => assignment.selectedLevel !== '')
       .map(assignment => ({
-        journalId: assignment.id,
+        contentId: assignment.id, 
+        journalId: assignment.id, 
         levelId: assignment.selectedLevel
       }))
 
