@@ -10,11 +10,93 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
   const [reportDetails, setReportDetails] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isResolved, setIsResolved] = useState(false)
+  const [userBanStatus, setUserBanStatus] = useState(null)
+  const [banStatusLoading, setBanStatusLoading] = useState(false)
+  const [userDetails, setUserDetails] = useState(null)
 
   // Function to strip HTML tags from text
   const stripHtmlTags = (html) => {
     if (!html) return ''
     return html.replace(/<[^>]*>/g, '').trim()
+  }
+
+  // Function to fetch user details and ban status
+  const fetchUserDetails = async (username) => {
+    if (!username) return
+
+    setBanStatusLoading(true)
+    try {
+      // First try to find user by searching users
+      const searchResponse = await axiosInstance.get('/super-admin/users', {
+        params: {
+          search: username,
+          limit: 1
+        }
+      })
+
+      if (searchResponse.data.success && searchResponse.data.data.length > 0) {
+        const user = searchResponse.data.data[0]
+        setUserDetails(user)
+        setUserBanStatus(user.isBannedForum === 1)
+      } else {
+        // If not found in users, try learners endpoint
+        const learnerResponse = await axiosInstance.get('/super-admin/learners', {
+          params: {
+            search: username,
+            limit: 1
+          }
+        })
+
+        if (learnerResponse.data.success && learnerResponse.data.data.length > 0) {
+          const learner = learnerResponse.data.data[0]
+          setUserDetails(learner)
+          setUserBanStatus(learner.isBannedForum === 1)
+        } else {
+          setUserBanStatus(null)
+          setUserDetails(null)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error)
+      setUserBanStatus(null)
+      setUserDetails(null)
+    } finally {
+      setBanStatusLoading(false)
+    }
+  }
+
+  // Function to toggle user's ban status
+  const toggleUserBanStatus = async () => {
+    if (!userDetails) {
+      toast.error('User details not available')
+      return
+    }
+
+    const newBanStatus = !userBanStatus
+    setBanStatusLoading(true)
+
+    try {
+      // Assuming there's an endpoint to update user ban status
+      const endpoint = userDetails.organization_name ?
+        `/forum/${userDetails.id}/ban-forum` :
+        `/forum/${userDetails.id}/ban-forum`
+
+      const response = await axiosInstance.patch(endpoint, {
+        isBannedForum: newBanStatus ? 1 : 0
+      })
+
+      if (response.data.success) {
+        setUserBanStatus(newBanStatus)
+        toast.success(`User ${newBanStatus ? 'banned' : 'unbanned'} from forum successfully`)
+      } else {
+        throw new Error('Failed to update ban status')
+      }
+    } catch (error) {
+      console.error('Error toggling ban status:', error)
+      toast.error('Failed to update user ban status')
+    } finally {
+      setBanStatusLoading(false)
+    }
   }
 
   // Function to get action from resolution
@@ -29,6 +111,8 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
     if (isOpen) {
       setSelectedAction('ignore')
       setIsResolved(false)
+      setUserBanStatus(null)
+      setUserDetails(null)
       if (reportId) {
         fetchReportDetails()
       } else if (reportData) {
@@ -36,6 +120,10 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
         setIsResolved(reportData.status === 'resolved')
         if (reportData.status === 'resolved') {
           setSelectedAction(getActionFromResolution(reportData.resolution))
+        }
+        // Fetch user details for ban status
+        if (reportData.postedBy) {
+          fetchUserDetails(reportData.postedBy)
         }
       }
     }
@@ -76,6 +164,11 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       setIsResolved(transformedReport.status === 'resolved')
       if (transformedReport.status === 'resolved') {
         setSelectedAction(getActionFromResolution(transformedReport.resolution))
+      }
+
+      // Fetch user details for ban status
+      if (transformedReport.postedBy) {
+        fetchUserDetails(transformedReport.postedBy)
       }
     } catch (error) {
       console.error('Error fetching report details:', error)
@@ -160,7 +253,6 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
         {loading ? (
           <div className="modal-content-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
             <div className="spinner-border text-primary" role="status">
-              <span className="sr-only">Loading...</span>
             </div>
           </div>
         ) : (
@@ -229,8 +321,46 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                 </div>
 
                 <div className="detail-item">
-                  <label className="detail-label">Posted By:</label>
-                  <p className="detail-value">{reportDetails?.postedBy || 'Anonymous User'}</p>
+                  <label className="detail-label" style={{width: '110px'}}>Posted By:</label>
+                  <div className="d-flex align-items-center gap-2 justify-content-between w-100">
+                    <p className="detail-value">{reportDetails?.postedBy || 'Anonymous User'}</p>
+                    {banStatusLoading ? (
+                      <div className="spinner-border spinner-border-sm text-primary" role="status">
+                      </div>
+                    ) : userBanStatus !== null ? (
+                      <div className="d-flex align-items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id="user-ban-status"
+                          checked={userBanStatus}
+                          onChange={toggleUserBanStatus}
+                          disabled={banStatusLoading}
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            cursor: banStatusLoading ? 'not-allowed' : 'pointer',
+                            opacity: banStatusLoading ? 0.6 : 1
+                          }}
+                        />
+                        <label
+                          htmlFor="user-ban-status"
+                          style={{
+                            fontSize: '12px',
+                            color: '#666',
+                            cursor: banStatusLoading ? 'not-allowed' : 'pointer',
+                            opacity: banStatusLoading ? 0.6 : 1,
+                            margin: 0
+                          }}
+                        >
+                          {userBanStatus ? 'Banned from Forum' : 'Not Banned'}
+                        </label>
+                      </div>
+                    ) : (
+                      <span style={{ fontSize: '12px', color: '#666' }}>
+                        User status unavailable
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="detail-item">

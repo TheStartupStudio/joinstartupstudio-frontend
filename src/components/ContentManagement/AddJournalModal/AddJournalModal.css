@@ -1,4 +1,4 @@
-.modal-overlay {
+/* .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -25,7 +25,6 @@
   padding-bottom: 32px;
 }
 
-/* Header */
 .modal-header {
   display: flex;
   align-items: flex-start;
@@ -69,7 +68,6 @@
   margin: 0;
 }
 
-/* Modal Content */
 .modal-content {
   display: flex;
   flex-direction: column;
@@ -84,7 +82,6 @@
   width: 662px;
 }
 
-/* Section Group */
 .section-group {
   display: flex;
   flex-direction: column;
@@ -125,7 +122,6 @@
   color: black;
 }
 
-/* Journal Basics Inputs */
 .journal-basics-inputs {
   display: flex;
   gap: 20px;
@@ -183,14 +179,12 @@
   color: #6f6f6f;
 }
 
-/* Sections Content */
 .sections-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Tab Navigation */
 .tab-navigation {
   backdrop-filter: blur(60.065px);
   background: rgba(227, 229, 233, 0.5);
@@ -232,7 +226,6 @@
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Sections Panel */
 .sections-panel {
   display: flex;
   flex-direction: column;
@@ -249,7 +242,6 @@
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
 }
 
-/* Section Row */
 .section-row {
   display: flex;
   gap: 20px;
@@ -302,7 +294,6 @@
   cursor: not-allowed;
 }
 
-/* Add Section Footer */
 .add-section-footer {
   display: flex;
   justify-content: flex-end;
@@ -333,7 +324,6 @@
   height: 24px;
 }
 
-/* Section Details Placeholder */
 .section-details-placeholder {
   padding: 7px;
   text-align: center;
@@ -346,7 +336,6 @@
   margin: 0;
 }
 
-/* Modal Actions */
 .modal-actions {
   display: flex;
   gap: 20px;
@@ -401,7 +390,6 @@
   opacity: 0.8;
 }
 
-/* Scrollbar Styling */
 .add-journal-modal::-webkit-scrollbar {
   width: 8px;
 }
@@ -436,4 +424,4 @@
     min-height: 100px !important;
     height: 100%;
 }
-
+ */
