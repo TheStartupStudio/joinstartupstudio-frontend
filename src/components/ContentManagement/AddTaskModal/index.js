@@ -18,6 +18,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const [thumbnailPreview, setThumbnailPreview] = useState(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [information, setInformation] = useState('')
+  const [description, setDescription] = useState('')
   const [reflectionItems, setReflectionItems] = useState([
     { id: 1, question: '', instructions: '' },
     { id: 2, question: '', instructions: '' },
@@ -70,6 +71,11 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       // Handle different field names for masterclass vs entrepreneurship
       const infoField = isMasterClass ? (taskData.journalData?.description || taskData.information || '') : (taskData.information || '')
       setInformation(infoField)
+
+      // Set description field for masterclass with journalLevel 12
+      if (isMasterClass && taskData.journalData?.journalLevel === 12) {
+        setDescription(taskData.journalData?.description || '')
+      }
 
       if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
         setReflectionItems(taskData.reflectionItems)
@@ -179,9 +185,22 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           })
         : []
 
+      // Preserve the original type field for existing masterclass content
+      let categoryValue = isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship'
+
+      if (isEditMode && taskData?.id && isMasterClass) {
+        const typeField = taskData?.journalData?.type || taskData?.type
+        if (typeField) {
+          const preservedTypes = ['guidance', 'master', 'podcast', 'startup-live']
+          if (preservedTypes.includes(typeField)) {
+            categoryValue = typeField  // Use the preserved type as category instead of 'master-class'
+          }
+        }
+      }
+
       const payload = {
         title: taskTitle,
-        category: isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship',
+        category: categoryValue,
         journalLevel: levelId,
         platform: 'instructor',
         order: taskData?.order || 0,
@@ -189,6 +208,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         videoUrl: videoUrl || null,
         thumbnailUrl: thumbnailUrl || null,
         information: isLeadership ? (information || null) : null,
+        description: isMasterClass && levelId === 12 ? (description || null) : null,
         reflectionItems: filteredReflectionItems
       }
 
@@ -200,7 +220,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         } else {
           response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
         }
-        toast.success('Task updated successfully!')
       } else {
         toast.info('Creating task...')
         if (isMasterClass) {
@@ -517,6 +536,25 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           </div>
         )}
 
+        {isMasterClass && ((selectedLevel && parseInt(selectedLevel.split(' ')[1]) === 12) || (taskData?.journalData?.journalLevel === 12)) && (
+              <div className="form-group" style={{ marginTop: '24px' }}>
+                <label className="form-label">AUTHOR:</label>
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    className="form-control task-title-input"
+                    placeholder="Add description here..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    readOnly={isViewMode}
+                    disabled={isViewMode}
+                    style={isViewMode ? { cursor: 'not-allowed' } : {}}
+                  />
+                  {!isViewMode && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                </div>
+              </div>
+            )}
+
         {(isMasterClass || activeTab === 'video') ? (
           <>
             <div className="upload-section">
@@ -654,6 +692,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                 )}
               </div>
             </div>
+
 
             {isLeadership && (
               <div className="reflection-section" style={{ marginTop: '24px' }}>

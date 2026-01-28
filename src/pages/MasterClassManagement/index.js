@@ -339,7 +339,6 @@ const MasterClassManagement = () => {
         order: tasksData.length + 1
       }
       setTasksData(prevTasks => [...prevTasks, newTask])
-      toast.success('Master class created successfully!')
     }
   }
 
