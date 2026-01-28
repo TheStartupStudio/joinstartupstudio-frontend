@@ -207,6 +207,10 @@ const LeadershipJournalManagement = React.lazy(() =>
   import('../pages/LeadershipJournalManagement')
 )
 
+const ManageContentSite = React.lazy(() =>
+  import('../pages/ManageContentSite')
+)
+
 const ReportedPosts = React.lazy(() =>
   import('../pages/ReportedPosts')
 )
@@ -244,7 +248,7 @@ export const adminRoutes = [
   {
     path: '/master-class-management',
     component: MasterClassManagement,
-    breadcrumb: 'Master Class Management',
+    breadcrumb: 'Studio Guidance Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
     requiresUniversitySetting: 'hasMasterClasses'
   },
@@ -255,6 +259,12 @@ export const adminRoutes = [
     breadcrumb: 'Leadership Journal Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
     requiresUniversitySetting: 'hasLeadershipJournal'
+  },
+  {
+    path: '/manage-content-site',
+    component: ManageContentSite,
+    breadcrumb: 'Manage Content Site',
+    requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
     path: '/startup-forum/post/:id',

@@ -13,11 +13,14 @@ import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 import greenLeader from '../../assets/images/academy-icons/green-leadership-journal.png'
 import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
+import axiosInstance from '../../utils/AxiosInstance'
 
 
 const LeadershipJournalManagement = () => {
   const dispatch = useDispatch()
-  const [activeLevel, setActiveLevel] = useState('Section One: Who am I?')
+  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
+  const [levels, setLevels] = useState([]) // Array of level titles for compatibility
+  const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
@@ -38,86 +41,96 @@ const LeadershipJournalManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levels, setLevels] = useState([
-    'Section One: Who am I?',
-    'Section Two: What can I do?',
-    'Section Three: How do I prove it?'
-  ])
+  // Fetch leadership journal content for the active level
+  const fetchContentByLevel = async (levelId) => {
+    if (!levelId) return
 
-  useEffect(() => {
-    setTasksData([
-      {
-        id: 1,
-        name: 'Introduction to Leadership',
-        status: 'unpublished',
-        hasContent: true,
-        order: 1
-      },
-      {
-        id: 2,
-        name: 'Building Your Leadership Style',
-        status: 'published',
-        hasContent: false,
-        order: 2
-      },
-      {
-        id: 3,
-        name: 'Team Management Strategies',
-        status: 'published',
-        hasContent: false,
-        order: 3
-      },
-      {
-        id: 4,
-        name: 'Effective Communication',
-        status: 'unpublished',
-        hasContent: true,
-        order: 4
-      },
-      {
-        id: 5,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 5
-      },
-      {
-        id: 6,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 6
-      },
-      {
-        id: 7,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 7
-      },
-      {
-        id: 8,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 8
-      },
-      {
-        id: 9,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 9
-      },
-      {
-        id: 10,
-        name: 'Leadership Challenges',
-        status: 'unpublished',
-        hasContent: true,
-        order: 10
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/content-by-level', {
+        params: {
+          category: 'student-leadership',
+          levelId: levelId
+        }
+      })
+
+      // Transform API response to match expected format
+      const transformedData = response.data.map((journal, index) => ({
+        id: journal.id,
+        name: journal.title,
+        status: journal.published ? 'published' : 'unpublished',
+        hasContent: journal.entries && journal.entries.length > 0,
+        order: journal.order || index + 1,
+        // Store full journal data for modal usage
+        fullData: journal
+      }))
+
+      setTasksData(transformedData)
+    } catch (error) {
+      console.error('Error fetching leadership content by level:', error)
+      toast.error('Failed to fetch content for this level')
+      setTasksData([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch leadership journal levels from API
+  const fetchLevels = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/LtsJournals/leadership-journal/levels')
+
+      // Response: [{ id, title, order, published, category }]
+      setLevelsData(response.data)
+
+      // Extract level titles for backward compatibility
+      const levelTitles = response.data.map(level => level.title)
+      setLevels(levelTitles)
+
+      // Set first level as active if available
+      if (response.data.length > 0) {
+        setActiveLevel(response.data[0].title)
       }
-    ])
+    } catch (error) {
+      console.error('Error fetching leadership journal levels:', error)
+      toast.error('Failed to fetch levels')
+
+      // Fallback to default levels
+      const defaultLevels = [
+        'Section One: Who am I?',
+        'Section Two: What can I do?',
+        'Section Three: How do I prove it?'
+      ]
+      setLevels(defaultLevels)
+      setActiveLevel(defaultLevels[0])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch leadership journal levels on component mount
+  useEffect(() => {
+    fetchLevels()
   }, [])
+
+  // Fetch content when active level changes
+  useEffect(() => {
+    if (activeLevel && levelsData.length > 0) {
+      // Find the level object by title to get its ID
+      const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+      if (activeLevelObj) {
+        fetchContentByLevel(activeLevelObj.id)
+      }
+    }
+  }, [activeLevel, levelsData])
+
+  // Update handleSaveLevels to refresh levels
+  const handleSaveLevels = async () => {
+    // The modal now handles all API calls directly
+    // This function just refreshes the levels list
+    await fetchLevels()
+  }
 
   const columns = useMemo(() => [
     {
@@ -140,53 +153,16 @@ const LeadershipJournalManagement = () => {
 
   const handleRowAction = (actionType, item) => {
     console.log(`${actionType} action for:`, item)
-    
+
     switch (actionType) {
       case 'view':
-        const taskDataForView = {
-          id: item.id,
-          title: item.name,
-          level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>What leadership principles did you learn?</p>',
-              instructions: '<p>Reflect on the task and answer the questions below.</p>'
-            }
-          ]
-        }
-        
-        setEditingTask(taskDataForView)
-        setModalMode('view')
-        setShowAddTaskModal(true)
-        break
       case 'edit':
-        const taskDataForEdit = {
-          id: item.id,
-          title: item.name,
-          level: activeLevel,
-          contentType: 'video',
-          videoUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-          thumbnailUrl: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg',
-          reflectionItems: [
-            {
-              id: 1,
-              question: '<p>Sample question for this task</p>',
-              instructions: '<p>Sample instructions for this task</p>'
-            }
-          ]
-        }
-        
-        setEditingTask(taskDataForEdit)
-        setModalMode('edit')
-        setShowAddTaskModal(true)
+        handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
-        setSelectedTask(item)
-        setShowPublishPopup(true)
+        // setSelectedTask(item)
+        // setShowPublishPopup(true)
+        toast.success('Task already published!')
         break
       case 'unpublish':
         setSelectedTask(item)
@@ -199,23 +175,33 @@ const LeadershipJournalManagement = () => {
 
   const handleReorder = async (newOrderedData) => {
     setLoading(true)
-    
+
     try {
       const updatedData = newOrderedData.map((item, index) => ({
         ...item,
         order: index + 1
       }))
-      
+
       setTasksData(updatedData)
 
-      const reorderedTasks = updatedData.map(task => ({
-        id: task.id
-      }))
+      const reorderPromises = updatedData.map(task =>
+        axiosInstance.put(`/LtsJournals/${task.id}/order`, {
+          order: task.order
+        })
+      )
+      await Promise.all(reorderPromises)
 
       toast.success('Task order updated successfully!')
     } catch (error) {
       console.error('Error reordering tasks:', error)
-      toast.success('Task order updated successfully!')
+      toast.error('Failed to update task order')
+      // Re-fetch the data to revert changes on error
+      if (activeLevel && levelsData.length > 0) {
+        const activeLevelObj = levelsData.find(l => l.title === activeLevel)
+        if (activeLevelObj) {
+          fetchContentByLevel(activeLevelObj.id)
+        }
+      }
     } finally {
       setLoading(false)
     }
@@ -238,48 +224,245 @@ const LeadershipJournalManagement = () => {
     setShowAddDropdown(false)
   }
 
-  const handleBulkPublish = () => {
-    toast.success('Bulk publish action triggered')
-    setShowBulkDropdown(false)
-  }
+  const handleBulkPublish = async () => {
+    const selectedTasks = tasksData.filter(task => task.isSelected)
 
-  const handleBulkUnpublish = () => {
-    toast.success('Bulk unpublish action triggered')
-    setShowBulkDropdown(false)
-  }
+    if (selectedTasks.length === 0) {
+      toast.warning('Please select tasks to publish')
+      return
+    }
 
-  const handleSaveTask = (taskData) => {
-    console.log('Leadership task data:', taskData)
-    
-    if (modalMode === 'edit') {
-      setTasksData(prevTasks => 
-        prevTasks.map(task => 
-          task.id === editingTask.id 
-            ? { ...task, name: taskData.title, ...taskData }
-            : task
-        )
-      )
-      toast.success('Leadership task updated successfully!')
-    } else {
-      const newTask = {
-        id: tasksData.length + 1,
-        name: taskData.title,
-        status: 'unpublished',
-        hasContent: true,
-        order: tasksData.length + 1
+    setLoading(true)
+    try {
+      const updatePromises = selectedTasks.map(async (task) => {
+        return axiosInstance.put(`/LtsJournals/${task.id}`, {
+          published: true
+        })
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${selectedTasks.length} leadership tasks published successfully!`)
+
+      // Refresh data
+      if (activeLevel) {
+        const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+        if (activeLevelObj) {
+          await fetchContentByLevel(activeLevelObj.id)
+        }
       }
-      setTasksData(prevTasks => [...prevTasks, newTask])
-      toast.success('Leadership task created successfully!')
+
+      // Clear selections
+      setTasksData(prevTasks =>
+        prevTasks.map(task => ({ ...task, isSelected: false }))
+      )
+
+    } catch (error) {
+      console.error('Error bulk publishing leadership tasks:', error)
+      toast.error('Failed to publish leadership tasks')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
     }
   }
 
-  const handleSaveLevels = (newLevels) => {
-    setLevels(newLevels)
-    toast.success('Levels updated successfully!')
+  const handleBulkUnpublish = async () => {
+    const selectedTasks = tasksData.filter(task => task.isSelected)
+
+    if (selectedTasks.length === 0) {
+      toast.warning('Please select tasks to unpublish')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const updatePromises = selectedTasks.map(async (task) => {
+        return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
+          journalLevel: null
+        })
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${selectedTasks.length} leadership tasks unpublished successfully!`)
+
+      // Refresh data
+      if (activeLevel) {
+        const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+        if (activeLevelObj) {
+          await fetchContentByLevel(activeLevelObj.id)
+        }
+      }
+
+      // Clear selections
+      setTasksData(prevTasks =>
+        prevTasks.map(task => ({ ...task, isSelected: false }))
+      )
+
+    } catch (error) {
+      console.error('Error bulk unpublishing leadership tasks:', error)
+      toast.error('Failed to unpublish leadership tasks')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
+    }
   }
 
-  const handleSaveAssignments = (assignments) => {
-    console.log('Task assignments:', assignments)
+  const handleViewEditJournal = async (journalId, mode) => {
+    try {
+      setLoading(true)
+
+      const response = await axiosInstance.get(`/LtsJournals/${journalId}`)
+
+      const journal = response.data
+
+      let formattedReflectionItems = []
+
+      if (journal.entries && Array.isArray(journal.entries)) {
+        formattedReflectionItems = journal.entries.map(entry => {
+          let question = ''
+          let instructions = ''
+
+          if (entry.title) {
+            // Check if title contains HTML tags
+            const hasHtmlTags = /<[^>]*>/.test(entry.title)
+
+            if (hasHtmlTags) {
+              // Parse HTML formatted title (like in content management)
+              const tempDiv = document.createElement('div')
+              tempDiv.innerHTML = entry.title
+
+              const headingElement = tempDiv.querySelector('h1, h2, h3, h4, h5, h6')
+              if (headingElement) {
+                question = headingElement.textContent || headingElement.innerText || ''
+              } else {
+                let headingMatch = entry.title.match(/<h3[^>]*>(.*?)<\/h3>/i)
+                if (!headingMatch) {
+                  headingMatch = entry.title.match(/<h2[^>]*>(.*?)<\/h2>/i)
+                }
+                if (headingMatch && headingMatch[1]) {
+                  const headingTempDiv = document.createElement('div')
+                  headingTempDiv.innerHTML = headingMatch[1]
+                  question = headingTempDiv.textContent || headingTempDiv.innerText || headingMatch[1]
+                }
+              }
+
+              const pElement = tempDiv.querySelector('p')
+              if (pElement) {
+                instructions = pElement.textContent || pElement.innerText || ''
+              } else {
+                const pMatch = entry.title.match(/<p[^>]*>(.*?)<\/p>/i)
+                if (pMatch && pMatch[1]) {
+                  const pTempDiv = document.createElement('div')
+                  pTempDiv.innerHTML = pMatch[1]
+                  instructions = pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
+                }
+              }
+            } else {
+              // Plain text title (like in leadership journals) - treat entire title as question
+              question = entry.title
+              instructions = ''
+            }
+          }
+
+          return {
+            id: entry.id || Date.now() + Math.random(),
+            question: question.trim(),
+            instructions: instructions.trim()
+          }
+        })
+      }
+
+      const taskData = {
+        id: journal.id,
+        title: journal.title,
+        level: activeLevel,
+        contentType: formattedReflectionItems.length > 0 ? 'reflection' : 'video',
+        videoUrl: journal.video?.url || journal.videos?.[0]?.url || '',
+        thumbnailUrl: journal.JournalImg?.url || journal.video?.thumbnail || journal.videos?.[0]?.thumbnail || '',
+        information: journal.content || journal.paragraph || '',
+        reflectionItems: formattedReflectionItems,
+        order: journal.order
+      }
+
+      setEditingTask(taskData)
+      setModalMode(mode)
+      setShowAddTaskModal(true)
+    } catch (error) {
+      console.error('Error fetching journal data:', error)
+      toast.error('Failed to load journal data')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSaveTask = (journalData) => {
+    if (journalData.deleted) {
+      setTasksData(prevTasks => prevTasks.filter(task => task.id !== journalData.id))
+      return
+    }
+
+    fetchContentByLevel(levelsData.find(l => l.title === activeLevel)?.id)
+  }
+
+
+  const handleSaveAssignments = async (assignments) => {
+    try {
+      setLoading(true)
+
+      console.log('Leadership assignments to process:', assignments)
+
+      // Filter out assignments with invalid level IDs
+      const validAssignments = assignments.filter(assignment => {
+        if (!assignment.levelId || assignment.levelId === '') {
+          console.warn(`Skipping assignment for journal ${assignment.journalId} - invalid levelId:`, assignment.levelId)
+          return false
+        }
+        return true
+      })
+
+      if (validAssignments.length === 0) {
+        toast.warning('No valid assignments to process')
+        setShowAssignModal(false)
+        setLoading(false)
+        return
+      }
+
+      // Update each journal's level assignment using the edit-with-content endpoint
+      const updatePromises = validAssignments.map(async (assignment) => {
+        try {
+          console.log(`Assigning leadership journal ${assignment.journalId} to level ${assignment.levelId}`)
+          return await axiosInstance.put(`/LtsJournals/${assignment.journalId}/edit-with-content`, {
+            journalLevel: assignment.levelId
+          })
+        } catch (individualError) {
+          console.error(`Error assigning leadership journal ${assignment.journalId}:`, individualError)
+          throw individualError // Re-throw to be caught by outer catch
+        }
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${validAssignments.length} leadership journal(s) assigned successfully!`)
+
+      // Refresh data
+      await fetchLevels()
+      if (activeLevel) {
+        const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+        if (activeLevelObj) {
+          await fetchContentByLevel(activeLevelObj.id)
+        }
+      }
+
+      // Close modal
+      setShowAssignModal(false)
+
+    } catch (error) {
+      console.error('Error assigning leadership journals:', error)
+      toast.error('Failed to assign leadership journals')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handlePublishCancel = () => {
@@ -305,20 +488,23 @@ const LeadershipJournalManagement = () => {
   const handleConfirmPublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      setTasksData(prevTasks =>
-        prevTasks.map(task =>
-          task.id === selectedTask.id
-            ? { ...task, status: 'published' }
-            : task
-        )
-      )
-      
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
+        published: true
+      })
+
+      // Refresh data from API
+      if (activeLevel) {
+        const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+        if (activeLevelObj) {
+          await fetchContentByLevel(activeLevelObj.id)
+        }
+      }
+
       toast.success(`Task "${selectedTask.name}" published successfully!`)
       setShowPublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error publishing task:', error)
       toast.error('Failed to publish task')
     } finally {
       setLoading(false)
@@ -328,20 +514,23 @@ const LeadershipJournalManagement = () => {
   const handleConfirmUnpublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      setTasksData(prevTasks =>
-        prevTasks.map(task =>
-          task.id === selectedTask.id
-            ? { ...task, status: 'unpublished' }
-            : task
-        )
-      )
-      
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
+        journalLevel: null
+      })
+
+      // Refresh data from API
+      if (activeLevel) {
+        const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+        if (activeLevelObj) {
+          await fetchContentByLevel(activeLevelObj.id)
+        }
+      }
+
       toast.success(`Task "${selectedTask.name}" unpublished successfully!`)
       setShowUnpublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error unpublishing task:', error)
       toast.error('Failed to unpublish task')
     } finally {
       setLoading(false)
@@ -351,16 +540,17 @@ const LeadershipJournalManagement = () => {
   const handleConfirmDeleteTask = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      await axiosInstance.delete(`/LtsJournals/${selectedTask.id}/delete-with-content`)
+
       setTasksData(prevTasks =>
         prevTasks.filter(task => task.id !== selectedTask.id)
       )
-      
+
       toast.success(`Task "${selectedTask.name}" deleted successfully!`)
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error deleting task:', error)
       toast.error('Failed to delete task')
     } finally {
       setLoading(false)
@@ -622,35 +812,10 @@ const LeadershipJournalManagement = () => {
               onRowAction={handleRowAction}
               onReorder={handleReorder}
               showCheckbox={true}
-              activeTab="Content"
+              activeTab="Leadership"
             />
           </div>
 
-          <div className="pagination-container">
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button className="pagination-btn">
-             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-              <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            </button>
-            <span className="pagination-info">1 / 2</span>
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button className="pagination-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -662,7 +827,7 @@ const LeadershipJournalManagement = () => {
           setModalMode('add')
         }}
         onSave={handleSaveTask}
-        levels={levels}
+        levels={levelsData}
         mode={modalMode}
         taskData={editingTask}
         source="leadership"
@@ -672,18 +837,16 @@ const LeadershipJournalManagement = () => {
         show={showAddLevelModal}
         onHide={() => setShowAddLevelModal(false)}
         onSave={handleSaveLevels}
-        existingLevels={levels}
+        existingLevels={levelsData}
+        category="leadership"
       />
 
       <AssignTasksModal
         show={showAssignModal}
         onHide={() => setShowAssignModal(false)}
         onSave={handleSaveAssignments}
-        tasks={[
-          { id: 1, title: 'Leadership Reflection Exercise' },
-          { id: 2, title: 'Team Building Activity' },
-          { id: 3, title: 'Communication Skills Assessment' }
-        ]}
+        type="leadership"
+        levels={levelsData}
       />
 
       <UserManagementPopup

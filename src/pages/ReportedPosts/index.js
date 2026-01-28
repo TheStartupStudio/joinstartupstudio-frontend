@@ -117,7 +117,7 @@ const ReportedPosts = () => {
       sortable: true,
       filterable: true,
       width: '15%',
-      render: (value) => <span>{value}</span>
+      render: (value) => <span>{value.charAt(0).toUpperCase() + value.slice(1)}</span>
     },
     {
       key: 'resolution',

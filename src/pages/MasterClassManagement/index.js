@@ -40,35 +40,29 @@ const MasterClassManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
-  const [levels, setLevels] = useState([]) // Array of level titles for compatibility
+  const [levelsData, setLevelsData] = useState([]) 
+  const [levels, setLevels] = useState([]) 
 
-  // Fetch masterclass levels on component mount
   useEffect(() => {
     fetchLevels()
   }, [])
 
-  // Fetch content when active level changes
   useEffect(() => {
     if (activeLevel && levelsData.length > 0) {
       fetchContentByLevel()
     }
-  }, [activeLevel]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeLevel]) 
 
-  // Fetch masterclass levels from API
   const fetchLevels = async () => {
     try {
       setLoading(true)
       const response = await axiosInstance.get('/contents/masterclass/levels')
 
-      // Response: [{ id, title, order, published, category }]
       setLevelsData(response.data)
 
-      // Extract level titles for backward compatibility
       const levelTitles = response.data.map(level => level.title)
       setLevels(levelTitles)
 
-      // Set first level as active if available
       if (response.data.length > 0) {
         setActiveLevel(response.data[0].title)
       }
@@ -76,7 +70,6 @@ const MasterClassManagement = () => {
       console.error('Error fetching masterclass levels:', error)
       toast.error('Failed to fetch levels')
 
-      // Fallback to default levels
       const defaultLevels = [
         'Encouragement Videos',
         'Career Guidance Videos',
@@ -90,17 +83,13 @@ const MasterClassManagement = () => {
     }
   }
 
-  // Helper function to translate video title keys
   const translateVideoTitle = (titleKey) => {
-    // If the title is already a translation key, look it up
     if (titleKey && titleKey.startsWith('video.')) {
       return EnLangs[titleKey] || titleKey
     }
-    // If it's already a readable title, return as is
     return titleKey
   }
 
-  // Fetch single content by ID for viewing/editing
   const handleViewContent = async (contentId, mode) => {
     try {
       setLoading(true)
@@ -108,7 +97,6 @@ const MasterClassManagement = () => {
       const response = await axiosInstance.get(`/contents/${contentId}`)
       const content = response.data
 
-      // Transform API data for the modal
       const taskData = {
         id: content.id,
         title: translateVideoTitle(content.title),
@@ -117,7 +105,7 @@ const MasterClassManagement = () => {
         videoUrl: content.url,
         thumbnailUrl: content.thumbnail,
         information: content.description || '',
-        reflectionItems: [], // Masterclass content might not have reflection items
+        reflectionItems: [], 
         journalData: content
       }
 
@@ -132,12 +120,10 @@ const MasterClassManagement = () => {
     }
   }
 
-  // Fetch content by level
   const fetchContentByLevel = async () => {
     try {
       setLoading(true)
 
-      // Find the level ID from the active level title
       const activeLevelObj = levelsData.find(l => l.title === activeLevel)
       if (!activeLevelObj) {
         setTasksData([])
@@ -146,9 +132,7 @@ const MasterClassManagement = () => {
 
       const response = await axiosInstance.get(`/contents/by-journal-level/${activeLevelObj.id}`)
 
-      // Transform API data to match table format
       const transformedContent = response.data.data.map(content => {
-        // Check for content availability (videos, etc.)
         const hasVideoContent = content.videoId ||
                                content.videoIds ||
                                (content.videos && content.videos.length > 0) ||
@@ -206,8 +190,9 @@ const MasterClassManagement = () => {
         handleViewContent(item.id, 'edit')
         break
       case 'publish':
-        setSelectedTask(item)
-        setShowPublishPopup(true)
+        // setSelectedTask(item)
+        // setShowPublishPopup(true)
+        toast.success('Video already published!')
         break
       case 'unpublish':
         setSelectedTask(item)
@@ -259,14 +244,78 @@ const MasterClassManagement = () => {
     setShowAddDropdown(false)
   }
 
-  const handleBulkPublish = () => {
-    toast.success('Bulk publish action triggered')
-    setShowBulkDropdown(false)
+  const handleBulkPublish = async () => {
+    const selectedTasks = tasksData.filter(task => task.isSelected)
+
+    if (selectedTasks.length === 0) {
+      toast.warning('Please select videos to publish')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const updatePromises = selectedTasks.map(async (task) => {
+        return axiosInstance.put(`/contents/${task.id}`, {
+          published: true
+        })
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${selectedTasks.length} master class videos published successfully!`)
+
+      if (activeLevel) {
+        await fetchContentByLevel()
+      }
+
+      setTasksData(prevTasks =>
+        prevTasks.map(task => ({ ...task, isSelected: false }))
+      )
+
+    } catch (error) {
+      console.error('Error bulk publishing master class videos:', error)
+      toast.error('Failed to publish master class videos')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
+    }
   }
 
-  const handleBulkUnpublish = () => {
-    toast.success('Bulk unpublish action triggered')
-    setShowBulkDropdown(false)
+  const handleBulkUnpublish = async () => {
+    const selectedTasks = tasksData.filter(task => task.isSelected)
+
+    if (selectedTasks.length === 0) {
+      toast.warning('Please select videos to unpublish')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const updatePromises = selectedTasks.map(async (task) => {
+        return axiosInstance.put(`/contents/${task.id}`, {
+          journalLevel: null
+        })
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${selectedTasks.length} master class videos unpublished successfully!`)
+
+      if (activeLevel) {
+        await fetchContentByLevel()
+      }
+
+      setTasksData(prevTasks =>
+        prevTasks.map(task => ({ ...task, isSelected: false }))
+      )
+
+    } catch (error) {
+      console.error('Error bulk unpublishing master class videos:', error)
+      toast.error('Failed to unpublish master class videos')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
+    }
   }
 
   const handleSaveTask = (taskData) => {
@@ -290,18 +339,63 @@ const MasterClassManagement = () => {
         order: tasksData.length + 1
       }
       setTasksData(prevTasks => [...prevTasks, newTask])
-      toast.success('Master class created successfully!')
     }
   }
 
   const handleSaveLevels = async () => {
-    // The modal now handles all API calls directly
-    // This function just refreshes the levels list
     await fetchLevels()
   }
 
-  const handleSaveAssignments = (assignments) => {
-    console.log('Video assignments:', assignments)
+  const handleSaveAssignments = async (assignments) => {
+    try {
+      setLoading(true)
+
+      console.log('Master class assignments to process:', assignments)
+
+      const validAssignments = assignments.filter(assignment => {
+        if (!assignment.levelId || assignment.levelId === '') {
+          console.warn(`Skipping assignment for content ${assignment.contentId} - invalid levelId:`, assignment.levelId)
+          return false
+        }
+        return true
+      })
+
+      if (validAssignments.length === 0) {
+        toast.warning('No valid assignments to process')
+        setShowAssignModal(false)
+        setLoading(false)
+        return
+      }
+
+      const updatePromises = validAssignments.map(async (assignment) => {
+        try {
+          console.log(`Assigning master class content ${assignment.contentId} to level ${assignment.levelId}`)
+          return await axiosInstance.put(`/contents/${assignment.contentId}`, {
+            journalLevel: assignment.levelId
+          })
+        } catch (individualError) {
+          console.error(`Error assigning master class content ${assignment.contentId}:`, individualError)
+          throw individualError 
+        }
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${validAssignments.length} master class content(s) assigned successfully!`)
+
+      await fetchLevels()
+      if (activeLevel) {
+        await fetchContentByLevel()
+      }
+
+      setShowAssignModal(false)
+
+    } catch (error) {
+      console.error('Error assigning master class content:', error)
+      toast.error('Failed to assign master class content')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handlePublishCancel = () => {
@@ -327,20 +421,19 @@ const MasterClassManagement = () => {
   const handleConfirmPublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      setTasksData(prevTasks =>
-        prevTasks.map(task =>
-          task.id === selectedTask.id
-            ? { ...task, status: 'published' }
-            : task
-        )
-      )
-      
+      await axiosInstance.put(`/contents/${selectedTask.id}`, {
+        published: true
+      })
+
+      if (activeLevel) {
+        await fetchContentByLevel()
+      }
+
       toast.success(`Master class "${selectedTask.name}" published successfully!`)
       setShowPublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error publishing master class:', error)
       toast.error('Failed to publish master class')
     } finally {
       setLoading(false)
@@ -350,20 +443,19 @@ const MasterClassManagement = () => {
   const handleConfirmUnpublish = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      setTasksData(prevTasks =>
-        prevTasks.map(task =>
-          task.id === selectedTask.id
-            ? { ...task, status: 'unpublished' }
-            : task
-        )
-      )
-      
+      await axiosInstance.put(`/contents/${selectedTask.id}`, {
+        journalLevel: null
+      })
+
+      if (activeLevel) {
+        await fetchContentByLevel()
+      }
+
       toast.success(`Master class "${selectedTask.name}" unpublished successfully!`)
       setShowUnpublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error unpublishing master class:', error)
       toast.error('Failed to unpublish master class')
     } finally {
       setLoading(false)
@@ -473,7 +565,7 @@ const MasterClassManagement = () => {
                   lineHeight: 'normal',
                 }}
               >
-                MASTER CLASS MANAGEMENT
+                STUDIO GUIDANCE MANAGEMENT
               </h3>
               <p
                 style={{
@@ -486,7 +578,7 @@ const MasterClassManagement = () => {
                   marginBottom: '0px',
                 }}
               >
-                View and edit Master Class Videos
+                View and edit Studio Guidance Videos
               </p>
             </div>
           </div>
@@ -637,7 +729,7 @@ const MasterClassManagement = () => {
           </div>
 
           <div className="table-container">
-            <DataTable 
+            <DataTable
               columns={columns}
               data={tasksData}
               searchQuery={searchQuery}
@@ -645,6 +737,15 @@ const MasterClassManagement = () => {
               onReorder={handleReorder}
               showCheckbox={true}
               activeTab="Content"
+              onSelectionChange={(selectedItems) => {
+                setTasksData(prevTasks =>
+                  prevTasks.map(task => ({
+                    ...task,
+                    isSelected: selectedItems.some(selected => selected.id === task.id)
+                  }))
+                )
+              }}
+              selectedItems={tasksData.filter(task => task.isSelected)}
             />
           </div>
 
@@ -677,11 +778,8 @@ const MasterClassManagement = () => {
         show={showAssignModal}
         onHide={() => setShowAssignModal(false)}
         onSave={handleSaveAssignments}
-        tasks={[
-          { id: 1, title: 'Introduction to Leadership' },
-          { id: 2, title: 'Advanced Marketing Techniques' },
-          { id: 3, title: 'Financial Management for Startups' }
-        ]}
+        type="masterclass"
+        levels={levelsData}
       />
 
       <UserManagementPopup

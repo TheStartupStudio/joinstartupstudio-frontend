@@ -11,8 +11,21 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const [hasNewLevel, setHasNewLevel] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  // Helper function to get the correct API endpoint based on category
+
   const getApiEndpoint = (action, id = null) => {
+    if (category === 'leadership') {
+      switch (action) {
+        case 'create':
+          return '/LtsJournals/leadership-journal/levels'
+        case 'update':
+          return `/LtsJournals/leadership-journal/levels/${id}`
+        case 'delete':
+          return `/LtsJournals/leadership-journal/levels/${id}`
+        default:
+          return '/LtsJournals/leadership-journal/levels'
+      }
+    }
+
     const basePath = category === 'masterclass' ? 'contents' : 'LtsJournals'
     const categoryPath = category === 'masterclass' ? 'masterclass' : 'entrepreneurship'
     switch (action) {
@@ -27,15 +40,13 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
     }
   }
 
-  // Initialize levels when modal opens or existingLevels changes
   useEffect(() => {
     if (show) {
       if (existingLevels.length > 0) {
-        // Convert level titles to objects if they're strings
         const levelsArray = existingLevels.map((level, index) => {
           if (typeof level === 'string') {
             return { 
-              id: null, // Will be fetched from backend
+              id: null, 
               title: level, 
               order: index + 1,
               isEditing: false, 
@@ -70,7 +81,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
     const level = levels.find(l => l.id === id)
     
     if (level && level.isEditing) {
-      // Saving the edit - update via API
       setLoading(true)
       try {
         await axiosInstance.put(getApiEndpoint('update', id), {
@@ -86,7 +96,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         
         toast.success('Level updated successfully!')
         
-        // Notify parent to refresh
         if (onSave) {
           onSave()
         }
@@ -97,7 +106,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         setLoading(false)
       }
     } else {
-      // Enable editing mode
       setLevels(prevLevels =>
         prevLevels.map(l =>
           l.id === id ? { ...l, isEditing: true } : l
@@ -109,13 +117,11 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const addNewLevelAfter = async (afterId) => {
     const insertIndex = levels.findIndex(level => level.id === afterId)
     const newOrder = insertIndex + 2
-    const newTitle = category === 'masterclass' 
-      ? 'Add Level title...' 
-      : `Level ${newOrder}: Add Level title...`
+
+    const newTitle = category === 'leadership' ? 'Add Section title...' : 'Add Level title...'
     
     setLoading(true)
     try {
-      // Create new level via API
       const response = await axiosInstance.post(getApiEndpoint('create'), {
         title: newTitle,
         order: newOrder,
@@ -126,7 +132,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         id: response.data.id,
         title: response.data.title,
         order: response.data.order,
-        isEditing: true, // Auto-enable editing for new level
+        isEditing: true, 
         isNew: true
       }
 
@@ -136,32 +142,24 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         ...levels.slice(insertIndex + 1)
       ]
 
-      // Renumber and update order for all subsequent levels
       const renumberedLevels = []
       for (let i = 0; i < updatedLevels.length; i++) {
         const level = updatedLevels[i]
         const levelNumber = i + 1
-        const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
-        const newTitle = category === 'masterclass' 
-          ? titleWithoutNumber 
-          : `Level ${levelNumber}: ${titleWithoutNumber}`
-        
+
         renumberedLevels.push({
           ...level,
-          title: newTitle,
           order: levelNumber
         })
 
-        // Update order in backend for existing levels (not the newly created one)
         if (!level.isNew && level.order !== levelNumber) {
           await axiosInstance.put(getApiEndpoint('update', level.id), {
-            title: newTitle,
+            title: level.title,
             order: levelNumber
           })
-        } else if (level.isNew && level.id === newLevel.id && newTitle !== response.data.title) {
-          // Update the newly created level's title if renumbered
+        } else if (level.isNew && level.id === newLevel.id && level.title !== response.data.title) {
           await axiosInstance.put(getApiEndpoint('update', level.id), {
-            title: newTitle,
+            title: level.title,
             order: levelNumber
           })
         }
@@ -171,7 +169,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       setHasNewLevel(true)
       toast.success('Level created successfully!')
       
-      // Notify parent to refresh
       if (onSave) {
         onSave()
       }
@@ -191,31 +188,23 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
 
     setLoading(true)
     try {
-      // Delete level via API
       await axiosInstance.delete(getApiEndpoint('delete', id))
 
       const filteredLevels = levels.filter(level => level.id !== id)
       
-      // Renumber and update remaining levels
       const renumberedLevels = []
       for (let i = 0; i < filteredLevels.length; i++) {
         const level = filteredLevels[i]
         const levelNumber = i + 1
-        const titleWithoutNumber = level.title.replace(/^Level \d+:\s*/, '')
-        const newTitle = category === 'masterclass' 
-          ? titleWithoutNumber 
-          : `Level ${levelNumber}: ${titleWithoutNumber}`
-        
+
         renumberedLevels.push({
           ...level,
-          title: newTitle,
           order: levelNumber
         })
 
-        // Update order in backend
-        if (level.order !== levelNumber || level.title !== newTitle) {
+        if (level.order !== levelNumber) {
           await axiosInstance.put(getApiEndpoint('update', level.id), {
-            title: newTitle,
+            title: level.title,
             order: levelNumber
           })
         }
@@ -223,13 +212,11 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       
       setLevels(renumberedLevels)
       
-      // Check if any new levels remain
       const hasNewLevels = renumberedLevels.some(level => level.isNew)
       setHasNewLevel(hasNewLevels)
       
       toast.success('Level deleted successfully!')
       
-      // Notify parent to refresh
       if (onSave) {
         onSave()
       }
@@ -242,8 +229,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   }
 
   const handleSave = () => {
-    // All changes have already been saved via API in real-time
-    // Just notify parent to refresh and close modal
     if (onSave) {
       onSave()
     }
@@ -251,7 +236,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   }
 
   const handleSaveAndContinue = () => {
-    // Mark all levels as not new (they're already saved in backend)
     const updatedLevels = levels.map(level => ({ 
       ...level, 
       isNew: false,
@@ -264,7 +248,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   }
 
   const handleClose = () => {
-    // Reset state
     setLevels([])
     setHasNewLevel(false)
     onHide()

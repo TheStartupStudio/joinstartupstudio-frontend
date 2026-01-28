@@ -18,6 +18,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const [thumbnailPreview, setThumbnailPreview] = useState(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [information, setInformation] = useState('')
+  const [description, setDescription] = useState('')
   const [reflectionItems, setReflectionItems] = useState([
     { id: 1, question: '', instructions: '' },
     { id: 2, question: '', instructions: '' },
@@ -70,6 +71,11 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       // Handle different field names for masterclass vs entrepreneurship
       const infoField = isMasterClass ? (taskData.journalData?.description || taskData.information || '') : (taskData.information || '')
       setInformation(infoField)
+
+      // Set description field for masterclass with journalLevel 12
+      if (isMasterClass && taskData.journalData?.journalLevel === 12) {
+        setDescription(taskData.journalData?.description || '')
+      }
 
       if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
         setReflectionItems(taskData.reflectionItems)
@@ -164,25 +170,45 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       })
       const levelId = selectedLevelObj && typeof selectedLevelObj !== 'string' ? selectedLevelObj.id : null
 
-      const filteredReflectionItems = (activeTab === 'reflection' || isLeadership) 
+      const filteredReflectionItems = (activeTab === 'reflection' || isLeadership)
         ? reflectionItems.filter(item => {
-            const tempDiv = document.createElement('div')
-            tempDiv.innerHTML = item.question
-            const textContent = tempDiv.textContent || tempDiv.innerText || ''
-            return textContent.trim() !== ''
+            if (isLeadership) {
+              // For leadership journals, question is plain text
+              return item.question && item.question.trim() !== ''
+            } else {
+              // For content management, question might be HTML formatted
+              const tempDiv = document.createElement('div')
+              tempDiv.innerHTML = item.question
+              const textContent = tempDiv.textContent || tempDiv.innerText || ''
+              return textContent.trim() !== ''
+            }
           })
         : []
 
+      // Preserve the original type field for existing masterclass content
+      let categoryValue = isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship'
+
+      if (isEditMode && taskData?.id && isMasterClass) {
+        const typeField = taskData?.journalData?.type || taskData?.type
+        if (typeField) {
+          const preservedTypes = ['guidance', 'master', 'podcast', 'startup-live']
+          if (preservedTypes.includes(typeField)) {
+            categoryValue = typeField  // Use the preserved type as category instead of 'master-class'
+          }
+        }
+      }
+
       const payload = {
         title: taskTitle,
-        category: isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship',
+        category: categoryValue,
         journalLevel: levelId,
         platform: 'instructor',
         order: taskData?.order || 0,
         parentId: null,
-        url: videoUrl || null,  // Changed from videoUrl to url
-        thumbnail: thumbnailUrl || null,  // Changed from thumbnailUrl to thumbnail
-        description: (isLeadership || isMasterClass) ? (information || null) : null,  // Changed from information to description
+        videoUrl: videoUrl || null,
+        thumbnailUrl: thumbnailUrl || null,
+        information: isLeadership ? (information || null) : null,
+        description: isMasterClass && levelId === 12 ? (description || null) : null,
         reflectionItems: filteredReflectionItems
       }
 
@@ -194,7 +220,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         } else {
           response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
         }
-        toast.success('Task updated successfully!')
       } else {
         toast.info('Creating task...')
         if (isMasterClass) {
@@ -385,7 +410,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         </div>
         
         <h5 className="modal-title">
-          {isViewMode ? (isMasterClass ? 'View Master Class' : 'View Task') : isEditMode ? (isMasterClass ? 'Edit Master Class' : 'Edit Task') : (isMasterClass ? 'Add New Master Class' : 'Add New Task')}
+          {isViewMode ? (isMasterClass ? 'View Studio Guidance' : 'View Task') : isEditMode ? (isMasterClass ? 'Edit Studio Guidance' : 'Edit Task') : (isMasterClass ? 'Add New Studio Guidance' : 'Add New Task')}
         </h5>
 
         {isViewMode && (
@@ -393,7 +418,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             <div 
               onClick={handleSwitchToEditMode}
               style={{ cursor: 'pointer' }}
-              title={isMasterClass ? "Edit master class" : "Edit task"}
+              title={isMasterClass ? "Edit studio guidance" : "Edit task"}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                 <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -413,12 +438,12 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         )}
 
         <div className="form-group">
-          <label className="form-label">{isMasterClass ? 'MASTER CLASS TITLE:' : 'TASK TITLE:'}</label>
+          <label className="form-label">{isMasterClass ? 'STUDIO GUIDANCE TITLE:' : 'TASK TITLE:'}</label>
           <div className="input-wrapper">
             <input
               type="text"
               className="form-control task-title-input"
-              placeholder={isMasterClass ? "Add master class title here..." : "Add task title here..."}
+              placeholder={isMasterClass ? "Add studio guidance title here..." : "Add task title here..."}
               value={taskTitle}
               onChange={(e) => setTaskTitle(e.target.value)}
               readOnly={isViewMode}
@@ -430,7 +455,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         </div>
 
         <div className="form-group">
-          <label className="form-label">{isMasterClass ? 'CONNECTED MASTER CLASS LEVEL' : 'CONNECTED AIE LEVEL'}</label>
+          <label className="form-label">{isMasterClass ? 'CONNECTED STUDIO GUIDANCE LEVEL' : 'CONNECTED AIE LEVEL'}</label>
           <div className="custom-level-dropdown" ref={dropdownRef}>
             <div 
               className="level-dropdown-trigger"
@@ -438,7 +463,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
               style={isViewMode ? { cursor: 'not-allowed', opacity: 0.7 } : { cursor: 'pointer' }}
             >
               <span className={selectedLevel ? 'selected-text' : 'placeholder-text'}>
-                {selectedLevel || (isMasterClass ? 'Select master class level' : 'Select AIE level')}
+                {selectedLevel || (isMasterClass ? 'Select studio guidance level' : 'Select AIE level')}
               </span>
               {!isViewMode && (
                 <FontAwesomeIcon 
@@ -510,6 +535,25 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             </div>
           </div>
         )}
+
+        {isMasterClass && ((selectedLevel && parseInt(selectedLevel.split(' ')[1]) === 12) || (taskData?.journalData?.journalLevel === 12)) && (
+              <div className="form-group" style={{ marginTop: '24px' }}>
+                <label className="form-label">AUTHOR:</label>
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    className="form-control task-title-input"
+                    placeholder="Add description here..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    readOnly={isViewMode}
+                    disabled={isViewMode}
+                    style={isViewMode ? { cursor: 'not-allowed' } : {}}
+                  />
+                  {!isViewMode && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                </div>
+              </div>
+            )}
 
         {(isMasterClass || activeTab === 'video') ? (
           <>
@@ -648,6 +692,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                 )}
               </div>
             </div>
+
 
             {isLeadership && (
               <div className="reflection-section" style={{ marginTop: '24px' }}>
@@ -801,7 +846,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                   <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
                   <path d="M10 14.1743L10.0083 14.1651" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span>{isMasterClass ? 'Delete Master Class' : 'Delete Task'}</span>
+                <span>{isMasterClass ? 'Delete Studio Guidance' : 'Delete Task'}</span>
               </div>
             )}
 

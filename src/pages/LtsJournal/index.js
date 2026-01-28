@@ -110,49 +110,42 @@ function LtsJournal(props) {
 
   const userRole = user?.role_id || localStorage.getItem('role')
 
-  // console.log('Finished Content:', finishedContent);
 
   const [levels, setLevels] = useState([])
   const [lessonsByLevel, setLessonsByLevel] = useState({})
   const [lessonsLoading, setLessonsLoading] = useState(true)
 
-  // Fetch levels from API
   const fetchLevels = async () => {
     try {
       const response = await axiosInstance.get('/LtsJournals/entrepreneurship/levels')
       if (response.data && Array.isArray(response.data)) {
-        // Map API response to match expected format
         const mappedLevels = response.data.map((level, index) => ({
           title: level.title || `Level ${index + 1}`,
           description: level.description || `Welcome to Level ${index + 1}`,
-          active: index === 0 // Set first level as active by default
+          active: index === 0 
         }))
         setLevels(mappedLevels)
       }
     } catch (error) {
       console.error('Error fetching levels:', error)
-      // Keep default values on error
     }
   }
 
-  // Fetch lessons from API
   const fetchLessons = async () => {
     try {
       setLessonsLoading(true)
       const response = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons')
       if (response.data) {
-        // Convert string keys to numeric keys and ensure proper structure
         const transformedLessons = {}
         Object.keys(response.data).forEach(key => {
           const numericKey = parseInt(key)
           if (!isNaN(numericKey)) {
-            // Ensure each lesson has the required fields - use redirectId as the primary identifier
             transformedLessons[numericKey] = (response.data[key] || []).map(lesson => ({
-              id: lesson.id || lesson.redirectId || 0, // Keep id for backward compatibility
+              id: lesson.id || lesson.redirectId || 0, 
               title: lesson.title || '',
               status: lesson.status || 'notStarted',
               redirectId: lesson.redirectId || parseInt(lesson.id) || 0,
-              separate: lesson.separate || false // Add separate property
+              separate: lesson.separate || false 
             }))
           }
         })
@@ -160,7 +153,6 @@ function LtsJournal(props) {
       }
     } catch (error) {
       console.error('Error fetching lessons:', error)
-      // Set empty object on error
       setLessonsByLevel({})
     } finally {
       setLessonsLoading(false)
@@ -200,7 +192,6 @@ function LtsJournal(props) {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-    // Fetch levels and lessons from API
     fetchLevels()
     fetchLessons()
     if (isRootPath) {
@@ -216,11 +207,10 @@ function LtsJournal(props) {
     if (journalId && Object.keys(lessonsByLevel).length > 0) {
       const numericId = parseInt(journalId);
 
-      // Search across all levels to find the lesson by id
       let found = null;
       let foundLevel = activeLevel;
       
-      for (let level = 0; level <= 2; level++) {
+      for (let level = 0; level < levels.length; level++) {
         const lesson = lessonsByLevel[level]?.find(
           lesson => lesson.id === numericId
         );
@@ -232,13 +222,12 @@ function LtsJournal(props) {
       }
       
       if (found) {
-        // Update activeLevel if the lesson is in a different level
         if (foundLevel !== activeLevel) {
           setActiveLevel(foundLevel);
         }
         
         setSelectedLesson({
-          value: found.id, // Use id as value to match options
+          value: found.id, 
           label: found.title,
           redirectId: found.redirectId,
           lessonId: found.id
@@ -263,24 +252,20 @@ function LtsJournal(props) {
   }
 
   const handleLevelClick = (clickedLevel) => {
-    // First level is always accessible
     if (clickedLevel === 0) {
       setActiveLevel(clickedLevel);
-      setCurrentPlaceholder("Welcome to Level 1 & The Myths of Entrepreneurship");
-      // Use the first lesson's id from level 0, or fallback to 51
+      setCurrentPlaceholder("Select a Lesson");
       const firstLessonId = lessonsByLevel[0]?.[0]?.id || 51;
       history.push(`/my-course-in-entrepreneurship/journal/${firstLessonId}`);
       return;
     }
 
-    // Check if user has subscription OR is exempt
     if (!user?.user?.stripe_subscription_id && !user?.user?.subscription_exempt) {
       setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
       setShowSubscriptionModal(true);
       return;
     }
 
-    // Check if user is still in free trial period (exempt users skip this check)
     const isInTrial = !user?.user?.subscription_exempt && isUserInFreeTrial(user.user.createdAt);
 
     if (isInTrial) {
@@ -293,37 +278,31 @@ function LtsJournal(props) {
       return;
     }
 
-    // Check level completion requirements (for paid users/exempt users after trial)
-    // Find the last lesson of level 0 by its id (58)
-    const level0LastLesson = lessonsByLevel[0]?.find(l => l.id === 58)
-    if (clickedLevel === 1 && level0LastLesson && !finishedContent.includes(58)) {
-      setLockModalMessage('This lesson is currently locked. You must complete Level 1 (Task #2: Create your I Am Video) before you can access Level 2.');
-      setShowLockModal(true);
-      return;
+    if (clickedLevel > 0) {
+      const previousLevel = clickedLevel - 1;
+      const previousLevelLessons = lessonsByLevel[previousLevel];
+
+      if (previousLevelLessons && previousLevelLessons.length > 0) {
+        const allPreviousLessonsCompleted = previousLevelLessons.every(lesson =>
+          finishedContent.includes(lesson.id)
+        );
+
+        if (!allPreviousLessonsCompleted) {
+          const levelNumber = previousLevel + 1;
+          const currentLevelNumber = clickedLevel + 1;
+          setLockModalMessage(`This level is currently locked. You must complete all lessons in Level ${levelNumber} before you can access Level ${currentLevelNumber}.`);
+          setShowLockModal(true);
+          return;
+        }
+      }
     }
 
-    // Find the last lesson of level 1 by its id (68)
-    const level1LastLesson = lessonsByLevel[1]?.find(l => l.id === 68)
-    if (clickedLevel === 2 && level1LastLesson && !finishedContent.includes(68)) {
-      setLockModalMessage('This lesson is currently locked. You must complete Level 2 (Task #2: Build Your Team and Find Your Mentor) before you can access Level 3.');
-      setShowLockModal(true);
-      return;
-    }
-
-    // If all checks pass, set the active level
     setActiveLevel(clickedLevel);
-
-    const levelPlaceholders = {
-      0: "Welcome to Level 1 & The Myths of Entrepreneurship",
-      1: "Welcome to Level 2 & The Journey of Entrepreneurship",
-      2: "Welcome to Level 3 & Business Story"
-    };
 
     setSelectedLesson(null);
     localStorage.removeItem('selectedLesson');
-    setCurrentPlaceholder(levelPlaceholders[clickedLevel]);
+    setCurrentPlaceholder("Select a Lesson");
 
-    // Get the first non-separator lesson's id for each level
     const getFirstNonSeparatorLesson = (levelLessons) => {
       if (!levelLessons) return null;
       const firstNonSeparator = levelLessons.find(lesson => !lesson.separate);
@@ -379,7 +358,6 @@ function LtsJournal(props) {
   }
 
   const getOptionStatus = (lessonId, lessons) => {
-    // Find the lesson by id
     const lesson = lessons.find(l => l.id === lessonId)
     if (!lesson) {
       return { status: 'notStarted', disabled: true }
@@ -389,8 +367,6 @@ function LtsJournal(props) {
       (l) => l.id === lessonId
     )
     
-    // Find the first lesson that is NOT in finishedContent
-    // This will be the first incomplete lesson that should be unlocked
     let firstIncompleteIndex = -1
     for (let i = 0; i < lessons.length; i++) {
       if (!finishedContent.includes(lessons[i].id)) {
@@ -399,34 +375,22 @@ function LtsJournal(props) {
       }
     }
     
-    // If all lessons are completed, unlock all of them
     if (firstIncompleteIndex === -1) {
-      // All lessons are completed
       if (finishedContent.includes(lessonId)) {
         return { status: 'done', disabled: false }
       }
       return { status: 'done', disabled: false }
     }
-
-    // Strict sequential locking:
-    // - Lessons before the first incomplete one should be unlocked (they're completed)
-    // - The first incomplete lesson should be unlocked (in progress)
-    // - Lessons after the first incomplete one should be LOCKED (even if completed)
     
     if (index < firstIncompleteIndex) {
-      // This lesson comes before the first incomplete one - it should be completed and unlocked
       return { status: 'done', disabled: false }
     } else if (index === firstIncompleteIndex) {
-      // This is the first incomplete lesson - unlock it (in progress)
       return { status: 'inProgress', disabled: false }
     } else {
-      // This lesson is after the first incomplete one - LOCK IT (even if it's completed)
       return { status: 'notStarted', disabled: true }
     }
   }
 
-  // Generate options for the active level, ensuring lessonsByLevel[activeLevel] exists
-  // Use lesson.id as the value since that's what's used in URLs
   const options = (lessonsByLevel[activeLevel] && Array.isArray(lessonsByLevel[activeLevel])) 
     ? lessonsByLevel[activeLevel].map((lesson) => {
         const status = getOptionStatus(
@@ -434,22 +398,21 @@ function LtsJournal(props) {
           lessonsByLevel[activeLevel]
         )
 
-        // Handle separate lessons differently
         if (lesson.separate) {
           return {
             value: lesson.id,
             label: lesson.title,
-            icon: null, // No icon for separators
-            textColor: 'text-dark', // Normal text color for separators
-            disabled: false, // Separators are clickable but do nothing
-            isSeparator: true, // Mark as separator
+            icon: null, 
+            textColor: 'text-dark', 
+            disabled: false,
+            isSeparator: true, 
             redirectId: lesson.redirectId,
             lessonId: lesson.id
           }
         }
 
         return {
-          value: lesson.id, // Use lesson.id as value for URLs
+          value: lesson.id, 
           label: lesson.title,
           icon:
             status.status === 'done'
@@ -460,7 +423,7 @@ function LtsJournal(props) {
           textColor:
             status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
           disabled: status.disabled,
-          redirectId: lesson.redirectId, // Keep redirectId for next lesson navigation
+          redirectId: lesson.redirectId, 
           lessonId: lesson.id
         }
       })
@@ -469,14 +432,12 @@ function LtsJournal(props) {
   const isContentAccessible = (journalId) => {
     const numericId = parseInt(journalId)
 
-    // Find the lesson by id to check its completion in finishedContent
-    for (let level = 0; level <= 2; level++) {
+    for (let level = 0; level < levels.length; level++) {
       const lessons = lessonsByLevel[level]
       if (!lessons) continue
 
       for (let i = 0; i < lessons.length; i++) {
         if (lessons[i].id === numericId) {
-          // finishedContent tracks by lesson.id
           if (finishedContent.includes(lessons[i].id)) {
             return true
           }
@@ -487,10 +448,8 @@ function LtsJournal(props) {
             const prevLevelLessons = lessonsByLevel[level - 1]
             if (!prevLevelLessons || prevLevelLessons.length === 0) return false
             const lastItemPrevLevel = prevLevelLessons[prevLevelLessons.length - 1]
-            // Check using lesson.id
             return finishedContent.includes(lastItemPrevLevel.id)
           }
-          // Check previous lesson using lesson.id
           return finishedContent.includes(lessons[i - 1].id)
         }
       }
@@ -529,7 +488,6 @@ function LtsJournal(props) {
   const findNextLesson = (currentId) => {
     const numericId = parseInt(currentId);
     
-    // Check if user has subscription
     if (!user?.user?.stripe_subscription_id) {
       setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
       setShowSubscriptionModal(true);
@@ -537,10 +495,8 @@ function LtsJournal(props) {
       return null;
     }
 
-    // Check if user is still in free trial period for level transitions
     const isInFreeTrial = isUserInFreeTrial(user.user.createdAt);
 
-    // Check for content beyond level 1 during free trial
     if (isInFreeTrial && numericId >= 58) {
       if (numericId === 58) {
         setSubscriptionModalparagraph('Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
@@ -552,42 +508,73 @@ function LtsJournal(props) {
       return null;
     }
 
-    // For paid users, check level completion
     if (!isInFreeTrial) {
-        // Trying to access Level 2 without completing Level 1
-        if (numericId >= 60 && numericId < 70 && !finishedContent.includes(58)) {
-          setLockModalMessage('You must complete Level 1 before accessing Level 2.');
-          setShowLockModal(true);
-          setSaving(false);
-          return null;
-        }
-        
-        // Trying to access Level 3 without completing Level 2
-        if (numericId >= 70 && !finishedContent.includes(68)) {
-          setLockModalMessage('You must complete Level 2 before accessing Level 3.');
-          setShowLockModal(true);
-          setSaving(false);
-          return null;
+        for (let levelIndex = 1; levelIndex < levels.length; levelIndex++) {
+          const currentLevelLessons = lessonsByLevel[levelIndex];
+          if (!currentLevelLessons || currentLevelLessons.length === 0) continue;
+
+          const accessingCurrentLevel = currentLevelLessons.some(lesson => lesson.id === numericId);
+          if (accessingCurrentLevel) {
+            const prevLevelLessons = lessonsByLevel[levelIndex - 1];
+            if (prevLevelLessons && prevLevelLessons.length > 0) {
+              const prevLevelLastLesson = prevLevelLessons[prevLevelLessons.length - 1];
+              const prevLevelCompleted = finishedContent.includes(prevLevelLastLesson.id);
+
+              if (!prevLevelCompleted) {
+                const prevLevelName = levels[levelIndex - 1]?.title || `Level ${levelIndex}`;
+                const currentLevelName = levels[levelIndex]?.title || `Level ${levelIndex + 1}`;
+                setLockModalMessage(`You must complete ${prevLevelName} before accessing ${currentLevelName}.`);
+                setShowLockModal(true);
+                setSaving(false);
+                return null;
+              }
+            }
+          }
         }
     }
 
-    // Handle special case for lesson 63 -> 65
     if (numericId === 63) return { nextId: 65 };
-    
-      // Handle level transitions
-      const levelTransitions = {
-        58: { nextId: 60, nextLevel: 1 },
-        68: { nextId: 70, nextLevel: 2 }
-      };
-    
-    if (levelTransitions[numericId]) {
-      return levelTransitions[numericId];
+
+    const getLevelTransition = (currentLessonId) => {
+      let currentLevelIndex = -1;
+      for (let i = 0; i < levels.length; i++) {
+        const levelLessons = lessonsByLevel[i];
+        if (levelLessons && levelLessons.find(lesson => lesson.id === currentLessonId)) {
+          currentLevelIndex = i;
+          break;
+        }
+      }
+
+      if (currentLevelIndex === -1) return null;
+
+      const currentLevelLessons = lessonsByLevel[currentLevelIndex];
+      const lastLessonInLevel = currentLevelLessons[currentLevelLessons.length - 1];
+
+      if (currentLessonId === lastLessonInLevel.id && currentLevelIndex < levels.length - 1) {
+        const nextLevelIndex = currentLevelIndex + 1;
+        const nextLevelLessons = lessonsByLevel[nextLevelIndex];
+        if (nextLevelLessons && nextLevelLessons.length > 0) {
+          const firstNonSeparatorLesson = nextLevelLessons.find(lesson => !lesson.separate);
+          if (firstNonSeparatorLesson) {
+            return {
+              nextId: firstNonSeparatorLesson.id,
+              nextLevel: nextLevelIndex
+            };
+          }
+        }
+      }
+
+      return null;
+    };
+
+    const levelTransition = getLevelTransition(numericId);
+    if (levelTransition) {
+      return levelTransition;
     }
 
-      // Find which level the current lesson belongs to by id
       let currentLevel = activeLevel;
       
-      for (let level = 0; level <= 2; level++) {
+      for (let level = 0; level < levels.length; level++) {
         const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.id === numericId);
         if (foundInCurrentLevel) {
           currentLevel = level;
@@ -595,43 +582,34 @@ function LtsJournal(props) {
         }
       }
 
-      // Get lessons for the determined level
       const lessons = lessonsByLevel[currentLevel] || [];
 
-      // If lessons array is empty, the data might not be loaded yet
       if (lessons.length === 0) {
         console.warn('Lessons not loaded for level:', currentLevel, lessonsByLevel);
         return null;
       }
 
-      // Find current lesson index by id
       const currentIndex = lessons.findIndex(lesson => lesson.id === numericId);
 
-      // If lesson not found, return null
       if (currentIndex === -1) {
         console.warn('Lesson not found:', numericId, 'in level:', currentLevel);
         return null;
       }
 
-      // If lesson found and not the last one, find the next non-separator lesson
       if (currentIndex < lessons.length - 1) {
-        // Find the next lesson that is not a separator
         for (let i = currentIndex + 1; i < lessons.length; i++) {
           const potentialNextLesson = lessons[i];
           if (!potentialNextLesson.separate) {
             return { nextId: potentialNextLesson.id };
           }
         }
-        // If all remaining lessons are separators, return null
         return null;
       }
 
-      // If it's the last lesson of the course (level 3, lesson 126)
       if (numericId === 126) {
         return null;
       }
 
-      // If it's the last lesson of a level but not the last lesson overall, return null
       return null;
   };
 
@@ -647,7 +625,6 @@ const handleSaveAndContinue = async () => {
     const findNextLesson = (currentId) => {
       const numericId = parseInt(currentId);
       
-      // Check if user has subscription OR is exempt
       if (!user?.user?.stripe_subscription_id && !user?.user?.subscription_exempt) {
         setSubscriptionModalparagraph('This content is only available to subscribed users. Subscribe now to access all levels and features.');
         setShowSubscriptionModal(true);
@@ -655,10 +632,8 @@ const handleSaveAndContinue = async () => {
         return null;
       }
 
-      // Check if user is still in free trial period (exempt users skip this check)
       const isInTrial = !user?.user?.subscription_exempt && isUserInFreeTrial(user.user.createdAt);
 
-      // Block access to content beyond Level 1 during free trial (exempt users skip this check)
       if (isInTrial && numericId >= 58) {
         if (numericId === 58) {
           setSubscriptionModalparagraph('Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.');
@@ -670,42 +645,73 @@ const handleSaveAndContinue = async () => {
         return null;
       }
 
-      // For paid users/exempt users, check level completion
       if (!isInTrial) {
-        // Trying to access Level 2 without completing Level 1
-        if (numericId >= 60 && numericId < 70 && !finishedContent.includes(58)) {
-          setLockModalMessage('You must complete Level 1 before accessing Level 2.');
-          setShowLockModal(true);
-          setSaving(false);
-          return null;
-        }
-        
-        // Trying to access Level 3 without completing Level 2
-        if (numericId >= 70 && !finishedContent.includes(68)) {
-          setLockModalMessage('You must complete Level 2 before accessing Level 3.');
-          setShowLockModal(true);
-          setSaving(false);
-          return null;
+        for (let levelIndex = 1; levelIndex < levels.length; levelIndex++) {
+          const currentLevelLessons = lessonsByLevel[levelIndex];
+          if (!currentLevelLessons || currentLevelLessons.length === 0) continue;
+
+          const accessingCurrentLevel = currentLevelLessons.some(lesson => lesson.id === numericId);
+          if (accessingCurrentLevel) {
+            const prevLevelLessons = lessonsByLevel[levelIndex - 1];
+            if (prevLevelLessons && prevLevelLessons.length > 0) {
+              const prevLevelLastLesson = prevLevelLessons[prevLevelLessons.length - 1];
+              const prevLevelCompleted = finishedContent.includes(prevLevelLastLesson.id);
+
+              if (!prevLevelCompleted) {
+                const prevLevelName = levels[levelIndex - 1]?.title || `Level ${levelIndex}`;
+                const currentLevelName = levels[levelIndex]?.title || `Level ${levelIndex + 1}`;
+                setLockModalMessage(`You must complete ${prevLevelName} before accessing ${currentLevelName}.`);
+                setShowLockModal(true);
+                setSaving(false);
+                return null;
+              }
+            }
+          }
         }
       }
 
-      // Handle special case for lesson 63 -> 65
       if (numericId === 63) return { nextId: 65 };
-      
-      // Handle level transitions
-      const levelTransitions = {
-        58: { nextId: 60, nextLevel: 1 },
-        68: { nextId: 70, nextLevel: 2 }
+
+      const getLevelTransition = (currentLessonId) => {
+        let currentLevelIndex = -1;
+        for (let i = 0; i < levels.length; i++) {
+          const levelLessons = lessonsByLevel[i];
+          if (levelLessons && levelLessons.find(lesson => lesson.id === currentLessonId)) {
+            currentLevelIndex = i;
+            break;
+          }
+        }
+
+        if (currentLevelIndex === -1) return null;
+
+        const currentLevelLessons = lessonsByLevel[currentLevelIndex];
+        const lastLessonInLevel = currentLevelLessons[currentLevelLessons.length - 1];
+
+        if (currentLessonId === lastLessonInLevel.id && currentLevelIndex < levels.length - 1) {
+          const nextLevelIndex = currentLevelIndex + 1;
+          const nextLevelLessons = lessonsByLevel[nextLevelIndex];
+          if (nextLevelLessons && nextLevelLessons.length > 0) {
+            const firstNonSeparatorLesson = nextLevelLessons.find(lesson => !lesson.separate);
+            if (firstNonSeparatorLesson) {
+              return {
+                nextId: firstNonSeparatorLesson.id,
+                nextLevel: nextLevelIndex
+              };
+            }
+          }
+        }
+
+        return null;
       };
-      
-      if (levelTransitions[numericId]) {
-        return levelTransitions[numericId];
+
+      const levelTransition = getLevelTransition(numericId);
+      if (levelTransition) {
+        return levelTransition;
       }
 
-      // Find which level the current lesson belongs to by id
       let currentLevel = activeLevel;
       
-      for (let level = 0; level <= 2; level++) {
+      for (let level = 0; level < levels.length; level++) {
         const foundInCurrentLevel = lessonsByLevel[level]?.find(lesson => lesson.id === numericId);
         if (foundInCurrentLevel) {
           currentLevel = level;
@@ -713,55 +719,44 @@ const handleSaveAndContinue = async () => {
         }
       }
 
-      // Get lessons for the determined level
       const lessons = lessonsByLevel[currentLevel] || [];
 
-      // If lessons array is empty, the data might not be loaded yet
       if (lessons.length === 0) {
         console.warn('Lessons not loaded for level:', currentLevel, lessonsByLevel);
         return null;
       }
 
-      // Find current lesson index by id
       const currentIndex = lessons.findIndex(lesson => lesson.id === numericId);
 
-      // If lesson not found, return null
       if (currentIndex === -1) {
         console.warn('Lesson not found:', numericId, 'in level:', currentLevel);
         return null;
       }
 
-      // If lesson found and not the last one, find the next non-separator lesson
       if (currentIndex < lessons.length - 1) {
-        // Find the next lesson that is not a separator
         for (let i = currentIndex + 1; i < lessons.length; i++) {
           const potentialNextLesson = lessons[i];
           if (!potentialNextLesson.separate) {
             return { nextId: potentialNextLesson.id };
           }
         }
-        // If all remaining lessons are separators, return null
         return null;
       }
 
-      // If it's the last lesson of the course (level 3, lesson 126)
       if (numericId === 126) {
         return null;
       }
 
-      // If it's the last lesson of a level but not the last lesson overall, return null
-      // (This shouldn't happen, but handle it gracefully)
       return null;
     };
 
-    // Rest of your existing code remains the same...
     const resolveLessonTitle = (lessonId) => {
       switch (lessonId) {
         case 51: return "The Myths of Entrepreneurship";
         case 60: return "The Journey of Entrepreneurship";
         case 70: return "Business Story";
         default:
-          for (let level = 0; level <= 2; level++) {
+          for (let level = 0; level < levels.length; level++) {
             const found = lessonsByLevel[level]?.find(lesson => lesson.id === lessonId);
             if (found) return found.title;
           }
@@ -770,13 +765,11 @@ const handleSaveAndContinue = async () => {
       }
     };
 
-    // Fetch the latest finished content data first
     await dispatch(fetchLtsCoursefinishedContent());
     const finishedContentResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
     const finishedContentData = finishedContentResponse.data;
     const finishedContentList = finishedContentData.finishedContent || [];
 
-    // Check if the current journal ID is in the finished content list
     const isJournalCompleted = finishedContentList.includes(currentJournalId);
 
     let hasEmptyReflections = false;
@@ -804,15 +797,12 @@ const handleSaveAndContinue = async () => {
     const navigateToNextLesson = async () => {
       const nextLessonInfo = findNextLesson(currentJournalId);
       
-      // If findNextLesson returned null (course completed) or undefined (error), handle appropriately
       if (nextLessonInfo === null) {
         toast.success('Course completed!');
         return;
       }
       
       if (!nextLessonInfo || !nextLessonInfo.nextId) {
-        // If there's no next lesson info, it might be due to subscription/trial check
-        // Those cases are already handled in findNextLesson, so just return
         return;
       }
       
@@ -825,23 +815,20 @@ const handleSaveAndContinue = async () => {
       const nextLessonTitle = resolveLessonTitle(nextLessonId);
       setCurrentPlaceholder(nextLessonTitle);
 
-      // Navigate to next lesson
       const targetLevel = nextLessonInfo.nextLevel !== undefined ? nextLessonInfo.nextLevel : activeLevel;
       let nextLesson = null;
 
-      // Search across all levels to find the lesson by id (in case activeLevel wasn't updated yet)
-      for (let level = 0; level <= 2; level++) {
+      for (let level = 0; level < levels.length; level++) {
         const found = lessonsByLevel[level]?.find(
           l => l.id === nextLessonId
         );
         if (found) {
           nextLesson = {
-            value: nextLessonId, // Use id as value to match options
+            value: nextLessonId, 
             label: found.title,
             redirectId: found.redirectId,
             lessonId: found.id
           };
-          // Update activeLevel if we found it in a different level
           if (level !== activeLevel) {
             setActiveLevel(level);
           }
@@ -851,7 +838,6 @@ const handleSaveAndContinue = async () => {
 
       if (nextLesson) {
         setSelectedLesson(nextLesson);
-        // Ensure we have latest finishedContent before navigation
         await dispatch(fetchLtsCoursefinishedContent());
         history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`);
       } else {
@@ -861,7 +847,6 @@ const handleSaveAndContinue = async () => {
     };
 
     if (hasEmptyReflections) {
-      // If journal is already marked as completed, allow navigation regardless of empty reflections
       if (isJournalCompleted) {
         await navigateToNextLesson();
         setSaving(false);
@@ -873,7 +858,6 @@ const handleSaveAndContinue = async () => {
     }
 
     if (savePromises.length === 0) {
-      // If journal is already marked as completed, allow navigation even without new reflections
       if (isJournalCompleted) {
         await navigateToNextLesson();
         setSaving(false);
@@ -884,12 +868,10 @@ const handleSaveAndContinue = async () => {
       return;
     }
 
-    // Save all reflections
     await Promise.all(savePromises);
     setReflectionsData({});
     toast.success('Reflections saved successfully!');
 
-    // After saving reflections, check again if this journal is now marked as completed
     await dispatch(fetchLtsCoursefinishedContent());
     const updatedFinishedResponse = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
     const updatedFinishedList = updatedFinishedResponse.data.finishedContent || [];
@@ -908,18 +890,15 @@ const handleSaveAndContinue = async () => {
 };
 
 
-// Add this helper function near the top of the component
 const isUserInFreeTrial = (userCreatedDate) => {
   if (!userCreatedDate) return false;
   const currentDate = new Date();
   const trialEndDate = new Date(userCreatedDate);
-  trialEndDate.setDate(trialEndDate.getDate() + 14); // 14 day free trial
+  trialEndDate.setDate(trialEndDate.getDate() + 14); 
   return currentDate <= trialEndDate;
 };
 
-// Add this useEffect to handle navigation from dashboard
 useEffect(() => {
-  // Check if we're coming from dashboard with stored state
   const storedLesson = localStorage.getItem('selectedLesson');
   if (storedLesson && location.state) {
     try {
@@ -934,7 +913,6 @@ useEffect(() => {
         setCurrentPlaceholder(currentPlaceholder);
       }
       
-      // Clear the stored lesson after using it
       localStorage.removeItem('selectedLesson');
     } catch (error) {
       console.error('Error parsing stored lesson:', error);
@@ -945,7 +923,7 @@ useEffect(() => {
   const getLessonTitle = (journalId) => {
     const numericId = parseInt(journalId);
 
-    for (let level = 0; level <= 2; level++) {
+    for (let level = 0; level < levels.length; level++) {
       const lessons = lessonsByLevel[level];
       if (!lessons) continue;
 
@@ -966,7 +944,7 @@ useEffect(() => {
     );
     if (found) return found.title;
 
-    for (let level = 0; level <= 2; level++) {
+    for (let level = 0; level < levels.length; level++) {
       const found = lessonsByLevel[level]?.find(
         lesson => lesson.id === numericId
       );
@@ -981,7 +959,6 @@ useEffect(() => {
   };
 
   const handleContinue = () => {
-    // Use the first non-separator lesson's id from level 0
     const getFirstNonSeparatorLesson = (levelLessons) => {
       if (!levelLessons) return null;
       const firstNonSeparator = levelLessons.find(lesson => !lesson.separate);
@@ -1031,14 +1008,17 @@ useEffect(() => {
                           let levelClass = '';
                           if (index === activeLevel) {
                             levelClass = 'active-level-journal';
-                          } else if (index === 1 && finishedContent.includes(58)) {
-                            levelClass = 'accessible-level-journal';
-                          } else if (index === 2 && finishedContent.includes(68)) {
-                            levelClass = 'accessible-level-journal';
-                          } else if (!isContentAccessible(lessonsByLevel[index]?.[0]?.id)) {
-                            levelClass = 'inactive-level-journal';
                           } else {
-                            levelClass = 'accessible-level-journal';
+                            // Dynamic check: level is accessible if all previous level lessons are completed
+                            const isLevelAccessible = index === 0 ||
+                              (index > 0 && lessonsByLevel[index - 1] &&
+                               lessonsByLevel[index - 1].every(lesson => finishedContent.includes(lesson.id)));
+
+                            if (isLevelAccessible) {
+                              levelClass = 'accessible-level-journal';
+                            } else {
+                              levelClass = 'inactive-level-journal';
+                            }
                           }
                           return (
                             <div
@@ -1063,16 +1043,13 @@ useEffect(() => {
 
                                 setSelectedLesson(selectedOption);
 
-                                // selectedOption.value is now lesson.id, so use it directly
                                 const lessonId = selectedOption.value;
                                 
-                                // Search across all levels to find the lesson and update activeLevel
-                                for (let level = 0; level <= 2; level++) {
+                                for (let level = 0; level < levels.length; level++) {
                                   const lesson = lessonsByLevel[level]?.find(
                                     lesson => lesson.id === lessonId
                                   );
                                   if (lesson) {
-                                    // Update activeLevel if the lesson is in a different level
                                     if (level !== activeLevel) {
                                       setActiveLevel(level);
                                     }
@@ -1085,8 +1062,8 @@ useEffect(() => {
                               setShowLockModal={setShowLockModal}
                               setLockModalMessage={setLockModalMessage}
                               activeLevel={activeLevel}
-                              placeholder={currentPlaceholder} // Pass the current placeholder
-                              setCurrentPlaceholder={setCurrentPlaceholder} // Pass the setter function
+                              placeholder={currentPlaceholder} 
+                              setCurrentPlaceholder={setCurrentPlaceholder} 
                             />
                           </div>
 
@@ -1231,13 +1208,10 @@ useEffect(() => {
                           const { journalId } = renderProps.match.params
 
                           if (!isContentAccessible(journalId)) {
-                            // Wait for lessons to load before redirecting
                             if (lessonsLoading || !lessonsByLevel[0] || !Array.isArray(lessonsByLevel[0]) || lessonsByLevel[0].length === 0) {
-                              // Lessons are still loading, return null to wait
                               return null;
                             }
                             
-                            // Lessons are loaded, get the first lesson ID
                             const firstLessonId = lessonsByLevel[0][0].id;
                             
                             return <Redirect to={`${props.match.url}/${firstLessonId}`} />

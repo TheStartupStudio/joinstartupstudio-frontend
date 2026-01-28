@@ -44,7 +44,7 @@ export const allMenuItems = [
     }
   },
   {
-    title: 'Master Class Management',
+    title: 'Studio Guidance Management',
     to: '/master-class-management',
     icon: LibraryIcon,
     hoverIcon: LibraryHoverIcon,

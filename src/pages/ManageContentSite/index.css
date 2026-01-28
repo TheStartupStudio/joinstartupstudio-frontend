@@ -6,7 +6,7 @@
   /* overflow: hidden; */
 }
 
-.leadership-journal-management .header-tabs {
+.content-management .header-tabs {
 
   border-radius: 8px;
 background: rgba(255, 255, 255, 0.10);
@@ -17,7 +17,7 @@ background: rgba(255, 255, 255, 0.10);
   z-index: 1;
 }
 
-.leadership-journal-management .tab-button {
+.content-management .tab-button {
   font-family: 'Montserrat', sans-serif;
   cursor: pointer;
 border: none;
@@ -38,12 +38,19 @@ width: 100%;
 background-color: transparent;
 }
 
-.leadership-journal-management .tab-button.active {
-  background: #e0ebc5;
+.content-management .tab-button:hover {
+  color: #333;
+  background: #f9fafb;
+}
+
+.content-management .tab-button.active {
+  background: rgba(185, 223, 236, 0.20);
+
+
 box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
 }
 
-.leadership-journal-management .search-actions-bar {
+.content-management .search-actions-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,7 +59,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   flex-wrap: wrap;
 }
 
-.leadership-journal-management .search-container {
+.content-management .search-container {
   flex: 1;
   width: 100%;
   max-width: 640px;
@@ -61,11 +68,11 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
 }
 
-.leadership-journal-management .search-input-wrapper {
+.content-management .search-input-wrapper {
   position: relative;
 }
 
-.leadership-journal-management .search-input {
+.content-management .search-input {
   width: 100%;
   padding: 12px 40px 12px 18px;
   /* border: 1px solid #d1d5db; */
@@ -75,15 +82,15 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   transition: border-color 0.2s ease;
 }
 
-.leadership-journal-management .search-input:focus {
+.content-management .search-input:focus {
   outline: none;
 }
 
-.leadership-journal-management .search-input::placeholder {
+.content-management .search-input::placeholder {
   color: #9ca3af;
 }
 
-.leadership-journal-management .search-icon {
+.content-management .search-icon {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -92,22 +99,22 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
 }
 
 
-.leadership-journal-management .actions-container {
+.content-management .content-management-container .actions-container {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
 }
 
-.content-management-container .table-container{
+.content-management .content-management-container .table-container{
   background-color: white;
   position: relative;
-  z-index: 0;
+    z-index: 0;
 }
 
-.leadership-journal-management .action-btn-new {
+.content-management .action-btn-new {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -122,29 +129,29 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   white-space: nowrap;
 }
 
-.leadership-journal-management .add-content-btn {
+.content-management .add-content-btn {
   background: #51C7DF;
   color: white;
 }
 
-.leadership-journal-management .add-content-btn:hover {
+.content-management .add-content-btn:hover {
   background: #3AAFCA;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(81, 199, 223, 0.3);
 }
 
-.leadership-journal-management .uncategorized-btn {
+.content-management .uncategorized-btn {
   background: #333;
   color: white;
 }
 
-.leadership-journal-management .uncategorized-btn:hover {
+.content-management .uncategorized-btn:hover {
   background: #1a1a1a;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.leadership-journal-management .bulk-actions {
+.content-management .bulk-actions {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -155,7 +162,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   background: var(--COLORS-White, #FFF);
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
   height: -webkit-fill-available;
-  padding: 8px 16px;
+  padding: 6px 12px;
   width: 200px;
   height: 54px;
   justify-content: space-between;
@@ -168,13 +175,15 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   font-family: Montserrat;
   font-size: 12px;
   font-weight: 600;
+  position: relative;
+  z-index: 2;
 }
 
 /* .table-container {
   padding: 0 24px 24px;
 } */
 
-.leadership-journal-management .pagination-container {
+.content-management .pagination-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,7 +192,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   border-top: 1px solid #e5e7eb;
 }
 
-.leadership-journal-management .pagination-btn {
+.content-management .pagination-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -202,7 +211,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   background: #f0f9ff;
 } */
 
-.leadership-journal-management .pagination-info {
+.content-management .pagination-info {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -210,26 +219,65 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
   padding: 0 12px;
 }
 
-.leadership-journal-management .main-search-table-container{
+.content-management .main-search-table-container{
 padding: 12px 0;
+padding-bottom: 30px;
 margin-top: 20px;
 gap: 10px;
 border-radius: 24px;
 background: var(--Glassy-White, rgba(255, 255, 255, 0.10));
 box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
-padding-bottom: 30px;
 }
 
-
-.leadership-journal-management .content-management-container .continue-course-btn{
+.content-management .content-management-container .continue-course-btn{
       font-family: 'Montserrat', sans-serif;
   background-color: white;
   padding: 6px 12px !important;
   font-size: 12px !important;
 }
 
+/* Task name cell styling */
+.content-management .task-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.content-management .task-name-cell .status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #51C7DF;
+  flex-shrink: 0;
+}
+
+.content-management .task-name-cell .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.content-management .task-name-cell .status-dot.published {
+  background-color: var(--COLORS-Green, #9C3);
+box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.content-management .task-name-cell .status-dot.unpublished {
+  /* background-color: var(--COLORS-Grey, #AEAEAE); */
+  background-color: #9C3;
+box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.content-management .task-name-cell span {
+  color: #231F20;
+  font-family: Montserrat;
+  font-size: 15px;
+  font-weight: 500;
+}
+
 @media (max-width: 1200px) {
-    .leadership-journal-management .search-actions-bar {
+    .content-management .search-actions-bar {
     flex-direction: column;
     align-items: stretch;
     padding: 16px 5px;
@@ -239,32 +287,41 @@ padding-bottom: 30px;
 
 
 @media (max-width: 768px) {
-  .content-management-container {
+  .content-management .content-management-container {
     margin: 10px;
   }
 
-  .leadership-journal-management .header-tabs {
+  .content-management .header-tabs {
     overflow-x: auto;
     padding: 0 12px;
   }
 
-  .leadership-journal-management .search-actions-bar {
+  .content-management .search-actions-bar {
     flex-direction: column;
     align-items: stretch;
     padding: 16px 5px;
   }
 
-  .leadership-journal-management .search-container {
+  .content-management .search-container {
     min-width: 100%;
   }
 
-  .leadership-journal-management .actions-container {
+  .content-management .actions-container {
     justify-content: stretch;
   }
 
-  .leadership-journal-management .action-btn-new,
-  .leadership-journal-management .bulk-actions {
+  .content-management .action-btn-new,
+  .content-management .bulk-actions {
     flex: 1;
     justify-content: center;
   }
+}
+
+.content-management .content-management-container .action-buttons {
+  width: max-content;
+}
+
+
+.content-management .content-management-container tbody tr td:nth-child(2) {
+  width: 100%;
 }

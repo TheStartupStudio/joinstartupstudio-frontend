@@ -492,7 +492,6 @@ const UserManagement = () => {
   }
 
   const handleLearnerModalSuccess = () => {
-    toast.success('Learner saved successfully!')
     setShowAddLearnerModal(false)
     if (activeTab === 'Users') {
       fetchUsers(currentPage, debouncedSearchQuery)

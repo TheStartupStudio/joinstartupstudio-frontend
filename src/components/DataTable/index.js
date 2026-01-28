@@ -108,8 +108,11 @@ const DataTable = ({
         { name: 'Delete Organization', action: 'delete-organization' },
         { name: 'Export Organization Data', action: 'export-organization' }
       ]
-    } else if (activeTab === 'Content') {
-      return []
+    } else if (activeTab === 'Content' || activeTab === 'Leadership') {
+      return [
+        { name: 'Publish Task', action: 'publish' },
+        { name: 'Unpublish Task', action: 'unpublish' }
+      ]
     } else if (activeTab === 'Invoices') {
       return [
         { 
