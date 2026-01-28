@@ -80,14 +80,14 @@ const SIDEBAR_MENU_ITEMS = [
     requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal-management') ? 'active' : ''
   },
-  {
-    id: 'manage-content-site',
-    title: 'Manage Content Site',
-    srcImage: ContentSiteIcon,
-    to: '/manage-content-site',
-    roles: [3],
-    className: (pathname) => pathname.includes('manage-content-site') ? 'active' : ''
-  },
+  // {
+  //   id: 'manage-content-site',
+  //   title: 'Manage Content Site',
+  //   srcImage: ContentSiteIcon,
+  //   to: '/manage-content-site',
+  //   roles: [3],
+  //   className: (pathname) => pathname.includes('manage-content-site') ? 'active' : ''
+  // },
   {
     id: 'intro-course',
     title: 'Intro to the Studio',
@@ -109,7 +109,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
   },
