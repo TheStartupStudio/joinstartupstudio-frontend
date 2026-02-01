@@ -25,6 +25,11 @@
   padding-bottom: 32px;
 }
 
+.add-journal-modal-overlay .journal-basics-inputs {
+  position: relative;
+  overflow: visible;
+}
+
 .add-journal-modal-overlay .modal-header {
   display: flex;
   align-items: flex-start;
@@ -146,6 +151,10 @@
 .add-journal-modal-overlay .input-box.icon-select {
   width: 250px;
   cursor: pointer;
+  position: relative;
+  z-index: 10000000;
+  display: flex;
+    justify-content: space-between;
 }
 
 .add-journal-modal-overlay .journal-input,
@@ -177,6 +186,60 @@
   width: 24px;
   height: 24px;
   color: #6f6f6f;
+}
+
+.add-journal-modal-overlay .input-icon.rotated {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.add-journal-modal-overlay .icon-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  right: 0;
+  background: white;
+  border: 1px solid rgba(227, 229, 233, 0.50);
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10000001;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 250px;
+}
+
+.add-journal-modal-overlay .icon-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(227, 229, 233, 0.20);
+  transition: background-color 0.2s ease;
+}
+
+.add-journal-modal-overlay .icon-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.add-journal-modal-overlay .icon-dropdown-item:hover {
+  background-color: rgba(227, 229, 233, 0.30);
+}
+
+.add-journal-modal-overlay .icon-dropdown-item.selected {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.add-journal-modal-overlay .icon-dropdown-item span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #231f20;
+}
+
+.add-journal-modal-overlay .icon-dropdown-item.selected span {
+  color: #007bff;
 }
 
 .add-journal-modal-overlay .sections-content {
