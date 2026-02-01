@@ -7,10 +7,13 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import AddJournalModal from '../../components/ContentManagement/AddJournalModal'
+import AddJournalIntroduction from '../../components/ContentManagement/AddJournalIntroduction'
 
 const ManageContentSite = () => {
   const dispatch = useDispatch()
   const [showAddJournalModal, setShowAddJournalModal] = useState(false)
+  const [showAddJournalIntroductionModal, setShowAddJournalIntroductionModal] = useState(false)
+  const [journalData, setJournalData] = useState(null)
 
   const columns = [
     {
@@ -41,11 +44,28 @@ const ManageContentSite = () => {
     setShowAddJournalModal(false)
   }
 
+  const handleOpenAddJournalIntroductionModal = (data) => {
+    setJournalData(data)
+    setShowAddJournalModal(false)
+    setShowAddJournalIntroductionModal(true)
+  }
+
+  const handleCloseAddJournalIntroductionModal = () => {
+    setShowAddJournalIntroductionModal(false)
+    setJournalData(null)
+  }
+
   return (
     <div className="manage-content">
-      <AddJournalModal 
+      <AddJournalModal
         show={showAddJournalModal}
         onClose={handleCloseAddJournalModal}
+        onProceedToIntroduction={handleOpenAddJournalIntroductionModal}
+      />
+      <AddJournalIntroduction
+        show={showAddJournalIntroductionModal}
+        onClose={handleCloseAddJournalIntroductionModal}
+        journalData={journalData}
       />
       <div>
         <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">

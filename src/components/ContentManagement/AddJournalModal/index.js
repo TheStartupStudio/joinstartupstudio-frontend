@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 
-const AddJournalModal = ({ show, onClose }) => {
+const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
     const [journalTitle, setJournalTitle] = useState('')
     const [selectedIcon, setSelectedIcon] = useState('')
     const [activeTab, setActiveTab] = useState('names') // 'names' or 'details'
@@ -90,6 +90,45 @@ const AddJournalModal = ({ show, onClose }) => {
     const getSelectedIconSvg = () => {
         const selectedOption = iconOptions.find(option => option.id === selectedIcon)
         return selectedOption ? selectedOption.svg : null
+    }
+
+    const validateForm = () => {
+        // Check if journal title is filled
+        if (!journalTitle.trim()) {
+            return false
+        }
+
+        // Check if icon is selected
+        if (!selectedIcon) {
+            return false
+        }
+
+        // Check if all sections have names
+        const hasEmptySections = sections.some(section => !section.name.trim())
+        if (hasEmptySections) {
+            return false
+        }
+
+        return true
+    }
+
+    const handleSave = () => {
+        // if (!validateForm()) {
+        //     alert('Please fill in all required fields: Journal Title, Icon, and Section Names')
+        //     return
+        // }
+
+        // Prepare journal data to pass to introduction modal
+        const journalData = {
+            title: journalTitle,
+            icon: selectedIcon,
+            sections: sections
+        }
+
+        // Call the callback to open introduction modal
+        if (onProceedToIntroduction) {
+            onProceedToIntroduction(journalData)
+        }
     }
 
     const handleCancel = () => {
@@ -292,7 +331,7 @@ const AddJournalModal = ({ show, onClose }) => {
                         <button className="cancel-btn" onClick={handleCancel}>
                             Cancel
                         </button>
-                        <button className="save-btn">
+                        <button className="save-btn" onClick={handleSave}>
                             Save
                         </button>
                     </div>
