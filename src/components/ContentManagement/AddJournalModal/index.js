@@ -45,7 +45,7 @@ const AddJournalModal = ({ show, onClose }) => {
     }
 
     return (
-        <div className="modal-overlay">
+        <div className="add-journal-modal-overlay">
             <div className="add-journal-modal">
                 <div className="modal-header">
                     <div className="circle-icon-heading">

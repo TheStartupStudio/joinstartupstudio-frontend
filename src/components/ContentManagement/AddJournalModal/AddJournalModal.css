@@ -1,4 +1,4 @@
-/* .modal-overlay {
+.add-journal-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   padding-top: 56px;
 }
 
-.add-journal-modal {
+.add-journal-modal-overlay .add-journal-modal {
   background: white;
   border-radius: 24px;
   box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.25);
@@ -25,27 +25,27 @@
   padding-bottom: 32px;
 }
 
-.modal-header {
+.add-journal-modal-overlay .modal-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
 }
 
-.circle-icon-heading {
+.add-journal-modal-overlay .circle-icon-heading {
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 40px;
 }
 
-.circle-icon {
+.add-journal-modal-overlay .circle-icon {
   width: 36px;
   height: 36px;
   position: relative;
 }
 
-.icon-circle-bg {
+.add-journal-modal-overlay .icon-circle-bg {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -55,12 +55,12 @@
   justify-content: center;
 }
 
-.icon-circle-bg .plus-icon {
+.add-journal-modal-overlay .icon-circle-bg .plus-icon {
   color: white;
   font-size: 16px;
 }
 
-.modal-title {
+.add-journal-modal-overlay .modal-title {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 15px;
@@ -68,34 +68,34 @@
   margin: 0;
 }
 
-.modal-content {
+.add-journal-modal-overlay .modal-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 0 40px;
 }
 
-.form-section {
+.add-journal-modal-overlay .form-section {
   display: flex;
   flex-direction: column;
   gap: 40px;
   width: 662px;
 }
 
-.section-group {
+.add-journal-modal-overlay .section-group {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.section-header {
+.add-journal-modal-overlay .section-header {
   display: flex;
   height: 36px;
   align-items: center;
   border-radius: 12px;
 }
 
-.section-header-content {
+.add-journal-modal-overlay .section-header-content {
   background: rgba(227, 229, 233, 0.5);
   display: flex;
   align-items: center;
@@ -106,7 +106,7 @@
   height: 100%;
 }
 
-.spark-icon {
+.add-journal-modal-overlay .spark-icon {
   font-size: 20px;
   display: flex;
   align-items: center;
@@ -115,20 +115,20 @@
   height: 20px;
 }
 
-.section-header-content span {
+.add-journal-modal-overlay .section-header-content span {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 15px;
   color: black;
 }
 
-.journal-basics-inputs {
+.add-journal-modal-overlay .journal-basics-inputs {
   display: flex;
   gap: 20px;
   align-items: center;
 }
 
-.input-box {
+.add-journal-modal-overlay .input-box {
   background: white;
   display: flex;
   align-items: center;
@@ -139,17 +139,17 @@
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
-.input-box.flex-1 {
+.add-journal-modal-overlay .input-box.flex-1 {
   flex: 1;
 }
 
-.input-box.icon-select {
+.add-journal-modal-overlay .input-box.icon-select {
   width: 250px;
   cursor: pointer;
 }
 
-.journal-input,
-.section-input {
+.add-journal-modal-overlay .journal-input,
+.add-journal-modal-overlay .section-input {
   flex: 1;
   border: none;
   outline: none;
@@ -159,13 +159,13 @@
   background: transparent;
 }
 
-.journal-input::placeholder,
-.section-input::placeholder {
+.add-journal-modal-overlay .journal-input::placeholder,
+.add-journal-modal-overlay .section-input::placeholder {
   color: #6f6f6f;
   font-weight: 400;
 }
 
-.select-text {
+.add-journal-modal-overlay .select-text {
   flex: 1;
   font-family: 'Montserrat', sans-serif;
   font-size: 15px;
@@ -173,19 +173,19 @@
   font-weight: 400;
 }
 
-.input-icon {
+.add-journal-modal-overlay .input-icon {
   width: 24px;
   height: 24px;
   color: #6f6f6f;
 }
 
-.sections-content {
+.add-journal-modal-overlay .sections-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.tab-navigation {
+.add-journal-modal-overlay .tab-navigation {
   backdrop-filter: blur(60.065px);
   background: rgba(227, 229, 233, 0.5);
   display: flex;
@@ -198,7 +198,7 @@
   gap: 0;
 }
 
-.tab-btn {
+.add-journal-modal-overlay .tab-btn {
   flex: 1;
   height: 35px;
   display: flex;
@@ -216,22 +216,22 @@
   transition: all 0.3s ease;
 }
 
-.tab-btn.active {
+.add-journal-modal-overlay .tab-btn.active {
   background: white;
   backdrop-filter: blur(60px);
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.25);
 }
 
-.tab-btn:hover:not(.active) {
+.add-journal-modal-overlay .tab-btn:hover:not(.active) {
   background: rgba(255, 255, 255, 0.5);
 }
 
-.sections-panel {
+.add-journal-modal-overlay .sections-panel {
   display: flex;
   flex-direction: column;
 }
 
-.sections-box {
+.add-journal-modal-overlay .sections-box {
   backdrop-filter: blur(60.065px);
   background: white;
   display: flex;
@@ -242,13 +242,13 @@
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
 }
 
-.section-row {
+.add-journal-modal-overlay .section-row {
   display: flex;
   gap: 20px;
   align-items: center;
 }
 
-.reorder-icon {
+.add-journal-modal-overlay .reorder-icon {
   width: 24px;
   height: 24px;
   display: flex;
@@ -257,14 +257,14 @@
   cursor: grab;
 }
 
-.reorder-lines {
+.add-journal-modal-overlay .reorder-lines {
   display: flex;
   flex-direction: column;
   gap: 4px;
   width: 16px;
 }
 
-.reorder-lines span {
+.add-journal-modal-overlay .reorder-lines span {
   display: block;
   width: 100%;
   height: 2px;
@@ -272,7 +272,7 @@
   border-radius: 1px;
 }
 
-.delete-btn {
+.add-journal-modal-overlay .delete-btn {
   width: 24px;
   height: 24px;
   border: none;
@@ -285,22 +285,22 @@
   transition: color 0.3s ease;
 }
 
-.delete-btn:hover {
+.add-journal-modal-overlay .delete-btn:hover {
   color: #e74c3c;
 }
 
-.delete-btn:disabled {
+.add-journal-modal-overlay .delete-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.add-section-footer {
+.add-journal-modal-overlay .add-section-footer {
   display: flex;
   justify-content: flex-end;
   padding: 4px 2px 4px 4px;
 }
 
-.add-new-section-btn {
+.add-journal-modal-overlay .add-new-section-btn {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -315,28 +315,28 @@
   transition: opacity 0.3s ease;
 }
 
-.add-new-section-btn:hover {
+.add-journal-modal-overlay .add-new-section-btn:hover {
   opacity: 0.7;
 }
 
-.add-new-section-btn .plus-icon {
+.add-journal-modal-overlay .add-new-section-btn .plus-icon {
   width: 24px;
   height: 24px;
 }
 
-.section-details-placeholder {
+.add-journal-modal-overlay .section-details-placeholder {
   padding: 7px;
   text-align: center;
 }
 
-.section-details-placeholder p {
+.add-journal-modal-overlay .section-details-placeholder p {
   font-family: 'Montserrat', sans-serif;
   font-size: 15px;
   color: #6f6f6f;
   margin: 0;
 }
 
-.modal-actions {
+.add-journal-modal-overlay .modal-actions {
   display: flex;
   gap: 20px;
   justify-content: flex-end;
@@ -344,7 +344,7 @@
   margin-top: 40px;
 }
 
-.cancel-btn {
+.add-journal-modal-overlay .cancel-btn {
   background: #dee1e6;
   display: flex;
   align-items: center;
@@ -365,7 +365,7 @@
   width: 100%;
 }
 
-.save-btn{
+.add-journal-modal-overlay .save-btn{
     background: #51C7DF;
   display: flex;
   align-items: center;
@@ -386,42 +386,42 @@
   width: 100%;
 }
 
-.cancel-btn:hover {
+.add-journal-modal-overlay .cancel-btn:hover {
   opacity: 0.8;
 }
 
-.add-journal-modal::-webkit-scrollbar {
+.add-journal-modal-overlay .add-journal-modal::-webkit-scrollbar {
   width: 8px;
 }
 
-.add-journal-modal::-webkit-scrollbar-track {
+.add-journal-modal-overlay .add-journal-modal::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.add-journal-modal::-webkit-scrollbar-thumb {
+.add-journal-modal-overlay .add-journal-modal::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
-.add-journal-modal::-webkit-scrollbar-thumb:hover {
+.add-journal-modal-overlay .add-journal-modal::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
 
-.add-journal-modal .quill .ql-toolbar.ql-snow {
+.add-journal-modal-overlay .add-journal-modal .quill .ql-toolbar.ql-snow {
     display: flex;
     align-items: center;
 
 }
 
-.add-journal-modal .ql-editor {
+.add-journal-modal-overlay .add-journal-modal .ql-editor {
     min-height: 100px !important;
     height: 100%;
 }
 
-.add-journal-modal .ql-editor.ql-blank{
+.add-journal-modal-overlay .add-journal-modal .ql-editor.ql-blank{
     min-height: 100px !important;
     height: 100%;
 }
- */
+

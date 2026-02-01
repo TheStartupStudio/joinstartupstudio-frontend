@@ -19,7 +19,7 @@ const ManageContentSite = () => {
     sortable: true,
     filterable: true,
     width: '100%',
-    className: 'content-management-task-name-column',
+    className: 'manage-content-task-name-column',
     render: (value, item) => (
       <div className="task-name-cell">
         <div className={`status-dot ${item.status}`}></div>
@@ -42,7 +42,7 @@ const ManageContentSite = () => {
   }
 
   return (
-    <div className="content-management">
+    <div className="manage-content">
       <AddJournalModal 
         show={showAddJournalModal}
         onClose={handleCloseAddJournalModal}
@@ -89,7 +89,7 @@ const ManageContentSite = () => {
         </div>
       </div>
 
-      <div className="content-management-container position-relative">
+      <div className="manage-content-container position-relative">
         <img src={blueManagerBG} className='position-absolute'
         style={{
           top: 0,
@@ -200,7 +200,7 @@ const ManageContentSite = () => {
                         className="checkbox"
                       />
                     </td>
-                    <td className="content-management-task-name-column">
+                    <td className="manage-content-task-name-column">
                       <div className="task-name-cell">
                         <div className="status-dot published"></div>
                         <span>Introduction to Entrepreneurship</span>
@@ -240,7 +240,7 @@ const ManageContentSite = () => {
                         className="checkbox"
                       />
                     </td>
-                    <td className="content-management-task-name-column">
+                    <td className="manage-content-task-name-column">
                       <div className="task-name-cell">
                         <div className="status-dot unpublished"></div>
                         <span>Myths of Entrepreneurship</span>
@@ -280,7 +280,7 @@ const ManageContentSite = () => {
                         className="checkbox"
                       />
                     </td>
-                    <td className="content-management-task-name-column">
+                    <td className="manage-content-task-name-column">
                       <div className="task-name-cell">
                         <div className="status-dot published"></div>
                         <span>Definition of Entrepreneurship</span>
