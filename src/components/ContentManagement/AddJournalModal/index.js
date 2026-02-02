@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import './AddJournalModal.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
@@ -10,9 +10,33 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
     const [activeTab, setActiveTab] = useState('names') // 'names' or 'details'
     const [isIconDropdownOpen, setIsIconDropdownOpen] = useState(false)
     const [sections, setSections] = useState([
-        { id: 1, name: '' },
-        { id: 2, name: '' }
+        { id: 1, name: '', detailsText: '', detailsRich: '' },
+        { id: 2, name: '', detailsText: '', detailsRich: '' }
     ])
+
+    // Function to send complete journal data to API
+    const sendJournalDataToAPI = useCallback(async (journalData) => {
+        try {
+            const response = await fetch('/journalnewcontent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...journalData,
+                    timestamp: new Date().toISOString()
+                })
+            })
+
+            if (!response.ok) {
+                console.error('Failed to send journal data to API:', response.statusText)
+            } else {
+                console.log('Journal data sent successfully to API')
+            }
+        } catch (error) {
+            console.error('Error sending journal data to API:', error)
+        }
+    }, [])
 
     const iconOptions = [
         {
@@ -61,7 +85,9 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
     const handleAddSection = () => {
         const newSection = {
             id: sections.length + 1,
-            name: ''
+            name: '',
+            detailsText: '',
+            detailsRich: ''
         }
         setSections([...sections, newSection])
     }
@@ -75,6 +101,18 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
     const handleSectionNameChange = (id, value) => {
         setSections(sections.map(section =>
             section.id === id ? { ...section, name: value } : section
+        ))
+    }
+
+    const handleSectionDetailsTextChange = (id, value) => {
+        setSections(sections.map(section =>
+            section.id === id ? { ...section, detailsText: value } : section
+        ))
+    }
+
+    const handleSectionDetailsRichChange = (id, value) => {
+        setSections(sections.map(section =>
+            section.id === id ? { ...section, detailsRich: value } : section
         ))
     }
 
@@ -113,17 +151,25 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
     }
 
     const handleSave = () => {
-        // if (!validateForm()) {
-        //     alert('Please fill in all required fields: Journal Title, Icon, and Section Names')
-        //     return
-        // }
+        if (!validateForm()) {
+            alert('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            return
+        }
 
-        // Prepare journal data to pass to introduction modal
+        // Prepare journal data with sections including their individual details
         const journalData = {
             title: journalTitle,
             icon: selectedIcon,
-            sections: sections
+            sections: sections.map(section => ({
+                id: section.id,
+                name: section.name,
+                detailsText: section.detailsText,
+                detailsRich: section.detailsRich
+            }))
         }
+
+        // Send journal data to API
+        sendJournalDataToAPI(journalData)
 
         // Call the callback to open introduction modal
         if (onProceedToIntroduction) {
@@ -135,7 +181,10 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
         // Reset form
         setJournalTitle('')
         setSelectedIcon('')
-        setSections([{ id: 1, name: '' }, { id: 2, name: '' }])
+        setSections([
+            { id: 1, name: '', detailsText: '', detailsRich: '' },
+            { id: 2, name: '', detailsText: '', detailsRich: '' }
+        ])
         setActiveTab('names')
         setIsIconDropdownOpen(false)
         onClose()
@@ -304,21 +353,50 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
                             {activeTab === 'details' && (
                                 <div className="sections-panel">
                                     <div className="sections-box">
-                                        <div className="section-details-placeholder">
-                                            <input style={{
-                                                border: '1px solid rgba(227, 229, 233, 0.50)',
-                                                borderRadius: '8px',
-                                                padding: '12px 18px',
-                                                width: '100%',
-                                                height: '100%',
-                                                fontSize: '16px',
-                                                fontWeight: '500',
-                                                color: '#333',
-                                                backgroundColor: 'transparent',
-                                                marginBottom: '10px',
-                                            }} type="text" placeholder="Add section details..." />
-                                            <ReactQuill />
-                                        </div>
+                                        {sections.map((section) => (
+                                            <div key={section.id} className="section-detail-item" style={{ marginBottom: '30px' }}>
+                                                <div className="section-header" style={{ marginBottom: '15px' }}>
+                                                    <div className="section-header-content">
+                                                        <div className="spark-icon">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                                <g clip-path="url(#clip0_4724_21225)">
+                                                                    <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" stroke-width="1.5" stroke-linejoin="round" />
+                                                                </g>
+                                                                <defs>
+                                                                    <clipPath id="clip0_4724_21225">
+                                                                        <rect width="20" height="20" fill="white" />
+                                                                    </clipPath>
+                                                                </defs>
+                                                            </svg>
+                                                        </div>
+                                                        <span>Section {section.id}: {section.name || 'Unnamed Section'}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="section-details-content">
+                                                    <input
+                                                        style={{
+                                                            border: '1px solid rgba(227, 229, 233, 0.50)',
+                                                            borderRadius: '8px',
+                                                            padding: '12px 18px',
+                                                            width: '100%',
+                                                            fontSize: '16px',
+                                                            fontWeight: '500',
+                                                            color: '#333',
+                                                            backgroundColor: 'transparent',
+                                                            marginBottom: '10px',
+                                                        }}
+                                                        type="text"
+                                                        placeholder="Add section details..."
+                                                        value={section.detailsText}
+                                                        onChange={(e) => handleSectionDetailsTextChange(section.id, e.target.value)}
+                                                    />
+                                                    <ReactQuill
+                                                        value={section.detailsRich}
+                                                        onChange={(value) => handleSectionDetailsRichChange(section.id, value)}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             )}
