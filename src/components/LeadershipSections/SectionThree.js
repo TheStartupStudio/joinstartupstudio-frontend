@@ -1,52 +1,128 @@
+import React, { useState, useEffect } from 'react'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
 import { NotesButton } from '../../components/Notes'
+import axiosInstance from '../../utils/AxiosInstance'
 
 
 function SectionThree({ setIsReflection }) {
+  const [journalData, setJournalData] = useState(null)
+  const [manageContentData, setManageContentData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
   setIsReflection(false)
-  const paragraphs = [
-    {
-      id: 1,
-      text: 'How do you prove yourself as a leader? It’s taking your ability to execute as a leader and turning your actions into outcomes through which you can communicate your value. In this section of your Leadership Journal, you will reflect on four specific areas that will determine how you can prove yourself as a leader: outcomes, feedback, iteration, and vision. Each of these components of leadership proof must be supported by your leadership identity established in the first section of this journal and your leadership execution in the second section of your journal. You are proving who you are and what you can do as a leader. You are learning how to communicate your identity and abilities as a leader. You are staking claims in the market as to the type of leadership and experience as a leader on which others can depend. As you seek out mentorship, remember that everyone has their own unique path, so be inspired and informed by others, but determine your own path towards leadership.'
-    },
-    {
-      id: 2,
-      text: 'How do you prove yourself as a leader? By putting solutions in the market that stand as repeatable outcomes that you can create. By actively seeking out and listening to feedback from your team and markets so you lead from an informed position. By embracing the process of iteration and applying feedback to increase the value of the outcomes on which you want others to depend. By envisioning the long-term reach and evolution of the solutions you create and leading others to see that vision and execute on it.'
-    },
-    {
-      id: 3,
-      text: 'Reflect on the breakdown of each of these leadership components, then take the time to start your journey of identifying and expressing each of them in the context of the leader version of you.'
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+
+        // Make both API calls
+        const [journalResponse, manageContentResponse] = await Promise.all([
+          axiosInstance.get('/ltsJournals/1001064/'),
+          axiosInstance.get('/manage-content/1')
+        ])
+
+        console.log('Journal API response:', journalResponse.data)
+        console.log('Manage Content API response:', manageContentResponse.data)
+
+        if (journalResponse) {
+          setJournalData(journalResponse.data)
+        }
+
+        if (manageContentResponse.data.success) {
+          setManageContentData(manageContentResponse.data.data)
+        }
+
+      } catch (err) {
+        console.error('Error fetching data:', err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    fetchData()
+  }, [])
+
+  console.log('journalData', journalData)
+
+  // Create paragraphs from API data
+  const paragraphs = React.useMemo(() => {
+    if (!journalData) return []
+
+    const content = journalData.content || ''
+
+    // Parse HTML content and extract text from <p> tags
+    const parseHTMLParagraphs = (htmlContent) => {
+      // Create a temporary DOM element to parse HTML
+      const tempDiv = document.createElement('div')
+      tempDiv.innerHTML = htmlContent
+
+      // Get all <p> elements
+      const pElements = tempDiv.querySelectorAll('p')
+
+      // Extract text content from each <p> element
+      return Array.from(pElements)
+        .map(p => p.textContent.trim())
+        .filter(text => text.length > 0)
+    }
+
+    const contentParagraphs = parseHTMLParagraphs(content)
+
+    return contentParagraphs.map((text, index) => ({
+      id: index + 1,
+      text: text
+    }))
+  }, [journalData])
+
+  if (loading) {
+    return (
+      <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
+        <div className='text-center py-5'>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className='mt-3'>Loading content...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
+        <div className='alert alert-danger text-center py-5'>
+          Error loading content: {error}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
       <div className='w-100'>
         <YourInstructor
-          instructorName={'DR. Leslie Williams'}
-          profilePic={
-            'https://s3-alpha-sig.figma.com/img/5281/edbe/057c844eb974d929552c412c8956de9c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=jtzM83EbGZBWpKQXVfDBL6Z4e7mbF7eog9obL16NgkFy1KNN7Mk4V9DPFN6498GnwRXbTm1FDWSUv4oGbOZIjXHxhu6ua0xXkv7J8Hl85kQmXVPbAqJuPGmjSsQr2dAmgSuVMlO1xcUV5BRmAvBmEnqJwKAt0~xEmAj4uyfHwRLuzsxidRb4HiVSBLXR5GkjOy1U2UGM4ycTtL3IAAFjlgRhYJ1qAE06tnmkIUr6p5OkRv0djxrDClPbTaLXaBTsrlclw6vo~ApVYvcJl63UzYD4fpHA6mmi5odfvnmzT1obUqtExKlr6fXjWsthlFRRJucaEfNfEqHg0GXoHnaOpQ__'
-          }
-          userProffesion={
-            'Group Head of Social Impact and EDIB at Nord Anglia Education'
-          }
-          videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 12 Section Three How Can I Prove It - V2.mov'}
-          thumbnailUrl={'https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/a0392214a623f13d0bf3dfaaf063dcf5-1747042878019.jpg'}
-          showInstructorInfo = {false}
+          instructorName={manageContentData?.instructorName || 'DR. Leslie Williams'}
+          profilePic={manageContentData?.instructorHeadshot || 'https://s3-alpha-sig.figma.com/img/5281/edbe/057c844eb974d929552c412c8956de9c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=jtzM83EbGZBWpKQXVfDBL6Z4e7mbF7eog9obL16NgkFy1KNN7Mk4V9DPFN6498GnwRXbTm1FDWSUv4oGbOZIjXHxhu6ua0xXkv7J8Hl85kQmXVPbAqJuPGmjSsQr2dAmgSuVMlO1xcUV5BRmAvBmEnqJwKAt0~xEmAj4uyfHwRLuzsxidRb4HiVSBLXR5GkjOy1U2UGM4ycTtL3IAAFjlgRhYJ1qAE06tnmkIUr6p5OkRv0djxrDClPbTaLXaBTsrlclw6vo~ApVYvcJl63UzYD4fpHA6mmi5odfvnmzT1obUqtExKlr6fXjWsthlFRRJucaEfNfEqHg0GXoHnaOpQ__'}
+          userProffesion={manageContentData?.instructorTitle || 'Group Head of Social Impact and EDIB at Nord Anglia Education'}
+          videoUrl={journalData?.videoId ? `https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 12 Section Three How Can I Prove It - V2.mov` : 'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 12 Section Three How Can I Prove It - V2.mov'}
+          thumbnailUrl={manageContentData?.videoThumbnail || 'https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/a0392214a623f13d0bf3dfaaf063dcf5-1747042878019.jpg'}
+          showInstructorInfo={false}
           customTitle="How do I prove it?"
         />
       </div>
       <NotesButton from="leadershipJournal"
                           data={{
-                            id: 1001064,
-                            title: 'Introduction to How do I prove it?'
+                            id: journalData?.id || 1001064,
+                            title: journalData?.title || 'Introduction to How do I prove it?'
                           }}
-                          createdFrom={'Introduction to How do I prove it?'}
-                          journalId={1001064} 
+                          createdFrom={journalData?.title || 'Introduction to How do I prove it?'}
+                          journalId={journalData?.id || 1001064}
                     />
       <SectionsWrapper
-        title={'Introduction to How do I prove it?'}
+        title={journalData?.title || 'Introduction to How do I prove it?'}
         paragraphs={paragraphs}
       />
     </div>

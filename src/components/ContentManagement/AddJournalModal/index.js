@@ -1,10 +1,18 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import './AddJournalModal.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
+import axiosInstance from '../../../utils/AxiosInstance'
 
-const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
+const AddJournalModal = ({
+    show,
+    onClose,
+    onProceedToIntroduction,
+    mode = 'add', // 'add', 'edit', 'view'
+    existingData = null,
+    contentId = null
+}) => {
     const [journalTitle, setJournalTitle] = useState('')
     const [selectedIcon, setSelectedIcon] = useState('')
     const [activeTab, setActiveTab] = useState('names') // 'names' or 'details'
@@ -13,32 +21,199 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
         { id: 1, name: '', detailsText: '', detailsRich: '' },
         { id: 2, name: '', detailsText: '', detailsRich: '' }
     ])
+    const [loading, setLoading] = useState(false)
 
-    // Function to send complete journal data to API
-    const sendJournalDataToAPI = useCallback(async (journalData) => {
+    // Function to fetch existing journal data
+    const fetchJournalData = useCallback(async (id) => {
         try {
-            const response = await fetch('/journalnewcontent', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...journalData,
-                    timestamp: new Date().toISOString()
-                })
-            })
-
-            if (!response.ok) {
-                console.error('Failed to send journal data to API:', response.statusText)
+            setLoading(true)
+            const response = await axiosInstance.get(`/manage-content/full/${id}`)
+            if (response.data.success) {
+                return response.data.data
             } else {
-                console.log('Journal data sent successfully to API')
+                throw new Error('Failed to fetch journal data')
             }
         } catch (error) {
-            console.error('Error sending journal data to API:', error)
+            console.error('Error fetching journal data:', error)
+            throw error
+        } finally {
+            setLoading(false)
         }
     }, [])
 
+    const initializeFormData = useCallback((data) => {
+        console.log('Initializing form data:', data)
+
+        if (data.manageContent) {
+            console.log('Setting journal title:', data.manageContent.title, 'icon:', data.manageContent.icon)
+            setJournalTitle(data.manageContent.title || '')
+            setSelectedIcon(data.manageContent.icon || '')
+        }
+
+        if (data.journalLevels && Array.isArray(data.journalLevels)) {
+            console.log('Processing journal levels:', data.journalLevels.length)
+            const mappedSections = data.journalLevels.map((level, index) => {
+                // Get content from the first related journal if it exists
+                const htmlContent = level.relatedJournals && level.relatedJournals.length > 0
+                    ? level.relatedJournals[0].content || ''
+                    : '';
+
+                // Extract plain text from HTML for detailsText
+                const plainText = htmlContent.replace(/<[^>]*>/g, '').trim();
+
+                console.log(`Section ${index + 1}:`, level.title, 'HTML content length:', htmlContent.length, 'Plain text length:', plainText.length)
+
+                return {
+                    id: level.id || (index + 1),
+                    journalId: level.relatedJournals && level.relatedJournals.length > 0 ? level.relatedJournals[0].id : null,
+                    name: level.title || '',
+                    detailsText: plainText, // Plain text extracted from HTML
+                    detailsRich: htmlContent // Full HTML content
+                };
+            })
+            console.log('Mapped sections:', mappedSections)
+            setSections(mappedSections.length > 0 ? mappedSections : [
+                { id: 1, journalId: null, name: '', detailsText: '', detailsRich: '' },
+                { id: 2, journalId: null, name: '', detailsText: '', detailsRich: '' }
+            ])
+        } else {
+            console.log('No journal levels found')
+        }
+    }, [])
+
+    const resetForm = useCallback(() => {
+        setJournalTitle('')
+        setSelectedIcon('')
+        setSections([
+            { id: 1, journalId: null, name: '', detailsText: '', detailsRich: '' },
+            { id: 2, journalId: null, name: '', detailsText: '', detailsRich: '' }
+        ])
+        setActiveTab('names')
+        setIsIconDropdownOpen(false)
+    }, [])
+
+    const isMountedRef = useRef(true)
+
+    // Initialize form data based on mode and existing data
+    useEffect(() => {
+        console.log('useEffect triggered:', { mode, existingData: !!existingData, contentId, show })
+
+        if (mode === 'edit' || mode === 'view') {
+            if (existingData) {
+                console.log('Using existing data prop')
+                // Initialize from existing data prop
+                initializeFormData(existingData)
+            } else if (contentId) {
+                console.log('Fetching data from API for contentId:', contentId)
+                // Fetch data from API
+                fetchJournalData(contentId).then(data => {
+                    if (isMountedRef.current) {
+                        console.log('Data fetched successfully:', data)
+                        initializeFormData(data)
+                    }
+                }).catch(error => {
+                    if (isMountedRef.current) {
+                        console.error('Failed to load journal data:', error)
+                        alert(`Failed to load journal data: ${error.message}`)
+                    }
+                })
+            } else {
+                console.log('No existingData or contentId provided for edit/view mode')
+            }
+        } else {
+            console.log('Resetting form for add mode')
+            // Reset form for add mode
+            resetForm()
+        }
+
+        return () => {
+            isMountedRef.current = false
+        }
+    }, [mode, existingData, contentId, fetchJournalData, initializeFormData, resetForm])
+
+    // Function to send complete journal data to API
+    const sendJournalDataToAPI = useCallback(async (journalData, isEdit = false) => {
+        try {
+            const url = isEdit && contentId ? `/manage-content/full/${contentId}` : '/journalnewcontent'
+
+            const payload = isEdit ? {
+                manageContent: {
+                    title: journalData.title,
+                    icon: journalData.icon
+                },
+                journalLevels: journalData.sections.map(section => ({
+                    id: section.id,
+                    title: section.name,
+                    detailsText: section.detailsText,
+                    order: section.id,
+                    published: true,
+                    category: 'student-leadership',
+                    content: section.detailsRich || '' // Include content in the payload
+                }))
+            } : {
+                ...journalData,
+                timestamp: new Date().toISOString()
+            }
+
+            const response = await axiosInstance({
+                method: isEdit ? 'put' : 'post',
+                url,
+                data: payload
+            })
+
+            if (response.data.success) {
+                console.log(`Journal data ${isEdit ? 'updated' : 'sent'} successfully to API`)
+
+                // If editing, also update the journal content separately
+                if (isEdit) {
+                    console.log('Updating journal content separately...')
+                    console.log('Number of sections to update:', journalData.sections.length)
+                    for (const section of journalData.sections) {
+                        console.log(`Checking section ${section.id}: detailsRich exists: ${!!section.detailsRich}, journalId: ${section.journalId}`)
+                        if (section.detailsRich && section.journalId) {
+                            try {
+                                const contentPayload = {
+                                    content: section.detailsRich
+                                }
+
+                                console.log(`Updating journal ${section.journalId} with content:`, section.detailsRich.substring(0, 50) + '...')
+                                console.log('Full content payload:', contentPayload)
+
+                                const contentResponse = await axiosInstance.put(`/ltsJournals/${section.journalId}`, contentPayload)
+                                console.log(`Journal ${section.journalId} content update response:`, contentResponse)
+                                console.log(`Journal ${section.journalId} content updated successfully`)
+                            } catch (contentError) {
+                                console.error(`Failed to update content for journal ${section.journalId}:`, contentError)
+                                console.error('Error details:', contentError.response?.data || contentError.message)
+                                // Don't throw here, continue with other updates
+                            }
+                        } else {
+                            console.log(`Skipping section update - detailsRich: ${!!section.detailsRich}, journalId: ${section.journalId}`)
+                        }
+                    }
+                }
+
+                return response.data
+            } else {
+                throw new Error(`Failed to ${isEdit ? 'update' : 'send'} journal data to API`)
+            }
+        } catch (error) {
+            console.error(`Error ${isEdit ? 'updating' : 'sending'} journal data to API:`, error)
+            throw error
+        }
+    }, [contentId])
+
     const iconOptions = [
+        {
+            id: 'leader',
+            name: 'Leader',
+            svg: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 2C12.6863 2 10 4.68629 10 8C10 11.3137 12.6863 14 16 14C19.3137 14 22 11.3137 22 8C22 4.68629 19.3137 2 16 2Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 30V22C8 19.7909 9.79086 18 12 18H20C22.2091 18 24 19.7909 24 22V30" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 10C12 8.89543 12.8954 8 14 8" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M20 10C20 8.89543 19.1046 8 18 8" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+        },
         {
             id: 'book',
             name: 'Book/Document',
@@ -80,50 +255,53 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
         }
     ]
 
-    if (!show) return null
+    const handleAddSection = useCallback(() => {
+        setSections(prevSections => {
+            const newSection = {
+                id: prevSections.length + 1,
+                name: '',
+                detailsText: '',
+                detailsRich: ''
+            }
+            return [...prevSections, newSection]
+        })
+    }, [])
 
-    const handleAddSection = () => {
-        const newSection = {
-            id: sections.length + 1,
-            name: '',
-            detailsText: '',
-            detailsRich: ''
-        }
-        setSections([...sections, newSection])
-    }
+    const handleDeleteSection = useCallback((id) => {
+        setSections(prevSections => {
+            if (prevSections.length > 1) {
+                return prevSections.filter(section => section.id !== id)
+            }
+            return prevSections
+        })
+    }, [])
 
-    const handleDeleteSection = (id) => {
-        if (sections.length > 1) {
-            setSections(sections.filter(section => section.id !== id))
-        }
-    }
-
-    const handleSectionNameChange = (id, value) => {
-        setSections(sections.map(section =>
+    const handleSectionNameChange = useCallback((id, value) => {
+        setSections(prevSections => prevSections.map(section =>
             section.id === id ? { ...section, name: value } : section
         ))
-    }
+    }, [])
 
-    const handleSectionDetailsTextChange = (id, value) => {
-        setSections(sections.map(section =>
+    const handleSectionDetailsTextChange = useCallback((id, value) => {
+        setSections(prevSections => prevSections.map(section =>
             section.id === id ? { ...section, detailsText: value } : section
         ))
-    }
+    }, [])
 
-    const handleSectionDetailsRichChange = (id, value) => {
-        setSections(sections.map(section =>
+    const handleSectionDetailsRichChange = useCallback((id, value) => {
+        setSections(prevSections => prevSections.map(section =>
             section.id === id ? { ...section, detailsRich: value } : section
         ))
-    }
+    }, [])
 
-    const handleIconSelect = (iconId) => {
+    const handleIconSelect = useCallback((iconId) => {
         setSelectedIcon(iconId)
         setIsIconDropdownOpen(false)
-    }
+    }, [])
 
-    const handleIconDropdownToggle = () => {
+    const handleIconDropdownToggle = useCallback(() => {
         setIsIconDropdownOpen(!isIconDropdownOpen)
-    }
+    }, [isIconDropdownOpen])
 
     const getSelectedIconSvg = () => {
         const selectedOption = iconOptions.find(option => option.id === selectedIcon)
@@ -150,50 +328,77 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
         return true
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        if (mode === 'view') return // No save action in view mode
+
         if (!validateForm()) {
             alert('Please fill in all required fields: Journal Title, Icon, and Section Names')
             return
         }
 
-        // Prepare journal data with sections including their individual details
-        const journalData = {
-            title: journalTitle,
-            icon: selectedIcon,
-            sections: sections.map(section => ({
-                id: section.id,
-                name: section.name,
-                detailsText: section.detailsText,
-                detailsRich: section.detailsRich
-            }))
-        }
+        setLoading(true)
 
-        // Send journal data to API
-        sendJournalDataToAPI(journalData)
+        try {
+            // Prepare journal data with sections including their individual details
+            const journalData = {
+                title: journalTitle,
+                icon: selectedIcon,
+                sections: sections.map(section => ({
+                    id: section.id,
+                    journalId: section.journalId,
+                    name: section.name,
+                    detailsText: section.detailsText,
+                    detailsRich: section.detailsRich
+                }))
+            }
 
-        // Call the callback to open introduction modal
-        if (onProceedToIntroduction) {
-            onProceedToIntroduction(journalData)
+            console.log('Saving journal data:', journalData)
+
+            // Send journal data to API
+            const result = await sendJournalDataToAPI(journalData, mode === 'edit')
+
+            if (mode === 'add' && onProceedToIntroduction) {
+                // For add mode, proceed to introduction modal
+                onProceedToIntroduction(journalData)
+            } else if (mode === 'edit') {
+                // For edit mode, close modal and show success message
+                alert('Journal updated successfully!')
+                onClose()
+            }
+        } catch (error) {
+            alert(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
+        } finally {
+            setLoading(false)
         }
     }
 
     const handleCancel = () => {
-        // Reset form
-        setJournalTitle('')
-        setSelectedIcon('')
-        setSections([
-            { id: 1, name: '', detailsText: '', detailsRich: '' },
-            { id: 2, name: '', detailsText: '', detailsRich: '' }
-        ])
-        setActiveTab('names')
-        setIsIconDropdownOpen(false)
+        if (mode === 'add') {
+            // Reset form for add mode
+            resetForm()
+        }
+        // For edit/view mode, just close without resetting
         onClose()
     }
 
+    if (!show) return null
+
     return (
-        <div className="add-journal-modal-overlay">
-            <div className="add-journal-modal">
-                <div className="modal-header">
+        <>
+            {loading && (
+                <div className="loading-overlay">
+                    <div className="loading-spinner">
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading journal data...</p>
+                    </div>
+                </div>
+            )}
+
+            <div className="add-journal-modal-overlay">
+                <div className="add-journal-modal">
+                    <div className="modal-header">
                     <div className="circle-icon-heading">
                         <div className="circle-icon">
                             <div className="icon-circle-bg">
@@ -204,7 +409,9 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
                                 </svg>
                             </div>
                         </div>
-                        <p className="modal-title">Add New Journal</p>
+                        <p className="modal-title">
+                            {mode === 'view' ? 'View Journal' : mode === 'edit' ? 'Edit Journal' : 'Add New Journal'}
+                        </p>
                     </div>
                 </div>
 
@@ -236,10 +443,11 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
                                         value={journalTitle}
                                         onChange={(e) => setJournalTitle(e.target.value)}
                                         className="journal-input"
+                                        disabled={mode === 'view'}
                                     />
                                     <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
                                 </div>
-                                <div className="input-box icon-select" onClick={handleIconDropdownToggle}>
+                                <div className="input-box icon-select" onClick={mode !== 'view' ? handleIconDropdownToggle : undefined} style={{ cursor: mode === 'view' ? 'default' : 'pointer' }}>
                                     {selectedIcon ? (
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -311,13 +519,15 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
 
                                         {sections.map((section, index) => (
                                             <div key={section.id} className="section-row">
-                                                <div className="reorder-icon">
-                                                    <div className="reorder-lines">
-                                                        <span></span>
-                                                        <span></span>
-                                                        <span></span>
+                                                {mode === 'add' && (
+                                                    <div className="reorder-icon">
+                                                        <div className="reorder-lines">
+                                                            <span></span>
+                                                            <span></span>
+                                                            <span></span>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                )}
                                                 <div className="input-box flex-1">
                                                     <input
                                                         type="text"
@@ -325,27 +535,35 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
                                                         value={section.name}
                                                         onChange={(e) => handleSectionNameChange(section.id, e.target.value)}
                                                         className="section-input"
+                                                        disabled={mode === 'view'}
                                                     />
                                                     <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
                                                 </div>
-                                                <button
-                                                    className="delete-btn"
-                                                    onClick={() => handleDeleteSection(section.id)}
-                                                    disabled={sections.length === 1}
-                                                >
-                                                    <FontAwesomeIcon icon={faTrash} />
-                                                </button>
+                                                {mode === 'add' && (
+                                                    <button
+                                                        className="delete-btn"
+                                                        onClick={() => handleDeleteSection(section.id)}
+                                                        disabled={sections.length === 1}
+                                                    >
+                                                        <FontAwesomeIcon icon={faTrash} />
+                                                    </button>
+                                                )}
                                             </div>
                                         ))}
 
-                                        <div className="add-section-footer">
-                                            <button className="add-new-section-btn" onClick={handleAddSection}>
-                                                <span>Add New Section</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                    <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </svg>
-                                            </button>
-                                        </div>
+                                        {mode === 'add' && (
+                                            <div className="add-section-footer">
+                                                <button
+                                                    className="add-new-section-btn"
+                                                    onClick={handleAddSection}
+                                                >
+                                                    <span>Add New Section</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -373,7 +591,7 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
                                                     </div>
                                                 </div>
                                                 <div className="section-details-content">
-                                                    <input
+                                                    {/* <input
                                                         style={{
                                                             border: '1px solid rgba(227, 229, 233, 0.50)',
                                                             borderRadius: '8px',
@@ -389,10 +607,12 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
                                                         placeholder="Add section details..."
                                                         value={section.detailsText}
                                                         onChange={(e) => handleSectionDetailsTextChange(section.id, e.target.value)}
-                                                    />
+                                                        disabled={mode === 'view'}
+                                                    /> */}
                                                     <ReactQuill
                                                         value={section.detailsRich}
                                                         onChange={(value) => handleSectionDetailsRichChange(section.id, value)}
+                                                        readOnly={mode === 'view'}
                                                     />
                                                 </div>
                                             </div>
@@ -407,14 +627,17 @@ const AddJournalModal = ({ show, onClose, onProceedToIntroduction }) => {
                 {/* Actions */}
                 <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
                         <button className="cancel-btn" onClick={handleCancel}>
-                            Cancel
+                            {mode === 'view' ? 'Close' : 'Cancel'}
                         </button>
-                        <button className="save-btn" onClick={handleSave}>
-                            Save
-                        </button>
+                        {mode !== 'view' && (
+                            <button className="save-btn" onClick={handleSave} disabled={loading}>
+                                {loading ? 'Saving...' : (mode === 'edit' ? 'Update' : 'Save')}
+                            </button>
+                        )}
                     </div>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

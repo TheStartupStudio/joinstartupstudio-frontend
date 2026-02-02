@@ -24,8 +24,6 @@ function SectionOne({ setIsReflection }) {
     const fetchContent = async () => {
       try {
         const response = await axiosInstance.get('/manage-content/1')
-        console.log('API Response Data:', response.data)
-        console.log('API Response Data.data:', response.data.data)
         setContentData(response.data.data || response.data)
         setLoading(false)
       } catch (error) {
@@ -42,14 +40,10 @@ function SectionOne({ setIsReflection }) {
   const renderIntroDescription = (description) => {
     if (!description) return null
 
-    console.log('Rendering introDescription:', description)
-
     // For now, let's try to render just the text content and keep accordion as JSX
     // Extract text content before the accordion
     const parts = description.split('<div className=\'accordion mt-3\'')
     const textContent = parts[0]
-
-    console.log('Text content extracted:', textContent)
 
     return (
       <>
