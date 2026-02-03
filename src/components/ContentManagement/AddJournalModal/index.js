@@ -325,31 +325,57 @@ const AddJournalModal = ({
         setLoading(true)
 
         try {
+            // Prepare data for the new /full endpoint
             const journalData = {
-                title: journalTitle,
-                icon: selectedIcon,
-                sections: sections.map(section => ({
-                    id: section.id,
-                    journalId: section.journalId,
-                    name: section.name,
-                    detailsText: section.detailsText,
-                    detailsRich: section.detailsRich
-                }))
+                manageContent: {
+                    ...(mode === 'edit' && contentId ? { id: contentId } : {}),
+                    title: journalTitle,
+                    icon: selectedIcon
+                    // Other fields will be added in AddJournalIntroduction
+                },
+                // Only send journalLevels for new journal creation, not for updates
+                ...(mode === 'add' ? {
+                    journalLevels: sections
+                        .filter(section => section.name && section.name.trim() !== '')
+                        .map((section, index) => ({
+                            title: section.name,
+                            order: index + 1,
+                            published: true,
+                            category: 'student-leadership',
+                            detailsText: section.detailsText,
+                            content: section.detailsRich || ''
+                        }))
+                } : {})
             }
 
             console.log('Saving journal data:', journalData)
 
-            const result = await sendJournalDataToAPI(journalData, mode === 'edit')
+            let response
+            if (mode === 'edit' && contentId) {
+                // Use PUT for updating existing journal
+                response = await axiosInstance.put(`/manage-content/full/${contentId}`, journalData)
+                console.log('Journal updated successfully:', response.data.data)
+            } else {
+                // Use POST for creating new journal
+                response = await axiosInstance.post('/manage-content/full', journalData)
+                console.log('Journal created successfully:', response.data.data)
+            }
 
-            if (mode === 'add' && onProceedToIntroduction) {
-                onProceedToIntroduction(journalData)
-            } else if (mode === 'edit') {
-                if (onProceedToIntroduction) {
-                    onProceedToIntroduction(existingData || journalData)
-                } else {
-                    alert('Journal updated successfully!')
+            if (response.data.success) {
+                if (mode === 'add') {
+                    // For new journal creation, just show success and close
+                    alert('Journal created successfully!')
                     onClose()
+                } else if (mode === 'edit') {
+                    if (onProceedToIntroduction) {
+                        onProceedToIntroduction(response.data.data)
+                    } else {
+                        alert('Journal updated successfully!')
+                        onClose()
+                    }
                 }
+            } else {
+                throw new Error(response.data.error || 'Failed to save journal')
             }
         } catch (error) {
             alert(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
