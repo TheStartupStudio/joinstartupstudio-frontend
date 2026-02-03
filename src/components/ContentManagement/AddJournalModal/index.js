@@ -9,13 +9,13 @@ const AddJournalModal = ({
     show,
     onClose,
     onProceedToIntroduction,
-    mode = 'add', // 'add', 'edit', 'view'
+    mode = 'add', 
     existingData = null,
     contentId = null
 }) => {
     const [journalTitle, setJournalTitle] = useState('')
     const [selectedIcon, setSelectedIcon] = useState('')
-    const [activeTab, setActiveTab] = useState('names') // 'names' or 'details'
+    const [activeTab, setActiveTab] = useState('names') 
     const [isIconDropdownOpen, setIsIconDropdownOpen] = useState(false)
     const [sections, setSections] = useState([
         { id: 1, name: '', detailsText: '', detailsRich: '' },
@@ -23,7 +23,6 @@ const AddJournalModal = ({
     ])
     const [loading, setLoading] = useState(false)
 
-    // Function to fetch existing journal data
     const fetchJournalData = useCallback(async (id) => {
         try {
             setLoading(true)
@@ -53,12 +52,10 @@ const AddJournalModal = ({
         if (data.journalLevels && Array.isArray(data.journalLevels)) {
             console.log('Processing journal levels:', data.journalLevels.length)
             const mappedSections = data.journalLevels.map((level, index) => {
-                // Get content from the first related journal if it exists
                 const htmlContent = level.relatedJournals && level.relatedJournals.length > 0
                     ? level.relatedJournals[0].content || ''
                     : '';
 
-                // Extract plain text from HTML for detailsText
                 const plainText = htmlContent.replace(/<[^>]*>/g, '').trim();
 
                 console.log(`Section ${index + 1}:`, level.title, 'HTML content length:', htmlContent.length, 'Plain text length:', plainText.length)
@@ -67,8 +64,8 @@ const AddJournalModal = ({
                     id: level.id || (index + 1),
                     journalId: level.relatedJournals && level.relatedJournals.length > 0 ? level.relatedJournals[0].id : null,
                     name: level.title || '',
-                    detailsText: plainText, // Plain text extracted from HTML
-                    detailsRich: htmlContent // Full HTML content
+                    detailsText: plainText,
+                    detailsRich: htmlContent
                 };
             })
             console.log('Mapped sections:', mappedSections)
@@ -94,18 +91,15 @@ const AddJournalModal = ({
 
     const isMountedRef = useRef(true)
 
-    // Initialize form data based on mode and existing data
     useEffect(() => {
         console.log('useEffect triggered:', { mode, existingData: !!existingData, contentId, show })
 
         if (mode === 'edit' || mode === 'view') {
             if (existingData) {
                 console.log('Using existing data prop')
-                // Initialize from existing data prop
                 initializeFormData(existingData)
             } else if (contentId) {
                 console.log('Fetching data from API for contentId:', contentId)
-                // Fetch data from API
                 fetchJournalData(contentId).then(data => {
                     if (isMountedRef.current) {
                         console.log('Data fetched successfully:', data)
@@ -122,7 +116,6 @@ const AddJournalModal = ({
             }
         } else {
             console.log('Resetting form for add mode')
-            // Reset form for add mode
             resetForm()
         }
 
@@ -131,7 +124,6 @@ const AddJournalModal = ({
         }
     }, [mode, existingData, contentId, fetchJournalData, initializeFormData, resetForm])
 
-    // Function to send complete journal data to API
     const sendJournalDataToAPI = useCallback(async (journalData, isEdit = false) => {
         try {
             const url = isEdit && contentId ? `/manage-content/full/${contentId}` : '/journalnewcontent'
@@ -148,7 +140,7 @@ const AddJournalModal = ({
                     order: section.id,
                     published: true,
                     category: 'student-leadership',
-                    content: section.detailsRich || '' // Include content in the payload
+                    content: section.detailsRich || '' 
                 }))
             } : {
                 ...journalData,
@@ -164,7 +156,6 @@ const AddJournalModal = ({
             if (response.data.success) {
                 console.log(`Journal data ${isEdit ? 'updated' : 'sent'} successfully to API`)
 
-                // If editing, also update the journal content separately
                 if (isEdit) {
                     console.log('Updating journal content separately...')
                     console.log('Number of sections to update:', journalData.sections.length)
@@ -185,7 +176,6 @@ const AddJournalModal = ({
                             } catch (contentError) {
                                 console.error(`Failed to update content for journal ${section.journalId}:`, contentError)
                                 console.error('Error details:', contentError.response?.data || contentError.message)
-                                // Don't throw here, continue with other updates
                             }
                         } else {
                             console.log(`Skipping section update - detailsRich: ${!!section.detailsRich}, journalId: ${section.journalId}`)
@@ -207,12 +197,11 @@ const AddJournalModal = ({
         {
             id: 'leader',
             name: 'Leader',
-            svg: <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <path d="M16 2C12.6863 2 10 4.68629 10 8C10 11.3137 12.6863 14 16 14C19.3137 14 22 11.3137 22 8C22 4.68629 19.3137 2 16 2Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M8 30V22C8 19.7909 9.79086 18 12 18H20C22.2091 18 24 19.7909 24 22V30" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 10C12 8.89543 12.8954 8 14 8" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M20 10C20 8.89543 19.1046 8 18 8" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            svg: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M14.5 2H4.5C4.23478 2 3.98043 2.10536 3.79289 2.29289C3.60536 2.48043 3.5 2.73478 3.5 3V21C3.5 21.2652 3.60536 21.5196 3.79289 21.7071C3.98043 21.8946 4.23478 22 4.5 22H18.5C18.7652 22 19.0196 21.8946 19.2071 21.7071C19.3946 21.5196 19.5 21.2652 19.5 21V10.0025" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6.5 9H10.5M6.5 14H12.5" stroke="black" stroke-width="2" stroke-linecap="round"/>
+            <path d="M20.5 3L14.5015 8.9975" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         },
         {
             id: 'book',
@@ -309,17 +298,14 @@ const AddJournalModal = ({
     }
 
     const validateForm = () => {
-        // Check if journal title is filled
         if (!journalTitle.trim()) {
             return false
         }
 
-        // Check if icon is selected
         if (!selectedIcon) {
             return false
         }
 
-        // Check if all sections have names
         const hasEmptySections = sections.some(section => !section.name.trim())
         if (hasEmptySections) {
             return false
@@ -329,7 +315,7 @@ const AddJournalModal = ({
     }
 
     const handleSave = async () => {
-        if (mode === 'view') return // No save action in view mode
+        if (mode === 'view') return 
 
         if (!validateForm()) {
             alert('Please fill in all required fields: Journal Title, Icon, and Section Names')
@@ -339,7 +325,6 @@ const AddJournalModal = ({
         setLoading(true)
 
         try {
-            // Prepare journal data with sections including their individual details
             const journalData = {
                 title: journalTitle,
                 icon: selectedIcon,
@@ -354,16 +339,17 @@ const AddJournalModal = ({
 
             console.log('Saving journal data:', journalData)
 
-            // Send journal data to API
             const result = await sendJournalDataToAPI(journalData, mode === 'edit')
 
             if (mode === 'add' && onProceedToIntroduction) {
-                // For add mode, proceed to introduction modal
                 onProceedToIntroduction(journalData)
             } else if (mode === 'edit') {
-                // For edit mode, close modal and show success message
-                alert('Journal updated successfully!')
-                onClose()
+                if (onProceedToIntroduction) {
+                    onProceedToIntroduction(existingData || journalData)
+                } else {
+                    alert('Journal updated successfully!')
+                    onClose()
+                }
             }
         } catch (error) {
             alert(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
@@ -374,10 +360,8 @@ const AddJournalModal = ({
 
     const handleCancel = () => {
         if (mode === 'add') {
-            // Reset form for add mode
             resetForm()
         }
-        // For edit/view mode, just close without resetting
         onClose()
     }
 

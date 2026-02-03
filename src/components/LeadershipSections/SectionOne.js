@@ -14,12 +14,10 @@ function SectionOne({ setIsReflection }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Move the setIsReflection call to useEffect to avoid calling it during render
   useEffect(() => {
     setIsReflection(false)
   }, [setIsReflection])
 
-  // API call to fetch manage-content/1
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -36,12 +34,9 @@ function SectionOne({ setIsReflection }) {
   }, [])
   const [openAccordion, setOpenAccordion] = useState(null)
 
-  // Function to render intro description content
   const renderIntroDescription = (description) => {
     if (!description) return null
 
-    // For now, let's try to render just the text content and keep accordion as JSX
-    // Extract text content before the accordion
     const parts = description.split('<div className=\'accordion mt-3\'')
     const textContent = parts[0]
 
@@ -201,6 +196,7 @@ function SectionOne({ setIsReflection }) {
       </div>
     )
   }
+
 
   return (
     <div className='leadership-layout d-grid gap-5 grid-col-1-mob '>

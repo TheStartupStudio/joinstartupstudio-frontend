@@ -611,3 +611,39 @@
   border-radius: 8px;
   object-fit: cover;
 }
+
+.add-journal-instructor-modal-overlay .headshot-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.add-journal-instructor-modal-overlay .upload-preview-headshot {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 140px;
+}
+
+.add-journal-instructor-modal-overlay .upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  min-height: 120px;
+}
+
+.add-journal-instructor-modal-overlay .upload-area:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}

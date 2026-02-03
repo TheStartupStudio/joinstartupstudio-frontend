@@ -21,7 +21,6 @@ const ManageContentSite = () => {
   const [selectedJournalData, setSelectedJournalData] = useState(null)
   const [selectedContentId, setSelectedContentId] = useState(null)
 
-  // Content management state
   const [contents, setContents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -29,7 +28,6 @@ const ManageContentSite = () => {
   const [showEditModal, setShowEditModal] = useState(false)
   const [editFormData, setEditFormData] = useState({})
 
-  // Edit Content Form Component
   const EditContentForm = ({ content, onSave, onCancel }) => {
     const handleChange = (e) => {
       const { name, value } = e.target
@@ -44,7 +42,6 @@ const ManageContentSite = () => {
       onSave(editFormData)
     }
 
-    // Initialize form data when content changes
     React.useEffect(() => {
       if (content) {
         setEditFormData({
@@ -174,7 +171,6 @@ const ManageContentSite = () => {
   ]
 
   const handleSearch = (e) => {
-    // Static implementation - no functionality
   }
 
   const handleOpenAddJournalModal = () => {
@@ -199,7 +195,6 @@ const ManageContentSite = () => {
     setJournalData(null)
   }
 
-  // API Functions
   const fetchContents = async () => {
     try {
       setLoading(true)
@@ -231,7 +226,6 @@ const ManageContentSite = () => {
       const response = await axiosInstance.put(`/manage-content/${contentId}`, updateData)
       if (response.data.success) {
         toast.success('Content updated successfully')
-        // Refresh the contents
         await fetchContents()
         setShowEditModal(false)
         setSelectedContent(null)
@@ -242,12 +236,10 @@ const ManageContentSite = () => {
     }
   }
 
-  // Load data on component mount
   useEffect(() => {
     fetchContents()
   }, [])
 
-  // Action handlers
   const handleViewContent = async (content) => {
     console.log('View clicked for content:', content)
     console.log('Available content properties:', Object.keys(content))
@@ -324,6 +316,8 @@ const ManageContentSite = () => {
         show={showAddJournalIntroductionModal}
         onClose={handleCloseAddJournalIntroductionModal}
         journalData={journalData}
+        mode={modalMode}
+        contentId={selectedContentId}
       />
 
       {/* Edit Content Modal */}
