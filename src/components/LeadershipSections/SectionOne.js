@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 import AccordionLead from '../../components/LeadershipJournal/AccordionLead'
 import SectionsWrapper from './SectionsWrapper'
@@ -10,6 +11,7 @@ import { NotesButton } from '../../components/Notes'
 
 
 function SectionOne({ setIsReflection }) {
+  const { id } = useParams()
   const [contentData, setContentData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -21,7 +23,9 @@ function SectionOne({ setIsReflection }) {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await axiosInstance.get('/manage-content/1')
+        // Use dynamic ID if available (journal courses), otherwise default to 1 (leadership journal)
+        const contentId = id || '1'
+        const response = await axiosInstance.get(`/manage-content/${contentId}`)
         setContentData(response.data.data || response.data)
         setLoading(false)
       } catch (error) {
@@ -31,7 +35,7 @@ function SectionOne({ setIsReflection }) {
       }
     }
     fetchContent()
-  }, [])
+  }, [id])
   const [openAccordion, setOpenAccordion] = useState(null)
 
   const renderIntroDescription = (description) => {
@@ -353,11 +357,11 @@ function SectionOne({ setIsReflection }) {
         <NotesButton
           from="leadershipJournal"
           data={{
-            id: contentData?.id || 1001061,
+            id: contentData?.id || parseInt(id) || 1001061,
             title: contentData?.introTitle || 'Welcome to the Leadership Journal'
           }}
           createdFrom={contentData?.introTitle || 'Welcome to the Leadership Journal'}
-          journalId={contentData?.id || 1001061}
+          journalId={contentData?.id || parseInt(id) || 1001061}
         />
         
       </SectionsWrapper>

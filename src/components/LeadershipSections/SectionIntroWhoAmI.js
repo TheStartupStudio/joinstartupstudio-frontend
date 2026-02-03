@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
 import { NotesButton } from '../../components/Notes'
@@ -6,6 +7,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 
 
 function IntroWhoAmI({ setIsReflection }) {
+  const { id } = useParams()
   const [journalData, setJournalData] = useState(null)
   const [manageContentData, setManageContentData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -18,10 +20,13 @@ function IntroWhoAmI({ setIsReflection }) {
       try {
         setLoading(true)
 
+        // Use dynamic ID if available (journal courses), otherwise default to 1 (leadership journal)
+        const contentId = id || '1'
+
         // Make both API calls
         const [journalResponse, manageContentResponse] = await Promise.all([
           axiosInstance.get('/ltsJournals/1001062/'),
-          axiosInstance.get('/manage-content/1')
+          axiosInstance.get(`/manage-content/${contentId}`)
         ])
 
         console.log('Manage Content API response:', manageContentResponse.data)
@@ -43,7 +48,7 @@ function IntroWhoAmI({ setIsReflection }) {
     }
 
     fetchData()
-  }, [])
+  }, [id])
 
   console.log('journalData', journalData)
 

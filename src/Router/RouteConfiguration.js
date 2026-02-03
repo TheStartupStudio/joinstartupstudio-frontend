@@ -171,6 +171,10 @@ const LeadershipJournal = React.lazy(() =>
   import('../pages/LeadershipJournal/index')
 )
 
+const JournalCourses = React.lazy(() =>
+  import('../pages/JournalCourses/index')
+)
+
 const AcademyPortfolio = React.lazy(() =>
   import('../pages/Academy-Portfolio/index')
 )
@@ -326,11 +330,16 @@ export const mutualRoutes = [
   { path: '/verify', component: VerifyEmail },
   { path: '/my-account', component: MyAccount, exact: true },
   { path: '/logout', component: Logout },
-  { 
-    path: '/leadership-journal', 
-    component: LeadershipJournal, 
+  {
+    path: '/leadership-journal',
+    component: LeadershipJournal,
     exact: true,
     requiresUniversitySetting: 'hasLeadershipJournal'
+  },
+  {
+    path: '/journal-courses/:id',
+    component: JournalCourses,
+    exact: true
   },
   {
     path: '/beyond-your-course',

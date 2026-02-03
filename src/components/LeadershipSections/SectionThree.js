@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
 import { NotesButton } from '../../components/Notes'
@@ -6,6 +7,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 
 
 function SectionThree({ setIsReflection }) {
+  const { id } = useParams()
   const [journalData, setJournalData] = useState(null)
   const [manageContentData, setManageContentData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -18,10 +20,13 @@ function SectionThree({ setIsReflection }) {
       try {
         setLoading(true)
 
+        // Use dynamic ID if available (journal courses), otherwise default to 1 (leadership journal)
+        const contentId = id || '1'
+
         // Make both API calls
         const [journalResponse, manageContentResponse] = await Promise.all([
           axiosInstance.get('/ltsJournals/1001064/'),
-          axiosInstance.get('/manage-content/1')
+          axiosInstance.get(`/manage-content/${contentId}`)
         ])
 
         console.log('Journal API response:', journalResponse.data)
@@ -44,7 +49,7 @@ function SectionThree({ setIsReflection }) {
     }
 
     fetchData()
-  }, [])
+  }, [id])
 
   console.log('journalData', journalData)
 
