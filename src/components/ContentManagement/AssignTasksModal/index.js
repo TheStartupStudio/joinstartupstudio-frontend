@@ -7,7 +7,7 @@ const AssignTasksModal = ({
   show,
   onHide,
   onSave,
-  type = 'content', 
+  type = 'content',
   levels = []
 }) => {
   const [taskAssignments, setTaskAssignments] = useState([])
@@ -24,8 +24,9 @@ const AssignTasksModal = ({
         endpoint = '/LtsJournals/entrepreneurship/unassigned-journals'
       } else if (type === 'masterclass') {
         endpoint = '/contents/master-class/unassigned-content'
-      } else if (type === 'leadership') {
-        endpoint = '/LtsJournals/leadership-journal/unassigned-journals'
+      } else {
+        // For dynamic categories, use the new generic endpoint
+        endpoint = `/LtsJournals/unassigned-journals-by-category?category=${type}`
       }
 
       const response = await axiosInstance.get(endpoint)
@@ -41,7 +42,7 @@ const AssignTasksModal = ({
         id: journal.id,
         title: journal.title,
         selectedLevel: '',
-        journalData: journal 
+        journalData: journal
       }))
 
       setTaskAssignments(assignments)
@@ -92,8 +93,8 @@ const AssignTasksModal = ({
     const assignments = taskAssignments
       .filter(assignment => assignment.selectedLevel !== '')
       .map(assignment => ({
-        contentId: assignment.id, 
-        journalId: assignment.id, 
+        contentId: assignment.id,
+        journalId: assignment.id,
         levelId: assignment.selectedLevel
       }))
 
@@ -107,6 +108,16 @@ const AssignTasksModal = ({
     onHide()
   }
 
+  const getCategoryDisplayName = () => {
+    const categoryNames = {
+      'content': 'Content',
+      'masterclass': 'Masterclass',
+      'Leadership Journal': 'Leadership Journal',
+      'test ground': 'Test Ground'
+    }
+    return categoryNames[type] || type.charAt(0).toUpperCase() + type.slice(1)
+  }
+
   return (
     <Modal show={show} onHide={handleClose} centered size="lg" className="assign-tasks-modal">
       <Modal.Body className="assign-tasks-modal-body">
@@ -117,11 +128,9 @@ const AssignTasksModal = ({
             <path d="M1.66016 15.833H4.16016M6.66016 15.833H4.16016M4.16016 15.833V13.333M4.16016 15.833V18.333" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
-        
+
         <h5 className="modal-title">
-          {type === 'content' ? 'Assign Content to Levels' :
-           type === 'masterclass' ? 'Assign Masterclass to Levels' :
-           'Assign Leadership Journal to Levels'}
+          Assign {getCategoryDisplayName()} Journal to Levels
         </h5>
 
         {loading && (
@@ -142,9 +151,7 @@ const AssignTasksModal = ({
         {!loading && !error && (
           <div className="form-group">
             <label className="form-label">
-              {type === 'content' ? 'UNASSIGNED CONTENT JOURNALS' :
-               type === 'masterclass' ? 'UNASSIGNED MASTERCLASS JOURNALS' :
-               'UNASSIGNED LEADERSHIP JOURNALS'}
+              UNASSIGNED {getCategoryDisplayName().toUpperCase()} JOURNALS
             </label>
 
             {taskAssignments.length === 0 ? (

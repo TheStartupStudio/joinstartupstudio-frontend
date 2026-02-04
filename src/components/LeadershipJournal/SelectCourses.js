@@ -31,22 +31,17 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder
 
   // If selected option doesn't exist in current options, auto-select first available option
   React.useEffect(() => {
-    console.log('ardi 37: SelectCourses useEffect - selectedOptionExists:', selectedOptionExists, 'processedOptions.length:', processedOptions.length);
     if (!selectedOptionExists && processedOptions.length > 0) {
       const firstAvailableOption = processedOptions.find(opt => !isDisabled(opt));
-      console.log('ardi 38: firstAvailableOption:', firstAvailableOption);
       if (firstAvailableOption) {
-        console.log('ardi 39: Auto-selecting first available option:', firstAvailableOption.value);
         setSelectedCourse((prev) => ({ ...prev, option: firstAvailableOption }));
       }
     }
   }, [selectedOptionExists, processedOptions, setSelectedCourse, isDisabled]);
 
   const handleChange = (selectedOption) => {
-    console.log('ardi 32: SelectCourses handleChange called with:', selectedOption?.value || selectedOption?.label)
     if (selectedOption.icon !== lockSign) {
       setSelectedCourse((prev) => ({ ...prev, option: selectedOption }))
-      console.log('ardi 33: SelectCourses setting new option:', selectedOption.value)
     }
   }
 
