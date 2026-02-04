@@ -103,11 +103,10 @@ const JournalCourses = memo(() => {
 
   useEffect(() => {
     if (contentData?.title) {
-      dispatch(fetchJournalFinishedContent(contentData.title));
       fetchLessons();
       setLoading(false);
     }
-  }, [dispatch, contentData?.title])
+  }, [contentData?.title])
 
   const sections = useMemo(() => {
     const result = {}

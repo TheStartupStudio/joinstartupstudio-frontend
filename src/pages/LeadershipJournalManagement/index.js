@@ -15,6 +15,7 @@ import greenLeader from '../../assets/images/academy-icons/green-leadership-jour
 import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file-copy-outline-rounded.svg'
 import axiosInstance from '../../utils/AxiosInstance'
 
+
 const LeadershipJournalManagement = () => {
   const dispatch = useDispatch()
   const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
@@ -40,20 +41,15 @@ const LeadershipJournalManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  // Manage content integration
-  const [selectedContent, setSelectedContent] = useState(null)
-  const [availableContent, setAvailableContent] = useState([])
-  const [contentLoading, setContentLoading] = useState(false)
-
-  // Fetch journal content for the active level based on selected content
+  // Fetch leadership journal content for the active level
   const fetchContentByLevel = async (levelId) => {
-    if (!levelId || !selectedContent) return
+    if (!levelId) return
 
     try {
       setLoading(true)
       const response = await axiosInstance.get('/LtsJournals/content-by-level', {
         params: {
-          category: selectedContent.title,
+          category: 'student-leadership',
           levelId: levelId
         }
       })
@@ -71,51 +67,19 @@ const LeadershipJournalManagement = () => {
 
       setTasksData(transformedData)
     } catch (error) {
-      console.error(`Error fetching ${selectedContent?.title || 'content'} content by level:`, error)
-      toast.error(`Failed to fetch content for this level`)
+      console.error('Error fetching leadership content by level:', error)
+      toast.error('Failed to fetch content for this level')
       setTasksData([])
     } finally {
       setLoading(false)
     }
   }
 
-  // Fetch available content from manage-content API
-  const fetchAvailableContent = async () => {
-    try {
-      setContentLoading(true)
-      const response = await axiosInstance.get('/manage-content/')
-
-      if (response.data.success && response.data.data) {
-        setAvailableContent(response.data.data)
-
-        // Set Leadership Journal as default if it exists
-        const leadershipJournal = response.data.data.find(content =>
-          content.title.toLowerCase().includes('leadership')
-        )
-
-        if (leadershipJournal) {
-          setSelectedContent(leadershipJournal)
-        } else if (response.data.data.length > 0) {
-          setSelectedContent(response.data.data[0])
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching available content:', error)
-      toast.error('Failed to fetch available content')
-    } finally {
-      setContentLoading(false)
-    }
-  }
-
-  // Fetch journal levels based on selected content
+  // Fetch leadership journal levels from API
   const fetchLevels = async () => {
-    if (!selectedContent) return
-
     try {
       setLoading(true)
-      const response = await axiosInstance.get('/LtsJournals/levels-by-category', {
-        params: { category: selectedContent.title }
-      })
+      const response = await axiosInstance.get('/LtsJournals/leadership-journal/levels')
 
       // Response: [{ id, title, order, published, category }]
       setLevelsData(response.data)
@@ -129,50 +93,37 @@ const LeadershipJournalManagement = () => {
         setActiveLevel(response.data[0].title)
       }
     } catch (error) {
-      console.error(`Error fetching levels for ${selectedContent.title}:`, error)
-      toast.error(`Failed to fetch levels for ${selectedContent.title}`)
+      console.error('Error fetching leadership journal levels:', error)
+      toast.error('Failed to fetch levels')
 
-      // Clear levels if none found
-      setLevelsData([])
-      setLevels([])
-      setActiveLevel(null)
+      // Fallback to default levels
+      const defaultLevels = [
+        'Section One: Who am I?',
+        'Section Two: What can I do?',
+        'Section Three: How do I prove it?'
+      ]
+      setLevels(defaultLevels)
+      setActiveLevel(defaultLevels[0])
     } finally {
       setLoading(false)
     }
   }
 
-  // Fetch available content on component mount
+  // Fetch leadership journal levels on component mount
   useEffect(() => {
-    fetchAvailableContent()
+    fetchLevels()
   }, [])
-
-  // Fetch levels when selected content changes
-  useEffect(() => {
-    if (selectedContent) {
-      fetchLevels()
-    }
-  }, [selectedContent])
 
   // Fetch content when active level changes
   useEffect(() => {
-    if (activeLevel && levelsData.length > 0 && selectedContent) {
+    if (activeLevel && levelsData.length > 0) {
       // Find the level object by title to get its ID
       const activeLevelObj = levelsData.find(level => level.title === activeLevel)
       if (activeLevelObj) {
         fetchContentByLevel(activeLevelObj.id)
       }
     }
-  }, [activeLevel, levelsData, selectedContent])
-
-  // Handle content selection change
-  const handleContentChange = (contentId) => {
-    const content = availableContent.find(c => c.id === parseInt(contentId))
-    if (content) {
-      setSelectedContent(content)
-      setActiveLevel(null) // Reset active level when content changes
-      setTasksData([]) // Clear tasks data
-    }
-  }
+  }, [activeLevel, levelsData])
 
   // Update handleSaveLevels to refresh levels
   const handleSaveLevels = async () => {
@@ -291,7 +242,7 @@ const LeadershipJournalManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} ${selectedContent?.title || 'content'} tasks published successfully!`)
+      toast.success(`${selectedTasks.length} leadership tasks published successfully!`)
 
       // Refresh data
       if (activeLevel) {
@@ -307,8 +258,8 @@ const LeadershipJournalManagement = () => {
       )
 
     } catch (error) {
-      console.error(`Error bulk publishing ${selectedContent?.title || 'content'} tasks:`, error)
-      toast.error(`Failed to publish ${selectedContent?.title || 'content'} tasks`)
+      console.error('Error bulk publishing leadership tasks:', error)
+      toast.error('Failed to publish leadership tasks')
     } finally {
       setLoading(false)
       setShowBulkDropdown(false)
@@ -333,7 +284,7 @@ const LeadershipJournalManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} ${selectedContent?.title || 'content'} tasks unpublished successfully!`)
+      toast.success(`${selectedTasks.length} leadership tasks unpublished successfully!`)
 
       // Refresh data
       if (activeLevel) {
@@ -349,8 +300,8 @@ const LeadershipJournalManagement = () => {
       )
 
     } catch (error) {
-      console.error(`Error bulk unpublishing ${selectedContent?.title || 'content'} tasks:`, error)
-      toast.error(`Failed to unpublish ${selectedContent?.title || 'content'} tasks`)
+      console.error('Error bulk unpublishing leadership tasks:', error)
+      toast.error('Failed to unpublish leadership tasks')
     } finally {
       setLoading(false)
       setShowBulkDropdown(false)
@@ -454,11 +405,12 @@ const LeadershipJournalManagement = () => {
     fetchContentByLevel(levelsData.find(l => l.title === activeLevel)?.id)
   }
 
+
   const handleSaveAssignments = async (assignments) => {
     try {
       setLoading(true)
 
-      console.log(`${selectedContent?.title || 'content'} assignments to process:`, assignments)
+      console.log('Leadership assignments to process:', assignments)
 
       // Filter out assignments with invalid level IDs
       const validAssignments = assignments.filter(assignment => {
@@ -479,19 +431,19 @@ const LeadershipJournalManagement = () => {
       // Update each journal's level assignment using the edit-with-content endpoint
       const updatePromises = validAssignments.map(async (assignment) => {
         try {
-          console.log(`Assigning ${selectedContent?.title || 'content'} journal ${assignment.journalId} to level ${assignment.levelId}`)
+          console.log(`Assigning leadership journal ${assignment.journalId} to level ${assignment.levelId}`)
           return await axiosInstance.put(`/LtsJournals/${assignment.journalId}/edit-with-content`, {
             journalLevel: assignment.levelId
           })
         } catch (individualError) {
-          console.error(`Error assigning ${selectedContent?.title || 'content'} journal ${assignment.journalId}:`, individualError)
+          console.error(`Error assigning leadership journal ${assignment.journalId}:`, individualError)
           throw individualError // Re-throw to be caught by outer catch
         }
       })
 
       await Promise.all(updatePromises)
 
-      toast.success(`${validAssignments.length} ${selectedContent?.title || 'content'} journal(s) assigned successfully!`)
+      toast.success(`${validAssignments.length} leadership journal(s) assigned successfully!`)
 
       // Refresh data
       await fetchLevels()
@@ -506,8 +458,8 @@ const LeadershipJournalManagement = () => {
       setShowAssignModal(false)
 
     } catch (error) {
-      console.error(`Error assigning ${selectedContent?.title || 'content'} journals:`, error)
-      toast.error(`Failed to assign ${selectedContent?.title || 'content'} journals`)
+      console.error('Error assigning leadership journals:', error)
+      toast.error('Failed to assign leadership journals')
     } finally {
       setLoading(false)
     }
@@ -609,7 +561,7 @@ const LeadershipJournalManagement = () => {
     setLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
-
+      
       toast.success(`Level "${selectedLevel}" deleted successfully!`)
       setShowDeleteLevelPopup(false)
       setSelectedLevel(null)
@@ -637,7 +589,7 @@ const LeadershipJournalManagement = () => {
           <defs>
             <clipPath id="clip0_3778_10072">
               <rect width="20" height="20" fill="white"/>
-              </clipPath>
+            </clipPath>
           </defs>
         </svg>
       )
@@ -660,14 +612,14 @@ const LeadershipJournalManagement = () => {
       if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
         setShowAddDropdown(false)
       }
-
+      
       if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
         setShowBulkDropdown(false)
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-
+    
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
@@ -689,7 +641,7 @@ const LeadershipJournalManagement = () => {
                   lineHeight: 'normal',
                 }}
               >
-                JOURNAL MANAGEMENT
+                LEADERSHIP JOURNAL MANAGEMENT
               </h3>
               <p
                 style={{
@@ -702,7 +654,7 @@ const LeadershipJournalManagement = () => {
                   marginBottom: '0px',
                 }}
               >
-                View and edit Journal Tasks by Category
+                View and edit Leadership Journal Tasks
               </p>
             </div>
           </div>
@@ -714,68 +666,24 @@ const LeadershipJournalManagement = () => {
           />
         </div>
       </div>
-
+      
       <div className="content-management-container position-relative">
-         <img
-        src={greenLeader}
-        className='position-absolute'
+         <img 
+        src={greenLeader} 
+        className='position-absolute' 
         style={{
-          top: 0,
-          left: '50%',
+          top: 0, 
+          left: '50%', 
           transform: 'translateX(-50%)',
           zIndex: 0,
           pointerEvents: 'none',
           // opacity: 0.1,
           width: '100dvw',
           height: '100dvh'
-        }}
+        }} 
         alt="Decorative background"
         aria-hidden="true"
       />
-
-        {/* Content Selector */}
-        <div className="content-selector" style={{
-          padding: '20px 30px',
-          background: 'white',
-          borderBottom: '1px solid #e5e7eb',
-          marginBottom: '20px'
-        }}>
-          <div className="d-flex align-items-center gap-3">
-            <label style={{
-              fontFamily: 'Montserrat',
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#231F20',
-              marginBottom: '0'
-            }}>
-              Select Content Type:
-            </label>
-            <select
-              value={selectedContent?.id || ''}
-              onChange={(e) => handleContentChange(e.target.value)}
-              disabled={contentLoading}
-              style={{
-                padding: '8px 12px',
-                border: '1px solid #d1d5db',
-                borderRadius: '6px',
-                fontFamily: 'Montserrat',
-                fontSize: '14px',
-                minWidth: '200px'
-              }}
-            >
-              {contentLoading ? (
-                <option>Loading...</option>
-              ) : (
-                availableContent.map(content => (
-                  <option key={content.id} value={content.id}>
-                    {content.title}
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
-        </div>
-
         <div className="header-tabs d-flex justify-content-between gap-3">
           {levels.map((level, index) => (
             <button
@@ -835,7 +743,7 @@ const LeadershipJournalManagement = () => {
               </div>
 
               <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
-                <div
+                <div 
                   className="bulk-actions"
                   onClick={() => {
                     setShowBulkDropdown(!showBulkDropdown)
@@ -849,7 +757,7 @@ const LeadershipJournalManagement = () => {
                 </div>
 
                                 {showBulkDropdown && (
-                  <div
+                  <div 
                     className="dropdown-menu"
                     style={{
                       position: 'absolute',
@@ -866,7 +774,7 @@ const LeadershipJournalManagement = () => {
                     }}
                   >
                     {bulkOptions.map((option, index) => (
-                      <div
+                      <div 
                         key={index}
                         className="dropdown-item"
                         style={{
@@ -897,21 +805,21 @@ const LeadershipJournalManagement = () => {
           </div>
 
           <div className="table-container">
-            <DataTable
+            <DataTable 
               columns={columns}
               data={tasksData}
               searchQuery={searchQuery}
               onRowAction={handleRowAction}
               onReorder={handleReorder}
               showCheckbox={true}
-              activeTab={selectedContent?.title || "Content"}
+              activeTab="Leadership"
             />
           </div>
 
         </div>
       </div>
 
-      <AddTaskModal
+      <AddTaskModal 
         show={showAddTaskModal}
         onHide={() => {
           setShowAddTaskModal(false)
@@ -922,7 +830,7 @@ const LeadershipJournalManagement = () => {
         levels={levelsData}
         mode={modalMode}
         taskData={editingTask}
-        source={selectedContent?.title || ''}
+        source="leadership"
       />
 
       <AddLevelModal
@@ -930,14 +838,14 @@ const LeadershipJournalManagement = () => {
         onHide={() => setShowAddLevelModal(false)}
         onSave={handleSaveLevels}
         existingLevels={levelsData}
-        category={selectedContent?.title || ''}
+        category="leadership"
       />
 
       <AssignTasksModal
         show={showAssignModal}
         onHide={() => setShowAssignModal(false)}
         onSave={handleSaveAssignments}
-        type={selectedContent?.title || ''}
+        type="leadership"
         levels={levelsData}
       />
 
@@ -946,7 +854,7 @@ const LeadershipJournalManagement = () => {
         onHide={handlePublishCancel}
         onConfirm={handleConfirmPublish}
         title="Publish Task?"
-        message="Are you sure you want to publish this task?"
+        message="Are you sure you want to publish this leadership task? Once it's published, it will be available to all learners with access to this content."
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, PUBLISH TASK"
         loading={loading}
@@ -957,7 +865,7 @@ const LeadershipJournalManagement = () => {
         onHide={handleUnpublishCancel}
         onConfirm={handleConfirmUnpublish}
         title="Unpublish Task?"
-        message="Are you sure you want to unpublish this task?"
+        message="Are you sure you want to unpublish this leadership task? Once it's unpublished, it will no longer be available to learners."
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, UNPUBLISH TASK"
         loading={loading}
@@ -968,7 +876,7 @@ const LeadershipJournalManagement = () => {
         onHide={handleDeleteTaskCancel}
         onConfirm={handleConfirmDeleteTask}
         title="Delete Task?"
-        message="Are you sure you want to delete this task?"
+        message="Are you sure you want to delete this leadership task?"
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, DELETE TASK"
         loading={loading}
