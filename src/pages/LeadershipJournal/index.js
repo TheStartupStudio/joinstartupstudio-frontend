@@ -9,10 +9,7 @@ import AcademyBtn from '../../components/AcademyBtn'
 import SelectCourses from '../../components/LeadershipJournal/SelectCourses'
 import Expertise from '../../components/LeadershipSections/Expertise'
 import GoToJournal from '../../components/LeadershipSections/GoToJournal'
-import IntroWhoAmI from '../../components/LeadershipSections/SectionIntroWhoAmI'
 import SectionOne from '../../components/LeadershipSections/SectionOne'
-import SectionThree from '../../components/LeadershipSections/SectionThree'
-import SectionTwo from '../../components/LeadershipSections/SectionTwo'
 import Value from '../../components/LeadershipSections/Value'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
@@ -114,24 +111,14 @@ const LeadershipJournal = memo(() => {
       const sectionKey = levelIndex === '0' ? 'one' : levelIndex === '1' ? 'two' : 'three'
 
       result[sectionKey] = levelLessons.map(lesson => {
-        // Special handling for specific sections (first 2 lessons are intro sections)
         const lessonIndex = levelLessons.indexOf(lesson)
         let component
 
+        // Special case: First lesson of section 1 uses SectionOne component
         if (lessonIndex === 0 && levelIndex === '0') {
-          // First lesson of section 1 - Welcome to Leadership Journal
           component = <SectionOne setIsReflection={setIsReflection} lessonId={lesson.id} />
-        } else if (lessonIndex === 1 && levelIndex === '0') {
-          // Second lesson of section 1 - Section One: Who am I?
-          component = <IntroWhoAmI setIsReflection={setIsReflection} lessonId={lesson.id} />
-        } else if (lessonIndex === 0 && levelIndex === '1') {
-          // First lesson of section 2 - Section Two: What can I do?
-          component = <SectionTwo setIsReflection={setIsReflection} lessonId={lesson.id} />
-        } else if (lessonIndex === 0 && levelIndex === '2') {
-          // First lesson of section 3 - Section Three: How do I prove it?
-          component = <SectionThree setIsReflection={setIsReflection} lessonId={lesson.id} />
         } else {
-          // All other lessons use the Value component
+          // All other lessons use Value component - it handles video/text vs video/text+reflections dynamically
           component = (
             <Value
               ref={el => valueRefs.current[lesson.title] = el}
@@ -242,20 +229,9 @@ const LeadershipJournal = memo(() => {
 
       const currentComponent = valueRefs.current[activeTabData.option?.value];
 
-      // Check if this is an intro section
-      const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
-      const currentSectionLessons = sections[sectionKey] || [];
-      const currentLessonIndex = currentSectionLessons.findIndex(
-        lesson => lesson.title === activeTabData.option?.value
-      );
-
-      // For section 1, first 2 lessons are intro sections
-      // For sections 2 and 3, first lesson is intro section
-      const isIntroSection = (activeTabData.activeTab === 0 && (currentLessonIndex === 0 || currentLessonIndex === 1)) ||
-                            (activeTabData.activeTab > 0 && currentLessonIndex === 0);
-
-      if (isIntroSection) {
-        // Handle intro sections as before...
+      // Check if this is an intro section (no reflections)
+      // Intro sections just continue to next lesson without saving
+      if (!isReflection) {
         const currentSection = allTabs[activeTabData.activeTab].options;
         const currentOptionIndex = currentSection.findIndex(
           option => option.value === activeTabData.option?.value
@@ -334,25 +310,9 @@ const LeadershipJournal = memo(() => {
     return !finishedContent.includes(option.label) && !option.isNext;
   };
 
-  // Check if current option is an intro section
-  const isIntroSection = useMemo(() => {
-    const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
-    const currentSectionLessons = sections[sectionKey] || [];
-
-    if (currentSectionLessons.length === 0) return false;
-
-    const currentLessonIndex = currentSectionLessons.findIndex(
-      lesson => lesson.title === activeTabData.option?.value
-    );
-
-    // For section 1 (index 0), first 2 lessons are intro sections
-    // For sections 2 and 3 (index 1, 2), first lesson is intro section
-    if (activeTabData.activeTab === 0) {
-      return currentLessonIndex === 0 || currentLessonIndex === 1;
-    } else {
-      return currentLessonIndex === 0;
-    }
-  }, [activeTabData, sections]);
+  // Check if current option is an intro section (no reflections)
+  // This is now determined by the Value component setting isReflection to false
+  const isIntroSection = !isReflection;
 
   // Render the appropriate section based on active tab and option
   const renderedSection = useMemo(() => {

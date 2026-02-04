@@ -377,7 +377,7 @@ const LeadershipJournalManagement = () => {
         id: journal.id,
         title: journal.title,
         level: activeLevel,
-        contentType: formattedReflectionItems.length > 0 ? 'reflection' : 'video',
+        contentType: 'video',
         videoUrl: journal.video?.url || journal.videos?.[0]?.url || '',
         thumbnailUrl: journal.JournalImg?.url || journal.video?.thumbnail || journal.videos?.[0]?.thumbnail || '',
         information: journal.content || journal.paragraph || '',

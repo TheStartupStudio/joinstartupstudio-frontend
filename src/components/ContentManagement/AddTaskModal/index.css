@@ -240,6 +240,7 @@ height: unset;
 }
 
 .add-task-content-management-modal .delete-reflection-btn {
+  font-family: 'Montserrat', sans-serif !important;
   border: none;
   outline: none;
   display: flex;
