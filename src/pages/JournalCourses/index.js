@@ -372,14 +372,13 @@ const JournalCourses = memo(() => {
   }, [activeTabData, allTabs]);
 
   const handleTabClick = (index) => {
-
-    if (showOverview) {
-      return;
-    }
-
     if (!canAccessSection(index)) {
       setShowLockModal(true);
       return;
+    }
+
+    if (showOverview) {
+      setShowOverview(false);
     }
 
     const tabOptions = allTabs[index]?.options || [];
@@ -504,14 +503,14 @@ const JournalCourses = memo(() => {
                 {allTabs.map((tab, index) => (
                   <span
                     key={index}
-                    className={`fs-14 fw-medium text-center p-2 cursor-pointer w-100-mob ${activeTabData.activeTab === index
+                    className={`fs-14 fw-medium text-center p-2 cursor-pointer w-100-mob ${activeTabData.activeTab === index && !showOverview
                       ? 'active-leadership'
                       : ''
                       }`}
                     onClick={() => handleTabClick(index)}
                     style={{
-                      color: showOverview ? '#999' : (canAccessSection(index) ? '#000' : '#999'),
-                      cursor: showOverview ? 'not-allowed' : (canAccessSection(index) ? 'pointer' : 'not-allowed'),
+                      color: canAccessSection(index) ? '#000' : '#999',
+                      cursor: canAccessSection(index) ? 'pointer' : 'not-allowed',
                       width: '100%'
                     }}
                   >
@@ -523,18 +522,33 @@ const JournalCourses = memo(() => {
                 <div className='search-journals-width w-100-mob'>
                   <SelectCourses
                     selectedCourse={activeTabData}
-                    setSelectedCourse={setActiveTabData}
-                    options={showOverview ? [{
-                      label: 'Course Overview',
-                      value: 'Course Overview',
-                      isNext: true,
-                      id: null,
-                      redirectId: null
-                    }] : (allTabs[activeTabData.activeTab]?.options || [])}
+                    setSelectedCourse={(newData) => {
+                      if (showOverview && newData.option && newData.option.value !== 'Course Overview') {
+                        setShowOverview(false);
+                        setActiveTabData({
+                          activeTab: 0,
+                          option: newData.option
+                        });
+                      } else {
+                        setActiveTabData(newData);
+                      }
+                    }}
+                    options={showOverview ? [
+                      {
+                        label: 'Course Overview',
+                        value: 'Course Overview',
+                        isNext: true,
+                        id: null,
+                        redirectId: null
+                      },
+                      ...(allTabs[0]?.options || []) 
+                    ] : (allTabs[activeTabData.activeTab]?.options || [])}
                     placeholder={
-                      currentTitle || (showOverview ? 'Course Overview' : (allTabs[activeTabData.activeTab]?.title || 'Select Journal Sections'))
+                      currentTitle || (showOverview ? 'Select Lesson' : (allTabs[activeTabData.activeTab]?.title || 'Select Journal Sections'))
                     }
-                    isDisabled={showOverview ? (() => false) : isOptionDisabled}
+                    isDisabled={showOverview ? ((option) => {
+                      return option.value === 'Course Overview' ? false : !canAccessSection(0);
+                    }) : isOptionDisabled}
                   />
                 </div>
                 <div className='d-flex gap-3 flex-col-mob align-items-end-mob saveContinue-btn'>
