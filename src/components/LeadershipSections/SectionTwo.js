@@ -6,34 +6,53 @@ import { NotesButton } from '../../components/Notes'
 import axiosInstance from '../../utils/AxiosInstance'
 
 
-function SectionTwo({ setIsReflection }) {
+function SectionTwo({ setIsReflection, lessonId }) {
   const { id } = useParams()
   const [journalData, setJournalData] = useState(null)
   const [manageContentData, setManageContentData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  setIsReflection(false)
+  // Use lessonId prop if provided, otherwise fallback to URL param
+  const contentId = lessonId || id
+
+  useEffect(() => {
+    setIsReflection(false)
+  }, [setIsReflection])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true)
 
-        // Use dynamic ID if available (journal courses), otherwise default to 1 (leadership journal)
-        const contentId = id || '1'
+        // Use contentId from props or URL param
+        const finalContentId = contentId || '1'
+
+        // For lessons, fetch lesson-specific journal data using the lessonId
+        const journalEndpoint = `/ltsJournals/${lessonId}/`
 
         // Make both API calls
         const [journalResponse, manageContentResponse] = await Promise.all([
-          axiosInstance.get('/ltsJournals/1001063/'),
-          axiosInstance.get(`/manage-content/${contentId}`)
+          axiosInstance.get(journalEndpoint).catch((error) => {
+            console.log('Journal API failed, using fallback:', error)
+            return { data: null }
+          }),
+          axiosInstance.get(`/manage-content/${finalContentId}`)
         ])
 
         console.log('Journal API response:', journalResponse.data)
         console.log('Manage Content API response:', manageContentResponse.data)
 
-        if (journalResponse) {
+        if (journalResponse.data) {
           setJournalData(journalResponse.data)
+        } else {
+          // If no lesson-specific journal data, create a placeholder
+          setJournalData({
+            id: lessonId,
+            title: `Lesson: ${lessonId}`, // Will be updated by parent component
+            content: '<p>Lesson content will be displayed here.</p>',
+            videoId: null
+          })
         }
 
         if (manageContentResponse.data.success) {
@@ -49,7 +68,7 @@ function SectionTwo({ setIsReflection }) {
     }
 
     fetchData()
-  }, [id])
+  }, [contentId, lessonId])
 
   console.log('journalData', journalData)
 
@@ -120,14 +139,14 @@ function SectionTwo({ setIsReflection }) {
       </div>
       <NotesButton from="leadershipJournal"
                           data={{
-                            id: journalData?.id || 1001063,
+                            id: journalData?.id || lessonId || 1001063,
                             title: journalData?.title || 'Introduction to What can I do?'
                           }}
                           createdFrom={journalData?.title || 'Introduction to What can I do?'}
-                          journalId={journalData?.id || 1001063}
+                          journalId={journalData?.id || lessonId || 1001063}
                     />
       <SectionsWrapper
-        title={journalData?.title || 'Introduction to What can I do?'}
+        title={journalData?.title || 'Lesson Content'}
         paragraphs={paragraphs}
       />
     </div>

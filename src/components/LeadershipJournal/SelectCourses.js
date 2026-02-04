@@ -9,7 +9,7 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder
   const processedOptions = options.map(option => {
     // Clone the option to avoid mutating the original
     const newOption = { ...option };
-    
+
     // Add icon based on status
     if (isDisabled(option)) {
       newOption.icon = lockSign;
@@ -21,14 +21,32 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder
       newOption.icon = tickSign;
       newOption.textColor = 'text-black';
     }
-    
+
     return newOption;
   });
 
+  // Check if current selected option exists in processedOptions
+  const currentSelectedValue = selectedCourse?.option;
+  const selectedOptionExists = processedOptions.some(opt => opt.value === currentSelectedValue?.value);
+
+  // If selected option doesn't exist in current options, auto-select first available option
+  React.useEffect(() => {
+    console.log('ardi 37: SelectCourses useEffect - selectedOptionExists:', selectedOptionExists, 'processedOptions.length:', processedOptions.length);
+    if (!selectedOptionExists && processedOptions.length > 0) {
+      const firstAvailableOption = processedOptions.find(opt => !isDisabled(opt));
+      console.log('ardi 38: firstAvailableOption:', firstAvailableOption);
+      if (firstAvailableOption) {
+        console.log('ardi 39: Auto-selecting first available option:', firstAvailableOption.value);
+        setSelectedCourse((prev) => ({ ...prev, option: firstAvailableOption }));
+      }
+    }
+  }, [selectedOptionExists, processedOptions, setSelectedCourse, isDisabled]);
+
   const handleChange = (selectedOption) => {
+    console.log('ardi 32: SelectCourses handleChange called with:', selectedOption?.value || selectedOption?.label)
     if (selectedOption.icon !== lockSign) {
       setSelectedCourse((prev) => ({ ...prev, option: selectedOption }))
-      console.log('Selected Journal:', selectedOption.value)
+      console.log('ardi 33: SelectCourses setting new option:', selectedOption.value)
     }
   }
 

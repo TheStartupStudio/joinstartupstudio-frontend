@@ -10,32 +10,38 @@ import parse from 'html-react-parser'
 import { NotesButton } from '../../components/Notes'
 
 
-function SectionOne({ setIsReflection }) {
-  const { id } = useParams()
-  const [contentData, setContentData] = useState(null)
-  const [loading, setLoading] = useState(true)
+function SectionOne({ setIsReflection, contentData: propContentData, lessonId }) {
+  const [fetchedContentData, setFetchedContentData] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
+  // Use prop contentData if provided, otherwise use fetched contentData
+  const contentData = propContentData || fetchedContentData
 
   useEffect(() => {
     setIsReflection(false)
   }, [setIsReflection])
 
+  // If no contentData prop provided, fetch it (fallback for backward compatibility)
   useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        // Use dynamic ID if available (journal courses), otherwise default to 1 (leadership journal)
-        const contentId = id || '1'
-        const response = await axiosInstance.get(`/manage-content/${contentId}`)
-        setContentData(response.data.data || response.data)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching manage-content:', error)
-        setError(error.message)
-        setLoading(false)
+    if (!propContentData) {
+      setLoading(true)
+      const fetchContent = async () => {
+        try {
+          // Use dynamic ID if available (journal courses), otherwise default to 1 (leadership journal)
+          const contentId = lessonId || '1'
+          const response = await axiosInstance.get(`/manage-content/${contentId}`)
+          setFetchedContentData(response.data.data || response.data)
+          setLoading(false)
+        } catch (error) {
+          console.error('Error fetching manage-content:', error)
+          setError(error.message)
+          setLoading(false)
+        }
       }
+      fetchContent()
     }
-    fetchContent()
-  }, [id])
+    }, [propContentData, lessonId])
   const [openAccordion, setOpenAccordion] = useState(null)
 
   const renderIntroDescription = (description) => {
@@ -47,127 +53,133 @@ function SectionOne({ setIsReflection }) {
     return (
       <>
         {textContent && parse(textContent)}
-        <div className='accordion mt-3' id='progressAccordion'>
-          <div className='accordion-item progress-details-accordion'>
-            <h2 className='accordion-header' id='headingOne'>
-              <button
-                className={`accordion-button fw-medium ${openAccordion !== 'one' ? 'collapsed' : ''}`}
-                type='button'
-                onClick={() => handleAccordionClick('one')}
-              >
-                Section One: Who am I?
-              </button>
-            </h2>
-            <div
-              id='collapseOne'
-              className={`accordion-collapse collapse ${openAccordion === 'one' ? 'show' : ''}`}
-              aria-labelledby='headingOne'
-            >
-              <div className='accordion-body d-grid gap-2'>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Values:</span> The personal values that inform all of your decisions and must align with the organization or company you work with professionally.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Expertise:</span> The knowledge you have acquired and can apply to solve problems in a way that creates demand for your solutions.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Experience:</span> The data you have gathered based on a combination of successes and failures that have taught you how to evaluate a given situation and how to creatively and critically think as you problem-solve.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Style:</span> The way you communicate and interact with others that creates and maintains a valuable work culture.
-                  </p>
-                </AccordionLead>
-              </div>
-            </div>
-          </div>
 
-          <div className='accordion-item progress-details-accordion'>
-            <h2 className='accordion-header' id='headingTwo'>
-              <button
-                className={`accordion-button fw-medium ${openAccordion !== 'two' ? 'collapsed' : ''}`}
-                type='button'
-                onClick={() => handleAccordionClick('two')}
+        {
+          contentData?.id === 1 ? (
+            <div className='accordion mt-3' id='progressAccordion'>
+            <div className='accordion-item progress-details-accordion'>
+              <h2 className='accordion-header' id='headingOne'>
+                <button
+                  className={`accordion-button fw-medium ${openAccordion !== 'one' ? 'collapsed' : ''}`}
+                  type='button'
+                  onClick={() => handleAccordionClick('one')}
+                >
+                  Section One: Who am I?
+                </button>
+              </h2>
+              <div
+                id='collapseOne'
+                className={`accordion-collapse collapse ${openAccordion === 'one' ? 'show' : ''}`}
+                aria-labelledby='headingOne'
               >
-                Section Two: What can I do?
-              </button>
-            </h2>
-            <div
-              id='collapseTwo'
-              className={`accordion-collapse collapse ${openAccordion === 'two' ? 'show' : ''}`}
-              aria-labelledby='headingTwo'
-            >
-              <div className='accordion-body d-grid gap-2'>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Teamwork:</span> The working relationships you build with others to create outcomes.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Initiative:</span> The ability to take a risk and start something new to create outcomes.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Methodology:</span> The processes you utilize to create outcomes.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Self-Assessment:</span> The evaluation system you use to give yourself transparency around the success and failure of creating outcomes.
-                  </p>
-                </AccordionLead>
+                <div className='accordion-body d-grid gap-2'>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Values:</span> The personal values that inform all of your decisions and must align with the organization or company you work with professionally.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Expertise:</span> The knowledge you have acquired and can apply to solve problems in a way that creates demand for your solutions.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Experience:</span> The data you have gathered based on a combination of successes and failures that have taught you how to evaluate a given situation and how to creatively and critically think as you problem-solve.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Style:</span> The way you communicate and interact with others that creates and maintains a valuable work culture.
+                    </p>
+                  </AccordionLead>
+                </div>
+              </div>
+            </div>
+  
+            <div className='accordion-item progress-details-accordion'>
+              <h2 className='accordion-header' id='headingTwo'>
+                <button
+                  className={`accordion-button fw-medium ${openAccordion !== 'two' ? 'collapsed' : ''}`}
+                  type='button'
+                  onClick={() => handleAccordionClick('two')}
+                >
+                  Section Two: What can I do?
+                </button>
+              </h2>
+              <div
+                id='collapseTwo'
+                className={`accordion-collapse collapse ${openAccordion === 'two' ? 'show' : ''}`}
+                aria-labelledby='headingTwo'
+              >
+                <div className='accordion-body d-grid gap-2'>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Teamwork:</span> The working relationships you build with others to create outcomes.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Initiative:</span> The ability to take a risk and start something new to create outcomes.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Methodology:</span> The processes you utilize to create outcomes.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Self-Assessment:</span> The evaluation system you use to give yourself transparency around the success and failure of creating outcomes.
+                    </p>
+                  </AccordionLead>
+                </div>
+              </div>
+            </div>
+  
+            <div className='accordion-item progress-details-accordion'>
+              <h2 className='accordion-header' id='headingThree'>
+                <button
+                  className={`accordion-button fw-medium ${openAccordion !== 'three' ? 'collapsed' : ''}`}
+                  type='button'
+                  onClick={() => handleAccordionClick('three')}
+                >
+                  Section Three: How do I prove it?
+                </button>
+              </h2>
+              <div
+                id='collapseThree'
+                className={`accordion-collapse collapse ${openAccordion === 'three' ? 'show' : ''}`}
+                aria-labelledby='headingThree'
+              >
+                <div className='accordion-body d-grid gap-2'>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Outcomes:</span> The solutions you create to solve problems.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Feedback:</span> The response from your team and market concerning the outcomes you create.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Iteration:</span> The use of failure and feedback to pivot as you create and modify outcomes.
+                    </p>
+                  </AccordionLead>
+                  <AccordionLead>
+                    <p className='fs-15 fw-light'>
+                      <span className='fw-medium'>Vision:</span> The ability to project forward in the context of the markets you serve.
+                    </p>
+                  </AccordionLead>
+                </div>
               </div>
             </div>
           </div>
+          ) : (null)
 
-          <div className='accordion-item progress-details-accordion'>
-            <h2 className='accordion-header' id='headingThree'>
-              <button
-                className={`accordion-button fw-medium ${openAccordion !== 'three' ? 'collapsed' : ''}`}
-                type='button'
-                onClick={() => handleAccordionClick('three')}
-              >
-                Section Three: How do I prove it?
-              </button>
-            </h2>
-            <div
-              id='collapseThree'
-              className={`accordion-collapse collapse ${openAccordion === 'three' ? 'show' : ''}`}
-              aria-labelledby='headingThree'
-            >
-              <div className='accordion-body d-grid gap-2'>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Outcomes:</span> The solutions you create to solve problems.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Feedback:</span> The response from your team and market concerning the outcomes you create.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Iteration:</span> The use of failure and feedback to pivot as you create and modify outcomes.
-                  </p>
-                </AccordionLead>
-                <AccordionLead>
-                  <p className='fs-15 fw-light'>
-                    <span className='fw-medium'>Vision:</span> The ability to project forward in the context of the markets you serve.
-                  </p>
-                </AccordionLead>
-              </div>
-            </div>
-          </div>
-        </div>
+        }
       </>
     )
   }
@@ -357,11 +369,11 @@ function SectionOne({ setIsReflection }) {
         <NotesButton
           from="leadershipJournal"
           data={{
-            id: contentData?.id || parseInt(id) || 1001061,
+            id: contentData?.id || parseInt(lessonId) || 1001061,
             title: contentData?.introTitle || 'Welcome to the Leadership Journal'
           }}
           createdFrom={contentData?.introTitle || 'Welcome to the Leadership Journal'}
-          journalId={contentData?.id || parseInt(id) || 1001061}
+          journalId={contentData?.id || parseInt(lessonId) || 1001061}
         />
         
       </SectionsWrapper>

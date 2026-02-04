@@ -30,17 +30,23 @@ import NotificationBell from '../../components/NotificationBell'
 import { toast } from 'react-toastify'
 
 const JournalCourses = memo(() => {
-  const { id } = useParams()
+  const { id: category } = useParams()
   const dispatch = useDispatch()
   const [isReflection, setIsReflection] = useState(false)
   const [allTabs, setAllTabs] = useState([])
   const [activeTabData, setActiveTabData] = useState({
     activeTab: 0,
     option: {
-      label: 'Welcome to the Journal Course',
-      value: 'Welcome to the Journal Course'
+      label: 'Course Overview',
+      value: 'Course Overview',
+      isNext: true,
+      id: null,
+      redirectId: null
     }
   })
+
+  // Track if we're showing overview or lessons
+  const [showOverview, setShowOverview] = useState(true)
   const [showLockModal, setShowLockModal] = useState(false)
   const [currentTitle, setCurrentTitle] = useState('')
   const [isSaving, setIsSaving] = useState(false)
@@ -58,124 +64,134 @@ const JournalCourses = memo(() => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Fetch lessons from API
+  const fetchLessons = async () => {
+    console.log('ardi 1: fetchLessons called with contentData:', contentData)
+    try {
+      const response = await axiosInstance.get(`/journal-courses/lessons?category=${contentData?.title}`)
+      console.log('ardi 2: lessons API response:', response.data)
+      if (response.data) {
+        setLessons(response.data)
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        setLoading(true)
-        const response = await axiosInstance.get(`/manage-content/${id}`)
-        const data = response.data.data || response.data
-        setContentData(data)
-
-        // Use ltsJournalLevels from the response as primary source for levels
-        if (data?.ltsJournalLevels && Array.isArray(data.ltsJournalLevels)) {
-          console.log('Found ltsJournalLevels:', data.ltsJournalLevels);
-
-          // Map ltsJournalLevels to levels format
-          const mappedLevels = data.ltsJournalLevels.map((level, index) => ({
-            title: level.title || `Section ${index + 1}`,
-            description: level.detailsText || `Welcome to Section ${index + 1}`,
-            active: index === 0
+        // Create levels based on ltsJournalLevels from manage-content API
+        if (contentData?.ltsJournalLevels && Array.isArray(contentData.ltsJournalLevels)) {
+          const mappedLevels = contentData.ltsJournalLevels.map((level, index) => ({
+            title: level.title,
+            description: level.detailsText || `Welcome to ${level.title}`,
+            active: index === 0,
+            id: level.id
           }))
-
-          console.log('Mapped levels:', mappedLevels);
+          console.log('ardi 3: mapped levels:', mappedLevels)
           setLevels(mappedLevels)
-
-          // Create basic lessons for each level
-          const basicLessons = {}
-          data.ltsJournalLevels.forEach((level, levelIndex) => {
-            const sectionKey = levelIndex === 0 ? 'one' : levelIndex === 1 ? 'two' : 'three'
-            basicLessons[levelIndex.toString()] = [{
-              id: level.id,
-              title: level.title,
-              value: level.title,
-              redirectId: null,
-              separate: false,
-              component: levelIndex === 0 ?
-                <SectionOne setIsReflection={setIsReflection} lessonId={level.id} /> :
-                <SectionTwo setIsReflection={setIsReflection} lessonId={level.id} />
-            }]
-          })
-
-          console.log('Created basic lessons:', basicLessons);
-          setLessons(basicLessons)
-        } else if (data?.title) {
-          // Fallback to API calls if ltsJournalLevels not available
-          console.log('No ltsJournalLevels found, falling back to API calls');
-          await fetchLevels(data.title)
-          await fetchLessons(data.title)
-        } else {
-          console.log('No ltsJournalLevels or title found in response');
         }
+      }
+    } catch (error) {
+      console.error('ardi 4: Error fetching journal lessons:', error)
+      // Fallback to empty lessons
+      setLessons({})
+    }
+  }
 
-        setLoading(false)
+
+  // Fetch content data for SectionOne component
+  useEffect(() => {
+    console.log('ardi 5: fetchContentData useEffect triggered with category:', category)
+    const fetchContentData = async () => {
+      try {
+        const response = await axiosInstance.get(`/manage-content/${category}`)
+        const data = response.data.data || response.data
+        console.log('ardi 6: manage-content API response:', data)
+        setContentData(data)
       } catch (error) {
-        console.error('Error fetching journal course content:', error)
-        setError(error.message)
-        setLoading(false)
+        console.error('ardi 7: Error fetching content data:', error)
       }
     }
-    if (id) {
-      fetchContent()
+    if (category) {
+      fetchContentData()
     }
-  }, [id])
+  }, [category])
 
-  // Generate sections dynamically from lessons API
+  // Fetch finished content, levels, and lessons when component mounts
+  useEffect(() => {
+    if (contentData?.title) {
+      dispatch(fetchJournalFinishedContent(contentData.title));
+      // Fetch lessons from API
+      fetchLessons();
+      setLoading(false);
+    }
+  }, [dispatch, contentData?.title])
+
+  // Generate sections dynamically from levels and lessons API
   const sections = useMemo(() => {
+    console.log('ardi 8: sections useMemo called with levels:', levels, 'lessons:', lessons)
     const result = {}
 
-    Object.keys(lessons).forEach(levelIndex => {
-      const levelLessons = lessons[levelIndex] || []
-      const sectionKey = levelIndex === '0' ? 'one' : levelIndex === '1' ? 'two' : 'three'
+    levels.forEach((level, levelIndex) => {
+      const sectionKey = levelIndex === 0 ? 'one' : levelIndex === 1 ? 'two' : 'three'
+      const levelLessons = lessons[levelIndex.toString()] || []
+      console.log('ardi 9: processing level', levelIndex, 'with lessons:', levelLessons)
 
-      result[sectionKey] = levelLessons.map(lesson => {
-        // Special handling for specific sections (first 2 lessons are intro sections)
-        const lessonIndex = levelLessons.indexOf(lesson)
-        let component
+      // Create sections array for this level
+      const levelSections = []
 
-        if (lessonIndex === 0 && levelIndex === '0') {
-          // First lesson of section 1 - Welcome to Journal Course
-          component = <SectionOne setIsReflection={setIsReflection} lessonId={lesson.id} />
-        } else if (lessonIndex === 1 && levelIndex === '0') {
-          // Second lesson of section 1 - Section One: Who am I?
-          component = <IntroWhoAmI setIsReflection={setIsReflection} lessonId={lesson.id} />
-        } else if (lessonIndex === 0 && levelIndex === '1') {
-          // First lesson of section 2 - Section Two: What can I do?
-          component = <SectionTwo setIsReflection={setIsReflection} lessonId={lesson.id} />
-        } else if (lessonIndex === 0 && levelIndex === '2') {
-          // First lesson of section 3 - Section Three: How do I prove it?
-          component = <SectionThree setIsReflection={setIsReflection} lessonId={lesson.id} />
+      // For each level, add the corresponding lesson that shows SectionTwo
+      if (levelLessons.length > 0) {
+        // Find the lesson that matches this level's title
+        const matchingLesson = levelLessons.find(lesson => lesson.title === level.title)
+
+        if (matchingLesson) {
+          console.log('ardi 10: found matching lesson for level', level.title, ':', matchingLesson.title)
+          const lessonComponent = <SectionTwo setIsReflection={setIsReflection} lessonId={matchingLesson.id} />
+
+          levelSections.push({
+            title: level.title,
+            value: level.title,
+            id: matchingLesson.id,
+            redirectId: matchingLesson.redirectId,
+            separate: matchingLesson.separate,
+            component: lessonComponent
+          })
         } else {
-          // All other lessons use the Value component
-          component = (
-            <Value
-              ref={el => valueRefs.current[lesson.title] = el}
-              id={lesson.id}
-              setIsReflection={setIsReflection}
-            />
-          )
+          // Fallback - show level overview with SectionOne
+          console.log('ardi 11: no matching lesson found for level', level.title)
+          const levelOverviewComponent = <SectionOne setIsReflection={setIsReflection} lessonId={level.id} contentData={contentData} />
+          levelSections.push({
+            title: level.title,
+            value: level.title,
+            id: level.id,
+            redirectId: null,
+            separate: false,
+            component: levelOverviewComponent
+          })
         }
+      } else {
+        // No lessons available - show level overview
+        console.log('ardi 12: no lessons available for level', level.title)
+        const levelOverviewComponent = <SectionOne setIsReflection={setIsReflection} lessonId={level.id} contentData={contentData} />
+        levelSections.push({
+          title: level.title,
+          value: level.title,
+          id: level.id,
+          redirectId: null,
+          separate: false,
+          component: levelOverviewComponent
+        })
+      }
 
-        return {
-          title: lesson.title,
-          value: lesson.title,
-          id: lesson.id,
-          redirectId: lesson.redirectId,
-          separate: lesson.separate,
-          component: component
-        }
-      })
+      result[sectionKey] = levelSections
+      console.log('ardi 13: final levelSections for', sectionKey, ':', levelSections.map(s => ({ title: s.title, id: s.id })))
     })
 
+    console.log('ardi 14: final sections result:', Object.keys(result).map(key => ({ key, count: result[key].length })))
     return result
-  }, [lessons, setIsReflection])
+  }, [levels, lessons, contentData, setIsReflection])
 
   // Initialize allTabs based on dynamic sections and levels from API
   useEffect(() => {
-    console.log('useEffect triggered:', { levels, lessons, sections });
+    console.log('ardi 14: allTabs useEffect triggered:', { levels, lessons, sections });
 
     if (levels.length === 0) {
-      console.log('No levels available, cannot create tabs');
+      console.log('ardi 15: No levels available, cannot create tabs');
       return;
     }
 
@@ -184,34 +200,57 @@ const JournalCourses = memo(() => {
       const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
       const sectionLessons = sections[sectionKey] || [];
 
-      console.log(`Creating tab ${index}:`, level.title, 'with lessons:', sectionLessons.length);
+      console.log('ardi 15: Creating tab', index, ':', level.title, 'with lessons:', sectionLessons.length);
+      console.log('ardi 16: sectionLessons:', sectionLessons.map(l => ({ title: l.title, id: l.id })));
+
+      // Each tab has only one option - the matching lesson
+      const tabOptions = sectionLessons.length > 0 ? sectionLessons.map((lesson) => ({
+        label: lesson.title,
+        value: lesson.title,
+        isNext: true, // All tabs are initially available
+        id: lesson.id,
+        redirectId: lesson.redirectId
+      })) : [{
+        label: level.title,
+        value: level.title,
+        isNext: true,
+        id: level.id || index + 1,
+        redirectId: null
+      }];
 
       return {
         title: level.title,
-        options: sectionLessons.length > 0 ? sectionLessons.map((lesson) => ({
-          label: lesson.title,
-          value: lesson.title,
-          isNext: false,
-          id: lesson.id, // Use actual lesson ID from API
-          redirectId: lesson.redirectId
-        })) : [{
-          label: level.title,
-          value: level.title,
-          isNext: true,
-          id: level.id || index + 1,
-          redirectId: null
-        }]
+        options: tabOptions
       };
     });
 
-    console.log('Setting allTabs:', tabs);
+    console.log('ardi 18: Setting allTabs:', tabs.map(t => ({ title: t.title, optionsCount: t.options.length })));
     setAllTabs(tabs);
-  }, [levels, sections, lessons]);
+
+    // Set initial option when tabs are first created
+    if (tabs.length > 0 && !activeTabData.option) {
+      const firstTab = tabs[0];
+      if (firstTab.options && firstTab.options.length > 0) {
+        console.log('ardi 19: Setting initial option:', firstTab.options[0]);
+        setActiveTabData({
+          activeTab: 0,
+          option: firstTab.options[0]
+        });
+      }
+    }
+  }, [levels, sections, lessons]); // Removed activeTabData.option from dependencies to prevent infinite loops
 
   // Fetch finished content, levels, and lessons when component mounts
   useEffect(() => {
-    dispatch(fetchJournalFinishedContent());
-  }, [dispatch]);
+    if (contentData?.title) {
+      dispatch(fetchJournalFinishedContent(contentData.title));
+    }
+  }, [dispatch, contentData?.title]);
+
+  // Debug activeTabData changes
+  useEffect(() => {
+    console.log('ardi 34: activeTabData changed:', activeTabData);
+  }, [activeTabData]);
 
   // Update isNext flag based on finishedContent
   useEffect(() => {
@@ -251,14 +290,14 @@ const JournalCourses = memo(() => {
 
   // Function to check if a section is accessible
   const canAccessSection = (index) => {
+    // First lesson tab (index 0) is accessible after overview
     if (index === 0) return true;
 
-    // Get lessons for the previous section from dynamic sections
-    const sectionKey = (index - 1) === 0 ? 'one' : (index - 1) === 1 ? 'two' : 'three';
-    const prevSectionLessons = sections[sectionKey] || [];
+    // Other lesson tabs (indices 1+) require previous lesson to be completed
+    const prevSectionLessons = sections[index === 1 ? 'one' : index === 2 ? 'two' : 'three'] || [];
 
-    // All lessons from the previous section must be completed
-    return prevSectionLessons.every(lesson => finishedContent.includes(lesson.title));
+    // The lesson from the previous section must be completed
+    return prevSectionLessons.length > 0 && finishedContent.includes(prevSectionLessons[0].title);
   };
 
   // Handle save and continue
@@ -266,83 +305,92 @@ const JournalCourses = memo(() => {
     try {
       setIsSaving(true);
 
-      const currentComponent = valueRefs.current[activeTabData.option?.value];
+      console.log('ardi 40: handleSaveAndContinue called, showOverview:', showOverview);
 
-      // Check if this is an intro section
-      const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
-      const currentSectionLessons = sections[sectionKey] || [];
-      const currentLessonIndex = currentSectionLessons.findIndex(
-        lesson => lesson.title === activeTabData.option?.value
-      );
-
-      // For section 1, first 2 lessons are intro sections
-      // For sections 2 and 3, first lesson is intro section
-      const isIntroSection = (activeTabData.activeTab === 0 && (currentLessonIndex === 0 || currentLessonIndex === 1)) ||
-                            (activeTabData.activeTab > 0 && currentLessonIndex === 0);
-
-      if (isIntroSection) {
-        // Handle intro sections as before...
-        const currentSection = allTabs[activeTabData.activeTab].options;
-        const currentOptionIndex = currentSection.findIndex(
-          option => option.value === activeTabData.option?.value
-        );
-
-        if (currentOptionIndex < currentSection.length - 1) {
+      // If showing overview, switch to lessons mode
+      if (showOverview) {
+        console.log('ardi 41: switching from overview to lessons');
+        setShowOverview(false);
+        // Set to first lesson tab
+        if (allTabs.length > 0) {
           setActiveTabData({
-            ...activeTabData,
-            option: currentSection[currentOptionIndex + 1]
+            activeTab: 0,
+            option: allTabs[0].options[0]
           });
         }
+        setIsSaving(false);
         return;
       }
 
+      // For lesson tabs, save changes and move to next tab
+      const currentComponent = valueRefs.current[activeTabData.option?.value];
+
       // Save changes if it's a reflection section
       if (currentComponent?.saveChanges) {
+        console.log('ardi 42: saving changes');
         await currentComponent.saveChanges();
       }
 
       // Fetch updated content
-      await dispatch(fetchJournalFinishedContent());
+      await dispatch(fetchJournalFinishedContent(contentData.title));
       const { journal: { finishedContent: updatedContent } } = store.getState();
+      console.log('ardi 43: updated finished content:', updatedContent);
 
       // Check if current content is completed
       if (!updatedContent.includes(activeTabData.option?.value)) {
+        console.log('ardi 44: content not completed, showing lock modal');
         setShowLockModal(true);
+        setIsSaving(false);
         return;
       }
 
-      // Special handling for Vision section
-      if (activeTabData.option?.value === 'Vision' && updatedContent.includes('Vision')) {
-        window.location.href = `/journal-courses/${id}`;
-        return;
-      }
-
-      // Rest of the function remains the same...
-      const currentSection = allTabs[activeTabData.activeTab].options;
-      const currentOptionIndex = currentSection.findIndex(
-        option => option.value === activeTabData.option?.value
-      );
-
-      if (currentOptionIndex < currentSection.length - 1) {
-        const nextOption = currentSection[currentOptionIndex + 1];
-        setActiveTabData({
-          ...activeTabData,
-          option: nextOption
-        });
-      } else if (activeTabData.activeTab < allTabs.length - 1) {
+      // Move to next tab
+      if (activeTabData.activeTab < allTabs.length - 1) {
         if (canAccessSection(activeTabData.activeTab + 1)) {
+          console.log('ardi 45: moving to next tab', activeTabData.activeTab + 1);
           setActiveTabData({
             activeTab: activeTabData.activeTab + 1,
             option: allTabs[activeTabData.activeTab + 1].options[0]
           });
         } else {
+          console.log('ardi 46: next tab not accessible, showing lock modal');
           setShowLockModal(true);
         }
+      } else {
+        // End of course - redirect back to course page
+        console.log('ardi 47: end of course, redirecting');
+        window.location.href = `/journal-courses/${category}`;
+        return;
       }
 
-      // Update isNext flags...
+      // Update isNext flags
+      setAllTabs(prevTabs => {
+        if (prevTabs.length === 0) return prevTabs;
+
+        const updatedTabs = [...prevTabs];
+
+        const updateNextFlags = (options) => {
+          let foundNext = false;
+          return options.map(option => {
+            const finished = updatedContent.includes(option.label);
+            const isNext = !finished && !foundNext;
+            if (isNext) foundNext = true;
+            return { ...option, isNext };
+          });
+        };
+
+        updatedTabs.forEach((tab, index) => {
+          if (tab && tab.options) {
+            updatedTabs[index].options = updateNextFlags(tab.options);
+          }
+        });
+
+        return updatedTabs;
+      });
+
     } catch (error) {
-      console.error('Error saving:', error);
+      console.error('ardi 48: Error saving:', error);
+      setIsSaving(false);
     } finally {
       setIsSaving(false);
     }
@@ -362,39 +410,41 @@ const JournalCourses = memo(() => {
 
   // Check if current option is an intro section
   const isIntroSection = useMemo(() => {
-    const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
-    const currentSectionLessons = sections[sectionKey] || [];
+    if (showOverview) return false; // Overview is not an intro section
 
-    if (currentSectionLessons.length === 0) return false;
-
-    const currentLessonIndex = currentSectionLessons.findIndex(
-      lesson => lesson.title === activeTabData.option?.value
-    );
-
-    // For section 1 (index 0), first 2 lessons are intro sections
-    // For sections 2 and 3 (index 1, 2), first lesson is intro section
-    if (activeTabData.activeTab === 0) {
-      return currentLessonIndex === 0 || currentLessonIndex === 1;
-    } else {
-      return currentLessonIndex === 0;
-    }
-  }, [activeTabData, sections]);
+    // Since each tab has only one lesson and it's always the main content, no intro sections
+    return false;
+  }, [activeTabData, sections, showOverview]);
 
   // Render the appropriate section based on active tab and option
   const renderedSection = useMemo(() => {
-    if (allTabs.length === 0) return null;
+    console.log('ardi 20: renderedSection useMemo called with activeTabData:', activeTabData, 'showOverview:', showOverview);
 
-    // Find the component that matches the selected option from the hardcoded sections
-    // Map level index to section key
-    const sectionKey = activeTabData.activeTab === 0 ? 'one' :
-      activeTabData.activeTab === 1 ? 'two' : 'three';
+    // Show overview (SectionOne with main content) initially
+    if (showOverview) {
+      console.log('ardi 21: showing overview SectionOne');
+      return <SectionOne setIsReflection={setIsReflection} contentData={contentData} />;
+    }
+
+    if (allTabs.length === 0) {
+      console.log('ardi 22: no allTabs, returning null');
+      return null;
+    }
+
+    // Handle lesson tabs
+    const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
+
+    console.log('ardi 23: looking for section in', sectionKey, 'with title:', activeTabData.option?.value);
+    console.log('ardi 24: available sections in', sectionKey, ':', sections[sectionKey]?.map(s => s.title));
 
     const selectedSection = sections[sectionKey]?.find(
       section => section.title === activeTabData.option?.value
     );
 
+    console.log('ardi 25: selectedSection found:', selectedSection ? 'YES' : 'NO', selectedSection?.title);
+
     return selectedSection ? selectedSection.component : null;
-  }, [activeTabData, allTabs, sections]);
+  }, [activeTabData, allTabs, sections, showOverview, contentData, setIsReflection]);
 
   // Update current title when option changes
   useEffect(() => {
@@ -408,36 +458,36 @@ const JournalCourses = memo(() => {
 
   // Handle tab click
   const handleTabClick = (index) => {
+    console.log('ardi 26: handleTabClick called with index:', index, 'showOverview:', showOverview);
+
+    // Prevent tab clicks during overview mode
+    if (showOverview) {
+      console.log('ardi 27: ignoring tab click during overview mode');
+      return;
+    }
+
+    // Check accessibility
     if (!canAccessSection(index)) {
+      console.log('ardi 28: section not accessible, showing lock modal');
       setShowLockModal(true);
       return;
     }
 
-    // Get the first lesson from the dynamic sections
-    const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
-    const sectionLessons = sections[sectionKey] || [];
-    const firstLesson = sectionLessons[0];
+    // Get the first lesson from the tabs options
+    const tabOptions = allTabs[index]?.options || [];
+    const firstOption = tabOptions[0];
+    console.log('ardi 29: tabOptions for index', index, ':', tabOptions.map(o => ({ label: o.label, value: o.value })));
+    console.log('ardi 30: firstOption:', firstOption);
 
-    let initialOption;
-    if (firstLesson) {
-      initialOption = {
-        label: firstLesson.title,
-        value: firstLesson.title,
-        id: firstLesson.id, // Use actual lesson ID from API
-        redirectId: firstLesson.redirectId
-      };
+    if (firstOption) {
+      console.log('ardi 31: setting activeTabData to:', { activeTab: index, option: firstOption });
+      setActiveTabData({
+        activeTab: index,
+        option: firstOption
+      });
     } else {
-      // Fallback if no lessons available
-      initialOption = {
-        label: levels[index]?.title || `Section ${index + 1}`,
-        value: levels[index]?.title || `Section ${index + 1}`
-      };
+      console.log('ardi 32: no firstOption found');
     }
-
-    setActiveTabData({
-      activeTab: index,
-      option: initialOption
-    });
   };
 
   if (loading) {
@@ -448,7 +498,7 @@ const JournalCourses = memo(() => {
             <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
               <div className='d-flex flex-column gap-2'>
                 <h3 className='page-title bold-page-title text-black mb-0'>
-                  {contentData?.title || 'Journal Course'}
+                  {category || 'Journal Course'}
                 </h3>
                 <p className='fs-13 fw-light text-black'>
                   Loading course content...
@@ -485,7 +535,7 @@ const JournalCourses = memo(() => {
             <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
               <div className='d-flex flex-column gap-2'>
                 <h3 className='page-title bold-page-title text-black mb-0'>
-                  {contentData?.title || 'Journal Course'}
+                  {category || 'Journal Course'}
                 </h3>
                 <p className='fs-13 fw-light text-black'>
                   Error loading course content
@@ -542,7 +592,7 @@ const JournalCourses = memo(() => {
         </div>
         <div className='academy-dashboard-layout lead-class mb-5'>
           {allTabs.length === 0 ? (
-            <div>Loading tabs...</div>
+            <div>Loading...</div>
           ) : (
             <>
               <div className='course-experts d-flex flex-col-mob align-center-mob'>
@@ -555,8 +605,8 @@ const JournalCourses = memo(() => {
                       }`}
                     onClick={() => handleTabClick(index)}
                     style={{
-                      color: canAccessSection(index) ? '#000' : '#999',
-                      cursor: canAccessSection(index) ? 'pointer' : 'not-allowed',
+                      color: showOverview ? '#999' : (canAccessSection(index) ? '#000' : '#999'),
+                      cursor: showOverview ? 'not-allowed' : (canAccessSection(index) ? 'pointer' : 'not-allowed'),
                       width: '100%'
                     }}
                   >
@@ -569,25 +619,28 @@ const JournalCourses = memo(() => {
                   <SelectCourses
                     selectedCourse={activeTabData}
                     setSelectedCourse={setActiveTabData}
-                    options={allTabs[activeTabData.activeTab]?.options || []}
+                    options={showOverview ? [{
+                      label: 'Course Overview',
+                      value: 'Course Overview',
+                      isNext: true,
+                      id: null,
+                      redirectId: null
+                    }] : (allTabs[activeTabData.activeTab]?.options || [])}
                     placeholder={
-                      !activeTabData.option ? (
-                        allTabs[activeTabData.activeTab]?.title || 'Select Journal Sections'
-                      ) : currentTitle || 'Select Journal Sections'
+                      currentTitle || (showOverview ? 'Course Overview' : (allTabs[activeTabData.activeTab]?.title || 'Select Journal Sections'))
                     }
-                    isDisabled={isOptionDisabled}
+                    isDisabled={showOverview ? (() => false) : isOptionDisabled}
                   />
                 </div>
                 <div className='d-flex gap-3 flex-col-mob align-items-end-mob saveContinue-btn'>
-                  {(isReflection || isIntroSection) && (
-                      <AcademyBtn
-                        title={isReflection ? 'Save and Continue' : 'Continue'}
-                        icon={isSaving ? faSpinner : faArrowRight}
-                        onClick={handleSaveAndContinue}
-                        disabled={isSaving}
-                        loading={isSaving}
-                        spin={isSaving}
-                      />)}
+                  <AcademyBtn
+                    title={showOverview ? 'Continue' : (isReflection ? 'Save and Continue' : 'Continue')}
+                    icon={isSaving ? faSpinner : faArrowRight}
+                    onClick={handleSaveAndContinue}
+                    disabled={isSaving}
+                    loading={isSaving}
+                    spin={isSaving}
+                  />
                 </div>
                 {showLockModal && (
                   <Modal
@@ -619,28 +672,6 @@ const JournalCourses = memo(() => {
               </div>
               <div className='leadership-btn-section'>
                 <div className='d-flex mt-4'>{renderedSection}</div>
-              </div>
-
-              <div className='d-flex justify-content-end mt-4 mb-4'>
-                <div className='progress-details'>
-                  <button
-                    style={{ padding: '.5rem', background: 'inherit', border: 'none', marginRight: '2rem' }}
-                    className='progress-details'
-                    onClick={handleSaveAndContinue}
-                    disabled={isSaving}
-                  >
-                    {isSaving ? (
-                      <FontAwesomeIcon icon={faSpinner} spin />
-                    ) : (
-                      <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                        {isReflection
-                          ? 'Save and Continue'
-                          : isIntroSection ? 'Continue' : 'Save and Continue'}
-                        <FontAwesomeIcon icon={faArrowRight} />
-                      </span>
-                    )}
-                  </button>
-                </div>
               </div>
             </>
           )}
