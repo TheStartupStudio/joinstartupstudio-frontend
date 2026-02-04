@@ -24,12 +24,13 @@ function SectionOne({ setIsReflection, contentData: propContentData, lessonId })
 
   // If no contentData prop provided, fetch it (fallback for backward compatibility)
   useEffect(() => {
+    // Only fetch if propContentData is not provided
     if (!propContentData) {
-      setLoading(true)
       const fetchContent = async () => {
         try {
+          setLoading(true)
           // Use dynamic ID if available (journal courses), otherwise default to 1 (leadership journal)
-          const contentId = lessonId || '1'
+          const contentId = '1'
           const response = await axiosInstance.get(`/manage-content/${contentId}`)
           setFetchedContentData(response.data.data || response.data)
           setLoading(false)
@@ -39,6 +40,7 @@ function SectionOne({ setIsReflection, contentData: propContentData, lessonId })
           setLoading(false)
         }
       }
+
       fetchContent()
     }
     }, [propContentData, lessonId])
@@ -212,6 +214,9 @@ function SectionOne({ setIsReflection, contentData: propContentData, lessonId })
       </div>
     )
   }
+
+
+  console.log('contentData ardi 123', contentData)
 
 
   return (

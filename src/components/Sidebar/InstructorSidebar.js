@@ -309,27 +309,27 @@ const InstructorSidebar = (props) => {
     }
   }, [user])
 
-  useEffect(() => {
-    const fetchManageContent = async () => {
-      try {
-        setManageContentLoading(true)
-        const response = await axiosInstance.get('/journal-courses/manage-content/all')
-        if (response.data.success) {
-          setManageContentData(response.data.data || [])
-        } else {
-          console.error('Failed to fetch manage content data')
-          setManageContentData([])
-        }
-      } catch (error) {
-        console.error('Error fetching manage content data:', error)
-        setManageContentData([])
-      } finally {
-        setManageContentLoading(false)
-      }
-    }
+  // useEffect(() => {
+  //   const fetchManageContent = async () => {
+  //     try {
+  //       setManageContentLoading(true)
+  //       const response = await axiosInstance.get('/journal-courses/manage-content/all')
+  //       if (response.data.success) {
+  //         setManageContentData(response.data.data || [])
+  //       } else {
+  //         console.error('Failed to fetch manage content data')
+  //         setManageContentData([])
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching manage content data:', error)
+  //       setManageContentData([])
+  //     } finally {
+  //       setManageContentLoading(false)
+  //     }
+  //   }
 
-    fetchManageContent()
-  }, [])
+  //   fetchManageContent()
+  // }, [])
 
   const handleMouseEnter = () => {
     if (isTouchDevice) return
