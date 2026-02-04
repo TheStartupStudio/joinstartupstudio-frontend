@@ -276,3 +276,7 @@ padding-bottom: 30px;
     justify-content: center;
   }
 }
+
+.master-class-managment .data-table-container td:nth-child(2){
+ width: 100%;
+}

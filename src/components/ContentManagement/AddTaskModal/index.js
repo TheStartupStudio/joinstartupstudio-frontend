@@ -119,6 +119,12 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     }
   }, [])
 
+  const handleSaveAndContinue = async () => {
+    // For "Save and Continue", we just switch to reflection tab
+    // No need to save to backend yet, as video/thumbnail are already uploaded when selected
+    setActiveTab('reflection')
+  }
+
   const handleSave = async () => {
     if (!taskTitle || !selectedLevel) {
       toast.error('Please fill in all required fields')
@@ -214,14 +220,13 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
       let response
       if (isEditMode && taskData?.id) {
-        toast.info('Updating task...')
         if (isMasterClass) {
           response = await axiosInstance.put(`/contents/${taskData.id}`, payload)
         } else {
           response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
         }
+        toast.success('Task updated successfully!')
       } else {
-        toast.info('Creating task...')
         if (isMasterClass) {
           response = await axiosInstance.post('/contents', payload)
         } else {
@@ -854,8 +859,14 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
               <button className="btn-cancel" onClick={handleClose} disabled={loading}>
                 CANCEL
               </button>
-              <button className="btn-save" onClick={handleSave} disabled={loading}>
-                {loading ? 'SAVING...' : (isEditMode ? 'UPDATE AND CLOSE' : 'SAVE AND CLOSE')}
+              <button
+                className="btn-save"
+                onClick={(!isMasterClass && (videoPreview || thumbnailPreview) && activeTab === 'video') ? handleSaveAndContinue : handleSave}
+                disabled={loading}
+              >
+                {loading ? 'SAVING...' :
+                 (!isMasterClass && (videoPreview || thumbnailPreview) && activeTab === 'video') ? 'SAVE AND CONTINUE' :
+                 (isEditMode ? 'UPDATE AND CLOSE' : 'SAVE AND CLOSE')}
               </button>
             </div>
           </div>

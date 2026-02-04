@@ -111,7 +111,7 @@ const AssignTasksModal = ({
   const getCategoryDisplayName = () => {
     const categoryNames = {
       'content': 'Content',
-      'masterclass': 'Masterclass',
+      'masterclass': 'Studio Guidance',
       'Leadership Journal': 'Leadership Journal',
       'test ground': 'Test Ground'
     }
