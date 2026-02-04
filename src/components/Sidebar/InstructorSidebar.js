@@ -102,7 +102,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Sessions',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     className: (pathname) => pathname.includes('my-course-in-entrepreneurship/journal') ? 'active' : ''
   },
   {
@@ -119,7 +119,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Leadership journal',
     srcImage: LeadershipIcon,
     to: '/leadership-journal',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasLeadershipJournal',
     className: (pathname) => pathname.includes('leadership-journal') ? 'active' : ''
   },
