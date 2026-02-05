@@ -1,0 +1,461 @@
+/* TSS Feedback Styles - Similar to UserManagement */
+.tss-feedback-container {
+  padding: 30px 30px 30px 30px;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
+  margin: 10px;
+  border-radius: 8px;
+}
+
+.tss-feedback-container .search-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.tss-feedback-container .search-container {
+  flex: 1;
+  max-width: 400px;
+}
+
+.tss-feedback-container .search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.tss-feedback-container .search-input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  background: white;
+  transition: border-color 0.2s ease;
+}
+
+.tss-feedback-container .search-input:focus {
+  outline: none;
+  border-color: rgb(236, 236, 236);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.tss-feedback-container .search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.tss-feedback-container .table-container {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.tss-feedback-container .pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  margin-top: 0px;
+  border:none;
+  padding: 10px;
+}
+
+.tss-feedback-container .pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tss-feedback-container .pagination-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.tss-feedback-container .pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tss-feedback-container .pagination-info {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Learner info styles */
+.tss-feedback-container .learner-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tss-feedback-container .learner-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tss-feedback-container .learner-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.tss-feedback-container .learner-email {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+/* Status indicators */
+.tss-feedback-container .status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tss-feedback-container .status-indicator.active {
+  background: #10b981;
+}
+
+.tss-feedback-container .status-indicator.inactive {
+  background: #ef4444;
+}
+
+/* Date styles */
+.tss-feedback-container .last-active {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #374151;
+}
+
+
+/* Feedback View Modal Styles */
+.tss-feedback-view-modal .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.tss-feedback-view-modal .feedback-modal-header {
+  /* background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); */
+  /* border-bottom: 1px solid #e2e8f0; */
+  padding: 24px 30px;
+  position: relative;
+}
+
+.tss-feedback-view-modal .modal-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 12px;
+}
+
+.tss-feedback-view-modal .modal-icon {
+  background: #E2E6EC;
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tss-feedback-view-modal .modal-icon svg {
+  display: block;
+}
+
+.tss-feedback-view-modal .feedback-modal-header .modal-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.tss-feedback-view-modal .feedback-modal-header .btn-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #64748b;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.tss-feedback-view-modal .feedback-modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.tss-feedback-view-modal .feedback-modal-body {
+  padding: 30px;
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  background: #ffffff;
+}
+
+.tss-feedback-view-modal .feedback-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.tss-feedback-view-modal .feedback-section {
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.tss-feedback-view-modal .section-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 6px 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 6px;
+}
+
+.tss-feedback-view-modal .section-header svg {
+  flex-shrink: 0;
+}
+
+.tss-feedback-view-modal .section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.tss-feedback-view-modal .section-content {
+  padding: 24px 0px;
+}
+
+.tss-feedback-view-modal .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.tss-feedback-view-modal .info-item {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+/* .tss-feedback-view-modal .info-item:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e1;
+} */
+
+.tss-feedback-view-modal .info-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.tss-feedback-view-modal .info-label svg {
+  flex-shrink: 0;
+}
+
+.tss-feedback-view-modal .info-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.tss-feedback-view-modal .question-item {
+  margin-bottom: 24px;
+}
+
+.tss-feedback-view-modal .question-item:last-child {
+  margin-bottom: 0;
+}
+
+.tss-feedback-view-modal .question-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  /* background: #f1f5f9; */
+  border-radius: 8px;
+  /* border-left: 4px solid #3b82f6; */
+}
+
+.tss-feedback-view-modal .question-number {
+  background: #eaf0f7;
+  color: black;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.tss-feedback-view-modal .question-answer {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-left: 36px;
+  position: relative;
+}
+
+/* .tss-feedback-view-modal .question-answer:before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #e2e8f0;
+}
+
+.tss-feedback-view-modal .question-answer:after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #ffffff;
+} */
+
+.tss-feedback-view-modal .feedback-content-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+}
+
+.tss-feedback-view-modal .feedback-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #334155;
+}
+
+.tss-feedback-view-modal .feedback-paragraph {
+  margin: 0 0 16px 0;
+  text-align: justify;
+}
+
+.tss-feedback-view-modal .feedback-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.tss-feedback-view-modal .no-feedback {
+  font-style: italic;
+  color: #94a3b8;
+  text-align: center;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tss-feedback-container {
+    padding: 0 15px 20px 15px;
+  }
+
+  .tss-feedback-container .search-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tss-feedback-container .search-container {
+    max-width: none;
+  }
+
+  .tss-feedback-view-modal .modal-body {
+    padding: 16px;
+  }
+
+  .tss-feedback-view-modal .feedback-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .tss-feedback-view-modal .feedback-row strong {
+    min-width: auto;
+  }
+}
+
+.tss-feedback-view-modal button {
+  background: rgb(231, 231, 231);
+  color: black;
+  outline: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  padding: 14px 20px;
+  /* margin-top: 20px; */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 150px;
+}
+
+/* .tss-feedback-view-modal button:hover {
+  background: rgb(211, 211, 211);
+  transform: translateY(-2px);
+} */

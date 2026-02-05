@@ -210,6 +210,7 @@ const MasterClassManagement = React.lazy(() =>
 const LeadershipJournalManagement = React.lazy(() =>
   import('../pages/LeadershipJournalManagement')
 )
+const TssFeedback = React.lazy(() => import('../pages/TssFeedback'))
 
 const ManageContentSite = React.lazy(() =>
   import('../pages/ManageContentSite')
@@ -281,6 +282,11 @@ export const adminRoutes = [
     component: ReportedPosts,
     breadcrumb: 'Reported Posts',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN
+  },
+  {
+    path: '/tss-feedback',
+    component: TssFeedback,
+    breadcrumb: 'TSS Feedback'
   },
   {
     path: '/my-school/:page?',
