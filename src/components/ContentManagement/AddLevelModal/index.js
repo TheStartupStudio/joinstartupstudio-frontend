@@ -45,12 +45,14 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       if (existingLevels.length > 0) {
         const levelsArray = existingLevels.map((level, index) => {
           if (typeof level === 'string') {
-            return { 
-              id: null, 
-              title: level, 
+            return {
+              id: null,
+              title: level,
               order: index + 1,
-              isEditing: false, 
-              isNew: false 
+              isEditing: false,
+              isNew: false,
+              isEdited: false,
+              isDeleted: false
             }
           } else {
             return {
@@ -59,6 +61,8 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
               order: level.order || index + 1,
               isEditing: false,
               isNew: false,
+              isEdited: false,
+              isDeleted: false,
               originalTitle: level.title
             }
           }
@@ -72,172 +76,151 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const handleLevelChange = (id, value) => {
     setLevels(prevLevels =>
       prevLevels.map(level =>
-        level.id === id ? { ...level, title: value } : level
+        level.id === id ? { ...level, title: value, isEdited: true } : level
       )
     )
   }
 
-  const toggleEditing = async (id) => {
-    const level = levels.find(l => l.id === id)
-    
-    if (level && level.isEditing) {
-      setLoading(true)
-      try {
-        await axiosInstance.put(getApiEndpoint('update', id), {
-          title: level.title,
-          order: level.order
-        })
-        
-        setLevels(prevLevels =>
-          prevLevels.map(l =>
-            l.id === id ? { ...l, isEditing: false, isNew: false, originalTitle: l.title } : l
-          )
-        )
-        
-        toast.success('Level updated successfully!')
-        
-        if (onSave) {
-          onSave()
-        }
-      } catch (error) {
-        console.error('Error updating level:', error)
-        toast.error(error.response?.data?.message || 'Failed to update level')
-      } finally {
-        setLoading(false)
-      }
-    } else {
-      setLevels(prevLevels =>
-        prevLevels.map(l =>
-          l.id === id ? { ...l, isEditing: true } : l
-        )
+  const toggleEditing = (id) => {
+    setLevels(prevLevels =>
+      prevLevels.map(l =>
+        l.id === id ? { ...l, isEditing: !l.isEditing } : l
       )
-    }
+    )
   }
 
-  const addNewLevelAfter = async (afterId) => {
+  const addNewLevelAfter = (afterId) => {
     const insertIndex = levels.findIndex(level => level.id === afterId)
     const newOrder = insertIndex + 2
 
     const newTitle = category === 'leadership' ? 'Add Section title...' : 'Add Level title...'
-    
-    setLoading(true)
-    try {
-      const response = await axiosInstance.post(getApiEndpoint('create'), {
-        title: newTitle,
-        order: newOrder,
-        published: true
-      })
 
-      const newLevel = {
-        id: response.data.id,
-        title: response.data.title,
-        order: response.data.order,
-        isEditing: true, 
-        isNew: true
-      }
+    // Generate a temporary ID for the new level
+    const tempId = `temp-${Date.now()}`
 
-      const updatedLevels = [
-        ...levels.slice(0, insertIndex + 1),
-        newLevel,
-        ...levels.slice(insertIndex + 1)
-      ]
-
-      const renumberedLevels = []
-      for (let i = 0; i < updatedLevels.length; i++) {
-        const level = updatedLevels[i]
-        const levelNumber = i + 1
-
-        renumberedLevels.push({
-          ...level,
-          order: levelNumber
-        })
-
-        if (!level.isNew && level.order !== levelNumber) {
-          await axiosInstance.put(getApiEndpoint('update', level.id), {
-            title: level.title,
-            order: levelNumber
-          })
-        } else if (level.isNew && level.id === newLevel.id && level.title !== response.data.title) {
-          await axiosInstance.put(getApiEndpoint('update', level.id), {
-            title: level.title,
-            order: levelNumber
-          })
-        }
-      }
-
-      setLevels(renumberedLevels)
-      setHasNewLevel(true)
-      toast.success('Level created successfully!')
-      
-      if (onSave) {
-        onSave()
-      }
-    } catch (error) {
-      console.error('Error creating level:', error)
-      toast.error(error.response?.data?.message || 'Failed to create level')
-    } finally {
-      setLoading(false)
+    const newLevel = {
+      id: tempId,
+      title: newTitle,
+      order: newOrder,
+      isEditing: true,
+      isNew: true,
+      isEdited: false
     }
+
+    const updatedLevels = [
+      ...levels.slice(0, insertIndex + 1),
+      newLevel,
+      ...levels.slice(insertIndex + 1)
+    ]
+
+    // Renumber all levels
+    const renumberedLevels = updatedLevels.map((level, index) => ({
+      ...level,
+      order: index + 1
+    }))
+
+    setLevels(renumberedLevels)
+    setHasNewLevel(true)
   }
 
-  const deleteLevel = async (id) => {
+  const deleteLevel = (id) => {
     if (levels.length <= 1) {
       toast.warning('Cannot delete the last level')
       return
     }
 
-    setLoading(true)
-    try {
-      await axiosInstance.delete(getApiEndpoint('delete', id))
+    const levelToDelete = levels.find(level => level.id === id)
 
+    if (levelToDelete && !levelToDelete.isNew) {
+      // If it's an existing level, mark it for deletion but don't remove from UI yet
+      setLevels(prevLevels =>
+        prevLevels.map(level =>
+          level.id === id ? { ...level, isDeleted: true } : level
+        )
+      )
+    } else {
+      // If it's a new level that hasn't been saved yet, just remove it
       const filteredLevels = levels.filter(level => level.id !== id)
-      
-      const renumberedLevels = []
-      for (let i = 0; i < filteredLevels.length; i++) {
-        const level = filteredLevels[i]
-        const levelNumber = i + 1
 
-        renumberedLevels.push({
-          ...level,
-          order: levelNumber
-        })
+      // Renumber remaining levels
+      const renumberedLevels = filteredLevels.map((level, index) => ({
+        ...level,
+        order: index + 1
+      }))
 
-        if (level.order !== levelNumber) {
-          await axiosInstance.put(getApiEndpoint('update', level.id), {
-            title: level.title,
-            order: levelNumber
-          })
-        }
-      }
-      
       setLevels(renumberedLevels)
-      
+
       const hasNewLevels = renumberedLevels.some(level => level.isNew)
       setHasNewLevel(hasNewLevels)
-      
-      toast.success('Level deleted successfully!')
-      
+    }
+  }
+
+  const handleSave = async () => {
+    setLoading(true)
+    try {
+      const activeLevels = levels.filter(level => !level.isDeleted)
+
+      // Handle deletions first
+      for (const level of levels) {
+        if (level.isDeleted && level.id && !level.isNew) {
+          await axiosInstance.delete(getApiEndpoint('delete', level.id))
+        }
+      }
+
+      // First, create all new levels
+      for (const level of activeLevels) {
+        if (level.isNew && level.id.startsWith('temp-')) {
+          // Create new level
+          const response = await axiosInstance.post(getApiEndpoint('create'), {
+            title: level.title,
+            order: level.order,
+            published: true
+          })
+          // Update the temp ID with the real ID
+          level.id = response.data.id
+        }
+      }
+
+      // Then update all levels with correct order and any changes
+      for (let i = 0; i < activeLevels.length; i++) {
+        const level = activeLevels[i]
+        const correctOrder = i + 1
+
+        // Always update the order to ensure correct sequencing
+        await axiosInstance.put(getApiEndpoint('update', level.id), {
+          title: level.title,
+          order: correctOrder
+        })
+      }
+
+      // Update local state to reflect saved changes
+      const updatedLevels = activeLevels.map(level => ({
+        ...level,
+        isNew: false,
+        isEdited: false,
+        isEditing: false,
+        isDeleted: false,
+        originalTitle: level.title
+      }))
+      setLevels(updatedLevels)
+      setHasNewLevel(false)
+
+      toast.success('Changes saved successfully!')
       if (onSave) {
         onSave()
       }
     } catch (error) {
-      console.error('Error deleting level:', error)
-      toast.error(error.response?.data?.message || 'Failed to delete level')
+      console.error('Error saving changes:', error)
+      toast.error(error.response?.data?.message || 'Failed to save changes')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleSave = () => {
-    if (onSave) {
-      onSave()
-    }
-    handleClose()
-  }
 
   const handleSaveAndContinue = () => {
-    const updatedLevels = levels.map(level => ({ 
-      ...level, 
+    const updatedLevels = levels.map(level => ({
+      ...level,
       isNew: false,
       isEditing: false,
       originalTitle: level.title
@@ -270,7 +253,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           <label className="form-label">LEVEL TITLE:</label>
           
           <div className="levels-list">
-            {levels.map((level) => (
+            {levels.filter(level => !level.isDeleted).map((level) => (
               <div key={level.id}>
                 <div className={`level-item ${level.isNew ? 'new-level' : ''}`}>
                   <input
@@ -340,11 +323,10 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           <button className="btn-cancel" style={{ fontSize: '14px' }} onClick={handleClose} disabled={loading}>
             CANCEL
           </button>
-          {hasNewLevel && (
-            <button className="btn-save" onClick={handleSaveAndContinue} disabled={loading}>
-              {loading ? 'SAVING...' : 'SAVE AND CONTINUE'}
-            </button>
-          )}
+          <button className="btn-save" onClick={handleSave} disabled={loading}>
+            {loading ? 'SAVING...' : 'SAVE'}
+          </button>
+
         </div>
       </Modal.Body>
     </Modal>

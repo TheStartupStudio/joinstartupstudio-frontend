@@ -90,6 +90,9 @@ font-weight: 500;
   background: #51C7DF;
   color: #FFFFFF;
   box-shadow: 0 2px 8px rgba(81, 199, 223, 0.2);
+  font-size: 12px;
+font-weight: 600;
+font-family: Montserrat;
 }
 
 .user-management-popup-modal .cancel-btn:hover:not(:disabled) {

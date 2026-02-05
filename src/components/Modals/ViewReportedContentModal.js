@@ -13,6 +13,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
   const [userBanStatus, setUserBanStatus] = useState(null)
   const [banStatusLoading, setBanStatusLoading] = useState(false)
   const [userDetails, setUserDetails] = useState(null)
+  const [allowEditingResolved, setAllowEditingResolved] = useState(false)
 
   // Function to strip HTML tags from text
   const stripHtmlTags = (html) => {
@@ -37,7 +38,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       if (searchResponse.data.success && searchResponse.data.data.length > 0) {
         const user = searchResponse.data.data[0]
         setUserDetails(user)
-        setUserBanStatus(user.isBannedForum === 1)
+        setUserBanStatus(user.is_banned_forum || false)
       } else {
         // If not found in users, try learners endpoint
         const learnerResponse = await axiosInstance.get('/super-admin/learners', {
@@ -50,7 +51,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
         if (learnerResponse.data.success && learnerResponse.data.data.length > 0) {
           const learner = learnerResponse.data.data[0]
           setUserDetails(learner)
-          setUserBanStatus(learner.isBannedForum === 1)
+          setUserBanStatus(learner.is_banned_forum || false)
         } else {
           setUserBanStatus(null)
           setUserDetails(null)
@@ -88,6 +89,27 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       if (response.data.success) {
         setUserBanStatus(newBanStatus)
         toast.success(`User ${newBanStatus ? 'banned' : 'unbanned'} from forum successfully`)
+
+        // If this is a resolved report with "User restricted from posting in forum" resolution
+        // and we're unbanning the user, update the report resolution
+        if (isResolved && allowEditingResolved && !newBanStatus && reportDetails) {
+          try {
+            const currentReportId = reportId || reportDetails.id
+            await axiosInstance.post(`/forum/reports/${currentReportId}/resolution`, {
+              action: 'ignore' // Change to "Report reviewed and dismissed"
+            })
+            // Update the local report details
+            setReportDetails(prev => ({
+              ...prev,
+              resolution: 'Report reviewed and dismissed by administrator'
+            }))
+            setSelectedAction('ignore')
+            toast.success('Report resolution updated')
+          } catch (resolutionError) {
+            console.error('Error updating report resolution:', resolutionError)
+            // Don't show error toast for this as the main action succeeded
+          }
+        }
       } else {
         throw new Error('Failed to update ban status')
       }
@@ -111,6 +133,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
     if (isOpen) {
       setSelectedAction('ignore')
       setIsResolved(false)
+      setAllowEditingResolved(false)
       setUserBanStatus(null)
       setUserDetails(null)
       if (reportId) {
@@ -118,6 +141,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       } else if (reportData) {
         setReportDetails(reportData)
         setIsResolved(reportData.status === 'resolved')
+        setAllowEditingResolved(reportData.status === 'resolved' && reportData.resolution === 'User restricted from posting in forum')
         if (reportData.status === 'resolved') {
           setSelectedAction(getActionFromResolution(reportData.resolution))
         }
@@ -128,6 +152,22 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       }
     }
   }, [isOpen, reportId, reportData])
+
+  // Automatically set selected action based on user ban status
+  useEffect(() => {
+    if (userBanStatus !== null && !isResolved) {
+      if (userBanStatus) {
+        // User is banned - automatically select "restrict user from posting"
+        setSelectedAction('restrict')
+      } else {
+        // User is not banned - automatically select "ignore report"
+        setSelectedAction('ignore')
+      }
+    }
+  }, [userBanStatus, isResolved])
+
+  // Calculate what the ban status should be after the selected action
+  const calculatedBanStatus = selectedAction === 'restrict' ? true : userBanStatus
 
   const fetchReportDetails = async () => {
     try {
@@ -162,6 +202,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       console.log('Transformed report:', transformedReport)
       setReportDetails(transformedReport)
       setIsResolved(transformedReport.status === 'resolved')
+      setAllowEditingResolved(transformedReport.status === 'resolved' && transformedReport.resolution === 'User restricted from posting in forum')
       if (transformedReport.status === 'resolved') {
         setSelectedAction(getActionFromResolution(transformedReport.resolution))
       }
@@ -406,7 +447,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="ignore"
                     checked={selectedAction === 'ignore'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isResolved}
+                    disabled={isResolved && !allowEditingResolved}
                   />
                   <label htmlFor="ignore-report" className="radio-label">
                     <div className="radio-label-content">
@@ -423,7 +464,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="delete"
                     checked={selectedAction === 'delete'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isResolved}
+                    disabled={isResolved && !allowEditingResolved}
                   />
                   <label htmlFor="delete-post" className="radio-label">
                     <div className="radio-label-content">
@@ -440,7 +481,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="restrict"
                     checked={selectedAction === 'restrict'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isResolved}
+                    disabled={isResolved && !allowEditingResolved}
                   />
                   <label htmlFor="restrict-user" className="radio-label">
                     <div className="radio-label-content">
@@ -484,7 +525,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                 alignItems: "center",
                 gap: "12px",
                 borderRadius: 8,
-                background: isResolved ? "#ccc" : "#51C7DF",
+                background: (isResolved && !allowEditingResolved) ? "#ccc" : "#51C7DF",
                 boxShadow: "0 4px 10px 0 rgba(0, 0, 0, 0.25)",
                 color: "#FFF",
                 fontSize: 17,
@@ -492,7 +533,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                 outline: "none",
                 border: "none",
               }}
-              disabled={isResolved}
+              disabled={isResolved && !allowEditingResolved}
             onClick={handleSubmit}>
               Submit
             </button>

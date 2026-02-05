@@ -13,6 +13,8 @@ import { getJournalData } from '../../redux/journal/Actions'
 import { toast } from 'react-toastify'
 import { NotesButton } from '../Notes'
 import { useHistory } from 'react-router-dom'
+import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
+
 
 const Value = forwardRef((props, ref) => {
   const { id, setIsReflection, onTitleChange } = props
@@ -135,7 +137,11 @@ const Value = forwardRef((props, ref) => {
       <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
         <div className='w-100'>
           <div className='row'>
-            <div className='col-12 mb-4'>
+            <div className='d-grid academy-dashboard-card p-3'>
+              <div className='d-flex gap-3 align-items-center mb-4 mt-2'>
+              <img src={WhoAmI} alt='who-am-i' style={{ width: '40px', height: '40px' }}  />
+              <h4 className='fs-18 my-details-header text-black'>{journalData?.title}</h4>
+            </div>
               {journalData?.video && (
                 <div
                   className="journal-entries__video-thumbnail"
@@ -180,7 +186,7 @@ const Value = forwardRef((props, ref) => {
           </div>
         </div>
 
-        <SectionsWrapper title={journalData?.title}>
+        <SectionsWrapper title={'Details'}>
           <div style={{ position: 'relative' }}>
             <div style={noteButtonStyles}>
               <NotesButton

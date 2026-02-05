@@ -77,6 +77,7 @@ const UserManagement = () => {
   const [showDeletePopup, setShowDeletePopup] = useState(false)
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false)
   const [showDeactivatePopup, setShowDeactivatePopup] = useState(false)
+  const [showActivatePopup, setShowActivatePopup] = useState(false)
   const [selectedItems, setSelectedItems] = useState([])
   const [actionContext, setActionContext] = useState('') 
   const [isSingleAction, setIsSingleAction] = useState(false) 
@@ -368,6 +369,12 @@ const UserManagement = () => {
         setIsSingleAction(true)
         setShowDeletePopup(true)
         break
+      case 'activate-learner':
+        setActionContext('users')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowActivatePopup(true)
+        break
       default:
         break
     }
@@ -584,6 +591,18 @@ const UserManagement = () => {
     setShowBulkDropdown(false)
   }
 
+  const activateUsers = () => {
+    if (selectedUsers.length === 0) {
+      toast.warning('Please select at least one user')
+      return
+    }
+    setActionContext('users')
+    setSelectedItems(selectedUsers)
+    setIsSingleAction(false)
+    setShowActivatePopup(true)
+    setShowBulkDropdown(false)
+  }
+
   const deactivateUsers = () => {
     if (selectedUsers.length === 0) {
       toast.warning('Please select at least one user')
@@ -721,6 +740,11 @@ const UserManagement = () => {
       icons: <img src={userPassword} alt="password" className="admin-icons-dropdown" />
     },
     {
+      name: 'Activate Users',
+      action: () => activateUsers(),
+      icons: <img src={userPlus} alt="activate" className="admin-icons-dropdown" />
+    },
+    {
       name: 'Deactivate Users',
       action: () => deactivateUsers(),
       icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
@@ -751,6 +775,12 @@ const UserManagement = () => {
 
   const handleDeactivateCancel = () => {
     setShowDeactivatePopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleActivateCancel = () => {
+    setShowActivatePopup(false)
     setSelectedItems([])
     setIsSingleAction(false)
   }
@@ -819,6 +849,33 @@ const UserManagement = () => {
     }
   }
 
+  const handleConfirmActivate = async () => {
+    setLoading(true)
+    try {
+      if (isSingleAction) {
+        const userIds = [selectedItems[0].id]
+        await axiosInstance.post('/super-admin/users/bulk-activate', { userIds })
+        toast.success('User activated successfully!')
+      } else {
+        const userIds = selectedItems.map(item => item.id)
+        await axiosInstance.post('/super-admin/users/bulk-activate', { userIds })
+        toast.success(`${userIds.length} user(s) activated successfully!`)
+      }
+
+      setSelectedUsers([])
+      fetchUsers(currentPage, debouncedSearchQuery, searchFilter)
+
+      setShowActivatePopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      console.error('Activate error:', error)
+      toast.error(error.response?.data?.message || 'Failed to activate')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleConfirmDeactivate = async () => {
     setLoading(true)
     try {
@@ -846,7 +903,7 @@ const UserManagement = () => {
         setSelectedUsers([])
         fetchUsers(currentPage, debouncedSearchQuery)
       }
-      
+
       setShowDeactivatePopup(false)
       setSelectedItems([])
       setIsSingleAction(false)
@@ -1334,6 +1391,29 @@ const UserManagement = () => {
           isSingleAction
             ? `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION' : 'USER'}`
             : `YES, DEACTIVATE ${actionContext === 'organizations' ? 'ORGANIZATION(S)' : 'USER(S)'}` 
+        }
+        loading={loading}
+      />
+
+      <UserManagementPopup
+        show={showActivatePopup}
+        onHide={handleActivateCancel}
+        onConfirm={handleConfirmActivate}
+        title={
+          isSingleAction
+            ? "Activate User?"
+            : "Activate User(s)?"
+        }
+        message={
+          isSingleAction
+            ? "Are you sure you want to activate this user? They will regain access to the platform."
+            : "Are you sure you want to activate the selected user(s)? They will regain access to the platform."
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={
+          isSingleAction
+            ? "YES, ACTIVATE USER"
+            : "YES, ACTIVATE USER(S)"
         }
         loading={loading}
       />

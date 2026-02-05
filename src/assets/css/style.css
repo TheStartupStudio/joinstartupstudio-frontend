@@ -5033,6 +5033,7 @@ line-height: normal;
 }
 
 .leadership-layout {
+  width: 100%;
   grid-template-columns: 4fr 5fr;
 }
 

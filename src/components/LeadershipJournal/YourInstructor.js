@@ -14,8 +14,8 @@ function YourInstructor({
   userProffesion, 
   videoUrl, 
   thumbnailUrl,
-  showInstructorInfo = true, // First prop with default true
-  customTitle = 'Your Instructor' // Second prop with default text
+  showInstructorInfo = true, 
+  customTitle = 'Your Instructor' 
 }) {
   const [showVideo, setShowVideo] = useState(false)
 
@@ -44,7 +44,7 @@ function YourInstructor({
             <div className='d-flex gap-4 align-items-center'>
               <img
                 className='profile-dashboard-academy'
-                src={instructorImg}
+                src={profilePic || instructorImg}
                 alt='profile'
               />
               <div className='academy-profile-info'>

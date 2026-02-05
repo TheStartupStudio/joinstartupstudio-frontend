@@ -1,52 +1,152 @@
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
 import { NotesButton } from '../../components/Notes'
+import axiosInstance from '../../utils/AxiosInstance'
 
 
-function SectionTwo({ setIsReflection }) {
-  setIsReflection(false)
-  const paragraphs = [
-    {
-      id: 1,
-      text: 'What can you do as a leader? Now that you have a better sense of who you are as a leader, you can focus on executing as one. In this section of your Leadership Journal, you will reflect on four specific areas that will determine what you can do as a leader: teamwork, initiative, methodology, and self-assessment. Each of these components of leadership execution must be supported by your leadership identity established in the first section of this journal. You can claim an identity as a leader, but you must also be able to claim real action within that identity to have credibility. It follows the old adage: actions speak louder than words. Make sure your actions match the way you speak about yourself as a leader. Again, you should reach out to mentors as you reflect on your ability to execute as a leader, but make sure you are receiving guidance and not looking for answers. You must be in charge of the answers.'
-    },
-    {
-      id: 2,
-      text: 'How do you execute as a leader? By building relationships that work collaboratively founded in an alignment of values. By taking the initiative to start a project instead of waiting on the initiative of others. By establishing a methodology through which you solve problems consistently. By self-assessing your quality of leadership execution and leaning into the data that comes from that type of transparency.'
-    },
-    {
-      id: 3,
-      text: 'Reflect on the breakdown of each of these leadership components, then take the time to start your journey of identifying and expressing each of them in the context of the leader version of you.'
+function SectionTwo({ setIsReflection, lessonId }) {
+  const { id } = useParams()
+  const [journalData, setJournalData] = useState(null)
+  const [manageContentData, setManageContentData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // Use lessonId prop if provided, otherwise fallback to URL param
+  const contentId = lessonId || id
+
+  useEffect(() => {
+    setIsReflection(false)
+  }, [setIsReflection])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+
+        // Use contentId from props or URL param
+        const finalContentId = contentId || '1'
+
+        // For lessons, fetch lesson-specific journal data using the lessonId
+        const journalEndpoint = `/ltsJournals/${lessonId}/`
+
+        // Make both API calls
+        const [journalResponse, manageContentResponse] = await Promise.all([
+          axiosInstance.get(journalEndpoint).catch((error) => {
+            console.log('Journal API failed, using fallback:', error)
+            return { data: null }
+          }),
+          axiosInstance.get(`/manage-content/${finalContentId}`)
+        ])
+
+        console.log('Journal API response:', journalResponse.data)
+        console.log('Manage Content API response:', manageContentResponse.data)
+
+        if (journalResponse.data) {
+          setJournalData(journalResponse.data)
+        } else {
+          // If no lesson-specific journal data, create a placeholder
+          setJournalData({
+            id: lessonId,
+            title: `Lesson: ${lessonId}`, // Will be updated by parent component
+            content: '<p>Lesson content will be displayed here.</p>',
+            videoId: null
+          })
+        }
+
+        if (manageContentResponse.data.success) {
+          setManageContentData(manageContentResponse.data.data)
+        }
+
+      } catch (err) {
+        console.error('Error fetching data:', err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    fetchData()
+  }, [contentId, lessonId])
+
+  console.log('journalData', journalData)
+
+  // Create paragraphs from API data
+  const paragraphs = React.useMemo(() => {
+    if (!journalData) return []
+
+    const content = journalData.content || ''
+
+    // Parse HTML content and extract text from <p> tags
+    const parseHTMLParagraphs = (htmlContent) => {
+      // Create a temporary DOM element to parse HTML
+      const tempDiv = document.createElement('div')
+      tempDiv.innerHTML = htmlContent
+
+      // Get all <p> elements
+      const pElements = tempDiv.querySelectorAll('p')
+
+      // Extract text content from each <p> element
+      return Array.from(pElements)
+        .map(p => p.textContent.trim())
+        .filter(text => text.length > 0)
+    }
+
+    const contentParagraphs = parseHTMLParagraphs(content)
+
+    return contentParagraphs.map((text, index) => ({
+      id: index + 1,
+      text: text
+    }))
+  }, [journalData])
+
+  if (loading) {
+    return (
+      <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
+        <div className='text-center py-5'>
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className='mt-3'>Loading content...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
+        <div className='alert alert-danger text-center py-5'>
+          Error loading content: {error}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
       <div className='w-100'>
         <YourInstructor
-          instructorName={'DR. Leslie Williams'}
-          profilePic={
-            'https://s3-alpha-sig.figma.com/img/5281/edbe/057c844eb974d929552c412c8956de9c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=jtzM83EbGZBWpKQXVfDBL6Z4e7mbF7eog9obL16NgkFy1KNN7Mk4V9DPFN6498GnwRXbTm1FDWSUv4oGbOZIjXHxhu6ua0xXkv7J8Hl85kQmXVPbAqJuPGmjSsQr2dAmgSuVMlO1xcUV5BRmAvBmEnqJwKAt0~xEmAj4uyfHwRLuzsxidRb4HiVSBLXR5GkjOy1U2UGM4ycTtL3IAAFjlgRhYJ1qAE06tnmkIUr6p5OkRv0djxrDClPbTaLXaBTsrlclw6vo~ApVYvcJl63UzYD4fpHA6mmi5odfvnmzT1obUqtExKlr6fXjWsthlFRRJucaEfNfEqHg0GXoHnaOpQ__'
-          }
-          userProffesion={
-            'Group Head of Social Impact and EDIB at Nord Anglia Education'
-          }
-          videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 7 Section Two What Can I Do - V2.mov'}
-          thumbnailUrl={'https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/c4c3bb86ca9d7fb7262ac58945292cda-1747042396238.jpg'}
-          showInstructorInfo = {false}
+          instructorName={manageContentData?.instructorName || 'DR. Leslie Williams'}
+          profilePic={manageContentData?.instructorHeadshot || 'https://s3-alpha-sig.figma.com/img/5281/edbe/057c844eb974d929552c412c8956de9c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=jtzM83EbGZBWpKQXVfDBL6Z4e7mbF7eog9obL16NgkFy1KNN7Mk4V9DPFN6498GnwRXbTm1FDWSUv4oGbOZIjXHxhu6ua0xXkv7J8Hl85kQmXVPbAqJuPGmjSsQr2dAmgSuVMlO1xcUV5BRmAvBmEnqJwKAt0~xEmAj4uyfHwRLuzsxidRb4HiVSBLXR5GkjOy1U2UGM4ycTtL3IAAFjlgRhYJ1qAE06tnmkIUr6p5OkRv0djxrDClPbTaLXaBTsrlclw6vo~ApVYvcJl63UzYD4fpHA6mmi5odfvnmzT1obUqtExKlr6fXjWsthlFRRJucaEfNfEqHg0GXoHnaOpQ__'}
+          userProffesion={manageContentData?.instructorTitle || 'Group Head of Social Impact and EDIB at Nord Anglia Education'}
+          videoUrl={journalData?.videoId ? `https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 7 Section Two What Can I Do - V2.mov` : 'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 7 Section Two What Can I Do - V2.mov'}
+          thumbnailUrl={manageContentData?.videoThumbnail || 'https://demo-startupstudio-drive.s3.amazonaws.com/users/1972/c4c3bb86ca9d7fb7262ac58945292cda-1747042396238.jpg'}
+          showInstructorInfo={false}
           customTitle="What can I do?"
         />
       </div>
       <NotesButton from="leadershipJournal"
                           data={{
-                            id: 1001063,
-                            title: 'Introduction to What can I do?'
+                            id: journalData?.id || lessonId || 1001063,
+                            title: journalData?.title || 'Introduction to What can I do?'
                           }}
-                          createdFrom={'Introduction to What can I do?'}
-                          journalId={1001063} 
+                          createdFrom={journalData?.title || 'Introduction to What can I do?'}
+                          journalId={journalData?.id || lessonId || 1001063}
                     />
       <SectionsWrapper
-        title={'Introduction to What can I do?'}
+        title={journalData?.title || 'Lesson Content'}
         paragraphs={paragraphs}
       />
     </div>
