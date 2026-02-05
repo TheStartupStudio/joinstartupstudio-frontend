@@ -101,6 +101,10 @@ const DataTable = ({
       ]
     } else if (activeTab === 'Content') {
       return []
+    } else if (activeTab === 'tss-feedback') {
+      return [
+        { name: 'View Feedback', action: 'view-feedback' }
+      ]
     } else {
       return [
         { name: 'Deactivate Learner', action: 'deactivate-learner' },
@@ -199,7 +203,26 @@ const DataTable = ({
   }
 
   const renderActions = (item) => {
-    if (activeTab === 'Content') {
+    if (activeTab === 'tss-feedback') {
+      return (
+
+        <div className="action-buttons justify-content-between">
+          <button
+            className="action-btn view-btn"
+            onClick={() => handleActionClick('view-feedback', item)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M3.3335 17.7337V2.26699C3.3335 1.93562 3.60213 1.66699 3.9335 1.66699H13.5016C13.6608 1.66699 13.8134 1.73021 13.9259 1.84273L16.4911 4.40792C16.6036 4.52044 16.6668 4.67306 16.6668 4.83219V17.7337C16.6668 18.065 16.3982 18.3337 16.0668 18.3337H3.9335C3.60213 18.3337 3.3335 18.065 3.3335 17.7337Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M6.6665 8.33301L13.3332 8.33301" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M6.6665 15L13.3332 15" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M6.6665 11.667L9.99984 11.667" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M13.3335 1.66699V4.40033C13.3335 4.7317 13.6021 5.00033 13.9335 5.00033H16.6668" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            View Feedback
+          </button>
+        </div>
+      )
+    } else if (activeTab === 'Content') {
       const isPublished = item.status === 'published'
       
       return (

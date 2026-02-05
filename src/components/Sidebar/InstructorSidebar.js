@@ -113,6 +113,14 @@ const SIDEBAR_MENU_ITEMS = [
     className: (pathname) => pathname.includes('leadership-journal') ? 'active' : ''
   },
   {
+    id: 'tss-feeback',
+    title: 'Website Feedback',
+    srcImage: groupIcon,
+    to: '/tss-feedback',
+    roles: [3],
+    className: (pathname) => pathname.includes('tss-feedback') ? 'active' : ''
+  },
+  {
     id: 'my-portfolio',
     title: 'My portfolio',
     srcImage: PortfolioIcon,

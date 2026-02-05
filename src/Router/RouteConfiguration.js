@@ -204,6 +204,7 @@ const MasterClassManagement = React.lazy(() =>
 const LeadershipJournalManagement = React.lazy(() =>
   import('../pages/LeadershipJournalManagement')
 )
+const TssFeedback = React.lazy(() => import('../pages/TssFeedback'))
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
@@ -232,6 +233,11 @@ export const adminRoutes = [
     path: '/leadership-journal-management',
     component: LeadershipJournalManagement,
     breadcrumb: 'Leadership Journal Management'
+  },
+  {
+    path: '/tss-feedback',
+    component: TssFeedback,
+    breadcrumb: 'TSS Feedback'
   },
   {
     path: '/my-school/:page?',
