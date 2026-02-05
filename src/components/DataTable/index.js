@@ -99,7 +99,7 @@ const DataTable = ({
     return item[column.key]
   }
 
-  const getMoreActionsOptions = () => {
+  const getMoreActionsOptions = (item = null) => {
     if (activeTab === 'Organizations') {
       return [
         { name: 'View Organization', action: 'view-organization' },
@@ -115,8 +115,8 @@ const DataTable = ({
       ]
     } else if (activeTab === 'Invoices') {
       return [
-        { 
-          name: 'Export Invoice as PDF', 
+        {
+          name: 'Export Invoice as PDF',
           action: 'export-invoice-pdf',
           icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
@@ -126,8 +126,8 @@ const DataTable = ({
             </svg>
           )
         },
-        // { 
-        //   name: 'Generate Invoice', 
+        // {
+        //   name: 'Generate Invoice',
         //   action: 'generate-invoice',
         //   icon: (
         //     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
@@ -139,8 +139,8 @@ const DataTable = ({
         //     </svg>
         //   )
         // },
-        { 
-          name: 'Archive Invoice', 
+        {
+          name: 'Archive Invoice',
           action: 'archive-invoice',
           icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
@@ -150,8 +150,8 @@ const DataTable = ({
             </svg>
           )
         },
-        { 
-          name: 'Delete Invoice', 
+        {
+          name: 'Delete Invoice',
           action: 'delete-invoice',
           icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
@@ -163,10 +163,18 @@ const DataTable = ({
         }
       ]
     } else {
-      return [
-        { name: 'Deactivate Learner', action: 'deactivate-learner' },
-        { name: 'Delete Learner', action: 'delete-learner' }
-      ]
+      // For users, check activeStatus
+      if (item && item.activeStatus === false) {
+        return [
+          { name: 'Activate Learner', action: 'activate-learner' },
+          { name: 'Delete Learner', action: 'delete-learner' }
+        ]
+      } else {
+        return [
+          { name: 'Deactivate Learner', action: 'deactivate-learner' },
+          { name: 'Delete Learner', action: 'delete-learner' }
+        ]
+      }
     }
   }
 
@@ -721,7 +729,7 @@ const DataTable = ({
                   display: 'block'
                 }}
               >
-                {getMoreActionsOptions().map((option, optionIndex) => (
+                {getMoreActionsOptions(item).map((option, optionIndex) => (
                   <div 
                     key={optionIndex}
                     className="more-actions-dropdown-item"
