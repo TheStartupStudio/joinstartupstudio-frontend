@@ -18,8 +18,8 @@ import axiosInstance from '../../utils/AxiosInstance'
 
 const LeadershipJournalManagement = () => {
   const dispatch = useDispatch()
-  const [levelsData, setLevelsData] = useState([]) // Array of level objects with IDs
-  const [levels, setLevels] = useState([]) // Array of level titles for compatibility
+  const [levelsData, setLevelsData] = useState([]) 
+  const [levels, setLevels] = useState([]) 
   const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
@@ -31,6 +31,8 @@ const LeadershipJournalManagement = () => {
   const [editingTask, setEditingTask] = useState(null)
   const [tasksData, setTasksData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [manageContentData, setManageContentData] = useState([]) 
+  const [selectedCategory, setSelectedCategory] = useState('') 
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
@@ -41,7 +43,25 @@ const LeadershipJournalManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  // Fetch leadership journal content for the active level
+  const fetchManageContent = async () => {
+    try {
+      const response = await axiosInstance.get('/journal-courses/manage-content/all')
+      if (response.data.success) {
+        const contentData = response.data.data || []
+        setManageContentData(contentData)
+        if (contentData.length > 0) {
+          setSelectedCategory(contentData[0].title)
+        }
+      } else {
+        console.error('Failed to fetch manage content data')
+        setManageContentData([])
+      }
+    } catch (error) {
+      console.error('Error fetching manage content data:', error)
+      setManageContentData([])
+    }
+  }
+
   const fetchContentByLevel = async (levelId) => {
     if (!levelId) return
 
@@ -49,19 +69,17 @@ const LeadershipJournalManagement = () => {
       setLoading(true)
       const response = await axiosInstance.get('/LtsJournals/content-by-level', {
         params: {
-          category: 'student-leadership',
+          category: selectedCategory,
           levelId: levelId
         }
       })
 
-      // Transform API response to match expected format
       const transformedData = response.data.map((journal, index) => ({
         id: journal.id,
         name: journal.title,
         status: journal.published ? 'published' : 'unpublished',
         hasContent: journal.entries && journal.entries.length > 0,
         order: journal.order || index + 1,
-        // Store full journal data for modal usage
         fullData: journal
       }))
 
@@ -75,20 +93,20 @@ const LeadershipJournalManagement = () => {
     }
   }
 
-  // Fetch leadership journal levels from API
   const fetchLevels = async () => {
     try {
       setLoading(true)
-      const response = await axiosInstance.get('/LtsJournals/leadership-journal/levels')
+      const response = await axiosInstance.get('/LtsJournals/leadership-journal/levels', {
+        params: {
+          category: selectedCategory
+        }
+      })
 
-      // Response: [{ id, title, order, published, category }]
       setLevelsData(response.data)
 
-      // Extract level titles for backward compatibility
       const levelTitles = response.data.map(level => level.title)
       setLevels(levelTitles)
 
-      // Set first level as active if available
       if (response.data.length > 0) {
         setActiveLevel(response.data[0].title)
       }
@@ -96,7 +114,6 @@ const LeadershipJournalManagement = () => {
       console.error('Error fetching leadership journal levels:', error)
       toast.error('Failed to fetch levels')
 
-      // Fallback to default levels
       const defaultLevels = [
         'Section One: Who am I?',
         'Section Two: What can I do?',
@@ -109,15 +126,18 @@ const LeadershipJournalManagement = () => {
     }
   }
 
-  // Fetch leadership journal levels on component mount
   useEffect(() => {
-    fetchLevels()
+    fetchManageContent()
   }, [])
 
-  // Fetch content when active level changes
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchLevels()
+    }
+  }, [selectedCategory])
+
   useEffect(() => {
     if (activeLevel && levelsData.length > 0) {
-      // Find the level object by title to get its ID
       const activeLevelObj = levelsData.find(level => level.title === activeLevel)
       if (activeLevelObj) {
         fetchContentByLevel(activeLevelObj.id)
@@ -125,10 +145,7 @@ const LeadershipJournalManagement = () => {
     }
   }, [activeLevel, levelsData])
 
-  // Update handleSaveLevels to refresh levels
   const handleSaveLevels = async () => {
-    // The modal now handles all API calls directly
-    // This function just refreshes the levels list
     await fetchLevels()
   }
 
@@ -160,8 +177,6 @@ const LeadershipJournalManagement = () => {
         handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
-        // setSelectedTask(item)
-        // setShowPublishPopup(true)
         toast.success('Task already published!')
         break
       case 'unpublish':
@@ -195,7 +210,6 @@ const LeadershipJournalManagement = () => {
     } catch (error) {
       console.error('Error reordering tasks:', error)
       toast.error('Failed to update task order')
-      // Re-fetch the data to revert changes on error
       if (activeLevel && levelsData.length > 0) {
         const activeLevelObj = levelsData.find(l => l.title === activeLevel)
         if (activeLevelObj) {
@@ -244,7 +258,6 @@ const LeadershipJournalManagement = () => {
 
       toast.success(`${selectedTasks.length} leadership tasks published successfully!`)
 
-      // Refresh data
       if (activeLevel) {
         const activeLevelObj = levelsData.find(level => level.title === activeLevel)
         if (activeLevelObj) {
@@ -252,7 +265,6 @@ const LeadershipJournalManagement = () => {
         }
       }
 
-      // Clear selections
       setTasksData(prevTasks =>
         prevTasks.map(task => ({ ...task, isSelected: false }))
       )
@@ -286,7 +298,6 @@ const LeadershipJournalManagement = () => {
 
       toast.success(`${selectedTasks.length} leadership tasks unpublished successfully!`)
 
-      // Refresh data
       if (activeLevel) {
         const activeLevelObj = levelsData.find(level => level.title === activeLevel)
         if (activeLevelObj) {
@@ -294,7 +305,6 @@ const LeadershipJournalManagement = () => {
         }
       }
 
-      // Clear selections
       setTasksData(prevTasks =>
         prevTasks.map(task => ({ ...task, isSelected: false }))
       )
@@ -324,11 +334,9 @@ const LeadershipJournalManagement = () => {
           let instructions = ''
 
           if (entry.title) {
-            // Check if title contains HTML tags
             const hasHtmlTags = /<[^>]*>/.test(entry.title)
 
             if (hasHtmlTags) {
-              // Parse HTML formatted title (like in content management)
               const tempDiv = document.createElement('div')
               tempDiv.innerHTML = entry.title
 
@@ -359,7 +367,6 @@ const LeadershipJournalManagement = () => {
                 }
               }
             } else {
-              // Plain text title (like in leadership journals) - treat entire title as question
               question = entry.title
               instructions = ''
             }
@@ -412,7 +419,6 @@ const LeadershipJournalManagement = () => {
 
       console.log('Leadership assignments to process:', assignments)
 
-      // Filter out assignments with invalid level IDs
       const validAssignments = assignments.filter(assignment => {
         if (!assignment.levelId || assignment.levelId === '') {
           console.warn(`Skipping assignment for journal ${assignment.journalId} - invalid levelId:`, assignment.levelId)
@@ -428,7 +434,6 @@ const LeadershipJournalManagement = () => {
         return
       }
 
-      // Update each journal's level assignment using the edit-with-content endpoint
       const updatePromises = validAssignments.map(async (assignment) => {
         try {
           console.log(`Assigning leadership journal ${assignment.journalId} to level ${assignment.levelId}`)
@@ -437,7 +442,7 @@ const LeadershipJournalManagement = () => {
           })
         } catch (individualError) {
           console.error(`Error assigning leadership journal ${assignment.journalId}:`, individualError)
-          throw individualError // Re-throw to be caught by outer catch
+          throw individualError 
         }
       })
 
@@ -445,7 +450,6 @@ const LeadershipJournalManagement = () => {
 
       toast.success(`${validAssignments.length} leadership journal(s) assigned successfully!`)
 
-      // Refresh data
       await fetchLevels()
       if (activeLevel) {
         const activeLevelObj = levelsData.find(level => level.title === activeLevel)
@@ -454,7 +458,6 @@ const LeadershipJournalManagement = () => {
         }
       }
 
-      // Close modal
       setShowAssignModal(false)
 
     } catch (error) {
@@ -492,7 +495,6 @@ const LeadershipJournalManagement = () => {
         published: true
       })
 
-      // Refresh data from API
       if (activeLevel) {
         const activeLevelObj = levelsData.find(level => level.title === activeLevel)
         if (activeLevelObj) {
@@ -518,7 +520,6 @@ const LeadershipJournalManagement = () => {
         journalLevel: null
       })
 
-      // Refresh data from API
       if (activeLevel) {
         const activeLevelObj = levelsData.find(level => level.title === activeLevel)
         if (activeLevelObj) {
@@ -684,6 +685,35 @@ const LeadershipJournalManagement = () => {
         alt="Decorative background"
         aria-hidden="true"
       />
+
+        {/* Category Selector */}
+        <div className="category-selector" style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-start' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label style={{ color: '#231F20', fontFamily: 'Montserrat', fontSize: '14px', fontWeight: '600' }}>
+              Category:
+            </label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                fontFamily: 'Montserrat',
+                fontSize: '14px',
+                backgroundColor: 'white',
+                minWidth: '200px'
+              }}
+            >
+              {manageContentData.map((item) => (
+                <option key={item.id} value={item.title}>
+                  {item.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <div className="header-tabs d-flex justify-content-between gap-3">
           {levels.map((level, index) => (
             <button
@@ -805,14 +835,14 @@ const LeadershipJournalManagement = () => {
           </div>
 
           <div className="table-container">
-            <DataTable 
+            <DataTable
               columns={columns}
               data={tasksData}
               searchQuery={searchQuery}
               onRowAction={handleRowAction}
               onReorder={handleReorder}
               showCheckbox={true}
-              activeTab="Leadership"
+              activeTab="Content"
             />
           </div>
 
@@ -839,6 +869,7 @@ const LeadershipJournalManagement = () => {
         onSave={handleSaveLevels}
         existingLevels={levelsData}
         category="leadership"
+        selectedCategory={selectedCategory}
       />
 
       <AssignTasksModal

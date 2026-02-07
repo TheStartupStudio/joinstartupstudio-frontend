@@ -344,7 +344,7 @@ export const mutualRoutes = [
   },
   {
     path: '/journal-courses/:id',
-    component: JournalCourses,
+    component: LeadershipJournal,
     exact: true
   },
   {

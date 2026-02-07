@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, memo, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { fetchJournalFinishedContent } from '../../redux/journal/Actions'
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import lockSign from '../../assets/images/academy-icons/lock.png'
@@ -27,14 +28,13 @@ import { toast } from 'react-toastify'
 
 
 const LeadershipJournal = memo(() => {
+  const { id: routeId } = useParams() 
+  const finalRouteId = routeId || '1' 
   const [isReflection, setIsReflection] = useState(false)
   const [allTabs, setAllTabs] = useState([])
   const [activeTabData, setActiveTabData] = useState({
     activeTab: 0,
-    option: {
-      label: 'Welcome to the Leadership Journal',
-      value: 'Welcome to the Leadership Journal'
-    }
+    option: null 
   })
   const [showLockModal, setShowLockModal] = useState(false)
   const [currentTitle, setCurrentTitle] = useState('')
@@ -42,30 +42,35 @@ const LeadershipJournal = memo(() => {
 
   const [levels, setLevels] = useState([])
   const [lessons, setLessons] = useState({})
+  const [manageContentData, setManageContentData] = useState(null)
 
   const dispatch = useDispatch()
   const { finishedContent } = useSelector((state) => state.journal)
   const valueRefs = useRef({})
+  const initialRouteIdRef = useRef(routeId) 
 
         const { user } = useSelector((state) => state.user.user)
         const userRole = user?.role_id || localStorage.getItem('role')
 
-  // Fetch levels from API
   const fetchLevels = async () => {
     try {
-      const response = await axiosInstance.get('/LtsJournals/leadership-journal/levels')
+      const title = manageContentData?.title
+
+      const url = title
+        ? `/LtsJournals/leadership-journal/levels?category=${encodeURIComponent(title)}`
+        : '/LtsJournals/leadership-journal/levels'
+
+      const response = await axiosInstance.get(url)
       if (response.data && Array.isArray(response.data)) {
-        // Map API response to match expected format
         const mappedLevels = response.data.map((level, index) => ({
           title: level.title || `Section ${index + 1}`,
           description: level.description || `Welcome to Section ${index + 1}`,
-          active: index === 0 // Set first level as active by default
+          active: index === 0
         }))
         setLevels(mappedLevels)
       }
     } catch (error) {
       console.error('Error fetching leadership levels:', error)
-      // Fallback to default levels when API fails
       const defaultLevels = [
         {
           title: 'Section One: Who am I?',
@@ -87,22 +92,51 @@ const LeadershipJournal = memo(() => {
     }
   }
 
-  // Fetch lessons from API
+  const fetchManageContent = async () => {
+    try {
+      const response = await axiosInstance.get(`/manage-content/${finalRouteId}`)
+      const contentData = response.data.data || response.data
+      setManageContentData(contentData)
+      return contentData
+    } catch (error) {
+      console.error('Error fetching manage-content:', error)
+      setManageContentData(null)
+    }
+    return null
+  }
+
   const fetchLessons = async () => {
     try {
-      const response = await axiosInstance.get('/LtsJournals/leadership-journal/lessons')
+      const title = manageContentData?.title
+
+      const url = title
+        ? `/LtsJournals/leadership-journal/lessons?category=${encodeURIComponent(title)}`
+        : '/LtsJournals/leadership-journal/lessons'
+
+      const response = await axiosInstance.get(url)
       if (response.data) {
-        setLessons(response.data)
+        const modifiedLessons = { ...response.data }
+
+        if (modifiedLessons['0'] && modifiedLessons['0'].length > 0 && manageContentData?.title) {
+          const welcomeLesson = {
+            id: parseInt(finalRouteId), 
+            title: manageContentData.title,
+            redirectId: modifiedLessons['0'][0].id, 
+            separate: false
+          }
+
+          modifiedLessons['0'] = [welcomeLesson, ...modifiedLessons['0']]
+        }
+
+        setLessons(modifiedLessons)
       }
     } catch (error) {
       console.error('Error fetching leadership lessons:', error)
-      // Fallback to empty lessons
       setLessons({})
     }
   }
 
 
-  // Generate sections dynamically from lessons API
   const sections = useMemo(() => {
     const result = {}
 
@@ -114,11 +148,9 @@ const LeadershipJournal = memo(() => {
         const lessonIndex = levelLessons.indexOf(lesson)
         let component
 
-        // Special case: First lesson of section 1 uses SectionOne component
         if (lessonIndex === 0 && levelIndex === '0') {
-          component = <SectionOne setIsReflection={setIsReflection} lessonId={lesson.id} />
+          component = <SectionOne setIsReflection={setIsReflection} lessonId={lesson.id} contentData={manageContentData} />
         } else {
-          // All other lessons use Value component - it handles video/text vs video/text+reflections dynamically
           component = (
             <Value
               ref={el => valueRefs.current[lesson.title] = el}
@@ -142,12 +174,10 @@ const LeadershipJournal = memo(() => {
     return result
   }, [lessons, setIsReflection])
 
-  // Initialize allTabs based on dynamic sections and levels from API
   useEffect(() => {
     if (levels.length === 0 || Object.keys(lessons).length === 0) return;
 
     const tabs = levels.map((level, index) => {
-      // Map level index to section key
       const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
       const sectionLessons = sections[sectionKey] || [];
 
@@ -157,7 +187,7 @@ const LeadershipJournal = memo(() => {
           label: lesson.title,
           value: lesson.title,
           isNext: false,
-          id: lesson.id, // Use actual lesson ID from API
+          id: lesson.id, 
           redirectId: lesson.redirectId
         }))
       };
@@ -166,15 +196,37 @@ const LeadershipJournal = memo(() => {
     setAllTabs(tabs);
   }, [levels, sections, lessons]);
 
-  // Fetch finished content, levels, and lessons when component mounts
   useEffect(() => {
-    dispatch(fetchJournalFinishedContent());
-    // Fetch levels and lessons from API
-    fetchLevels();
-    fetchLessons();
-  }, [dispatch]);
+    fetchManageContent();
+  }, []);
 
-  // Update isNext flag based on finishedContent
+  useEffect(() => {
+    if (manageContentData) {
+      const category = manageContentData.title
+      dispatch(fetchJournalFinishedContent(category, manageContentData.title));
+      fetchLevels();
+      fetchLessons();
+    }
+  }, [manageContentData, dispatch]);
+
+  useEffect(() => {
+    if (routeId && routeId !== initialRouteIdRef.current) {
+      setIsReflection(false)
+      setAllTabs([])
+      setActiveTabData({
+        activeTab: 0,
+        option: null
+      })
+      setShowLockModal(false)
+      setCurrentTitle('')
+      setIsSaving(false)
+      setLevels([])
+      setLessons({})
+      setManageContentData(null)
+      fetchManageContent()
+    }
+  }, [routeId])
+
   useEffect(() => {
     if (!finishedContent || finishedContent.length === 0) return;
 
@@ -183,7 +235,6 @@ const LeadershipJournal = memo(() => {
 
       const updatedTabs = [...prevTabs];
 
-      // Helper function to determine the next item that should be marked as "next"
       const updateNextFlags = (options) => {
         let foundNext = false;
 
@@ -199,7 +250,6 @@ const LeadershipJournal = memo(() => {
         });
       };
 
-      // Update each tab's options dynamically
       updatedTabs.forEach((tab, index) => {
         if (tab && tab.options) {
           updatedTabs[index].options = updateNextFlags(tab.options);
@@ -208,29 +258,34 @@ const LeadershipJournal = memo(() => {
 
       return updatedTabs;
     });
-  }, [finishedContent]); // Only depend on finishedContent
+  }, [finishedContent]); 
 
-  // Function to check if a section is accessible
   const canAccessSection = (index) => {
     if (index === 0) return true;
 
-    // Get lessons for the previous section from dynamic sections
     const sectionKey = (index - 1) === 0 ? 'one' : (index - 1) === 1 ? 'two' : 'three';
     const prevSectionLessons = sections[sectionKey] || [];
 
-    // All lessons from the previous section must be completed
     return prevSectionLessons.every(lesson => finishedContent.includes(lesson.title));
   };
 
-  // Handle save and continue
   const handleSaveAndContinue = async () => {
     try {
       setIsSaving(true);
 
+      if (!activeTabData.option) {
+        const firstSection = allTabs[0];
+        if (firstSection && firstSection.options && firstSection.options.length > 0) {
+          setActiveTabData({
+            activeTab: 0,
+            option: firstSection.options[0]
+          });
+        }
+        return;
+      }
+
       const currentComponent = valueRefs.current[activeTabData.option?.value];
 
-      // Check if this is an intro section (no reflections)
-      // Intro sections just continue to next lesson without saving
       if (!isReflection) {
         const currentSection = allTabs[activeTabData.activeTab].options;
         const currentOptionIndex = currentSection.findIndex(
@@ -246,28 +301,24 @@ const LeadershipJournal = memo(() => {
         return;
       }
 
-      // Save changes if it's a reflection section
       if (currentComponent?.saveChanges) {
         await currentComponent.saveChanges();
       }
 
-      // Fetch updated content
-      await dispatch(fetchJournalFinishedContent());
+      const category = manageContentData?.title
+      await dispatch(fetchJournalFinishedContent(category, manageContentData?.title));
       const { journal: { finishedContent: updatedContent } } = store.getState();
 
-      // Check if current content is completed
       if (!updatedContent.includes(activeTabData.option?.value)) {
         setShowLockModal(true);
         return;
       }
 
-      // Special handling for Vision section
       if (activeTabData.option?.value === 'Vision' && updatedContent.includes('Vision')) {
         window.location.href = '/leadership-journal';
         return;
       }
 
-      // Rest of the function remains the same...
       const currentSection = allTabs[activeTabData.activeTab].options;
       const currentOptionIndex = currentSection.findIndex(
         option => option.value === activeTabData.option?.value
@@ -290,7 +341,6 @@ const LeadershipJournal = memo(() => {
         }
       }
 
-      // Update isNext flags...
     } catch (error) {
       console.error('Error saving:', error);
     } finally {
@@ -298,28 +348,23 @@ const LeadershipJournal = memo(() => {
     }
   };
 
-  // Determine if an option is disabled
   const isOptionDisabled = (option) => {
-    // Check if the section is accessible
     if (!canAccessSection(activeTabData.activeTab)) {
       return true;
     }
 
-    // Check if this specific option should be disabled
-    // An option is disabled if it's not in finishedContent and it's not marked as next
     return !finishedContent.includes(option.label) && !option.isNext;
   };
 
-  // Check if current option is an intro section (no reflections)
-  // This is now determined by the Value component setting isReflection to false
   const isIntroSection = !isReflection;
 
-  // Render the appropriate section based on active tab and option
   const renderedSection = useMemo(() => {
+    if (!activeTabData.option && manageContentData) {
+      return <SectionOne setIsReflection={setIsReflection} lessonId={null} contentData={manageContentData} />
+    }
+
     if (allTabs.length === 0) return null;
 
-    // Find the component that matches the selected option from the hardcoded sections
-    // Map level index to section key
     const sectionKey = activeTabData.activeTab === 0 ? 'one' :
       activeTabData.activeTab === 1 ? 'two' : 'three';
 
@@ -328,9 +373,8 @@ const LeadershipJournal = memo(() => {
     );
 
     return selectedSection ? selectedSection.component : null;
-  }, [activeTabData, allTabs, sections]);
+  }, [activeTabData, allTabs, sections, setIsReflection, manageContentData]);
 
-  // Update current title when option changes
   useEffect(() => {
     if (activeTabData.option) {
       setCurrentTitle(activeTabData.option.label);
@@ -347,7 +391,6 @@ const LeadershipJournal = memo(() => {
       return;
     }
 
-    // Get the first lesson from the dynamic sections
     const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
     const sectionLessons = sections[sectionKey] || [];
     const firstLesson = sectionLessons[0];
@@ -357,11 +400,10 @@ const LeadershipJournal = memo(() => {
       initialOption = {
         label: firstLesson.title,
         value: firstLesson.title,
-        id: firstLesson.id, // Use actual lesson ID from API
+        id: firstLesson.id, 
         redirectId: firstLesson.redirectId
       };
     } else {
-      // Fallback if no lessons available
       initialOption = {
         label: levels[index]?.title || `Section ${index + 1}`,
         value: levels[index]?.title || `Section ${index + 1}`

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 import AccordionLead from '../../components/LeadershipJournal/AccordionLead'
 import SectionsWrapper from './SectionsWrapper'

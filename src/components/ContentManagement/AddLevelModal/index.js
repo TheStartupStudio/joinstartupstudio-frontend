@@ -6,10 +6,12 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = 'entrepreneurship' }) => {
+const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = 'entrepreneurship', selectedCategory = 'Leadership Journal' }) => {
   const [levels, setLevels] = useState([])
   const [hasNewLevel, setHasNewLevel] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  console.log('selectedCategory', selectedCategory)
 
 
   const getApiEndpoint = (action, id = null) => {
@@ -171,11 +173,18 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       for (const level of activeLevels) {
         if (level.isNew && level.id.startsWith('temp-')) {
           // Create new level
-          const response = await axiosInstance.post(getApiEndpoint('create'), {
+          const createPayload = {
             title: level.title,
             order: level.order,
             published: true
-          })
+          }
+
+          // If category is 'leadership', include selectedCategory in payload
+          if (category === 'leadership') {
+            createPayload.category = selectedCategory
+          }
+
+          const response = await axiosInstance.post(getApiEndpoint('create'), createPayload)
           // Update the temp ID with the real ID
           level.id = response.data.id
         }
@@ -187,10 +196,17 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         const correctOrder = i + 1
 
         // Always update the order to ensure correct sequencing
-        await axiosInstance.put(getApiEndpoint('update', level.id), {
+        const updatePayload = {
           title: level.title,
           order: correctOrder
-        })
+        }
+
+        // If category is 'leadership', include selectedCategory in payload
+        if (category === 'leadership') {
+          updatePayload.category = selectedCategory
+        }
+
+        await axiosInstance.put(getApiEndpoint('update', level.id), updatePayload)
       }
 
       // Update local state to reflect saved changes

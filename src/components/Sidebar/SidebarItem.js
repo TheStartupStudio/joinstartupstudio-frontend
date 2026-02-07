@@ -9,7 +9,13 @@ import { collapseTrue } from '../../redux/sidebar/Actions'
 const IconContainer = ({ srcImage }) => {
   return (
     <Col md='2' className='col-2 icon_container'>
-      <img src={srcImage} alt='Icon' />
+      {typeof srcImage === 'string' ? (
+        <img src={srcImage} alt='Icon' />
+      ) : (
+        <div className='svg-icon-container'>
+          {srcImage}
+        </div>
+      )}
     </Col>
   )
 }

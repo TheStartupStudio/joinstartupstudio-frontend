@@ -25,8 +25,7 @@ const AssignTasksModal = ({
       } else if (type === 'masterclass') {
         endpoint = '/contents/master-class/unassigned-content'
       } else {
-        // For dynamic categories, use the new generic endpoint
-        endpoint = `/LtsJournals/unassigned-journals-by-category?category=${type}`
+        endpoint = `/LtsJournals/leadership-journal/unassigned-journals`
       }
 
       const response = await axiosInstance.get(endpoint)

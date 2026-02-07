@@ -176,12 +176,22 @@ export const getJournalData = (id) => async (dispatch) => {
   }
 }
 
-export const fetchJournalFinishedContent = () => {
+export const fetchJournalFinishedContent = (category, welcomeLessonTitle) => {
   return async (dispatch) => {
     try {
       dispatch(fetchJournalFinishedContentPending())
-      const response = await axiosInstance.get('/ltsJournals/LtsJournalFinishedContent')
-      dispatch(fetchJournalFinishedContentFulfilled(response.data.finishedContent))
+      const url = category
+        ? `/ltsJournals/LtsJournalFinishedContent?category=${encodeURIComponent(category)}`
+        : '/ltsJournals/LtsJournalFinishedContent'
+      const response = await axiosInstance.get(url)
+
+      // Add welcome lesson title to finished content if provided
+      let finishedContent = response.data.finishedContent || []
+      if (welcomeLessonTitle) {
+        finishedContent = [welcomeLessonTitle, ...finishedContent]
+      }
+
+      dispatch(fetchJournalFinishedContentFulfilled(finishedContent))
     } catch (error) {
       dispatch(fetchJournalFinishedContentRejected(error))
     }
