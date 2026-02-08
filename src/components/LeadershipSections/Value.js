@@ -212,7 +212,7 @@ const Value = forwardRef((props, ref) => {
   // If has entries, show normal reflection layout
   setIsReflection(true)
   return (
-    <div className='d-grid grid-col-2 gap-4 grid-col-1-mob'>
+    <div className='d-grid grid-col-2 gap-4 grid-col-1-mob w-100'>
       <SectionsWrapper title={journalData?.title}>
         <div style={{ position: 'relative' }}>
           <div style={noteButtonStyles}>

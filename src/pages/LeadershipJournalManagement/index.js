@@ -32,7 +32,9 @@ const LeadershipJournalManagement = () => {
   const [tasksData, setTasksData] = useState([])
   const [loading, setLoading] = useState(false)
   const [manageContentData, setManageContentData] = useState([]) 
-  const [selectedCategory, setSelectedCategory] = useState('') 
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef(null) 
   const addDropdownRef = useRef(null)
   const bulkDropdownRef = useRef(null)
 
@@ -613,9 +615,13 @@ const LeadershipJournalManagement = () => {
       if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
         setShowAddDropdown(false)
       }
-      
+
       if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
         setShowBulkDropdown(false)
+      }
+
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false)
       }
     }
 
@@ -630,7 +636,7 @@ const LeadershipJournalManagement = () => {
     <div className="leadership-journal-management">
       <div>
         <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
-          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
+          <div className="d-flex justify-content-between flex-col-tab align-start-tab gap-5" style={{padding: '40px 40px 10px 30px'}}>
             <div className="d-flex flex-column gap-2">
               <h3 className="text-black mb-0"
                 style={{
@@ -658,6 +664,122 @@ const LeadershipJournalManagement = () => {
                 View and edit Leadership Journal Tasks
               </p>
             </div>
+
+            {/* Category Selector */}
+        <div className="category-selector" style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-start' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              ref={dropdownRef}
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                minWidth: '200px'
+              }}
+            >
+              <div
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{
+                  display: 'inline-block',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                  padding: '2px',
+                  height: '58px',
+                  boxShadow: '0px 4px 10px 0px #00000040',
+                  cursor: 'pointer'
+                }}
+              >
+                <div
+                  className="fs-14 d-flex align-items-center justify-content-between"
+                  style={{
+                    width: '100%',
+                    padding: '0 1rem',
+                    borderRadius: '6px',
+                    fontFamily: 'Montserrat',
+                    fontSize: '14px',
+                    backgroundColor: 'white',
+                    height: '100%',
+                    outline: 'none',
+                    minWidth: '200px'
+                  }}
+                >
+                  <span >
+                    {selectedCategory || 'Select Category'}
+                  </span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#666"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{
+                      transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s ease'
+                    }}
+                  >
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                  </svg>
+                </div>
+              </div>
+
+              {isDropdownOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '0',
+                    right: '0',
+                    borderRadius: '8px',
+                    padding: '2px',
+                    boxShadow: '0px 8px 20px 0px #00000050',
+                    zIndex: 1000,
+                    marginTop: '4px'
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: 'white',
+                      borderRadius: '6px',
+                      maxHeight: '200px',
+                      overflowY: 'auto'
+                    }}
+                  >
+                    {manageContentData.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => {
+                          setSelectedCategory(item.title)
+                          setIsDropdownOpen(false)
+                        }}
+                        style={{
+                          padding: '12px 12px',
+                          cursor: 'pointer',
+                          fontFamily: 'Montserrat',
+                          fontSize: '12px',
+                          fontWeight: '400',
+                          color: 'black',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = '#f9fafb'
+                          e.target.style.fontWeight = '600'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = 'white'
+                          e.target.style.fontWeight = '400'
+                        }}
+                      >
+                        {item.title}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
           </div>
           <img
             src={MenuIcon}
@@ -686,33 +808,6 @@ const LeadershipJournalManagement = () => {
         aria-hidden="true"
       />
 
-        {/* Category Selector */}
-        <div className="category-selector" style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-start' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <label style={{ color: '#231F20', fontFamily: 'Montserrat', fontSize: '14px', fontWeight: '600' }}>
-              Category:
-            </label>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              style={{
-                padding: '8px 12px',
-                border: '1px solid #e5e7eb',
-                borderRadius: '6px',
-                fontFamily: 'Montserrat',
-                fontSize: '14px',
-                backgroundColor: 'white',
-                minWidth: '200px'
-              }}
-            >
-              {manageContentData.map((item) => (
-                <option key={item.id} value={item.title}>
-                  {item.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
 
         <div className="header-tabs d-flex justify-content-between gap-3">
           {levels.map((level, index) => (

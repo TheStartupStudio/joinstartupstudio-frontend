@@ -268,7 +268,7 @@ const InstructorSidebar = (props) => {
       result.push(staticItems[i])
 
       // If this is the leadership-journal item, insert dynamic items after it
-      if (staticItems[i].id === 'master-classes') {
+      if (staticItems[i].id === 'forum') {
         result.push(...dynamicItems)
       }
     }
