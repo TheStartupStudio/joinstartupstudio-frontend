@@ -9,7 +9,8 @@ const AddJournalModal = ({
     show,
     onClose,
     onProceedToIntroduction,
-    mode = 'add', 
+    onContentChange,
+    mode = 'add',
     existingData = null,
     contentId = null
 }) => {
@@ -366,12 +367,20 @@ const AddJournalModal = ({
                     // For new journal creation, just show success and close
                     alert('Journal created successfully!')
                     onClose()
+                    // Refresh the content list in the parent component
+                    if (onContentChange) {
+                        onContentChange()
+                    }
                 } else if (mode === 'edit') {
                     if (onProceedToIntroduction) {
                         onProceedToIntroduction(response.data.data)
                     } else {
                         alert('Journal updated successfully!')
                         onClose()
+                        // Refresh the content list in the parent component
+                        if (onContentChange) {
+                            onContentChange()
+                        }
                     }
                 }
             } else {
@@ -379,6 +388,35 @@ const AddJournalModal = ({
             }
         } catch (error) {
             alert(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleDelete = async () => {
+        if (!contentId) return
+
+        const confirmDelete = window.confirm('Are you sure you want to delete this journal and all its related content? This action cannot be undone.')
+        if (!confirmDelete) return
+
+        setLoading(true)
+
+        try {
+            const response = await axiosInstance.delete(`/manage-content/full/${contentId}`)
+
+            if (response.data.success) {
+                alert('Journal and all related content deleted successfully!')
+                onClose()
+                // Refresh the content list in the parent component
+                if (onContentChange) {
+                    onContentChange()
+                }
+            } else {
+                throw new Error(response.data.error || 'Failed to delete journal')
+            }
+        } catch (error) {
+            console.error('Error deleting journal:', error)
+            alert(`Failed to delete journal: ${error.response?.data?.message || error.message}`)
         } finally {
             setLoading(false)
         }
@@ -635,8 +673,41 @@ const AddJournalModal = ({
                 </div>
 
                 {/* Actions */}
-                <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-                        <button className="cancel-btn" onClick={handleCancel}>
+                <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+                    {/* Delete button - only show for edit mode */}
+                    <div>
+                        {(mode === 'edit' || mode === 'view') && contentId && (
+                            <button
+                                onClick={handleDelete}
+                                disabled={loading}
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    width: 'content-fit',
+                                    color: 'black',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    padding: '8px 16px',
+                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                    opacity: loading ? 0.5 : 1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M10 14.1743L10.0083 14.1651" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Delete Journal
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Cancel and Save buttons */}
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <button className="cancel-btn" onClick={handleCancel} disabled={loading}>
                             {mode === 'view' ? 'Close' : 'Cancel'}
                         </button>
                         {mode !== 'view' && (
@@ -645,6 +716,7 @@ const AddJournalModal = ({
                             </button>
                         )}
                     </div>
+                </div>
                 </div>
             </div>
         </>

@@ -308,6 +308,7 @@ const ManageContentSite = () => {
         show={showAddJournalModal}
         onClose={handleCloseAddJournalModal}
         onProceedToIntroduction={handleOpenAddJournalIntroductionModal}
+        onContentChange={fetchContents}
         mode={modalMode}
         existingData={selectedJournalData}
         contentId={selectedContentId}

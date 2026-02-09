@@ -432,7 +432,7 @@ const LeadershipJournal = memo(() => {
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
               <h3 className='page-title bold-page-title text-black mb-0'>
-                <IntlMessages id='journal.header' />
+                {manageContentData?.title || 'Leadership Journal'}
               </h3>
               <p className='fs-13 fw-light text-black'>
                 Leadership comes in many forms but the foundation is leading
