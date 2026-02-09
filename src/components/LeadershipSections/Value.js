@@ -16,6 +16,15 @@ import { useHistory } from 'react-router-dom'
 import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 
 
+// Utility function to strip HTML tags from text
+const stripHtmlTags = (html) => {
+  if (!html) return ''
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = html
+  return tempDiv.textContent || tempDiv.innerText || ''
+}
+
+
 const Value = forwardRef((props, ref) => {
   const { id, setIsReflection, onTitleChange } = props
   const [currentId, setCurrentId] = useState(id)
@@ -281,7 +290,7 @@ const Value = forwardRef((props, ref) => {
         {journalData?.entries.map((item, index) => (
           <LeadershipTextEditor
             key={item.id}
-            title={item.title}
+            title={stripHtmlTags(item.title)}
             id={item.id}
             journalId={currentId}
             onContentChange={handleContentChange}

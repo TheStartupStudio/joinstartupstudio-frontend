@@ -965,6 +965,13 @@ const LeadershipJournalManagement = () => {
         existingLevels={levelsData}
         category="leadership"
         selectedCategory={selectedCategory}
+        manageContentId={(() => {
+          console.log('manageContentData:', manageContentData)
+          console.log('selectedCategory:', selectedCategory)
+          const foundItem = manageContentData.find(item => item.title === selectedCategory)
+          console.log('Found manage content item:', foundItem)
+          return foundItem?.id
+        })()}
       />
 
       <AssignTasksModal

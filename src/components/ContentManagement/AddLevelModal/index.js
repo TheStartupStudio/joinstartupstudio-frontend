@@ -6,12 +6,12 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = 'entrepreneurship', selectedCategory = 'Leadership Journal' }) => {
+const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = 'entrepreneurship', selectedCategory = 'Leadership Journal', manageContentId }) => {
   const [levels, setLevels] = useState([])
   const [hasNewLevel, setHasNewLevel] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  console.log('selectedCategory', selectedCategory)
+  console.log('AddLevelModal props:', { selectedCategory, manageContentId, category, show })
 
 
   const getApiEndpoint = (action, id = null) => {
@@ -179,11 +179,15 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
             published: true
           }
 
-          // If category is 'leadership', include selectedCategory in payload
+          // If category is 'leadership', include selectedCategory and manageContentId in payload
           if (category === 'leadership') {
             createPayload.category = selectedCategory
+            if (manageContentId) {
+              createPayload.manageContentId = manageContentId
+            }
           }
 
+          console.log('Create payload:', createPayload)
           const response = await axiosInstance.post(getApiEndpoint('create'), createPayload)
           // Update the temp ID with the real ID
           level.id = response.data.id
@@ -201,9 +205,12 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           order: correctOrder
         }
 
-        // If category is 'leadership', include selectedCategory in payload
+        // If category is 'leadership', include selectedCategory and manageContentId in payload
         if (category === 'leadership') {
           updatePayload.category = selectedCategory
+          if (manageContentId) {
+            updatePayload.manageContentId = manageContentId
+          }
         }
 
         await axiosInstance.put(getApiEndpoint('update', level.id), updatePayload)

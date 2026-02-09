@@ -2,6 +2,15 @@ import React, { useState, useEffect, useRef, memo, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { fetchJournalFinishedContent } from '../../redux/journal/Actions'
+
+
+// Utility function to strip HTML tags from text
+const stripHtmlTags = (html) => {
+  if (!html) return ''
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = html
+  return tempDiv.textContent || tempDiv.innerText || ''
+}
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import lockSign from '../../assets/images/academy-icons/lock.png'
 import searchJ from '../../assets/images/academy-icons/search.png'
@@ -153,7 +162,7 @@ const LeadershipJournal = memo(() => {
         } else {
           component = (
             <Value
-              ref={el => valueRefs.current[lesson.title] = el}
+              ref={el => valueRefs.current[stripHtmlTags(lesson.title)] = el}
               id={lesson.id}
               setIsReflection={setIsReflection}
             />
@@ -161,8 +170,8 @@ const LeadershipJournal = memo(() => {
         }
 
         return {
-          title: lesson.title,
-          value: lesson.title,
+          title: stripHtmlTags(lesson.title),
+          value: stripHtmlTags(lesson.title),
           id: lesson.id,
           redirectId: lesson.redirectId,
           separate: lesson.separate,
@@ -184,10 +193,10 @@ const LeadershipJournal = memo(() => {
       return {
         title: level.title,
         options: sectionLessons.map((lesson) => ({
-          label: lesson.title,
-          value: lesson.title,
+          label: stripHtmlTags(lesson.title),
+          value: stripHtmlTags(lesson.title),
           isNext: false,
-          id: lesson.id, 
+          id: lesson.id,
           redirectId: lesson.redirectId
         }))
       };
@@ -266,7 +275,7 @@ const LeadershipJournal = memo(() => {
     const sectionKey = (index - 1) === 0 ? 'one' : (index - 1) === 1 ? 'two' : 'three';
     const prevSectionLessons = sections[sectionKey] || [];
 
-    return prevSectionLessons.every(lesson => finishedContent.includes(lesson.title));
+    return prevSectionLessons.every(lesson => finishedContent.includes(stripHtmlTags(lesson.title)));
   };
 
   const handleSaveAndContinue = async () => {
@@ -398,9 +407,9 @@ const LeadershipJournal = memo(() => {
     let initialOption;
     if (firstLesson) {
       initialOption = {
-        label: firstLesson.title,
-        value: firstLesson.title,
-        id: firstLesson.id, 
+        label: stripHtmlTags(firstLesson.title),
+        value: stripHtmlTags(firstLesson.title),
+        id: firstLesson.id,
         redirectId: firstLesson.redirectId
       };
     } else {
