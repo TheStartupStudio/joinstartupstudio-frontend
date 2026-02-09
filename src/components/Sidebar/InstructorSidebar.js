@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import ExpandLogo from '../../assets/images/academy-icons/fast-arrow-right.png'
 import LogOutIcon from '../../assets/images/academy-icons/svg/LogOut.svg'
 import CoursEnIcon from '../../assets/images/academy-icons/svg/course-in-e.svg'
@@ -161,6 +161,7 @@ const SIDEBAR_MENU_ITEMS = [
 const InstructorSidebar = (props) => {
   const [isTextVisible, setIsTextVisible] = useState(true)
   const dispatch = useDispatch()
+  const location = useLocation()
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
   const { user } = useSelector((state) => state.user.user)
   const [modal, setModal] = useState(false)
@@ -258,7 +259,13 @@ const InstructorSidebar = (props) => {
       srcImage: getIconSvg(content.icon),
       to: `/journal-courses/${content.id}`,
       roles: [1, 2, 3], // All roles can see these
-      className: (pathname) => pathname === `/journal-courses/${content.id}` ? 'active' : '',
+      className: (pathname) => {
+        // Check for journal-courses route
+        if (pathname === `/journal-courses/${content.id}`) return 'active'
+        // Check for leadership-journal route (defaults to ID 1)
+        if (pathname === '/leadership-journal' && content.id === 1) return 'active'
+        return ''
+      },
       category: content.title // Add category for API calls
     }))
 
@@ -347,7 +354,7 @@ const InstructorSidebar = (props) => {
     }
 
     fetchManageContent()
-  }, [])
+  }, [location.pathname])
 
   const handleMouseEnter = () => {
     if (isTouchDevice) return

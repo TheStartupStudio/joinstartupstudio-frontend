@@ -1,0 +1,11 @@
+/* Dynamic color variables will be set via inline styles */
+.lead-class {
+    box-shadow: 0 -6px 8px rgba(0, 0, 0, 0.05);
+    background: radial-gradient(circle at 50% 24%, rgba(224, 235, 197, 0.4) 5%, rgba(255, 255, 255, 0.9) 80%);
+}
+
+.active-leadership {
+    background-color: #e0ebc5;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}

@@ -16,11 +16,11 @@ const AddJournalModal = ({
 }) => {
     const [journalTitle, setJournalTitle] = useState('')
     const [selectedIcon, setSelectedIcon] = useState('')
-    const [activeTab, setActiveTab] = useState('names') 
+    const [selectedColor, setSelectedColor] = useState('#E0EBC5')
+    const [activeTab, setActiveTab] = useState('names')
     const [isIconDropdownOpen, setIsIconDropdownOpen] = useState(false)
     const [sections, setSections] = useState([
         { id: 1, name: '', detailsText: '', detailsRich: '' },
-        { id: 2, name: '', detailsText: '', detailsRich: '' }
     ])
     const [loading, setLoading] = useState(false)
 
@@ -45,9 +45,10 @@ const AddJournalModal = ({
         console.log('Initializing form data:', data)
 
         if (data.manageContent) {
-            console.log('Setting journal title:', data.manageContent.title, 'icon:', data.manageContent.icon)
+            console.log('Setting journal title:', data.manageContent.title, 'icon:', data.manageContent.icon, 'color:', data.manageContent.color)
             setJournalTitle(data.manageContent.title || '')
             setSelectedIcon(data.manageContent.icon || '')
+            setSelectedColor(data.manageContent.color || '#E0EBC5')
         }
 
         if (data.journalLevels && Array.isArray(data.journalLevels)) {
@@ -71,8 +72,7 @@ const AddJournalModal = ({
             })
             console.log('Mapped sections:', mappedSections)
             setSections(mappedSections.length > 0 ? mappedSections : [
-                { id: 1, journalId: null, name: '', detailsText: '', detailsRich: '' },
-                { id: 2, journalId: null, name: '', detailsText: '', detailsRich: '' }
+                { id: 1, journalId: null, name: '', detailsText: '', detailsRich: '' }
             ])
         } else {
             console.log('No journal levels found')
@@ -82,9 +82,9 @@ const AddJournalModal = ({
     const resetForm = useCallback(() => {
         setJournalTitle('')
         setSelectedIcon('')
+        setSelectedColor('#E0EBC5')
         setSections([
-            { id: 1, journalId: null, name: '', detailsText: '', detailsRich: '' },
-            { id: 2, journalId: null, name: '', detailsText: '', detailsRich: '' }
+            { id: 1, journalId: null, name: '', detailsText: '', detailsRich: '' }
         ])
         setActiveTab('names')
         setIsIconDropdownOpen(false)
@@ -298,12 +298,43 @@ const AddJournalModal = ({
         return selectedOption ? selectedOption.svg : null
     }
 
+    const rgbToHex = (rgb) => {
+        const result = rgb.match(/\d+/g)
+        if (!result || result.length !== 3) return '#000000'
+
+        const r = parseInt(result[0])
+        const g = parseInt(result[1])
+        const b = parseInt(result[2])
+
+        return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
+    }
+
+    const validateColor = (color) => {
+        // Check if it's a valid hex color
+        const hexRegex = /^#[0-9A-Fa-f]{6}$|^#[0-9A-Fa-f]{3}$/
+        if (hexRegex.test(color)) {
+            return true
+        }
+
+        // Check if it's a valid rgb color
+        const rgbRegex = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/
+        if (rgbRegex.test(color)) {
+            return true
+        }
+
+        return false
+    }
+
     const validateForm = () => {
         if (!journalTitle.trim()) {
             return false
         }
 
         if (!selectedIcon) {
+            return false
+        }
+
+        if (!selectedColor || !validateColor(selectedColor)) {
             return false
         }
 
@@ -327,11 +358,15 @@ const AddJournalModal = ({
 
         try {
             // Prepare data for the new /full endpoint
+            // Normalize color to hex format
+            const normalizedColor = selectedColor.startsWith('rgb') ? rgbToHex(selectedColor) : selectedColor
+
             const journalData = {
                 manageContent: {
                     ...(mode === 'edit' && contentId ? { id: contentId } : {}),
                     title: journalTitle,
-                    icon: selectedIcon
+                    icon: selectedIcon,
+                    color: normalizedColor
                     // Other fields will be added in AddJournalIntroduction
                 },
                 // Only send journalLevels for new journal creation, not for updates
@@ -495,37 +530,79 @@ const AddJournalModal = ({
                                     />
                                     <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
                                 </div>
-                                <div className="input-box icon-select" onClick={mode !== 'view' ? handleIconDropdownToggle : undefined} style={{ cursor: mode === 'view' ? 'default' : 'pointer' }}>
-                                    {selectedIcon ? (
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                {getSelectedIconSvg()}
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <span className="select-text">Select Menu Icon</span>
-                                    )}
-                                    <FontAwesomeIcon
-                                        icon={faChevronDown}
-                                        className={`input-icon ${isIconDropdownOpen ? 'rotated' : ''}`}
-                                    />
-                                </div>
 
-                                {isIconDropdownOpen && (
-                                    <div className="icon-dropdown-menu">
-                                        {iconOptions.map((option) => (
-                                            <div
-                                                key={option.id}
-                                                className={`icon-dropdown-item ${selectedIcon === option.id ? 'selected' : ''}`}
-                                                onClick={() => handleIconSelect(option.id)}
-                                            >
+                                <div className="d-flex gap-2 w-100">
+
+                                <div className="position-relative w-100">
+                                    <div className="input-box icon-select" onClick={mode !== 'view' ? handleIconDropdownToggle : undefined} style={{ cursor: mode === 'view' ? 'default' : 'pointer' }}>
+                                        {selectedIcon ? (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                 <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                    {option.svg}
+                                                    {getSelectedIconSvg()}
                                                 </div>
                                             </div>
-                                        ))}
+                                        ) : (
+                                            <span className="select-text">Select Menu Icon</span>
+                                        )}
+                                        <FontAwesomeIcon
+                                            icon={faChevronDown}
+                                            className={`input-icon ${isIconDropdownOpen ? 'rotated' : ''}`}
+                                        />
                                     </div>
-                                )}
+
+                                    {isIconDropdownOpen && (
+                                        <div className="icon-dropdown-menu">
+                                            {iconOptions.map((option) => (
+                                                <div
+                                                    key={option.id}
+                                                    className={`icon-dropdown-item ${selectedIcon === option.id ? 'selected' : ''}`}
+                                                    onClick={() => handleIconSelect(option.id)}
+                                                >
+                                                    <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        {option.svg}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                </div>
+                                <div className="input-box color-select w-100" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    
+                                    <input
+                                        id="color-picker"
+                                        type="color"
+                                        value={selectedColor}
+                                        onChange={(e) => setSelectedColor(e.target.value)}
+                                        style={{
+                                            width: '50px',
+                                            height: '40px',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                        disabled={mode === 'view'}
+                                    />
+                                    <input
+                                        type="text"
+                                        value={selectedColor}
+                                        onChange={(e) => setSelectedColor(e.target.value)}
+                                        placeholder="#E0EBC5"
+                                        style={{
+                                            flex: 1,
+                                            border: '1px solid rgba(227, 229, 233, 0.50)',
+                                            borderRadius: '8px',
+                                            padding: '8px 12px',
+                                            fontSize: '14px',
+                                            fontWeight: '500',
+                                            color: '#333',
+                                            backgroundColor: 'transparent',
+                                            width: '100px'
+                                        }}
+                                        disabled={mode === 'view'}
+                                    />
+                                </div>
+                                </div>
                             </div>
                         </div>
 

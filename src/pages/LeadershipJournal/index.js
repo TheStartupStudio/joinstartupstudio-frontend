@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, memo, useMemo } from 'react'
+import './LeadershipJournal.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { fetchJournalFinishedContent } from '../../redux/journal/Actions'
@@ -52,11 +53,61 @@ const LeadershipJournal = memo(() => {
   const [levels, setLevels] = useState([])
   const [lessons, setLessons] = useState({})
   const [manageContentData, setManageContentData] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [currentRouteId, setCurrentRouteId] = useState(routeId)
 
   const dispatch = useDispatch()
   const { finishedContent } = useSelector((state) => state.journal)
   const valueRefs = useRef({})
-  const initialRouteIdRef = useRef(routeId) 
+  const initialRouteIdRef = useRef(routeId)
+  const abortControllerRef = useRef(null)
+
+  // Function to lighten a hex color
+  const lightenColor = (hex, percent) => {
+    // Remove # if present
+    hex = hex.replace('#', '')
+
+    // Parse r, g, b values
+    const num = parseInt(hex, 16)
+    const amt = Math.round(2.55 * percent)
+    const R = (num >> 16) + amt
+    const G = (num >> 8 & 0x00FF) + amt
+    const B = (num & 0x0000FF) + amt
+
+    return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+      (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+      (B < 255 ? B < 1 ? 0 : B : 255))
+      .toString(16).slice(1)
+  }
+
+  // Generate dynamic styles based on the journal color
+  const dynamicStyles = useMemo(() => {
+    const journalColor = manageContentData?.color
+
+    // If no color is provided, return empty styles to use CSS defaults
+    if (!journalColor) {
+      return {
+        leadClass: {},
+        activeLeadership: {}
+      }
+    }
+
+    // Create variations of the color for different uses
+    const lightColor = lightenColor(journalColor, 30) // Less lightening
+    const mediumColor = lightenColor(journalColor, 0) // Medium lightening
+
+    return {
+      leadClass: {
+        background: `radial-gradient(circle at 50% 24%, ${mediumColor}70 5%, rgba(255, 255, 255, 0.9) 80%)`,
+        boxShadow: '0 -6px 8px rgba(0, 0, 0, 0.05)'
+      },
+      activeLeadership: {
+        backgroundColor: journalColor, // Use original color for active tab
+        borderRadius: '8px',
+        boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px'
+      }
+    }
+  }, [manageContentData?.color]) 
 
         const { user } = useSelector((state) => state.user.user)
         const userRole = user?.role_id || localStorage.getItem('role')
@@ -101,15 +152,33 @@ const LeadershipJournal = memo(() => {
     }
   }
 
-  const fetchManageContent = async () => {
+  const fetchManageContent = async (routeIdToFetch = finalRouteId) => {
+    // Cancel any ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+
+    // Create new abort controller
+    abortControllerRef.current = new AbortController()
+
     try {
-      const response = await axiosInstance.get(`/manage-content/${finalRouteId}`)
+      setIsLoading(true)
+      const response = await axiosInstance.get(`/manage-content/${routeIdToFetch}`, {
+        signal: abortControllerRef.current.signal
+      })
       const contentData = response.data.data || response.data
       setManageContentData(contentData)
+      setCurrentRouteId(routeIdToFetch)
       return contentData
     } catch (error) {
+      if (error.name === 'AbortError') {
+        console.log('Request was cancelled')
+        return null
+      }
       console.error('Error fetching manage-content:', error)
       setManageContentData(null)
+    } finally {
+      setIsLoading(false)
     }
     return null
   }
@@ -209,17 +278,32 @@ const LeadershipJournal = memo(() => {
     fetchManageContent();
   }, []);
 
+  // Cleanup effect for abort controller
   useEffect(() => {
-    if (manageContentData) {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (manageContentData && !isLoading && currentRouteId === routeId) {
       const category = manageContentData.title
       dispatch(fetchJournalFinishedContent(category, manageContentData.title));
       fetchLevels();
       fetchLessons();
     }
-  }, [manageContentData, dispatch]);
+  }, [manageContentData, dispatch, isLoading, currentRouteId, routeId]);
 
   useEffect(() => {
     if (routeId && routeId !== initialRouteIdRef.current) {
+      // Cancel any ongoing requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+
+      // Reset all state
       setIsReflection(false)
       setAllTabs([])
       setActiveTabData({
@@ -232,7 +316,13 @@ const LeadershipJournal = memo(() => {
       setLevels([])
       setLessons({})
       setManageContentData(null)
-      fetchManageContent()
+      setIsLoading(false)
+
+      // Update the ref to prevent re-triggering
+      initialRouteIdRef.current = routeId
+
+      // Fetch new data
+      fetchManageContent(routeId)
     }
   }, [routeId])
 
@@ -306,6 +396,15 @@ const LeadershipJournal = memo(() => {
             ...activeTabData,
             option: currentSection[currentOptionIndex + 1]
           });
+        } else if (activeTabData.activeTab < allTabs.length - 1) {
+          if (canAccessSection(activeTabData.activeTab + 1)) {
+            setActiveTabData({
+              activeTab: activeTabData.activeTab + 1,
+              option: allTabs[activeTabData.activeTab + 1].options[0]
+            });
+          } else {
+            setShowLockModal(true);
+          }
         }
         return;
       }
@@ -451,9 +550,16 @@ const LeadershipJournal = memo(() => {
                                    />
                                  </div>
         </div>
-        <div className='academy-dashboard-layout lead-class mb-5'>
-          {allTabs.length === 0 ? (
-            <div>Loading...</div>
+        <div className='academy-dashboard-layout lead-class mb-5' style={Object.keys(dynamicStyles.leadClass).length > 0 ? dynamicStyles.leadClass : undefined}>
+          {(allTabs.length === 0 || isLoading) ? (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+              <div className="text-center">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-2">Loading journal content...</p>
+              </div>
+            </div>
           ) : (
             <>
               <div className='course-experts d-flex flex-col-mob align-center-mob'>
@@ -466,6 +572,7 @@ const LeadershipJournal = memo(() => {
                       }`}
                     onClick={() => handleTabClick(index)}
                     style={{
+                      ...(activeTabData.activeTab === index && Object.keys(dynamicStyles.activeLeadership).length > 0 ? dynamicStyles.activeLeadership : {}),
                       color: canAccessSection(index) ? '#000' : '#999',
                       cursor: canAccessSection(index) ? 'pointer' : 'not-allowed',
                       width: '100%'
