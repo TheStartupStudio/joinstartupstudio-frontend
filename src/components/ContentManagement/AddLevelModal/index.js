@@ -346,7 +346,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           <button className="btn-cancel" style={{ fontSize: '14px' }} onClick={handleClose} disabled={loading}>
             CANCEL
           </button>
-          <button className="btn-save" onClick={handleSave} disabled={loading}>
+          <button className="btn-cancel" style={{ backgroundColor: '#51c7df', color: '#fff' }} onClick={handleSave} disabled={loading}>
             {loading ? 'SAVING...' : 'SAVE'}
           </button>
 

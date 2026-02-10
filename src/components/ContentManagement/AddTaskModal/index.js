@@ -137,7 +137,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       let thumbnailUrl = thumbnailPreview
 
       if (videoFile && videoFile instanceof File) {
-        toast.info('Uploading video...')
         const videoFormData = new FormData()
         videoFormData.append('video', videoFile)
         
@@ -154,7 +153,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       }
 
       if (thumbnailFile && thumbnailFile instanceof File) {
-        toast.info('Uploading thumbnail...')
         const thumbnailFormData = new FormData()
         thumbnailFormData.append('img', thumbnailFile)
         
@@ -460,7 +458,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         </div>
 
         <div className="form-group">
-          <label className="form-label">{isMasterClass ? 'CONNECTED STUDIO GUIDANCE LEVEL' : 'CONNECTED AIE LEVEL'}</label>
+          <label className="form-label">{isMasterClass ? 'CONNECTED STUDIO GUIDANCE LEVEL' : 'CONNECTED LEVEL'}</label>
           <div className="custom-level-dropdown" ref={dropdownRef}>
             <div 
               className="level-dropdown-trigger"
@@ -468,7 +466,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
               style={isViewMode ? { cursor: 'not-allowed', opacity: 0.7 } : { cursor: 'pointer' }}
             >
               <span className={selectedLevel ? 'selected-text' : 'placeholder-text'}>
-                {selectedLevel || (isMasterClass ? 'Select studio guidance level' : 'Select AIE level')}
+                {selectedLevel || (isMasterClass ? 'Select studio guidance level' : 'Select level')}
               </span>
               {!isViewMode && (
                 <FontAwesomeIcon 
