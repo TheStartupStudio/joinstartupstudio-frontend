@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
+import AcademyBtn from '../../../components/AcademyBtn'
+import { useHistory } from 'react-router-dom'
 
 const AddJournalModal = ({
     show,
@@ -14,6 +16,7 @@ const AddJournalModal = ({
     existingData = null,
     contentId = null
 }) => {
+    const history = useHistory()
     const [journalTitle, setJournalTitle] = useState('')
     const [selectedIcon, setSelectedIcon] = useState('')
     const [selectedColor, setSelectedColor] = useState('#E0EBC5')
@@ -399,12 +402,16 @@ const AddJournalModal = ({
 
             if (response.data.success) {
                 if (mode === 'add') {
-                    // For new journal creation, just show success and close
-                    alert('Journal created successfully!')
-                    onClose()
-                    // Refresh the content list in the parent component
-                    if (onContentChange) {
-                        onContentChange()
+                    // For new journal creation, proceed to introduction modal immediately
+                    if (onProceedToIntroduction) {
+                        onProceedToIntroduction(response.data.data)
+                    } else {
+                        alert('Journal created successfully!')
+                        onClose()
+                        // Refresh the content list in the parent component
+                        if (onContentChange) {
+                            onContentChange()
+                        }
                     }
                 } else if (mode === 'edit') {
                     if (onProceedToIntroduction) {
@@ -481,7 +488,7 @@ const AddJournalModal = ({
 
             <div className="add-journal-modal-overlay">
                 <div className="add-journal-modal">
-                    <div className="modal-header">
+                    <div className="modal-header position-relative">
                     <div className="circle-icon-heading">
                         <div className="circle-icon">
                             <div className="icon-circle-bg">
@@ -496,6 +503,30 @@ const AddJournalModal = ({
                             {mode === 'view' ? 'View Journal' : mode === 'edit' ? 'Edit Journal' : 'Add New Journal'}
                         </p>
                     </div>
+                    {mode === 'edit' && (
+                        <div style={{ display: 'flex', 
+                            gap: '20px', 
+                            position: 'absolute', 
+                            right: '0px', 
+                            top: '0px', 
+                            borderRadius: '0 24px', 
+                            boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)',
+                            padding: '17px'
+                        }}>
+                            <div  onClick={handleCancel} disabled={loading} className="cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                                    <path d="M23.125 15H7.5M7.5 15L15 7.5M7.5 15L15 22.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div  onClick={handleSave} disabled={loading} className="cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                                    <path d="M3.75 24.25V5.75C3.75 4.64543 4.64543 3.75 5.75 3.75H20.4216C20.952 3.75 21.4607 3.96071 21.8358 4.33579L25.6642 8.16421C26.0393 8.53929 26.25 9.04799 26.25 9.57843V24.25C26.25 25.3546 25.3546 26.25 24.25 26.25H5.75C4.64543 26.25 3.75 25.3546 3.75 24.25Z" stroke="black" stroke-width="1.5"/>
+                                    <path d="M10.6 11.25H19.4C19.7314 11.25 20 10.9814 20 10.65V4.35C20 4.01863 19.7314 3.75 19.4 3.75H10.6C10.2686 3.75 10 4.01863 10 4.35V10.65C10 10.9814 10.2686 11.25 10.6 11.25Z" stroke="black" stroke-width="1.5"/>
+                                    <path d="M7.5 16.85V26.25H22.5V16.85C22.5 16.5186 22.2314 16.25 21.9 16.25H8.1C7.76863 16.25 7.5 16.5186 7.5 16.85Z" stroke="black" stroke-width="1.5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ padding: '0 40px' }}>
@@ -750,7 +781,7 @@ const AddJournalModal = ({
                 </div>
 
                 {/* Actions */}
-                <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+                <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '20px' }}>
                     {/* Delete button - only show for edit mode */}
                     <div>
                         {(mode === 'edit' || mode === 'view') && contentId && (
@@ -782,17 +813,21 @@ const AddJournalModal = ({
                         )}
                     </div>
 
-                    {/* Cancel and Save buttons */}
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        <button className="cancel-btn" onClick={handleCancel} disabled={loading}>
-                            {mode === 'view' ? 'Close' : 'Cancel'}
-                        </button>
-                        {mode !== 'view' && (
-                            <button className="save-btn" onClick={handleSave} disabled={loading}>
-                                {loading ? 'Saving...' : (mode === 'edit' ? 'Update' : 'Save')}
-                            </button>
-                        )}
-                    </div>
+                    {/* Action buttons - only for edit mode */}
+                    {mode === 'edit' && (
+                        <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+                            <AcademyBtn
+                                title="edit intro"
+                                onClick={() => onProceedToIntroduction && onProceedToIntroduction(existingData || { manageContent: { id: contentId } })}
+                                disabled={loading}
+                            />
+                            <AcademyBtn
+                                title="edit sections"
+                                onClick={() => history.push('/leadership-journal-management')}
+                                disabled={loading}
+                            />
+                        </div>
+                    )}
                 </div>
                 </div>
             </div>
