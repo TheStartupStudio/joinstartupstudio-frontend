@@ -42,6 +42,7 @@ const ContentManagement = () => {
   const [showDeleteLevelPopup, setShowDeleteLevelPopup] = useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
+  const [selectedItems, setSelectedItems] = useState([])
 
   useEffect(() => {
     if (editingTask) {
@@ -58,8 +59,11 @@ const ContentManagement = () => {
       if (activeLevelObj) {
         fetchTasksByLevel()
       }
+    } else {
+      // Clear selected items when switching levels
+      setSelectedItems([])
     }
-  }, [activeLevel])
+  }, [activeLevel, levelsData])
 
   const fetchLevels = async () => {
     try {
@@ -123,6 +127,8 @@ const ContentManagement = () => {
       })
 
       setTasksData(transformedTasks)
+      // Clear selected items when data is refreshed
+      setSelectedItems([])
     } catch (error) {
       console.error('Error fetching tasks by level:', error)
       toast.error('Failed to fetch tasks')
@@ -151,6 +157,10 @@ const ContentManagement = () => {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
+  }
+
+  const handleSelectionChange = (selectedTasks) => {
+    setSelectedItems(selectedTasks)
   }
 
   const handleRowAction = (actionType, item) => {
@@ -226,22 +236,48 @@ const ContentManagement = () => {
     setShowAddDropdown(false)
   }
 
-  const handleBulkPublish = () => {
-    toast.success('Bulk publish action triggered')
-    setShowBulkDropdown(false)
+  const handleBulkPublish = async () => {
+    if (selectedItems.length === 0) {
+      toast.warning('Please select tasks to publish')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const updatePromises = selectedItems.map(async (task) => {
+        return axiosInstance.put(`/LtsJournals/${task.id}`, {
+          published: true
+        })
+      })
+
+      await Promise.all(updatePromises)
+
+      toast.success(`${selectedItems.length} tasks published successfully!`)
+
+      // Refresh data
+      await fetchTasksByLevel()
+
+      // Clear selections
+      setSelectedItems([])
+
+    } catch (error) {
+      console.error('Error bulk publishing tasks:', error)
+      toast.error('Failed to publish tasks')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
+    }
   }
 
   const handleBulkUnpublish = async () => {
-    const selectedTasks = tasksData.filter(task => task.isSelected)
-
-    if (selectedTasks.length === 0) {
+    if (selectedItems.length === 0) {
       toast.warning('Please select tasks to unpublish')
       return
     }
 
     setLoading(true)
     try {
-      const updatePromises = selectedTasks.map(async (task) => {
+      const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
           journalLevel: null
         })
@@ -249,15 +285,13 @@ const ContentManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} tasks unpublished successfully!`)
+      toast.success(`${selectedItems.length} tasks unpublished successfully!`)
 
       // Refresh data
       await fetchTasksByLevel()
 
       // Clear selections
-      setTasksData(prevTasks =>
-        prevTasks.map(task => ({ ...task, isSelected: false }))
-      )
+      setSelectedItems([])
 
     } catch (error) {
       console.error('Error bulk unpublishing tasks:', error)
@@ -786,14 +820,8 @@ const ContentManagement = () => {
             searchQuery={searchQuery}
             onRowAction={handleRowAction}
             onReorder={handleReorder}
-            onSelectionChange={(selectedItems) => {
-              setTasksData(prevTasks =>
-                prevTasks.map(task => ({
-                  ...task,
-                  isSelected: selectedItems.some(selected => selected.id === task.id)
-                }))
-              )
-            }}
+            onSelectionChange={handleSelectionChange}
+            selectedItems={selectedItems}
             showCheckbox={true}
             activeTab="Content"
           />

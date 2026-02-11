@@ -6,6 +6,11 @@
   /* overflow: hidden; */
 }
 
+
+.manage-content .data-table-container{
+  overflow: unset;
+}
+
 .manage-content .header-tabs {
 
   border-radius: 8px;
@@ -267,6 +272,16 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
   /* background-color: var(--COLORS-Grey, #AEAEAE); */
   background-color: #9C3;
 box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.manage-content .task-name-cell .status-dot.active {
+  background-color: var(--COLORS-Green, #9C3);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.manage-content .task-name-cell .status-dot.inactive {
+  background-color: var(--COLORS-Grey, #AEAEAE);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }
 
 .manage-content .task-name-cell span {

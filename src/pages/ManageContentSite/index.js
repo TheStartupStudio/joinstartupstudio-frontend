@@ -27,6 +27,12 @@ const ManageContentSite = () => {
   const [selectedContent, setSelectedContent] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
   const [editFormData, setEditFormData] = useState({})
+  const [selectedItems, setSelectedItems] = useState([])
+  const [showBulkDropdown, setShowBulkDropdown] = useState(false)
+  const [showActionDropdown, setShowActionDropdown] = useState(null)
+  const [isArchiveMode, setIsArchiveMode] = useState(false)
+  const [archivedContents, setArchivedContents] = useState([])
+  const [archiveLoading, setArchiveLoading] = useState(false)
 
   const EditContentForm = ({ content, onSave, onCancel }) => {
     const handleChange = (e) => {
@@ -240,6 +246,22 @@ const ManageContentSite = () => {
     fetchContents()
   }, [])
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showBulkDropdown && !event.target.closest('.dropdown-wrapper')) {
+        setShowBulkDropdown(false)
+      }
+      if (showActionDropdown && !event.target.closest('.dropdown-wrapper')) {
+        setShowActionDropdown(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showBulkDropdown, showActionDropdown])
+
   const handleViewContent = async (content) => {
     console.log('View clicked for content:', content)
     console.log('Available content properties:', Object.keys(content))
@@ -302,6 +324,188 @@ const ManageContentSite = () => {
     }
   }
 
+  const handleSelectionChange = (contentId) => {
+    setSelectedItems(prev => {
+      const isSelected = prev.includes(contentId)
+      if (isSelected) {
+        return prev.filter(id => id !== contentId)
+      } else {
+        return [...prev, contentId]
+      }
+    })
+  }
+
+  const handleSelectAll = () => {
+    const currentContents = isArchiveMode ? archivedContents : contents
+    if (selectedItems.length === currentContents.length) {
+      setSelectedItems([])
+    } else {
+      setSelectedItems(currentContents.map(content => content.id))
+    }
+  }
+
+  const handleBulkArchive = async () => {
+    if (selectedItems.length === 0) {
+      toast.warning('Please select items to archive/unarchive')
+      return
+    }
+
+    try {
+      setLoading(true)
+      const response = await axiosInstance.put('/manage-content/bulk/archive', {
+        ids: selectedItems
+      })
+
+      if (response.data.success) {
+        toast.success(`Successfully toggled archive status for ${selectedItems.length} items`)
+        setSelectedItems([])
+        fetchContents()
+      } else {
+        toast.error('Failed to update archive status')
+      }
+    } catch (error) {
+      console.error('Error bulk archiving:', error)
+      toast.error('Failed to update archive status')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
+    }
+  }
+
+  const handleBulkPublish = async () => {
+    if (selectedItems.length === 0) {
+      toast.warning('Please select items to publish/unpublish')
+      return
+    }
+
+    try {
+      setLoading(true)
+      const response = await axiosInstance.put('/manage-content/bulk/publish', {
+        ids: selectedItems
+      })
+
+      if (response.data.success) {
+        toast.success(`Successfully toggled publish status for ${selectedItems.length} items`)
+        setSelectedItems([])
+        fetchContents()
+      } else {
+        toast.error('Failed to update publish status')
+      }
+    } catch (error) {
+      console.error('Error bulk publishing:', error)
+      toast.error('Failed to update publish status')
+    } finally {
+      setLoading(false)
+      setShowBulkDropdown(false)
+    }
+  }
+
+  const handleArchiveContent = async (contentId) => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.put('/manage-content/bulk/archive', {
+        ids: [contentId]
+      })
+
+      if (response.data.success) {
+        toast.success('Content archive status updated successfully')
+        fetchContents()
+      } else {
+        toast.error('Failed to update archive status')
+      }
+    } catch (error) {
+      console.error('Error archiving content:', error)
+      toast.error('Failed to update archive status')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handlePublishContent = async (contentId) => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.put('/manage-content/bulk/publish', {
+        ids: [contentId]
+      })
+
+      if (response.data.success) {
+        toast.success('Content publish status updated successfully')
+        fetchContents()
+      } else {
+        toast.error('Failed to update publish status')
+      }
+    } catch (error) {
+      console.error('Error publishing content:', error)
+      toast.error('Failed to update publish status')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDeleteContent = async (contentId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this content? This action cannot be undone.')
+    if (!confirmDelete) return
+
+    try {
+      setLoading(true)
+      const response = await axiosInstance.delete(`/manage-content/${contentId}`)
+
+      if (response.data.success) {
+        toast.success('Content deleted successfully')
+        setSelectedItems(prev => prev.filter(id => id !== contentId))
+        fetchContents()
+      } else {
+        toast.error('Failed to delete content')
+      }
+    } catch (error) {
+      console.error('Error deleting content:', error)
+      toast.error('Failed to delete content')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchArchivedContents = async () => {
+    try {
+      setArchiveLoading(true)
+      const response = await axiosInstance.get('/manage-content/full/archived', {
+        params: {
+          page: 1,
+          limit: 10, // Increased limit to show more items
+        }
+      })
+
+      if (response.data.success && response.data.data) {
+        setArchivedContents(response.data.data)
+      } else {
+        setArchivedContents([])
+      }
+    } catch (error) {
+      console.error('Error fetching archived contents:', error)
+      toast.error('Failed to load archived content')
+      setArchivedContents([])
+    } finally {
+      setArchiveLoading(false)
+    }
+  }
+
+  const toggleArchiveMode = () => {
+    if (isArchiveMode) {
+      // Switching back to normal mode
+      setIsArchiveMode(false)
+      setSelectedItems([])
+      setShowBulkDropdown(false)
+      setShowActionDropdown(null)
+    } else {
+      // Switching to archive mode
+      setIsArchiveMode(true)
+      setSelectedItems([])
+      setShowBulkDropdown(false)
+      setShowActionDropdown(null)
+      fetchArchivedContents()
+    }
+  }
+
   return (
     <div className="manage-content">
       <AddJournalModal
@@ -359,7 +563,7 @@ const ManageContentSite = () => {
                   lineHeight: 'normal',
                 }}
               >
-                MANAGE CONTENT SITE
+                {isArchiveMode ? 'ARCHIVED CONTENT' : 'MANAGE CONTENT SITE'}
               </h3>
               <p
                 style={{
@@ -372,7 +576,7 @@ const ManageContentSite = () => {
                   marginBottom: '0px',
                 }}
               >
-                View and manage content site elements
+                {isArchiveMode ? 'View and restore archived content' : 'View and manage content site elements'}
               </p>
             </div>
           </div>
@@ -431,20 +635,97 @@ const ManageContentSite = () => {
 
               <div>
                 <AcademyBtn
-                  title="View Archive"
+                  title={isArchiveMode ? "Return to Manage Content" : "View Archive"}
                   icon={btnIcon}
+                  onClick={toggleArchiveMode}
                 />
               </div>
 
-              <div className="dropdown-wrapper">
+              <div className="dropdown-wrapper" style={{ position: 'relative' }}>
                 <div
                   className="bulk-actions"
+                  onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <span>BULK ACTIONS</span>
                   <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                     <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
+
+                {showBulkDropdown && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      background: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      zIndex: 9999,
+                      minWidth: '180px',
+                      marginTop: '4px'
+                    }}
+                  >
+                    <button
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        border: 'none',
+                        background: 'none',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        color: 'black',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                      onClick={handleBulkArchive}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                        <path d="M2.5 6.66699V15.0003C2.5 15.442 2.67559 15.8656 2.98816 16.1782C3.30072 16.4907 3.72464 16.6663 4.16667 16.6663H15.8333C16.2754 16.6663 16.6993 16.4907 17.0118 16.1782C17.3244 15.8656 17.5 15.442 17.5 15.0003V6.66699" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M18.3337 3.33301H1.66699V6.66634H18.3337V3.33301Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M8.33301 10H11.6663" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      {isArchiveMode ? 'Unarchive' : 'Archive/Unarchive'}
+                    </button>
+
+                    <button
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        border: 'none',
+                        background: 'none',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        color: 'black',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                      onClick={handleBulkPublish}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                        <g clipPath="url(#clip0_3778_10072)">
+                          <path d="M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M2.19141 12.916H10.0001" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M2.19141 7.08301H17.8087" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path fillRule="evenodd" clipRule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="currentColor" strokeWidth="1.5"/>
+                        </g>
+                      </svg>
+                      Publish/Unpublish
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -458,8 +739,8 @@ const ManageContentSite = () => {
                       <input
                         type="checkbox"
                         className="checkbox"
-                        checked={false}
-                        readOnly
+                        checked={selectedItems.length === (isArchiveMode ? archivedContents : contents).length && (isArchiveMode ? archivedContents : contents).length > 0}
+                        onChange={handleSelectAll}
                       />
                     </th>
                     {columns.map((column, index) => (
@@ -491,14 +772,14 @@ const ManageContentSite = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {(loading || archiveLoading) ? (
                     <tr>
                       <td colSpan="3" className="text-center py-4">
                         <div className="d-flex justify-content-center align-items-center">
                           <div className="spinner-border text-primary me-2" role="status">
                             <span className="visually-hidden">Loading...</span>
                           </div>
-                          Loading content...
+                          {isArchiveMode ? 'Loading archived content...' : 'Loading content...'}
                         </div>
                       </td>
                     </tr>
@@ -509,23 +790,23 @@ const ManageContentSite = () => {
                           {error}
                           <button
                             className="btn btn-link p-0 ms-2"
-                            onClick={fetchContents}
+                            onClick={isArchiveMode ? fetchArchivedContents : fetchContents}
                           >
                             Retry
                           </button>
                         </div>
                       </td>
                     </tr>
-                  ) : contents.length === 0 ? (
+                  ) : (isArchiveMode ? archivedContents : contents).length === 0 ? (
                     <tr>
                       <td colSpan="3" className="text-center py-4">
                         <div className="alert alert-info mb-0">
-                          No content found. Try adding new content.
+                          {isArchiveMode ? 'No archived content found.' : 'No content found. Try adding new content.'}
                         </div>
                       </td>
                     </tr>
                   ) : (
-                    contents.map((content, index) => {
+                    (isArchiveMode ? archivedContents : contents).map((content, index) => {
                       console.log('Rendering content item:', index, content)
                       return (
                         <tr key={content.timestamp || index}>
@@ -533,12 +814,13 @@ const ManageContentSite = () => {
                             <input
                               type="checkbox"
                               className="checkbox"
-                              readOnly
+                              checked={selectedItems.includes(content.id)}
+                              onChange={() => handleSelectionChange(content.id)}
                             />
                           </td>
                           <td className="manage-content-task-name-column">
                             <div className="task-name-cell">
-                              <div className="status-dot published"></div>
+                              <div className={`status-dot ${(!content.archiveStatus && content.publishedStatus) ? 'active' : 'inactive'}`}></div>
                               <span>{content.title || 'Untitled Content'}</span>
                             </div>
                           </td>
@@ -563,14 +845,138 @@ const ManageContentSite = () => {
                               </svg>
                               Edit
                             </button>
-                            <div className="dropdown-wrapper">
-                              <button className="action-btn more-actions-btn">
+                            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+                              <button
+                                className="action-btn more-actions-btn"
+                                onClick={() => setShowActionDropdown(showActionDropdown === content.id ? null : content.id)}
+                              >
                                 <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
                                   <circle cx="2" cy="2" r="2" fill="currentColor" />
                                   <circle cx="8" cy="2" r="2" fill="currentColor" />
                                   <circle cx="14" cy="2" r="2" fill="currentColor" />
                                 </svg>
                               </button>
+
+                              {showActionDropdown === content.id && (
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    top: '100%',
+                                    right: 0,
+                                    background: 'white',
+                                    border: '1px solid #e5e7eb',
+                                    borderRadius: '8px',
+                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                    zIndex: 9999,
+                                    minWidth: '140px',
+                                    marginTop: '4px'
+                                  }}
+                                >
+                                  <button
+                                    style={{
+                                      width: '100%',
+                                      padding: '10px 16px',
+                                      border: 'none',
+                                      background: 'none',
+                                      textAlign: 'left',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      color: '#374151',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                    onClick={() => {
+                                      handleArchiveContent(content.id)
+                                      setShowActionDropdown(null)
+                                    }}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                      <path d="M2.5 6.66699V15.0003C2.5 15.442 2.67559 15.8656 2.98816 16.1782C3.30072 16.4907 3.72464 16.6663 4.16667 16.6663H15.8333C16.2754 16.6663 16.6993 16.4907 17.0118 16.1782C17.3244 15.8656 17.5 15.442 17.5 15.0003V6.66699" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M18.3337 3.33301H1.66699V6.66634H18.3337V3.33301Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <path d="M8.33301 10H11.6663" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    {isArchiveMode ? 'Unarchive' : 'Archive'}
+                                  </button>
+
+                                  <button
+                                    style={{
+                                      width: '100%',
+                                      padding: '10px 16px',
+                                      border: 'none',
+                                      background: 'none',
+                                      textAlign: 'left',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      color: content.publishedStatus ? '#dc2626' : '#059669',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                    onClick={() => {
+                                      handlePublishContent(content.id)
+                                      setShowActionDropdown(null)
+                                    }}
+                                  >
+                                    {content.publishedStatus ? (
+                                      <>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                          <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round"/>
+                                          <path d="M10 7.5V10.8333" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round"/>
+                                          <path d="M10 14.1753L10.0083 14.1661" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                        Unpublish
+                                      </>
+                                    ) : (
+                                      <>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                          <g clipPath="url(#clip0_3778_10072)">
+                                            <path d="M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path d="M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path d="M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path d="M2.19141 12.916H10.0001" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path d="M2.19141 7.08301H17.8087" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <path fillRule="evenodd" clipRule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="#059669" strokeWidth="1.5"/>
+                                          </g>
+                                        </svg>
+                                        Publish
+                                      </>
+                                    )}
+                                  </button>
+
+                                  <button
+                                    style={{
+                                      width: '100%',
+                                      padding: '10px 16px',
+                                      border: 'none',
+                                      background: 'none',
+                                      textAlign: 'left',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      color: 'black',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                    onClick={() => {
+                                      handleDeleteContent(content.id)
+                                      setShowActionDropdown(null)
+                                    }}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                      <path d="M16.6668 7.5L15.0043 16.9552C14.8642 17.7522 14.172 18.3333 13.3629 18.3333H6.63745C5.82832 18.3333 5.13608 17.7522 4.99596 16.9552L3.3335 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      <path d="M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </td>
