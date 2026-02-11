@@ -394,7 +394,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
 
                                         </div>
 
-                                        <div className="upload-section">
+                                        <div className="upload-section headshot">
                                             {instructorHeadshot ? (
                                                 <div className="upload-preview-headshot">
                                                     <img

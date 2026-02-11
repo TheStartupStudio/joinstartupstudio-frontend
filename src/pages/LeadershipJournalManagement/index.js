@@ -44,6 +44,7 @@ const LeadershipJournalManagement = () => {
   const [showDeleteLevelPopup, setShowDeleteLevelPopup] = useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
+  const [selectedItems, setSelectedItems] = useState([])
 
   const fetchManageContent = async () => {
     try {
@@ -86,6 +87,8 @@ const LeadershipJournalManagement = () => {
       }))
 
       setTasksData(transformedData)
+      // Clear selected items when data is refreshed
+      setSelectedItems([])
     } catch (error) {
       console.error('Error fetching leadership content by level:', error)
       toast.error('Failed to fetch content for this level')
@@ -144,6 +147,9 @@ const LeadershipJournalManagement = () => {
       if (activeLevelObj) {
         fetchContentByLevel(activeLevelObj.id)
       }
+    } else {
+      // Clear selected items when switching levels
+      setSelectedItems([])
     }
   }, [activeLevel, levelsData])
 
@@ -168,6 +174,10 @@ const LeadershipJournalManagement = () => {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
+  }
+
+  const handleSelectionChange = (selectedTasks) => {
+    setSelectedItems(selectedTasks)
   }
 
   const handleRowAction = (actionType, item) => {
@@ -241,16 +251,14 @@ const LeadershipJournalManagement = () => {
   }
 
   const handleBulkPublish = async () => {
-    const selectedTasks = tasksData.filter(task => task.isSelected)
-
-    if (selectedTasks.length === 0) {
+    if (selectedItems.length === 0) {
       toast.warning('Please select tasks to publish')
       return
     }
 
     setLoading(true)
     try {
-      const updatePromises = selectedTasks.map(async (task) => {
+      const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}`, {
           published: true
         })
@@ -258,7 +266,7 @@ const LeadershipJournalManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} leadership tasks published successfully!`)
+      toast.success(`${selectedItems.length} leadership tasks published successfully!`)
 
       if (activeLevel) {
         const activeLevelObj = levelsData.find(level => level.title === activeLevel)
@@ -267,9 +275,7 @@ const LeadershipJournalManagement = () => {
         }
       }
 
-      setTasksData(prevTasks =>
-        prevTasks.map(task => ({ ...task, isSelected: false }))
-      )
+      setSelectedItems([])
 
     } catch (error) {
       console.error('Error bulk publishing leadership tasks:', error)
@@ -281,16 +287,14 @@ const LeadershipJournalManagement = () => {
   }
 
   const handleBulkUnpublish = async () => {
-    const selectedTasks = tasksData.filter(task => task.isSelected)
-
-    if (selectedTasks.length === 0) {
+    if (selectedItems.length === 0) {
       toast.warning('Please select tasks to unpublish')
       return
     }
 
     setLoading(true)
     try {
-      const updatePromises = selectedTasks.map(async (task) => {
+      const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
           journalLevel: null
         })
@@ -298,7 +302,7 @@ const LeadershipJournalManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} leadership tasks unpublished successfully!`)
+      toast.success(`${selectedItems.length} leadership tasks unpublished successfully!`)
 
       if (activeLevel) {
         const activeLevelObj = levelsData.find(level => level.title === activeLevel)
@@ -307,9 +311,7 @@ const LeadershipJournalManagement = () => {
         }
       }
 
-      setTasksData(prevTasks =>
-        prevTasks.map(task => ({ ...task, isSelected: false }))
-      )
+      setSelectedItems([])
 
     } catch (error) {
       console.error('Error bulk unpublishing leadership tasks:', error)
@@ -938,6 +940,8 @@ const LeadershipJournalManagement = () => {
               onReorder={handleReorder}
               showCheckbox={true}
               activeTab="Content"
+              onSelectionChange={handleSelectionChange}
+              selectedItems={selectedItems}
             />
           </div>
 

@@ -503,7 +503,7 @@ const AddJournalModal = ({
                             {mode === 'view' ? 'View Journal' : mode === 'edit' ? 'Edit Journal' : 'Add New Journal'}
                         </p>
                     </div>
-                    {mode === 'edit' && (
+                    {(mode === 'edit') && (
                         <div style={{ display: 'flex', 
                             gap: '20px', 
                             position: 'absolute', 
@@ -784,7 +784,7 @@ const AddJournalModal = ({
                 <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '20px' }}>
                     {/* Delete button - only show for edit mode */}
                     <div>
-                        {(mode === 'edit' || mode === 'view') && contentId && (
+                        {(mode === 'edit') && contentId && (
                             <button
                                 onClick={handleDelete}
                                 disabled={loading}
@@ -814,7 +814,7 @@ const AddJournalModal = ({
                     </div>
 
                     {/* Action buttons - only for edit mode */}
-                    {mode === 'edit' && (
+                    {mode === 'edit'  && (
                         <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
                             <AcademyBtn
                                 title="edit intro"
@@ -826,6 +826,27 @@ const AddJournalModal = ({
                                 onClick={() => history.push('/leadership-journal-management')}
                                 disabled={loading}
                             />
+                        </div>
+                    )}
+
+
+                    {/* Action buttons - only for edit mode */}
+                    {mode === 'add' && (
+                        <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+                            <div onClick={handleCancel} disabled={loading} className="cancel-btn">
+                                Cancel
+                            </div>
+                            <div onClick={handleSave} disabled={loading} className="save-btn">
+                                Save
+                            </div>
+                        </div>
+                    )}
+
+                    {mode === 'view' && (
+                        <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+                            <button className="cancel-btn" onClick={handleCancel}>
+                                Cancel
+                            </button>
                         </div>
                     )}
                 </div>
