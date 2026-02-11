@@ -268,7 +268,7 @@ export const adminRoutes = [
   {
     path: '/manage-content-site',
     component: ManageContentSite,
-    breadcrumb: 'Manage Content Site',
+    breadcrumb: 'Content Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {

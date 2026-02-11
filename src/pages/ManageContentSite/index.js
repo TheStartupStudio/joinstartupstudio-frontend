@@ -563,7 +563,7 @@ const ManageContentSite = () => {
                   lineHeight: 'normal',
                 }}
               >
-                {isArchiveMode ? 'ARCHIVED CONTENT' : 'MANAGE CONTENT SITE'}
+                {isArchiveMode ? 'ARCHIVED CONTENT' : 'Content Management'}
               </h3>
               <p
                 style={{
@@ -576,7 +576,7 @@ const ManageContentSite = () => {
                   marginBottom: '0px',
                 }}
               >
-                {isArchiveMode ? 'View and restore archived content' : 'View and manage content site elements'}
+                {isArchiveMode ? 'View and restore archived content' : 'View and content management elements'}
               </p>
             </div>
           </div>
@@ -635,7 +635,7 @@ const ManageContentSite = () => {
 
               <div>
                 <AcademyBtn
-                  title={isArchiveMode ? "Return to Manage Content" : "View Archive"}
+                  title={isArchiveMode ? "Return to Content Management" : "View Archive"}
                   icon={btnIcon}
                   onClick={toggleArchiveMode}
                 />

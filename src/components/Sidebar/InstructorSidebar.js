@@ -83,7 +83,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'manage-content-site',
-    title: 'Manage Content Site',
+    title: 'Content Management',
     srcImage: ContentSiteIcon,
     to: '/manage-content-site',
     roles: [3],
@@ -252,13 +252,13 @@ const InstructorSidebar = (props) => {
       return true
     })
 
-    // Add dynamic content items right after leadership-journal
+    // Add dynamic content items under Studio Guidance (master-classes)
     const dynamicItems = manageContentData.map(content => ({
       id: `journal-course-${content.id}`,
       title: content.title,
       srcImage: getIconSvg(content.icon),
       to: `/journal-courses/${content.id}`,
-      roles: [1, 2, 3], // All roles can see these
+      roles: [1, 2], // Students and instructors only (not admins)
       className: (pathname) => {
         // Check for journal-courses route
         if (pathname === `/journal-courses/${content.id}`) return 'active'
@@ -274,8 +274,8 @@ const InstructorSidebar = (props) => {
     for (let i = 0; i < staticItems.length; i++) {
       result.push(staticItems[i])
 
-      // If this is the leadership-journal item, insert dynamic items after it
-      if (staticItems[i].id === 'forum') {
+      // If this is the master-classes item (Studio Guidance), insert dynamic items after it
+      if (staticItems[i].id === 'master-classes') {
         result.push(...dynamicItems)
       }
     }
