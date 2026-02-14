@@ -525,9 +525,9 @@ const LeadershipJournal = memo(() => {
   };
 
   return (
-    <div className='container-fluid'>
-      <div className='row'>
-        <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+    <div className='container-fluid h-100' style={{ '--bs-gutter-x': '0' }}>
+      <div className='d-flex flex-column h-100'>
+        <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4 ' style={{ height: 'fit-content' }}>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
               <h3 className='page-title bold-page-title text-black mb-0'>
@@ -550,7 +550,9 @@ const LeadershipJournal = memo(() => {
                                    />
                                  </div>
         </div>
-        <div className='academy-dashboard-layout lead-class mb-5' style={Object.keys(dynamicStyles.leadClass).length > 0 ? dynamicStyles.leadClass : undefined}>
+        <div className='academy-dashboard-layout lead-class pb-5 flex-grow-1' style={Object.keys(dynamicStyles.leadClass).length > 0 ? dynamicStyles.leadClass : undefined}>
+          <div className=''>
+
           {(allTabs.length === 0 || isLoading) ? (
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
               <div className="text-center">
@@ -665,6 +667,7 @@ const LeadershipJournal = memo(() => {
               </div>
             </>
           )}
+          </div>
         </div>
       </div>
     </div>

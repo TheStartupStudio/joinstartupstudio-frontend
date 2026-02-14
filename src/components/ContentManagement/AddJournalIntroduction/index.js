@@ -280,14 +280,14 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
             const response = await axiosInstance.put(`/manage-content/full/${contentIdToUse}`, updateData)
 
             if (response.data.success) {
-                alert('Introduction data updated successfully!')
+                toast.success('Introduction data updated successfully!')
                 onClose()
             } else {
                 throw new Error('Failed to update introduction data')
             }
         } catch (error) {
             console.error('Error updating introduction data:', error)
-            alert(`Failed to update introduction data: ${error.message}`)
+            toast.error(`Failed to update introduction data: ${error.message}`)
         }
     }
 

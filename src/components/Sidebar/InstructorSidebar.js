@@ -233,7 +233,7 @@ const InstructorSidebar = (props) => {
     ]
 
     const foundIcon = iconOptions.find(option => option.id === iconName)
-    return foundIcon ? foundIcon.svg : iconOptions[0].svg // Default to leader icon if not found
+    return foundIcon ? foundIcon.svg : iconOptions[0].svg 
   }
 
   const getVisibleMenuItems = () => {
@@ -241,7 +241,6 @@ const InstructorSidebar = (props) => {
     const university = user?.University
 
     const staticItems = SIDEBAR_MENU_ITEMS.filter(item => {
-      // Check role permission
       if (!hasPermission(item.roles, userRoleId)) return false
 
       if (item.requiresUniversitySetting) {
@@ -252,30 +251,26 @@ const InstructorSidebar = (props) => {
       return true
     })
 
-    // Add dynamic content items under Studio Guidance (master-classes)
     const dynamicItems = manageContentData.map(content => ({
       id: `journal-course-${content.id}`,
       title: content.title,
       srcImage: getIconSvg(content.icon),
       to: `/journal-courses/${content.id}`,
-      roles: [1, 2], // Students and instructors only (not admins)
+      roles: [1, 2, 3], 
       className: (pathname) => {
-        // Check for journal-courses route
         if (pathname === `/journal-courses/${content.id}`) return 'active'
-        // Check for leadership-journal route (defaults to ID 1)
         if (pathname === '/leadership-journal' && content.id === 1) return 'active'
         return ''
       },
       category: content.title // Add category for API calls
     }))
 
-    // Find the leadership-journal item and insert dynamic items after it
     const result = []
     for (let i = 0; i < staticItems.length; i++) {
       result.push(staticItems[i])
 
-      // If this is the master-classes item (Studio Guidance), insert dynamic items after it
-      if (staticItems[i].id === 'master-classes') {
+      // if (staticItems[i].id === 'master-classes') {
+      if (staticItems[i].id === 'leadership-journal-management') {
         result.push(...dynamicItems)
       }
     }

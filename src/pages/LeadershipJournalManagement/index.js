@@ -1,6 +1,7 @@
 import './index.css'
 import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
@@ -18,8 +19,9 @@ import axiosInstance from '../../utils/AxiosInstance'
 
 const LeadershipJournalManagement = () => {
   const dispatch = useDispatch()
-  const [levelsData, setLevelsData] = useState([]) 
-  const [levels, setLevels] = useState([]) 
+  const location = useLocation()
+  const [levelsData, setLevelsData] = useState([])
+  const [levels, setLevels] = useState([])
   const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
@@ -52,7 +54,22 @@ const LeadershipJournalManagement = () => {
       if (response.data.success) {
         const contentData = response.data.data || []
         setManageContentData(contentData)
+
         if (contentData.length > 0) {
+          // Check if there's a contentId in the URL query parameters
+          const urlParams = new URLSearchParams(location.search)
+          const contentIdParam = urlParams.get('contentId')
+
+          if (contentIdParam) {
+            // Find the content with matching ID
+            const matchingContent = contentData.find(content => content.id.toString() === contentIdParam)
+            if (matchingContent) {
+              setSelectedCategory(matchingContent.title)
+              return // Exit early since we found the matching content
+            }
+          }
+
+          // Default to first item if no contentId param or no matching content found
           setSelectedCategory(contentData[0].title)
         }
       } else {
@@ -133,7 +150,7 @@ const LeadershipJournalManagement = () => {
 
   useEffect(() => {
     fetchManageContent()
-  }, [])
+  }, [location.search]) // Run on mount and when URL search params change
 
   useEffect(() => {
     if (selectedCategory) {

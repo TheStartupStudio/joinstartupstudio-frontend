@@ -823,7 +823,7 @@ const AddJournalModal = ({
                             />
                             <AcademyBtn
                                 title="edit sections"
-                                onClick={() => history.push('/leadership-journal-management')}
+                                onClick={() => history.push(`/leadership-journal-management?contentId=${contentId}`)}
                                 disabled={loading}
                             />
                         </div>
