@@ -148,7 +148,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         
         if (videoUploadResponse.data.success) {
           videoUrl = videoUploadResponse.data.fileLocation
-          toast.success('Video uploaded successfully!')
         }
       }
 
@@ -164,7 +163,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         
         if (thumbnailUploadResponse.data.success) {
           thumbnailUrl = thumbnailUploadResponse.data.fileLocation
-          toast.success('Thumbnail uploaded successfully!')
         }
       }
 
