@@ -412,6 +412,8 @@ const AddJournalModal = ({
                     // For new journal creation, proceed to introduction modal immediately
                     if (onProceedToIntroduction) {
                         onProceedToIntroduction(response.data.data)
+                        // Reset form fields after successful creation
+                        resetForm()
                     } else {
                         toast.success('Journal created successfully!')
                         onClose()
@@ -419,6 +421,8 @@ const AddJournalModal = ({
                         if (onContentChange) {
                             onContentChange()
                         }
+                        // Reset form fields after successful creation
+                        resetForm()
                     }
                 } else if (mode === 'edit') {
                     if (onProceedToIntroduction) {
@@ -797,7 +801,7 @@ const AddJournalModal = ({
                                                                 </defs>
                                                             </svg>
                                                         </div>
-                                                        <span>Section {section.id}: {section.name || 'Unnamed Section'}</span>
+                                                        <span>Section {sections.indexOf(section) + 1}: {section.name || 'Unnamed Section'}</span>
                                                     </div>
                                                 </div>
                                                 <div className="section-details-content">

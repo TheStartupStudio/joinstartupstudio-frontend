@@ -23,6 +23,9 @@
 .tss-feedback-container .search-input-wrapper {
   position: relative;
   width: 100%;
+  border-radius: 12px;
+background: var(--COLORS-White, #FFF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
 }
 
 .tss-feedback-container .search-input {
@@ -78,7 +81,6 @@
   width: 30px;
   height: 30px;
   border: none;
-  background: white;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -253,6 +255,7 @@
   color: #334155;
   margin: 0;
   letter-spacing: -0.025em;
+  background: transparent;
 }
 
 .tss-feedback-view-modal .section-content {
