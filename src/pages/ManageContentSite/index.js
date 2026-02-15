@@ -8,6 +8,7 @@ import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import AddJournalModal from '../../components/ContentManagement/AddJournalModal'
 import AddJournalIntroduction from '../../components/ContentManagement/AddJournalIntroduction'
+import DeleteJournalContentModal from '../../components/ContentManagement/DeleteJournalContentModal'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 
@@ -35,6 +36,8 @@ const ManageContentSite = () => {
   const [archiveLoading, setArchiveLoading] = useState(false)
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
   const [contentFilter, setContentFilter] = useState('all') // 'all', 'published', 'unpublished'
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteModalData, setDeleteModalData] = useState(null)
 
   const EditContentForm = ({ content, onSave, onCancel }) => {
     const handleChange = (e) => {
@@ -196,6 +199,8 @@ const ManageContentSite = () => {
     setJournalData(data)
     setShowAddJournalModal(false)
     setShowAddJournalIntroductionModal(true)
+    // Refresh the content list to show the newly created or updated journal
+    fetchContents()
   }
 
   const handleCloseAddJournalIntroductionModal = () => {
@@ -448,9 +453,6 @@ const ManageContentSite = () => {
   }
 
   const handleDeleteContent = async (contentId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this content? This action cannot be undone.')
-    if (!confirmDelete) return
-
     try {
       setLoading(true)
       const response = await axiosInstance.delete(`/manage-content/${contentId}`)
@@ -467,6 +469,57 @@ const ManageContentSite = () => {
       toast.error('Failed to delete content')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleArchiveContentForDelete = async (contentId) => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.put('/manage-content/bulk/archive', {
+        ids: [contentId]
+      })
+
+      if (response.data.success) {
+        toast.success('Content archived successfully')
+        fetchContents()
+      } else {
+        toast.error('Failed to archive content')
+      }
+    } catch (error) {
+      console.error('Error archiving content:', error)
+      toast.error('Failed to archive content')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleShowDeleteModal = (contentId) => {
+    // Find the content to check if it's archived
+    const currentContents = isArchiveMode ? archivedContents : contents
+    const content = currentContents.find(c => c.id === contentId)
+
+    setDeleteModalData({
+      contentId,
+      isArchived: content?.archiveStatus || false
+    })
+    setShowDeleteModal(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false)
+    setDeleteModalData(null)
+  }
+
+  const handleArchiveFromModal = () => {
+    if (deleteModalData?.contentId) {
+      handleArchiveContentForDelete(deleteModalData.contentId)
+      setSelectedItems(prev => prev.filter(id => id !== deleteModalData.contentId))
+    }
+  }
+
+  const handleDeleteFromModal = () => {
+    if (deleteModalData?.contentId) {
+      handleDeleteContent(deleteModalData.contentId)
     }
   }
 
@@ -552,6 +605,16 @@ const ManageContentSite = () => {
         journalData={journalData}
         mode={modalMode}
         contentId={selectedContentId}
+      />
+
+      <DeleteJournalContentModal
+        show={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onArchive={handleArchiveFromModal}
+        onDelete={handleDeleteFromModal}
+        title="Delete Content"
+        message="What would you like to do with this content?"
+        isArchived={deleteModalData?.isArchived || false}
       />
 
       {/* Edit Content Modal */}
@@ -1087,7 +1150,7 @@ const ManageContentSite = () => {
                                     onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                                     onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     onClick={() => {
-                                      handleDeleteContent(content.id)
+                                      handleShowDeleteModal(content.id)
                                       setShowActionDropdown(null)
                                     }}
                                   >

@@ -533,11 +533,17 @@ const LeadershipJournal = memo(() => {
               <h3 className='page-title bold-page-title text-black mb-0'>
                 {manageContentData?.title || 'Leadership Journal'}
               </h3>
-              <p className='fs-13 fw-light text-black'>
+              {manageContentData?.subtitle ? (
+                <p className='fs-13 fw-light text-black'>
+                  {manageContentData.subtitle}
+                </p>
+              ) : (
+                <p className='fs-13 fw-light text-black'>
                 Leadership comes in many forms but the foundation is leading
                 yourself first. Use this journal to inspire your development as
                 a leader.
               </p>
+              )}
             </div>
           </div>
           <div className="d-flex align-items-center justify-content-center">
