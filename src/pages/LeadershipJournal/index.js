@@ -220,23 +220,10 @@ const LeadershipJournal = memo(() => {
 
     Object.keys(lessons).forEach(levelIndex => {
       const levelLessons = lessons[levelIndex] || []
-      const sectionKey = levelIndex === '0' ? 'one' : levelIndex === '1' ? 'two' : 'three'
+      const sectionKey = levelIndex // Use level index directly as section key
 
       result[sectionKey] = levelLessons.map(lesson => {
         const lessonIndex = levelLessons.indexOf(lesson)
-        let component
-
-        if (lessonIndex === 0 && levelIndex === '0') {
-          component = <SectionOne setIsReflection={setIsReflection} lessonId={lesson.id} contentData={manageContentData} />
-        } else {
-          component = (
-            <Value
-              ref={el => valueRefs.current[stripHtmlTags(lesson.title)] = el}
-              id={lesson.id}
-              setIsReflection={setIsReflection}
-            />
-          )
-        }
 
         return {
           title: stripHtmlTags(lesson.title),
@@ -244,19 +231,20 @@ const LeadershipJournal = memo(() => {
           id: lesson.id,
           redirectId: lesson.redirectId,
           separate: lesson.separate,
-          component: component
+          lessonIndex: lessonIndex,
+          levelIndex: levelIndex
         }
       })
     })
 
     return result
-  }, [lessons, setIsReflection])
+  }, [lessons])
 
   useEffect(() => {
     if (levels.length === 0 || Object.keys(lessons).length === 0) return;
 
     const tabs = levels.map((level, index) => {
-      const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
+      const sectionKey = index.toString(); // Use level index as string directly as section key
       const sectionLessons = sections[sectionKey] || [];
 
       return {
@@ -338,7 +326,7 @@ const LeadershipJournal = memo(() => {
         let foundNext = false;
 
         return options.map(option => {
-          const finished = finishedContent.includes(option.label);
+          const finished = finishedContent.some(finishedItem => stripHtmlTags(finishedItem) === option.label);
           const isNext = !finished && !foundNext;
           if (isNext) foundNext = true;
 
@@ -362,10 +350,14 @@ const LeadershipJournal = memo(() => {
   const canAccessSection = (index) => {
     if (index === 0) return true;
 
-    const sectionKey = (index - 1) === 0 ? 'one' : (index - 1) === 1 ? 'two' : 'three';
+    const prevIndex = index - 1;
+    const sectionKey = prevIndex.toString(); // Use level index as string directly as section key
     const prevSectionLessons = sections[sectionKey] || [];
 
-    return prevSectionLessons.every(lesson => finishedContent.includes(stripHtmlTags(lesson.title)));
+    return prevSectionLessons.every(lesson => {
+      const strippedLessonTitle = stripHtmlTags(lesson.title);
+      return finishedContent.some(finishedItem => stripHtmlTags(finishedItem) === strippedLessonTitle);
+    });
   };
 
   const handleSaveAndContinue = async () => {
@@ -383,67 +375,72 @@ const LeadershipJournal = memo(() => {
         return;
       }
 
+      // Always save first if we're in reflection mode or if we need to update progress
       const currentComponent = valueRefs.current[activeTabData.option?.value];
 
-      if (!isReflection) {
-        const currentSection = allTabs[activeTabData.activeTab].options;
-        const currentOptionIndex = currentSection.findIndex(
-          option => option.value === activeTabData.option?.value
-        );
-
-        if (currentOptionIndex < currentSection.length - 1) {
-          setActiveTabData({
-            ...activeTabData,
-            option: currentSection[currentOptionIndex + 1]
-          });
-        } else if (activeTabData.activeTab < allTabs.length - 1) {
-          if (canAccessSection(activeTabData.activeTab + 1)) {
-            setActiveTabData({
-              activeTab: activeTabData.activeTab + 1,
-              option: allTabs[activeTabData.activeTab + 1].options[0]
-            });
-          } else {
-            setShowLockModal(true);
-          }
+      if (isReflection) {
+        if (currentComponent?.saveChanges) {
+          await currentComponent.saveChanges();
         }
+
+        // Update finished content state
+        const category = manageContentData?.title
+        await dispatch(fetchJournalFinishedContent(category, manageContentData?.title));
+
+        // Wait for state to update before proceeding
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+
+      // Now handle navigation logic after saving (if needed)
+      const currentTabData = allTabs[activeTabData.activeTab];
+      if (!currentTabData || !currentTabData.options) {
+        console.error('Current tab data or options not found');
         return;
       }
 
-      if (currentComponent?.saveChanges) {
-        await currentComponent.saveChanges();
-      }
-
-      const category = manageContentData?.title
-      await dispatch(fetchJournalFinishedContent(category, manageContentData?.title));
-      const { journal: { finishedContent: updatedContent } } = store.getState();
-
-      if (!updatedContent.includes(activeTabData.option?.value)) {
-        setShowLockModal(true);
-        return;
-      }
-
-      if (activeTabData.option?.value === 'Vision' && updatedContent.includes('Vision')) {
-        window.location.href = '/leadership-journal';
-        return;
-      }
-
-      const currentSection = allTabs[activeTabData.activeTab].options;
+      const currentSection = currentTabData.options;
       const currentOptionIndex = currentSection.findIndex(
         option => option.value === activeTabData.option?.value
       );
 
+      if (currentOptionIndex === -1) {
+        console.error('Current option not found in section');
+        return;
+      }
+
       if (currentOptionIndex < currentSection.length - 1) {
+        // Move to next option in current section
         const nextOption = currentSection[currentOptionIndex + 1];
-        setActiveTabData({
-          ...activeTabData,
-          option: nextOption
-        });
-      } else if (activeTabData.activeTab < allTabs.length - 1) {
-        if (canAccessSection(activeTabData.activeTab + 1)) {
+        if (nextOption) {
           setActiveTabData({
-            activeTab: activeTabData.activeTab + 1,
-            option: allTabs[activeTabData.activeTab + 1].options[0]
+            ...activeTabData,
+            option: nextOption
           });
+        }
+      } else if (activeTabData.activeTab < allTabs.length - 1) {
+        // Move to next section - check if user can access it
+        // Get the most current finishedContent state
+        const { journal: { finishedContent: currentFinishedContent } } = store.getState();
+
+        const currentTab = activeTabData.activeTab;
+        const sectionKey = currentTab.toString(); // Use level index as string directly as section key
+
+        const prevSectionLessons = sections[sectionKey] || [];
+        const canAccess = prevSectionLessons.every(lesson => {
+          const strippedLessonTitle = stripHtmlTags(lesson.title);
+          return currentFinishedContent.some(finishedItem => stripHtmlTags(finishedItem) === strippedLessonTitle);
+        });
+
+        if (canAccess) {
+          const nextTabData = allTabs[activeTabData.activeTab + 1];
+          if (nextTabData && nextTabData.options && nextTabData.options.length > 0) {
+            setActiveTabData({
+              activeTab: activeTabData.activeTab + 1,
+              option: nextTabData.options[0]
+            });
+          } else {
+            console.error('Next tab data or options not found');
+          }
         } else {
           setShowLockModal(true);
         }
@@ -461,7 +458,7 @@ const LeadershipJournal = memo(() => {
       return true;
     }
 
-    return !finishedContent.includes(option.label) && !option.isNext;
+    return !finishedContent.some(finishedItem => stripHtmlTags(finishedItem) === option.label) && !option.isNext;
   };
 
   const isIntroSection = !isReflection;
@@ -471,17 +468,31 @@ const LeadershipJournal = memo(() => {
       return <SectionOne setIsReflection={setIsReflection} lessonId={null} contentData={manageContentData} />
     }
 
-    if (allTabs.length === 0) return null;
+    if (Object.keys(sections).length === 0) return null;
 
-    const sectionKey = activeTabData.activeTab === 0 ? 'one' :
-      activeTabData.activeTab === 1 ? 'two' : 'three';
+    const currentTab = activeTabData.activeTab;
+    const sectionKey = currentTab.toString(); // Use level index as string directly as section key
 
     const selectedSection = sections[sectionKey]?.find(
       section => section.title === activeTabData.option?.value
     );
 
-    return selectedSection ? selectedSection.component : null;
-  }, [activeTabData, allTabs, sections, setIsReflection, manageContentData]);
+    if (!selectedSection) return null;
+
+    // Render component based on section data
+    if (selectedSection.lessonIndex === 0 && selectedSection.levelIndex === '0') {
+      return <SectionOne setIsReflection={setIsReflection} lessonId={selectedSection.id} contentData={manageContentData} />
+    } else {
+      return (
+        <Value
+          key={selectedSection.id}
+          ref={el => valueRefs.current[stripHtmlTags(selectedSection.title)] = el}
+          id={selectedSection.id}
+          setIsReflection={setIsReflection}
+        />
+      )
+    }
+  }, [activeTabData.option, sections, manageContentData]);
 
   useEffect(() => {
     if (activeTabData.option) {
@@ -499,7 +510,8 @@ const LeadershipJournal = memo(() => {
       return;
     }
 
-    const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
+    const sectionKey = index.toString(); // Use level index as string directly as section key
+
     const sectionLessons = sections[sectionKey] || [];
     const firstLesson = sectionLessons[0];
 

@@ -521,7 +521,7 @@ const AddJournalModal = ({
 
     return (
         <>
-            {loading && (
+            {/* {loading && (
                 <div className="loading-overlay">
                     <div className="loading-spinner">
                         <div className="spinner-border text-primary" role="status">
@@ -530,7 +530,7 @@ const AddJournalModal = ({
                         <p>Loading journal data...</p>
                     </div>
                 </div>
-            )}
+            )} */}
 
             <div className="add-journal-modal-overlay">
                 <div className="add-journal-modal">
@@ -895,7 +895,7 @@ const AddJournalModal = ({
                                 Cancel
                             </div>
                             <div onClick={handleSave} disabled={loading} className="save-btn">
-                                Save
+                                {loading ? 'Saving...' : 'Save'}
                             </div>
                         </div>
                     )}
