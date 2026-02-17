@@ -14,6 +14,7 @@ import { toast } from 'react-toastify'
 import { NotesButton } from '../Notes'
 import { useHistory } from 'react-router-dom'
 import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
+import { useRef, useCallback } from 'react'
 
 
 // Utility function to strip HTML tags from text
@@ -24,34 +25,164 @@ const stripHtmlTags = (html) => {
   return tempDiv.textContent || tempDiv.innerText || ''
 }
 
+// Shared Skeleton Loader component
+export const SkeletonLoader = ({ className = '', style = {} }) => (
+  <div
+    className={`skeleton-loader ${className}`}
+    style={{
+      background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+      backgroundSize: '200% 100%',
+      animation: 'loading 1.5s infinite',
+      borderRadius: '4px',
+      ...style
+    }}
+  />
+)
+
+
+// Add skeleton animation styles
+const skeletonStyles = `
+  @keyframes loading {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+`
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style')
+  styleSheet.type = 'text/css'
+  styleSheet.innerText = skeletonStyles
+  document.head.appendChild(styleSheet)
+}
+
+// Export ContentOnlySkeleton for reuse
+export const ContentOnlySkeleton = () => (
+  <div className='d-grid grid-col-2 gap-4 grid-col-1-mob w-100'>
+    {/* Left side - Content */}
+    <div className='academy-dashboard-card p-3'>
+      <SkeletonLoader style={{ width: '150px', height: '24px', marginBottom: '1rem' }} />
+      {/* Video placeholder */}
+      <div style={{
+        width: '100%',
+        aspectRatio: '16 / 9',
+        marginBottom: '1rem',
+        borderRadius: '8px'
+      }}>
+        <SkeletonLoader style={{ width: '100%', height: '100%' }} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <SkeletonLoader style={{ width: '100%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '90%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '95%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '85%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '100%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '80%', height: '16px' }} />
+      </div>
+    </div>
+
+    {/* Right side - Reflection */}
+    <div className='academy-dashboard-card p-3'>
+      <div className='d-flex gap-3 align-items-center mb-4'>
+        <SkeletonLoader style={{ width: '20px', height: '20px' }} />
+        <SkeletonLoader style={{ width: '100px', height: '20px' }} />
+      </div>
+
+      {/* Multiple reflection entries */}
+      {[1, 2, 3].map((item) => (
+        <div key={item} style={{ marginBottom: '2rem' }}>
+          <SkeletonLoader style={{ width: '200px', height: '18px', marginBottom: '0.5rem' }} />
+          <SkeletonLoader style={{ width: '100%', height: '120px', borderRadius: '8px' }} />
+        </div>
+      ))}
+    </div>
+  </div>
+)
+
+const ReflectionSkeleton = () => (
+  <div className='d-grid grid-col-2 gap-4 grid-col-1-mob w-100'>
+    {/* Left side - Content */}
+    <div className='academy-dashboard-card p-3'>
+      <SkeletonLoader style={{ width: '150px', height: '24px', marginBottom: '1rem' }} />
+      {/* Video placeholder */}
+      <div style={{
+        width: '100%',
+        aspectRatio: '16 / 9',
+        marginBottom: '1rem',
+        borderRadius: '8px'
+      }}>
+        <SkeletonLoader style={{ width: '100%', height: '100%' }} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <SkeletonLoader style={{ width: '100%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '90%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '95%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '85%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '100%', height: '16px' }} />
+        <SkeletonLoader style={{ width: '80%', height: '16px' }} />
+      </div>
+    </div>
+
+    {/* Right side - Reflection */}
+    <div className='academy-dashboard-card p-3'>
+      <div className='d-flex gap-3 align-items-center mb-4'>
+        <SkeletonLoader style={{ width: '20px', height: '20px' }} />
+        <SkeletonLoader style={{ width: '100px', height: '20px' }} />
+      </div>
+
+      {/* Multiple reflection entries */}
+      {[1, 2, 3].map((item) => (
+        <div key={item} style={{ marginBottom: '2rem' }}>
+          <SkeletonLoader style={{ width: '200px', height: '18px', marginBottom: '0.5rem' }} />
+          <SkeletonLoader style={{ width: '100%', height: '120px', borderRadius: '8px' }} />
+        </div>
+      ))}
+    </div>
+  </div>
+)
+
 
 const Value = forwardRef((props, ref) => {
   const { id, setIsReflection, onTitleChange } = props
-  const [currentId, setCurrentId] = useState(id)
   const [pendingChanges, setPendingChanges] = useState({})
+  const [currentId, setCurrentId] = useState(id)
   const [showVideo, setShowVideo] = useState(false)
   const dispatch = useDispatch()
-  const { journalData } = useSelector((state) => state.journal)
+  const { journalData, loading } = useSelector((state) => state.journal)
+  const hasFetchedRef = useRef(false)
+
+  const refreshData = useCallback(() => {
+    if (!hasFetchedRef.current) {
+      hasFetchedRef.current = true
+      dispatch(getJournalData(id))
+    }
+  }, [dispatch, id])
 
   useEffect(() => {
-    setCurrentId(id)
-  }, [id])
-
-  const refreshData = () => {
-    dispatch(getJournalData(currentId))
-  }
-
-  useEffect(() => {
+    // Reset fetch flag when id changes
+    hasFetchedRef.current = false
     refreshData()
-    // Clear any stale title when currentId changes
+    // Clear any stale title when id changes
     onTitleChange?.('')
-  }, [currentId])
+  }, [id, refreshData, onTitleChange])
 
   useEffect(() => {
     if (journalData?.title) {
       onTitleChange?.(journalData.title)
     }
   }, [journalData?.title]) // Remove onTitleChange from dependencies
+
+  // Set isReflection based on whether journal has entries
+  useEffect(() => {
+    if (journalData) {
+      const hasEntries = journalData.entries && journalData.entries.length > 0
+      setIsReflection(hasEntries)
+    }
+  }, [journalData, setIsReflection])
 
   const handleContentChange = (entryId, data) => {
     setPendingChanges((prev) => ({
@@ -127,8 +258,6 @@ const Value = forwardRef((props, ref) => {
 
   const { paragraphs, listItems } = parseContent(journalData?.content) || {}
 
-  setIsReflection(true)
-
   const noteButtonStyles = {
     position: 'absolute',
     bottom: '55px !important',
@@ -136,12 +265,18 @@ const Value = forwardRef((props, ref) => {
     zIndex: 99999999
   }
 
+  // Show skeleton loading when data is loading or not available
+  if (loading || !journalData) {
+    // If we have journalData, check if it has entries to show appropriate skeleton
+    const hasEntriesForSkeleton = journalData?.entries && journalData.entries.length > 0
+    return hasEntriesForSkeleton ? <ReflectionSkeleton /> : <ContentOnlySkeleton />
+  }
+
   // Check if this journal has reflection questions
   const hasEntries = journalData?.entries && journalData.entries.length > 0
 
   // If no entries, show content-only layout like intro sections
   if (!hasEntries) {
-    setIsReflection(false)
     return (
       <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
         <div className='w-100'>
@@ -219,7 +354,6 @@ const Value = forwardRef((props, ref) => {
   }
 
   // If has entries, show normal reflection layout
-  setIsReflection(true)
   return (
     <div className='d-grid grid-col-2 gap-4 grid-col-1-mob w-100'>
       <SectionsWrapper title={journalData?.title}>

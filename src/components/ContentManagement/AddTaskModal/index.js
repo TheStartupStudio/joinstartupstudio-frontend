@@ -20,9 +20,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const [information, setInformation] = useState('')
   const [description, setDescription] = useState('')
   const [reflectionItems, setReflectionItems] = useState([
-    { id: 1, question: '', instructions: '' },
-    { id: 2, question: '', instructions: '' },
-    { id: 3, question: '', instructions: '' }
+    { id: 1, question: '', instructions: '' }
   ])
   const [currentMode, setCurrentMode] = useState(mode)
   const [loading, setLoading] = useState(false)
@@ -80,15 +78,8 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
         setReflectionItems(taskData.reflectionItems)
       } else if (currentMode === 'add') {
-        if (isLeadership) {
-          setReflectionItems([
-            { id: 1, question: '', instructions: '' },
-            { id: 2, question: '', instructions: '' },
-            { id: 3, question: '', instructions: '' }
-          ])
-        } else {
-          setReflectionItems([{ id: 1, question: '', instructions: '' }])
-        }
+        // Always start with just 1 reflection item, regardless of leadership or not
+        setReflectionItems([{ id: 1, question: '', instructions: '' }])
       }
 
       // Handle different field names for video/thumbnail URLs

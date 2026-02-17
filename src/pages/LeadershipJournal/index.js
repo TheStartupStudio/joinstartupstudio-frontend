@@ -34,7 +34,10 @@ import { ModalBody, Modal } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NotificationBell from '../../components/NotificationBell'
+import { ContentOnlySkeleton } from '../../components/LeadershipSections/Value'
+
 import { toast } from 'react-toastify'
+
 
 
 const LeadershipJournal = memo(() => {
@@ -49,6 +52,7 @@ const LeadershipJournal = memo(() => {
   const [showLockModal, setShowLockModal] = useState(false)
   const [currentTitle, setCurrentTitle] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [navigationLocked, setNavigationLocked] = useState(false)
 
   const [levels, setLevels] = useState([])
   const [lessons, setLessons] = useState({})
@@ -361,8 +365,12 @@ const LeadershipJournal = memo(() => {
   };
 
   const handleSaveAndContinue = async () => {
+    // Prevent rapid successive clicks and navigation during transitions
+    if (isSaving || navigationLocked) return;
+
     try {
       setIsSaving(true);
+      setNavigationLocked(true);
 
       if (!activeTabData.option) {
         const firstSection = allTabs[0];
@@ -450,6 +458,10 @@ const LeadershipJournal = memo(() => {
       console.error('Error saving:', error);
     } finally {
       setIsSaving(false);
+      // Small delay before unlocking navigation to ensure all state updates are complete
+      setTimeout(() => {
+        setNavigationLocked(false);
+      }, 100);
     }
   };
 
@@ -464,6 +476,11 @@ const LeadershipJournal = memo(() => {
   const isIntroSection = !isReflection;
 
   const renderedSection = useMemo(() => {
+    // Show loading skeleton during navigation transitions
+    if (navigationLocked) {
+      return <ContentOnlySkeleton />
+    }
+
     if (!activeTabData.option && manageContentData) {
       return <SectionOne setIsReflection={setIsReflection} lessonId={null} contentData={manageContentData} />
     }
@@ -485,14 +502,14 @@ const LeadershipJournal = memo(() => {
     } else {
       return (
         <Value
-          key={selectedSection.id}
+          key={`value-${selectedSection.id}`}
           ref={el => valueRefs.current[stripHtmlTags(selectedSection.title)] = el}
           id={selectedSection.id}
           setIsReflection={setIsReflection}
         />
       )
     }
-  }, [activeTabData.option, sections, manageContentData]);
+  }, [activeTabData.option, sections, manageContentData, setIsReflection, navigationLocked]);
 
   useEffect(() => {
     if (activeTabData.option) {
