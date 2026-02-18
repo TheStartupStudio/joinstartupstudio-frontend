@@ -251,7 +251,7 @@ export const adminRoutes = [
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
-    path: '/master-class-management',
+    path: '/studio-guidance-management',
     component: MasterClassManagement,
     breadcrumb: 'Studio Guidance Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN,

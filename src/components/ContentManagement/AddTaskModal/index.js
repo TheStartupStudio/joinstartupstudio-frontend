@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null, source = 'content' }) => {
+const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null, source = 'content', initialLevel = null }) => {
   const [taskTitle, setTaskTitle] = useState('')
   const [selectedLevel, setSelectedLevel] = useState('')
   const [activeTab, setActiveTab] = useState('video')
@@ -57,6 +57,12 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   useEffect(() => {
     setCurrentMode(mode)
   }, [mode])
+
+  useEffect(() => {
+    if (show && isAddMode && initialLevel) {
+      setSelectedLevel(initialLevel)
+    }
+  }, [show, isAddMode, initialLevel])
 
   useEffect(() => {
     if (taskData && taskData.id) {
@@ -180,7 +186,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         : []
 
       // Preserve the original type field for existing masterclass content
-      let categoryValue = isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship'
+      let categoryValue = isMasterClass ? 'master' : isLeadership ? 'student-leadership' : 'entrepreneurship'
 
       if (isEditMode && taskData?.id && isMasterClass) {
         const typeField = taskData?.journalData?.type || taskData?.type
@@ -202,7 +208,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         videoUrl: videoUrl || null,
         thumbnailUrl: thumbnailUrl || null,
         information: isLeadership ? (information || null) : null,
-        description: isMasterClass && levelId === 12 ? (description || null) : null,
+        description: isMasterClass && (levelId === 12 || selectedLevel === 'Career Guidance Videos') ? (description || null) : null,
         reflectionItems: filteredReflectionItems
       }
 
@@ -252,6 +258,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     setVideoPreview(null)
     setThumbnailPreview(null)
     setInformation('')
+    setDescription('')
     setReflectionItems(
       isLeadership
         ? [
@@ -532,14 +539,14 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           </div>
         )}
 
-        {isMasterClass && ((selectedLevel && parseInt(selectedLevel.split(' ')[1]) === 12) || (taskData?.journalData?.journalLevel === 12)) && (
+        {isMasterClass && (selectedLevel === 'Career Guidance Videos' || taskData?.journalData?.journalLevel === 12) && (
               <div className="form-group" style={{ marginTop: '24px' }}>
                 <label className="form-label">AUTHOR:</label>
                 <div className="input-wrapper">
                   <input
                     type="text"
                     className="form-control task-title-input"
-                    placeholder="Add description here..."
+                    placeholder="Add author name here..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     readOnly={isViewMode}

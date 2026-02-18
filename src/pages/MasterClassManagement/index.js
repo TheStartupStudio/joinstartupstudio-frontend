@@ -318,18 +318,26 @@ const MasterClassManagement = () => {
     }
   }
 
-  const handleSaveTask = (taskData) => {
+  const handleSaveTask = async (taskData) => {
     console.log('Master class data:', taskData)
-    
+
+    // Handle deletion
+    if (taskData.deleted) {
+      // Refetch data from API to ensure table is updated
+      if (activeLevel) {
+        await fetchContentByLevel()
+      }
+      return
+    }
+
     if (modalMode === 'edit') {
-      setTasksData(prevTasks => 
-        prevTasks.map(task => 
-          task.id === editingTask.id 
+      setTasksData(prevTasks =>
+        prevTasks.map(task =>
+          task.id === editingTask.id
             ? { ...task, name: taskData.title, ...taskData }
             : task
         )
       )
-      toast.success('Master class updated successfully!')
     } else {
       const newTask = {
         id: tasksData.length + 1,
@@ -752,7 +760,7 @@ const MasterClassManagement = () => {
         </div>
       </div>
 
-      <AddTaskModal 
+      <AddTaskModal
         show={showAddTaskModal}
         onHide={() => {
           setShowAddTaskModal(false)
@@ -764,6 +772,7 @@ const MasterClassManagement = () => {
         mode={modalMode}
         taskData={editingTask}
         source="masterclass"
+        initialLevel={activeLevel}
       />
 
       <AddLevelModal

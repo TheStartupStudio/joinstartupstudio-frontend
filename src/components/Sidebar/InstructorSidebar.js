@@ -64,13 +64,13 @@ const SIDEBAR_MENU_ITEMS = [
     className: (pathname) => pathname.includes('content-management') ? 'active' : ''
   },
   {
-    id: 'master-class-management',
+    id: 'studio-guidance-management',
     title: 'Studio Guidance Management',
     srcImage: MasterIcon,
-    to: '/master-class-management',
+    to: '/studio-guidance-management',
     roles: [3],
     requiresUniversitySetting: 'hasMasterClasses',
-    className: (pathname) => pathname.includes('master-class-management') ? 'active' : ''
+    className: (pathname) => pathname.includes('studio-guidance-management') ? 'active' : ''
   },
   {
     id: 'leadership-journal-management',
@@ -102,7 +102,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Sessions',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     className: (pathname) => pathname.includes('my-course-in-entrepreneurship/journal') ? 'active' : ''
   },
   {
@@ -110,7 +110,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: [2, 1],
+    roles: [2, 1, 3],
     requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
   },
@@ -270,7 +270,7 @@ const InstructorSidebar = (props) => {
       result.push(staticItems[i])
 
       // if (staticItems[i].id === 'master-classes') {
-      if (staticItems[i].id === 'leadership-journal-management') {
+      if (staticItems[i].id === 'studio-sessions') {
         result.push(...dynamicItems)
       }
     }
