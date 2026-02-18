@@ -63,27 +63,8 @@ export default function BeyondYourCourse() {
       const levelsResponse = await axiosInstance.get('/contents/masterclass/levels');
       const allLevels = levelsResponse.data;
 
-      // Sort levels: priority levels first (11, 12, 13, 14), then others, Live Q&A last
-      const sortedLevels = allLevels.sort((a, b) => {
-        // Live Q&A always last
-        if (a.title === 'Live Q&A Episodes') return 1;
-        if (b.title === 'Live Q&A Episodes') return -1;
-
-        // Priority levels first
-        const aPriority = priorityLevelIds.includes(a.id);
-        const bPriority = priorityLevelIds.includes(b.id);
-
-        if (aPriority && !bPriority) return -1;
-        if (!aPriority && bPriority) return 1;
-
-        // Within priority levels, sort by ID
-        if (aPriority && bPriority) {
-          return a.id - b.id;
-        }
-
-        // Other levels by ID
-        return a.id - b.id;
-      });
+      // Sort levels by order (same as StoryInMotion)
+      const sortedLevels = allLevels.sort((a, b) => a.order - b.order);
 
       setLevels(sortedLevels);
 
@@ -263,9 +244,7 @@ export default function BeyondYourCourse() {
                 .filter(level => level.title !== 'Live Q&A Episodes')
                 .map((level, index) => {
                   const videos = levelContents[level.id] || [];
-                  const tabIndex = priorityLevelIds.includes(level.id) ?
-                    priorityLevelIds.indexOf(level.id) :
-                    Math.max(...priorityLevelIds) + levels.filter(l => !priorityLevelIds.includes(l.id) && l.title !== 'Live Q&A Episodes').indexOf(level) + 1;
+                  const tabIndex = index; // Use array index since levels are sorted consistently
 
                   return (
                     <div key={level.id} className="videos-container">
@@ -319,7 +298,7 @@ export default function BeyondYourCourse() {
                   </div>
                   <Link
                     className="guidance-link"
-                    to={`/story-in-motion/videos?tab=3`}
+                    to={`/story-in-motion/videos?tab=${levels.findIndex(level => level.title === 'Live Q&A Episodes')}`}
                     onClick={() => {
                       window.scrollTo({ top: 0, behavior: 'instant' });
                     }}
