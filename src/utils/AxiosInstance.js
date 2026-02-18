@@ -11,7 +11,29 @@ const getSubdomain = () => {
   return subdomain
 }
 
-const baseURL = process.env.REACT_APP_SERVER_BASE_URL
+// Check if we're on a joinstartupstudio.com subdomain (master branch/production)
+// Must have a subdomain (e.g., fma.joinstartupstudio.com, not just joinstartupstudio.com)
+const isJoinstartupstudioDomain = () => {
+  const hostname = window.location.hostname
+  // Check if it's a joinstartupstudio.com domain with a subdomain
+  // Pattern: subdomain.joinstartupstudio.com (at least 3 parts when split by '.')
+  const parts = hostname.split('.')
+  return hostname.includes('joinstartupstudio.com') && parts.length >= 3 && parts[0] !== 'api'
+}
+
+// Construct baseURL: for master branch use api.joinstartupstudio.com/{subdomain}, otherwise use env variable
+const getBaseURL = () => {
+  if (isJoinstartupstudioDomain()) {
+    const subdomain = getSubdomain()
+    // Only use the new pattern if we have a valid subdomain
+    if (subdomain && subdomain !== 'www' && subdomain !== 'api') {
+      return `https://api.joinstartupstudio.com/${subdomain}`
+    }
+  }
+  return process.env.REACT_APP_SERVER_BASE_URL
+}
+
+const baseURL = getBaseURL()
 
 const axiosInstance = axios.create({
   baseURL
