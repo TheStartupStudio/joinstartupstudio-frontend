@@ -62,23 +62,23 @@ const suppressResizeObserverErrors = () => {
 // Call immediately
 suppressResizeObserverErrors();
 
-Amplify.configure({
-  Auth: {
-    region: process.env.REACT_APP_CLIENT_BASE_URL.includes('dev')
-      ? config.cognitoDemo.REGION
-      : config.cognito.REGION,
-    userPoolId: process.env.REACT_APP_CLIENT_BASE_URL.split('/')[2].includes(
-      'dev'
-    )
-      ? config.cognitoDemo.USER_POOL_ID
-      : config.cognito.USER_POOL_ID,
-    userPoolWebClientId: process.env.REACT_APP_CLIENT_BASE_URL.split(
-      '/'
-    )[2].includes('dev')
-      ? config.cognitoDemo.APP_CLIENT_ID
-      : config.cognito.APP_CLIENT_ID
-  }
-})
+// Amplify.configure({
+//   Auth: {
+//     region: process.env.REACT_APP_CLIENT_BASE_URL.includes('dev')
+//       ? config.cognitoDemo.REGION
+//       : config.cognito.REGION,
+//     userPoolId: process.env.REACT_APP_CLIENT_BASE_URL.split('/')[2].includes(
+//       'dev'
+//     )
+//       ? config.cognitoDemo.USER_POOL_ID
+//       : config.cognito.USER_POOL_ID,
+//     userPoolWebClientId: process.env.REACT_APP_CLIENT_BASE_URL.split(
+//       '/'
+//     )[2].includes('dev')
+//       ? config.cognitoDemo.APP_CLIENT_ID
+//       : config.cognito.APP_CLIENT_ID
+//   }
+// })
 
 ReactDOM.render(
   <React.Fragment>
