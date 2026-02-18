@@ -25,6 +25,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const [currentMode, setCurrentMode] = useState(mode)
   const [loading, setLoading] = useState(false)
   const [isLoadingData, setIsLoadingData] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const dropdownRef = useRef(null)
 
   const isViewMode = currentMode === 'view'
@@ -252,7 +253,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     setThumbnailPreview(null)
     setInformation('')
     setReflectionItems(
-      isLeadership 
+      isLeadership
         ? [
             { id: 1, question: '', instructions: '' },
             { id: 2, question: '', instructions: '' },
@@ -261,6 +262,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         : [{ id: 1, question: '', instructions: '' }]
     )
     setIsDropdownOpen(false)
+    setShowDeleteModal(false)
     setCurrentMode(mode)
     onHide()
   }
@@ -284,12 +286,13 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     setActiveTab("video")
   }
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!taskData?.id) return
+    setShowDeleteModal(true)
+  }
 
-    const confirmDelete = window.confirm(`Are you sure you want to delete "${taskTitle}"? This action cannot be undone.`)
-    if (!confirmDelete) return
-
+  const confirmDelete = async () => {
+    setShowDeleteModal(false)
     setLoading(true)
     try {
       if (isMasterClass) {
@@ -391,6 +394,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }
 
   return (
+    <>
     <Modal show={show} onHide={handleClose} centered size="lg" className="add-task-content-management-modal">
       <Modal.Body className="add-task-modal-body">
         <div className="modal-icon">
@@ -860,6 +864,78 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         )}
       </Modal.Body>
     </Modal>
+
+    {/* Delete Confirmation Modal */}
+    <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered className="custom-delete-modal-add-task" style={{ zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '40px !important' }}>
+      <Modal.Body className="text-center p-4">
+        <div className="mb-4">
+          <div className="d-flex flex-column gap-2">
+            <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#E2E6EC', borderRadius: '50%' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.1256 17.4997H3.87307C2.33504 17.4997 1.37259 15.8361 2.13926 14.5027L8.26554 3.84833C9.03455 2.51092 10.9641 2.51092 11.7332 3.84833L17.8594 14.5027C18.6261 15.8361 17.6637 17.4997 16.1256 17.4997Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M10 14.1753L10.0083 14.1661" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p className="mb-5" style={{ fontSize: '15px', fontWeight: '500', marginBottom: '16px', color: '#231F20', width: 'fit-content' }}>Delete Task?</p>
+          </div>
+          <p className="mb-5" style={{ fontSize: '15px', fontWeight: '400', marginBottom: '16px', color: '#231F20' }}>Are you sure you want to delete this task?</p>
+        </div>
+
+        <div className="d-flex gap-3 justify-content-center">
+          <button
+            style={{ borderRadius: "8px",
+              background: "#51C7DF",
+              boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+              display: 'flex',
+              width: '250px',
+              height: '53px',
+              minWidth: '250px',
+              maxHeight: '54px',
+              padding: '6px 12px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '12px',
+              color: "#FFF",
+              fontFamily: 'Montserrat',
+              fontSize: '17px',
+              fontWeight: '600',
+              border: 'none',
+             }}
+            onClick={() => setShowDeleteModal(false)}
+            disabled={loading}
+          >
+            NO, TAKE ME BACK
+          </button>
+          <button
+            style={{ borderRadius: "8px",
+              background: "#FFF",
+              boxShadow: "0 4px 10px 0 rgba(0, 0, 0, 0.25)",
+              display: 'flex',
+              width: '250px',
+              height: '53px',
+              minWidth: '250px',
+              maxHeight: '54px',
+              padding: '6px 12px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '12px',
+              color: "#F39",
+              fontFamily: 'Montserrat',
+              fontSize: '17px',
+              fontWeight: '600',
+              border: 'none',
+              
+             }}
+            onClick={confirmDelete}
+            disabled={loading}
+          >
+            {loading ? 'Deleting...' : 'YES, DELETE THIS TASK'}
+          </button>
+        </div>
+      </Modal.Body>
+    </Modal>
+    </>
   )
 }
 
