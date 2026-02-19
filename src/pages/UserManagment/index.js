@@ -78,6 +78,7 @@ const UserManagement = () => {
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false)
   const [showDeactivatePopup, setShowDeactivatePopup] = useState(false)
   const [showActivatePopup, setShowActivatePopup] = useState(false)
+  const [showToggleOrganizationStatusPopup, setShowToggleOrganizationStatusPopup] = useState(false)
   const [selectedItems, setSelectedItems] = useState([])
   const [actionContext, setActionContext] = useState('') 
   const [isSingleAction, setIsSingleAction] = useState(false) 
@@ -342,11 +343,11 @@ const UserManagement = () => {
       case 'edit-organization':
         handleEditOrganization(item)
         break
-      case 'deactivate-organization':
+      case 'toggle-organization-status':
         setActionContext('organizations')
         setSelectedItems([item])
         setIsSingleAction(true)
-        setShowDeactivatePopup(true)
+        setShowToggleOrganizationStatusPopup(true)
         break
       case 'delete-organization':
         setActionContext('organizations')
@@ -362,6 +363,12 @@ const UserManagement = () => {
         setSelectedItems([item])
         setIsSingleAction(true)
         setShowDeactivatePopup(true)
+        break
+      case 'activate-learner':
+        setActionContext('users')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowActivatePopup(true)
         break
       case 'delete-learner':
         setActionContext('users')
@@ -660,17 +667,6 @@ const UserManagement = () => {
     setShowBulkDropdown(false)
   }
 
-  const deactivateOrganizations = () => {
-    if (selectedOrganizations.length === 0) {
-      toast.warning('Please select at least one organization')
-      return
-    }
-    setActionContext('organizations')
-    setSelectedItems(selectedOrganizations)
-    setIsSingleAction(false)
-    setShowDeactivatePopup(true)
-    setShowBulkDropdown(false)
-  }
 
   const deleteOrganizations = () => {
     if (selectedOrganizations.length === 0) {
@@ -711,16 +707,6 @@ const UserManagement = () => {
   ]
 
   const bulkOptionsOrganizations = [
-    {
-      name: 'Activate Organizations',
-      action: () => activateOrganizations(),
-      icons: <img src={userPlus} alt="activate" className="admin-icons-dropdown" />
-    },
-    {
-      name: 'Deactivate Organizations',
-      action: () => deactivateOrganizations(),
-      icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
-    },
     {
       name: 'Delete Organizations',
       action: () => deleteOrganizations(),
@@ -781,6 +767,12 @@ const UserManagement = () => {
 
   const handleActivateCancel = () => {
     setShowActivatePopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleToggleOrganizationStatusCancel = () => {
+    setShowToggleOrganizationStatusPopup(false)
     setSelectedItems([])
     setIsSingleAction(false)
   }
@@ -871,6 +863,32 @@ const UserManagement = () => {
     } catch (error) {
       console.error('Activate error:', error)
       toast.error(error.response?.data?.message || 'Failed to activate')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmToggleOrganizationStatus = async () => {
+    setLoading(true)
+    try {
+      if (isSingleAction) {
+        const organizationId = selectedItems[0].id
+        const response = await axiosInstance.post(`/super-admin/organizations/${organizationId}/deactivate`)
+
+        if (response.data.success) {
+          toast.success(response.data.message || 'Organization status updated successfully!')
+        }
+
+        setSelectedOrganizations([])
+        fetchOrganizations(currentPage, debouncedSearchQuery)
+      }
+
+      setShowToggleOrganizationStatusPopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      console.error('Toggle organization status error:', error)
+      toast.error(error.response?.data?.message || 'Failed to update organization status')
     } finally {
       setLoading(false)
     }
@@ -969,33 +987,6 @@ const UserManagement = () => {
   }
 
 
-  const activateOrganizations = async () => {
-    if (selectedOrganizations.length === 0) {
-      toast.warning('Please select at least one organization')
-      return
-    }
-
-    try {
-      setLoading(true)
-      const organizationIds = selectedOrganizations.map(org => org.id)
-      
-      const response = await axiosInstance.post('/super-admin/organizations/bulk-activate', {
-        organizationIds
-      })
-
-      if (response.data.success) {
-        toast.success(`${response.data.affectedOrganizations} organization(s) and their users activated successfully!`)
-        setSelectedOrganizations([])
-        fetchOrganizations(currentPage, debouncedSearchQuery)
-      }
-    } catch (error) {
-      console.error('Error activating organizations:', error)
-      toast.error(error.response?.data?.error || 'Failed to activate organizations')
-    } finally {
-      setLoading(false)
-      setShowBulkDropdown(false)
-    }
-  }
 
   return (
     <div>
@@ -1414,6 +1405,29 @@ const UserManagement = () => {
           isSingleAction
             ? "YES, ACTIVATE USER"
             : "YES, ACTIVATE USER(S)"
+        }
+        loading={loading}
+      />
+
+      <UserManagementPopup
+        show={showToggleOrganizationStatusPopup}
+        onHide={handleToggleOrganizationStatusCancel}
+        onConfirm={handleConfirmToggleOrganizationStatus}
+        title={
+          isSingleAction
+            ? `${selectedItems[0]?.isActive ? 'Deactivate' : 'Activate'} Organization?`
+            : `${selectedItems[0]?.isActive ? 'Deactivate' : 'Activate'} Organization(s)?`
+        }
+        message={
+          isSingleAction
+            ? `Are you sure you want to ${selectedItems[0]?.isActive ? 'deactivate' : 'activate'} this organization? ${selectedItems[0]?.isActive ? 'Work and settings will be preserved, but they will no longer have access to the platform.' : 'The organization and its users will regain access to the platform.'}`
+            : `Are you sure you want to ${selectedItems[0]?.isActive ? 'deactivate' : 'activate'} the selected organization(s)? ${selectedItems[0]?.isActive ? 'Work and settings will be preserved, but they will no longer have access to the platform.' : 'The organizations and their users will regain access to the platform.'}`
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={
+          isSingleAction
+            ? `YES, ${selectedItems[0]?.isActive ? 'DEACTIVATE' : 'ACTIVATE'} ORGANIZATION`
+            : `YES, ${selectedItems[0]?.isActive ? 'DEACTIVATE' : 'ACTIVATE'} ORGANIZATION(S)`
         }
         loading={loading}
       />

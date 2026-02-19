@@ -99,12 +99,13 @@ const DataTable = ({
     return item[column.key]
   }
 
-  const getMoreActionsOptions = () => {
+  const getMoreActionsOptions = (item) => {
     if (activeTab === 'Organizations') {
+      const isActive = item?.isActive !== undefined ? item.isActive : true
       return [
         { name: 'View Organization', action: 'view-organization' },
         { name: 'Edit Organization', action: 'edit-organization' },
-        { name: 'Deactivate Organization', action: 'deactivate-organization' },
+        { name: isActive ? 'Deactivate Organization' : 'Activate Organization', action: 'toggle-organization-status' },
         { name: 'Delete Organization', action: 'delete-organization' },
         { name: 'Export Organization Data', action: 'export-organization' }
       ]
@@ -167,8 +168,9 @@ const DataTable = ({
         }
       ]
     } else {
+      const isActive = item?.activeStatus !== undefined ? item.activeStatus : true
       return [
-        { name: 'Deactivate Learner', action: 'deactivate-learner' },
+        { name: isActive ? 'Deactivate Learner' : 'Activate Learner', action: isActive ? 'deactivate-learner' : 'activate-learner' },
         { name: 'Delete Learner', action: 'delete-learner' }
       ]
     }
@@ -684,7 +686,7 @@ const DataTable = ({
                   display: 'block'
                 }}
               >
-                {getMoreActionsOptions().map((option, optionIndex) => (
+                {getMoreActionsOptions(item).map((option, optionIndex) => (
                   <div 
                     key={optionIndex}
                     className="more-actions-dropdown-item"
@@ -756,7 +758,7 @@ const DataTable = ({
                   display: 'block'
                 }}
               >
-                {getMoreActionsOptions().map((option, optionIndex) => (
+                {getMoreActionsOptions(item).map((option, optionIndex) => (
                   <div 
                     key={optionIndex}
                     className="more-actions-dropdown-item"
