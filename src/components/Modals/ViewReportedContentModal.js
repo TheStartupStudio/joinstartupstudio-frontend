@@ -5,7 +5,7 @@ import AcademyBtn from '../AcademyBtn'
 import './ViewReportedContentModal.css'
 import axiosInstance from '../../utils/AxiosInstance'
 
-const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubmit }) => {
+const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubmit, mode = 'view' }) => {
   const [selectedAction, setSelectedAction] = useState('ignore')
   const [reportDetails, setReportDetails] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -153,6 +153,10 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
     }
   }, [isOpen, reportId, reportData])
 
+  // Report mode variables
+  const isReportViewMode = mode === 'view'
+  const isReportEditMode = mode === 'edit'
+
   // Automatically set selected action based on user ban status
   useEffect(() => {
     if (userBanStatus !== null && !isResolved) {
@@ -237,9 +241,32 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
     }
   }
 
+  // Helper function to perform ban/unban without toast messages
+  const performBanUnbanAction = async (shouldBan) => {
+    if (!userDetails) return
+
+    try {
+      const endpoint = userDetails.organization_name ?
+        `/forum/${userDetails.id}/ban-forum` :
+        `/forum/${userDetails.id}/ban-forum`
+
+      const response = await axiosInstance.patch(endpoint, {
+        isBannedForum: shouldBan ? 1 : 0
+      })
+
+      if (response.data.success) {
+        setUserBanStatus(shouldBan)
+        return true
+      }
+    } catch (error) {
+      console.error('Error performing ban/unban action:', error)
+    }
+    return false
+  }
+
   const handleSubmit = async () => {
     const currentReportId = reportId || reportDetails?.id
-    
+
     if (!currentReportId) {
       toast.error('Report ID not found')
       return
@@ -249,26 +276,43 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       const response = await axiosInstance.post(`/forum/reports/${currentReportId}/resolution`, {
         action: selectedAction
       })
-      
+
       if (response.data.success) {
+        let banActionMessage = ''
+
+        // Handle ban/unban logic based on selected action
+        if (selectedAction === 'ignore' && userBanStatus) {
+          // If ignoring report and user is banned, unban them
+          const success = await performBanUnbanAction(false)
+          if (success) {
+            banActionMessage = ' and user unbanned'
+          }
+        } else if (selectedAction === 'restrict' && !userBanStatus) {
+          // If restricting user and user is not banned, ban them
+          const success = await performBanUnbanAction(true)
+          if (success) {
+            banActionMessage = ' and user banned'
+          }
+        }
+
         switch (selectedAction) {
           case 'ignore':
-            toast.success('Report dismissed')
+            toast.success(`Report dismissed${banActionMessage}`)
             break
           case 'delete':
             toast.success('Post deleted successfully')
             break
           case 'restrict':
-            toast.success('User has been restricted from posting')
+            toast.success(`User has been restricted from posting${banActionMessage}`)
             break
           default:
             toast.success('Action completed')
         }
-        
+
         if (onSubmit) {
           onSubmit({ reportId: currentReportId, action: selectedAction })
         }
-        
+
         toggle()
       }
     } catch (error) {
@@ -305,7 +349,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     <path d="M10 14.168C8.61929 14.168 7.5 13.0487 7.5 11.668C7.5 10.2873 8.61929 9.16797 10 9.16797C11.3807 9.16797 12.5 10.2873 12.5 11.668C12.5 13.0487 11.3807 14.168 10 14.168Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </div>
-            <h2 className="modal-title">View Reported Content</h2>
+            <h2 className="modal-title">{isReportViewMode ? 'View Reported Content' : 'Edit Report Resolution'}</h2>
           </div>
 
           <div className="modal-body-section">
@@ -365,7 +409,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                   <label className="detail-label" style={{width: '110px'}}>Posted By:</label>
                   <div className="d-flex align-items-center gap-2 justify-content-between w-100">
                     <p className="detail-value">{reportDetails?.postedBy || 'Anonymous User'}</p>
-                    {banStatusLoading ? (
+                    {/* {banStatusLoading ? (
                       <div className="spinner-border spinner-border-sm text-primary" role="status">
                       </div>
                     ) : userBanStatus !== null ? (
@@ -375,7 +419,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                           id="user-ban-status"
                           checked={userBanStatus}
                           onChange={toggleUserBanStatus}
-                          disabled={banStatusLoading}
+                          disabled={isReportViewMode || banStatusLoading}
                           style={{
                             width: '16px',
                             height: '16px',
@@ -400,7 +444,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                       <span style={{ fontSize: '12px', color: '#666' }}>
                         User status unavailable
                       </span>
-                    )}
+                    )} */}
                   </div>
                 </div>
 
@@ -447,7 +491,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="ignore"
                     checked={selectedAction === 'ignore'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isResolved && !allowEditingResolved}
+                    disabled={isReportViewMode || (isResolved && !allowEditingResolved)}
                   />
                   <label htmlFor="ignore-report" className="radio-label">
                     <div className="radio-label-content">
@@ -464,7 +508,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="delete"
                     checked={selectedAction === 'delete'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isResolved && !allowEditingResolved}
+                    disabled={isReportViewMode || (isResolved && !allowEditingResolved)}
                   />
                   <label htmlFor="delete-post" className="radio-label">
                     <div className="radio-label-content">
@@ -481,7 +525,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="restrict"
                     checked={selectedAction === 'restrict'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isResolved && !allowEditingResolved}
+                    disabled={isReportViewMode || (isResolved && !allowEditingResolved)}
                   />
                   <label htmlFor="restrict-user" className="radio-label">
                     <div className="radio-label-content">
@@ -493,7 +537,8 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
             </div>
           </div>
 
-          <div className="modal-footer-section">
+          {!isReportViewMode && (
+            <div className="modal-footer-section">
             <button className="cancel-btn"
               style={{
                 display: 'flex',
@@ -538,6 +583,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
               Submit
             </button>
           </div>
+          )}
         </div>
         )}
       </ModalBody>

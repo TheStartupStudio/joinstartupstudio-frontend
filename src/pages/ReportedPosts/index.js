@@ -24,6 +24,7 @@ const ReportedPosts = () => {
   const [selectedReports, setSelectedReports] = useState([])
   const [showViewModal, setShowViewModal] = useState(false)
   const [selectedReportId, setSelectedReportId] = useState(null)
+  const [modalMode, setModalMode] = useState('view') // 'view' or 'edit'
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [limit] = useState(10)
@@ -139,10 +140,16 @@ const ReportedPosts = () => {
 
   const handleRowAction = async (actionType, item) => {
     console.log(`${actionType} action for:`, item)
-    
+
     switch (actionType) {
       case 'view':
         setSelectedReportId(item.id)
+        setModalMode('view')
+        setShowViewModal(true)
+        break
+      case 'edit':
+        setSelectedReportId(item.id)
+        setModalMode('edit')
         setShowViewModal(true)
         break
       case 'archive':
@@ -497,7 +504,7 @@ const ReportedPosts = () => {
                 </div>
               )}
 
-              <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
+              <div className="dropdown-wrapper" style={{ position: 'relative', height:"-webkit-fill-available" }} ref={bulkDropdownRef}>
                 <div 
                   className="bulk-actions"
                   onClick={() => {
@@ -610,9 +617,11 @@ const ReportedPosts = () => {
         toggle={() => {
           setShowViewModal(false)
           setSelectedReportId(null)
+          setModalMode('view')
         }}
         reportId={selectedReportId}
         onSubmit={handleModalSubmit}
+        mode={modalMode}
       />
 
       <Modal isOpen={showDeleteModal} toggle={handleDeleteCancel} className="delete-confirmation-modal" size="md">
