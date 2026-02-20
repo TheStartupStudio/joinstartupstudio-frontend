@@ -1,166 +1,165 @@
-name: Deploy React App
-
-on:
-  push:
-    branches:
-      - dev
-      - release
-      - master
-      - new-features
-      - academy-platform
-      - aie-dev 
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      # Checkout
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # Node version
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 16
-
-      # Install & build
-      - name: Install dependencies
-        run: npm install --force
-
-      # Create .env file from secrets based on branch
-      - name: Create .env file
-        run: |
-          echo "Current branch: ${{ github.ref_name }}"
-          
-          # Determine server URL based on branch
-          if [ "${{ github.ref_name }}" = "dev" ]; then
-            echo "Using DEV server URL"
-            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_DEV }}"
-          elif [ "${{ github.ref_name }}" = "release" ]; then
-            echo "Using RELEASE server URL"
-            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_RELEASE }}"
-          elif [ "${{ github.ref_name }}" = "new-features" ]; then
-            echo "Using NEW-FEATURES server URL"
-            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_NEW_FEATURES }}"
-          elif [ "${{ github.ref_name }}" = "academy-platform" ]; then
-            echo "Using AIE server URL"
-            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_AIE }}"
-          elif [ "${{ github.ref_name }}" = "aie-dev" ]; then
-            echo "Using AIE DEV server URL"
-            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_AIE_DEV }}"
-          else
-            echo "Using PROD server URL"
-            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_PROD }}"
-          fi
-          
-          # Create the .env file (webpack expects .env by default)
-          echo "REACT_APP_CLIENT_BASE_URL=${{ secrets.REACT_APP_CLIENT_BASE_URL }}" >> .env
-          echo "REACT_APP_SERVER_BASE_URL=$SERVER_URL" >> .env
-          
-          echo "Created .env file with environment variables"
-          echo "Verifying REACT_APP_SERVER_BASE_URL is set (value masked for security):"
-          if grep -q "REACT_APP_SERVER_BASE_URL=" .env; then
-            echo "✓ REACT_APP_SERVER_BASE_URL is set in .env"
-          else
-            echo "✗ REACT_APP_SERVER_BASE_URL is missing!"
-            exit 1
-          fi
-
-      - name: Build project
-        run: npm run build
-
-      - name: Verify build output
-        run: |
-          if [ ! -d "dist" ]; then
-            echo "Error: dist folder was not created"
-            exit 1
-          fi
-          echo "Build output verified in dist/ folder"
-          ls -la dist/ | head -20
-
-      # AWS credentials
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      # Choose folder by branch, S3 bucket, and CloudFront distribution ID
-      - name: Select Target Folder, Bucket, and CloudFront ID
-        id: vars
-        run: |
-          if [ "${{ github.ref_name }}" = "dev" ]; then
-            echo "target=dev" >> $GITHUB_OUTPUT
-            echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
-            echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref_name }}" = "release" ]; then
-            echo "target=release" >> $GITHUB_OUTPUT
-            echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
-            echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref_name }}" = "new-features" ]; then
-            echo "target=new-features" >> $GITHUB_OUTPUT
-            echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
-            echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID_NEW_FEATURES }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref_name }}" = "academy-platform" ]; then
-            echo "target=AIE-REACT" >> $GITHUB_OUTPUT
-            echo "s3_bucket=lts-aie" >> $GITHUB_OUTPUT
-            echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID_AIE }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref_name }}" = "aie-dev" ]; then
-            echo "target=aie-dev" >> $GITHUB_OUTPUT
-            echo "s3_bucket=lts-aie" >> $GITHUB_OUTPUT
-            echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID_AIE_DEV }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref_name }}" = "master" ]; then
-            echo "target=production" >> $GITHUB_OUTPUT
-            echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
-            echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
-          else
-            echo "target=production" >> $GITHUB_OUTPUT
-            echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
-            echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
-          fi
-
-      # Upload to S3 folder
-      - name: Upload to S3
-        run: |
-          aws s3 sync dist/ s3://${{ steps.vars.outputs.s3_bucket }}/${{ steps.vars.outputs.target }}/ --delete
-
-      # CloudFront cache invalidation
-      - name: Invalidate CloudFront
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ steps.vars.outputs.cf_distribution_id }} \
-            --paths "/*"
-
-      # Slack notification on success
-      - name: Notify Slack on Success
-        if: success()
-        run: |
-          # Get commit message - if it's a merge commit, get the most recent non-merge commit message instead
-          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-          if [[ "$COMMIT_MSG" == "Merge"* ]]; then
-            # Get the most recent non-merge commit message
-            COMMIT_MSG=$(git log --no-merges -1 --pretty=format:"%s")
-          fi
-          COMMIT_MSG=$(echo "$COMMIT_MSG" | tr '\n' ' ' | sed 's/"/\\"/g')
-          curl -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\"✅ Deployment Successful!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\"}" \
-            ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      # Slack notification on failure
-      - name: Notify Slack on Failure
-        if: failure()
-        run: |
-          # Get commit message - if it's a merge commit, get the most recent non-merge commit message instead
-          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
-          if [[ "$COMMIT_MSG" == "Merge"* ]]; then
-            # Get the most recent non-merge commit message
-            COMMIT_MSG=$(git log --no-merges -1 --pretty=format:"%s")
-          fi
-          COMMIT_MSG=$(echo "$COMMIT_MSG" | tr '\n' ' ' | sed 's/"/\\"/g')
-          curl -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\"❌ Deployment Failed!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\nView logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
-            ${{ secrets.SLACK_WEBHOOK_URL }}
-
+# name: Deploy React App
+# 
+# # on:
+# #   push:
+# #     branches:
+# #       - dev
+# #       - release
+# #       - master
+# #       - new-features
+# #       - academy-platform
+# #       # - aie-dev 
+# 
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+# 
+#     steps:
+#       # Checkout
+#       - name: Checkout
+#         uses: actions/checkout@v4
+# 
+#       # Node version
+#       - name: Setup Node
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 16
+# 
+#       # Install & build
+#       - name: Install dependencies
+#         run: npm install --force
+# 
+#       # Create .env file from secrets based on branch
+#       - name: Create .env file
+#         run: |
+#           echo "Current branch: ${{ github.ref_name }}"
+#           
+#           # Determine server URL based on branch
+#           if [ "${{ github.ref_name }}" = "dev" ]; then
+#             echo "Using DEV server URL"
+#             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_DEV }}"
+#           elif [ "${{ github.ref_name }}" = "release" ]; then
+#             echo "Using RELEASE server URL"
+#             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_RELEASE }}"
+#           elif [ "${{ github.ref_name }}" = "new-features" ]; then
+#             echo "Using NEW-FEATURES server URL"
+#             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_NEW_FEATURES }}"
+#           elif [ "${{ github.ref_name }}" = "academy-platform" ]; then
+#             echo "Using AIE server URL"
+#             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_AIE }}"
+#           # elif [ "${{ github.ref_name }}" = "aie-dev" ]; then
+#           #   echo "Using AIE DEV server URL"
+#           #   SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_AIE_DEV }}"
+#           else
+#             echo "Using PROD server URL"
+#             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_PROD }}"
+#           fi
+#           
+#           # Create the .env file (webpack expects .env by default)
+#           echo "REACT_APP_CLIENT_BASE_URL=${{ secrets.REACT_APP_CLIENT_BASE_URL }}" >> .env
+#           echo "REACT_APP_SERVER_BASE_URL=$SERVER_URL" >> .env
+#           
+#           echo "Created .env file with environment variables"
+#           echo "Verifying REACT_APP_SERVER_BASE_URL is set (value masked for security):"
+#           if grep -q "REACT_APP_SERVER_BASE_URL=" .env; then
+#             echo "✓ REACT_APP_SERVER_BASE_URL is set in .env"
+#           else
+#             echo "✗ REACT_APP_SERVER_BASE_URL is missing!"
+#             exit 1
+#           fi
+# 
+#       - name: Build project
+#         run: npm run build
+# 
+#       - name: Verify build output
+#         run: |
+#           if [ ! -d "dist" ]; then
+#             echo "Error: dist folder was not created"
+#             exit 1
+#           fi
+#           echo "Build output verified in dist/ folder"
+#           ls -la dist/ | head -20
+# 
+#       # AWS credentials
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-1
+# 
+#       # Choose folder by branch, S3 bucket, and CloudFront distribution ID
+#       - name: Select Target Folder, Bucket, and CloudFront ID
+#         id: vars
+#         run: |
+#           if [ "${{ github.ref_name }}" = "dev" ]; then
+#             echo "target=dev" >> $GITHUB_OUTPUT
+#             echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
+#             echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
+#           elif [ "${{ github.ref_name }}" = "release" ]; then
+#             echo "target=release" >> $GITHUB_OUTPUT
+#             echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
+#             echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
+#           elif [ "${{ github.ref_name }}" = "new-features" ]; then
+#             echo "target=new-features" >> $GITHUB_OUTPUT
+#             echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
+#             echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID_NEW_FEATURES }}" >> $GITHUB_OUTPUT
+#           elif [ "${{ github.ref_name }}" = "academy-platform" ]; then
+#             echo "target=AIE-REACT" >> $GITHUB_OUTPUT
+#             echo "s3_bucket=lts-aie" >> $GITHUB_OUTPUT
+#             echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID_AIE }}" >> $GITHUB_OUTPUT
+#           # elif [ "${{ github.ref_name }}" = "aie-dev" ]; then
+#           #   echo "target=aie-dev" >> $GITHUB_OUTPUT
+#           #   echo "s3_bucket=lts-aie" >> $GITHUB_OUTPUT
+#           #   echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID_AIE_DEV }}" >> $GITHUB_OUTPUT
+#           elif [ "${{ github.ref_name }}" = "master" ]; then
+#             echo "target=production" >> $GITHUB_OUTPUT
+#             echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
+#             echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
+#           else
+#             echo "target=production" >> $GITHUB_OUTPUT
+#             echo "s3_bucket=lts-main" >> $GITHUB_OUTPUT
+#             echo "cf_distribution_id=${{ secrets.CF_DISTRIBUTION_ID }}" >> $GITHUB_OUTPUT
+#           fi
+# 
+#       # Upload to S3 folder
+#       - name: Upload to S3
+#         run: |
+#           aws s3 sync dist/ s3://${{ steps.vars.outputs.s3_bucket }}/${{ steps.vars.outputs.target }}/ --delete
+# 
+#       # CloudFront cache invalidation
+#       - name: Invalidate CloudFront
+#         run: |
+#           aws cloudfront create-invalidation \
+#             --distribution-id ${{ steps.vars.outputs.cf_distribution_id }} \
+#             --paths "/*"
+# 
+#       # Slack notification on success
+#       - name: Notify Slack on Success
+#         if: success()
+#         run: |
+#           # Get commit message - if it's a merge commit, get the most recent non-merge commit message instead
+#           COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+#           if [[ "$COMMIT_MSG" == "Merge"* ]]; then
+#             # Get the most recent non-merge commit message
+#             COMMIT_MSG=$(git log --no-merges -1 --pretty=format:"%s")
+#           fi
+#           COMMIT_MSG=$(echo "$COMMIT_MSG" | tr '\n' ' ' | sed 's/"/\\"/g')
+#           curl -X POST -H 'Content-type: application/json' \
+#             --data "{\"text\":\"✅ Deployment Successful!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\"}" \
+#             ${{ secrets.SLACK_WEBHOOK_URL }}
+# 
+#       # Slack notification on failure
+#       - name: Notify Slack on Failure
+#         if: failure()
+#         run: |
+#           # Get commit message - if it's a merge commit, get the most recent non-merge commit message instead
+#           COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+#           if [[ "$COMMIT_MSG" == "Merge"* ]]; then
+#             # Get the most recent non-merge commit message
+#             COMMIT_MSG=$(git log --no-merges -1 --pretty=format:"%s")
+#           fi
+#           COMMIT_MSG=$(echo "$COMMIT_MSG" | tr '\n' ' ' | sed 's/"/\\"/g')
+#           curl -X POST -H 'Content-type: application/json' \
+#             --data "{\"text\":\"❌ Deployment Failed!\nBranch: ${{ github.ref_name }}\nEnvironment: ${{ steps.vars.outputs.target }}\nCommit Message: $COMMIT_MSG\nAuthor: ${{ github.actor }}\nView logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+#             ${{ secrets.SLACK_WEBHOOK_URL }}
