@@ -6,6 +6,8 @@ import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
 import AcademyBtn from '../../../components/AcademyBtn'
 import { useHistory } from 'react-router-dom'
+import DeleteJournalContentModal from '../DeleteJournalContentModal'
+import { toast } from 'react-toastify'
 
 const AddJournalModal = ({
     show,
@@ -18,6 +20,7 @@ const AddJournalModal = ({
 }) => {
     const history = useHistory()
     const [journalTitle, setJournalTitle] = useState('')
+    const [journalSubtitle, setJournalSubtitle] = useState('')
     const [selectedIcon, setSelectedIcon] = useState('')
     const [selectedColor, setSelectedColor] = useState('#E0EBC5')
     const [activeTab, setActiveTab] = useState('names')
@@ -26,6 +29,7 @@ const AddJournalModal = ({
         { id: 1, name: '', detailsText: '', detailsRich: '' },
     ])
     const [loading, setLoading] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const fetchJournalData = useCallback(async (id) => {
         try {
@@ -50,6 +54,7 @@ const AddJournalModal = ({
         if (data.manageContent) {
             console.log('Setting journal title:', data.manageContent.title, 'icon:', data.manageContent.icon, 'color:', data.manageContent.color)
             setJournalTitle(data.manageContent.title || '')
+            setJournalSubtitle(data.manageContent.subtitle || '')
             setSelectedIcon(data.manageContent.icon || '')
             setSelectedColor(data.manageContent.color || '#E0EBC5')
         }
@@ -84,6 +89,7 @@ const AddJournalModal = ({
 
     const resetForm = useCallback(() => {
         setJournalTitle('')
+        setJournalSubtitle('')
         setSelectedIcon('')
         setSelectedColor('#E0EBC5')
         setSections([
@@ -112,7 +118,7 @@ const AddJournalModal = ({
                 }).catch(error => {
                     if (isMountedRef.current) {
                         console.error('Failed to load journal data:', error)
-                        alert(`Failed to load journal data: ${error.message}`)
+                        toast.error(`Failed to load journal data: ${error.message}`)
                     }
                 })
             } else {
@@ -353,7 +359,7 @@ const AddJournalModal = ({
         if (mode === 'view') return 
 
         if (!validateForm()) {
-            alert('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            toast.error('Please fill in all required fields: Journal Title, Icon, and Section Names')
             return
         }
 
@@ -368,6 +374,7 @@ const AddJournalModal = ({
                 manageContent: {
                     ...(mode === 'edit' && contentId ? { id: contentId } : {}),
                     title: journalTitle,
+                    subtitle: journalSubtitle,
                     icon: selectedIcon,
                     color: normalizedColor
                     // Other fields will be added in AddJournalIntroduction
@@ -405,19 +412,23 @@ const AddJournalModal = ({
                     // For new journal creation, proceed to introduction modal immediately
                     if (onProceedToIntroduction) {
                         onProceedToIntroduction(response.data.data)
+                        // Reset form fields after successful creation
+                        resetForm()
                     } else {
-                        alert('Journal created successfully!')
+                        toast.success('Journal created successfully!')
                         onClose()
                         // Refresh the content list in the parent component
                         if (onContentChange) {
                             onContentChange()
                         }
+                        // Reset form fields after successful creation
+                        resetForm()
                     }
                 } else if (mode === 'edit') {
                     if (onProceedToIntroduction) {
                         onProceedToIntroduction(response.data.data)
                     } else {
-                        alert('Journal updated successfully!')
+                        toast.success('Journal updated successfully!')
                         onClose()
                         // Refresh the content list in the parent component
                         if (onContentChange) {
@@ -429,7 +440,7 @@ const AddJournalModal = ({
                 throw new Error(response.data.error || 'Failed to save journal')
             }
         } catch (error) {
-            alert(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
+            toast.error(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
         } finally {
             setLoading(false)
         }
@@ -438,16 +449,13 @@ const AddJournalModal = ({
     const handleDelete = async () => {
         if (!contentId) return
 
-        const confirmDelete = window.confirm('Are you sure you want to delete this journal and all its related content? This action cannot be undone.')
-        if (!confirmDelete) return
-
         setLoading(true)
 
         try {
             const response = await axiosInstance.delete(`/manage-content/full/${contentId}`)
 
             if (response.data.success) {
-                alert('Journal and all related content deleted successfully!')
+                toast.success('Journal and all related content deleted successfully!')
                 onClose()
                 // Refresh the content list in the parent component
                 if (onContentChange) {
@@ -458,11 +466,49 @@ const AddJournalModal = ({
             }
         } catch (error) {
             console.error('Error deleting journal:', error)
-            alert(`Failed to delete journal: ${error.response?.data?.message || error.message}`)
+            toast.error(`Failed to delete journal: ${error.response?.data?.message || error.message}`)
         } finally {
             setLoading(false)
         }
     }
+
+    const handleArchive = async () => {
+        if (!contentId) return
+
+        setLoading(true)
+
+        try {
+            const response = await axiosInstance.put('/manage-content/bulk/archive', {
+                ids: [contentId]
+            })
+
+            if (response.data.success) {
+                toast.success('Journal archived successfully!')
+                onClose()
+                // Refresh the content list in the parent component
+                if (onContentChange) {
+                    onContentChange()
+                }
+            } else {
+                throw new Error('Failed to archive journal')
+            }
+        } catch (error) {
+            console.error('Error archiving journal:', error)
+            toast.error(`Failed to archive journal: ${error.response?.data?.message || error.message}`)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+  const handleShowDeleteModal = () => {
+    setShowDeleteModal(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false)
+  }
+
+  const isContentArchived = existingData?.manageContent?.archiveStatus || false
 
     const handleCancel = () => {
         if (mode === 'add') {
@@ -475,7 +521,7 @@ const AddJournalModal = ({
 
     return (
         <>
-            {loading && (
+            {/* {loading && (
                 <div className="loading-overlay">
                     <div className="loading-spinner">
                         <div className="spinner-border text-primary" role="status">
@@ -484,7 +530,7 @@ const AddJournalModal = ({
                         <p>Loading journal data...</p>
                     </div>
                 </div>
-            )}
+            )} */}
 
             <div className="add-journal-modal-overlay">
                 <div className="add-journal-modal">
@@ -556,6 +602,18 @@ const AddJournalModal = ({
                                         placeholder="Add Journal Title (i.e. Leadership Journal)..."
                                         value={journalTitle}
                                         onChange={(e) => setJournalTitle(e.target.value)}
+                                        className="journal-input"
+                                        disabled={mode === 'view'}
+                                    />
+                                    <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+                                </div>
+
+                                <div className="input-box flex-1">
+                                    <input
+                                        type="text"
+                                        placeholder="Add Journal Subtitle..."
+                                        value={journalSubtitle}
+                                        onChange={(e) => setJournalSubtitle(e.target.value)}
                                         className="journal-input"
                                         disabled={mode === 'view'}
                                     />
@@ -743,7 +801,7 @@ const AddJournalModal = ({
                                                                 </defs>
                                                             </svg>
                                                         </div>
-                                                        <span>Section {section.id}: {section.name || 'Unnamed Section'}</span>
+                                                        <span>Section {sections.indexOf(section) + 1}: {section.name || 'Unnamed Section'}</span>
                                                     </div>
                                                 </div>
                                                 <div className="section-details-content">
@@ -786,7 +844,7 @@ const AddJournalModal = ({
                     <div>
                         {(mode === 'edit') && contentId && (
                             <button
-                                onClick={handleDelete}
+                                onClick={handleShowDeleteModal}
                                 disabled={loading}
                                 style={{
                                     backgroundColor: 'transparent',
@@ -823,7 +881,7 @@ const AddJournalModal = ({
                             />
                             <AcademyBtn
                                 title="edit sections"
-                                onClick={() => history.push('/leadership-journal-management')}
+                                onClick={() => history.push(`/leadership-journal-management?contentId=${contentId}`)}
                                 disabled={loading}
                             />
                         </div>
@@ -837,7 +895,7 @@ const AddJournalModal = ({
                                 Cancel
                             </div>
                             <div onClick={handleSave} disabled={loading} className="save-btn">
-                                Save
+                                {loading ? 'Saving...' : 'Save'}
                             </div>
                         </div>
                     )}
@@ -852,6 +910,16 @@ const AddJournalModal = ({
                 </div>
                 </div>
             </div>
+
+            <DeleteJournalContentModal
+                show={showDeleteModal}
+                onClose={handleCloseDeleteModal}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+                title="Delete Journal Content"
+                message="What would you like to do with this journal and all its related content?"
+                isArchived={isContentArchived}
+            />
         </>
     )
 }

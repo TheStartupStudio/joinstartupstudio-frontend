@@ -1,0 +1,152 @@
+.delete-journal-content-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+
+.delete-journal-content-modal-overlay .delete-journal-content-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 742px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-journal-content-modal-overlay .modal-header {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 12px;
+  width: 100%;
+}
+
+.delete-journal-content-modal-overlay .modal-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #231F20;
+  margin: 0;
+  text-align: center;
+}
+
+.delete-journal-content-modal-overlay .modal-body {
+  margin-bottom: 30px;
+}
+
+.delete-journal-content-modal-overlay .modal-message {
+  font-size: 15px;
+  color: black;
+  text-align: center;
+  margin: 0;
+  font-weight: 500;
+}
+
+.delete-journal-content-modal-overlay .modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+
+.delete-journal-content-modal-overlay .archive-btn {
+  border-radius: 8px;
+background: var(--COLORS-Blue, #51C7DF);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+display: flex;
+padding: 6px 12px;
+justify-content: center;
+align-items: center;
+gap: 12px;
+color: var(--COLORS-White, #FFF);
+font-family: Montserrat;
+font-size: 20px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+font-variant: all-small-caps;
+height: 53px;
+}
+
+
+
+.delete-journal-content-modal-overlay .cancel-btn {
+  border-radius: 8px;
+background: var(--COLORS-Light-Grey, #DEE1E6);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+display: flex;
+padding: 6px 12px;
+justify-content: center;
+align-items: center;
+gap: 12px;
+/* color: var(--COLORS-White, black); */
+font-family: Montserrat;
+font-size: 20px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+font-variant: all-small-caps;
+height: 53px;
+}
+
+.delete-journal-content-modal-overlay .delete-btn {
+  border-radius: 8px;
+background: var(--COLORS-Pink, #F39);
+box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: var(--COLORS-White, white);
+  font-family: Montserrat;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  font-variant: all-small-caps;
+  height: 53px;
+}
+
+.delete-journal-content-modal-overlay .archive-btn,
+.delete-journal-content-modal-overlay .cancel-btn,
+.delete-journal-content-modal-overlay .delete-btn {
+  min-width: 140px;
+  cursor: pointer;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+  .delete-journal-content-modal-overlay .delete-journal-content-modal {
+    padding: 30px 20px;
+    margin: 20px;
+  }
+
+  .delete-journal-content-modal-overlay .modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .delete-journal-content-modal-overlay .archive-btn,
+  .delete-journal-content-modal-overlay .cancel-btn,
+  .delete-journal-content-modal-overlay .delete-btn {
+    width: 100%;
+    min-width: unset;
+  }
+}

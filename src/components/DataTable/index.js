@@ -99,12 +99,13 @@ const DataTable = ({
     return item[column.key]
   }
 
-  const getMoreActionsOptions = () => {
+  const getMoreActionsOptions = (item) => {
     if (activeTab === 'Organizations') {
+      const isActive = item?.isActive !== undefined ? item.isActive : true
       return [
         { name: 'View Organization', action: 'view-organization' },
         { name: 'Edit Organization', action: 'edit-organization' },
-        { name: 'Deactivate Organization', action: 'deactivate-organization' },
+        { name: isActive ? 'Deactivate Organization' : 'Activate Organization', action: 'toggle-organization-status' },
         { name: 'Delete Organization', action: 'delete-organization' },
         { name: 'Export Organization Data', action: 'export-organization' }
       ]
@@ -167,8 +168,9 @@ const DataTable = ({
         }
       ]
     } else {
+      const isActive = item?.activeStatus !== undefined ? item.activeStatus : true
       return [
-        { name: 'Deactivate Learner', action: 'deactivate-learner' },
+        { name: isActive ? 'Deactivate Learner' : 'Activate Learner', action: isActive ? 'deactivate-learner' : 'activate-learner' },
         { name: 'Delete Learner', action: 'delete-learner' }
       ]
     }
@@ -490,12 +492,23 @@ const DataTable = ({
            <button
             className="action-btn view-btn"
             onClick={() => handleActionClick('view', item)}
+            title="View Report (Read-only)"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M2.5 10.8335C5.5 4.16683 14.5 4.16683 17.5 10.8335" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M10 14.1665C8.61929 14.1665 7.5 13.0472 7.5 11.6665C7.5 10.2858 8.61929 9.1665 10 9.1665C11.3807 9.1665 12.5 10.2858 12.5 11.6665C12.5 13.0472 11.3807 14.1665 10 14.1665Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             View
+          </button>
+          <button
+            className="action-btn edit-btn"
+            onClick={() => handleActionClick('edit', item)}
+            title="Edit Report Resolution"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5V19M5 12H19" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Edit
           </button>
           <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
             <button
@@ -673,7 +686,7 @@ const DataTable = ({
                   display: 'block'
                 }}
               >
-                {getMoreActionsOptions().map((option, optionIndex) => (
+                {getMoreActionsOptions(item).map((option, optionIndex) => (
                   <div 
                     key={optionIndex}
                     className="more-actions-dropdown-item"
@@ -745,7 +758,7 @@ const DataTable = ({
                   display: 'block'
                 }}
               >
-                {getMoreActionsOptions().map((option, optionIndex) => (
+                {getMoreActionsOptions(item).map((option, optionIndex) => (
                   <div 
                     key={optionIndex}
                     className="more-actions-dropdown-item"

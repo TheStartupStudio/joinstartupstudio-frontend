@@ -8,6 +8,7 @@ import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import AddJournalModal from '../../components/ContentManagement/AddJournalModal'
 import AddJournalIntroduction from '../../components/ContentManagement/AddJournalIntroduction'
+import DeleteJournalContentModal from '../../components/ContentManagement/DeleteJournalContentModal'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 
@@ -33,6 +34,10 @@ const ManageContentSite = () => {
   const [isArchiveMode, setIsArchiveMode] = useState(false)
   const [archivedContents, setArchivedContents] = useState([])
   const [archiveLoading, setArchiveLoading] = useState(false)
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false)
+  const [contentFilter, setContentFilter] = useState('all') // 'all', 'published', 'unpublished'
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteModalData, setDeleteModalData] = useState(null)
 
   const EditContentForm = ({ content, onSave, onCancel }) => {
     const handleChange = (e) => {
@@ -163,7 +168,7 @@ const ManageContentSite = () => {
     {
     key: 'name',
     title: 'TASK NAME',
-    sortable: true,
+    sortable: false,
     filterable: true,
     width: '100%',
     className: 'manage-content-task-name-column',
@@ -194,6 +199,8 @@ const ManageContentSite = () => {
     setJournalData(data)
     setShowAddJournalModal(false)
     setShowAddJournalIntroductionModal(true)
+    // Refresh the content list to show the newly created or updated journal
+    fetchContents()
   }
 
   const handleCloseAddJournalIntroductionModal = () => {
@@ -254,13 +261,16 @@ const ManageContentSite = () => {
       if (showActionDropdown && !event.target.closest('.dropdown-wrapper')) {
         setShowActionDropdown(null)
       }
+      if (showFilterDropdown && !event.target.closest('.header-icons')) {
+        setShowFilterDropdown(false)
+      }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [showBulkDropdown, showActionDropdown])
+  }, [showBulkDropdown, showActionDropdown, showFilterDropdown])
 
   const handleViewContent = async (content) => {
     console.log('View clicked for content:', content)
@@ -336,11 +346,11 @@ const ManageContentSite = () => {
   }
 
   const handleSelectAll = () => {
-    const currentContents = isArchiveMode ? archivedContents : contents
-    if (selectedItems.length === currentContents.length) {
+    const filteredContents = getFilteredContents()
+    if (selectedItems.length === filteredContents.length) {
       setSelectedItems([])
     } else {
-      setSelectedItems(currentContents.map(content => content.id))
+      setSelectedItems(filteredContents.map(content => content.id))
     }
   }
 
@@ -443,9 +453,6 @@ const ManageContentSite = () => {
   }
 
   const handleDeleteContent = async (contentId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this content? This action cannot be undone.')
-    if (!confirmDelete) return
-
     try {
       setLoading(true)
       const response = await axiosInstance.delete(`/manage-content/${contentId}`)
@@ -462,6 +469,57 @@ const ManageContentSite = () => {
       toast.error('Failed to delete content')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleArchiveContentForDelete = async (contentId) => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.put('/manage-content/bulk/archive', {
+        ids: [contentId]
+      })
+
+      if (response.data.success) {
+        toast.success('Content archived successfully')
+        fetchContents()
+      } else {
+        toast.error('Failed to archive content')
+      }
+    } catch (error) {
+      console.error('Error archiving content:', error)
+      toast.error('Failed to archive content')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleShowDeleteModal = (contentId) => {
+    // Find the content to check if it's archived
+    const currentContents = isArchiveMode ? archivedContents : contents
+    const content = currentContents.find(c => c.id === contentId)
+
+    setDeleteModalData({
+      contentId,
+      isArchived: content?.archiveStatus || false
+    })
+    setShowDeleteModal(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false)
+    setDeleteModalData(null)
+  }
+
+  const handleArchiveFromModal = () => {
+    if (deleteModalData?.contentId) {
+      handleArchiveContentForDelete(deleteModalData.contentId)
+      setSelectedItems(prev => prev.filter(id => id !== deleteModalData.contentId))
+    }
+  }
+
+  const handleDeleteFromModal = () => {
+    if (deleteModalData?.contentId) {
+      handleDeleteContent(deleteModalData.contentId)
     }
   }
 
@@ -496,14 +554,38 @@ const ManageContentSite = () => {
       setSelectedItems([])
       setShowBulkDropdown(false)
       setShowActionDropdown(null)
+      setShowFilterDropdown(false)
+      setContentFilter('all')
     } else {
       // Switching to archive mode
       setIsArchiveMode(true)
       setSelectedItems([])
       setShowBulkDropdown(false)
       setShowActionDropdown(null)
+      setShowFilterDropdown(false)
+      setContentFilter('all')
       fetchArchivedContents()
     }
+  }
+
+  const getFilteredContents = () => {
+    const currentContents = isArchiveMode ? archivedContents : contents
+
+    if (contentFilter === 'all') {
+      return currentContents
+    } else if (contentFilter === 'published') {
+      return currentContents.filter(content => content.publishedStatus && !content.archiveStatus)
+    } else if (contentFilter === 'unpublished') {
+      return currentContents.filter(content => !content.publishedStatus || content.archiveStatus)
+    }
+
+    return currentContents
+  }
+
+  const handleFilterChange = (filterValue) => {
+    setContentFilter(filterValue)
+    setShowFilterDropdown(false)
+    setSelectedItems([])
   }
 
   return (
@@ -523,6 +605,16 @@ const ManageContentSite = () => {
         journalData={journalData}
         mode={modalMode}
         contentId={selectedContentId}
+      />
+
+      <DeleteJournalContentModal
+        show={showDeleteModal}
+        onClose={handleCloseDeleteModal}
+        onArchive={handleArchiveFromModal}
+        onDelete={handleDeleteFromModal}
+        title="Delete Content"
+        message="What would you like to do with this content?"
+        isArchived={deleteModalData?.isArchived || false}
       />
 
       {/* Edit Content Modal */}
@@ -739,7 +831,7 @@ const ManageContentSite = () => {
                       <input
                         type="checkbox"
                         className="checkbox"
-                        checked={selectedItems.length === (isArchiveMode ? archivedContents : contents).length && (isArchiveMode ? archivedContents : contents).length > 0}
+                        checked={selectedItems.length === getFilteredContents().length && getFilteredContents().length > 0}
                         onChange={handleSelectAll}
                       />
                     </th>
@@ -751,18 +843,111 @@ const ManageContentSite = () => {
                       >
                         <div className="header-with-icons">
                           {column.title}
-                          {column.sortable && (
-                            <div className="header-icons">
-                              <img src={require('../../assets/images/academy-icons/svg/Icon_Sort.svg').default} alt="graph" className="header-icon" />
-                            </div>
-                          )}
                           {column.filterable && (
-                            <div className="header-icons">
-                              <img
-                                src={require('../../assets/images/academy-icons/svg/Dropdown_ Filter by Level.svg').default}
-                                alt="filter"
-                                className="header-icon"
-                              />
+                            <div className="header-icons" style={{ position: 'relative' }}>
+                              <div
+                                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                  <path d="M3.99961 3H19.9997C20.552 3 20.9997 3.44764 20.9997 3.99987L20.9999 5.58569C21 5.85097 20.8946 6.10538 20.707 6.29295L14.2925 12.7071C14.105 12.8946 13.9996 13.149 13.9996 13.4142L13.9996 19.7192C13.9996 20.3698 13.3882 20.8472 12.7571 20.6894L10.7571 20.1894C10.3119 20.0781 9.99961 19.6781 9.99961 19.2192L9.99961 13.4142C9.99961 13.149 9.89425 12.8946 9.70672 12.7071L3.2925 6.29289C3.10496 6.10536 2.99961 5.851 2.99961 5.58579V4C2.99961 3.44772 3.44732 3 3.99961 3Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                </div>
+
+                              {showFilterDropdown && (
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    top: '100%',
+                                    right: 0,
+                                    background: 'white',
+                                    border: '1px solid #e5e7eb',
+                                    borderRadius: '8px',
+                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                    zIndex: 9999,
+                                    minWidth: '140px',
+                                    marginTop: '4px'
+                                  }}
+                                >
+                                  <button
+                                    style={{
+                                      width: '100%',
+                                      padding: '10px 16px',
+                                      border: 'none',
+                                      background: 'none',
+                                      textAlign: 'left',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      color: contentFilter === 'all' ? '#059669' : '#374151',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                    onClick={() => handleFilterChange('all')}
+                                  >
+                                    All Content
+                                  </button>
+
+                                  <button
+                                    style={{
+                                      width: '100%',
+                                      padding: '10px 16px',
+                                      border: 'none',
+                                      background: 'none',
+                                      textAlign: 'left',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      color: contentFilter === 'published' ? '#059669' : '#374151',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                    onClick={() => handleFilterChange('published')}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                      <g clipPath="url(#clip0_3778_10072)">
+                                        <path d="M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M2.19141 12.916H10.0001" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M2.19141 7.08301H17.8087" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path fillRule="evenodd" clipRule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="currentColor" strokeWidth="1.5"/>
+                                      </g>
+                                    </svg>
+                                    Published
+                                  </button>
+
+                                  <button
+                                    style={{
+                                      width: '100%',
+                                      padding: '10px 16px',
+                                      border: 'none',
+                                      background: 'none',
+                                      textAlign: 'left',
+                                      cursor: 'pointer',
+                                      fontSize: '14px',
+                                      color: contentFilter === 'unpublished' ? '#059669' : '#374151',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                    onClick={() => handleFilterChange('unpublished')}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                                      <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                      <path d="M10 7.5V10.8333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                      <path d="M10 14.1753L10.0083 14.1661" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    Unpublished
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
@@ -797,16 +982,16 @@ const ManageContentSite = () => {
                         </div>
                       </td>
                     </tr>
-                  ) : (isArchiveMode ? archivedContents : contents).length === 0 ? (
+                  ) : getFilteredContents().length === 0 ? (
                     <tr>
                       <td colSpan="3" className="text-center py-4">
-                        <div className="alert alert-info mb-0">
+                        {/* <div className="alert alert-info mb-0">
                           {isArchiveMode ? 'No archived content found.' : 'No content found. Try adding new content.'}
-                        </div>
+                        </div> */}
                       </td>
                     </tr>
                   ) : (
-                    (isArchiveMode ? archivedContents : contents).map((content, index) => {
+                    getFilteredContents().map((content, index) => {
                       console.log('Rendering content item:', index, content)
                       return (
                         <tr key={content.timestamp || index}>
@@ -965,7 +1150,7 @@ const ManageContentSite = () => {
                                     onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                                     onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                                     onClick={() => {
-                                      handleDeleteContent(content.id)
+                                      handleShowDeleteModal(content.id)
                                       setShowActionDropdown(null)
                                     }}
                                   >

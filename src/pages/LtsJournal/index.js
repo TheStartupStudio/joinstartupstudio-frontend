@@ -309,13 +309,8 @@ function LtsJournal(props) {
       return firstNonSeparator?.id || null;
     };
 
-    const welcomeLessonIds = {
-      0: getFirstNonSeparatorLesson(lessonsByLevel[0]) || 51,
-      1: getFirstNonSeparatorLesson(lessonsByLevel[1]) || 60,
-      2: getFirstNonSeparatorLesson(lessonsByLevel[2]) || 70
-    };
-
-    const welcomeLessonId = welcomeLessonIds[clickedLevel];
+    // Dynamically get the welcome lesson for any level
+    const welcomeLessonId = getFirstNonSeparatorLesson(lessonsByLevel[clickedLevel]);
     if (welcomeLessonId) {
       history.push(`/my-course-in-entrepreneurship/journal/${welcomeLessonId}`);
     }

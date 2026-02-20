@@ -34,7 +34,10 @@ import { ModalBody, Modal } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NotificationBell from '../../components/NotificationBell'
+import { ContentOnlySkeleton } from '../../components/LeadershipSections/Value'
+
 import { toast } from 'react-toastify'
+
 
 
 const LeadershipJournal = memo(() => {
@@ -49,6 +52,7 @@ const LeadershipJournal = memo(() => {
   const [showLockModal, setShowLockModal] = useState(false)
   const [currentTitle, setCurrentTitle] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [navigationLocked, setNavigationLocked] = useState(false)
 
   const [levels, setLevels] = useState([])
   const [lessons, setLessons] = useState({})
@@ -220,23 +224,10 @@ const LeadershipJournal = memo(() => {
 
     Object.keys(lessons).forEach(levelIndex => {
       const levelLessons = lessons[levelIndex] || []
-      const sectionKey = levelIndex === '0' ? 'one' : levelIndex === '1' ? 'two' : 'three'
+      const sectionKey = levelIndex // Use level index directly as section key
 
       result[sectionKey] = levelLessons.map(lesson => {
         const lessonIndex = levelLessons.indexOf(lesson)
-        let component
-
-        if (lessonIndex === 0 && levelIndex === '0') {
-          component = <SectionOne setIsReflection={setIsReflection} lessonId={lesson.id} contentData={manageContentData} />
-        } else {
-          component = (
-            <Value
-              ref={el => valueRefs.current[stripHtmlTags(lesson.title)] = el}
-              id={lesson.id}
-              setIsReflection={setIsReflection}
-            />
-          )
-        }
 
         return {
           title: stripHtmlTags(lesson.title),
@@ -244,19 +235,20 @@ const LeadershipJournal = memo(() => {
           id: lesson.id,
           redirectId: lesson.redirectId,
           separate: lesson.separate,
-          component: component
+          lessonIndex: lessonIndex,
+          levelIndex: levelIndex
         }
       })
     })
 
     return result
-  }, [lessons, setIsReflection])
+  }, [lessons])
 
   useEffect(() => {
     if (levels.length === 0 || Object.keys(lessons).length === 0) return;
 
     const tabs = levels.map((level, index) => {
-      const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
+      const sectionKey = index.toString(); // Use level index as string directly as section key
       const sectionLessons = sections[sectionKey] || [];
 
       return {
@@ -338,7 +330,7 @@ const LeadershipJournal = memo(() => {
         let foundNext = false;
 
         return options.map(option => {
-          const finished = finishedContent.includes(option.label);
+          const finished = finishedContent.some(finishedItem => stripHtmlTags(finishedItem) === option.label);
           const isNext = !finished && !foundNext;
           if (isNext) foundNext = true;
 
@@ -362,15 +354,23 @@ const LeadershipJournal = memo(() => {
   const canAccessSection = (index) => {
     if (index === 0) return true;
 
-    const sectionKey = (index - 1) === 0 ? 'one' : (index - 1) === 1 ? 'two' : 'three';
+    const prevIndex = index - 1;
+    const sectionKey = prevIndex.toString(); // Use level index as string directly as section key
     const prevSectionLessons = sections[sectionKey] || [];
 
-    return prevSectionLessons.every(lesson => finishedContent.includes(stripHtmlTags(lesson.title)));
+    return prevSectionLessons.every(lesson => {
+      const strippedLessonTitle = stripHtmlTags(lesson.title);
+      return finishedContent.some(finishedItem => stripHtmlTags(finishedItem) === strippedLessonTitle);
+    });
   };
 
   const handleSaveAndContinue = async () => {
+    // Prevent rapid successive clicks and navigation during transitions
+    if (isSaving || navigationLocked) return;
+
     try {
       setIsSaving(true);
+      setNavigationLocked(true);
 
       if (!activeTabData.option) {
         const firstSection = allTabs[0];
@@ -383,67 +383,72 @@ const LeadershipJournal = memo(() => {
         return;
       }
 
+      // Always save first if we're in reflection mode or if we need to update progress
       const currentComponent = valueRefs.current[activeTabData.option?.value];
 
-      if (!isReflection) {
-        const currentSection = allTabs[activeTabData.activeTab].options;
-        const currentOptionIndex = currentSection.findIndex(
-          option => option.value === activeTabData.option?.value
-        );
-
-        if (currentOptionIndex < currentSection.length - 1) {
-          setActiveTabData({
-            ...activeTabData,
-            option: currentSection[currentOptionIndex + 1]
-          });
-        } else if (activeTabData.activeTab < allTabs.length - 1) {
-          if (canAccessSection(activeTabData.activeTab + 1)) {
-            setActiveTabData({
-              activeTab: activeTabData.activeTab + 1,
-              option: allTabs[activeTabData.activeTab + 1].options[0]
-            });
-          } else {
-            setShowLockModal(true);
-          }
+      if (isReflection) {
+        if (currentComponent?.saveChanges) {
+          await currentComponent.saveChanges();
         }
+
+        // Update finished content state
+        const category = manageContentData?.title
+        await dispatch(fetchJournalFinishedContent(category, manageContentData?.title));
+
+        // Wait for state to update before proceeding
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+
+      // Now handle navigation logic after saving (if needed)
+      const currentTabData = allTabs[activeTabData.activeTab];
+      if (!currentTabData || !currentTabData.options) {
+        console.error('Current tab data or options not found');
         return;
       }
 
-      if (currentComponent?.saveChanges) {
-        await currentComponent.saveChanges();
-      }
-
-      const category = manageContentData?.title
-      await dispatch(fetchJournalFinishedContent(category, manageContentData?.title));
-      const { journal: { finishedContent: updatedContent } } = store.getState();
-
-      if (!updatedContent.includes(activeTabData.option?.value)) {
-        setShowLockModal(true);
-        return;
-      }
-
-      if (activeTabData.option?.value === 'Vision' && updatedContent.includes('Vision')) {
-        window.location.href = '/leadership-journal';
-        return;
-      }
-
-      const currentSection = allTabs[activeTabData.activeTab].options;
+      const currentSection = currentTabData.options;
       const currentOptionIndex = currentSection.findIndex(
         option => option.value === activeTabData.option?.value
       );
 
+      if (currentOptionIndex === -1) {
+        console.error('Current option not found in section');
+        return;
+      }
+
       if (currentOptionIndex < currentSection.length - 1) {
+        // Move to next option in current section
         const nextOption = currentSection[currentOptionIndex + 1];
-        setActiveTabData({
-          ...activeTabData,
-          option: nextOption
-        });
-      } else if (activeTabData.activeTab < allTabs.length - 1) {
-        if (canAccessSection(activeTabData.activeTab + 1)) {
+        if (nextOption) {
           setActiveTabData({
-            activeTab: activeTabData.activeTab + 1,
-            option: allTabs[activeTabData.activeTab + 1].options[0]
+            ...activeTabData,
+            option: nextOption
           });
+        }
+      } else if (activeTabData.activeTab < allTabs.length - 1) {
+        // Move to next section - check if user can access it
+        // Get the most current finishedContent state
+        const { journal: { finishedContent: currentFinishedContent } } = store.getState();
+
+        const currentTab = activeTabData.activeTab;
+        const sectionKey = currentTab.toString(); // Use level index as string directly as section key
+
+        const prevSectionLessons = sections[sectionKey] || [];
+        const canAccess = prevSectionLessons.every(lesson => {
+          const strippedLessonTitle = stripHtmlTags(lesson.title);
+          return currentFinishedContent.some(finishedItem => stripHtmlTags(finishedItem) === strippedLessonTitle);
+        });
+
+        if (canAccess) {
+          const nextTabData = allTabs[activeTabData.activeTab + 1];
+          if (nextTabData && nextTabData.options && nextTabData.options.length > 0) {
+            setActiveTabData({
+              activeTab: activeTabData.activeTab + 1,
+              option: nextTabData.options[0]
+            });
+          } else {
+            console.error('Next tab data or options not found');
+          }
         } else {
           setShowLockModal(true);
         }
@@ -453,6 +458,10 @@ const LeadershipJournal = memo(() => {
       console.error('Error saving:', error);
     } finally {
       setIsSaving(false);
+      // Small delay before unlocking navigation to ensure all state updates are complete
+      setTimeout(() => {
+        setNavigationLocked(false);
+      }, 100);
     }
   };
 
@@ -461,27 +470,46 @@ const LeadershipJournal = memo(() => {
       return true;
     }
 
-    return !finishedContent.includes(option.label) && !option.isNext;
+    return !finishedContent.some(finishedItem => stripHtmlTags(finishedItem) === option.label) && !option.isNext;
   };
 
   const isIntroSection = !isReflection;
 
   const renderedSection = useMemo(() => {
+    // Show loading skeleton during navigation transitions
+    if (navigationLocked) {
+      return <ContentOnlySkeleton />
+    }
+
     if (!activeTabData.option && manageContentData) {
       return <SectionOne setIsReflection={setIsReflection} lessonId={null} contentData={manageContentData} />
     }
 
-    if (allTabs.length === 0) return null;
+    if (Object.keys(sections).length === 0) return null;
 
-    const sectionKey = activeTabData.activeTab === 0 ? 'one' :
-      activeTabData.activeTab === 1 ? 'two' : 'three';
+    const currentTab = activeTabData.activeTab;
+    const sectionKey = currentTab.toString(); // Use level index as string directly as section key
 
     const selectedSection = sections[sectionKey]?.find(
       section => section.title === activeTabData.option?.value
     );
 
-    return selectedSection ? selectedSection.component : null;
-  }, [activeTabData, allTabs, sections, setIsReflection, manageContentData]);
+    if (!selectedSection) return null;
+
+    // Render component based on section data
+    if (selectedSection.lessonIndex === 0 && selectedSection.levelIndex === '0') {
+      return <SectionOne setIsReflection={setIsReflection} lessonId={selectedSection.id} contentData={manageContentData} />
+    } else {
+      return (
+        <Value
+          key={`value-${selectedSection.id}`}
+          ref={el => valueRefs.current[stripHtmlTags(selectedSection.title)] = el}
+          id={selectedSection.id}
+          setIsReflection={setIsReflection}
+        />
+      )
+    }
+  }, [activeTabData.option, sections, manageContentData, setIsReflection, navigationLocked]);
 
   useEffect(() => {
     if (activeTabData.option) {
@@ -499,7 +527,8 @@ const LeadershipJournal = memo(() => {
       return;
     }
 
-    const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
+    const sectionKey = index.toString(); // Use level index as string directly as section key
+
     const sectionLessons = sections[sectionKey] || [];
     const firstLesson = sectionLessons[0];
 
@@ -525,19 +554,25 @@ const LeadershipJournal = memo(() => {
   };
 
   return (
-    <div className='container-fluid'>
-      <div className='row'>
-        <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+    <div className='container-fluid h-100' style={{ '--bs-gutter-x': '0' }}>
+      <div className='d-flex flex-column h-100'>
+        <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4 ' style={{ height: 'fit-content' }}>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
               <h3 className='page-title bold-page-title text-black mb-0'>
                 {manageContentData?.title || 'Leadership Journal'}
               </h3>
-              <p className='fs-13 fw-light text-black'>
+              {manageContentData?.subtitle ? (
+                <p className='fs-13 fw-light text-black'>
+                  {manageContentData.subtitle}
+                </p>
+              ) : (
+                <p className='fs-13 fw-light text-black'>
                 Leadership comes in many forms but the foundation is leading
                 yourself first. Use this journal to inspire your development as
                 a leader.
               </p>
+              )}
             </div>
           </div>
           <div className="d-flex align-items-center justify-content-center">
@@ -550,7 +585,9 @@ const LeadershipJournal = memo(() => {
                                    />
                                  </div>
         </div>
-        <div className='academy-dashboard-layout lead-class mb-5' style={Object.keys(dynamicStyles.leadClass).length > 0 ? dynamicStyles.leadClass : undefined}>
+        <div className='academy-dashboard-layout lead-class pb-5 flex-grow-1' style={Object.keys(dynamicStyles.leadClass).length > 0 ? dynamicStyles.leadClass : undefined}>
+          <div className=''>
+
           {(allTabs.length === 0 || isLoading) ? (
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
               <div className="text-center">
@@ -665,6 +702,7 @@ const LeadershipJournal = memo(() => {
               </div>
             </>
           )}
+          </div>
         </div>
       </div>
     </div>

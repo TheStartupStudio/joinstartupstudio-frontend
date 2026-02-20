@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null, source = 'content' }) => {
+const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null, source = 'content', initialLevel = null }) => {
   const [taskTitle, setTaskTitle] = useState('')
   const [selectedLevel, setSelectedLevel] = useState('')
   const [activeTab, setActiveTab] = useState('video')
@@ -20,13 +20,12 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const [information, setInformation] = useState('')
   const [description, setDescription] = useState('')
   const [reflectionItems, setReflectionItems] = useState([
-    { id: 1, question: '', instructions: '' },
-    { id: 2, question: '', instructions: '' },
-    { id: 3, question: '', instructions: '' }
+    { id: 1, question: '', instructions: '' }
   ])
   const [currentMode, setCurrentMode] = useState(mode)
   const [loading, setLoading] = useState(false)
   const [isLoadingData, setIsLoadingData] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const dropdownRef = useRef(null)
 
   const isViewMode = currentMode === 'view'
@@ -60,6 +59,12 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }, [mode])
 
   useEffect(() => {
+    if (show && isAddMode && initialLevel) {
+      setSelectedLevel(initialLevel)
+    }
+  }, [show, isAddMode, initialLevel])
+
+  useEffect(() => {
     if (taskData && taskData.id) {
 
       setIsLoadingData(true)
@@ -80,15 +85,8 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
         setReflectionItems(taskData.reflectionItems)
       } else if (currentMode === 'add') {
-        if (isLeadership) {
-          setReflectionItems([
-            { id: 1, question: '', instructions: '' },
-            { id: 2, question: '', instructions: '' },
-            { id: 3, question: '', instructions: '' }
-          ])
-        } else {
-          setReflectionItems([{ id: 1, question: '', instructions: '' }])
-        }
+        // Always start with just 1 reflection item, regardless of leadership or not
+        setReflectionItems([{ id: 1, question: '', instructions: '' }])
       }
 
       // Handle different field names for video/thumbnail URLs
@@ -148,7 +146,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         
         if (videoUploadResponse.data.success) {
           videoUrl = videoUploadResponse.data.fileLocation
-          toast.success('Video uploaded successfully!')
         }
       }
 
@@ -164,7 +161,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         
         if (thumbnailUploadResponse.data.success) {
           thumbnailUrl = thumbnailUploadResponse.data.fileLocation
-          toast.success('Thumbnail uploaded successfully!')
         }
       }
 
@@ -190,7 +186,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         : []
 
       // Preserve the original type field for existing masterclass content
-      let categoryValue = isMasterClass ? 'master-class' : isLeadership ? 'student-leadership' : 'entrepreneurship'
+      let categoryValue = isMasterClass ? 'master' : isLeadership ? 'student-leadership' : 'entrepreneurship'
 
       if (isEditMode && taskData?.id && isMasterClass) {
         const typeField = taskData?.journalData?.type || taskData?.type
@@ -212,7 +208,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         videoUrl: videoUrl || null,
         thumbnailUrl: thumbnailUrl || null,
         information: isLeadership ? (information || null) : null,
-        description: isMasterClass && levelId === 12 ? (description || null) : null,
+        description: isMasterClass && (levelId === 12 || selectedLevel === 'Career Guidance Videos') ? (description || null) : null,
         reflectionItems: filteredReflectionItems
       }
 
@@ -262,8 +258,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     setVideoPreview(null)
     setThumbnailPreview(null)
     setInformation('')
+    setDescription('')
     setReflectionItems(
-      isLeadership 
+      isLeadership
         ? [
             { id: 1, question: '', instructions: '' },
             { id: 2, question: '', instructions: '' },
@@ -272,6 +269,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         : [{ id: 1, question: '', instructions: '' }]
     )
     setIsDropdownOpen(false)
+    setShowDeleteModal(false)
     setCurrentMode(mode)
     onHide()
   }
@@ -295,12 +293,13 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     setActiveTab("video")
   }
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!taskData?.id) return
+    setShowDeleteModal(true)
+  }
 
-    const confirmDelete = window.confirm(`Are you sure you want to delete "${taskTitle}"? This action cannot be undone.`)
-    if (!confirmDelete) return
-
+  const confirmDelete = async () => {
+    setShowDeleteModal(false)
     setLoading(true)
     try {
       if (isMasterClass) {
@@ -402,6 +401,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }
 
   return (
+    <>
     <Modal show={show} onHide={handleClose} centered size="lg" className="add-task-content-management-modal">
       <Modal.Body className="add-task-modal-body">
         <div className="modal-icon">
@@ -539,14 +539,14 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           </div>
         )}
 
-        {isMasterClass && ((selectedLevel && parseInt(selectedLevel.split(' ')[1]) === 12) || (taskData?.journalData?.journalLevel === 12)) && (
+        {isMasterClass && (selectedLevel === 'Career Guidance Videos' || taskData?.journalData?.journalLevel === 12) && (
               <div className="form-group" style={{ marginTop: '24px' }}>
                 <label className="form-label">AUTHOR:</label>
                 <div className="input-wrapper">
                   <input
                     type="text"
                     className="form-control task-title-input"
-                    placeholder="Add description here..."
+                    placeholder="Add author name here..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     readOnly={isViewMode}
@@ -871,6 +871,78 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         )}
       </Modal.Body>
     </Modal>
+
+    {/* Delete Confirmation Modal */}
+    <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered className="custom-delete-modal-add-task" style={{ zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '40px !important' }}>
+      <Modal.Body className="text-center p-4">
+        <div className="mb-4">
+          <div className="d-flex flex-column gap-2">
+            <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#E2E6EC', borderRadius: '50%' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.1256 17.4997H3.87307C2.33504 17.4997 1.37259 15.8361 2.13926 14.5027L8.26554 3.84833C9.03455 2.51092 10.9641 2.51092 11.7332 3.84833L17.8594 14.5027C18.6261 15.8361 17.6637 17.4997 16.1256 17.4997Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M10 14.1753L10.0083 14.1661" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p className="mb-5" style={{ fontSize: '15px', fontWeight: '500', marginBottom: '16px', color: '#231F20', width: 'fit-content' }}>Delete Task?</p>
+          </div>
+          <p className="mb-5" style={{ fontSize: '15px', fontWeight: '400', marginBottom: '16px', color: '#231F20' }}>Are you sure you want to delete this task?</p>
+        </div>
+
+        <div className="d-flex gap-3 justify-content-center">
+          <button
+            style={{ borderRadius: "8px",
+              background: "#51C7DF",
+              boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+              display: 'flex',
+              width: '250px',
+              height: '53px',
+              minWidth: '250px',
+              maxHeight: '54px',
+              padding: '6px 12px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '12px',
+              color: "#FFF",
+              fontFamily: 'Montserrat',
+              fontSize: '17px',
+              fontWeight: '600',
+              border: 'none',
+             }}
+            onClick={() => setShowDeleteModal(false)}
+            disabled={loading}
+          >
+            NO, TAKE ME BACK
+          </button>
+          <button
+            style={{ borderRadius: "8px",
+              background: "#FFF",
+              boxShadow: "0 4px 10px 0 rgba(0, 0, 0, 0.25)",
+              display: 'flex',
+              width: '250px',
+              height: '53px',
+              minWidth: '250px',
+              maxHeight: '54px',
+              padding: '6px 12px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '12px',
+              color: "#F39",
+              fontFamily: 'Montserrat',
+              fontSize: '17px',
+              fontWeight: '600',
+              border: 'none',
+              
+             }}
+            onClick={confirmDelete}
+            disabled={loading}
+          >
+            {loading ? 'Deleting...' : 'YES, DELETE THIS TASK'}
+          </button>
+        </div>
+      </Modal.Body>
+    </Modal>
+    </>
   )
 }
 

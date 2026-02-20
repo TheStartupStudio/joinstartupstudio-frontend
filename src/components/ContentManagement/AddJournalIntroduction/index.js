@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 
 const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add', contentId = null }) => {
     const initializeState = () => {
@@ -148,11 +149,11 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                     console.log('Video uploaded successfully:', videoUploadResponse.data.fileLocation)
                 } else {
                     console.error('Video upload failed')
-                    alert('Failed to upload video')
+                    toast.error('Failed to upload video')
                 }
             } catch (error) {
                 console.error('Error uploading video:', error)
-                alert('Failed to upload video: ' + error.message)
+                toast.error('Failed to upload video: ' + error.message)
             }
         }
     }
@@ -179,11 +180,11 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                     console.log('Thumbnail uploaded successfully:', thumbnailUploadResponse.data.fileLocation)
                 } else {
                     console.error('Thumbnail upload failed')
-                    alert('Failed to upload thumbnail')
+                    toast.error('Failed to upload thumbnail')
                 }
             } catch (error) {
                 console.error('Error uploading thumbnail:', error)
-                alert('Failed to upload thumbnail: ' + error.message)
+                toast.error('Failed to upload thumbnail: ' + error.message)
             }
         }
     }
@@ -209,11 +210,11 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                 } else {
                     console.error('Headshot upload failed')
                     setInstructorHeadshot(previewUrl)
-                    alert('Failed to upload headshot')
+                    toast.error('Failed to upload headshot')
                 }
             } catch (error) {
                 console.error('Error uploading headshot:', error)
-                alert('Failed to upload headshot: ' + error.message)
+                toast.error('Failed to upload headshot: ' + error.message)
             }
         }
     }
@@ -280,14 +281,14 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
             const response = await axiosInstance.put(`/manage-content/full/${contentIdToUse}`, updateData)
 
             if (response.data.success) {
-                alert('Introduction data updated successfully!')
+                toast.success('Introduction data updated successfully!')
                 onClose()
             } else {
                 throw new Error('Failed to update introduction data')
             }
         } catch (error) {
             console.error('Error updating introduction data:', error)
-            alert(`Failed to update introduction data: ${error.message}`)
+            toast.error(`Failed to update introduction data: ${error.message}`)
         }
     }
 
@@ -328,7 +329,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                                     className={`tab-btn ${activeTab === 'intro' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('intro')}
                                 >
-                                    Section Details
+                                    Section Intro
                                 </button>
                                 <button
                                     className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}

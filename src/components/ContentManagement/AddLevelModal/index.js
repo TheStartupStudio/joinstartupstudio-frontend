@@ -231,6 +231,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       toast.success('Changes saved successfully!')
       if (onSave) {
         onSave()
+        handleClose()
       }
     } catch (error) {
       console.error('Error saving changes:', error)
