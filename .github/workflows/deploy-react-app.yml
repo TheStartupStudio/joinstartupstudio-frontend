@@ -35,8 +35,8 @@ jobs:
           
           # Determine server URL based on branch
           if [ "${{ github.ref_name }}" = "dev" ]; then
-            echo "Using AIE DEV server URL"
-            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_AIE_DEV }}"
+            echo "Using TSS DEV server URL"
+            SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_TSS_DEV }}"
           elif [ "${{ github.ref_name }}" = "release" ]; then
             echo "Using RELEASE server URL"
             SERVER_URL="${{ secrets.REACT_APP_SERVER_BASE_URL_RELEASE }}"
