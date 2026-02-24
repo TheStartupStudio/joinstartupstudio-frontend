@@ -26,6 +26,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const [loading, setLoading] = useState(false)
   const [isLoadingData, setIsLoadingData] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [taskToDelete, setTaskToDelete] = useState(null)
   const dropdownRef = useRef(null)
 
   const isViewMode = currentMode === 'view'
@@ -73,11 +74,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       setSelectedLevel(taskData.level || '')
       setActiveTab(taskData.contentType || 'video')
 
-      // Handle different field names for masterclass vs entrepreneurship
       const infoField = isMasterClass ? (taskData.journalData?.description || taskData.information || '') : (taskData.information || '')
       setInformation(infoField)
 
-      // Set description field for masterclass with journalLevel 12
       if (isMasterClass && taskData.journalData?.journalLevel === 12) {
         setDescription(taskData.journalData?.description || '')
       }
@@ -85,11 +84,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
         setReflectionItems(taskData.reflectionItems)
       } else if (currentMode === 'add') {
-        // Always start with just 1 reflection item, regardless of leadership or not
         setReflectionItems([{ id: 1, question: '', instructions: '' }])
       }
 
-      // Handle different field names for video/thumbnail URLs
       const videoUrlField = isMasterClass ? (taskData.journalData?.url || taskData.videoUrl || '') : (taskData.videoUrl || '')
       const thumbnailUrlField = isMasterClass ? (taskData.journalData?.thumbnail || taskData.thumbnailUrl || '') : (taskData.thumbnailUrl || '')
 
@@ -118,8 +115,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   }, [])
 
   const handleSaveAndContinue = async () => {
-    // For "Save and Continue", we just switch to reflection tab
-    // No need to save to backend yet, as video/thumbnail are already uploaded when selected
     setActiveTab('reflection')
   }
 
@@ -173,10 +168,8 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       const filteredReflectionItems = (activeTab === 'reflection' || isLeadership)
         ? reflectionItems.filter(item => {
             if (isLeadership) {
-              // For leadership journals, question is plain text
               return item.question && item.question.trim() !== ''
             } else {
-              // For content management, question might be HTML formatted
               const tempDiv = document.createElement('div')
               tempDiv.innerHTML = item.question
               const textContent = tempDiv.textContent || tempDiv.innerText || ''
@@ -185,7 +178,6 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           })
         : []
 
-      // Preserve the original type field for existing masterclass content
       let categoryValue = isMasterClass ? 'master' : isLeadership ? 'student-leadership' : 'entrepreneurship'
 
       if (isEditMode && taskData?.id && isMasterClass) {
@@ -193,7 +185,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         if (typeField) {
           const preservedTypes = ['guidance', 'master', 'podcast', 'startup-live']
           if (preservedTypes.includes(typeField)) {
-            categoryValue = typeField  // Use the preserved type as category instead of 'master-class'
+            categoryValue = typeField 
           }
         }
       }
@@ -270,6 +262,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     )
     setIsDropdownOpen(false)
     setShowDeleteModal(false)
+    setTaskToDelete(null) 
     setCurrentMode(mode)
     onHide()
   }
@@ -295,24 +288,35 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const handleDelete = () => {
     if (!taskData?.id) return
+    setTaskToDelete(taskData)
     setShowDeleteModal(true)
+    onHide() 
   }
 
   const confirmDelete = async () => {
+    if (!taskToDelete?.id) {
+      toast.error('Task data is missing. Cannot delete.')
+      setShowDeleteModal(false)
+      setTaskToDelete(null)
+      return
+    }
+
     setShowDeleteModal(false)
     setLoading(true)
     try {
       if (isMasterClass) {
-        await axiosInstance.delete(`/contents/${taskData.id}`)
+        await axiosInstance.delete(`/contents/${taskToDelete.id}`)
       } else {
-        await axiosInstance.delete(`/LtsJournals/${taskData.id}/delete-with-content`)
+        await axiosInstance.delete(`/LtsJournals/${taskToDelete.id}/delete-with-content`)
       }
       toast.success('Task deleted successfully!')
-      onSave({ deleted: true, id: taskData.id })
+      onSave({ deleted: true, id: taskToDelete.id })
+      setTaskToDelete(null)
       handleClose()
     } catch (error) {
       console.error('Error deleting task:', error)
       toast.error(error.response?.data?.message || 'Failed to delete task')
+      setTaskToDelete(null)
     } finally {
       setLoading(false)
     }
@@ -873,7 +877,10 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     </Modal>
 
     {/* Delete Confirmation Modal */}
-    <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered className="custom-delete-modal-add-task" style={{ zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '40px !important' }}>
+    <Modal show={showDeleteModal} onHide={() => {
+      setShowDeleteModal(false)
+      setTaskToDelete(null) 
+    }} centered className="custom-delete-modal-add-task" style={{ zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '40px !important' }}>
       <Modal.Body className="text-center p-4">
         <div className="mb-4">
           <div className="d-flex flex-column gap-2">
@@ -909,7 +916,10 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
               fontWeight: '600',
               border: 'none',
              }}
-            onClick={() => setShowDeleteModal(false)}
+            onClick={() => {
+              setShowDeleteModal(false)
+              setTaskToDelete(null)
+            }}
             disabled={loading}
           >
             NO, TAKE ME BACK
