@@ -62,6 +62,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
 
 .leadership-journal-management .search-input-wrapper {
   position: relative;
+  max-width: unset;
+  width: 100%;
 }
 
 .leadership-journal-management .search-input {

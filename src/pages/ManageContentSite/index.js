@@ -701,13 +701,14 @@ const ManageContentSite = () => {
         <div className='main-search-table-container'>
           <div className="search-actions-bar">
             <div className="search-container">
-              <div className="search-input-wrapper">
+              <div className="search-input-wrapper" style={{ width: '100%', maxWidth: 'unset' }}>
                 <input
                   type="text"
                   placeholder="Search for content"
                   value=""
                   onChange={handleSearch}
                   className="search-input"
+                  style={{ width: '100%' }}
                 />
                 <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -985,14 +986,13 @@ const ManageContentSite = () => {
                   ) : getFilteredContents().length === 0 ? (
                     <tr>
                       <td colSpan="3" className="text-center py-4">
-                        {/* <div className="alert alert-info mb-0">
-                          {isArchiveMode ? 'No archived content found.' : 'No content found. Try adding new content.'}
-                        </div> */}
+                        <div className=" mb-0" style={{ color: '#6c757d' }}>
+                          {isArchiveMode ? 'No archived content found.' : 'No content found.'}
+                        </div>
                       </td>
                     </tr>
                   ) : (
                     getFilteredContents().map((content, index) => {
-                      console.log('Rendering content item:', index, content)
                       return (
                         <tr key={content.timestamp || index}>
                           <td className="checkbox-column">
