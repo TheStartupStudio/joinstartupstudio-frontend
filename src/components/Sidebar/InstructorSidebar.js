@@ -271,7 +271,7 @@ const InstructorSidebar = (props) => {
       result.push(staticItems[i])
 
       // if (staticItems[i].id === 'master-classes') {
-      if (staticItems[i].id === 'studio-sessions') {
+      if (staticItems[i].id === 'forum') {
         result.push(...dynamicItems)
       }
     }

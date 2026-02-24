@@ -48,6 +48,12 @@ const LeadershipJournalManagement = () => {
   const [selectedLevel, setSelectedLevel] = useState(null)
   const [selectedItems, setSelectedItems] = useState([])
 
+  // Get the selected journal's color
+  const getSelectedJournalColor = () => {
+    const selectedJournal = manageContentData.find(item => item.title === selectedCategory)
+    return selectedJournal?.color || '#E0EBC5' // Default to green if no color found
+  }
+
   const fetchManageContent = async () => {
     try {
       const response = await axiosInstance.get('/journal-courses/manage-content/all')
@@ -654,7 +660,7 @@ const LeadershipJournalManagement = () => {
   return (
     <div className="leadership-journal-management">
       <div>
-        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
+        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4" style={{backgroundColor: 'white'}}>
           <div className="d-flex justify-content-between flex-col-tab align-start-tab gap-5" style={{padding: '40px 40px 10px 30px'}}>
             <div className="d-flex flex-column gap-2">
               <h3 className="text-black mb-0"
@@ -809,8 +815,8 @@ const LeadershipJournalManagement = () => {
         </div>
       </div>
       
-      <div className="content-management-container position-relative">
-         <img 
+      <div className="content-management-container">
+         {/* <img 
         src={greenLeader} 
         className='position-absolute' 
         style={{
@@ -825,7 +831,19 @@ const LeadershipJournalManagement = () => {
         }} 
         alt="Decorative background"
         aria-hidden="true"
-      />
+      /> */}
+
+      <div style={{ borderRadius: '1234px',
+          background: `radial-gradient(50% 50% at 50% 50%, ${getSelectedJournalColor()}33 0%, rgba(255, 255, 255, 0.00) 100%)`,
+          height: '100dvh',
+          width: '100dvw',
+          position: 'absolute',
+          top: '0px',
+          left: 0,
+          zIndex: 0,
+          pointerEvents: 'none'
+        }}>
+      </div>
 
 
         <div className="header-tabs d-flex justify-content-between gap-3">
@@ -833,6 +851,7 @@ const LeadershipJournalManagement = () => {
             <button
               key={index}
               className={`tab-button ${activeLevel === level ? 'active' : ''}`}
+              style={activeLevel === level ? { backgroundColor: getSelectedJournalColor() } : {}}
               onClick={() => setActiveLevel(level)}
             >
               {level}
@@ -959,6 +978,7 @@ const LeadershipJournalManagement = () => {
               activeTab="Content"
               onSelectionChange={handleSelectionChange}
               selectedItems={selectedItems}
+              emptyMessage="There are no leadership journals"
             />
           </div>
 
@@ -987,10 +1007,7 @@ const LeadershipJournalManagement = () => {
         category="leadership"
         selectedCategory={selectedCategory}
         manageContentId={(() => {
-          console.log('manageContentData:', manageContentData)
-          console.log('selectedCategory:', selectedCategory)
           const foundItem = manageContentData.find(item => item.title === selectedCategory)
-          console.log('Found manage content item:', foundItem)
           return foundItem?.id
         })()}
       />
