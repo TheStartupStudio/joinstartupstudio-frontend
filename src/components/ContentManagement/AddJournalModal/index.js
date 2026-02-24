@@ -7,6 +7,7 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import AcademyBtn from '../../../components/AcademyBtn'
 import { useHistory } from 'react-router-dom'
 import DeleteJournalContentModal from '../DeleteJournalContentModal'
+import AddJournalIntroduction from '../AddJournalIntroduction'
 import { toast } from 'react-toastify'
 
 const AddJournalModal = ({
@@ -30,6 +31,7 @@ const AddJournalModal = ({
     ])
     const [loading, setLoading] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showIntroductionModal, setShowIntroductionModal] = useState(false)
 
     const fetchJournalData = useCallback(async (id) => {
         try {
@@ -355,11 +357,23 @@ const AddJournalModal = ({
         return true
     }
 
+    const validateSectionDetails = () => {
+        const hasEmptyDetails = sections.some(section =>
+            !section.detailsRich || section.detailsRich.trim() === '<p><br></p>' || section.detailsRich.trim() === ''
+        )
+        return !hasEmptyDetails
+    }
+
     const handleSave = async () => {
-        if (mode === 'view') return 
+        if (mode === 'view') return
 
         if (!validateForm()) {
             toast.error('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            return
+        }
+
+        if (activeTab === 'details' && !validateSectionDetails()) {
+            toast.error('Please fill in all section details before creating the journal')
             return
         }
 
@@ -446,6 +460,14 @@ const AddJournalModal = ({
         }
     }
 
+    const handleContinueToDetails = () => {
+        if (!validateForm()) {
+            toast.error('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            return
+        }
+        setActiveTab('details')
+    }
+
     const handleDelete = async () => {
         if (!contentId) return
 
@@ -506,6 +528,14 @@ const AddJournalModal = ({
 
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false)
+  }
+
+  const handleViewIntroduction = () => {
+    setShowIntroductionModal(true)
+  }
+
+  const handleCloseIntroductionModal = () => {
+    setShowIntroductionModal(false)
   }
 
   const isContentArchived = existingData?.manageContent?.archiveStatus || false
@@ -785,52 +815,43 @@ const AddJournalModal = ({
                             {activeTab === 'details' && (
                                 <div className="sections-panel">
                                     <div className="sections-box">
-                                        {sections.map((section) => (
-                                            <div key={section.id} className="section-detail-item" style={{ marginBottom: '30px' }}>
-                                                <div className="section-header" style={{ marginBottom: '15px' }}>
-                                                    <div className="section-header-content">
-                                                        <div className="spark-icon">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                                <g clip-path="url(#clip0_4724_21225)">
-                                                                    <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" stroke-width="1.5" stroke-linejoin="round" />
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_4724_21225">
-                                                                        <rect width="20" height="20" fill="white" />
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg>
+                                        {sections.map((section) => {
+                                            const isEmpty = !section.detailsRich || section.detailsRich.trim() === '<p><br></p>' || section.detailsRich.trim() === ''
+                                            return (
+                                                <div key={section.id} className="section-detail-item" style={{ marginBottom: '30px' }}>
+                                                    <div className="section-header" style={{ marginBottom: '15px' }}>
+                                                        <div className="section-header-content">
+                                                            <div className="spark-icon">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                                    <g clip-path="url(#clip0_4724_21225)">
+                                                                        <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" stroke-width="1.5" stroke-linejoin="round" />
+                                                                    </g>
+                                                                    <defs>
+                                                                        <clipPath id="clip0_4724_21225">
+                                                                            <rect width="20" height="20" fill="white" />
+                                                                        </clipPath>
+                                                                    </defs>
+                                                                </svg>
+                                                            </div>
+                                                            <span>Section {sections.indexOf(section) + 1}: {section.name || 'Unnamed Section'}</span>
+                                                            {/* {isEmpty && (
+                                                                <span style={{ color: '#dc3545', fontSize: '12px', marginLeft: '10px' }}>
+                                                                    (Required)
+                                                                </span>
+                                                            )} */}
                                                         </div>
-                                                        <span>Section {sections.indexOf(section) + 1}: {section.name || 'Unnamed Section'}</span>
+                                                    </div>
+                                                    <div className="section-details-content">
+                                                        <ReactQuill
+                                                            value={section.detailsRich}
+                                                            onChange={(value) => handleSectionDetailsRichChange(section.id, value)}
+                                                            readOnly={mode === 'view'}
+                                                            placeholder="Add section details..."
+                                                        />
                                                     </div>
                                                 </div>
-                                                <div className="section-details-content">
-                                                    {/* <input
-                                                        style={{
-                                                            border: '1px solid rgba(227, 229, 233, 0.50)',
-                                                            borderRadius: '8px',
-                                                            padding: '12px 18px',
-                                                            width: '100%',
-                                                            fontSize: '16px',
-                                                            fontWeight: '500',
-                                                            color: '#333',
-                                                            backgroundColor: 'transparent',
-                                                            marginBottom: '10px',
-                                                        }}
-                                                        type="text"
-                                                        placeholder="Add section details..."
-                                                        value={section.detailsText}
-                                                        onChange={(e) => handleSectionDetailsTextChange(section.id, e.target.value)}
-                                                        disabled={mode === 'view'}
-                                                    /> */}
-                                                    <ReactQuill
-                                                        value={section.detailsRich}
-                                                        onChange={(value) => handleSectionDetailsRichChange(section.id, value)}
-                                                        readOnly={mode === 'view'}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ))}
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             )}
@@ -888,20 +909,37 @@ const AddJournalModal = ({
                     )}
 
 
-                    {/* Action buttons - only for edit mode */}
+                    {/* Action buttons - only for add mode */}
                     {mode === 'add' && (
                         <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
                             <div onClick={handleCancel} disabled={loading} className="cancel-btn">
                                 Cancel
                             </div>
-                            <div onClick={handleSave} disabled={loading} className="save-btn">
-                                {loading ? 'Saving...' : 'Save'}
-                            </div>
+                            {activeTab === 'names' ? (
+                                <div onClick={handleContinueToDetails} disabled={loading} className="save-btn">
+                                    Save and Continue
+                                </div>
+                            ) : (
+                                <div
+                                    onClick={handleSave}
+                                    disabled={loading || !validateSectionDetails()}
+                                    className={`save-btn ${!validateSectionDetails() ? 'disabled' : ''}`}
+                                    style={!validateSectionDetails() ? { opacity: 0.8, cursor: 'not-allowed' } : {}}
+                                >
+                                    {loading ? 'Saving...' : 'Save'}
+                                </div>
+                            )}
                         </div>
                     )}
 
                     {mode === 'view' && (
                         <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+                            <div style={{ width: '100%' }}>
+                                <AcademyBtn
+                                    title="view intro"
+                                    onClick={handleViewIntroduction}
+                                />
+                            </div>
                             <button className="cancel-btn" onClick={handleCancel}>
                                 Cancel
                             </button>
@@ -919,6 +957,14 @@ const AddJournalModal = ({
                 title="Delete Journal Content"
                 message="What would you like to do with this journal and all its related content?"
                 isArchived={isContentArchived}
+            />
+
+            <AddJournalIntroduction
+                show={showIntroductionModal}
+                onClose={handleCloseIntroductionModal}
+                journalData={existingData}
+                mode="view"
+                contentId={contentId}
             />
         </>
     )

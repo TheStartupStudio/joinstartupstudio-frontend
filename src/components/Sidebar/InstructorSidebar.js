@@ -110,7 +110,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
   },
@@ -270,8 +270,8 @@ const InstructorSidebar = (props) => {
     for (let i = 0; i < staticItems.length; i++) {
       result.push(staticItems[i])
 
-      // if (staticItems[i].id === 'master-classes') {
-      if (staticItems[i].id === 'forum') {
+      if (staticItems[i].id === 'master-classes') {
+      // if (staticItems[i].id === 'forum') {
         result.push(...dynamicItems)
       }
     }

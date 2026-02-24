@@ -329,7 +329,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                                     className={`tab-btn ${activeTab === 'intro' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('intro')}
                                 >
-                                    Section Intro
+                                    Journal Intro
                                 </button>
                                 <button
                                     className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}

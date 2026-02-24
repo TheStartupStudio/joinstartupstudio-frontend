@@ -103,7 +103,7 @@ const LeadershipJournalManagement = () => {
       const transformedData = response.data.map((journal, index) => ({
         id: journal.id,
         name: journal.title,
-        status: journal.published ? 'published' : 'unpublished',
+        status: journal.published ? 'published' : 'published',
         hasContent: journal.entries && journal.entries.length > 0,
         order: journal.order || index + 1,
         fullData: journal

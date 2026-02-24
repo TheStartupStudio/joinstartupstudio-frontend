@@ -141,7 +141,7 @@ const MasterClassManagement = () => {
         return {
           id: content.id,
           name: translateVideoTitle(content.title),
-          status: content.published ? 'published' : 'unpublished',
+          status: content.published ? 'published' : 'published',
           hasContent: hasVideoContent,
           order: content.order || 0,
           journalData: content
