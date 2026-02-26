@@ -816,9 +816,9 @@ a.sidenav.active {
 .beyond-your-course-video-thumb-icon {
   color: #fff;
   position: absolute;
-  top: 60%;
-  left: 55%;
-  margin: -30px 0 0 -30px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 30px;
   height: 30px;
   border: 3px solid white;
@@ -828,9 +828,10 @@ a.sidenav.active {
 
 .beyond-your-course-video-thumb-icon-fullscreen {
   color: #ffffffff;
-  position: relative;
+  position: absolute;
   top: 50%;
   right: 50%;
+  transform: translate(50%, 50%);
   margin: -30px 0 0 -30px;
   width: 30px;
   height: 30px;
@@ -6548,6 +6549,7 @@ strong {
   padding-left: 20px;
   padding-bottom: 20px; */
   padding: 20px 20px;
+  border-radius: 0 25px 0 25px;
   flex-direction: column;
   /* background-color: rgb(0,0,0); */
   background-color: rgba(0, 0, 0, 0.7);

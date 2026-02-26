@@ -40,8 +40,15 @@ const MasterClassManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levelsData, setLevelsData] = useState([]) 
-  const [levels, setLevels] = useState([]) 
+  const [levelsData, setLevelsData] = useState([])
+  const [levels, setLevels] = useState([])
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [allTasksData, setAllTasksData] = useState([]) // Store all data for client-side pagination 
 
   useEffect(() => {
     fetchLevels()
@@ -49,9 +56,44 @@ const MasterClassManagement = () => {
 
   useEffect(() => {
     if (activeLevel && levelsData.length > 0) {
-      fetchContentByLevel()
+      setCurrentPage(1) // Reset to first page when level changes
+      fetchContentByLevel(1)
     }
-  }, [activeLevel]) 
+  }, [activeLevel])
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      applyPagination(allTasksData, page)
+    }
+  }
+
+  // Handle search and pagination
+  useEffect(() => {
+    if (allTasksData.length > 0) {
+      let filteredData = allTasksData
+
+      // Apply search filter if there's a search query
+      if (searchQuery.trim()) {
+        filteredData = allTasksData.filter(item =>
+          item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.status?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      }
+
+      // Update pagination info
+      const calculatedTotalPages = Math.ceil(filteredData.length / itemsPerPage)
+      setTotalPages(calculatedTotalPages || 1)
+      setTotalItems(filteredData.length)
+
+      // Reset to first page when searching
+      if (searchQuery.trim() && currentPage > calculatedTotalPages) {
+        setCurrentPage(1)
+        applyPagination(filteredData, 1)
+      } else {
+        applyPagination(filteredData, currentPage)
+      }
+    }
+  }, [searchQuery, allTasksData, currentPage, itemsPerPage]) 
 
   const fetchLevels = async () => {
     try {
@@ -126,7 +168,10 @@ const MasterClassManagement = () => {
 
       const activeLevelObj = levelsData.find(l => l.title === activeLevel)
       if (!activeLevelObj) {
+        setAllTasksData([])
         setTasksData([])
+        setTotalPages(1)
+        setTotalItems(0)
         return
       }
 
@@ -148,14 +193,34 @@ const MasterClassManagement = () => {
         }
       })
 
-      setTasksData(transformedContent)
+      // Store all data for client-side pagination
+      setAllTasksData(transformedContent)
+      setTotalItems(transformedContent.length)
+
+      // Calculate total pages
+      const calculatedTotalPages = Math.ceil(transformedContent.length / itemsPerPage)
+      setTotalPages(calculatedTotalPages || 1)
+
+      // Set current page data
+      applyPagination(transformedContent, currentPage)
     } catch (error) {
       console.error('Error fetching content by level:', error)
       toast.error('Failed to fetch content')
+      setAllTasksData([])
       setTasksData([])
+      setTotalPages(1)
+      setTotalItems(0)
     } finally {
       setLoading(false)
     }
+  }
+
+  const applyPagination = (data, page) => {
+    const startIndex = (page - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const paginatedData = data.slice(startIndex, endIndex)
+    setTasksData(paginatedData)
+    setCurrentPage(page)
   }
 
 
@@ -757,6 +822,48 @@ const MasterClassManagement = () => {
             />
           </div>
 
+               {/* Pagination */}
+            <div className="pagination-container">
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                  <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <span className="pagination-info">{currentPage} / {totalPages}</span>
+              <button
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                  <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button
+                className="pagination-btn"
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
         </div>
       </div>
 
