@@ -478,7 +478,7 @@ const ReportedPosts = () => {
                 </svg>
                 {isArchiveView ? 'Return to Current Reports' : 'Return to Forum'}
             </div>
-            <div className="search-container">
+            <div className="search-container" style={{boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)', borderRadius: '8px'}}>
               <div className="search-input-wrapper">
                 <input
                   type="text"

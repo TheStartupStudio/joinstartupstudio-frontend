@@ -90,7 +90,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
         setUserBanStatus(newBanStatus)
         toast.success(`User ${newBanStatus ? 'banned' : 'unbanned'} from forum successfully`)
 
-        // If this is a resolved report with "User restricted from posting in forum" resolution
+        // If this is a resolved report with user restriction resolution
         // and we're unbanning the user, update the report resolution
         if (isResolved && allowEditingResolved && !newBanStatus && reportDetails) {
           try {
@@ -123,9 +123,16 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
 
   // Function to get action from resolution
   const getActionFromResolution = (resolution) => {
-    if (resolution === 'Post deleted by administrator') return 'delete'
-    if (resolution === 'User restricted from posting in forum') return 'restrict'
-    if (resolution === 'Report reviewed and dismissed by administrator') return 'ignore'
+    // Handle new user-friendly format (returned by API)
+    if (resolution === 'DELETE POST') return 'delete'
+    if (resolution === 'RESTRICT USER FROM POSTING') return 'restrict'
+    if (resolution === 'IGNORE REPORT') return 'ignore'
+
+    // Handle old format (for backward compatibility with existing data)
+    if (resolution === 'Post deleted by administrator' || resolution === 'Post soft deleted') return 'delete'
+    if (resolution === 'User restricted from posting in forum' || resolution === 'User restricted from forum') return 'restrict'
+    if (resolution === 'Report reviewed and dismissed by administrator' || resolution === 'Report reviewed and dismissed') return 'ignore'
+
     return 'ignore' // default
   }
 
@@ -141,7 +148,8 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       } else if (reportData) {
         setReportDetails(reportData)
         setIsResolved(reportData.status === 'resolved')
-        setAllowEditingResolved(reportData.status === 'resolved' && reportData.resolution === 'User restricted from posting in forum')
+        // Allow editing resolved reports to change resolution, regardless of view/edit mode
+        setAllowEditingResolved(reportData.status === 'resolved')
         if (reportData.status === 'resolved') {
           setSelectedAction(getActionFromResolution(reportData.resolution))
         }
@@ -206,7 +214,8 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
       console.log('Transformed report:', transformedReport)
       setReportDetails(transformedReport)
       setIsResolved(transformedReport.status === 'resolved')
-      setAllowEditingResolved(transformedReport.status === 'resolved' && transformedReport.resolution === 'User restricted from posting in forum')
+      // Allow editing any resolved report to change the resolution
+      setAllowEditingResolved(transformedReport.status === 'resolved')
       if (transformedReport.status === 'resolved') {
         setSelectedAction(getActionFromResolution(transformedReport.resolution))
       }
@@ -295,25 +304,66 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
           }
         }
 
-        switch (selectedAction) {
-          case 'ignore':
-            toast.success(`Report dismissed${banActionMessage}`)
-            break
-          case 'delete':
-            toast.success('Post deleted successfully')
-            break
-          case 'restrict':
-            toast.success(`User has been restricted from posting${banActionMessage}`)
-            break
-          default:
-            toast.success('Action completed')
+        // Handle updating existing resolutions
+        if (isResolved) {
+          switch (selectedAction) {
+            case 'ignore':
+              toast.success(`Report resolution updated to "Ignore"${banActionMessage}`)
+              break
+            case 'delete':
+              toast.success('Report resolution updated to "Delete Post"')
+              break
+            case 'restrict':
+              toast.success(`Report resolution updated to "Restrict User"${banActionMessage}`)
+              break
+            default:
+              toast.success('Report resolution updated')
+          }
+        } else {
+          // Original logic for initial resolutions
+          switch (selectedAction) {
+            case 'ignore':
+              toast.success(`Report dismissed${banActionMessage}`)
+              break
+            case 'delete':
+              toast.success('Post deleted successfully')
+              break
+            case 'restrict':
+              toast.success(`User has been restricted from posting${banActionMessage}`)
+              break
+            default:
+              toast.success('Action completed')
+          }
+        }
+
+        // Refresh report details to show updated resolution
+        if (reportId) {
+          fetchReportDetails()
+        } else {
+          // Update local report details for modal
+          setReportDetails(prev => ({
+            ...prev,
+            status: 'resolved',
+            resolution: selectedAction === 'ignore' ? 'IGNORE REPORT' :
+                       selectedAction === 'delete' ? 'DELETE POST' :
+                       selectedAction === 'restrict' ? 'RESTRICT USER FROM POSTING' : prev.resolution
+          }))
+          setIsResolved(true)
+          setSelectedAction(getActionFromResolution(
+            selectedAction === 'ignore' ? 'IGNORE REPORT' :
+            selectedAction === 'delete' ? 'DELETE POST' :
+            selectedAction === 'restrict' ? 'RESTRICT USER FROM POSTING' : prev?.resolution
+          ))
         }
 
         if (onSubmit) {
           onSubmit({ reportId: currentReportId, action: selectedAction })
         }
 
-        toggle()
+        // Don't close modal for resolved reports, just update the UI
+        if (!isResolved) {
+          toggle()
+        }
       }
     } catch (error) {
       console.error('Error submitting action:', error)
@@ -349,7 +399,9 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     <path d="M10 14.168C8.61929 14.168 7.5 13.0487 7.5 11.668C7.5 10.2873 8.61929 9.16797 10 9.16797C11.3807 9.16797 12.5 10.2873 12.5 11.668C12.5 13.0487 11.3807 14.168 10 14.168Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </div>
-            <h2 className="modal-title">{isReportViewMode ? 'View Reported Content' : 'Edit Report Resolution'}</h2>
+            <h2 className="modal-title">
+              {isResolved ? 'Edit Report Resolution' : (isReportViewMode ? 'View Reported Content' : 'Edit Report Resolution')}
+            </h2>
           </div>
 
           <div className="modal-body-section">
@@ -390,7 +442,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
 
                 <div className="detail-item">
                   <label className="detail-label">Category:</label>
-                  <p className="detail-value">{reportDetails?.reportType || 'N/A'}</p>
+                  <p className="detail-value">{reportDetails?.reportType ? reportDetails.reportType.charAt(0).toUpperCase() + reportDetails.reportType.slice(1).toLowerCase() : 'N/A'}</p>
                 </div>
 
                 <div className="detail-item">
@@ -400,7 +452,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
 
                 <div className="detail-item full-width">
                   <p className="detail-value content-text">
-                    <label className="detail-label">Content:</label>
+                    <label className="detail-label" style={{marginRight: '5px'}}>Content: </label>
                     {stripHtmlTags(reportDetails?.postContent) || 'This is the content of the reported post. It may contain text, links, or other information that was flagged by the reporter.'}
                   </p>
                 </div>
@@ -419,7 +471,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                           id="user-ban-status"
                           checked={userBanStatus}
                           onChange={toggleUserBanStatus}
-                          disabled={isReportViewMode || banStatusLoading}
+                          disabled={(isReportViewMode && !isResolved) || banStatusLoading}
                           style={{
                             width: '16px',
                             height: '16px',
@@ -450,7 +502,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
 
                 <div className="detail-item">
                   <label className="detail-label">Reason Flagged:</label>
-                  <p className="detail-value">{reportDetails?.reasonFlagged || reportDetails?.reportType || 'N/A'}</p>
+                  <p className="detail-value">{reportDetails?.reasonFlagged ? reportDetails.reasonFlagged.charAt(0).toUpperCase() + reportDetails.reasonFlagged.slice(1).toLowerCase() : (reportDetails?.reportType ? reportDetails.reportType.charAt(0).toUpperCase() + reportDetails.reportType.slice(1).toLowerCase() : 'N/A')}</p>
                 </div>
 
                 <div className="detail-item full-width">
@@ -462,8 +514,37 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
               </div>
             </div>
 
+            {/* {isResolved && (
+              <div className="current-resolution-section" style={{
+                backgroundColor: '#f8f9fa',
+                padding: '15px',
+                borderRadius: '8px',
+                marginBottom: '20px',
+                border: '1px solid #dee2e6'
+              }}>
+                <div style={{fontWeight: 600, fontSize: '14px', color: '#495057', marginBottom: '5px'}}>
+                  Current Resolution:
+                </div>
+                <div style={{
+                  fontWeight: 500,
+                  fontSize: '16px',
+                  color: '#28a745',
+                  backgroundColor: '#d4edda',
+                  padding: '8px 12px',
+                  borderRadius: '4px',
+                  display: 'inline-block',
+                  border: '1px solid #c3e6cb'
+                }}>
+                  {reportDetails?.resolution || 'Unknown'}
+                </div>
+                <div style={{fontSize: '13px', color: '#6c757d', marginTop: '8px'}}>
+                  You can change this resolution below if needed.
+                </div>
+              </div>
+            )} */}
+
             <div className="response-section">
-            
+
             <div className="section-title">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <g clipPath="url(#clip0_4017_26016)">
@@ -471,15 +552,18 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     </g>
                     <defs>
                         <clipPath id="clip0_4017_26016">
-                        <rect width="20" height="20" fill="white"/>
+                            <rect width="20" height="20" fill="white"/>
                         </clipPath>
                     </defs>
                 </svg>
-                Response
+                {isResolved ? 'Change Resolution' : 'Response'}
             </div>
 
                 <div style={{fontWeight: 500, fontSize: '15px', marginBottom: '9px'}}>
-                    Select one or more actions to take in response to this report.
+                    {isResolved
+                      ? 'Select a new resolution to update this report:'
+                      : 'Select one or more actions to take in response to this report.'
+                    }
                 </div>
               
               <div className="radio-options">
@@ -508,7 +592,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="delete"
                     checked={selectedAction === 'delete'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isReportViewMode || (isResolved && !allowEditingResolved)}
+                    disabled={(isReportViewMode && !isResolved) || (isResolved && !allowEditingResolved)}
                   />
                   <label htmlFor="delete-post" className="radio-label">
                     <div className="radio-label-content">
@@ -525,7 +609,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                     value="restrict"
                     checked={selectedAction === 'restrict'}
                     onChange={(e) => setSelectedAction(e.target.value)}
-                    disabled={isReportViewMode || (isResolved && !allowEditingResolved)}
+                    disabled={(isReportViewMode && !isResolved) || (isResolved && !allowEditingResolved)}
                   />
                   <label htmlFor="restrict-user" className="radio-label">
                     <div className="radio-label-content">
@@ -537,7 +621,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
             </div>
           </div>
 
-          {!isReportViewMode && (
+          {(!isReportViewMode || isResolved) && (
             <div className="modal-footer-section">
             <button className="cancel-btn"
               style={{
@@ -570,7 +654,7 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                 alignItems: "center",
                 gap: "12px",
                 borderRadius: 8,
-                background: (isResolved && !allowEditingResolved) ? "#ccc" : "#51C7DF",
+                background: "#51C7DF",
                 boxShadow: "0 4px 10px 0 rgba(0, 0, 0, 0.25)",
                 color: "#FFF",
                 fontSize: 17,
@@ -578,9 +662,9 @@ const ViewReportedContentModal = ({ isOpen, toggle, reportData, reportId, onSubm
                 outline: "none",
                 border: "none",
               }}
-              disabled={isResolved && !allowEditingResolved}
+              disabled={false}
             onClick={handleSubmit}>
-              Submit
+              {isResolved ? 'Update Resolution' : 'Submit'}
             </button>
           </div>
           )}
