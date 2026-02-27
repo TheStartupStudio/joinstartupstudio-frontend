@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import {useCallback} from 'react'
 import DataTable from '../../DataTable'
 import AcademyBtn from '../../AcademyBtn'
 import UserManagementPopup from '../AlertPopup'
@@ -15,23 +17,48 @@ import userPassword from '../../../assets/images/academy-icons/svg/Icon_User_Pas
 import download from '../../../assets/images/academy-icons/svg/download.svg'
 import newCity from '../../../assets/images/academy-icons/credit-card-slash.png'
 import leftArrow from '../../../assets/images/academy-icons/left-arrow.png'
-import axiosInstance from '../../../utils/AxiosInstance'
+import { invoiceApi } from '../../../utils/invoiceApi'
+import InvoiceFilters from '../../InvoiceFilters'
+import ViewInvoiceModal from '../ViewInvoiceModal'
+import PreviewInvoiceEmailModal from '../PreviewInvoiceEmailModal'
 import './index.css'
 
 const ViewFailedPayments = ({ show, onHide }) => {
+  const { user } = useSelector((state) => state.user?.user || {})
+  const userRole = user?.role_id || localStorage.getItem('role')
+
+  const isInstructor = user?.role_id === 2
+  const isSuperAdmin = user?.role_id === 3 || userRole === 'super-admin'
+
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  
+  const [showFilters, setShowFilters] = useState(false)
+  const [selectedInvoices, setSelectedInvoices] = useState([])
+  const [filters, setFilters] = useState({
+    organizationName: '',
+    dateFrom: null,
+    dateTo: null
+  })
+
+  // Modal states
+  const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(false)
+  const [selectedInvoice, setSelectedInvoice] = useState(null)
+  const [invoiceMode, setInvoiceMode] = useState('view')
+  const [showPreviewEmailModal, setShowPreviewEmailModal] = useState(false)
+  const [invoiceToSend, setInvoiceToSend] = useState(null)
+
   // Data and pagination
   const [failedPaymentsData, setFailedPaymentsData] = useState([])
   const [loading, setLoading] = useState(false)
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
-    limit: 50,
+    limit: 10,
     totalPages: 1
   })
+
+  const searchContainerRef = useRef(null)
 
   // Debounce search query
   useEffect(() => {
@@ -43,25 +70,87 @@ const ViewFailedPayments = ({ show, onHide }) => {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  // Fetch failed payments data
-  const fetchFailedPayments = async (page = 1, search = '') => {
+  const getOrganizationId = () => {
+    if (isSuperAdmin) {
+      return null
+    } else {
+      return user?.universityId || user?.University?.id
+    }
+  }
+
+  // Fetch failed payments data (filtered invoices)
+  const fetchFailedPayments = async (page = 1, search = '', appliedFilters = filters) => {
     setLoading(true)
     try {
-      const response = await axiosInstance.get('/super-admin/failed-payments', {
-        params: {
-          page,
-          limit: 50,
-          search: search || undefined
-        }
-      })
+      console.log('Fetching failed payments with params:', { page, search, filters: appliedFilters, userRole: user?.role_id })
 
-      if (response.data.success) {
-        setFailedPaymentsData(response.data.data)
-        setPagination(response.data.pagination)
+      // Build query parameters including filters
+      const queryParams = {
+        page,
+        limit: 10,
+        search,
+        status: 'payment_failed' // Filter for failed payments
       }
+
+      // Add filter parameters
+      if (appliedFilters.organizationName && appliedFilters.organizationName.trim()) {
+        queryParams.organizationName = appliedFilters.organizationName.trim()
+        console.log('Adding organizationName filter:', queryParams.organizationName)
+      }
+
+      if (appliedFilters.dateFrom) {
+        // Convert Date object to YYYY-MM-DD format
+        const dateFromStr = appliedFilters.dateFrom instanceof Date
+          ? appliedFilters.dateFrom.toISOString().split('T')[0]
+          : appliedFilters.dateFrom
+        queryParams.dateFrom = dateFromStr
+        console.log('Adding dateFrom filter:', queryParams.dateFrom)
+      }
+
+      if (appliedFilters.dateTo) {
+        // Convert Date object to YYYY-MM-DD format
+        const dateToStr = appliedFilters.dateTo instanceof Date
+          ? appliedFilters.dateTo.toISOString().split('T')[0]
+          : appliedFilters.dateTo
+        queryParams.dateTo = dateToStr
+        console.log('Adding dateTo filter:', queryParams.dateTo)
+      }
+
+      console.log('Final query params:', queryParams)
+
+      let response
+
+      if (isInstructor) {
+        response = await invoiceApi.getClientInvoices(queryParams)
+      } else if (isSuperAdmin) {
+        response = await invoiceApi.getAllInvoices(queryParams)
+      } else {
+        // For other roles (if any)
+        response = await invoiceApi.getClientInvoices(queryParams)
+      }
+
+      console.log('Failed payments response:', response)
+
+      const invoicesData = response.data || []
+
+      setFailedPaymentsData(invoicesData)
+      setPagination(response.pagination || {
+        total: invoicesData.length,
+        page,
+        limit: 10,
+        totalPages: Math.ceil(invoicesData.length / 10)
+      })
     } catch (error) {
       console.error('Error fetching failed payments:', error)
-      toast.error('Failed to load failed payments data')
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to load failed payments data'
+      toast.error(errorMessage)
+      setFailedPaymentsData([])
+      setPagination({
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 1
+      })
     } finally {
       setLoading(false)
     }
@@ -69,10 +158,11 @@ const ViewFailedPayments = ({ show, onHide }) => {
 
   // Fetch data when modal opens or when search/page changes
   useEffect(() => {
-    if (show) {
-      fetchFailedPayments(currentPage, debouncedSearchQuery)
+    if (show && user) {
+      console.log('User changed, fetching failed payments:', user)
+      fetchFailedPayments(currentPage, debouncedSearchQuery, filters)
     }
-  }, [show, currentPage, debouncedSearchQuery])
+  }, [show, currentPage, debouncedSearchQuery, user, filters])
 
   // Reset state when modal closes
   useEffect(() => {
@@ -80,53 +170,142 @@ const ViewFailedPayments = ({ show, onHide }) => {
       setSearchQuery('')
       setCurrentPage(1)
       setFailedPaymentsData([])
+      setFilters({
+        organizationName: '',
+        dateFrom: null,
+        dateTo: null
+      })
+      setSelectedInvoices([])
     }
   }, [show])
 
-  const failedPaymentsColumns = useMemo(() => [
-    {
-      key: 'name',
-      title: 'USER NAME',
-      sortable: true,
-      filterable: true,
-      render: (value, item) => (
-        <div className="learner-info">
-          <div className="learner-details">
-            <div className="learner-name">{item.name}</div>
-            <div className="learner-email">{item.email}</div>
+  const handleClickOutside = (event) => {
+    if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+      setShowFilters(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const failedPaymentsColumns = useMemo(() => {
+    if (isInstructor) {
+      return [
+        {
+          key: 'invoiceNumber',
+          title: 'INVOICE NUMBER',
+          sortable: true,
+          filterable: false,
+          render: (value) => (
+            <div className="organization-id">{value}</div>
+          )
+        },
+        {
+          key: 'status',
+          title: 'STATUS',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className={`status-badge status-${value.toLowerCase()}`}>
+              <span className="status-dot"></span>
+              {value}
+            </span>
+          )
+        },
+        {
+          key: 'issueDate',
+          title: 'INVOICE DATE',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className="invoice-date">
+              {value ? new Date(value).toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+              }) : 'N/A'}
+            </span>
+          )
+        },
+        {
+          key: 'paymentDate',
+          title: 'PAYMENT DATE',
+          sortable: true,
+          filterable: true,
+          render: (value) => (
+            <span className="payment-date">
+              {value ? new Date(value).toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
+              }) : 'N/A'}
+            </span>
+          )
+        }
+      ]
+    }
+
+    return [
+      {
+        key: 'organizationName',
+        title: 'ORGANIZATION NAME',
+        sortable: true,
+        filterable: false,
+        render: (value, item) => (
+          <div className="invoice-organization-info">
+            <div className="organization-name">{item.organizationName}</div>
+            <div className="organization-id">{item.invoiceNumber}</div>
           </div>
-        </div>
-      )
-    },
-    {
-      key: 'planType',
-      title: 'PLAN TYPE',
-      sortable: true,
-      filterable: true,
-      render: (value) => (
-        <span className={`level-badge level-${value?.toLowerCase()}`}>
-          {value || 'N/A'}
-        </span>
-      )
-    },
-    {
-      key: 'planStartDate',
-      title: 'PLAN START DATE',
-      sortable: true,
-      render: (value) => (
-        <span className="date-text">{value || 'N/A'}</span>
-      )
-    },
-    {
-      key: 'paymentFailedDate',
-      title: 'PAYMENT FAILED DATE',
-      sortable: true,
-      render: (value) => (
-        <span className="date-text">{value || 'N/A'}</span>
-      )
-    },
-    
-  ], [])
+        )
+      },
+      {
+        key: 'status',
+        title: 'STATUS',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className={`status-badge status-${value.toLowerCase()}`}>
+            <span className="status-dot"></span>
+            {value}
+          </span>
+        )
+      },
+      {
+        key: 'invoiceDate',
+        title: 'INVOICE DATE',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className="invoice-date">
+            {value ? new Date(value).toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric'
+            }) : 'N/A'}
+          </span>
+        )
+      },
+      {
+        key: 'paymentDate',
+        title: 'PAYMENT DATE',
+        sortable: true,
+        filterable: true,
+        render: (value) => (
+          <span className="payment-date">
+            {value ? new Date(value).toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric'
+            }) : 'N/A'}
+          </span>
+        )
+      }
+    ]
+  }, [isInstructor])
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
@@ -136,6 +315,201 @@ const ViewFailedPayments = ({ show, onHide }) => {
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= pagination.totalPages) {
       setCurrentPage(newPage)
+    }
+  }
+
+  const handleFiltersChange = useCallback((newFilters) => {
+    console.log('Filters changed:', newFilters)
+    setFilters(prevFilters => {
+      // Only update if filters actually changed
+      if (
+        prevFilters.organizationName !== newFilters.organizationName ||
+        prevFilters.dateFrom !== newFilters.dateFrom ||
+        prevFilters.dateTo !== newFilters.dateTo
+      ) {
+        return newFilters
+      }
+      return prevFilters
+    })
+    setCurrentPage(1) // Reset to first page when filters change
+  }, [])
+
+  const handleSelectionChange = (selectedItems) => {
+    setSelectedInvoices(selectedItems)
+  }
+
+  const handleRowAction = (actionType, item) => {
+    console.log(`${actionType} action for invoice:`, item)
+
+    switch (actionType) {
+      case 'view':
+        setSelectedInvoice(item)
+        setInvoiceMode('view')
+        setShowEditInvoiceModal(true)
+        break
+      case 'export-invoice-pdf':
+        handleExportInvoicePDF(item)
+        break
+      case 'download-invoice':
+        handleDownloadInvoice(item)
+        break
+      case 'send-invoice':
+      case 'send':
+        handleSendInvoice(item)
+        break
+      default:
+        break
+    }
+  }
+
+  const handleExportInvoicePDF = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setLoading(true)
+      toast.success('Generating PDF...')
+
+      // Open the modal to trigger PDF generation
+      setSelectedInvoice(invoice)
+      setInvoiceMode('view')
+      setShowEditInvoiceModal(true)
+
+      // Wait for modal to render, then trigger download
+      setTimeout(() => {
+        const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
+        if (downloadBtn) {
+          downloadBtn.click()
+          // Close modal after brief delay
+          setTimeout(() => {
+            setShowEditInvoiceModal(false)
+          }, 5000)
+        } else {
+          toast.error('Unable to generate PDF. Please try again.')
+        }
+      }, 800)
+    } catch (error) {
+      console.error('❌ Error exporting invoice PDF:', error)
+      toast.error('Failed to export invoice')
+    } finally {
+      setTimeout(() => {
+        setLoading(false)
+      }, 1500)
+    }
+  }
+
+  const handleDownloadInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setLoading(true)
+      toast.info('Downloading invoice...')
+
+      try {
+        await invoiceApi.downloadClientInvoice(invoice.id)
+
+        toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
+        return
+      } catch (backendError) {
+        console.log('Backend PDF not available, using client-side generation')
+        setSelectedInvoice(invoice)
+        setInvoiceMode('view')
+        setShowEditInvoiceModal(true)
+
+        setTimeout(() => {
+          const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
+          if (downloadBtn) {
+            downloadBtn.click()
+          }
+        }, 500)
+      }
+    } catch (error) {
+      console.error('❌ Error downloading invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to download invoice')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSendInvoice = async (invoice) => {
+    if (!invoice?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    // Open preview modal instead of sending directly
+    setInvoiceToSend(invoice)
+    setShowPreviewEmailModal(true)
+  }
+
+  const handleConfirmSendEmail = async (emailData) => {
+    if (!invoiceToSend?.id) {
+      toast.error('Invalid invoice')
+      return
+    }
+
+    try {
+      setLoading(true)
+
+      await invoiceApi.sendInvoiceEmail(invoiceToSend.id, {
+        subject: emailData.subject,
+        message: emailData.message
+      })
+
+      toast.success(`Invoice ${invoiceToSend.invoiceNumber} sent successfully!`)
+      setShowPreviewEmailModal(false)
+      setInvoiceToSend(null)
+    } catch (error) {
+      console.error('❌ Error sending invoice:', error)
+      toast.error(error.response?.data?.message || 'Failed to send invoice')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleConfirmBulkSendEmail = async (emailData) => {
+    if (selectedInvoices.length === 0) {
+      toast.error('No invoices selected')
+      return
+    }
+
+    try {
+      setLoading(true)
+
+      const sendPromises = selectedInvoices.map(invoice =>
+        invoiceApi.sendInvoiceEmail(invoice.id, {
+          subject: emailData.subject.replace(selectedInvoices[0].invoiceNumber, invoice.invoiceNumber),
+          message: emailData.message.replace(selectedInvoices[0].organizationName, invoice.organizationName)
+        })
+      )
+
+      const results = await Promise.allSettled(sendPromises)
+
+      const succeeded = results.filter(r => r.status === 'fulfilled').length
+      const failed = results.filter(r => r.status === 'rejected').length
+
+      if (succeeded > 0) {
+        toast.success(`${succeeded} invoice(s) sent successfully!`)
+      }
+
+      if (failed > 0) {
+        toast.warning(`${failed} invoice(s) failed to send`)
+      }
+
+      setSelectedInvoices([])
+      setShowPreviewEmailModal(false)
+      setInvoiceToSend(null)
+
+    } catch (error) {
+      console.error('❌ Error sending invoices:', error)
+      toast.error('Failed to send some invoices')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -203,11 +577,11 @@ const ViewFailedPayments = ({ show, onHide }) => {
         }}>
           {/* Search Bar */}
           <div className="search-actions-bar">
-            <div className="search-container">
+            <div className="search-container" ref={searchContainerRef}>
               <div className="search-input-wrapper">
                 <input
                   type="text"
-                  placeholder="Search for User"
+                  placeholder="Search for Invoice"
                   value={searchQuery}
                   onChange={handleSearch}
                   className="search-input"
@@ -216,18 +590,31 @@ const ViewFailedPayments = ({ show, onHide }) => {
                   <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
+
+              {showFilters && (
+                <InvoiceFilters
+                  show={showFilters}
+                  onHide={() => setShowFilters(false)}
+                  anchorRef={searchContainerRef}
+                  onApplyFilters={handleFiltersChange}
+                  initialFilters={filters}
+                />
+              )}
             </div>
           </div>
 
           {/* Table */}
           <div className="table-container">
-            <DataTable 
+            <DataTable
               columns={failedPaymentsColumns}
               data={failedPaymentsData}
               searchQuery={searchQuery}
-              showCheckbox={false}
+              onRowAction={handleRowAction}
+              showCheckbox={true}
               activeTab="FailedPayments"
               loading={loading}
+              onSelectionChange={handleSelectionChange}
+              selectedItems={selectedInvoices}
             />
           </div>
 
@@ -274,6 +661,30 @@ const ViewFailedPayments = ({ show, onHide }) => {
             </button>
           </div>
         </div>
+
+        <ViewInvoiceModal
+          show={showEditInvoiceModal}
+          onHide={() => {
+            setShowEditInvoiceModal(false)
+            setSelectedInvoice(null)
+            setInvoiceMode('view')
+          }}
+          onSuccess={() => {
+            fetchFailedPayments(currentPage, debouncedSearchQuery, filters)
+          }}
+          invoiceData={selectedInvoice}
+          mode={invoiceMode}
+        />
+
+        <PreviewInvoiceEmailModal
+          show={showPreviewEmailModal}
+          onHide={() => {
+            setShowPreviewEmailModal(false)
+            setInvoiceToSend(null)
+          }}
+          invoiceData={invoiceToSend}
+          onConfirmSend={selectedInvoices.length > 1 ? handleConfirmBulkSendEmail : handleConfirmSendEmail}
+        />
       </div>
     </Modal>
   )

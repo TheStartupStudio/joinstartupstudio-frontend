@@ -431,12 +431,16 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                             ${payment.amount?.toFixed(2) || '0.00'} {payment.currency || 'USD'}
                           </td>
                           <td className="payment-status">
+                          <div className="d-flex gap-2 align-items-center">
                             <span className={`payment-status-badge status-${payment.status?.toLowerCase() || 'unknown'}`}>
-                              {payment.status === 'completed' ? 'Completed' :
-                               payment.status === 'failed' ? 'Failed' :
-                               payment.status === 'pending' ? 'Pending' :
-                               payment.status || 'Unknown'}
-                            </span>
+                                
+                              </span>
+                              <p style={{fontSize: '12px', fontWeight: '500', marginBottom: '0'}}>{payment.status === 'completed' ? 'Completed' :
+                                payment.status === 'failed' ? 'Failed' :
+                                payment.status === 'pending' ? 'Pending' :
+                                payment.status || 'Unknown'}</p>
+                          </div>
+                            
                           </td>
                         </tr>
                       ))
