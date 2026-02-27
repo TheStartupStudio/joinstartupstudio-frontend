@@ -209,6 +209,14 @@ const UserManagement = () => {
     }
   }, [activeTab, currentPage, debouncedSearchQuery, searchFilter])
 
+  // Reset current page if it exceeds total pages after search/filter changes
+  useEffect(() => {
+    const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+    if (currentPage > pagination.totalPages && pagination.totalPages > 0) {
+      setCurrentPage(1)
+    }
+  }, [usersPagination.totalPages, organizationsPagination.totalPages, activeTab, currentPage])
+
   const organizationsColumns = useMemo(() => [
     {
       key: 'name',

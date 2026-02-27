@@ -75,7 +75,7 @@
   line-height: normal;
 }
 
-.view-failed-payment-modal .search-actions-bar {
+.view-failed-payment-modal .search-actions-bar-failed-payments {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -84,17 +84,17 @@
   flex-wrap: wrap;
 }
 
-.view-failed-payment-modal .search-container {
+.view-failed-payment-modal .search-container-failed-payments {
   flex: 1;
   min-width: 300px;
 }
 
-.view-failed-payment-modal .search-input-wrapper {
+.view-failed-payment-modal .search-input-wrapper-failed-payments {
   position: relative;
   width: 100%;
 }
 
-.view-failed-payment-modal .search-input {
+.view-failed-payment-modal .search-input-failed-payments {
   width: 50%;
   padding: 12px 16px 12px 40px;
   border: 1px solid #e5e7eb;

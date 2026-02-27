@@ -576,15 +576,15 @@ const ViewFailedPayments = ({ show, onHide }) => {
           backdropFilter: 'blur(60px)',
         }}>
           {/* Search Bar */}
-          <div className="search-actions-bar">
-            <div className="search-container" ref={searchContainerRef}>
-              <div className="search-input-wrapper">
+          <div className="search-actions-bar-failed-payments">
+            <div className="search-container-failed-payments" ref={searchContainerRef}>
+              <div className="search-input-wrapper-failed-payments">
                 <input
                   type="text"
                   placeholder="Search for Invoice"
                   value={searchQuery}
                   onChange={handleSearch}
-                  className="search-input"
+                  className="search-input-failed-payments"
                 />
                 <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
