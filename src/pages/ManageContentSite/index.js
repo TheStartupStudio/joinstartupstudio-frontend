@@ -197,6 +197,11 @@ const ManageContentSite = () => {
 
   const handleOpenAddJournalIntroductionModal = (data) => {
     setJournalData(data)
+    // Set the content ID from the created/updated manage content
+    const contentId = data?.manageContent?.id || data?.id
+    if (contentId) {
+      setSelectedContentId(contentId)
+    }
     setShowAddJournalModal(false)
     setShowAddJournalIntroductionModal(true)
     // Refresh the content list to show the newly created or updated journal
@@ -206,6 +211,7 @@ const ManageContentSite = () => {
   const handleCloseAddJournalIntroductionModal = () => {
     setShowAddJournalIntroductionModal(false)
     setJournalData(null)
+    setSelectedContentId(null)
   }
 
   const fetchContents = async () => {

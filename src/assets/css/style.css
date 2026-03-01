@@ -524,6 +524,11 @@ li.nav-item.dropdown {
 
 .accordion ul {
   width: 100%;
+  padding-left: 0 !important;
+}
+
+.accordion p{
+  margin-bottom: 0 !important;
 }
 
 .accordion ul li {

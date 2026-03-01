@@ -76,8 +76,8 @@ const AddJournalModal = ({
                     id: level.id || (index + 1),
                     journalId: level.relatedJournals && level.relatedJournals.length > 0 ? level.relatedJournals[0].id : null,
                     name: level.title || '',
-                    detailsText: plainText,
-                    detailsRich: htmlContent
+                    detailsText: level.detailsText || htmlContent, // Use API detailsText, fallback to related journal content
+                    detailsRich: level.detailsText || htmlContent
                 };
             })
             console.log('Mapped sections:', mappedSections)
@@ -151,7 +151,7 @@ const AddJournalModal = ({
                     detailsText: section.detailsText,
                     order: section.id,
                     published: true,
-                    category: 'student-leadership',
+                    category: journalData.title,
                     content: section.detailsRich || '' 
                 }))
             } : {
@@ -291,7 +291,7 @@ const AddJournalModal = ({
 
     const handleSectionDetailsRichChange = useCallback((id, value) => {
         setSections(prevSections => prevSections.map(section =>
-            section.id === id ? { ...section, detailsRich: value } : section
+            section.id === id ? { ...section, detailsText: value, detailsRich: value } : section
         ))
     }, [])
 
@@ -394,18 +394,17 @@ const AddJournalModal = ({
                     // Other fields will be added in AddJournalIntroduction
                 },
                 // Only send journalLevels for new journal creation, not for updates
-                ...(mode === 'add' ? {
                     journalLevels: sections
                         .filter(section => section.name && section.name.trim() !== '')
                         .map((section, index) => ({
                             title: section.name,
                             order: index + 1,
                             published: true,
-                            category: 'student-leadership',
+                            category: journalTitle,
                             detailsText: section.detailsText,
                             content: section.detailsRich || ''
                         }))
-                } : {})
+                
             }
 
             console.log('Saving journal data:', journalData)
@@ -843,7 +842,7 @@ const AddJournalModal = ({
                                                     </div>
                                                     <div className="section-details-content">
                                                         <ReactQuill
-                                                            value={section.detailsRich}
+                                                            value={section.detailsText}
                                                             onChange={(value) => handleSectionDetailsRichChange(section.id, value)}
                                                             readOnly={mode === 'view'}
                                                             placeholder="Add section details..."
