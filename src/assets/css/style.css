@@ -5011,7 +5011,8 @@ line-height: normal;
 }
 
 .search-journals-width {
-  width: 39%;
+  max-width: 501px;
+  width: 100%;
   position: relative;
   z-index:10;
 }
@@ -5040,7 +5041,7 @@ line-height: normal;
 
 .leadership-layout {
   width: 100%;
-  grid-template-columns: 4fr 5fr;
+  grid-template-columns: min(501px, 50%) 1fr;
 }
 
 .width-50 {
