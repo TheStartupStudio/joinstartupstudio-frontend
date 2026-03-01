@@ -10,6 +10,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import DataTable from '../../components/DataTable'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
+import CreateJournalTaskModal from '../../components/ContentManagement/CreateJournalTaskModal'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 import greenLeader from '../../assets/images/academy-icons/green-leadership-journal.png'
@@ -28,6 +29,7 @@ const LeadershipJournalManagement = () => {
   const [showBulkDropdown, setShowBulkDropdown] = useState(false)
   const [showAddTaskModal, setShowAddTaskModal] = useState(false)
   const [showAddLevelModal, setShowAddLevelModal] = useState(false)
+  const [showCreateJournalTaskModal, setShowCreateJournalTaskModal] = useState(false)
   const [showAssignModal, setShowAssignModal] = useState(false)
   const [modalMode, setModalMode] = useState('add')
   const [editingTask, setEditingTask] = useState(null)
@@ -262,9 +264,19 @@ const LeadershipJournalManagement = () => {
   }
 
   const addNewContent = () => {
-    setEditingTask(null)
-    setModalMode('add')
-    setShowAddTaskModal(true)
+    // Check if the current level has any tasks
+    const hasTasksInLevel = tasksData.length > 0
+
+    if (hasTasksInLevel) {
+      // If level has tasks, use regular AddTaskModal
+      setEditingTask(null)
+      setModalMode('add')
+      setShowAddTaskModal(true)
+    } else {
+      // If level has no tasks, use CreateJournalTaskModal for the first task
+      setShowCreateJournalTaskModal(true)
+    }
+
     setShowAddDropdown(false)
   }
 
@@ -436,6 +448,11 @@ const LeadershipJournalManagement = () => {
       return
     }
 
+    fetchContentByLevel(levelsData.find(l => l.title === activeLevel)?.id)
+  }
+
+  const handleSaveJournalTask = () => {
+    // Refresh the tasks data for the current level after creating the first journal task
     fetchContentByLevel(levelsData.find(l => l.title === activeLevel)?.id)
   }
 
@@ -985,7 +1002,7 @@ const LeadershipJournalManagement = () => {
         </div>
       </div>
 
-      <AddTaskModal 
+      <AddTaskModal
         show={showAddTaskModal}
         onHide={() => {
           setShowAddTaskModal(false)
@@ -997,6 +1014,22 @@ const LeadershipJournalManagement = () => {
         mode={modalMode}
         taskData={editingTask}
         source="leadership"
+      />
+
+      <CreateJournalTaskModal
+        show={showCreateJournalTaskModal}
+        onClose={() => {
+          setShowCreateJournalTaskModal(false)
+        }}
+        onSave={handleSaveJournalTask}
+        contentId={(() => {
+          const foundItem = manageContentData.find(item => item.title === selectedCategory)
+          return foundItem?.id
+        })()}
+        journalLevelId={(() => {
+          const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+          return activeLevelObj?.id
+        })()}
       />
 
       <AddLevelModal
