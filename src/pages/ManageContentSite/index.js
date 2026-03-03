@@ -166,19 +166,33 @@ const ManageContentSite = () => {
 
   const columns = [
     {
-    key: 'name',
-    title: 'TASK NAME',
-    sortable: false,
-    filterable: true,
-    width: '100%',
-    className: 'manage-content-task-name-column',
-    render: (value, item) => (
-      <div className="task-name-cell">
-        <div className={`status-dot ${item.status}`}></div>
-        <span>{value}</span>
-      </div>
-    )
-  }
+      key: 'name',
+      title: "CONTENT NAME",
+      sortable: false,
+      filterable: true,
+      className: 'manage-content-name-column',
+      width: '40%',
+      render: (value, item) => (
+        <div className="task-name-cell">
+          <span>{value}</span>
+        </div>
+      )
+    },
+    {
+      key: 'status',
+      title: "STATUS",
+      sortable: false,
+      filterable: false,
+      className: 'manage-content-status-column',
+      render: (value, item) => (
+        <div className="status-cell">
+          <div className={`status-dot ${(!item.archiveStatus && item.publishedStatus) ? 'active' : 'inactive'}`}></div>
+          <span className="status-text">
+            {(!item.archiveStatus && item.publishedStatus) ? 'Published' : 'Unpublished'}
+          </span>
+        </div>
+      )
+    }
   ]
 
   const handleSearch = (e) => {
@@ -927,7 +941,7 @@ const ManageContentSite = () => {
                                       textAlign: 'left',
                                       cursor: 'pointer',
                                       fontSize: '14px',
-                                      color: contentFilter === 'all' ? '#059669' : '#374151',
+                                      color: 'black',
                                       display: 'flex',
                                       alignItems: 'center',
                                       gap: '8px'
@@ -1008,7 +1022,7 @@ const ManageContentSite = () => {
                 <tbody>
                   {(loading || archiveLoading) ? (
                     <tr>
-                      <td colSpan="3" className="text-center py-4">
+                      <td colSpan="4" className="text-center py-4">
                         <div className="d-flex justify-content-center align-items-center">
                           <div className="spinner-border text-primary me-2" role="status">
                             <span className="visually-hidden">Loading...</span>
@@ -1019,7 +1033,7 @@ const ManageContentSite = () => {
                     </tr>
                   ) : error ? (
                     <tr>
-                      <td colSpan="3" className="text-center py-4">
+                      <td colSpan="4" className="text-center py-4">
                         <div className="alert alert-danger mb-0">
                           {error}
                           <button
@@ -1033,7 +1047,7 @@ const ManageContentSite = () => {
                     </tr>
                   ) : getFilteredContents().length === 0 ? (
                     <tr>
-                      <td colSpan="3" className="text-center py-4">
+                      <td colSpan="4" className="text-center py-4">
                         <div className=" mb-0" style={{ color: '#6c757d' }}>
                           {isArchiveMode ? 'No archived content found.' : 'No content found.'}
                         </div>
@@ -1051,12 +1065,15 @@ const ManageContentSite = () => {
                               onChange={() => handleSelectionChange(content.id)}
                             />
                           </td>
-                          <td className="manage-content-task-name-column">
-                            <div className="task-name-cell">
-                              <div className={`status-dot ${(!content.archiveStatus && content.publishedStatus) ? 'active' : 'inactive'}`}></div>
-                              <span>{content.title || 'Untitled Content'}</span>
-                            </div>
-                          </td>
+                          {columns.map((column, columnIndex) => (
+                            <td
+                              key={columnIndex}
+                              className={column.className || ''}
+                              style={{ width: column.width }}
+                            >
+                              {column.render(content[column.key] || content.title || 'Untitled Content', content)}
+                            </td>
+                          ))}
                         <td className="actions-column">
                           <div className="action-buttons">
                             <button
@@ -1073,8 +1090,8 @@ const ManageContentSite = () => {
                               className="action-btn edit-btn"
                               onClick={() => handleEditContent(content)}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 5V19M5 12H19" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M11.9691 4.71029L12.9668 3.71266C13.7478 2.93162 15.0141 2.93162 15.7952 3.71266L16.5023 4.41977C17.2833 5.20082 17.2833 6.46715 16.5023 7.2482L15.5047 8.24582M11.9691 4.71029L4.04176 12.6377C3.70968 12.9697 3.50506 13.4081 3.46373 13.8759L3.29016 15.8407C3.23539 16.4607 3.75427 16.9796 4.37428 16.9248L6.33907 16.7512C6.80688 16.7099 7.24522 16.5053 7.57729 16.1732L15.5047 8.24582M11.9691 4.71029L15.5047 8.24582" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                               </svg>
                               Edit
                             </button>

@@ -285,6 +285,36 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }
 
+.manage-content .status-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.manage-content .status-cell .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.manage-content .status-cell .status-dot.active {
+  background-color: var(--COLORS-Green, #9C3);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.manage-content .status-cell .status-dot.inactive {
+  background-color: var(--COLORS-Grey, #AEAEAE);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+}
+
+.manage-content .status-cell .status-text {
+  color: #231F20;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .manage-content .task-name-cell span {
   color: #231F20;
   font-family: Montserrat;
@@ -338,6 +368,6 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }
 
 
-.manage-content .manage-content-container tbody tr td:nth-child(2) {
+.manage-content .manage-content-container tbody tr td:nth-child(3) {
   width: 100%;
 }
