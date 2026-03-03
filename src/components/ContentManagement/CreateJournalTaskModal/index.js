@@ -360,7 +360,10 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                         Cancel
                     </button>
                     <button className="save-btn" onClick={handleSave}>
-                        Create Journal Task
+                        <p style={{ width: 'fit-content', marginBottom: '0 !important', paddingBottom: '0 !important' }}>
+                            SAVE AND CLOSE
+                        </p>
+                        
                     </button>
                 </div>
             </div>

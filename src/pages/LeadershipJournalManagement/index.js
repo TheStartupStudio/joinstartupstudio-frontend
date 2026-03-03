@@ -897,7 +897,7 @@ const LeadershipJournalManagement = () => {
               <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
                 <div>
                   <AcademyBtn
-                    title="ADD NEW LEVEL"
+                    title="add new section"
                     icon={faPlus}
                     onClick={() => {
                       addNewLevel()

@@ -568,7 +568,7 @@ const ContentManagement = () => {
 
   const addOptions = [
     {
-      name: 'Add New Level',
+      name: 'add new section',
       action: addNewLevel
     },
     {
@@ -726,7 +726,7 @@ const ContentManagement = () => {
             <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
               <div>
                 <AcademyBtn
-                  title="ADD NEW LEVEL"
+                  title="add new section"
                   icon={faPlus}
                   onClick={() => {
                     addNewLevel()

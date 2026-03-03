@@ -452,8 +452,13 @@
     font-size: 17px;
     color: white;
     transition: opacity 0.3s ease;
-    max-width: 150px;
-    width: 100%;
+    /* max-width: 150px; */
+    /* width: 100%; */
+  }
+
+  .add-section-introduction-modal-overlay .save-btn p{
+    width: fit-content;
+    margin-bottom: 0 !important;
   }
 
   .add-section-introduction-modal-overlay .cancel-btn:hover {
