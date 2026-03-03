@@ -661,7 +661,7 @@ const ManageContentSite = () => {
                   lineHeight: 'normal',
                 }}
               >
-                {isArchiveMode ? 'ARCHIVED CONTENT' : 'Content Management'}
+                {isArchiveMode ? 'CONTENT ARCHIVE' : 'Content Management'}
               </h3>
               <p
                 style={{
@@ -706,6 +706,19 @@ const ManageContentSite = () => {
 
         <div className='main-search-table-container'>
           <div className="search-actions-bar">
+            {isArchiveMode && (
+              <div className="archive-return-btn d-flex align-items-center gap-2" onClick={toggleArchiveMode}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M6.52103 10.8333L10.6044 14.9167C10.771 15.0833 10.851 15.2778 10.8444 15.5C10.8377 15.7222 10.7508 15.9167 10.5835 16.0833C10.4169 16.2361 10.2224 16.3161 10.0002 16.3233C9.77797 16.3306 9.58353 16.2506 9.41686 16.0833L3.91686 10.5833C3.83353 10.5 3.77436 10.4097 3.73936 10.3125C3.70436 10.2153 3.68742 10.1111 3.68853 10C3.68964 9.88889 3.70714 9.78472 3.74103 9.6875C3.77492 9.59028 3.83381 9.5 3.91769 9.41667L9.41769 3.91667C9.57047 3.76389 9.76158 3.6875 9.99103 3.6875C10.2205 3.6875 10.4183 3.76389 10.5844 3.91667C10.751 4.08333 10.8344 4.28139 10.8344 4.51083C10.8344 4.74028 10.751 4.93806 10.5844 5.10417L6.52103 9.16667H15.8335C16.0696 9.16667 16.2677 9.24667 16.4277 9.40667C16.5877 9.56667 16.6674 9.76444 16.6669 10C16.6663 10.2356 16.5863 10.4336 16.4269 10.5942C16.2674 10.7547 16.0696 10.8344 15.8335 10.8333H6.52103Z" fill="black"/>
+                </svg>
+                <p style={{ fontSize: '15px', fontWeight: '500', color: 'black', marginBottom: '0px', cursor: 'pointer', width: 'max-content' }}>
+                  Return to Current Management
+                </p>
+              </div>
+            )}
+
+
+{!isArchiveMode && (
             <div className="search-container">
               <div className="search-input-wrapper" style={{ width: '100%', maxWidth: 'unset' }}>
                 <input
@@ -721,24 +734,51 @@ const ManageContentSite = () => {
                 </svg>
               </div>
             </div>
+)}
 
-            <div className="actions-container">
-              <div className="dropdown-wrapper">
-                <div onClick={handleOpenAddJournalModal} style={{ cursor: 'pointer' }}>
+
+            <div className="actions-container" style={isArchiveMode ? { width: '100%' } : { width: 'fit-content' }}>
+              {!isArchiveMode && (
+                <div className="dropdown-wrapper">
+                  <div onClick={handleOpenAddJournalModal} style={{ cursor: 'pointer' }}>
+                    <AcademyBtn
+                      title="add new journal"
+                      icon={faPlus}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {!isArchiveMode && (
+                <div>
                   <AcademyBtn
-                    title="add new journal"
-                    icon={faPlus}
+                    title="View Archive"
+                    icon={btnIcon}
+                    onClick={toggleArchiveMode}
                   />
                 </div>
-              </div>
-
-              <div>
-                <AcademyBtn
-                  title={isArchiveMode ? "Return to Content Management" : "View Archive"}
-                  icon={btnIcon}
-                  onClick={toggleArchiveMode}
+              )}
+  
+  <div className="d-flex gap-3 align-items-center" style={isArchiveMode ? { width: '100%', justifyContent: 'end' } : { width: 'fit-content', justifyContent: 'flex-end' }}>
+  {isArchiveMode && (
+            <div className="search-container">
+              <div className="search-input-wrapper" style={{ width: '100%', maxWidth: 'unset' }}>
+                <input
+                  type="text"
+                  placeholder="Search for content"
+                  value=""
+                  onChange={handleSearch}
+                  className="search-input"
+                  style={{ width: '100%',
+                    
+                   }}
                 />
+                <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
+            </div>
+)}
 
               <div className="dropdown-wrapper" style={{ position: 'relative' }}>
                 <div
@@ -785,11 +825,11 @@ const ManageContentSite = () => {
                       onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                       onClick={handleBulkArchive}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                        <path d="M2.5 6.66699V15.0003C2.5 15.442 2.67559 15.8656 2.98816 16.1782C3.30072 16.4907 3.72464 16.6663 4.16667 16.6663H15.8333C16.2754 16.6663 16.6993 16.4907 17.0118 16.1782C17.3244 15.8656 17.5 15.442 17.5 15.0003V6.66699" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M18.3337 3.33301H1.66699V6.66634H18.3337V3.33301Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M8.33301 10H11.6663" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                      <path d="M15 5.00065H16.6667M18.3333 5.00065H16.6667M16.6667 5.00065V3.33398M16.6667 5.00065V6.66732" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      <path d="M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      <path d="M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
                       {isArchiveMode ? 'Unarchive' : 'Archive/Unarchive'}
                     </button>
 
@@ -811,20 +851,22 @@ const ManageContentSite = () => {
                       onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                       onClick={handleBulkPublish}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                        <g clipPath="url(#clip0_3778_10072)">
-                          <path d="M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M2.19141 12.916H10.0001" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M2.19141 7.08301H17.8087" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path fillRule="evenodd" clipRule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="currentColor" strokeWidth="1.5"/>
-                        </g>
-                      </svg>
-                      Publish/Unpublish
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                          <g clip-path="url(#clip0_4916_28085)">
+                                            <path d="M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                          </g>
+                                          <defs>
+                                            <clipPath id="clip0_4916_28085">
+                                              <rect width="20" height="20" fill="white"/>
+                                            </clipPath>
+                                          </defs>
+                                        </svg>
+                      Activate/Deactivate
                     </button>
                   </div>
                 )}
+              </div>
+
               </div>
             </div>
           </div>
@@ -1022,10 +1064,10 @@ const ManageContentSite = () => {
                               onClick={() => handleViewContent(content)}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M2.5 10.8335C5.5 4.16683 14.5 4.16683 17.5 10.8335" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M10 14.1665C8.61929 14.1665 7.5 13.0472 7.5 11.6665C7.5 10.2858 8.61929 9.1665 10 9.1665C11.3807 9.1665 12.5 10.2858 12.5 11.6665C12.5 13.0472 11.3807 14.1665 10 14.1665Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                              View
+                              <path d="M2.5 10.834C5.5 4.16732 14.5 4.16732 17.5 10.834" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M10 14.166C8.61929 14.166 7.5 13.0467 7.5 11.666C7.5 10.2853 8.61929 9.16602 10 9.16602C11.3807 9.16602 12.5 10.2853 12.5 11.666C12.5 13.0467 11.3807 14.166 10 14.166Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                              Manage
                             </button>
                             <button
                               className="action-btn edit-btn"
@@ -1075,7 +1117,8 @@ const ManageContentSite = () => {
                                       color: '#374151',
                                       display: 'flex',
                                       alignItems: 'center',
-                                      gap: '8px'
+                                      gap: '8px',
+                                      color: 'black',
                                     }}
                                     onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                                     onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
@@ -1084,10 +1127,10 @@ const ManageContentSite = () => {
                                       setShowActionDropdown(null)
                                     }}
                                   >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                                      <path d="M2.5 6.66699V15.0003C2.5 15.442 2.67559 15.8656 2.98816 16.1782C3.30072 16.4907 3.72464 16.6663 4.16667 16.6663H15.8333C16.2754 16.6663 16.6993 16.4907 17.0118 16.1782C17.3244 15.8656 17.5 15.442 17.5 15.0003V6.66699" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M18.3337 3.33301H1.66699V6.66634H18.3337V3.33301Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8.33301 10H11.6663" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                      <path d="M15 5.00065H16.6667M18.3333 5.00065H16.6667M16.6667 5.00065V3.33398M16.6667 5.00065V6.66732" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      <path d="M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                      <path d="M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                     {isArchiveMode ? 'Unarchive' : 'Archive'}
                                   </button>
@@ -1101,7 +1144,7 @@ const ManageContentSite = () => {
                                       textAlign: 'left',
                                       cursor: 'pointer',
                                       fontSize: '14px',
-                                      color: content.publishedStatus ? '#dc2626' : '#059669',
+                                      color: "black",
                                       display: 'flex',
                                       alignItems: 'center',
                                       gap: '8px'
@@ -1115,26 +1158,31 @@ const ManageContentSite = () => {
                                   >
                                     {content.publishedStatus ? (
                                       <>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                                          <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round"/>
-                                          <path d="M10 7.5V10.8333" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round"/>
-                                          <path d="M10 14.1753L10.0083 14.1661" stroke="#dc2626" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                          <g clip-path="url(#clip0_4916_28085)">
+                                            <path d="M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                          </g>
+                                          <defs>
+                                            <clipPath id="clip0_4916_28085">
+                                              <rect width="20" height="20" fill="white"/>
+                                            </clipPath>
+                                          </defs>
                                         </svg>
-                                        Unpublish
+                                        Deactivate
                                       </>
                                     ) : (
                                       <>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                                          <g clipPath="url(#clip0_3778_10072)">
-                                            <path d="M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                            <path d="M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                            <path d="M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                            <path d="M2.19141 12.916H10.0001" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                            <path d="M2.19141 7.08301H17.8087" stroke="#059669" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                            <path fillRule="evenodd" clipRule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="#059669" strokeWidth="1.5"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                          <g clip-path="url(#clip0_4916_28085)">
+                                            <path d="M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                           </g>
+                                          <defs>
+                                            <clipPath id="clip0_4916_28085">
+                                              <rect width="20" height="20" fill="white"/>
+                                            </clipPath>
+                                          </defs>
                                         </svg>
-                                        Publish
+                                        Activate
                                       </>
                                     )}
                                   </button>
