@@ -725,7 +725,7 @@ const ContentManagement = () => {
             <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
               <div>
                 <AcademyBtn
-                  title="add new section"
+                  title="add new level"
                   icon={faPlus}
                   onClick={() => {
                     addNewLevel()
@@ -823,6 +823,7 @@ const ContentManagement = () => {
             selectedItems={selectedItems}
             showCheckbox={true}
             activeTab="Content"
+            loading={loading}
           />
         </div>
 

@@ -34,8 +34,9 @@ const DataTable = ({
   const [draggedRow, setDraggedRow] = useState(null)
   const [draggedOverRow, setDraggedOverRow] = useState(null)
   const [selectAll, setSelectAll] = useState(false)
-  
+
   const [dateFilters, setDateFilters] = useState({})
+  const [loadingTimeout, setLoadingTimeout] = useState(false)
   
   const filterDropdownRefs = useRef({})
   const moreActionsDropdownRefs = useRef({})
@@ -67,6 +68,24 @@ const DataTable = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [openFilterDropdown, openMoreActionsDropdown])
+
+  // Handle loading timeout - show "No data available" after 3 seconds if still loading
+  useEffect(() => {
+    let timeoutId
+    if (loading && data.length === 0) {
+      timeoutId = setTimeout(() => {
+        setLoadingTimeout(true)
+      }, 3000)
+    } else {
+      setLoadingTimeout(false)
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [loading, data.length])
 
   useEffect(() => {
     if (selectedItems.length === 0) {
@@ -1237,7 +1256,22 @@ const DataTable = ({
           </tr>
         </thead>
         <tbody>
-          {loading ? (
+          {loading && !loadingTimeout ? (
+            // Show loading circle initially
+            <tr>
+              <td
+                colSpan={columns.length + (showCheckbox ? 1 : 0) + 1}
+                style={{ textAlign: 'center', padding: '40px' }}
+              >
+                <div className="d-flex justify-content-center align-items-center">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ) : loading ? (
+            // Show skeleton rows when loading but we have some data
             Array.from({ length: 10 }).map((_, index) => (
               <tr key={`skeleton-${index}`}>
                 {showCheckbox && (
@@ -1257,11 +1291,11 @@ const DataTable = ({
             ))
           ) : filteredData.length === 0 ? (
             <tr>
-              <td 
-                colSpan={columns.length + (showCheckbox ? 1 : 0) + 1} 
+              <td
+                colSpan={columns.length + (showCheckbox ? 1 : 0) + 1}
                 style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}
               >
-                No data available
+                {data.length === 0 ? 'No data available' : 'No results found'}
               </td>
             </tr>
           ) : (

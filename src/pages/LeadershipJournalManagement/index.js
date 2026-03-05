@@ -996,6 +996,7 @@ const LeadershipJournalManagement = () => {
               onReorder={handleReorder}
               showCheckbox={true}
               activeTab="Content"
+              loading={loading}
               onSelectionChange={handleSelectionChange}
               selectedItems={selectedItems}
               emptyMessage="There are no leadership journals"

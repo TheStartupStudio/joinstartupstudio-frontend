@@ -809,6 +809,7 @@ const MasterClassManagement = () => {
               onReorder={handleReorder}
               showCheckbox={true}
               activeTab="Content"
+              loading={loading}
               onSelectionChange={(selectedItems) => {
                 setTasksData(prevTasks =>
                   prevTasks.map(task => ({
