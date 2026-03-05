@@ -56,7 +56,6 @@ const MasterClassManagement = () => {
 
   useEffect(() => {
     if (activeLevel && levelsData.length > 0) {
-      setCurrentPage(1) // Reset to first page when level changes
       fetchContentByLevel(1)
     }
   }, [activeLevel])
@@ -162,7 +161,7 @@ const MasterClassManagement = () => {
     }
   }
 
-  const fetchContentByLevel = async () => {
+  const fetchContentByLevel = async (page = null) => {
     try {
       setLoading(true)
 
@@ -202,7 +201,8 @@ const MasterClassManagement = () => {
       setTotalPages(calculatedTotalPages || 1)
 
       // Set current page data
-      applyPagination(transformedContent, currentPage)
+      const pageToUse = page !== null ? page : currentPage
+      applyPagination(transformedContent, pageToUse)
     } catch (error) {
       console.error('Error fetching content by level:', error)
       toast.error('Failed to fetch content')

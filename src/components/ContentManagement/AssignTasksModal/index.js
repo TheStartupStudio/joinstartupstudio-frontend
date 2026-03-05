@@ -109,8 +109,8 @@ const AssignTasksModal = ({
 
   const getCategoryDisplayName = () => {
     const categoryNames = {
-      'content': 'Content',
-      'masterclass': 'Studio Guidance',
+      'content': 'Content Journal',
+      'masterclass': 'Studio Guidance Videos',
       'Leadership Journal': 'Leadership Journal',
       'test ground': 'Test Ground'
     }
@@ -129,7 +129,7 @@ const AssignTasksModal = ({
         </div>
 
         <h5 className="modal-title">
-          Assign {getCategoryDisplayName()} Journal to Levels
+          Assign {getCategoryDisplayName()} to {type === 'content' ? 'Levels' : type === 'masterclass' ? 'Categories' : 'Sections'}
         </h5>
 
         {loading && (
@@ -155,7 +155,7 @@ const AssignTasksModal = ({
 
             {taskAssignments.length === 0 ? (
               <div className="text-center py-4">
-                <p>No unassigned journals found.</p>
+                <p>No unassigned {getCategoryDisplayName().toLowerCase()} found.</p>
               </div>
             ) : (
               <div className="tasks-list">
