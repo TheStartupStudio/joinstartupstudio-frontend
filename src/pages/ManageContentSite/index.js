@@ -187,7 +187,7 @@ const ManageContentSite = () => {
       render: (value, item) => (
         <div className="status-cell">
           <div className={`status-dot ${(!item.archiveStatus && item.publishedStatus) ? 'active' : 'inactive'}`}></div>
-          <span className="status-text">
+          <span className="status-text" style={{fontWeight: 500}}>
             {(!item.archiveStatus && item.publishedStatus) ? 'Published' : 'Unpublished'}
           </span>
         </div>
