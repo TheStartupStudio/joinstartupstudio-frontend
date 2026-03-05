@@ -109,17 +109,17 @@ const ContentManagement = () => {
       })
 
       const transformedTasks = response.data.map(journal => {
-        const hasVideoContent = journal.videoId || 
-                               journal.videoIds || 
+        const hasVideoContent = journal.videoId ||
+                               journal.videoIds ||
                                (journal.videos && journal.videos.length > 0) ||
                                (journal.video && journal.video.id)
-        
+
         const hasReflectionContent = journal.entries && journal.entries.length > 0
 
         return {
           id: journal.id,
           name: journal.title,
-          status: journal.published ? 'published' : 'unpublished',
+          status: (journal.published === true || journal.publishedStatus === true) ? 'published' : 'unpublished',
           hasContent: hasVideoContent || hasReflectionContent,
           order: journal.order,
           journalData: journal
@@ -173,9 +173,8 @@ const ContentManagement = () => {
         handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
-        // setSelectedTask(item)
-        // setShowPublishPopup(true)
-        toast.success('Task already published!')
+        setSelectedTask(item)
+        setShowPublishPopup(true)
         break
       case 'unpublish':
         setSelectedTask(item)

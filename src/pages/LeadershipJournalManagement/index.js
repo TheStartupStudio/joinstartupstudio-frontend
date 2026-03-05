@@ -102,10 +102,12 @@ const LeadershipJournalManagement = () => {
         }
       })
 
+      console.log('Ardi Osmani', response.data)
+
       const transformedData = response.data.map((journal, index) => ({
         id: journal.id,
         name: journal.title,
-        status: journal.published ? 'published' : 'published',
+        status: journal.published ? 'published' : 'unpublished',
         hasContent: journal.entries && journal.entries.length > 0,
         order: journal.order || index + 1,
         fullData: journal
@@ -214,7 +216,8 @@ const LeadershipJournalManagement = () => {
         handleViewEditJournal(item.id, actionType)
         break
       case 'publish':
-        toast.success('Task already published!')
+        setSelectedTask(item)
+        setShowPublishPopup(true)
         break
       case 'unpublish':
         setSelectedTask(item)

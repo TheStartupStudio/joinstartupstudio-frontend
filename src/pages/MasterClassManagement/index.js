@@ -186,7 +186,7 @@ const MasterClassManagement = () => {
         return {
           id: content.id,
           name: translateVideoTitle(content.title),
-          status: content.published ? 'published' : 'published',
+          status: (content.published === true || content.publishedStatus === true) ? 'published' : 'unpublished',
           hasContent: hasVideoContent,
           order: content.order || 0,
           journalData: content
@@ -255,9 +255,8 @@ const MasterClassManagement = () => {
         handleViewContent(item.id, 'edit')
         break
       case 'publish':
-        // setSelectedTask(item)
-        // setShowPublishPopup(true)
-        toast.success('Video already published!')
+        setSelectedTask(item)
+        setShowPublishPopup(true)
         break
       case 'unpublish':
         setSelectedTask(item)

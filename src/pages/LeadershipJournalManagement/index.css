@@ -305,3 +305,16 @@ padding-bottom: 30px;
   font-weight: 500;
   line-height: normal;
 }
+
+
+.leadership-journal-management.content-management-container .action-buttons {
+  width: max-content;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+
+.leadership-journal-management .content-management-container tbody tr td:nth-child(2) {
+  width: 60%;
+}

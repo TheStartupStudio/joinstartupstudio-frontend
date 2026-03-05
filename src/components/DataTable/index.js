@@ -711,6 +711,73 @@ const DataTable = ({
           </div>
         </div>
       )
+    } else if (activeTab === 'Content') {
+      return (
+        <div className="action-buttons">
+          <button
+            className="action-btn view-btn"
+            onClick={() => handleActionClick('view', item)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M3.3335 17.7327V2.26602C3.3335 1.93464 3.60213 1.66602 3.9335 1.66602H13.5016C13.6608 1.66602 13.8134 1.72923 13.9259 1.84175L16.4911 4.40695C16.6036 4.51947 16.6668 4.67208 16.6668 4.83121V17.7327C16.6668 18.0641 16.3982 18.3327 16.0668 18.3327H3.9335C3.60213 18.3327 3.3335 18.0641 3.3335 17.7327Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 8.33398L13.3332 8.33399" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 15L13.3332 15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 11.666L9.99984 11.666" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.3335 1.66602V4.39935C13.3335 4.73072 13.6021 4.99935 13.9335 4.99935H16.6668" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            View Task
+          </button>
+          <button
+            className="action-btn edit-btn"
+            onClick={() => handleActionClick('edit', item)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M16.6668 9.99935V4.83121C16.6668 4.67208 16.6036 4.51947 16.4911 4.40695L13.9259 1.84175C13.8134 1.72923 13.6608 1.66602 13.5016 1.66602H3.9335C3.60213 1.66602 3.3335 1.93464 3.3335 2.26602V17.7327C3.3335 18.0641 3.60213 18.3327 3.9335 18.3327H9.16683" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 8.33333H13.3332M6.6665 5H9.99984M6.6665 11.6667H9.1665" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14.9618 14.1159L15.7951 13.2826C16.16 12.9177 16.7517 12.9177 17.1166 13.2826C17.4815 13.6475 17.4815 14.2392 17.1166 14.6041L16.2833 15.4374M14.9618 14.1159L12.5077 16.5701C12.3578 16.72 12.2594 16.9136 12.2267 17.1231L12.0328 18.3664L13.276 18.1726C13.4855 18.1399 13.6792 18.0415 13.8291 17.8916L16.2833 15.4374M14.9618 14.1159L16.2833 15.4374" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.3335 1.66602V4.39935C13.3335 4.73072 13.6021 4.99935 13.9335 4.99935H16.6668" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Edit Task
+          </button>
+          <button
+            className="action-btn publish-btn"
+            onClick={() => handleActionClick(item.status === 'published' ? 'unpublish' : 'publish', item)}
+          >
+            {item.status === 'published' ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M16.1261 17.5007H3.87356C2.33553 17.5007 1.37308 15.837 2.13974 14.5037L8.26603 3.84931C9.03504 2.5119 10.9646 2.5119 11.7336 3.84931L17.8599 14.5037C18.6266 15.837 17.6642 17.5007 16.1261 17.5007Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10 14.1743L10.0083 14.1651" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <g clip-path="url(#clip0_4931_6389)">
+                  <path d="M18.3332 9.99935C18.3332 5.39698 14.6022 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 14.6017 5.39746 18.3327 9.99984 18.3327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10.8335 1.70703C10.8335 1.70703 13.3335 4.99922 13.3335 9.99922" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9.1665 18.2914C9.1665 18.2914 6.6665 14.9992 6.6665 9.99922C6.6665 4.99922 9.1665 1.70703 9.1665 1.70703" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M2.19141 12.916H10.0001" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M2.19141 7.08398H17.8087" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="black" stroke-width="1.5"/>
+                </g>
+                <defs>
+                  <clipPath id="clip0_4931_6389">
+                    <rect width="20" height="20" fill="white"/>
+                  </clipPath>
+                </defs>
+              </svg>
+            )}
+            {item.status === 'published' ? 'Unpublish Task' : 'Publish Task'}
+          </button>
+          <div className="drag-handle">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <line x1="4" y1="2" x2="12" y2="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="4" y1="6" x2="12" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="4" y1="10" x2="12" y2="10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <line x1="4" y1="14" x2="12" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </div>
+        </div>
+      )
     } else {
       return (
         <div className="action-buttons">
@@ -742,9 +809,9 @@ const DataTable = ({
                 <circle cx="14" cy="2" r="2" fill="currentColor" />
               </svg>
             </button>
-            
+
             {openMoreActionsDropdown === item.id && (
-              <div 
+              <div
                 className="more-actions-dropdown-menu"
                 style={{
                   position: 'fixed',
@@ -759,7 +826,7 @@ const DataTable = ({
                 }}
               >
                 {getMoreActionsOptions(item).map((option, optionIndex) => (
-                  <div 
+                  <div
                     key={optionIndex}
                     className="more-actions-dropdown-item"
                     style={{
