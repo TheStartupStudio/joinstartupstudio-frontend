@@ -180,7 +180,7 @@ const LineChart = ({
             }}>
               From:
             </label>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', boxShadow:'0 4px 12px 0 rgba(0, 0, 0, 0.25)', borderRadius: '8px' }}>
               <input
                 type="date"
                 value={startDate}
@@ -189,7 +189,6 @@ const LineChart = ({
                   width: '100%',
                   padding: '8px 40px',
                   borderRadius: '8px',
-                  border: '1px solid #DDD',
                   background: '#FFF',
                   borderRadius: '8px',
                   fontSize: '15px',
@@ -243,7 +242,7 @@ const LineChart = ({
             }}>
               To:
             </label>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', boxShadow:'0 4px 12px 0 rgba(0, 0, 0, 0.25)', borderRadius: '8px' }}>
               <input
                 type="date"
                 value={endDate}
@@ -252,7 +251,6 @@ const LineChart = ({
                   width: '100%',
                   padding: '8px 40px',
                   borderRadius: '8px',
-                  border: '1px solid #DDD',
                   background: '#FFF',
                   borderRadius: '8px',
                   fontSize: '15px',
