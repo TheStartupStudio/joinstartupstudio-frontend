@@ -244,7 +244,7 @@ const ContentManagement = () => {
     setLoading(true)
     try {
       const updatePromises = selectedItems.map(async (task) => {
-        return axiosInstance.put(`/LtsJournals/${task.id}`, {
+        return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
           published: true
         })
       })
@@ -278,7 +278,7 @@ const ContentManagement = () => {
     try {
       const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
-          journalLevel: null
+          published: false
         })
       })
 
@@ -492,7 +492,7 @@ const ContentManagement = () => {
   const handleConfirmPublish = async () => {
     setLoading(true)
     try {
-      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
         published: true
       })
 
@@ -514,7 +514,7 @@ const ContentManagement = () => {
     setLoading(true)
     try {
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
-        journalLevel: null
+        published: false
       })
 
       // Refresh data from API

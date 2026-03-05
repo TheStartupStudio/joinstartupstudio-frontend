@@ -297,7 +297,7 @@ const LeadershipJournalManagement = () => {
     setLoading(true)
     try {
       const updatePromises = selectedItems.map(async (task) => {
-        return axiosInstance.put(`/LtsJournals/${task.id}`, {
+        return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
           published: true
         })
       })
@@ -334,7 +334,7 @@ const LeadershipJournalManagement = () => {
     try {
       const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
-          journalLevel: null
+          published: false
         })
       })
 
@@ -538,7 +538,7 @@ const LeadershipJournalManagement = () => {
   const handleConfirmPublish = async () => {
     setLoading(true)
     try {
-      await axiosInstance.put(`/LtsJournals/${selectedTask.id}`, {
+      await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
         published: true
       })
 
@@ -564,7 +564,7 @@ const LeadershipJournalManagement = () => {
     setLoading(true)
     try {
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
-        journalLevel: null
+        published: false
       })
 
       if (activeLevel) {

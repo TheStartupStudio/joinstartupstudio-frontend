@@ -128,11 +128,6 @@
   border: none;
 }
 
-.reported-posts-page .pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .reported-posts-page .pagination-info {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;

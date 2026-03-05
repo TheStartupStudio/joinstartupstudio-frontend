@@ -330,11 +330,6 @@ padding: 4px;
   border-color: #9ca3af;
 }
 
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .pagination-info {
   font-size: 14px;
   color: #374151;

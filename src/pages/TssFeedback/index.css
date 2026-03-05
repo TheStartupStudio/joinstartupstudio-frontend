@@ -91,11 +91,6 @@ box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
   border-color: #d1d5db;
 }
 
-.tss-feedback-container .pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .tss-feedback-container .pagination-info {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;

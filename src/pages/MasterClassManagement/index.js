@@ -901,8 +901,8 @@ const MasterClassManagement = () => {
         show={showPublishPopup}
         onHide={handlePublishCancel}
         onConfirm={handleConfirmPublish}
-        title="Publish Master Class?"
-        message="Are you sure you want to publish this master class video? Once it's published, it will be available to all learners with access to this content."
+        title="Publish Video?"
+        message="Are you sure you want to publish this video? Once it's published, it will be available to all learners with access to this content."
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, PUBLISH VIDEO"
         loading={loading}
@@ -912,8 +912,8 @@ const MasterClassManagement = () => {
         show={showUnpublishPopup}
         onHide={handleUnpublishCancel}
         onConfirm={handleConfirmUnpublish}
-        title="Unpublish Master Class?"
-        message="Are you sure you want to unpublish this master class video? Once it's unpublished, it will no longer be available to learners."
+        title="Unpublish Video?"
+        message="Are you sure you want to unpublish this video? Once it's unpublished, it will no longer be available to learners."
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, UNPUBLISH VIDEO"
         loading={loading}
@@ -923,8 +923,8 @@ const MasterClassManagement = () => {
         show={showDeleteTaskPopup}
         onHide={handleDeleteTaskCancel}
         onConfirm={handleConfirmDeleteTask}
-        title="Delete Master Class?"
-        message="Are you sure you want to delete this master class video?"
+        title="Delete Video?"
+        message="Are you sure you want to delete this video?"
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, DELETE VIDEO"
         loading={loading}

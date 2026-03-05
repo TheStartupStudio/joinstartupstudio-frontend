@@ -312,3 +312,16 @@ padding-bottom: 30px;
   font-weight: 500;
   line-height: normal;
 }
+
+
+.master-class-managment .content-management-container .action-buttons {
+  width: max-content;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+
+.master-class-managment .content-management-container tbody tr td:nth-child(2) {
+  width: 60%;
+}

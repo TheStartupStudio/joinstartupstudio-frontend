@@ -891,9 +891,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                 <path d="M10 14.1753L10.0083 14.1661" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <p className="mb-5" style={{ fontSize: '15px', fontWeight: '500', marginBottom: '16px', color: '#231F20', width: 'fit-content' }}>Delete Task?</p>
+            <p className="mb-5" style={{ fontSize: '15px', fontWeight: '500', marginBottom: '16px', color: '#231F20', width: 'fit-content' }}> {isMasterClass ? 'Delete Video' : 'Delete Task'}?</p>
           </div>
-          <p className="mb-5" style={{ fontSize: '15px', fontWeight: '400', marginBottom: '16px', color: '#231F20' }}>Are you sure you want to delete this task?</p>
+          <p className="mb-5" style={{ fontSize: '15px', fontWeight: '400', marginBottom: '16px', color: '#231F20' }}>Are you sure you want to delete this {isMasterClass ? 'video' : 'task'}?</p>
         </div>
 
         <div className="d-flex gap-3 justify-content-center">
@@ -947,7 +947,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
             onClick={confirmDelete}
             disabled={loading}
           >
-            {loading ? 'Deleting...' : 'YES, DELETE THIS TASK'}
+            {loading ? 'Deleting...' : `YES, DELETE THIS ${isMasterClass ? 'VIDEO' : 'TASK'}`}
           </button>
         </div>
       </Modal.Body>
