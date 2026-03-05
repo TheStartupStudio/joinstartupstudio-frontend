@@ -16,7 +16,8 @@ import { useSelector } from 'react-redux'
 const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = null }) => {
   const [loading, setLoading] = useState(false)
   const [showGenderDropdown, setShowGenderDropdown] = useState(false)
-  const [showStateDropdown, setShowStateDropdown] = useState(false)
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false)
+  const [countrySearch, setCountrySearch] = useState('')
   const [showTypeDropdown, setShowTypeDropdown] = useState(false)
   const [showOrganizationDropdown, setShowOrganizationDropdown] = useState(false)
   const [showDeletePopup, setShowDeletePopup] = useState(false)
@@ -47,6 +48,40 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
   })
 
   const [organizations, setOrganizations] = useState([])
+
+
+
+  const countryOptions = [
+    'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan',
+    'Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi',
+    'Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Congo (Democratic Republic)','Costa Rica',"Côte d'Ivoire",'Croatia','Cuba','Cyprus','Czech Republic',
+    'Denmark','Djibouti','Dominica','Dominican Republic',
+    'Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia',
+    'Fiji','Finland','France',
+    'Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana',
+    'Haiti','Honduras','Hungary',
+    'Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy',
+    'Jamaica','Japan','Jordan',
+    'Kazakhstan','Kenya','Kiribati','Kosovo','Kuwait','Kyrgyzstan',
+    'Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
+    'Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar',
+    'Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia','Norway',
+    'Oman',
+    'Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal',
+    'Qatar',
+    'Romania','Russia','Rwanda',
+    'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria',
+    'Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu',
+    'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan',
+    'Vanuatu','Vatican City','Venezuela','Vietnam',
+    'Yemen',
+    'Zambia','Zimbabwe'
+    ];
+
+  // Filter countries based on search
+  const filteredCountries = countryOptions.filter(country =>
+    country.toLowerCase().includes(countrySearch.toLowerCase())
+  )
 
   useEffect(() => {
     setShowMainModal(show)
@@ -118,28 +153,21 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
         setShowCalendar(false)
       }
+      // Close country dropdown when clicking outside
+      if (showCountryDropdown && !event.target.closest('.custom-dropdown-learner')) {
+        setShowCountryDropdown(false)
+        setCountrySearch('')
+      }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
+  }, [showCountryDropdown])
 
   const genderOptions = ['Female', 'Male', 'Non-binary', 'Other']
   
-  const stateOptions = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-    'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
-    'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-    'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
-    'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-    'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
-    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-    'West Virginia', 'Wisconsin', 'Wyoming'
-  ]
 
   const learnerTypeOptions = ['Student', 'Professional', 'Educator', 'Other']
 
@@ -184,7 +212,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
       [field]: value
     }))
     setShowGenderDropdown(false)
-    setShowStateDropdown(false)
+    setShowCountryDropdown(false)
     setShowTypeDropdown(false)
     setShowOrganizationDropdown(false)
     setShowRoleDropdown(false)
@@ -235,7 +263,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
     }
 
     if (!state) {
-      toast.error('State is required')
+      toast.error('Country is required')
       return false
     }
 
@@ -640,7 +668,7 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
               {!loading && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
             </div>
 
-            {/* City and State Row */}
+            {/* City and Country Row */}
             <div className="form-row-learner">
               <div className="form-group-half">
                 <div className="input-group" onClick={() => !loading && handleInputFocus('city')}>
@@ -664,26 +692,58 @@ const AddNewLearner = ({ show, onHide, onSuccess, mode = 'add', learnerData = nu
                 <div className="custom-dropdown-learner">
                   <div
                     className="dropdown-trigger-learner"
-                    onClick={() => !loading && setShowStateDropdown(!showStateDropdown)}
+                    onClick={() => !loading && setShowCountryDropdown(!showCountryDropdown)}
                   >
                     <span className={formData.state ? 'selected-value' : 'placeholder-value'}>
-                      {formData.state || (mode === 'edit' ? `${getRoleLabel(formData.roleId)} State` : 'Learner State')}
+                      {formData.state || (mode === 'edit' ? `${getRoleLabel(formData.roleId)} Country` : 'Learner Country')}
                     </span>
                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                       <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
-                  {showStateDropdown && (
+                  {showCountryDropdown && (
                     <div className="dropdown-menu-learner">
-                      {stateOptions.map((state, index) => (
-                        <div
-                          key={index}
-                          className="dropdown-item-learner"
-                          onClick={() => handleDropdownSelect('state', state)}
-                        >
-                          {state}
-                        </div>
-                      ))}
+                      {/* Search input */}
+                      <div style={{ borderBottom: 'none' }}>
+                        <input
+                          type="text"
+                          placeholder="Search countries..."
+                          value={countrySearch}
+                          onChange={(e) => setCountrySearch(e.target.value)}
+                          className=""
+                          style={{
+                            width: '100%',
+                            padding: '6px 8px',
+                            fontSize: '12px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            borderBottom: '1px solid #d1d5db',
+                            backgroundColor: 'transparent',
+                          }}
+                          autoFocus
+                        />
+                      </div>
+                      {/* Country list */}
+                      <div style={{ maxHeight: '200px', overflowY: 'auto', scrollbarWidth: 'none' }}>
+                        {filteredCountries.map((country, index) => (
+                          <div
+                            key={index}
+                            className="dropdown-item-learner"
+                            onClick={() => {
+                              handleDropdownSelect('state', country)
+                              setShowCountryDropdown(false)
+                              setCountrySearch('')
+                            }}
+                          >
+                            {country}
+                          </div>
+                        ))}
+                        {filteredCountries.length === 0 && countrySearch && (
+                          <div style={{ padding: '12px 16px', color: '#6c757d', fontSize: '12px' }}>
+                            No countries found
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
