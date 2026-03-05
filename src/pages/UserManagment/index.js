@@ -113,11 +113,15 @@ const UserManagement = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
-      setCurrentPage(1) 
     }, 500)
 
     return () => clearTimeout(timer)
   }, [searchQuery])
+
+  // Reset to page 1 when search or filter changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [debouncedSearchQuery, searchFilter])
 
   const fetchOrganizations = async (page = 1, search = '') => {
     setOrganizationsLoading(true)
@@ -153,7 +157,13 @@ const UserManagement = () => {
         }))
 
         setOrganizationsData(mappedData)
-        setOrganizationsPagination(response.data.pagination)
+        const paginationData = response.data.pagination || {}
+        setOrganizationsPagination({
+          total: paginationData.total || 0,
+          page: paginationData.page || 1,
+          limit: paginationData.limit || 10,
+          totalPages: Math.max(paginationData.totalPages || 1, 1)
+        })
       }
     } catch (error) {
       console.error('Error fetching organizations:', error)
@@ -191,7 +201,13 @@ const UserManagement = () => {
         }))
 
         setUsersData(mappedData)
-        setUsersPagination(response.data.pagination)
+        const paginationData = response.data.pagination || {}
+        setUsersPagination({
+          total: paginationData.total || 0,
+          page: paginationData.page || 1,
+          limit: paginationData.limit || 10,
+          totalPages: Math.max(paginationData.totalPages || 1, 1)
+        })
       }
     } catch (error) {
       console.error('Error fetching users:', error)
@@ -209,13 +225,6 @@ const UserManagement = () => {
     }
   }, [activeTab, currentPage, debouncedSearchQuery, searchFilter])
 
-  // Reset current page if it exceeds total pages after search/filter changes
-  useEffect(() => {
-    const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
-    if (currentPage > pagination.totalPages && pagination.totalPages > 0) {
-      setCurrentPage(1)
-    }
-  }, [usersPagination.totalPages, organizationsPagination.totalPages, activeTab, currentPage])
 
   const organizationsColumns = useMemo(() => [
     {
@@ -973,8 +982,8 @@ const UserManagement = () => {
   }, [])
 
   const handlePageChange = (newPage) => {
-    const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
-    if (newPage >= 1 && newPage <= pagination.totalPages) {
+    const maxPages = totalPages
+    if (newPage >= 1 && newPage <= maxPages && !isLoading && newPage !== currentPageNum) {
       setCurrentPage(newPage)
     }
   }
@@ -985,6 +994,17 @@ const UserManagement = () => {
   const currentBulkOptions = activeTab === 'Organizations' ? bulkOptionsOrganizations : bulkOptionsUsers
   const isLoading = activeTab === 'Users' ? usersLoading : organizationsLoading
   const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+  const totalPages = Math.max(currentPagination?.totalPages || 1, 1)
+  const currentPageNum = Math.min(Math.max(currentPage || 1, 1), totalPages)
+
+  // Reset current page if it exceeds total pages after search/filter changes
+  useEffect(() => {
+    const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+    const maxPages = pagination?.totalPages || 1
+    if (currentPage > maxPages && maxPages >= 1 && !isLoading) {
+      setCurrentPage(Math.max(1, maxPages))
+    }
+  }, [usersPagination?.totalPages, organizationsPagination?.totalPages, activeTab, isLoading])
 
   const handleSelectionChange = (selectedItems) => {
     if (activeTab === 'Users') {
@@ -1237,10 +1257,9 @@ const UserManagement = () => {
         </div>
 
         <div className="table-container">
-          <DataTable 
+          <DataTable
             columns={currentColumns}
             data={currentData}
-            searchQuery={searchQuery}
             onRowAction={handleRowAction}
             showCheckbox={true}
             activeTab={activeTab}
@@ -1251,39 +1270,39 @@ const UserManagement = () => {
         </div>
 
         <div className="pagination-container">
-          <button 
+          <button
             className="pagination-btn"
             onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1}
+            disabled={currentPageNum <= 1 || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <button 
+          <button
             className="pagination-btn"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPageNum - 1)}
+            disabled={currentPageNum <= 1 || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
               <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <span className="pagination-info">{currentPage} / {currentPagination.totalPages}</span>
-          <button 
+          <span className="pagination-info">{currentPageNum} / {totalPages}</span>
+          <button
             className="pagination-btn"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === currentPagination.totalPages}
+            onClick={() => handlePageChange(currentPageNum + 1)}
+            disabled={currentPageNum >= totalPages || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
               <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <button 
+          <button
             className="pagination-btn"
-            onClick={() => handlePageChange(currentPagination.totalPages)}
-            disabled={currentPage === currentPagination.totalPages}
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPageNum >= totalPages || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
