@@ -46,11 +46,11 @@ const DeleteJournalContentModal = ({
             <p className="modal-message">
               {isArchived
                 ? "Are you sure you want to permanently delete this archived content? This cannot be undone."
-                : "Are you sure you want to delete this content? This cannot be undone. <br/> Alternatively, you can archive the content."
+                : "Are you sure you want to delete this content? This cannot be undone. \n Alternatively, you can archive the content."
               }
             </p>
             <p className="modal-message" style={{ marginTop: '20px' }}>
-            {isArchived ? (
+            {!isArchived ? (
               <p>Note: Deleting the content will not delete any tasks. All tasks will be unpublished and no longer be accessible to learners. You can find unassigned tasks in the <a href="#" style={{ color: '#51C7DF', textDecoration: 'underline' }}>Archive</a>. </p>
             ) : (
               <p>Note: Deleting this task will also delete all learner responses for this task.</p>

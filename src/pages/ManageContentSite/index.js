@@ -402,6 +402,84 @@ const ManageContentSite = () => {
     }
   }
 
+  const handleBulkDelete = () => {
+    if (selectedItems.length === 0) {
+      toast.warning('Please select items to delete')
+      return
+    }
+
+    // Show the delete confirmation modal instead of window.confirm
+    setDeleteModalData({
+      type: 'bulk',
+      selectedItems: selectedItems,
+      isArchived: isArchiveMode
+    })
+    setShowDeleteModal(true)
+    setShowBulkDropdown(false)
+  }
+
+  const handleBulkDeleteFromModal = async () => {
+    try {
+      setLoading(true)
+
+      // Delete each selected item individually using the full delete endpoint
+      const deletePromises = deleteModalData.selectedItems.map(contentId =>
+        axiosInstance.delete(`/manage-content/full/${contentId}`)
+      )
+
+      const responses = await Promise.all(deletePromises)
+
+      // Check if all deletions were successful
+      const allSuccessful = responses.every(response => response.data.success)
+
+      if (allSuccessful) {
+        toast.success(`Successfully deleted ${deleteModalData.selectedItems.length} items and all related content`)
+        setSelectedItems([])
+        fetchContents()
+      } else {
+        toast.error('Some items failed to delete')
+      }
+    } catch (error) {
+      console.error('Error bulk deleting:', error)
+      toast.error('Failed to delete items')
+    } finally {
+      setLoading(false)
+      setShowDeleteModal(false)
+      setDeleteModalData(null)
+    }
+  }
+
+  const handleBulkArchiveFromModal = async () => {
+    try {
+      setLoading(true)
+
+      // Archive each selected item
+      const archivePromises = deleteModalData.selectedItems.map(contentId =>
+        axiosInstance.put('/manage-content/bulk/archive', { ids: [contentId] })
+      )
+
+      const responses = await Promise.all(archivePromises)
+
+      // Check if all archives were successful
+      const allSuccessful = responses.every(response => response.data.success)
+
+      if (allSuccessful) {
+        toast.success(`Successfully archived ${deleteModalData.selectedItems.length} items`)
+        setSelectedItems([])
+        fetchContents()
+      } else {
+        toast.error('Some items failed to archive')
+      }
+    } catch (error) {
+      console.error('Error bulk archiving:', error)
+      toast.error('Failed to archive items')
+    } finally {
+      setLoading(false)
+      setShowDeleteModal(false)
+      setDeleteModalData(null)
+    }
+  }
+
   const handleBulkPublish = async () => {
     if (selectedItems.length === 0) {
       toast.warning('Please select items to publish/unpublish')
@@ -630,10 +708,13 @@ const ManageContentSite = () => {
       <DeleteJournalContentModal
         show={showDeleteModal}
         onClose={handleCloseDeleteModal}
-        onArchive={handleArchiveFromModal}
-        onDelete={handleDeleteFromModal}
-        title="Delete Content"
-        message="What would you like to do with this content?"
+        onArchive={deleteModalData?.type === 'bulk' ? handleBulkArchiveFromModal : handleArchiveFromModal}
+        onDelete={deleteModalData?.type === 'bulk' ? handleBulkDeleteFromModal : handleDeleteFromModal}
+        title={deleteModalData?.type === 'bulk' ? `Delete ${deleteModalData?.selectedItems?.length || 0} Items` : "Delete Content"}
+        message={deleteModalData?.type === 'bulk'
+          ? `Are you sure you want to delete ${deleteModalData?.selectedItems?.length || 0} items and all their related content?`
+          : "What would you like to do with this content?"
+        }
         isArchived={deleteModalData?.isArchived || false}
       />
 
@@ -844,7 +925,7 @@ const ManageContentSite = () => {
                                       <path d="M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                       <path d="M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                      {isArchiveMode ? 'Unarchive' : 'Archive/Unarchive'}
+                      {isArchiveMode ? 'Unarchive' : 'Archive'}
                     </button>
 
                     <button
@@ -875,7 +956,32 @@ const ManageContentSite = () => {
                                             </clipPath>
                                           </defs>
                                         </svg>
-                      Activate/Deactivate
+                      Reactivate/Deactivate
+                    </button>
+
+                    <button
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        border: 'none',
+                        background: 'none',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        color: 'black',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                      onClick={handleBulkDelete}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M16.6668 7.5L15.0043 16.9552C14.8642 17.7522 14.172 18.3333 13.3629 18.3333H6.63745C5.82832 18.3333 5.13608 17.7522 4.99596 16.9552L3.3335 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      Delete Content
                     </button>
                   </div>
                 )}
@@ -1118,7 +1224,7 @@ const ManageContentSite = () => {
                                     borderRadius: '8px',
                                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                                     zIndex: 9999,
-                                    minWidth: '140px',
+                                    minWidth: '200px',
                                     marginTop: '4px'
                                   }}
                                 >
@@ -1149,7 +1255,7 @@ const ManageContentSite = () => {
                                       <path d="M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                       <path d="M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                    {isArchiveMode ? 'Unarchive' : 'Archive'}
+                                    {isArchiveMode ? 'Unarchive Content' : 'Archive Content'}
                                   </button>
 
                                   <button
@@ -1185,21 +1291,26 @@ const ManageContentSite = () => {
                                             </clipPath>
                                           </defs>
                                         </svg>
-                                        Deactivate
+                                        Deactivate Content
                                       </>
                                     ) : (
                                       <>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                          <g clip-path="url(#clip0_4916_28085)">
-                                            <path d="M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                          <g clip-path="url(#clip0_4950_3009)">
+                                            <path d="M18.3332 9.99935C18.3332 5.39698 14.6022 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 14.6017 5.39746 18.3327 9.99984 18.3327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M10.8335 1.70703C10.8335 1.70703 13.3335 4.99922 13.3335 9.99922" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M9.1665 18.2914C9.1665 18.2914 6.6665 14.9992 6.6665 9.99922C6.6665 4.99922 9.1665 1.70703 9.1665 1.70703" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M2.19141 12.916H10.0001" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M2.19141 7.08398H17.8087" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="black" stroke-width="1.5"/>
                                           </g>
                                           <defs>
-                                            <clipPath id="clip0_4916_28085">
+                                            <clipPath id="clip0_4950_3009">
                                               <rect width="20" height="20" fill="white"/>
                                             </clipPath>
                                           </defs>
                                         </svg>
-                                        Activate
+                                        Reactivate Content
                                       </>
                                     )}
                                   </button>
@@ -1229,7 +1340,7 @@ const ManageContentSite = () => {
                                       <path d="M16.6668 7.5L15.0043 16.9552C14.8642 17.7522 14.172 18.3333 13.3629 18.3333H6.63745C5.82832 18.3333 5.13608 17.7522 4.99596 16.9552L3.3335 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                       <path d="M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                    Delete
+                                    Delete Content
                                   </button>
                                 </div>
                               )}

@@ -262,7 +262,7 @@ box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
 
 .content-management .task-name-cell .status-dot.published {
   background-color: var(--COLORS-Green, #9C3);
-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15) inset;
 }
 
 .content-management .task-name-cell .status-dot.unpublished {
