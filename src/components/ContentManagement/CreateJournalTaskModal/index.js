@@ -4,9 +4,10 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import UserManagementPopup from '../../UserManagment/AlertPopup'
 import './index.css'
 
-const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevelId, mode = 'add', taskData = null }) => {
+const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevelId, mode = 'add', taskData = null, category= 'student-leadership' }) => {
     const [journalTitle, setJournalTitle] = useState('')
     const [journalText, setJournalText] = useState('')
     const [journalVideoTitle, setJournalVideoTitle] = useState('')
@@ -19,10 +20,16 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
     const [activeTab, setActiveTab] = useState('video')
     const [currentMode, setCurrentMode] = useState(mode)
     const [loading, setLoading] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [modalHeaderTitle, setModalHeaderTitle] = useState('Section Intro')
 
     const isViewMode = currentMode === 'view'
     const isEditMode = currentMode === 'edit'
     const isAddMode = currentMode === 'add'
+
+    useEffect(() => {
+        setModalHeaderTitle(category === 'student-leadership' ? 'Section Intro' : 'Level Intro')
+    }, [isViewMode, isEditMode])
 
     const quillModules = {
         toolbar: isViewMode ? false : [
@@ -146,7 +153,7 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
         try {
             const payload = {
                 title: journalTitle,
-                category: 'student-leadership',
+                category: category,
                 journalLevel: journalLevelId,
                 platform: 'instructor',
                 order: taskData?.order || 0,
@@ -193,13 +200,54 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
         setJournalThumbnailPreview(null)
         setActiveTab('video')
         setCurrentMode('add')
+        setShowDeleteModal(false)
         onClose()
     }
 
-    if (!show) return null
+    const handleDelete = () => {
+        if (!taskData?.id) return
+        setShowDeleteModal(true)
+    }
+
+    const confirmDelete = async () => {
+        if (!taskData?.id) {
+            toast.error('Task data is missing. Cannot delete.')
+            setShowDeleteModal(false)
+            return
+        }
+
+        setLoading(true)
+        try {
+            await axiosInstance.delete(`/LtsJournals/${taskData.id}/delete-with-content`)
+            toast.success('Journal task deleted successfully!')
+            setShowDeleteModal(false)
+            if (onSave) onSave({ deleted: true, id: taskData.id })
+            handleClose()
+        } catch (error) {
+            console.error('Error deleting journal task:', error)
+            toast.error(error.response?.data?.message || 'Failed to delete journal task')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    if (!show && !showDeleteModal) return null
 
     return (
-        <div className="add-section-introduction-modal-overlay" style={{ zIndex: 1000000 }}>
+        <>
+            {/* Delete Confirmation Modal */}
+            <UserManagementPopup
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
+                onConfirm={confirmDelete}
+                title="Delete Task?"
+                message="Are you sure you want to delete this task?"
+                cancelText="NO, TAKE ME BACK"
+                confirmText="YES, DELETE TASK"
+                loading={loading}
+            />
+            {show && !showDeleteModal && (
+            <div className="add-section-introduction-modal-overlay" style={{ zIndex: 10000 }}>
             <div className="add-section-modal">
                 <div className="modal-header">
                     <div className="circle-icon-heading">
@@ -213,7 +261,7 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                             </div>
                         </div>
                                                 <p className="modal-title">
-                                                    {isViewMode ? 'View Journal Task' : isEditMode ? 'Edit Journal Task' : 'Create Journal Task'}
+                                                    {isViewMode ? `View ${modalHeaderTitle}` : isEditMode ? `Edit ${modalHeaderTitle}` : `${modalHeaderTitle}`}
                                                 </p>
                     </div>
                 </div>
@@ -474,8 +522,35 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                                 </p>
                             </button>
                         )}
+                        {isEditMode && (
+                            <button 
+                                onClick={handleDelete}
+                                style={{ 
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    padding: '12px 24px',
+                                    backgroundColor: 'transparent',
+                                    borderRadius: '8px',
+                                    color: 'black',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600',
+                                    fontFamily: 'Montserrat',
+                                    border: 'none',
+
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                    <path d="M10 7.5V10.8333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                    <path d="M10 14.1743L10.0083 14.1651" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                Delete Task
+                            </button>
+                        )}
                     </div>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div style={{ display: 'flex', gap: '10px', width: 'max-content', justifyContent: 'flex-end' }}>
                         <button className="cancel-btn" onClick={handleClose}>
                             {isViewMode ? 'CLOSE' : 'CANCEL'}
                         </button>
@@ -490,6 +565,8 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                 </div>
             </div>
         </div>
+            )}
+        </>
     )
 }
 

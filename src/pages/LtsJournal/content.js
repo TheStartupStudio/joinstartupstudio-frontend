@@ -338,7 +338,12 @@ function LtsJournalContent(props) {
     }
 
     return {
-      title: journal.title,
+      title: journal.entries && journal.entries.length > 0 
+        ? journal.title 
+        : journal.video?.title || journal.title,
+      taskTitle: journal.entries && journal.entries.length > 0 
+        ? journal.title 
+        : 'Reflection',
       content: journal.content
     };
   };
@@ -427,7 +432,9 @@ function LtsJournalContent(props) {
               alt="page-icon"
               style={{ width: '36px', height: '36px', marginRight: '10px' }}
             />
-            <h6>Reflection</h6>
+            <h6>{journal.entries && journal.entries.length > 0 
+        ? 'Reflection'
+        : journal.title}</h6>
           </div>
           
           {videos[currentVideoIndex] && 
@@ -467,7 +474,7 @@ function LtsJournalContent(props) {
               </div>
             </div>
           ) : (
-            <p>No journal entries available.</p>
+            <p dangerouslySetInnerHTML={{ __html: journal.content }} style={{ fontFamily: 'Montserrat', fontSize: '16px', fontWeight: '400', color: '#000', padding: '1rem 0rem' }}></p>
           ))}
         </div>
       </div>

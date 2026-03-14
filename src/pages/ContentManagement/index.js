@@ -12,6 +12,7 @@ import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager
 import axiosInstance from '../../utils/AxiosInstance'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
+import CreateJournalTaskModal from '../../components/ContentManagement/CreateJournalTaskModal'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import AssignTasksModal from '../../components/ContentManagement/AssignTasksModal'
 
@@ -40,6 +41,7 @@ const ContentManagement = () => {
   const [showUnpublishPopup, setShowUnpublishPopup] = useState(false)
   const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false)
   const [showDeleteLevelPopup, setShowDeleteLevelPopup] = useState(false)
+  const [showCreateJournalTaskModal, setShowCreateJournalTaskModal] = useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
   const [selectedItems, setSelectedItems] = useState([])
@@ -224,9 +226,19 @@ const ContentManagement = () => {
   }
 
   const addNewContent = () => {
-    setEditingTask(null)
-    setModalMode('add')
-    setShowAddTaskModal(true)
+    // Check if the current level has any tasks
+    const hasTasksInLevel = tasksData.length > 0
+
+    if (hasTasksInLevel) {
+      // If level has tasks, use regular AddTaskModal
+      setEditingTask(null)
+      setModalMode('add')
+      setShowAddTaskModal(true)
+    } else {
+      // If level has no tasks, use CreateJournalTaskModal for the first task
+      setShowCreateJournalTaskModal(true)
+    }
+
     setShowAddDropdown(false)
   }
 
@@ -377,22 +389,44 @@ const ContentManagement = () => {
             : []
       }
 
-      const taskData = {
-        id: journal.id,
-        title: journal.title,
-        level: activeLevel,
-        contentType: formattedReflectionItems.length > 0 ? 'video' : 'video',
-        videoUrl: journal.videoUrl,
-        thumbnailUrl: journal.thumbnailUrl,
-        information: journal.information || '',
-        reflectionItems: formattedReflectionItems,
-        order: journal.order
+      // Check if task has reflection content (entries with questions)
+      const hasReflection = formattedReflectionItems.length > 0 && 
+                           formattedReflectionItems.some(item => item.question && item.question.trim() !== '')
+
+      if (hasReflection) {
+        // Task has reflection content - use AddTaskModal
+        const taskData = {
+          id: journal.id,
+          title: journal.title,
+          level: activeLevel,
+          contentType: formattedReflectionItems.length > 0 ? 'video' : 'video',
+          videoUrl: journal.videoUrl,
+          thumbnailUrl: journal.thumbnailUrl,
+          information: journal.information || '',
+          reflectionItems: formattedReflectionItems,
+          order: journal.order
+        }
+
+        setEditingTask(taskData)
+        setModalMode(mode)
+        setShowAddTaskModal(true)
+      } else {
+        // Task has no reflection content - use CreateJournalTaskModal
+        // This is the first task or a basic journal task without reflection
+        const taskData = {
+          id: journal.id,
+          title: journal.title,
+          videoUrl: journal.videoUrl || journal.video?.url || '',
+          videoTitle: journal.video?.title || '',
+          thumbnailUrl: journal.thumbnailUrl || journal.JournalImg?.url || '',
+          information: journal.information || '',
+          order: journal.order
+        }
+
+        setEditingTask(taskData)
+        setModalMode(mode)
+        setShowCreateJournalTaskModal(true)
       }
-
-
-      setEditingTask(taskData)
-      setModalMode(mode)
-      setShowAddTaskModal(true)
     } catch (error) {
       console.error('Error fetching journal data:', error)
       toast.error('Failed to load journal data')
@@ -408,6 +442,11 @@ const ContentManagement = () => {
       return
     }
 
+    fetchTasksByLevel()
+  }
+
+  const handleSaveJournalTask = () => {
+    // Refresh the tasks list after saving
     fetchTasksByLevel()
   }
 
@@ -856,7 +895,7 @@ const ContentManagement = () => {
 
               </div>
 
-      <AddTaskModal 
+      <AddTaskModal
         show={showAddTaskModal}
         onHide={() => {
           setShowAddTaskModal(false)
@@ -867,6 +906,28 @@ const ContentManagement = () => {
         levels={levelsData}
         mode={modalMode}
         taskData={editingTask}
+      />
+
+      <CreateJournalTaskModal
+        show={showCreateJournalTaskModal}
+        onClose={() => {
+          setShowCreateJournalTaskModal(false)
+          setEditingTask(null)
+          setModalMode('add')
+        }}
+        onSave={handleSaveJournalTask}
+        mode={modalMode}
+        taskData={editingTask}
+        contentId={(() => {
+          // For ContentManagement, we don't have a specific contentId like in leadership
+          // This might need to be adjusted based on your content management structure
+          return null
+        })()}
+        journalLevelId={(() => {
+          const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+          return activeLevelObj?.id
+        })()}
+        category="entrepreneurship"
       />
 
       <AddLevelModal
