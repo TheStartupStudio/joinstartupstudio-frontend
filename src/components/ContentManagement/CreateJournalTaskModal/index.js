@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
@@ -6,16 +6,58 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import './index.css'
 
-const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevelId }) => {
+const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevelId, mode = 'add', taskData = null }) => {
     const [journalTitle, setJournalTitle] = useState('')
     const [journalText, setJournalText] = useState('')
+    const [journalVideoTitle, setJournalVideoTitle] = useState('')
     const [journalVideoUrl, setJournalVideoUrl] = useState('')
     const [journalVideoThumbnailUrl, setJournalVideoThumbnailUrl] = useState('')
     const [journalVideoFile, setJournalVideoFile] = useState(null)
     const [journalThumbnailFile, setJournalThumbnailFile] = useState(null)
     const [journalVideoPreview, setJournalVideoPreview] = useState(null)
     const [journalThumbnailPreview, setJournalThumbnailPreview] = useState(null)
-    const [activeTab, setActiveTab] = useState('intro')
+    const [activeTab, setActiveTab] = useState('video')
+    const [currentMode, setCurrentMode] = useState(mode)
+    const [loading, setLoading] = useState(false)
+
+    const isViewMode = currentMode === 'view'
+    const isEditMode = currentMode === 'edit'
+    const isAddMode = currentMode === 'add'
+
+    const quillModules = {
+        toolbar: isViewMode ? false : [
+            ['bold', 'italic', 'blockquote'],
+            [{ 'align': [] }, { 'align': 'center' }, { 'align': 'right' }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['link', 'image']
+        ]
+    }
+
+    const quillFormats = [
+        'bold',
+        'italic',
+        'blockquote',
+        'align',
+        'list',
+        'bullet',
+        'link',
+        'image'
+    ]
+
+    // Load task data when taskData changes
+    useEffect(() => {
+        if (taskData && show) {
+            console.log('CreateJournalTaskModal - taskData received:', taskData)
+            setJournalTitle(taskData.title || '')
+            setJournalText(taskData.information || '')
+            setJournalVideoTitle(taskData.videoTitle || '')
+            setJournalVideoUrl(taskData.videoUrl || '')
+            setJournalVideoThumbnailUrl(taskData.thumbnailUrl || '')
+            setJournalVideoPreview(taskData.videoUrl || '')
+            setJournalThumbnailPreview(taskData.thumbnailUrl || '')
+            setCurrentMode(mode)
+        }
+    }, [taskData, mode, show])
 
     const handleJournalVideoUpload = async (e) => {
         const file = e.target.files[0]
@@ -95,32 +137,47 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
     }
 
     const handleSave = async () => {
+        if (!journalTitle) {
+            toast.error('Please provide a journal title')
+            return
+        }
+
+        setLoading(true)
         try {
             const payload = {
                 title: journalTitle,
                 category: 'student-leadership',
                 journalLevel: journalLevelId,
                 platform: 'instructor',
-                order: 0,
+                order: taskData?.order || 0,
                 parentId: null,
                 videoUrl: journalVideoUrl || null,
+                videoTitle: journalVideoTitle || null,
                 thumbnailUrl: journalVideoThumbnailUrl || null,
                 information: journalText || null,
                 reflectionItems: []
             }
 
-            const response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
+            let response
+            if (isEditMode && taskData?.id) {
+                response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
+                toast.success('Journal task updated successfully!')
+            } else {
+                response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
+                toast.success('Journal task created successfully!')
+            }
 
             if (response.data.success) {
-                toast.success('Journal task created successfully!')
                 handleClose()
                 if (onSave) onSave()
             } else {
-                throw new Error('Failed to create journal task')
+                throw new Error('Failed to save journal task')
             }
         } catch (error) {
-            console.error('Error creating journal task:', error)
-            toast.error(`Failed to create journal task: ${error.message}`)
+            console.error('Error saving journal task:', error)
+            toast.error(`Failed to save journal task: ${error.message}`)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -134,7 +191,8 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
         setJournalThumbnailFile(null)
         setJournalVideoPreview(null)
         setJournalThumbnailPreview(null)
-        setActiveTab('intro')
+        setActiveTab('video')
+        setCurrentMode('add')
         onClose()
     }
 
@@ -154,7 +212,9 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                                 </svg>
                             </div>
                         </div>
-                        <p className="modal-title">Create Journal Task</p>
+                                                <p className="modal-title">
+                                                    {isViewMode ? 'View Journal Task' : isEditMode ? 'Edit Journal Task' : 'Create Journal Task'}
+                                                </p>
                     </div>
                 </div>
 
@@ -164,16 +224,16 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                         <div className="sections-content">
                             <div className="tab-navigation">
                                 <button
-                                    className={`tab-btn ${activeTab === 'intro' ? 'active' : ''}`}
-                                    onClick={() => setActiveTab('intro')}
-                                >
-                                    Section Intro
-                                </button>
-                                <button
                                     className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('video')}
                                 >
                                     Section Intro Video
+                                </button>
+                                <button
+                                    className={`tab-btn ${activeTab === 'intro' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('intro')}
+                                >
+                                    Section Intro
                                 </button>
                             </div>
 
@@ -194,13 +254,15 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                                                         fontWeight: '500',
                                                         color: '#333',
                                                         backgroundColor: 'transparent',
-                                                        marginBottom: '10px',
+                                                        marginBottom: '20px',
                                                         boxShadow: '0px 4px 10px 0px rgba(0, 0, 0, 0.25)',
                                                     }}
                                                     type="text"
                                                     placeholder="Add journal task title..."
                                                     value={journalTitle}
                                                     onChange={(e) => setJournalTitle(e.target.value)}
+                                                    readOnly={isViewMode}
+                                                    disabled={isViewMode}
                                                 />
                                             </div>
                                             <div className="d-flex flex-column justify-content-start align-items-start w-100">
@@ -208,6 +270,10 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                                                 <ReactQuill
                                                     value={journalText}
                                                     onChange={setJournalText}
+                                                    modules={quillModules}
+                                                    formats={quillFormats}
+                                                    readOnly={isViewMode}
+                                                    style={isViewMode ? { backgroundColor: '#f9fafb', cursor: 'not-allowed' } : {}}
                                                 />
                                             </div>
                                         </div>
@@ -217,7 +283,33 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
 
                             {activeTab === 'video' && (
                                 <>
+
                                     <div className="upload-section">
+                                    <div className="sections-panel" style={{ gridColumn: '1 / -1' }}>
+                                                <div className="d-flex flex-column justify-content-start align-items-start">
+                                                    <label>Video Title:</label>
+                                                    <input
+                                                        style={{
+                                                            border: '1px solid rgba(227, 229, 233, 0.50)',
+                                                            borderRadius: '8px',
+                                                            padding: '12px 18px',
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            fontSize: '16px',
+                                                            fontWeight: '500',
+                                                            color: '#333',
+                                                            backgroundColor: 'transparent',
+                                                            boxShadow: '0px 4px 10px 0px rgba(0, 0, 0, 0.25)',
+                                                        }}
+                                                        type="text"
+                                                        placeholder="Add video title..."
+                                                        value={journalVideoTitle}
+                                                        onChange={(e) => setJournalVideoTitle(e.target.value)}
+                                                        readOnly={isViewMode}
+                                                        disabled={isViewMode}
+                                                    />
+                                                </div>
+                                    </div>
                                         <div className="upload-box">
                                             <div className="upload-header">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -235,13 +327,15 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
 
                                             {journalVideoPreview ? (
                                                 <div className="upload-preview">
-                                                    <button
-                                                        className="delete-preview-btn"
-                                                        onClick={handleDeleteJournalVideo}
-                                                        type="button"
-                                                    >
-                                                        <FontAwesomeIcon icon={faTrash} />
-                                                    </button>
+                                                    {!isViewMode && (
+                                                        <button
+                                                            className="delete-preview-btn"
+                                                            onClick={handleDeleteJournalVideo}
+                                                            type="button"
+                                                        >
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </button>
+                                                    )}
                                                     <video
                                                         src={journalVideoPreview}
                                                         controls
@@ -252,34 +346,39 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <input
-                                                        type="file"
-                                                        id="journal-video-upload"
-                                                        accept="video/*"
-                                                        onChange={handleJournalVideoUpload}
-                                                        style={{ display: 'none' }}
-                                                    />
-                                                    <label htmlFor="journal-video-upload" className="upload-area">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                            <g clipPath="url(#clip0_3778_12543)">
-                                                                <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                                <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                            </g>
-                                                            <defs>
-                                                                <clipPath id="clip0_3778_12543">
-                                                                    <rect width="20" height="20" fill="white"/>
-                                                                </clipPath>
-                                                            </defs>
-                                                        </svg>
-                                                        <div className="d-flex flex-column text-center">
-                                                            <p className="upload-text">Click to upload</p>
-                                                            <p className="upload-subtext">or drag and drop</p>
-                                                        </div>
-                                                        <p className="upload-info">
-                                                            Only mp4, avi, or webm file format<br />
-                                                            supported (max. 50Mb)
-                                                        </p>
-                                                    </label>
+                                                    {!isViewMode && (
+                                                        <>
+                                                            <input
+                                                                type="file"
+                                                                id="journal-video-upload"
+                                                                accept="video/*"
+                                                                onChange={handleJournalVideoUpload}
+                                                                style={{ display: 'none' }}
+                                                                disabled={isViewMode}
+                                                            />
+                                                            <label htmlFor="journal-video-upload" className="upload-area">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                                    <g clipPath="url(#clip0_3778_12543)">
+                                                                        <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                                        <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                                    </g>
+                                                                    <defs>
+                                                                        <clipPath id="clip0_3778_12543">
+                                                                            <rect width="20" height="20" fill="white"/>
+                                                                        </clipPath>
+                                                                    </defs>
+                                                                </svg>
+                                                                <div className="d-flex flex-column text-center">
+                                                                    <p className="upload-text">Click to upload</p>
+                                                                    <p className="upload-subtext">or drag and drop</p>
+                                                                </div>
+                                                                <p className="upload-info">
+                                                                    Only mp4, avi, or webm file format<br />
+                                                                    supported (max. 50Mb)
+                                                                </p>
+                                                            </label>
+                                                        </>
+                                                    )}
                                                 </>
                                             )}
                                         </div>
@@ -301,13 +400,15 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
 
                                             {journalThumbnailPreview ? (
                                                 <div className="upload-preview">
-                                                    <button
-                                                        className="delete-preview-btn"
-                                                        onClick={handleDeleteJournalThumbnail}
-                                                        type="button"
-                                                    >
-                                                        <FontAwesomeIcon icon={faTrash} />
-                                                    </button>
+                                                    {!isViewMode && (
+                                                        <button
+                                                            className="delete-preview-btn"
+                                                            onClick={handleDeleteJournalThumbnail}
+                                                            type="button"
+                                                        >
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </button>
+                                                    )}
                                                     <img
                                                         src={journalThumbnailPreview}
                                                         alt="Journal thumbnail preview"
@@ -316,34 +417,39 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <input
-                                                        type="file"
-                                                        id="journal-thumbnail-upload"
-                                                        accept="image/*"
-                                                        onChange={handleJournalThumbnailUpload}
-                                                        style={{ display: 'none' }}
-                                                    />
-                                                    <label htmlFor="journal-thumbnail-upload" className="upload-area">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                            <g clipPath="url(#clip0_3778_12543)">
-                                                                <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                                <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                            </g>
-                                                            <defs>
-                                                                <clipPath id="clip0_3778_12543">
-                                                                    <rect width="20" height="20" fill="white"/>
-                                                                </clipPath>
-                                                            </defs>
-                                                        </svg>
-                                                        <div className="d-flex flex-column text-center">
-                                                            <p className="upload-text">Click to upload</p>
-                                                            <p className="upload-subtext">or drag and drop</p>
-                                                        </div>
-                                                        <p className="upload-info">
-                                                            Only png, jpg, or jpeg file format<br />
-                                                            supported (max. 2Mb)
-                                                        </p>
-                                                    </label>
+                                                    {!isViewMode && (
+                                                        <>
+                                                            <input
+                                                                type="file"
+                                                                id="journal-thumbnail-upload"
+                                                                accept="image/*"
+                                                                onChange={handleJournalThumbnailUpload}
+                                                                style={{ display: 'none' }}
+                                                                disabled={isViewMode}
+                                                            />
+                                                            <label htmlFor="journal-thumbnail-upload" className="upload-area">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                                    <g clipPath="url(#clip0_3778_12543)">
+                                                                        <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                                        <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                                    </g>
+                                                                    <defs>
+                                                                        <clipPath id="clip0_3778_12543">
+                                                                            <rect width="20" height="20" fill="white"/>
+                                                                        </clipPath>
+                                                                    </defs>
+                                                                </svg>
+                                                                <div className="d-flex flex-column text-center">
+                                                                    <p className="upload-text">Click to upload</p>
+                                                                    <p className="upload-subtext">or drag and drop</p>
+                                                                </div>
+                                                                <p className="upload-info">
+                                                                    Only png, jpg, or jpeg file format<br />
+                                                                    supported (max. 2Mb)
+                                                                </p>
+                                                            </label>
+                                                        </>
+                                                    )}
                                                 </>
                                             )}
                                         </div>
@@ -355,16 +461,32 @@ const CreateJournalTaskModal = ({ show, onClose, onSave, contentId, journalLevel
                 </div>
 
                 {/* Actions */}
-                <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-                    <button className="cancel-btn" onClick={handleClose}>
-                        Cancel
-                    </button>
-                    <button className="save-btn" onClick={handleSave}>
-                        <p style={{ width: 'fit-content', marginBottom: '0 !important', paddingBottom: '0 !important' }}>
-                            SAVE AND CLOSE
-                        </p>
-                        
-                    </button>
+                <div style={{ padding: '0 40px', display: 'flex', justifyContent: 'space-between', gap: '10px', marginTop: '20px', marginBottom: '20px' }}>
+                    <div>
+                        {isViewMode && (
+                            <button 
+                                className="save-btn" 
+                                onClick={() => setCurrentMode('edit')}
+                                style={{ marginRight: '10px' }}
+                            >
+                                <p style={{ width: 'fit-content', marginBottom: '0 !important', paddingBottom: '0 !important' }}>
+                                    SWITCH TO EDIT MODE
+                                </p>
+                            </button>
+                        )}
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <button className="cancel-btn" onClick={handleClose}>
+                            {isViewMode ? 'CLOSE' : 'CANCEL'}
+                        </button>
+                        {!isViewMode && (
+                            <button className="save-btn" onClick={handleSave} disabled={loading}>
+                                <p style={{ width: 'max-content', marginBottom: '0 !important', paddingBottom: '0 !important' }}>
+                                    {loading ? 'SAVING...' : (isEditMode ? 'UPDATE AND CLOSE' : 'SAVE AND CLOSE')}
+                                </p>
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -368,75 +368,98 @@ const LeadershipJournalManagement = () => {
 
       const journal = response.data
 
-      let formattedReflectionItems = []
+      // Check if task has reflection and content
+      const hasReflection = journal.entries && Array.isArray(journal.entries) && journal.entries.length > 0
+      const hasContent = journal.content && journal.content.trim() !== ''
 
-      if (journal.entries && Array.isArray(journal.entries)) {
-        formattedReflectionItems = journal.entries.map(entry => {
-          let question = ''
-          let instructions = ''
+      if (hasReflection && hasContent) {
+        // Task has reflection and content - use AddTaskModal
+        let formattedReflectionItems = []
 
-          if (entry.title) {
-            const hasHtmlTags = /<[^>]*>/.test(entry.title)
+        if (journal.entries && Array.isArray(journal.entries)) {
+          formattedReflectionItems = journal.entries.map(entry => {
+            let question = ''
+            let instructions = ''
 
-            if (hasHtmlTags) {
-              const tempDiv = document.createElement('div')
-              tempDiv.innerHTML = entry.title
+            if (entry.title) {
+              const hasHtmlTags = /<[^>]*>/.test(entry.title)
 
-              const headingElement = tempDiv.querySelector('h1, h2, h3, h4, h5, h6')
-              if (headingElement) {
-                question = headingElement.textContent || headingElement.innerText || ''
+              if (hasHtmlTags) {
+                const tempDiv = document.createElement('div')
+                tempDiv.innerHTML = entry.title
+
+                const headingElement = tempDiv.querySelector('h1, h2, h3, h4, h5, h6')
+                if (headingElement) {
+                  question = headingElement.textContent || headingElement.innerText || ''
+                } else {
+                  let headingMatch = entry.title.match(/<h3[^>]*>(.*?)<\/h3>/i)
+                  if (!headingMatch) {
+                    headingMatch = entry.title.match(/<h2[^>]*>(.*?)<\/h2>/i)
+                  }
+                  if (headingMatch && headingMatch[1]) {
+                    const headingTempDiv = document.createElement('div')
+                    headingTempDiv.innerHTML = headingMatch[1]
+                    question = headingTempDiv.textContent || headingTempDiv.innerText || headingMatch[1]
+                  }
+                }
+
+                const pElement = tempDiv.querySelector('p')
+                if (pElement) {
+                  instructions = pElement.textContent || pElement.innerText || ''
+                } else {
+                  const pMatch = entry.title.match(/<p[^>]*>(.*?)<\/p>/i)
+                  if (pMatch && pMatch[1]) {
+                    const pTempDiv = document.createElement('div')
+                    pTempDiv.innerHTML = pMatch[1]
+                    instructions = pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
+                  }
+                }
               } else {
-                let headingMatch = entry.title.match(/<h3[^>]*>(.*?)<\/h3>/i)
-                if (!headingMatch) {
-                  headingMatch = entry.title.match(/<h2[^>]*>(.*?)<\/h2>/i)
-                }
-                if (headingMatch && headingMatch[1]) {
-                  const headingTempDiv = document.createElement('div')
-                  headingTempDiv.innerHTML = headingMatch[1]
-                  question = headingTempDiv.textContent || headingTempDiv.innerText || headingMatch[1]
-                }
+                question = entry.title
+                instructions = ''
               }
-
-              const pElement = tempDiv.querySelector('p')
-              if (pElement) {
-                instructions = pElement.textContent || pElement.innerText || ''
-              } else {
-                const pMatch = entry.title.match(/<p[^>]*>(.*?)<\/p>/i)
-                if (pMatch && pMatch[1]) {
-                  const pTempDiv = document.createElement('div')
-                  pTempDiv.innerHTML = pMatch[1]
-                  instructions = pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
-                }
-              }
-            } else {
-              question = entry.title
-              instructions = ''
             }
-          }
 
-          return {
-            id: entry.id || Date.now() + Math.random(),
-            question: question.trim(),
-            instructions: instructions.trim()
-          }
-        })
+            return {
+              id: entry.id || Date.now() + Math.random(),
+              question: question.trim(),
+              instructions: instructions.trim()
+            }
+          })
+        }
+
+        const taskData = {
+          id: journal.id,
+          title: journal.title,
+          level: activeLevel,
+          contentType: 'video',
+          videoUrl: journal.video?.url || journal.videos?.[0]?.url || '',
+          thumbnailUrl: journal.JournalImg?.url || journal.video?.thumbnail || journal.videos?.[0]?.thumbnail || '',
+          information: journal.content || journal.paragraph || '',
+          reflectionItems: formattedReflectionItems,
+          order: journal.order
+        }
+
+        setEditingTask(taskData)
+        setModalMode(mode)
+        setShowAddTaskModal(true)
+      } else {
+        // Task has no reflection or content - use CreateJournalTaskModal
+        // For view/edit mode, we need to pass the journal data to the CreateJournalTaskModal
+        const taskData = {
+          id: journal.id,
+          title: journal.title,
+          videoUrl: journal.video?.url || journal.videos?.[0]?.url || '',
+          videoTitle: journal.video?.title || '',
+          thumbnailUrl: journal.JournalImg?.url || journal.video?.thumbnail || journal.videos?.[0]?.thumbnail || '',
+          information: journal.content || journal.paragraph || '',
+          order: journal.order
+        }
+
+        setEditingTask(taskData)
+        setModalMode(mode)
+        setShowCreateJournalTaskModal(true)
       }
-
-      const taskData = {
-        id: journal.id,
-        title: journal.title,
-        level: activeLevel,
-        contentType: 'video',
-        videoUrl: journal.video?.url || journal.videos?.[0]?.url || '',
-        thumbnailUrl: journal.JournalImg?.url || journal.video?.thumbnail || journal.videos?.[0]?.thumbnail || '',
-        information: journal.content || journal.paragraph || '',
-        reflectionItems: formattedReflectionItems,
-        order: journal.order
-      }
-
-      setEditingTask(taskData)
-      setModalMode(mode)
-      setShowAddTaskModal(true)
     } catch (error) {
       console.error('Error fetching journal data:', error)
       toast.error('Failed to load journal data')
@@ -1024,8 +1047,12 @@ const LeadershipJournalManagement = () => {
         show={showCreateJournalTaskModal}
         onClose={() => {
           setShowCreateJournalTaskModal(false)
+          setEditingTask(null)
+          setModalMode('add')
         }}
         onSave={handleSaveJournalTask}
+        mode={modalMode}
+        taskData={editingTask}
         contentId={(() => {
           const foundItem = manageContentData.find(item => item.title === selectedCategory)
           return foundItem?.id

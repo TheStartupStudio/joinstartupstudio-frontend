@@ -14,9 +14,6 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const [showDeleteAlert, setShowDeleteAlert] = useState(false)
   const [levelToDelete, setLevelToDelete] = useState(null)
 
-  console.log('AddLevelModal props:', { selectedCategory, manageContentId, category, show })
-
-
   const getApiEndpoint = (action, id = null) => {
     if (category === 'leadership') {
       switch (action) {

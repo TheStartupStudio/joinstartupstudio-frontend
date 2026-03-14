@@ -348,9 +348,9 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
     padding: 16px 5px;
   }
 
-  .manage-content .search-container {
+  /* .manage-content .search-container {
     min-width: 100%;
-  }
+  } */
 
   .manage-content .actions-container {
     justify-content: stretch;

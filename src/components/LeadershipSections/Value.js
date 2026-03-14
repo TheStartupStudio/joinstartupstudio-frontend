@@ -284,7 +284,7 @@ const Value = forwardRef((props, ref) => {
             <div className='d-grid academy-dashboard-card p-3'>
               <div className='d-flex gap-3 align-items-center mb-4 mt-2'>
               <img src={WhoAmI} alt='who-am-i' style={{ width: '40px', height: '40px' }}  />
-              <h4 className='fs-18 my-details-header text-black'>{journalData?.title}</h4>
+              <h4 className='fs-18 my-details-header text-black'>{journalData?.video?.title}</h4>
             </div>
               {journalData?.video && (
                 <div
@@ -330,7 +330,7 @@ const Value = forwardRef((props, ref) => {
           </div>
         </div>
 
-        <SectionsWrapper title={'Details'}>
+        <SectionsWrapper title={journalData?.title}>
           <div style={{ position: 'relative' }}>
             <div style={noteButtonStyles}>
               <NotesButton

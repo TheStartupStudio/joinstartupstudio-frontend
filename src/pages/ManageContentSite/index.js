@@ -11,6 +11,7 @@ import AddJournalIntroduction from '../../components/ContentManagement/AddJourna
 import DeleteJournalContentModal from '../../components/ContentManagement/DeleteJournalContentModal'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 
 
 const ManageContentSite = () => {
@@ -775,7 +776,7 @@ const ManageContentSite = () => {
           </div>
           <div className="menu-icon-container">
             <img
-              src={require('../../assets/images/academy-icons/svg/icons8-menu.svg').default}
+              src={MenuIcon}
               alt='menu'
               className='menu-icon-cie self-start-tab cursor-pointer'
               onClick={() => dispatch(toggleCollapse())}
