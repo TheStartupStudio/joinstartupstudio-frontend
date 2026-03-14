@@ -286,7 +286,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           </svg>
         </div>
         
-        <h5 className="modal-title">Add New Section</h5>
+        <h5 className="modal-title">Add New {category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'}</h5>
 
         <div className="form-group">
           <label className="form-label">LEVEL TITLE:</label>
@@ -347,7 +347,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
                     }}
                     onClick={() => !loading && addNewLevelAfter(level.id)}
                   >
-                    Add New Section Here
+                    Add New {category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'} Here
                     <svg className="plus" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
