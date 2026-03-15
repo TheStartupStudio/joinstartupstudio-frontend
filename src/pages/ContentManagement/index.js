@@ -188,7 +188,6 @@ const ContentManagement = () => {
   }
 
   const handleReorder = async (newOrderedData) => {
-    setLoading(true)
     
     try {
       const updatedData = newOrderedData.map((item, index) => ({
@@ -215,8 +214,6 @@ const ContentManagement = () => {
       console.error('Error reordering tasks:', error)
       toast.error('Failed to update task order')
       fetchTasksByLevel()
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -253,7 +250,6 @@ const ContentManagement = () => {
       return
     }
 
-    setLoading(true)
     try {
       const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
@@ -275,7 +271,6 @@ const ContentManagement = () => {
       console.error('Error bulk publishing tasks:', error)
       toast.error('Failed to publish tasks')
     } finally {
-      setLoading(false)
       setShowBulkDropdown(false)
     }
   }
@@ -286,7 +281,6 @@ const ContentManagement = () => {
       return
     }
 
-    setLoading(true)
     try {
       const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
@@ -308,14 +302,12 @@ const ContentManagement = () => {
       console.error('Error bulk unpublishing tasks:', error)
       toast.error('Failed to unpublish tasks')
     } finally {
-      setLoading(false)
       setShowBulkDropdown(false)
     }
   }
 
   const handleViewEditJournal = async (journalId, mode) => {
     try {
-      setLoading(true)
 
       const response = await axiosInstance.get(`/LtsJournals/${journalId}/view-with-content`)
 
@@ -430,8 +422,6 @@ const ContentManagement = () => {
     } catch (error) {
       console.error('Error fetching journal data:', error)
       toast.error('Failed to load journal data')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -457,8 +447,6 @@ const ContentManagement = () => {
   const handleSaveAssignments = async (assignments) => {
     try {
       setLoading(true)
-
-      console.log('Assignments to process:', assignments)
 
       // Filter out assignments with invalid level IDs
       const validAssignments = assignments.filter(assignment => {
@@ -529,7 +517,6 @@ const ContentManagement = () => {
   }
 
   const handleConfirmPublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
         published: true
@@ -544,13 +531,10 @@ const ContentManagement = () => {
     } catch (error) {
       console.error('Error publishing task:', error)
       toast.error('Failed to publish task')
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleConfirmUnpublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
         published: false
@@ -565,13 +549,10 @@ const ContentManagement = () => {
     } catch (error) {
       console.error('Error unpublishing task:', error)
       toast.error('Failed to unpublish task')
-    } finally {
-      setLoading(false)
-    }
+    } 
   }
 
   const handleConfirmDeleteTask = async () => {
-    setLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
@@ -584,13 +565,10 @@ const ContentManagement = () => {
       setSelectedTask(null)
     } catch (error) {
       toast.error('Failed to delete task')
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleConfirmDeleteLevel = async () => {
-    setLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
@@ -599,8 +577,6 @@ const ContentManagement = () => {
       setSelectedLevel(null)
     } catch (error) {
       toast.error('Failed to delete level')
-    } finally {
-      setLoading(false)
     }
   }
 

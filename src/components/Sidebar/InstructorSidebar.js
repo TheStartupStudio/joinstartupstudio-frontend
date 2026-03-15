@@ -102,7 +102,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Sessions',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     className: (pathname) => pathname.includes('my-course-in-entrepreneurship/journal') ? 'active' : ''
   },
   {
@@ -110,7 +110,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: [2, 1, 3],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) => pathname.includes('beyond-your-course') ? 'active' : ''
   },

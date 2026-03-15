@@ -407,6 +407,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   return (
     <>
     <Modal show={show} onHide={handleClose} centered size="lg" className="add-task-content-management-modal">
+      {show && (
       <Modal.Body className="add-task-modal-body">
         <div className="modal-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -719,7 +720,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                 <div className="reflection-editor-area">
                   <ReactQuill
                     theme="snow"
-                    value={information}
+                    value={information ?? ''}
                     onChange={(value) => setInformation(value)}
                     modules={quillModules}
                     formats={quillFormats}
@@ -752,7 +753,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                   <div className="reflection-editor-area">
                     <ReactQuill
                       theme="snow"
-                      value={item.question}
+                      value={item.question ?? ''}
                       onChange={(value) => handleQuestionChange(item.id, value)}
                       modules={quillModules}
                       formats={quillFormats}
@@ -807,7 +808,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
                     <div className="reflection-editor-area">
                       <ReactQuill
                         theme="snow"
-                        value={item.instructions}
+                        value={item.instructions ?? ''}
                         onChange={(value) => handleInstructionsChange(item.id, value)}
                         modules={quillModules}
                         formats={quillFormats}
@@ -874,6 +875,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
           </div>
         )}
       </Modal.Body>
+      )}
     </Modal>
 
     {/* Delete Confirmation Modal */}

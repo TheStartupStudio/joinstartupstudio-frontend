@@ -311,6 +311,7 @@ const ViewOrganizationInvoicesModal = ({ show, onHide, organizationName, organiz
             background: 'var(--Glassy-White, rgba(255, 255, 255, 0.10))',
             boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
             backdropFilter: 'blur(60px)',
+            padding: '10px'
           }}>
 
             <div className="header-content">

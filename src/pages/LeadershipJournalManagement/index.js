@@ -229,7 +229,6 @@ const LeadershipJournalManagement = () => {
   }
 
   const handleReorder = async (newOrderedData) => {
-    setLoading(true)
 
     try {
       const updatedData = newOrderedData.map((item, index) => ({
@@ -256,8 +255,6 @@ const LeadershipJournalManagement = () => {
           fetchContentByLevel(activeLevelObj.id)
         }
       }
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -294,7 +291,6 @@ const LeadershipJournalManagement = () => {
       return
     }
 
-    setLoading(true)
     try {
       const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
@@ -319,7 +315,6 @@ const LeadershipJournalManagement = () => {
       console.error('Error bulk publishing leadership tasks:', error)
       toast.error('Failed to publish leadership tasks')
     } finally {
-      setLoading(false)
       setShowBulkDropdown(false)
     }
   }
@@ -330,7 +325,6 @@ const LeadershipJournalManagement = () => {
       return
     }
 
-    setLoading(true)
     try {
       const updatePromises = selectedItems.map(async (task) => {
         return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
@@ -355,14 +349,12 @@ const LeadershipJournalManagement = () => {
       console.error('Error bulk unpublishing leadership tasks:', error)
       toast.error('Failed to unpublish leadership tasks')
     } finally {
-      setLoading(false)
       setShowBulkDropdown(false)
     }
   }
 
   const handleViewEditJournal = async (journalId, mode) => {
     try {
-      setLoading(true)
 
       const response = await axiosInstance.get(`/LtsJournals/${journalId}`)
 
@@ -463,8 +455,6 @@ const LeadershipJournalManagement = () => {
     } catch (error) {
       console.error('Error fetching journal data:', error)
       toast.error('Failed to load journal data')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -485,7 +475,6 @@ const LeadershipJournalManagement = () => {
 
   const handleSaveAssignments = async (assignments) => {
     try {
-      setLoading(true)
 
       console.log('Leadership assignments to process:', assignments)
 
@@ -533,8 +522,6 @@ const LeadershipJournalManagement = () => {
     } catch (error) {
       console.error('Error assigning leadership journals:', error)
       toast.error('Failed to assign leadership journals')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -559,7 +546,6 @@ const LeadershipJournalManagement = () => {
   }
 
   const handleConfirmPublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
         published: true
@@ -578,13 +564,10 @@ const LeadershipJournalManagement = () => {
     } catch (error) {
       console.error('Error publishing task:', error)
       toast.error('Failed to publish task')
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleConfirmUnpublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
         published: false
@@ -603,13 +586,10 @@ const LeadershipJournalManagement = () => {
     } catch (error) {
       console.error('Error unpublishing task:', error)
       toast.error('Failed to unpublish task')
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleConfirmDeleteTask = async () => {
-    setLoading(true)
     try {
       await axiosInstance.delete(`/LtsJournals/${selectedTask.id}/delete-with-content`)
 
@@ -623,13 +603,10 @@ const LeadershipJournalManagement = () => {
     } catch (error) {
       console.error('Error deleting task:', error)
       toast.error('Failed to delete task')
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleConfirmDeleteLevel = async () => {
-    setLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
@@ -638,8 +615,6 @@ const LeadershipJournalManagement = () => {
       setSelectedLevel(null)
     } catch (error) {
       toast.error('Failed to delete level')
-    } finally {
-      setLoading(false)
     }
   }
 
