@@ -4,10 +4,11 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const ContactLTSModal = ({ show, onHide }) => {
+const ContactLTSModal = ({ show, onHide, organizationAdminEmail, organizationId, organizationName }) => {
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const sendToOrgAdmin = Boolean(organizationAdminEmail)
 
   const handleSubjectChange = (e) => {
     setSubject(e.target.value)
@@ -30,13 +31,21 @@ const ContactLTSModal = ({ show, onHide }) => {
 
     setLoading(true)
     try {
-      const response = await axiosInstance.post('/admin-info/contact-lts', {
+      const payload = {
         subject,
         message
-      })
+      }
+      if (sendToOrgAdmin) {
+        payload.toEmail = organizationAdminEmail
+        if (organizationId) payload.organizationId = organizationId
+        if (organizationName) payload.organizationName = organizationName
+      }
+      const response = await axiosInstance.post('/admin-info/contact-lts', payload)
 
       if (response.data.success) {
-        toast.success('Your message has been sent to LTS administrators!')
+        toast.success(sendToOrgAdmin
+          ? 'Your message has been sent to the organization administrator.'
+          : 'Your message has been sent to LTS administrators!')
         setSubject('')
         setMessage('')
         onHide()

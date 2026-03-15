@@ -425,7 +425,7 @@ function RegistrationForm() {
             <header className="py-4 px-5 d-flex justify-content-between align-items-start px-1-mob">
             <img
               className="cursor-pointer w-200-mob img-register-login"
-              src={organizationLogo || StartupStudioLogo}
+              src={StartupStudioLogo}
               alt="course logo"
               onClick={() => window.location.href = '/'}
             />

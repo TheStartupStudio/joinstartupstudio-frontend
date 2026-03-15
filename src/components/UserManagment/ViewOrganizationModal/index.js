@@ -477,14 +477,31 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
     }
   }
 
-  const handleSaveLogos = () => {
-    setFormData(prev => ({
-      ...prev,
-      logo1: tempLogo1,
-      logo2: tempLogo2
-    }))
-    setShowEditLogoModal(false)
-    toast.success('Logos updated successfully')
+  const handleSaveLogos = async () => {
+    setLoading(true)
+    try {
+      const payload = {
+        logo1: tempLogo1,
+        logo2: tempLogo2
+      }
+      const { data } = await axiosInstance.patch(`/admin-info/organization/${universityId}`, payload)
+      if (data.success) {
+        setFormData(prev => ({
+          ...prev,
+          logo1: tempLogo1,
+          logo2: tempLogo2
+        }))
+        setOriginalData(prev => prev ? { ...prev, logo1: tempLogo1, logo2: tempLogo2 } : null)
+        setShowEditLogoModal(false)
+        toast.success('Logos updated successfully')
+        await fetchOrganizationData()
+      }
+    } catch (error) {
+      console.error('Error saving logos:', error)
+      toast.error(error.response?.data?.message || 'Failed to save logos')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleCancelEditLogo = () => {
@@ -1012,6 +1029,9 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
       <ContactLTSModal
         show={showContactLTSModal}
         onHide={() => setShowContactLTSModal(false)}
+        organizationAdminEmail={formData.adminEmail}
+        organizationId={universityId}
+        organizationName={formData.name}
       />
 
       {/* Edit Logo Modal */}
