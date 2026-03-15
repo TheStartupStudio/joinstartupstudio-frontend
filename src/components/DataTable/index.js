@@ -138,7 +138,12 @@ const DataTable = ({
       return [
         { name: 'View Feedback', action: 'view-feedback' }
       ]
-    }else if (activeTab === 'Invoices') {
+    } else if (activeTab === 'FailedPayments') {
+      return [
+        { name: 'Archive', action: 'archive-invoice' },
+        { name: 'Delete', action: 'delete-invoice' }
+      ]
+    } else if (activeTab === 'Invoices') {
       return [
         { 
           name: 'Export Invoice as PDF', 
@@ -199,8 +204,8 @@ const DataTable = ({
   const handleMoreActionsClick = (itemId, event) => {
     const rect = event.currentTarget.getBoundingClientRect()
     setDropdownPosition({
-      top: rect.top + window.scrollY,
-      left: rect.left + window.scrollX
+      top: rect.top,
+      left: rect.left
     })
     setOpenMoreActionsDropdown(openMoreActionsDropdown === itemId ? null : itemId)
     setOpenFilterDropdown(null)
@@ -301,6 +306,112 @@ const DataTable = ({
         </div>
       )
     }
+    if (activeTab === 'FailedPayments') {
+      return (
+        <div className="action-buttons">
+          <button
+            className="action-btn view-btn"
+            onClick={() => handleActionClick('view', item)}
+            title="View Learner"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M2.5 10.8335C5.5 4.16683 14.5 4.16683 17.5 10.8335" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10 14.1665C8.61929 14.1665 7.5 13.0472 7.5 11.6665C7.5 10.2858 8.61929 9.1665 10 9.1665C11.3807 9.1665 12.5 10.2858 12.5 11.6665C12.5 13.0472 11.3807 14.1665 10 14.1665Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            View
+          </button>
+          <button
+            className="action-btn send-btn"
+            onClick={() => handleActionClick('contact', item)}
+            title="Contact"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7.5 7.5L11.25 10L15 7.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2.49935 11.25H4.16602" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M0.832682 8.75H4.16602" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4.16732 6.25033V6.16699C4.16732 5.06242 5.06275 4.16699 6.16732 4.16699H16.334C17.4386 4.16699 18.334 5.06242 18.334 6.16699V13.8337C18.334 14.9382 17.4386 15.8337 16.334 15.8337H6.16732C5.06275 15.8337 4.16732 14.9382 4.16732 13.8337V13.7503" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            Contact
+          </button>
+          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
+            <button
+              className="action-btn more-actions-btn"
+              onClick={(e) => handleMoreActionsClick(item.id, e)}
+              title="More Actions"
+            >
+              <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
+                <circle cx="2" cy="2" r="2" fill="currentColor" />
+                <circle cx="8" cy="2" r="2" fill="currentColor" />
+                <circle cx="14" cy="2" r="2" fill="currentColor" />
+              </svg>
+            </button>
+            {openMoreActionsDropdown === item.id && (
+              <div
+                className="more-actions-dropdown-menu"
+                style={{
+                  position: 'absolute !important',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '4px',
+                  background: 'white',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  zIndex: 9999,
+                  minWidth: '200px',
+                  display: 'block'
+                }}
+              >
+                <div
+                  className="more-actions-dropdown-item"
+                  style={{
+                    padding: '12px 16px',
+                    color: 'black',
+                    fontFamily: 'Montserrat',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                  onClick={() => { handleActionClick('archive-invoice', item); setOpenMoreActionsDropdown(null) }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M2.5 6.66699V15.0003C2.5 15.442 2.67559 15.8656 2.98816 16.1782C3.30072 16.4907 3.72464 16.6663 4.16667 16.6663H15.8333C16.2754 16.6663 16.6993 16.4907 17.0118 16.1782C17.3244 15.8656 17.5 15.442 17.5 15.0003V6.66699" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M18.3337 3.33301H1.66699V6.66634H18.3337V3.33301Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8.33301 10H11.6663" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Archive
+                </div>
+                <div
+                  className="more-actions-dropdown-item"
+                  style={{
+                    padding: '12px 16px',
+                    fontFamily: 'Montserrat',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                  onClick={() => { handleActionClick('delete-invoice', item); setOpenMoreActionsDropdown(null) }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M10 14.1753L10.0083 14.1661" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Delete
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )
+    }
     if (activeTab === 'Invoices') {
       return (
         <div className="action-buttons">
@@ -349,9 +460,10 @@ const DataTable = ({
               <div 
                 className="more-actions-dropdown-menu"
                 style={{
-                  position: 'fixed',
-                  top: dropdownPosition.top + 30,
-                  left: dropdownPosition.left - 170,
+                  position: 'absolute !important',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '4px',
                   background: 'white',
                   borderRadius: '8px',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
@@ -547,9 +659,10 @@ const DataTable = ({
               <div 
                 className="more-actions-dropdown-menu"
                 style={{
-                  position: 'fixed',
-                  top: dropdownPosition.top + 30,
-                  left: dropdownPosition.left - 170,
+                  position: 'absolute !important',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '4px',
                   background: 'white',
                   borderRadius: '8px',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
@@ -695,9 +808,10 @@ const DataTable = ({
               <div 
                 className="more-actions-dropdown-menu"
                 style={{
-                  position: 'fixed',
-                  top: dropdownPosition.top + 30,
-                  left: dropdownPosition.left - 170,
+                  position: 'absolute !important',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '4px',
                   background: 'white',
                   borderRadius: '8px',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
@@ -831,14 +945,15 @@ const DataTable = ({
               <div
                 className="more-actions-dropdown-menu"
                 style={{
-                  position: 'fixed',
-                  top: dropdownPosition.top + 30,
-                  left: dropdownPosition.left - 170,
+                  position: 'absolute !important',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '4px',
                   background: 'white',
                   borderRadius: '8px',
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                   zIndex: 9999,
-                  minWidth: '180px',
+                  minWidth: '200px',
                   display: 'block'
                 }}
               >

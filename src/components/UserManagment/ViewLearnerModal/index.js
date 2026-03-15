@@ -35,9 +35,13 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   const [loading, setLoading] = useState(false)
   const [lessonsByLevel, setLessonsByLevel] = useState({})
   const [lessonsLoading, setLessonsLoading] = useState(true)
+  const [paymentsPage, setPaymentsPage] = useState(1)
+
+  const PAYMENTS_PER_PAGE = 5
 
   useEffect(() => {
     if (show && learner?.id) {
+      setPaymentsPage(1)
       fetchLearnerData()
       fetchLevelProgress()
       fetchLessons()
@@ -417,43 +421,78 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {displayData.paymentHistory && displayData.paymentHistory.length > 0 ? (
-                      displayData.paymentHistory.map((payment, index) => (
-                        <tr key={payment.id || index}>
-                          <td className="payment-date">
-                            {payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString('en-US', {
-                              month: '2-digit',
-                              day: '2-digit',
-                              year: 'numeric'
-                            }) : 'N/A'}
-                          </td>
-                          <td className="payment-amount">
-                            ${payment.amount?.toFixed(2) || '0.00'} {payment.currency || 'USD'}
-                          </td>
-                          <td className="payment-status">
-                          <div className="d-flex gap-2 align-items-center">
-                            <span className={`payment-status-badge status-${payment.status?.toLowerCase() || 'unknown'}`}>
-                                
-                              </span>
-                              <p style={{fontSize: '12px', fontWeight: '500', marginBottom: '0'}}>{payment.status === 'completed' ? 'Completed' :
-                                payment.status === 'failed' ? 'Failed' :
-                                payment.status === 'pending' ? 'Pending' :
-                                payment.status || 'Unknown'}</p>
-                          </div>
-                            
+                    {(() => {
+                      const allPayments = displayData.paymentHistory || []
+                      const totalPaymentPages = Math.ceil(allPayments.length / PAYMENTS_PER_PAGE) || 1
+                      const paginatedPayments = allPayments.slice(
+                        (paymentsPage - 1) * PAYMENTS_PER_PAGE,
+                        paymentsPage * PAYMENTS_PER_PAGE
+                      )
+                      return allPayments.length > 0 ? (
+                        paginatedPayments.map((payment, index) => (
+                          <tr key={payment.id || index}>
+                            <td className="payment-date">
+                              {payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString('en-US', {
+                                month: '2-digit',
+                                day: '2-digit',
+                                year: 'numeric'
+                              }) : 'N/A'}
+                            </td>
+                            <td className="payment-amount">
+                              ${payment.amount?.toFixed(2) || '0.00'} {payment.currency || 'USD'}
+                            </td>
+                            <td className="payment-status">
+                              <div className="d-flex gap-2 align-items-center">
+                                <span className={`payment-status-badge status-${payment.status?.toLowerCase() || 'unknown'}`}></span>
+                                <p style={{fontSize: '12px', fontWeight: '500', marginBottom: '0'}}>{payment.status === 'completed' ? 'Completed' :
+                                  payment.status === 'failed' ? 'Failed' :
+                                  payment.status === 'pending' ? 'Pending' :
+                                  payment.status || 'Unknown'}</p>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3" className="no-payments-message">
+                            There is no payment history
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="3" className="no-payments-message">
-                          There is no payment history
-                        </td>
-                      </tr>
-                    )}
+                      )
+                    })()}
                   </tbody>
                 </table>
               </div>
+              {(() => {
+                const allPayments = displayData.paymentHistory || []
+                const totalPaymentPages = Math.ceil(allPayments.length / PAYMENTS_PER_PAGE) || 1
+                if (allPayments.length <= PAYMENTS_PER_PAGE || totalPaymentPages <= 1) return null
+                return (
+                  <div className="payments-pagination">
+                    <span className="payments-pagination-info">
+                      Page {paymentsPage} of {totalPaymentPages}
+                    </span>
+                    <div className="payments-pagination-buttons">
+                      <button
+                        type="button"
+                        className="payments-pagination-btn"
+                        onClick={() => setPaymentsPage(p => Math.max(1, p - 1))}
+                        disabled={paymentsPage <= 1}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        className="payments-pagination-btn"
+                        onClick={() => setPaymentsPage(p => Math.min(totalPaymentPages, p + 1))}
+                        disabled={paymentsPage >= totalPaymentPages}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
           )}
 

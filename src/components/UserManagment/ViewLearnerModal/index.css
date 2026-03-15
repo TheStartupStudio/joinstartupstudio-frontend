@@ -697,3 +697,47 @@ border-radius: 50%;
   font-weight: 500;
   background: #f9fafb;
 }
+
+.view-learner-modal .payments-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.view-learner-modal .payments-pagination-info {
+  font-family: Montserrat;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.view-learner-modal .payments-pagination-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.view-learner-modal .payments-pagination-btn {
+  font-family: Montserrat;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  color: #374151;
+  cursor: pointer;
+}
+
+.view-learner-modal .payments-pagination-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.view-learner-modal .payments-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -280,7 +280,7 @@ text-transform: uppercase;
 /* Dropdown positioning - ensure it appears on top */
 .more-actions-dropdown-menu {
   z-index: 9999 !important;
-  position: fixed !important;
+  position: absolute !important;
 }
 
 .filter-dropdown-menu {

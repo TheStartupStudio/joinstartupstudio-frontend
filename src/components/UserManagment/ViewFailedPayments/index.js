@@ -2,25 +2,17 @@ import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
-import {useCallback} from 'react'
+import { useCallback } from 'react'
 import DataTable from '../../DataTable'
-import AcademyBtn from '../../AcademyBtn'
-import UserManagementPopup from '../AlertPopup'
-import AddNewLearner from '../AddNewLearner'
 import ViewLearnerModal from '../ViewLearnerModal'
-import BulkAddLearnersModal from '../BulkAddLearnersModal'
-import groupAdd from '../../../assets/images/academy-icons/svg/user-group-add.svg'
-import userPlus from '../../../assets/images/academy-icons/svg/Icon_User_Add_Alt.svg'
-import userDeactivate from '../../../assets/images/academy-icons/svg/Icon_User_de.svg'
-import warningTriangle from '../../../assets/images/academy-icons/svg/warning-triangle.svg'
-import userPassword from '../../../assets/images/academy-icons/svg/Icon_User_Pass.svg'
-import download from '../../../assets/images/academy-icons/svg/download.svg'
 import newCity from '../../../assets/images/academy-icons/credit-card-slash.png'
 import leftArrow from '../../../assets/images/academy-icons/left-arrow.png'
 import { invoiceApi } from '../../../utils/invoiceApi'
 import InvoiceFilters from '../../InvoiceFilters'
 import ViewInvoiceModal from '../ViewInvoiceModal'
 import PreviewInvoiceEmailModal from '../PreviewInvoiceEmailModal'
+import ContactLTSModal from '../ContactLTSModal'
+import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
 const ViewFailedPayments = ({ show, onHide }) => {
@@ -47,6 +39,10 @@ const ViewFailedPayments = ({ show, onHide }) => {
   const [invoiceMode, setInvoiceMode] = useState('view')
   const [showPreviewEmailModal, setShowPreviewEmailModal] = useState(false)
   const [invoiceToSend, setInvoiceToSend] = useState(null)
+  const [showViewLearnerModal, setShowViewLearnerModal] = useState(false)
+  const [selectedLearner, setSelectedLearner] = useState(null)
+  const [showContactModal, setShowContactModal] = useState(false)
+  const [contactInvoiceContext, setContactInvoiceContext] = useState(null)
 
   // Data and pagination
   const [failedPaymentsData, setFailedPaymentsData] = useState([])
@@ -131,7 +127,21 @@ const ViewFailedPayments = ({ show, onHide }) => {
 
       console.log('Failed payments response:', response)
 
-      const invoicesData = response.data || []
+      const rawData = response.data || []
+      const invoicesData = rawData.map(inv => {
+        const dateAdded = inv.issueDate || inv.invoiceDate || inv.createdAt
+        let dateFailed = inv.paymentDate
+        if (!dateFailed && dateAdded) {
+          const d = new Date(dateAdded)
+          d.setDate(d.getDate() + 31)
+          dateFailed = d.toISOString().split('T')[0]
+        }
+        return {
+          ...inv,
+          dateAdded,
+          dateFailed
+        }
+      })
 
       setFailedPaymentsData(invoicesData)
       setPagination(response.pagination || {
@@ -192,111 +202,36 @@ const ViewFailedPayments = ({ show, onHide }) => {
     }
   }, [])
 
-  const failedPaymentsColumns = useMemo(() => {
-    if (isInstructor) {
-      return [
-        {
-          key: 'invoiceNumber',
-          title: 'INVOICE NUMBER',
-          sortable: true,
-          filterable: false,
-          render: (value) => (
-            <div className="organization-id">{value}</div>
-          )
-        },
-        {
-          key: 'status',
-          title: 'STATUS',
-          sortable: true,
-          filterable: true,
-          render: (value) => (
-            <span className={`status-badge status-${value.toLowerCase()}`}>
-              <span className="status-dot"></span>
-              {value}
-            </span>
-          )
-        },
-        {
-          key: 'issueDate',
-          title: 'INVOICE DATE',
-          sortable: true,
-          filterable: true,
-          render: (value) => (
-            <span className="invoice-date">
-              {value ? new Date(value).toLocaleDateString('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric'
-              }) : 'N/A'}
-            </span>
-          )
-        },
-        {
-          key: 'paymentDate',
-          title: 'PAYMENT DATE',
-          sortable: true,
-          filterable: true,
-          render: (value) => (
-            <span className="payment-date">
-              {value ? new Date(value).toLocaleDateString('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric'
-              }) : 'N/A'}
-            </span>
-          )
-        }
-      ]
-    }
-
-    return [
-      {
-        key: 'organizationName',
-        title: 'ORGANIZATION NAME',
-        sortable: true,
-        filterable: false,
-        render: (value, item) => (
-          <div className="invoice-organization-info">
-            <div className="organization-name">{item.organizationName}</div>
-            <div className="organization-id">{item.invoiceNumber}</div>
-          </div>
-        )
-      },
-      {
-        key: 'status',
-        title: 'STATUS',
-        sortable: true,
-        filterable: true,
-        render: (value) => (
-          <span className={`status-badge status-${value.toLowerCase()}`}>
-            <span className="status-dot"></span>
-            {value}
-          </span>
-        )
-      },
-      {
-        key: 'invoiceDate',
-        title: 'INVOICE DATE',
-        sortable: true,
-        filterable: true,
-        render: (value) => (
+  const failedPaymentsColumns = useMemo(() => [
+    {
+      key: 'invoiceNumber',
+      title: 'INVOICE NUMBER',
+      sortable: true,
+      filterable: false,
+      render: (value) => <span>{value}</span>
+    },
+    {
+      key: 'status',
+      title: 'STATUS',
+      sortable: true,
+      filterable: false,
+      render: (value) => (
+        <span className={`status-badge status-${(value || '').toLowerCase().replace(/\s/g, '-')}`}>
+          <span className="status-dot"></span>
+          {value || 'Failed'}
+        </span>
+      )
+    },
+    {
+      key: 'dateAdded',
+      title: 'DATE ADDED',
+      sortable: true,
+      filterable: false,
+      render: (value, item) => {
+        const date = value || item.issueDate || item.invoiceDate
+        return (
           <span className="invoice-date">
-            {value ? new Date(value).toLocaleDateString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric'
-            }) : 'N/A'}
-          </span>
-        )
-      },
-      {
-        key: 'paymentDate',
-        title: 'PAYMENT DATE',
-        sortable: true,
-        filterable: true,
-        render: (value) => (
-          <span className="payment-date">
-            {value ? new Date(value).toLocaleDateString('en-US', {
+            {date ? new Date(date).toLocaleDateString('en-US', {
               month: '2-digit',
               day: '2-digit',
               year: 'numeric'
@@ -304,8 +239,26 @@ const ViewFailedPayments = ({ show, onHide }) => {
           </span>
         )
       }
-    ]
-  }, [isInstructor])
+    },
+    {
+      key: 'dateFailed',
+      title: 'DATE FAILED',
+      sortable: true,
+      filterable: false,
+      render: (value, item) => {
+        const date = value || item.paymentDate
+        return (
+          <span className="payment-date">
+            {date ? new Date(date).toLocaleDateString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric'
+            }) : 'N/A'}
+          </span>
+        )
+      }
+    }
+  ], [])
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
@@ -338,14 +291,90 @@ const ViewFailedPayments = ({ show, onHide }) => {
     setSelectedInvoices(selectedItems)
   }
 
-  const handleRowAction = (actionType, item) => {
-    console.log(`${actionType} action for invoice:`, item)
+  const handleViewLearner = async (item) => {
+    const organizationId = item.organizationId
+    if (!organizationId) {
+      toast.error('No organization linked to this invoice')
+      return
+    }
+    setLoading(true)
+    try {
+      const response = await axiosInstance.get(`/super-admin/universities/${organizationId}/learners`, {
+        params: { page: 1, limit: 1 }
+      })
+      if (response.data?.success && response.data?.data?.length > 0) {
+        const learner = response.data.data[0]
+        const mapped = {
+          id: learner.id,
+          name: learner.name,
+          organization_name: learner.organization_name,
+          email: learner.email,
+          level: learner.level,
+          reflections: learner.reflections,
+          total_paid: learner.total_paid,
+          last_active: learner.last_active,
+          trial_start: learner.trial_start,
+          activation_date: learner.member_since,
+          activeStatus: learner.activeStatus
+        }
+        setSelectedLearner(mapped)
+        setShowViewLearnerModal(true)
+      } else {
+        toast.info('No learners found for this organization')
+      }
+    } catch (err) {
+      console.error('Error fetching learners:', err)
+      toast.error('Failed to load learner')
+    } finally {
+      setLoading(false)
+    }
+  }
 
+  const handleArchiveInvoice = async (item) => {
+    if (!item?.id) return
+    try {
+      setLoading(true)
+      await invoiceApi.archiveInvoice(item.id)
+      toast.success('Invoice archived')
+      fetchFailedPayments(currentPage, debouncedSearchQuery, filters)
+    } catch (err) {
+      console.error('Error archiving invoice:', err)
+      toast.error(err.response?.data?.message || 'Failed to archive invoice')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDeleteInvoice = async (item) => {
+    if (!item?.id) return
+    if (!window.confirm(`Delete invoice ${item.invoiceNumber || item.id}?`)) return
+    try {
+      setLoading(true)
+      await invoiceApi.deleteInvoice(item.id)
+      toast.success('Invoice deleted')
+      fetchFailedPayments(currentPage, debouncedSearchQuery, filters)
+    } catch (err) {
+      console.error('Error deleting invoice:', err)
+      toast.error(err.response?.data?.message || 'Failed to delete invoice')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleRowAction = (actionType, item) => {
     switch (actionType) {
       case 'view':
-        setSelectedInvoice(item)
-        setInvoiceMode('view')
-        setShowEditInvoiceModal(true)
+        handleViewLearner(item)
+        break
+      case 'contact':
+        setContactInvoiceContext(item)
+        setShowContactModal(true)
+        break
+      case 'archive-invoice':
+        handleArchiveInvoice(item)
+        break
+      case 'delete-invoice':
+        handleDeleteInvoice(item)
         break
       case 'export-invoice-pdf':
         handleExportInvoicePDF(item)
@@ -579,16 +608,20 @@ const ViewFailedPayments = ({ show, onHide }) => {
           <div className="search-actions-bar-failed-payments">
             <div className="search-container-failed-payments" ref={searchContainerRef}>
               <div className="search-input-wrapper-failed-payments">
-                <input
-                  type="text"
-                  placeholder="Search for Invoice"
-                  value={searchQuery}
-                  onChange={handleSearch}
-                  className="search-input-failed-payments"
-                />
-                <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <div className="d-flex gap-2">
+
+            
+                  <input
+                    type="text"
+                    placeholder="Search for Invoice"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    className="search-input-failed-payments search-input-icon-right"
+                  />
+                  <svg className="search-icon search-icon-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
               </div>
 
               {showFilters && (
@@ -684,6 +717,25 @@ const ViewFailedPayments = ({ show, onHide }) => {
           }}
           invoiceData={invoiceToSend}
           onConfirmSend={selectedInvoices.length > 1 ? handleConfirmBulkSendEmail : handleConfirmSendEmail}
+        />
+
+        <ViewLearnerModal
+          show={showViewLearnerModal}
+          onHide={() => {
+            setShowViewLearnerModal(false)
+            setSelectedLearner(null)
+          }}
+          learner={selectedLearner}
+        />
+
+        <ContactLTSModal
+          show={showContactModal}
+          onHide={() => {
+            setShowContactModal(false)
+            setContactInvoiceContext(null)
+          }}
+          organizationName={contactInvoiceContext?.organizationName}
+          organizationId={contactInvoiceContext?.organizationId}
         />
       </div>
     </Modal>
