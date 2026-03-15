@@ -126,7 +126,7 @@ const ReportedPosts = () => {
       sortable: true,
       filterable: true,
       width: '25%',
-      render: (value) => <span>{value}</span>
+      render: (value) => <span>{value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()}</span>
     }
   ], [])
 

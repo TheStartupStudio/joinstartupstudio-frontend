@@ -4,7 +4,7 @@ import CustomLoginInput from './ui/CustomLoginInput'
 import SUSLogo from '../../../assets/images/LTS-logo-horizontal.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './index.css'
-import { loginLoading, userLogin } from '../../../redux'
+import { loginLoading, userLogin, fetchOrganizationBranding, loadOrganizationBrandingFromCache } from '../../../redux'
 import { Col, NavLink, Row } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import IntlMessages from '../../../utils/IntlMessages'
 import { validateEmail } from '../../../utils/helpers'
+import { preloadImage } from '../../../utils/preloadImage'
 import FormWrapper from './ui/FormWrapper'
 import { setLoginLoading } from '../../../redux/user/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
@@ -30,6 +31,7 @@ const ChooseLogin = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const isLoading = useSelector((state) => state.user.loginLoading)
+  const organizationLogo = useSelector((state) => state.organizationBranding?.logo)
   const [user, setUser] = useState({})
   const location = useLocation()
   const [faqModal, setFaqModal] = useState(false)
@@ -63,6 +65,20 @@ const ChooseLogin = () => {
 
     trackVisitor()
   }, [])
+
+  // Load cached logo first (instant), then fetch fresh branding
+  useEffect(() => {
+    dispatch(loadOrganizationBrandingFromCache())
+    const domain = window.location.hostname || ''
+    if (domain) {
+      dispatch(fetchOrganizationBranding(domain))
+    }
+  }, [dispatch])
+
+  // Preload logo image as soon as we have the URL (from cache or API)
+  useEffect(() => {
+    if (organizationLogo) preloadImage(organizationLogo)
+  }, [organizationLogo])
 
 
   // Helper function to determine dashboard route based on role
@@ -268,7 +284,7 @@ const ChooseLogin = () => {
             <div className='welcome-content'>
               <div className='login-logo'>
                 <img
-                  src={StartupStudioLogo}
+                  src={organizationLogo || StartupStudioLogo}
                   alt='logo'
                   style={{ width: '200px' }}
                 />

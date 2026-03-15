@@ -1,17 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { collapseTrue, toggleCollapse } from '../../redux/sidebar/Actions'
+import { fetchOrganizationBranding, loadOrganizationBrandingFromCache } from '../../redux'
+import { preloadImage } from '../../utils/preloadImage'
 import CloseBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
 
 const Header = (props) => {
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
+  const organizationLogo = useSelector((state) => state.organizationBranding?.logo)
+  const organizationBanner = useSelector((state) => state.organizationBranding?.banner)
   const dispatch = useDispatch()
+  const isDefaultLogo = !organizationLogo
   const user = useSelector((state) => state.user?.user?.user)
   const userRole = user?.role_id || parseInt(localStorage.getItem('role'))
-  
+
+  useEffect(() => {
+    dispatch(loadOrganizationBrandingFromCache())
+    const domain = window.location.hostname || ''
+    if (domain) {
+      dispatch(fetchOrganizationBranding(domain))
+    }
+  }, [dispatch])
+
+  // Preload logo and banner as soon as we have URLs (from cache or API)
+  useEffect(() => {
+    if (organizationLogo) preloadImage(organizationLogo)
+    if (organizationBanner) preloadImage(organizationBanner)
+  }, [organizationLogo, organizationBanner])
+
   // ✅ Get appropriate dashboard path based on role
   const getDashboardPath = () => {
     // Role 2 = Client, Role 3 = Admin/Super Admin
@@ -33,13 +52,22 @@ const Header = (props) => {
           to={getDashboardPath()}
           onClick={() => dispatch(collapseTrue())}
         >
-          <img
-            src={AcademyLogo}
+          {isCollapsed ? (
+            <img
+              src={organizationLogo || AcademyLogo}
+              alt='logo'
+              style={{ marginLeft: isCollapsed && '0px' }}
+            />
+          ) : (
+            <img src={organizationBanner} alt='banner' style={{ width: '100%' }} />
+          )}
+          {/* <img
+            src={organizationLogo || AcademyLogo}
             alt='logo'
             style={{ marginLeft: isCollapsed && '0px' }}
-          />
+          /> */}
 
-          {!isCollapsed && (
+          {!isCollapsed && isDefaultLogo && (
             <div>
               <h4 className='academy-header' style={{ marginBottom: '.75rem' }}>
                 <span className='header-title'>THE</span>

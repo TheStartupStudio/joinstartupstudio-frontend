@@ -2,6 +2,8 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchOrganizationBranding, loadOrganizationBrandingFromCache } from '../../redux'
 import AcademyBtn from '../../components/AcademyBtn'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import InfoPageHeader from '../../components/WelcomeToCourse/InfoPageHeader'
@@ -9,6 +11,7 @@ import IntlMessages from '../../utils/IntlMessages'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import HowWeProtect from '../../components/HowWeProtect'
 import axiosInstance from '../../utils/AxiosInstance'
+import { preloadImage } from '../../utils/preloadImage'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
@@ -66,6 +69,8 @@ const CARD_ELEMENT_OPTIONS = {
 function RegistrationForm() {
   const stripe = useStripe()
   const elements = useElements()
+  const dispatch = useDispatch()
+  const organizationLogo = useSelector((state) => state.organizationBranding?.logo)
   const [protectModal, setProtectModal] = useState(false)
   const [showCheckSubscription, setShowCheckSubscription] = useState(false)
   const history = useHistory()
@@ -76,6 +81,20 @@ function RegistrationForm() {
   const currentUrl = window.location.origin
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  // Load cached logo first (instant), then fetch fresh branding
+  useEffect(() => {
+    dispatch(loadOrganizationBrandingFromCache())
+    const domain = window.location.hostname || ''
+    if (domain) {
+      dispatch(fetchOrganizationBranding(domain))
+    }
+  }, [dispatch])
+
+  // Preload logo image as soon as we have the URL (from cache or API)
+  useEffect(() => {
+    if (organizationLogo) preloadImage(organizationLogo)
+  }, [organizationLogo])
 
   // useEffect(() => {
   //   trackLead({
@@ -406,7 +425,7 @@ function RegistrationForm() {
             <header className="py-4 px-5 d-flex justify-content-between align-items-start px-1-mob">
             <img
               className="cursor-pointer w-200-mob img-register-login"
-              src={StartupStudioLogo}
+              src={organizationLogo || StartupStudioLogo}
               alt="course logo"
               onClick={() => window.location.href = '/'}
             />
