@@ -133,8 +133,6 @@ const MasterClassManagement = () => {
 
   const handleViewContent = async (contentId, mode) => {
     try {
-      setLoading(true)
-
       const response = await axiosInstance.get(`/contents/${contentId}`)
       const content = response.data
 
@@ -156,8 +154,6 @@ const MasterClassManagement = () => {
     } catch (error) {
       console.error('Error fetching content:', error)
       toast.error('Failed to load content')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -326,7 +322,7 @@ const MasterClassManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} master class videos published successfully!`)
+      toast.success(`${selectedTasks.length} video(s) published successfully!`)
 
       if (activeLevel) {
         await fetchContentByLevel()
@@ -337,8 +333,7 @@ const MasterClassManagement = () => {
       )
 
     } catch (error) {
-      console.error('Error bulk publishing master class videos:', error)
-      toast.error('Failed to publish master class videos')
+      toast.error('Failed to publish videos')
     } finally {
       setLoading(false)
       setShowBulkDropdown(false)
@@ -363,7 +358,7 @@ const MasterClassManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} master class videos unpublished successfully!`)
+      toast.success(`${selectedTasks.length} video(s) unpublished successfully!`)
 
       if (activeLevel) {
         await fetchContentByLevel()
@@ -374,8 +369,7 @@ const MasterClassManagement = () => {
       )
 
     } catch (error) {
-      console.error('Error bulk unpublishing master class videos:', error)
-      toast.error('Failed to unpublish master class videos')
+      toast.error('Failed to unpublish videos')
     } finally {
       setLoading(false)
       setShowBulkDropdown(false)
@@ -383,7 +377,6 @@ const MasterClassManagement = () => {
   }
 
   const handleSaveTask = async (taskData) => {
-    console.log('Master class data:', taskData)
 
     // Handle deletion
     if (taskData.deleted) {
@@ -422,8 +415,6 @@ const MasterClassManagement = () => {
     try {
       setLoading(true)
 
-      console.log('Master class assignments to process:', assignments)
-
       const validAssignments = assignments.filter(assignment => {
         if (!assignment.levelId || assignment.levelId === '') {
           console.warn(`Skipping assignment for content ${assignment.contentId} - invalid levelId:`, assignment.levelId)
@@ -441,19 +432,19 @@ const MasterClassManagement = () => {
 
       const updatePromises = validAssignments.map(async (assignment) => {
         try {
-          console.log(`Assigning master class content ${assignment.contentId} to level ${assignment.levelId}`)
+          console.log(`Assigning video content ${assignment.contentId} to level ${assignment.levelId}`)
           return await axiosInstance.put(`/contents/${assignment.contentId}`, {
             journalLevel: assignment.levelId
           })
         } catch (individualError) {
-          console.error(`Error assigning master class content ${assignment.contentId}:`, individualError)
+          console.error(`Error assigning video content ${assignment.contentId}:`, individualError)
           throw individualError 
         }
       })
 
       await Promise.all(updatePromises)
 
-      toast.success(`${validAssignments.length} master class content(s) assigned successfully!`)
+      toast.success(`${validAssignments.length} video(s) assigned successfully!`)
 
       await fetchLevels()
       if (activeLevel) {
@@ -463,8 +454,7 @@ const MasterClassManagement = () => {
       setShowAssignModal(false)
 
     } catch (error) {
-      console.error('Error assigning master class content:', error)
-      toast.error('Failed to assign master class content')
+      toast.error('Failed to assign video')
     } finally {
       setLoading(false)
     }
@@ -491,7 +481,6 @@ const MasterClassManagement = () => {
   }
 
   const handleConfirmPublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/contents/${selectedTask.id}`, {
         published: true
@@ -501,19 +490,15 @@ const MasterClassManagement = () => {
         await fetchContentByLevel()
       }
 
-      toast.success(`Master class "${selectedTask.name}" published successfully!`)
+      toast.success(`Video "${selectedTask.name}" published successfully!`)
       setShowPublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      console.error('Error publishing master class:', error)
-      toast.error('Failed to publish master class')
-    } finally {
-      setLoading(false)
+      toast.error('Failed to publish video')
     }
   }
 
   const handleConfirmUnpublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/contents/${selectedTask.id}`, {
         published: false
@@ -523,14 +508,11 @@ const MasterClassManagement = () => {
         await fetchContentByLevel()
       }
 
-      toast.success(`Master class "${selectedTask.name}" unpublished successfully!`)
+      toast.success(`Video "${selectedTask.name}" unpublished successfully!`)
       setShowUnpublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      console.error('Error unpublishing master class:', error)
-      toast.error('Failed to unpublish master class')
-    } finally {
-      setLoading(false)
+      toast.error('Failed to unpublish video')
     }
   }
 
@@ -543,11 +525,11 @@ const MasterClassManagement = () => {
         prevTasks.filter(task => task.id !== selectedTask.id)
       )
       
-      toast.success(`Master class "${selectedTask.name}" deleted successfully!`)
+      toast.success(`Video "${selectedTask.name}" deleted successfully!`)
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      toast.error('Failed to delete master class')
+      toast.error('Failed to delete video')
     } finally {
       setLoading(false)
     }

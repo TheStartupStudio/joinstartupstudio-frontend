@@ -169,7 +169,7 @@ const AssignTasksModal = ({
                         value={journal.selectedLevel}
                         onChange={(e) => handleLevelChange(journal.id, e.target.value)}
                       >
-                        <option value="">Select level</option>
+                        <option value="">Select {type === 'masterclass' ? 'category' : 'level'}</option>
                         {levels.map((level) => (
                           <option key={level.id} value={level.id}>
                             {level.title}
