@@ -59,7 +59,7 @@ const Header = (props) => {
               style={{ marginLeft: isCollapsed && '0px' }}
             />
           ) : (
-            <img src={organizationBanner} alt='banner' style={{ width: '100%' }} />
+            <img src={organizationBanner || AcademyLogo} alt='banner' style={{ width: isDefaultLogo ? 'revert-layer' : '100%' }} />
           )}
           {/* <img
             src={organizationLogo || AcademyLogo}
