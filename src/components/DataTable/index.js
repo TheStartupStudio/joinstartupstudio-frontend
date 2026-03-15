@@ -632,7 +632,7 @@ const DataTable = ({
             </svg>
             View
           </button>
-          <button
+          {/* <button
             className="action-btn edit-btn"
             onClick={() => handleActionClick('edit', item)}
             title="Edit Report Resolution"
@@ -641,7 +641,7 @@ const DataTable = ({
               <path d="M12 5V19M5 12H19" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             Edit
-          </button>
+          </button> */}
           <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
             <button
               className="action-btn more-actions-btn"
@@ -997,6 +997,19 @@ const DataTable = ({
       if (columnKey === 'invoiceDate' || columnKey === 'paymentDate') {
         return null
       }
+    } else if (activeTab === 'Reports') {
+      if (columnKey === 'reportDate') {
+        return null // date range filter
+      }
+      if (columnKey === 'status') {
+        return ['Complete', 'Incomplete']
+      }
+      if (columnKey === 'reportType') {
+        return ['Bullying', 'Harassment', 'Inappropriate', 'Spam']
+      }
+      if (columnKey === 'resolution') {
+        return ['Ignored', 'Delete Post', 'Block User', 'Pending Review', 'Resolved', 'Archived', 'Dismissed']
+      }
     } else {
       if (columnKey === 'level') {
         return ['L1', 'L2', 'L3']
@@ -1326,13 +1339,13 @@ const DataTable = ({
                           style={{
                             position: 'fixed',
                             top: dropdownPosition.top,
-                            left: dropdownPosition.left,
+                            left: '400px',
                             transform: 'translateX(-50%)',
                             background: 'white',
                             borderRadius: '8px',
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                             zIndex: 9999,
-                            // minWidth: getFilterOptions(column.key) === null ? '700px' : '120px',
+                            minWidth: getFilterOptions(column.key) === null ? '380px' : '140px',
                             marginTop: '4px',
                             display: 'block'
                           }}

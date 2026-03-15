@@ -158,7 +158,7 @@ const ReportPostModal = ({ show, onHide, post, onSuccess }) => {
         
         <Modal.Body className="pb-4">
           {post && (
-            <div className="mb-4 p-3" style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E9ECEF' }}>
+            <div className="mb-4 p-3" style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E9ECEF', boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)' }}>
               <div className="d-flex align-items-start gap-3">
                 <img
                   src={post.author?.avatar || 'https://via.placeholder.com/55'}
@@ -216,7 +216,8 @@ const ReportPostModal = ({ show, onHide, post, onSuccess }) => {
                 borderRadius: '8px',
                 border: '1px solid #E9ECEF',
                 fontSize: '14px',
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)'
               }}
             >
               <option value="">Select a reason</option>
