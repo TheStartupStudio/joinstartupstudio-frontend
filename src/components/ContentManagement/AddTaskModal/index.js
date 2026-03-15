@@ -218,7 +218,7 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         } else {
           response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
         }
-        toast.success('Task created successfully!')
+        toast.success(`${isMasterClass ? 'Video' : 'Task'} created successfully!`)
       }
 
       // Response structure:

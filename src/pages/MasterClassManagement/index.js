@@ -357,7 +357,7 @@ const MasterClassManagement = () => {
     try {
       const updatePromises = selectedTasks.map(async (task) => {
         return axiosInstance.put(`/contents/${task.id}`, {
-          journalLevel: null
+          published: false
         })
       })
 
@@ -516,7 +516,7 @@ const MasterClassManagement = () => {
     setLoading(true)
     try {
       await axiosInstance.put(`/contents/${selectedTask.id}`, {
-        journalLevel: null
+        published: false
       })
 
       if (activeLevel) {
@@ -713,7 +713,7 @@ const MasterClassManagement = () => {
               <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
                 <div>
                   <AcademyBtn
-                    title="add new section"
+                    title="add new category"
                     icon={faPlus}
                     onClick={() => {
                       addNewLevel()
@@ -809,6 +809,7 @@ const MasterClassManagement = () => {
               onReorder={handleReorder}
               showCheckbox={true}
               activeTab="Content"
+              actionLabel="Video"
               loading={loading}
               onSelectionChange={(selectedItems) => {
                 setTasksData(prevTasks =>

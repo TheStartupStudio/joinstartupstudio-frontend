@@ -20,6 +20,7 @@ const DataTable = ({
   searchQuery = '',
   showCheckbox = true,
   activeTab = 'Organizations',
+  actionLabel = 'Task',
   onReorder,
   onSelectionChange,
   selectedItems = [],
@@ -744,7 +745,7 @@ const DataTable = ({
               <path d="M6.6665 11.666L9.99984 11.666" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M13.3335 1.66602V4.39935C13.3335 4.73072 13.6021 4.99935 13.9335 4.99935H16.6668" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            View Task
+            View {actionLabel}
           </button>
           <button
             className="action-btn edit-btn"
@@ -756,7 +757,7 @@ const DataTable = ({
               <path d="M14.9618 14.1159L15.7951 13.2826C16.16 12.9177 16.7517 12.9177 17.1166 13.2826C17.4815 13.6475 17.4815 14.2392 17.1166 14.6041L16.2833 15.4374M14.9618 14.1159L12.5077 16.5701C12.3578 16.72 12.2594 16.9136 12.2267 17.1231L12.0328 18.3664L13.276 18.1726C13.4855 18.1399 13.6792 18.0415 13.8291 17.8916L16.2833 15.4374M14.9618 14.1159L16.2833 15.4374" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M13.3335 1.66602V4.39935C13.3335 4.73072 13.6021 4.99935 13.9335 4.99935H16.6668" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Edit Task
+            Edit {actionLabel}
           </button>
           <button
             className="action-btn publish-btn"
@@ -785,7 +786,7 @@ const DataTable = ({
                 </defs>
               </svg>
             )}
-            {item.status === 'published' ? 'Unpublish Task' : 'Publish Task'}
+            {item.status === 'published' ? `Unpublish ${actionLabel}` : `Publish ${actionLabel}`}
           </button>
           <div className="drag-handle">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
