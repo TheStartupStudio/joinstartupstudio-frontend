@@ -33,7 +33,6 @@ const ViewFailedPayments = ({ show, onHide }) => {
     dateTo: null
   })
 
-  // Modal states
   const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState(null)
   const [invoiceMode, setInvoiceMode] = useState('view')
@@ -44,7 +43,6 @@ const ViewFailedPayments = ({ show, onHide }) => {
   const [showContactModal, setShowContactModal] = useState(false)
   const [contactInvoiceContext, setContactInvoiceContext] = useState(null)
 
-  // Data and pagination
   const [failedPaymentsData, setFailedPaymentsData] = useState([])
   const [loading, setLoading] = useState(false)
   const [pagination, setPagination] = useState({
@@ -56,7 +54,6 @@ const ViewFailedPayments = ({ show, onHide }) => {
 
   const searchContainerRef = useRef(null)
 
-  // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
@@ -74,45 +71,35 @@ const ViewFailedPayments = ({ show, onHide }) => {
     }
   }
 
-  // Fetch failed payments data (filtered invoices)
   const fetchFailedPayments = async (page = 1, search = '', appliedFilters = filters) => {
     setLoading(true)
     try {
-      console.log('Fetching failed payments with params:', { page, search, filters: appliedFilters, userRole: user?.role_id })
 
-      // Build query parameters including filters
       const queryParams = {
         page,
         limit: 10,
         search,
-        status: 'payment_failed' // Filter for failed payments
+        status: 'payment_failed' 
       }
 
-      // Add filter parameters
       if (appliedFilters.organizationName && appliedFilters.organizationName.trim()) {
         queryParams.organizationName = appliedFilters.organizationName.trim()
-        console.log('Adding organizationName filter:', queryParams.organizationName)
       }
 
       if (appliedFilters.dateFrom) {
-        // Convert Date object to YYYY-MM-DD format
         const dateFromStr = appliedFilters.dateFrom instanceof Date
           ? appliedFilters.dateFrom.toISOString().split('T')[0]
           : appliedFilters.dateFrom
         queryParams.dateFrom = dateFromStr
-        console.log('Adding dateFrom filter:', queryParams.dateFrom)
       }
 
       if (appliedFilters.dateTo) {
-        // Convert Date object to YYYY-MM-DD format
         const dateToStr = appliedFilters.dateTo instanceof Date
           ? appliedFilters.dateTo.toISOString().split('T')[0]
           : appliedFilters.dateTo
         queryParams.dateTo = dateToStr
-        console.log('Adding dateTo filter:', queryParams.dateTo)
       }
 
-      console.log('Final query params:', queryParams)
 
       let response
 
@@ -121,11 +108,9 @@ const ViewFailedPayments = ({ show, onHide }) => {
       } else if (isSuperAdmin) {
         response = await invoiceApi.getAllInvoices(queryParams)
       } else {
-        // For other roles (if any)
         response = await invoiceApi.getClientInvoices(queryParams)
       }
 
-      console.log('Failed payments response:', response)
 
       const rawData = response.data || []
       const invoicesData = rawData.map(inv => {
@@ -166,15 +151,12 @@ const ViewFailedPayments = ({ show, onHide }) => {
     }
   }
 
-  // Fetch data when modal opens or when search/page changes
   useEffect(() => {
     if (show && user) {
-      console.log('User changed, fetching failed payments:', user)
       fetchFailedPayments(currentPage, debouncedSearchQuery, filters)
     }
   }, [show, currentPage, debouncedSearchQuery, user, filters])
 
-  // Reset state when modal closes
   useEffect(() => {
     if (!show) {
       setSearchQuery('')
@@ -208,7 +190,12 @@ const ViewFailedPayments = ({ show, onHide }) => {
       title: 'INVOICE NUMBER',
       sortable: true,
       filterable: false,
-      render: (value) => <span>{value}</span>
+      render: (value, item) => (
+      <div className='d-flex flex-column gap-1'>
+          <span className='organization-name'>{item.organizationName}</span>
+         <span>{value}</span>
+      </div>
+     )
     },
     {
       key: 'status',
@@ -272,9 +259,7 @@ const ViewFailedPayments = ({ show, onHide }) => {
   }
 
   const handleFiltersChange = useCallback((newFilters) => {
-    console.log('Filters changed:', newFilters)
     setFilters(prevFilters => {
-      // Only update if filters actually changed
       if (
         prevFilters.organizationName !== newFilters.organizationName ||
         prevFilters.dateFrom !== newFilters.dateFrom ||
@@ -284,51 +269,13 @@ const ViewFailedPayments = ({ show, onHide }) => {
       }
       return prevFilters
     })
-    setCurrentPage(1) // Reset to first page when filters change
+    setCurrentPage(1)
   }, [])
 
   const handleSelectionChange = (selectedItems) => {
     setSelectedInvoices(selectedItems)
   }
 
-  const handleViewLearner = async (item) => {
-    const organizationId = item.organizationId
-    if (!organizationId) {
-      toast.error('No organization linked to this invoice')
-      return
-    }
-    setLoading(true)
-    try {
-      const response = await axiosInstance.get(`/super-admin/universities/${organizationId}/learners`, {
-        params: { page: 1, limit: 1 }
-      })
-      if (response.data?.success && response.data?.data?.length > 0) {
-        const learner = response.data.data[0]
-        const mapped = {
-          id: learner.id,
-          name: learner.name,
-          organization_name: learner.organization_name,
-          email: learner.email,
-          level: learner.level,
-          reflections: learner.reflections,
-          total_paid: learner.total_paid,
-          last_active: learner.last_active,
-          trial_start: learner.trial_start,
-          activation_date: learner.member_since,
-          activeStatus: learner.activeStatus
-        }
-        setSelectedLearner(mapped)
-        setShowViewLearnerModal(true)
-      } else {
-        toast.info('No learners found for this organization')
-      }
-    } catch (err) {
-      console.error('Error fetching learners:', err)
-      toast.error('Failed to load learner')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleArchiveInvoice = async (item) => {
     if (!item?.id) return
@@ -364,7 +311,9 @@ const ViewFailedPayments = ({ show, onHide }) => {
   const handleRowAction = (actionType, item) => {
     switch (actionType) {
       case 'view':
-        handleViewLearner(item)
+        setSelectedInvoice(item)
+        setInvoiceMode('view')
+        setShowEditInvoiceModal(true)
         break
       case 'contact':
         setContactInvoiceContext(item)
@@ -641,7 +590,7 @@ const ViewFailedPayments = ({ show, onHide }) => {
             <DataTable
               columns={failedPaymentsColumns}
               data={failedPaymentsData}
-              searchQuery={searchQuery}
+              searchQuery=""
               onRowAction={handleRowAction}
               showCheckbox={true}
               activeTab="FailedPayments"
