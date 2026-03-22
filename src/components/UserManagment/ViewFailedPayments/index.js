@@ -11,7 +11,7 @@ import { invoiceApi } from '../../../utils/invoiceApi'
 import InvoiceFilters from '../../InvoiceFilters'
 import ViewInvoiceModal from '../ViewInvoiceModal'
 import PreviewInvoiceEmailModal from '../PreviewInvoiceEmailModal'
-import ContactLTSModal from '../ContactLTSModal'
+import EmailLearnerModal from '../EmailLearnerModal'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
@@ -40,8 +40,8 @@ const ViewFailedPayments = ({ show, onHide }) => {
   const [invoiceToSend, setInvoiceToSend] = useState(null)
   const [showViewLearnerModal, setShowViewLearnerModal] = useState(false)
   const [selectedLearner, setSelectedLearner] = useState(null)
-  const [showContactModal, setShowContactModal] = useState(false)
-  const [contactInvoiceContext, setContactInvoiceContext] = useState(null)
+  const [showEmailClientModal, setShowEmailClientModal] = useState(false)
+  const [emailRecipientId, setEmailRecipientId] = useState(null)
 
   const [failedPaymentsData, setFailedPaymentsData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -276,6 +276,42 @@ const ViewFailedPayments = ({ show, onHide }) => {
     setSelectedInvoices(selectedItems)
   }
 
+  /** Email the client linked on the invoice (same API as View Learner email). */
+  const handleContactClientEmail = (item) => {
+    const clients = item?.clients
+    if (!Array.isArray(clients) || clients.length === 0) {
+      toast.info('No client is linked to this invoice')
+      return
+    }
+    const client = clients[0]
+    if (!client?.id) {
+      toast.error('Invalid client record for this invoice')
+      return
+    }
+    setEmailRecipientId(client.id)
+    setShowEmailClientModal(true)
+  }
+
+  /** Open View Learner for the client linked on the invoice (API `clients` array). */
+  const handleViewClientFromInvoice = (item) => {
+    const clients = item?.clients
+    if (!Array.isArray(clients) || clients.length === 0) {
+      toast.error('No user is linked to this invoice')
+      return
+    }
+    const client = clients[0]
+    if (!client?.id) {
+      toast.error('Invalid user record for this invoice')
+      return
+    }
+    setSelectedLearner({
+      id: client.id,
+      name: client.name,
+      email: client.email,
+      organization_name: item.organizationName
+    })
+    setShowViewLearnerModal(true)
+  }
 
   const handleArchiveInvoice = async (item) => {
     if (!item?.id) return
@@ -311,13 +347,10 @@ const ViewFailedPayments = ({ show, onHide }) => {
   const handleRowAction = (actionType, item) => {
     switch (actionType) {
       case 'view':
-        setSelectedInvoice(item)
-        setInvoiceMode('view')
-        setShowEditInvoiceModal(true)
+        handleViewClientFromInvoice(item)
         break
       case 'contact':
-        setContactInvoiceContext(item)
-        setShowContactModal(true)
+        handleContactClientEmail(item)
         break
       case 'archive-invoice':
         handleArchiveInvoice(item)
@@ -491,9 +524,13 @@ const ViewFailedPayments = ({ show, onHide }) => {
     }
   }
 
+  // Hide failed-payments modal while learner or email modal is open; render those as siblings to avoid nested modal issues
+  const showFailedPaymentsModal = show && !showViewLearnerModal && !showEmailClientModal
+
   return (
+    <>
     <Modal
-      show={show}
+      show={showFailedPaymentsModal}
       onHide={onHide}
       backdrop={true}
       keyboard={true}
@@ -667,27 +704,28 @@ const ViewFailedPayments = ({ show, onHide }) => {
           invoiceData={invoiceToSend}
           onConfirmSend={selectedInvoices.length > 1 ? handleConfirmBulkSendEmail : handleConfirmSendEmail}
         />
-
-        <ViewLearnerModal
-          show={showViewLearnerModal}
-          onHide={() => {
-            setShowViewLearnerModal(false)
-            setSelectedLearner(null)
-          }}
-          learner={selectedLearner}
-        />
-
-        <ContactLTSModal
-          show={showContactModal}
-          onHide={() => {
-            setShowContactModal(false)
-            setContactInvoiceContext(null)
-          }}
-          organizationName={contactInvoiceContext?.organizationName}
-          organizationId={contactInvoiceContext?.organizationId}
-        />
       </div>
     </Modal>
+
+    <EmailLearnerModal
+      show={showEmailClientModal}
+      onHide={() => {
+        setShowEmailClientModal(false)
+        setEmailRecipientId(null)
+      }}
+      recipientId={emailRecipientId}
+      title="Email Client"
+    />
+
+    <ViewLearnerModal
+      show={showViewLearnerModal}
+      onHide={() => {
+        setShowViewLearnerModal(false)
+        setSelectedLearner(null)
+      }}
+      learner={selectedLearner}
+    />
+    </>
   )
 }
 
