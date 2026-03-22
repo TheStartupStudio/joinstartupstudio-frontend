@@ -595,7 +595,7 @@ const DataTable = ({
                     className="more-actions-dropdown-item"
                     style={{
                       padding: '12px 16px',
-                      color: '#DC3545',
+                      color: 'black',
                       fontFamily: 'Montserrat',
                       fontSize: '12px',
                       cursor: 'pointer',
@@ -611,9 +611,9 @@ const DataTable = ({
                     }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M10 7.5V10.8333" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M10 14.1753L10.0083 14.1661" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M10 14.1753L10.0083 14.1661" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     Delete Invoice
                   </div>
@@ -707,7 +707,7 @@ const DataTable = ({
                   className="more-actions-dropdown-item"
                   style={{
                     padding: '12px 16px',
-                    color: '#DC3545',
+                    color: 'black',
                     fontFamily: 'Montserrat',
                     fontSize: '12px',
                     cursor: 'pointer',
@@ -723,8 +723,8 @@ const DataTable = ({
                   }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                    <path d="M2.5 5H4.16667H17.5" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M15.8337 4.99967V16.6663C15.8337 17.108 15.6581 17.5316 15.3455 17.8441C15.033 18.1567 14.6094 18.3323 14.167 18.3323H5.83366C5.39163 18.3323 4.96807 18.1567 4.65551 17.8441C4.34295 17.5316 4.16699 17.108 4.16699 16.6663V4.99967M6.66699 4.99967V3.33301C6.66699 2.89098 6.84295 2.46742 7.15551 2.15486C7.46807 1.8423 7.89163 1.66634 8.33366 1.66634H11.667C12.109 1.66634 12.5326 1.8423 12.8451 2.15486C13.1577 2.46742 13.3337 2.89098 13.3337 3.33301V4.99967" stroke="#DC3545" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2.5 5H4.16667H17.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M15.8337 4.99967V16.6663C15.8337 17.108 15.6581 17.5316 15.3455 17.8441C15.033 18.1567 14.6094 18.3323 14.167 18.3323H5.83366C5.39163 18.3323 4.96807 18.1567 4.65551 17.8441C4.34295 17.5316 4.16699 17.108 4.16699 16.6663V4.99967M6.66699 4.99967V3.33301C6.66699 2.89098 6.84295 2.46742 7.15551 2.15486C7.46807 1.8423 7.89163 1.66634 8.33366 1.66634H11.667C12.109 1.66634 12.5326 1.8423 12.8451 2.15486C13.1577 2.46742 13.3337 2.89098 13.3337 3.33301V4.99967" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                   Delete Report
                 </div>
@@ -1013,7 +1013,7 @@ const DataTable = ({
         return ['Bullying', 'Harassment', 'Inappropriate', 'Spam']
       }
       if (columnKey === 'resolution') {
-        return ['Ignored', 'Delete Post', 'Block User', 'Pending Review', 'Resolved', 'Archived', 'Dismissed']
+        return ['Ignored', 'Delete Post', 'Block User']
       }
     } else {
       if (columnKey === 'level') {
@@ -1344,8 +1344,7 @@ const DataTable = ({
                           style={{
                             position: 'fixed',
                             top: dropdownPosition.top,
-                            left: '400px',
-                            transform: 'translateX(-50%)',
+                            left: dropdownPosition.left,
                             background: 'white',
                             borderRadius: '8px',
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
