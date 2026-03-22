@@ -684,8 +684,8 @@ border-radius: 50%;
   background: #d97706;
 }
 
-.view-learner-modal .payment-status-badge.status-unknown {
-  background: #374151;
+.view-learner-modal .payment-status-badge.status-scheduled {
+  background: #51C7DF;
 }
 
 .view-learner-modal .no-payments-message {

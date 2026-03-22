@@ -983,7 +983,7 @@ const UserManagement = () => {
 
   const handlePageChange = (newPage) => {
     const maxPages = totalPages
-    if (newPage >= 1 && newPage <= maxPages && !isLoading && newPage !== currentPageNum) {
+    if (newPage >= 1 && newPage <= maxPages && !isLoading && newPage !== currentPage) {
       setCurrentPage(newPage)
     }
   }
@@ -995,7 +995,6 @@ const UserManagement = () => {
   const isLoading = activeTab === 'Users' ? usersLoading : organizationsLoading
   const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
   const totalPages = Math.max(currentPagination?.totalPages || 1, 1)
-  const currentPageNum = Math.min(Math.max(currentPage || 1, 1), totalPages)
 
   // Reset current page if it exceeds total pages after search/filter changes
   useEffect(() => {
@@ -1273,7 +1272,7 @@ const UserManagement = () => {
           <button
             className="pagination-btn"
             onClick={() => handlePageChange(1)}
-            disabled={currentPageNum <= 1 || isLoading}
+            disabled={currentPage <= 1 || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1282,18 +1281,18 @@ const UserManagement = () => {
           </button>
           <button
             className="pagination-btn"
-            onClick={() => handlePageChange(currentPageNum - 1)}
-            disabled={currentPageNum <= 1 || isLoading}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1 || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
               <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <span className="pagination-info">{currentPageNum} / {totalPages}</span>
+          <span className="pagination-info">{currentPage} / {totalPages}</span>
           <button
             className="pagination-btn"
-            onClick={() => handlePageChange(currentPageNum + 1)}
-            disabled={currentPageNum >= totalPages || isLoading}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
               <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1302,7 +1301,7 @@ const UserManagement = () => {
           <button
             className="pagination-btn"
             onClick={() => handlePageChange(totalPages)}
-            disabled={currentPageNum >= totalPages || isLoading}
+            disabled={currentPage >= totalPages || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

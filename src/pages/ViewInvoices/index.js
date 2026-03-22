@@ -46,7 +46,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     dateTo: null
   })
 
-  // Memoize filters to prevent unnecessary re-renders
   const memoizedFilters = useMemo(() => filters, [filters.organizationName, filters.dateFrom, filters.dateTo])
   
   const [invoicesData, setInvoicesData] = useState([])
@@ -95,21 +94,18 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     try {
       console.log('Fetching invoices with params:', { page, search, archiveMode, filters: appliedFilters, userRole: user?.role_id })
 
-      // Build query parameters including filters
       const queryParams = {
         page,
         limit: 10,
         search
       }
 
-      // Add filter parameters
       if (appliedFilters.organizationName && appliedFilters.organizationName.trim()) {
         queryParams.organizationName = appliedFilters.organizationName.trim()
         console.log('Adding organizationName filter:', queryParams.organizationName)
       }
 
       if (appliedFilters.dateFrom) {
-        // Convert Date object to YYYY-MM-DD format
         const dateFromStr = appliedFilters.dateFrom instanceof Date
           ? appliedFilters.dateFrom.toISOString().split('T')[0]
           : appliedFilters.dateFrom
@@ -118,7 +114,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       }
 
       if (appliedFilters.dateTo) {
-        // Convert Date object to YYYY-MM-DD format
         const dateToStr = appliedFilters.dateTo instanceof Date
           ? appliedFilters.dateTo.toISOString().split('T')[0]
           : appliedFilters.dateTo
@@ -131,24 +126,25 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       let response
 
       if (archiveMode) {
-        // ✅ Fetch archived invoices from /invoices/archived
         response = await invoiceApi.getArchivedInvoices(queryParams)
       } else {
-        // ✅ Fetch regular invoices
         if (isInstructor) {
           response = await invoiceApi.getClientInvoices(queryParams)
         } else if (isSuperAdmin) {
           response = await invoiceApi.getAllInvoices(queryParams)
         } else {
-          // For other roles (if any)
           response = await invoiceApi.getClientInvoices(queryParams)
         }
       }
 
       console.log('Invoices response:', response)
 
-      const invoicesData = response.data || []
-      
+      const raw = response.data || []
+      const invoicesData = raw.map((inv) => ({
+        ...inv,
+        id: inv.id ?? inv.invoiceId ?? inv.invoice_id
+      }))
+
       setInvoicesData(invoicesData)
       setPagination(response.pagination || {
         total: invoicesData.length,
@@ -171,10 +167,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       setInvoicesLoading(false)
     }
   }
-
-  // useEffect(() => {
-  //   fetchInvoices(currentPage, debouncedSearchQuery)
-  // }, [currentPage, debouncedSearchQuery, archiveMode])
 
   useEffect(() => {
     if (user) {
@@ -308,17 +300,14 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       setInvoicesLoading(true)
       toast.success('Generating PDF...')
 
-      // Open the modal to trigger PDF generation
       setSelectedInvoice(invoice)
       setInvoiceMode('view')
       setShowEditInvoiceModal(true)
 
-      // Wait for modal to render, then trigger download
       setTimeout(() => {
         const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
         if (downloadBtn) {
           downloadBtn.click()
-          // Close modal after brief delay
           setTimeout(() => {
             setShowEditInvoiceModal(false)
           }, 5000)
@@ -378,7 +367,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       return
     }
 
-    // Open preview modal instead of sending directly
     setInvoiceToSend(invoice)
     setShowPreviewEmailModal(true)
   }
@@ -552,40 +540,9 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       return
     }
 
-    // For bulk send, we'll send the first invoice's preview
-    // You can modify this to show a different modal for bulk sends if needed
     setInvoiceToSend(selectedInvoices[0])
     setShowPreviewEmailModal(true)
   }
-
-  // const handleConfirmBulkSendEmail = async (emailData) => {
-  //   if (selectedInvoices.length === 0) {
-  //     toast.error('No invoices selected')
-  //     return
-  //   }
-
-  //   try {
-  //     setInvoicesLoading(true)
-      
-  //     const sendPromises = selectedInvoices.map(invoice => 
-  //       invoiceApi.sendInvoiceEmail(invoice.id, {
-  //         subject: emailData.subject.replace(selectedInvoices[0].invoiceNumber, invoice.invoiceNumber),
-  //         message: emailData.message.replace(selectedInvoices[0].organizationName, invoice.organizationName)
-  //       })
-  //     )
-      
-  //     await Promise.all(sendPromises)
-  //     toast.success(`${selectedInvoices.length} invoice(s) sent successfully!`)
-  //     setSelectedInvoices([])
-  //     setShowPreviewEmailModal(false)
-  //     setInvoiceToSend(null)
-  //   } catch (error) {
-  //     console.error('❌ Error sending invoices:', error)
-  //     toast.error('Failed to send some invoices')
-  //   } finally {
-  //     setInvoicesLoading(false)
-  //   }
-  // }
 
   const handleRowAction = (actionType, item) => {
     console.log(`${actionType} action for invoice:`, item)
@@ -650,7 +607,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       return
     }
     
-    // Extract unique organization IDs from selected invoices
     const uniqueOrgIds = [...new Set(selectedInvoices.map(inv => inv.organizationId).filter(Boolean))]
     
     if (uniqueOrgIds.length === 0) {
@@ -666,7 +622,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     try {
       setGenerateLoading(true)
       
-      // Extract unique organization IDs from selected invoices
       const uniqueOrgIds = [...new Set(selectedInvoices.map(inv => inv.organizationId).filter(Boolean))]
       
       if (uniqueOrgIds.length === 0) {
@@ -677,7 +632,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
 
       console.log('Generating invoices for organizations:', uniqueOrgIds)
 
-      // Generate invoices for each unique organization
       const generatePromises = uniqueOrgIds.map(orgId =>
         axiosInstance.post(`/invoices/generate/${orgId}`)
       )
@@ -695,7 +649,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         const failedResults = results.filter(r => r.status === 'rejected')
         console.error('Failed generations:', failedResults)
         
-        // Log specific errors
         failedResults.forEach((result, index) => {
           console.error(`Failed to generate invoice for org ${uniqueOrgIds[index]}:`, result.reason?.response?.data)
         })
@@ -703,7 +656,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
         toast.warning(`${failed} invoice(s) failed to generate. Check console for details.`)
       }
 
-      // Refresh the invoices list
       await fetchInvoices(currentPage, debouncedSearchQuery, filters)
       setSelectedInvoices([])
       setShowGenerateMultiplePopup(false)
@@ -746,7 +698,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const handleFiltersChange = useCallback((newFilters) => {
     console.log('Filters changed:', newFilters)
     setFilters(prevFilters => {
-      // Only update if filters actually changed
       if (
         prevFilters.organizationName !== newFilters.organizationName ||
         prevFilters.dateFrom !== newFilters.dateFrom ||
@@ -756,7 +707,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       }
       return prevFilters
     })
-    setCurrentPage(1) // Reset to first page when filters change
+    setCurrentPage(1) 
   }, [])
 
   const handleBulkExportInvoices = async () => {
@@ -768,7 +719,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
     try {
       setInvoicesLoading(true)
       
-      // Export each selected invoice as PDF
       const exportPromises = selectedInvoices.map(invoice =>
         handleExportInvoicePDF(invoice)
       )
@@ -824,7 +774,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
       ]
     }
 
-    // For instructors (role_id === 2), show only Archive and Export
     if (isInstructor) {
       return [
         {
@@ -984,7 +933,6 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
   const handleSavePayment = async (paymentData) => {
     try {
       console.log('Saving payment data:', paymentData)
-      // Refresh invoices after payment method is saved
       await fetchInvoices(currentPage, debouncedSearchQuery, filters)
       toast.success('Payment information updated successfully!')
     } catch (error) {
@@ -1253,6 +1201,7 @@ const ViewInvoices = ({ isArchiveMode = false }) => {
             onRowAction={handleRowAction}
             showCheckbox={true}
             activeTab="Invoices"
+            invoiceArchiveView={archiveMode}
             loading={invoicesLoading}
             onSelectionChange={handleSelectionChange}
             selectedItems={selectedInvoices}

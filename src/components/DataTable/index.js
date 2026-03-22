@@ -13,6 +13,12 @@ import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { invoiceApi } from '../../utils/invoiceApi'
 
+const getStableRowKey = (item, index) => {
+  const raw = item?.id ?? item?.invoiceId ?? item?.invoice_id ?? item?._id
+  if (raw != null && raw !== '') return String(raw)
+  return `row-${index}`
+}
+
 const DataTable = ({ 
   columns, 
   data, 
@@ -25,7 +31,8 @@ const DataTable = ({
   onSelectionChange,
   selectedItems = [],
   loading = false,
-  onFilterChange
+  onFilterChange,
+  invoiceArchiveView = false
 }) => {
   
   const [openFilterDropdown, setOpenFilterDropdown] = useState(null)
@@ -70,7 +77,6 @@ const DataTable = ({
     }
   }, [openFilterDropdown, openMoreActionsDropdown])
 
-  // Handle loading timeout - show "No data available" after 3 seconds if still loading
   useEffect(() => {
     let timeoutId
     if (loading && data.length === 0) {
@@ -285,7 +291,9 @@ const DataTable = ({
     setDraggedOverRow(null)
   }
 
-  const renderActions = (item) => {
+  const renderActions = (item, index = 0) => {
+    const rowKey = getStableRowKey(item, index)
+    const invoiceId = item?.id ?? item?.invoiceId ?? item?.invoice_id
     if (activeTab === 'tss-feedback') {
       return (
 
@@ -333,10 +341,10 @@ const DataTable = ({
             </svg>
             Contact
           </button>
-          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
+          <div style={{ position: 'relative' }} ref={el => { moreActionsDropdownRefs.current[rowKey] = el }}>
             <button
               className="action-btn more-actions-btn"
-              onClick={(e) => handleMoreActionsClick(item.id, e)}
+              onClick={(e) => handleMoreActionsClick(rowKey, e)}
               title="More Actions"
             >
               <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
@@ -345,7 +353,7 @@ const DataTable = ({
                 <circle cx="14" cy="2" r="2" fill="currentColor" />
               </svg>
             </button>
-            {openMoreActionsDropdown === item.id && (
+            {openMoreActionsDropdown === rowKey && (
               <div
                 className="more-actions-dropdown-menu"
                 style={{
@@ -443,10 +451,10 @@ const DataTable = ({
             </button>
           )}
           
-          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
+          <div style={{ position: 'relative' }} ref={el => { moreActionsDropdownRefs.current[rowKey] = el }}>
             <button
               className="action-btn more-actions-btn"
-              onClick={(e) => handleMoreActionsClick(item.id, e)}
+              onClick={(e) => handleMoreActionsClick(rowKey, e)}
               title="More Actions"
             >
               <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
@@ -456,7 +464,7 @@ const DataTable = ({
               </svg>
             </button>
             
-            {openMoreActionsDropdown === item.id && (
+            {openMoreActionsDropdown === rowKey && (
               <div 
                 className="more-actions-dropdown-menu"
                 style={{
@@ -488,16 +496,13 @@ const DataTable = ({
                   onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
                   onClick={() => {
-                    // Direct API call for PDF export
                     const exportPDF = async () => {
                       try {
                         toast.success('Downloading invoice...')
                         if (user?.role_id === 2) {
-                          // Client/Instructor
-                          await invoiceApi.downloadClientInvoice(item.id)
+                          await invoiceApi.downloadClientInvoice(invoiceId)
                         } else {
-                          // Admin
-                          const response = await invoiceApi.downloadInvoice(item.id)
+                          const response = await invoiceApi.downloadInvoice(invoiceId)
                           const blob = new Blob([response.data], { type: 'application/pdf' })
                           const url = window.URL.createObjectURL(blob)
                           const link = document.createElement('a')
@@ -581,7 +586,7 @@ const DataTable = ({
                     <path d="M18.3337 3.33301H1.66699V6.66634H18.3337V3.33301Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     <path d="M8.33301 10H11.6663" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  Archive Invoice
+                  {invoiceArchiveView ? 'Unarchive Invoice' : 'Archive Invoice'}
                 </div>
 
                 {/* ✅ Delete Invoice - only show if not instructor */}
@@ -642,10 +647,10 @@ const DataTable = ({
             </svg>
             Edit
           </button> */}
-          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
+          <div style={{ position: 'relative' }} ref={el => { moreActionsDropdownRefs.current[rowKey] = el }}>
             <button
               className="action-btn more-actions-btn"
-              onClick={(e) => handleMoreActionsClick(item.id, e)}
+              onClick={(e) => handleMoreActionsClick(rowKey, e)}
               title="More Actions"
             >
               <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
@@ -655,7 +660,7 @@ const DataTable = ({
               </svg>
             </button>
             
-            {openMoreActionsDropdown === item.id && (
+            {openMoreActionsDropdown === rowKey && (
               <div 
                 className="more-actions-dropdown-menu"
                 style={{
@@ -792,10 +797,10 @@ const DataTable = ({
             </svg>
             View Invoices
           </button>
-          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
+          <div style={{ position: 'relative' }} ref={el => { moreActionsDropdownRefs.current[rowKey] = el }}>
             <button
               className="action-btn more-actions-btn"
-              onClick={(e) => handleMoreActionsClick(item.id, e)}
+              onClick={(e) => handleMoreActionsClick(rowKey, e)}
             >
               <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
                 <circle cx="2" cy="2" r="2" fill="currentColor" />
@@ -804,7 +809,7 @@ const DataTable = ({
               </svg>
             </button>
             
-            {openMoreActionsDropdown === item.id && (
+            {openMoreActionsDropdown === rowKey && (
               <div 
                 className="more-actions-dropdown-menu"
                 style={{
@@ -929,10 +934,10 @@ const DataTable = ({
             <FontAwesomeIcon icon={faPencilAlt} />
             Edit
           </button>
-          <div style={{ position: 'relative' }} ref={el => moreActionsDropdownRefs.current[item.id] = el}>
+          <div style={{ position: 'relative' }} ref={el => { moreActionsDropdownRefs.current[rowKey] = el }}>
             <button
               className="action-btn more-actions-btn"
-              onClick={(e) => handleMoreActionsClick(item.id, e)}
+              onClick={(e) => handleMoreActionsClick(rowKey, e)}
             >
               <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
                 <circle cx="2" cy="2" r="2" fill="currentColor" />
@@ -941,7 +946,7 @@ const DataTable = ({
               </svg>
             </button>
 
-            {openMoreActionsDropdown === item.id && (
+            {openMoreActionsDropdown === rowKey && (
               <div
                 className="more-actions-dropdown-menu"
                 style={{
@@ -1386,7 +1391,6 @@ const DataTable = ({
         </thead>
         <tbody>
           {loading && !loadingTimeout ? (
-            // Show loading circle initially
             <tr>
               <td
                 colSpan={columns.length + (showCheckbox ? 1 : 0) + 1}
@@ -1400,7 +1404,6 @@ const DataTable = ({
               </td>
             </tr>
           ) : loading ? (
-            // Show skeleton rows when loading but we have some data
             Array.from({ length: 10 }).map((_, index) => (
               <tr key={`skeleton-${index}`}>
                 {showCheckbox && (
@@ -1430,7 +1433,7 @@ const DataTable = ({
           ) : (
             filteredData.map((item, index) => (
               <tr 
-                key={item.id}
+                key={getStableRowKey(item, index)}
                 draggable={activeTab === 'Content'}
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragEnd={handleDragEnd}
@@ -1455,7 +1458,7 @@ const DataTable = ({
                   </td>
                 ))}
                 <td className="actions-column">
-                  {renderActions(item)}
+                  {renderActions(item, index)}
                 </td>
               </tr>
             ))

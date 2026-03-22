@@ -5,7 +5,7 @@ tbody{
 .data-table-container {
   position: relative;
   width: 100%;
-  overflow: auto;
+  /* overflow: auto; */
   /* border: 1px solid #e5e7eb; */
   border-radius: 8px;
 }

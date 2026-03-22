@@ -429,14 +429,18 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                         paymentsPage * PAYMENTS_PER_PAGE
                       )
                       return allPayments.length > 0 ? (
-                        paginatedPayments.map((payment, index) => (
+                        paginatedPayments.map((payment, index) => {
+                          const paymentDateValue = payment.paymentDate || payment.dueDate || payment.due_date
+                          return (
                           <tr key={payment.id || index}>
                             <td className="payment-date">
-                              {payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString('en-US', {
-                                month: '2-digit',
-                                day: '2-digit',
-                                year: 'numeric'
-                              }) : 'N/A'}
+                              {paymentDateValue
+                                ? new Date(paymentDateValue).toLocaleDateString('en-US', {
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                    year: 'numeric'
+                                  })
+                                : 'N/A'}
                             </td>
                             <td className="payment-amount">
                               ${payment.amount?.toFixed(2) || '0.00'} {payment.currency || 'USD'}
@@ -451,7 +455,8 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                               </div>
                             </td>
                           </tr>
-                        ))
+                          )
+                        })
                       ) : (
                         <tr>
                           <td colSpan="3" className="no-payments-message">

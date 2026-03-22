@@ -108,7 +108,7 @@ export const invoiceApi = {
    * Unarchive invoice - removes from archive
    */
   unarchiveInvoice: async (invoiceId) => {
-    const response = await axiosInstance.delete(`/invoices/${invoiceId}/unarchive`)
+    const response = await axiosInstance.delete(`/client/invoices/${invoiceId}/unarchive`)
     return response.data
   },
 

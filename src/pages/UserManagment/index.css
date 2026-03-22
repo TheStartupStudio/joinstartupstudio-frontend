@@ -1,6 +1,6 @@
 .user-management-container {
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
-  overflow: hidden;
+  /* overflow: hidden; */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 10px;
   background: rgba(255, 255, 255, 0.10);
