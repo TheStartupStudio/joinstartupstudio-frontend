@@ -32,15 +32,14 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
     dueDate: '2025/10/27',
     items: [
       {
-        description: 'AIE Learner Access',
+        description: 'TSS Learner Access',
         quantity: '1000',
         price: '15',
         total: 15000
       }
     ],
     subtotal: 15000,
-    tax: 1050,
-    total: 16050
+    total: 15000
   }
 
   const [formData, setFormData] = useState(defaultDummyData)
@@ -102,7 +101,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
         status: invoice.status,
         items: invoice.items || [],
         subtotal: invoice.subtotal,
-        tax: invoice.tax,
         total: invoice.total
       })
     } catch (error) {
@@ -243,13 +241,11 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
 
   const calculateTotals = (items) => {
     const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.total) || 0), 0)
-    const tax = subtotal * 0.07 
-    const total = subtotal + tax
+    const total = subtotal
 
     setFormData(prev => ({
       ...prev,
       subtotal,
-      tax,
       total
     }))
   }
@@ -303,7 +299,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
           total: parseFloat(item.total)
         })),
         subtotal: formData.subtotal,
-        tax: formData.tax,
         total: formData.total,
         status: formData.status
       })
@@ -717,10 +712,6 @@ const ViewInvoiceModal = ({ show = true, onHide, onSuccess, invoiceData = null, 
                     <div className="totals-row">
                       <span className="totals-label"></span>
                       <span className="totals-value">{formatCurrency(formData.subtotal)}</span>
-                    </div>
-                    <div className="totals-row">
-                      <span className="totals-label">Tax (7%)</span>
-                      <span className="totals-value">{formatCurrency(formData.tax)}</span>
                     </div>
                     <div className="totals-row total-row">
                       <span className="totals-label">TOTAL</span>
