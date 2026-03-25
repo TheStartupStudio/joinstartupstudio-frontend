@@ -117,6 +117,7 @@ padding: 4px;
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .add-organization-btn {
