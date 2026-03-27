@@ -264,6 +264,8 @@ const ContentManagement = () => {
       setShowAddTaskModal(true)
     } else {
       // If level has no tasks, use CreateJournalTaskModal for the first task
+      setEditingTask(null)
+      setModalMode('add')
       setShowCreateJournalTaskModal(true)
     }
 
@@ -423,7 +425,6 @@ const ContentManagement = () => {
               : []
       }
 
-      // Check if task has reflection content (entries with questions)
       const hasReflection =
         formattedReflectionItems.length > 0 &&
         formattedReflectionItems.some(

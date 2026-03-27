@@ -7,6 +7,20 @@
   border: none;
   border-radius: 24px;
   background: #f9fafb;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    filter 0.22s ease;
+}
+
+.view-failed-payment-modal.modal-in-background .modal-content {
+  opacity: 0.78;
+  transform: scale(0.985);
+  filter: saturate(0.85);
+}
+
+.view-failed-payment-modal.modal-in-background .modal-content-wrapper {
+  pointer-events: none;
 }
 
 .view-failed-payment-modal .modal-content-wrapper {
@@ -39,8 +53,8 @@
 
 .view-failed-payment-modal .back-button:hover {
   background: #f9fafb;
-  border-color: #51C7DF;
-  color: #51C7DF;
+  border-color: #51c7df;
+  color: #51c7df;
 }
 
 .view-failed-payment-modal .header-content {
@@ -66,7 +80,7 @@
   margin: 4px 0 0 0;
 }
 
-.view-failed-payment-modal .organization-id{
+.view-failed-payment-modal .organization-id {
   color: var(--COLORS-Black, #000);
   font-family: Montserrat;
   font-size: 14px;
@@ -107,7 +121,8 @@
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
 }
 
-.view-failed-payment-modal .search-input-failed-payments.search-input-icon-right {
+.view-failed-payment-modal
+  .search-input-failed-payments.search-input-icon-right {
   padding: 12px 40px 12px 16px;
 }
 
@@ -148,7 +163,7 @@
 
 .view-failed-payment-modal .bulk-actions:hover {
   background: #f9fafb;
-  border-color: #51C7DF;
+  border-color: #51c7df;
 }
 
 .view-failed-payment-modal .table-container {
@@ -157,6 +172,20 @@
   /* padding: 20px;
   margin-bottom: 20px; */
   /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  min-height: 280px;
+}
+
+.view-failed-payment-modal .table-refresh-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(1px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .view-failed-payment-modal .pagination-container {
@@ -178,12 +207,12 @@
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border:none;
+  border: none;
 }
 
 .view-failed-payment-modal .pagination-btn:hover {
   background: #f9fafb;
-  border-color: #51C7DF;
+  border-color: #51c7df;
 }
 
 .view-failed-payment-modal .pagination-info {
@@ -209,7 +238,6 @@
   width: 16px;
   height: 16px;
 }
-
 
 /* ...existing code... */
 
@@ -285,13 +313,12 @@
   text-transform: capitalize;
 }
 
-
 .view-failed-payment-modal .status-dot {
   min-width: 11px;
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  display: inline-block; 
+  display: inline-block;
   transition: background-color 0.2s ease;
 }
 
@@ -303,11 +330,11 @@
 }
 
 .view-failed-payment-modal .status-complete .status-dot {
-  background: #9C3;
+  background: #9c3;
 }
 
 .view-failed-payment-modal .status-paid .status-dot {
-  background: #9C3;
+  background: #9c3;
 }
 
 /* .view-invoices-container .status-badge.status-unpaid {
@@ -315,7 +342,7 @@
   color: #721C24;
 } */
 .view-failed-payment-modal .status-unpaid .status-dot {
-  background: #F39;
+  background: #f39;
 }
 
 .view-failed-payment-modal .status-pending .status-dot {
@@ -323,10 +350,10 @@
 }
 
 .view-failed-payment-modal .status-created {
-  background: #D1ECF1;
-  color: #0C5460;
+  background: #d1ecf1;
+  color: #0c5460;
 }
 
 .view-failed-payment-modal .status-badge-created .status-dot {
-  background: #17A2B8;
+  background: #17a2b8;
 }

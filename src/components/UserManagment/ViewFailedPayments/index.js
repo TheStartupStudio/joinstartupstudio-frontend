@@ -53,6 +53,8 @@ const ViewFailedPayments = ({ show, onHide }) => {
   })
 
   const searchContainerRef = useRef(null)
+  const isInitialTableLoading = loading && failedPaymentsData.length === 0
+  const isTableRefreshing = loading && failedPaymentsData.length > 0
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,35 +73,42 @@ const ViewFailedPayments = ({ show, onHide }) => {
     }
   }
 
-  const fetchFailedPayments = async (page = 1, search = '', appliedFilters = filters) => {
+  const fetchFailedPayments = async (
+    page = 1,
+    search = '',
+    appliedFilters = filters
+  ) => {
     setLoading(true)
     try {
-
       const queryParams = {
         page,
         limit: 10,
         search,
-        status: 'payment_failed' 
+        status: 'payment_failed'
       }
 
-      if (appliedFilters.organizationName && appliedFilters.organizationName.trim()) {
+      if (
+        appliedFilters.organizationName &&
+        appliedFilters.organizationName.trim()
+      ) {
         queryParams.organizationName = appliedFilters.organizationName.trim()
       }
 
       if (appliedFilters.dateFrom) {
-        const dateFromStr = appliedFilters.dateFrom instanceof Date
-          ? appliedFilters.dateFrom.toISOString().split('T')[0]
-          : appliedFilters.dateFrom
+        const dateFromStr =
+          appliedFilters.dateFrom instanceof Date
+            ? appliedFilters.dateFrom.toISOString().split('T')[0]
+            : appliedFilters.dateFrom
         queryParams.dateFrom = dateFromStr
       }
 
       if (appliedFilters.dateTo) {
-        const dateToStr = appliedFilters.dateTo instanceof Date
-          ? appliedFilters.dateTo.toISOString().split('T')[0]
-          : appliedFilters.dateTo
+        const dateToStr =
+          appliedFilters.dateTo instanceof Date
+            ? appliedFilters.dateTo.toISOString().split('T')[0]
+            : appliedFilters.dateTo
         queryParams.dateTo = dateToStr
       }
-
 
       let response
 
@@ -111,9 +120,8 @@ const ViewFailedPayments = ({ show, onHide }) => {
         response = await invoiceApi.getClientInvoices(queryParams)
       }
 
-
       const rawData = response.data || []
-      const invoicesData = rawData.map(inv => {
+      const invoicesData = rawData.map((inv) => {
         const dateAdded = inv.issueDate || inv.invoiceDate || inv.createdAt
         let dateFailed = inv.paymentDate
         if (!dateFailed && dateAdded) {
@@ -129,15 +137,20 @@ const ViewFailedPayments = ({ show, onHide }) => {
       })
 
       setFailedPaymentsData(invoicesData)
-      setPagination(response.pagination || {
-        total: invoicesData.length,
-        page,
-        limit: 10,
-        totalPages: Math.ceil(invoicesData.length / 10)
-      })
+      setPagination(
+        response.pagination || {
+          total: invoicesData.length,
+          page,
+          limit: 10,
+          totalPages: Math.ceil(invoicesData.length / 10)
+        }
+      )
     } catch (error) {
       console.error('Error fetching failed payments:', error)
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to load failed payments data'
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        'Failed to load failed payments data'
       toast.error(errorMessage)
       setFailedPaymentsData([])
       setPagination({
@@ -172,7 +185,10 @@ const ViewFailedPayments = ({ show, onHide }) => {
   }, [show])
 
   const handleClickOutside = (event) => {
-    if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+    if (
+      searchContainerRef.current &&
+      !searchContainerRef.current.contains(event.target)
+    ) {
       setShowFilters(false)
     }
   }
@@ -184,68 +200,77 @@ const ViewFailedPayments = ({ show, onHide }) => {
     }
   }, [])
 
-  const failedPaymentsColumns = useMemo(() => [
-    {
-      key: 'invoiceNumber',
-      title: 'INVOICE NUMBER',
-      sortable: true,
-      filterable: false,
-      render: (value, item) => (
-      <div className='d-flex flex-column gap-1'>
-          <span className='organization-name'>{item.organizationName}</span>
-         <span>{value}</span>
-      </div>
-     )
-    },
-    {
-      key: 'status',
-      title: 'STATUS',
-      sortable: true,
-      filterable: false,
-      render: (value) => (
-        <span className={`status-badge status-${(value || '').toLowerCase().replace(/\s/g, '-')}`}>
-          <span className="status-dot"></span>
-          {value || 'Failed'}
-        </span>
-      )
-    },
-    {
-      key: 'dateAdded',
-      title: 'DATE ADDED',
-      sortable: true,
-      filterable: false,
-      render: (value, item) => {
-        const date = value || item.issueDate || item.invoiceDate
-        return (
-          <span className="invoice-date">
-            {date ? new Date(date).toLocaleDateString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric'
-            }) : 'N/A'}
+  const failedPaymentsColumns = useMemo(
+    () => [
+      {
+        key: 'invoiceNumber',
+        title: 'INVOICE NUMBER',
+        sortable: true,
+        filterable: false,
+        render: (value, item) => (
+          <div className='d-flex flex-column gap-1'>
+            <span className='organization-name'>{item.organizationName}</span>
+            <span>{value}</span>
+          </div>
+        )
+      },
+      {
+        key: 'status',
+        title: 'STATUS',
+        sortable: true,
+        filterable: false,
+        render: (value) => (
+          <span
+            className={`status-badge status-${(value || '').toLowerCase().replace(/\s/g, '-')}`}
+          >
+            <span className='status-dot'></span>
+            {value || 'Failed'}
           </span>
         )
+      },
+      {
+        key: 'dateAdded',
+        title: 'DATE ADDED',
+        sortable: true,
+        filterable: false,
+        render: (value, item) => {
+          const date = value || item.issueDate || item.invoiceDate
+          return (
+            <span className='invoice-date'>
+              {date
+                ? new Date(date).toLocaleDateString('en-US', {
+                    month: '2-digit',
+                    day: '2-digit',
+                    year: 'numeric'
+                  })
+                : 'N/A'}
+            </span>
+          )
+        }
+      },
+      {
+        key: 'dateFailed',
+        title: 'DATE FAILED',
+        sortable: true,
+        filterable: false,
+        render: (value, item) => {
+          const date = value || item.paymentDate
+          return (
+            <span className='payment-date'>
+              {date
+                ? new Date(date).toLocaleDateString('en-US', {
+                    month: '2-digit',
+                    day: '2-digit',
+                    year: 'numeric'
+                  })
+                : 'N/A'}
+            </span>
+          )
+        }
       }
-    },
-    {
-      key: 'dateFailed',
-      title: 'DATE FAILED',
-      sortable: true,
-      filterable: false,
-      render: (value, item) => {
-        const date = value || item.paymentDate
-        return (
-          <span className="payment-date">
-            {date ? new Date(date).toLocaleDateString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric'
-            }) : 'N/A'}
-          </span>
-        )
-      }
-    }
-  ], [])
+    ],
+    []
+  )
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
@@ -259,7 +284,7 @@ const ViewFailedPayments = ({ show, onHide }) => {
   }
 
   const handleFiltersChange = useCallback((newFilters) => {
-    setFilters(prevFilters => {
+    setFilters((prevFilters) => {
       if (
         prevFilters.organizationName !== newFilters.organizationName ||
         prevFilters.dateFrom !== newFilters.dateFrom ||
@@ -330,7 +355,8 @@ const ViewFailedPayments = ({ show, onHide }) => {
 
   const handleDeleteInvoice = async (item) => {
     if (!item?.id) return
-    if (!window.confirm(`Delete invoice ${item.invoiceNumber || item.id}?`)) return
+    if (!window.confirm(`Delete invoice ${item.invoiceNumber || item.id}?`))
+      return
     try {
       setLoading(true)
       await invoiceApi.deleteInvoice(item.id)
@@ -390,7 +416,9 @@ const ViewFailedPayments = ({ show, onHide }) => {
 
       // Wait for modal to render, then trigger download
       setTimeout(() => {
-        const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
+        const downloadBtn = document.querySelector(
+          '.header-icons-nav svg[title="Download Invoice as PDF"]'
+        )?.parentElement
         if (downloadBtn) {
           downloadBtn.click()
           // Close modal after brief delay
@@ -424,7 +452,9 @@ const ViewFailedPayments = ({ show, onHide }) => {
       try {
         await invoiceApi.downloadClientInvoice(invoice.id)
 
-        toast.success(`Invoice ${invoice.invoiceNumber} downloaded successfully!`)
+        toast.success(
+          `Invoice ${invoice.invoiceNumber} downloaded successfully!`
+        )
         return
       } catch (backendError) {
         console.log('Backend PDF not available, using client-side generation')
@@ -433,7 +463,9 @@ const ViewFailedPayments = ({ show, onHide }) => {
         setShowEditInvoiceModal(true)
 
         setTimeout(() => {
-          const downloadBtn = document.querySelector('.header-icons-nav svg[title="Download Invoice as PDF"]')?.parentElement
+          const downloadBtn = document.querySelector(
+            '.header-icons-nav svg[title="Download Invoice as PDF"]'
+          )?.parentElement
           if (downloadBtn) {
             downloadBtn.click()
           }
@@ -492,17 +524,23 @@ const ViewFailedPayments = ({ show, onHide }) => {
     try {
       setLoading(true)
 
-      const sendPromises = selectedInvoices.map(invoice =>
+      const sendPromises = selectedInvoices.map((invoice) =>
         invoiceApi.sendInvoiceEmail(invoice.id, {
-          subject: emailData.subject.replace(selectedInvoices[0].invoiceNumber, invoice.invoiceNumber),
-          message: emailData.message.replace(selectedInvoices[0].organizationName, invoice.organizationName)
+          subject: emailData.subject.replace(
+            selectedInvoices[0].invoiceNumber,
+            invoice.invoiceNumber
+          ),
+          message: emailData.message.replace(
+            selectedInvoices[0].organizationName,
+            invoice.organizationName
+          )
         })
       )
 
       const results = await Promise.allSettled(sendPromises)
 
-      const succeeded = results.filter(r => r.status === 'fulfilled').length
-      const failed = results.filter(r => r.status === 'rejected').length
+      const succeeded = results.filter((r) => r.status === 'fulfilled').length
+      const failed = results.filter((r) => r.status === 'rejected').length
 
       if (succeeded > 0) {
         toast.success(`${succeeded} invoice(s) sent successfully!`)
@@ -515,7 +553,6 @@ const ViewFailedPayments = ({ show, onHide }) => {
       setSelectedInvoices([])
       setShowPreviewEmailModal(false)
       setInvoiceToSend(null)
-
     } catch (error) {
       console.error('❌ Error sending invoices:', error)
       toast.error('Failed to send some invoices')
@@ -524,207 +561,305 @@ const ViewFailedPayments = ({ show, onHide }) => {
     }
   }
 
-  // Hide failed-payments modal while learner or email modal is open; render those as siblings to avoid nested modal issues
-  const showFailedPaymentsModal = show && !showViewLearnerModal && !showEmailClientModal
+  const isChildModalOpen =
+    showViewLearnerModal ||
+    showEmailClientModal ||
+    showEditInvoiceModal ||
+    showPreviewEmailModal
 
   return (
     <>
-    <Modal
-      show={showFailedPaymentsModal}
-      onHide={onHide}
-      backdrop={true}
-      keyboard={true}
-      className="view-failed-payment-modal"
-      centered
-      size="xl"
-    >
-      <div className="modal-content-wrapper">
-        {/* Header */}
-        <div className="modal-header-learners position-relative">
-          <div className="d-flex flex-column gap-3">
-            <img 
-              src={newCity} 
+      <Modal
+        show={show}
+        onHide={onHide}
+        backdrop={true}
+        keyboard={!isChildModalOpen}
+        className={`view-failed-payment-modal ${isChildModalOpen ? 'modal-in-background' : ''}`}
+        centered
+        size='xl'
+      >
+        <div className='modal-content-wrapper'>
+          {/* Header */}
+          <div className='modal-header-learners position-relative'>
+            <div className='d-flex flex-column gap-3'>
+              <img
+                src={newCity}
+                style={{
+                  padding: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: '#E2E6EC',
+                  width: 'fit-content',
+                  width: '36px',
+                  height: '36px'
+                }}
+                alt='icon'
+              />
+              <p
+                style={{
+                  color: '#231F20',
+                  fontSize: '15px',
+                  fontWeight: 500
+                }}
+              >
+                View Failed Payments
+              </p>
+            </div>
+
+            <div
               style={{
-                padding: '8px', 
-                borderRadius:"50%", 
-                backgroundColor: "#E2E6EC", 
-                width: 'fit-content',
-                width: '36px',
-                height: '36px'
-              }} 
-              alt="icon"
-            />
-            <p style={{
-              color: '#231F20',
-              fontSize: '15px',
-              fontWeight: 500,
-            }}>
-              View Failed Payments
-            </p>
-          </div>
-
-          <div style={{
-            display: 'flex',
-            height: 64,
-            padding: 17,
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 28,
-            borderRadius: '0px 24px 0px 24px',
-            background: 'var(--COLORS-White, #FFF)',
-            boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)',
-            position: 'absolute',
-            top: -26,
-            right: -26,
-            cursor: 'pointer'
-          }}
-            onClick={onHide}
-          >
-            <img src={leftArrow} alt="back" />
-          </div>
-        </div>
-
-        <div style={{
-          borderRadius: 24,
-          background: 'var(--Glassy-White, rgba(255, 255, 255, 0.10))',
-          boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
-          backdropFilter: 'blur(60px)',
-        }}>
-          {/* Search Bar */}
-          <div className="search-actions-bar-failed-payments">
-            <div className="search-container-failed-payments" ref={searchContainerRef}>
-              <div className="search-input-wrapper-failed-payments">
-                <div className="d-flex gap-2">
-
-            
-                  <input
-                    type="text"
-                    placeholder="Search for Invoice"
-                    value={searchQuery}
-                    onChange={handleSearch}
-                    className="search-input-failed-payments search-input-icon-right"
-                  />
-                  <svg className="search-icon search-icon-right" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-              </div>
-
-              {showFilters && (
-                <InvoiceFilters
-                  show={showFilters}
-                  onHide={() => setShowFilters(false)}
-                  anchorRef={searchContainerRef}
-                  onApplyFilters={handleFiltersChange}
-                  initialFilters={filters}
-                />
-              )}
+                display: 'flex',
+                height: 64,
+                padding: 17,
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 28,
+                borderRadius: '0px 24px 0px 24px',
+                background: 'var(--COLORS-White, #FFF)',
+                boxShadow: '0 4px 12px 0 rgba(0, 0, 0, 0.25)',
+                position: 'absolute',
+                top: -26,
+                right: -26,
+                cursor: 'pointer'
+              }}
+              onClick={onHide}
+            >
+              <img src={leftArrow} alt='back' />
             </div>
           </div>
 
-          {/* Table */}
-          <div className="table-container">
-            <DataTable
-              columns={failedPaymentsColumns}
-              data={failedPaymentsData}
-              searchQuery=""
-              onRowAction={handleRowAction}
-              showCheckbox={true}
-              activeTab="FailedPayments"
-              loading={loading}
-              onSelectionChange={handleSelectionChange}
-              selectedItems={selectedInvoices}
-            />
+          <div
+            style={{
+              borderRadius: 24,
+              background: 'var(--Glassy-White, rgba(255, 255, 255, 0.10))',
+              boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
+              backdropFilter: 'blur(60px)'
+            }}
+          >
+            {/* Search Bar */}
+            <div className='search-actions-bar-failed-payments'>
+              <div
+                className='search-container-failed-payments'
+                ref={searchContainerRef}
+              >
+                <div className='search-input-wrapper-failed-payments'>
+                  <div className='d-flex gap-2'>
+                    <input
+                      type='text'
+                      placeholder='Search for Invoice'
+                      value={searchQuery}
+                      onChange={handleSearch}
+                      className='search-input-failed-payments search-input-icon-right'
+                    />
+                    <svg
+                      className='search-icon search-icon-right'
+                      width='16'
+                      height='16'
+                      viewBox='0 0 24 24'
+                      fill='none'
+                    >
+                      <path
+                        d='M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z'
+                        stroke='#666'
+                        strokeWidth='2'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                {showFilters && (
+                  <InvoiceFilters
+                    show={showFilters}
+                    onHide={() => setShowFilters(false)}
+                    anchorRef={searchContainerRef}
+                    onApplyFilters={handleFiltersChange}
+                    initialFilters={filters}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className='table-container position-relative'>
+              {isTableRefreshing && (
+                <div
+                  className='table-refresh-overlay'
+                  aria-live='polite'
+                  aria-busy='true'
+                >
+                  <div className='spinner-border text-primary' role='status'>
+                    <span className='visually-hidden'>Refreshing...</span>
+                  </div>
+                </div>
+              )}
+              <DataTable
+                columns={failedPaymentsColumns}
+                data={failedPaymentsData}
+                searchQuery=''
+                onRowAction={handleRowAction}
+                showCheckbox={true}
+                activeTab='FailedPayments'
+                loading={isInitialTableLoading}
+                onSelectionChange={handleSelectionChange}
+                selectedItems={selectedInvoices}
+              />
+            </div>
+
+            {/* Pagination */}
+            <div className='pagination-container'>
+              <button
+                className='pagination-btn'
+                onClick={() => handlePageChange(1)}
+                disabled={loading || currentPage === 1}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                >
+                  <path
+                    d='M11 6L5 12L11 18'
+                    stroke='black'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M19 6L13 12L19 18'
+                    stroke='black'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </button>
+              <button
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={loading || currentPage === 1}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='25'
+                  height='24'
+                  viewBox='0 0 25 24'
+                  fill='none'
+                >
+                  <path
+                    d='M15.75 6L9.75 12L15.75 18'
+                    stroke='black'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </button>
+              <span className='pagination-info'>
+                {currentPage} / {pagination.totalPages}
+              </span>
+              <button
+                className='pagination-btn'
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={loading || currentPage === pagination.totalPages}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='25'
+                  height='24'
+                  viewBox='0 0 25 24'
+                  fill='none'
+                >
+                  <path
+                    d='M9.25 6L15.25 12L9.25 18'
+                    stroke='black'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </button>
+              <button
+                className='pagination-btn'
+                onClick={() => handlePageChange(pagination.totalPages)}
+                disabled={loading || currentPage === pagination.totalPages}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                >
+                  <path
+                    d='M13 6L19 12L13 18'
+                    stroke='black'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M5 6L11 12L5 18'
+                    stroke='black'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          {/* Pagination */}
-          <div className="pagination-container">
-            <button 
-              className="pagination-btn"
-              onClick={() => handlePageChange(1)}
-              disabled={currentPage === 1}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button 
-              className="pagination-btn"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <span className="pagination-info">{currentPage} / {pagination.totalPages}</span>
-            <button 
-              className="pagination-btn"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === pagination.totalPages}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <button 
-              className="pagination-btn"
-              onClick={() => handlePageChange(pagination.totalPages)}
-              disabled={currentPage === pagination.totalPages}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          </div>
+          <ViewInvoiceModal
+            show={showEditInvoiceModal}
+            onHide={() => {
+              setShowEditInvoiceModal(false)
+              setSelectedInvoice(null)
+              setInvoiceMode('view')
+            }}
+            onSuccess={() => {
+              fetchFailedPayments(currentPage, debouncedSearchQuery, filters)
+            }}
+            invoiceData={selectedInvoice}
+            mode={invoiceMode}
+          />
+
+          <PreviewInvoiceEmailModal
+            show={showPreviewEmailModal}
+            onHide={() => {
+              setShowPreviewEmailModal(false)
+              setInvoiceToSend(null)
+            }}
+            invoiceData={invoiceToSend}
+            onConfirmSend={
+              selectedInvoices.length > 1
+                ? handleConfirmBulkSendEmail
+                : handleConfirmSendEmail
+            }
+          />
         </div>
+      </Modal>
 
-        <ViewInvoiceModal
-          show={showEditInvoiceModal}
-          onHide={() => {
-            setShowEditInvoiceModal(false)
-            setSelectedInvoice(null)
-            setInvoiceMode('view')
-          }}
-          onSuccess={() => {
-            fetchFailedPayments(currentPage, debouncedSearchQuery, filters)
-          }}
-          invoiceData={selectedInvoice}
-          mode={invoiceMode}
-        />
+      <EmailLearnerModal
+        show={showEmailClientModal}
+        onHide={() => {
+          setShowEmailClientModal(false)
+          setEmailRecipientId(null)
+        }}
+        recipientId={emailRecipientId}
+        title='Email Client'
+      />
 
-        <PreviewInvoiceEmailModal
-          show={showPreviewEmailModal}
-          onHide={() => {
-            setShowPreviewEmailModal(false)
-            setInvoiceToSend(null)
-          }}
-          invoiceData={invoiceToSend}
-          onConfirmSend={selectedInvoices.length > 1 ? handleConfirmBulkSendEmail : handleConfirmSendEmail}
-        />
-      </div>
-    </Modal>
-
-    <EmailLearnerModal
-      show={showEmailClientModal}
-      onHide={() => {
-        setShowEmailClientModal(false)
-        setEmailRecipientId(null)
-      }}
-      recipientId={emailRecipientId}
-      title="Email Client"
-    />
-
-    <ViewLearnerModal
-      show={showViewLearnerModal}
-      onHide={() => {
-        setShowViewLearnerModal(false)
-        setSelectedLearner(null)
-      }}
-      learner={selectedLearner}
-    />
+      <ViewLearnerModal
+        show={showViewLearnerModal}
+        onHide={() => {
+          setShowViewLearnerModal(false)
+          setSelectedLearner(null)
+        }}
+        learner={selectedLearner}
+      />
     </>
   )
 }

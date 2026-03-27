@@ -118,7 +118,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
-    roles: [3, 2, 1],
+    roles: [2, 1],
     requiresUniversitySetting: 'hasMasterClasses',
     className: (pathname) =>
       pathname.includes('beyond-your-course') ? 'active' : ''
