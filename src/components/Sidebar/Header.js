@@ -1,18 +1,27 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
+import StudioOs from '../../assets/images/academy-icons/StudioOs.png'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { collapseTrue, toggleCollapse } from '../../redux/sidebar/Actions'
-import { fetchOrganizationBranding, loadOrganizationBrandingFromCache } from '../../redux'
+import {
+  fetchOrganizationBranding,
+  loadOrganizationBrandingFromCache
+} from '../../redux'
 import { preloadImage } from '../../utils/preloadImage'
 import CloseBtn from '../../assets/images/academy-icons/svg/icons8-close (1).svg'
 
 const Header = (props) => {
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
-  const organizationLogo = useSelector((state) => state.organizationBranding?.logo)
-  const organizationBanner = useSelector((state) => state.organizationBranding?.banner)
+  const organizationLogo = useSelector(
+    (state) => state.organizationBranding?.logo
+  )
+  const organizationBanner = useSelector(
+    (state) => state.organizationBranding?.banner
+  )
   const dispatch = useDispatch()
+  const [showStudioOs, setShowStudioOs] = useState(false)
   const isDefaultLogo = !organizationLogo
   const user = useSelector((state) => state.user?.user?.user)
   const userRole = user?.role_id || parseInt(localStorage.getItem('role'))
@@ -30,6 +39,22 @@ const Header = (props) => {
     if (organizationLogo) preloadImage(organizationLogo)
     if (organizationBanner) preloadImage(organizationBanner)
   }, [organizationLogo, organizationBanner])
+
+  useEffect(() => {
+    let timer
+
+    if (!isCollapsed && isDefaultLogo) {
+      timer = setTimeout(() => {
+        setShowStudioOs(true)
+      }, 250)
+    } else {
+      setShowStudioOs(false)
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [isCollapsed, isDefaultLogo])
 
   // ✅ Get appropriate dashboard path based on role
   const getDashboardPath = () => {
@@ -59,7 +84,11 @@ const Header = (props) => {
               style={{ marginLeft: isCollapsed && '0px' }}
             />
           ) : (
-            <img src={organizationBanner || AcademyLogo} alt='banner' style={{ width: isDefaultLogo ? 'revert-layer' : '100%' }} />
+            <img
+              src={organizationBanner || AcademyLogo}
+              alt='banner'
+              style={{ width: isDefaultLogo ? 'revert-layer' : '100%' }}
+            />
           )}
           {/* <img
             src={organizationLogo || AcademyLogo}
@@ -67,21 +96,22 @@ const Header = (props) => {
             style={{ marginLeft: isCollapsed && '0px' }}
           /> */}
 
-          {!isCollapsed && isDefaultLogo && (
+          {!isCollapsed && isDefaultLogo && showStudioOs && (
             <div>
-              <h4 className='academy-header' style={{ marginBottom: '.75rem' }}>
-                <span className='header-title'>THE</span>
-                <br />
-                STARTUP
-                <br />
-                STUDIO
-              </h4>
-              <p
-                className='powered white-space-no-wrap lh-1'
-                style={{ fontSize: '.55rem' }}
+              <h4
+                className='academy-header'
+                style={{ marginLeft: '.5rem', marginBottom: '-.75rem' }}
               >
-                Powered by Learn to Start
-              </p>
+                <img
+                  style={{
+                    width: '140px',
+                    height: '100px',
+                    objectFit: 'contain'
+                  }}
+                  src={StudioOs}
+                  alt='StudioOS'
+                />
+              </h4>
             </div>
           )}
         </NavLink>
