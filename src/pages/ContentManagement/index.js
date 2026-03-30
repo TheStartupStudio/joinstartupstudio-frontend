@@ -18,7 +18,7 @@ import AssignTasksModal from '../../components/ContentManagement/AssignTasksModa
 
 const ContentManagement = () => {
   const dispatch = useDispatch()
-  const [levelsData, setLevelsData] = useState([]) 
+  const [levelsData, setLevelsData] = useState([])
   const [activeLevel, setActiveLevel] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddDropdown, setShowAddDropdown] = useState(false)
@@ -41,7 +41,8 @@ const ContentManagement = () => {
   const [showUnpublishPopup, setShowUnpublishPopup] = useState(false)
   const [showDeleteTaskPopup, setShowDeleteTaskPopup] = useState(false)
   const [showDeleteLevelPopup, setShowDeleteLevelPopup] = useState(false)
-  const [showCreateJournalTaskModal, setShowCreateJournalTaskModal] = useState(false)
+  const [showCreateJournalTaskModal, setShowCreateJournalTaskModal] =
+    useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
   const [selectedItems, setSelectedItems] = useState([])
@@ -57,7 +58,7 @@ const ContentManagement = () => {
 
   useEffect(() => {
     if (activeLevel && levelsData.length > 0) {
-      const activeLevelObj = levelsData.find(l => l.title === activeLevel)
+      const activeLevelObj = levelsData.find((l) => l.title === activeLevel)
       if (activeLevelObj) {
         fetchTasksByLevel()
       }
@@ -70,21 +71,38 @@ const ContentManagement = () => {
   const fetchLevels = async () => {
     try {
       setLoading(true)
-      const response = await axiosInstance.get('/LtsJournals/entrepreneurship/levels')
-      
+      const response = await axiosInstance.get(
+        '/LtsJournals/entrepreneurship/levels'
+      )
+
       setLevelsData(response.data)
-      
+
       if (response.data.length > 0) {
         setActiveLevel(response.data[0].title)
       }
     } catch (error) {
       console.error('Error fetching levels:', error)
       toast.error('Failed to fetch levels')
-      
+
       const defaultLevels = [
-        { id: 1, title: 'Level 1: Entrepreneurship and You', order: 1, published: true },
-        { id: 2, title: 'Level 2: Understanding Learn to Start', order: 2, published: true },
-        { id: 3, title: 'Level 3: The Journey of Entrepreneurship', order: 3, published: true }
+        {
+          id: 1,
+          title: 'Level 1: Entrepreneurship and You',
+          order: 1,
+          published: true
+        },
+        {
+          id: 2,
+          title: 'Level 2: Understanding Learn to Start',
+          order: 2,
+          published: true
+        },
+        {
+          id: 3,
+          title: 'Level 3: The Journey of Entrepreneurship',
+          order: 3,
+          published: true
+        }
       ]
       setLevelsData(defaultLevels)
       setActiveLevel(defaultLevels[0].title)
@@ -96,32 +114,40 @@ const ContentManagement = () => {
   const fetchTasksByLevel = async () => {
     try {
       setLoading(true)
-      
-      const activeLevelObj = levelsData.find(l => l.title === activeLevel)
+
+      const activeLevelObj = levelsData.find((l) => l.title === activeLevel)
       if (!activeLevelObj) {
         setTasksData([])
         return
       }
 
-      const response = await axiosInstance.get('/LtsJournals/content-by-level', {
-        params: {
-          category: 'entrepreneurship',
-          levelId: activeLevelObj.id
+      const response = await axiosInstance.get(
+        '/LtsJournals/content-by-level',
+        {
+          params: {
+            category: 'entrepreneurship',
+            levelId: activeLevelObj.id
+          }
         }
-      })
+      )
 
-      const transformedTasks = response.data.map(journal => {
-        const hasVideoContent = journal.videoId ||
-                               journal.videoIds ||
-                               (journal.videos && journal.videos.length > 0) ||
-                               (journal.video && journal.video.id)
+      const transformedTasks = response.data.map((journal) => {
+        const hasVideoContent =
+          journal.videoId ||
+          journal.videoIds ||
+          (journal.videos && journal.videos.length > 0) ||
+          (journal.video && journal.video.id)
 
-        const hasReflectionContent = journal.entries && journal.entries.length > 0
+        const hasReflectionContent =
+          journal.entries && journal.entries.length > 0
 
         return {
           id: journal.id,
           name: journal.title,
-          status: (journal.published === true || journal.publishedStatus === true) ? 'published' : 'unpublished',
+          status:
+            journal.published === true || journal.publishedStatus === true
+              ? 'published'
+              : 'unpublished',
           hasContent: hasVideoContent || hasReflectionContent,
           order: journal.order,
           journalData: journal
@@ -140,22 +166,29 @@ const ContentManagement = () => {
     }
   }
 
-  const columns = useMemo(() => [
-    {
-    key: 'name',
-    title: 'TASK NAME',
-    sortable: true,
-    filterable: true,
-    width: '100%',
-    className: 'content-management-task-name-column',
-    render: (value, item) => (
-      <div className="task-name-cell">
-        <div className={`status-dot ${item.status}`}></div>
-        <span>{value}</span>
-      </div>
-    )
-  }
-  ], [])
+  const columns = useMemo(
+    () => [
+      {
+        key: 'name',
+        title: 'TASK NAME',
+        sortable: true,
+        filterable: true,
+        width: '100%',
+        className: 'content-management-task-name-column',
+        render: (value, item) => (
+          <div className='task-name-cell'>
+            <div className={`status-dot ${item.status}`}></div>
+            <span>
+              {item?.journalData?.video?.title !== 'No title'
+                ? item?.journalData?.video?.title
+                : value}
+            </span>
+          </div>
+        )
+      }
+    ],
+    []
+  )
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
@@ -166,7 +199,6 @@ const ContentManagement = () => {
   }
 
   const handleRowAction = (actionType, item) => {
-    
     switch (actionType) {
       case 'view':
         handleViewEditJournal(item.id, actionType)
@@ -188,27 +220,26 @@ const ContentManagement = () => {
   }
 
   const handleReorder = async (newOrderedData) => {
-    
     try {
       const updatedData = newOrderedData.map((item, index) => ({
         ...item,
-        order: index 
+        order: index
       }))
-      
+
       setTasksData(updatedData)
-  
-      const reorderPromises = updatedData.map(task =>
+
+      const reorderPromises = updatedData.map((task) =>
         axiosInstance.put(`/LtsJournals/${task.id}/order`, {
           order: task.order
         })
       )
       await Promise.all(reorderPromises)
 
-      const reorderedItems = updatedData.map(item => ({
+      const reorderedItems = updatedData.map((item) => ({
         id: item.id,
         name: item.name
       }))
-  
+
       toast.success('Task order updated successfully!')
     } catch (error) {
       console.error('Error reordering tasks:', error)
@@ -233,6 +264,8 @@ const ContentManagement = () => {
       setShowAddTaskModal(true)
     } else {
       // If level has no tasks, use CreateJournalTaskModal for the first task
+      setEditingTask(null)
+      setModalMode('add')
       setShowCreateJournalTaskModal(true)
     }
 
@@ -266,7 +299,6 @@ const ContentManagement = () => {
 
       // Clear selections
       setSelectedItems([])
-
     } catch (error) {
       console.error('Error bulk publishing tasks:', error)
       toast.error('Failed to publish tasks')
@@ -297,7 +329,6 @@ const ContentManagement = () => {
 
       // Clear selections
       setSelectedItems([])
-
     } catch (error) {
       console.error('Error bulk unpublishing tasks:', error)
       toast.error('Failed to unpublish tasks')
@@ -308,26 +339,32 @@ const ContentManagement = () => {
 
   const handleViewEditJournal = async (journalId, mode) => {
     try {
-
-      const response = await axiosInstance.get(`/LtsJournals/${journalId}/view-with-content`)
+      const response = await axiosInstance.get(
+        `/LtsJournals/${journalId}/view-with-content`
+      )
 
       const journal = response.data
 
       let formattedReflectionItems = []
 
-      if (journal.journalData && journal.journalData.entries && Array.isArray(journal.journalData.entries)) {
-
-        formattedReflectionItems = journal.journalData.entries.map(entry => {
+      if (
+        journal.journalData &&
+        journal.journalData.entries &&
+        Array.isArray(journal.journalData.entries)
+      ) {
+        formattedReflectionItems = journal.journalData.entries.map((entry) => {
           let question = ''
           let instructions = ''
           if (entry.title) {
-
             const tempDiv = document.createElement('div')
             tempDiv.innerHTML = entry.title
 
-            const headingElement = tempDiv.querySelector('h1, h2, h3, h4, h5, h6')
+            const headingElement = tempDiv.querySelector(
+              'h1, h2, h3, h4, h5, h6'
+            )
             if (headingElement) {
-              question = headingElement.textContent || headingElement.innerText || ''
+              question =
+                headingElement.textContent || headingElement.innerText || ''
             } else {
               let headingMatch = entry.title.match(/<h3[^>]*>(.*?)<\/h3>/i)
               if (!headingMatch) {
@@ -336,7 +373,10 @@ const ContentManagement = () => {
               if (headingMatch && headingMatch[1]) {
                 const headingTempDiv = document.createElement('div')
                 headingTempDiv.innerHTML = headingMatch[1]
-                question = headingTempDiv.textContent || headingTempDiv.innerText || headingMatch[1]
+                question =
+                  headingTempDiv.textContent ||
+                  headingTempDiv.innerText ||
+                  headingMatch[1]
               }
             }
 
@@ -348,7 +388,8 @@ const ContentManagement = () => {
               if (pMatch && pMatch[1]) {
                 const pTempDiv = document.createElement('div')
                 pTempDiv.innerHTML = pMatch[1]
-                instructions = pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
+                instructions =
+                  pTempDiv.textContent || pTempDiv.innerText || pMatch[1]
               }
             }
           }
@@ -361,29 +402,34 @@ const ContentManagement = () => {
 
           return result
         })
-      }
-      else if (journal.reflectionItems && Array.isArray(journal.reflectionItems) && journal.reflectionItems.length > 0) {
-        formattedReflectionItems = journal.reflectionItems.map(item => ({
+      } else if (
+        journal.reflectionItems &&
+        Array.isArray(journal.reflectionItems) &&
+        journal.reflectionItems.length > 0
+      ) {
+        formattedReflectionItems = journal.reflectionItems.map((item) => ({
           id: item.id || Date.now() + Math.random(),
           question: item.question || '',
           instructions: item.instructions || ''
         }))
-      }
-      else {
-        formattedReflectionItems = (journal.category === 'leadership')
-          ? [
-              { id: 1, question: '', instructions: '' },
-              { id: 2, question: '', instructions: '' },
-              { id: 3, question: '', instructions: '' }
-            ]
-          : (journal.contentType === 'reflection')
-            ? [{ id: 1, question: '', instructions: '' }]
-            : []
+      } else {
+        formattedReflectionItems =
+          journal.category === 'leadership'
+            ? [
+                { id: 1, question: '', instructions: '' },
+                { id: 2, question: '', instructions: '' },
+                { id: 3, question: '', instructions: '' }
+              ]
+            : journal.contentType === 'reflection'
+              ? [{ id: 1, question: '', instructions: '' }]
+              : []
       }
 
-      // Check if task has reflection content (entries with questions)
-      const hasReflection = formattedReflectionItems.length > 0 && 
-                           formattedReflectionItems.some(item => item.question && item.question.trim() !== '')
+      const hasReflection =
+        formattedReflectionItems.length > 0 &&
+        formattedReflectionItems.some(
+          (item) => item.question && item.question.trim() !== ''
+        )
 
       if (hasReflection) {
         // Task has reflection content - use AddTaskModal
@@ -409,7 +455,7 @@ const ContentManagement = () => {
           id: journal.id,
           title: journal.title,
           videoUrl: journal.videoUrl || journal.video?.url || '',
-          videoTitle: journal.video?.title || '',
+          videoTitle: journal?.journalData?.video?.title || '',
           thumbnailUrl: journal.thumbnailUrl || journal.JournalImg?.url || '',
           information: journal.information || '',
           order: journal.order
@@ -426,9 +472,10 @@ const ContentManagement = () => {
   }
 
   const handleSaveTask = (journalData) => {
-
     if (journalData.deleted) {
-      setTasksData(prevTasks => prevTasks.filter(task => task.id !== journalData.id))
+      setTasksData((prevTasks) =>
+        prevTasks.filter((task) => task.id !== journalData.id)
+      )
       return
     }
 
@@ -449,9 +496,12 @@ const ContentManagement = () => {
       setLoading(true)
 
       // Filter out assignments with invalid level IDs
-      const validAssignments = assignments.filter(assignment => {
+      const validAssignments = assignments.filter((assignment) => {
         if (!assignment.levelId || assignment.levelId === '') {
-          console.warn(`Skipping assignment for journal ${assignment.journalId} - invalid levelId:`, assignment.levelId)
+          console.warn(
+            `Skipping assignment for journal ${assignment.journalId} - invalid levelId:`,
+            assignment.levelId
+          )
           return false
         }
         return true
@@ -467,19 +517,29 @@ const ContentManagement = () => {
       // Update each journal's level assignment using the edit-with-content endpoint
       const updatePromises = validAssignments.map(async (assignment) => {
         try {
-          console.log(`Assigning journal ${assignment.journalId} to level ${assignment.levelId}`)
-          return await axiosInstance.put(`/LtsJournals/${assignment.journalId}/edit-with-content`, {
-            journalLevel: assignment.levelId
-          })
+          console.log(
+            `Assigning journal ${assignment.journalId} to level ${assignment.levelId}`
+          )
+          return await axiosInstance.put(
+            `/LtsJournals/${assignment.journalId}/edit-with-content`,
+            {
+              journalLevel: assignment.levelId
+            }
+          )
         } catch (individualError) {
-          console.error(`Error assigning journal ${assignment.journalId}:`, individualError)
+          console.error(
+            `Error assigning journal ${assignment.journalId}:`,
+            individualError
+          )
           throw individualError // Re-throw to be caught by outer catch
         }
       })
 
       await Promise.all(updatePromises)
 
-      toast.success(`${validAssignments.length} journal(s) assigned successfully!`)
+      toast.success(
+        `${validAssignments.length} journal(s) assigned successfully!`
+      )
 
       // Refresh data
       await fetchTasksByLevel()
@@ -487,7 +547,6 @@ const ContentManagement = () => {
 
       // Close modal
       setShowAssignModal(false)
-
     } catch (error) {
       console.error('Error assigning journals:', error)
       // toast.error('Failed to assign journals')
@@ -518,9 +577,12 @@ const ContentManagement = () => {
 
   const handleConfirmPublish = async () => {
     try {
-      await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
-        published: true
-      })
+      await axiosInstance.put(
+        `/LtsJournals/${selectedTask.id}/edit-with-content`,
+        {
+          published: true
+        }
+      )
 
       // Refresh data from API
       await fetchTasksByLevel()
@@ -536,9 +598,12 @@ const ContentManagement = () => {
 
   const handleConfirmUnpublish = async () => {
     try {
-      await axiosInstance.put(`/LtsJournals/${selectedTask.id}/edit-with-content`, {
-        published: false
-      })
+      await axiosInstance.put(
+        `/LtsJournals/${selectedTask.id}/edit-with-content`,
+        {
+          published: false
+        }
+      )
 
       // Refresh data from API
       await fetchTasksByLevel()
@@ -549,17 +614,17 @@ const ContentManagement = () => {
     } catch (error) {
       console.error('Error unpublishing task:', error)
       toast.error('Failed to unpublish task')
-    } 
+    }
   }
 
   const handleConfirmDeleteTask = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      setTasksData(prevTasks =>
-        prevTasks.filter(task => task.id !== selectedTask.id)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      setTasksData((prevTasks) =>
+        prevTasks.filter((task) => task.id !== selectedTask.id)
       )
-      
+
       toast.success(`Task "${selectedTask.name}" deleted successfully!`)
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
@@ -570,8 +635,8 @@ const ContentManagement = () => {
 
   const handleConfirmDeleteLevel = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
       toast.success(`Level "${selectedLevel}" deleted successfully!`)
       setShowDeleteLevelPopup(false)
       setSelectedLevel(null)
@@ -600,18 +665,60 @@ const ContentManagement = () => {
       name: 'Publish Tasks',
       action: handleBulkPublish,
       svg: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <g clipPath="url(#clip0_3778_10072)">
-            <path d="M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M2.19141 12.916H10.0001" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M2.19141 7.08301H17.8087" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="currentColor" strokeWidth="1.5"/>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='20'
+          height='20'
+          viewBox='0 0 20 20'
+          fill='none'
+        >
+          <g clipPath='url(#clip0_3778_10072)'>
+            <path
+              d='M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M2.19141 12.916H10.0001'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M2.19141 7.08301H17.8087'
+              stroke='currentColor'
+              strokeWidth='1.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              fillRule='evenodd'
+              clipRule='evenodd'
+              d='M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z'
+              stroke='currentColor'
+              strokeWidth='1.5'
+            />
           </g>
           <defs>
-            <clipPath id="clip0_3778_10072">
-              <rect width="20" height="20" fill="white"/>
+            <clipPath id='clip0_3778_10072'>
+              <rect width='20' height='20' fill='white' />
             </clipPath>
           </defs>
         </svg>
@@ -621,10 +728,32 @@ const ContentManagement = () => {
       name: 'Unpublish Tasks',
       action: handleBulkUnpublish,
       svg: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          <path d="M10 7.5V10.8333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          <path d="M10 14.1753L10.0083 14.1661" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='20'
+          height='20'
+          viewBox='0 0 20 20'
+          fill='none'
+        >
+          <path
+            d='M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z'
+            stroke='currentColor'
+            strokeWidth='1.5'
+            strokeLinecap='round'
+          />
+          <path
+            d='M10 7.5V10.8333'
+            stroke='currentColor'
+            strokeWidth='1.5'
+            strokeLinecap='round'
+          />
+          <path
+            d='M10 14.1753L10.0083 14.1661'
+            stroke='currentColor'
+            strokeWidth='1.5'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          />
         </svg>
       )
     }
@@ -632,36 +761,46 @@ const ContentManagement = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (addDropdownRef.current && !addDropdownRef.current.contains(event.target)) {
+      if (
+        addDropdownRef.current &&
+        !addDropdownRef.current.contains(event.target)
+      ) {
         setShowAddDropdown(false)
       }
-      
-      if (bulkDropdownRef.current && !bulkDropdownRef.current.contains(event.target)) {
+
+      if (
+        bulkDropdownRef.current &&
+        !bulkDropdownRef.current.contains(event.target)
+      ) {
         setShowBulkDropdown(false)
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
 
   return (
-    <div className="content-management">
+    <div className='content-management'>
       <div>
-        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
-          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
-            <div className="d-flex flex-column gap-2">
-              <h3 className="text-black mb-0"
+        <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+          <div
+            className='d-flex justify-content-between flex-col-tab align-start-tab'
+            style={{ padding: '40px 40px 10px 30px' }}
+          >
+            <div className='d-flex flex-column gap-2'>
+              <h3
+                className='text-black mb-0'
                 style={{
                   color: '#231F20',
                   fontFamily: 'Montserrat',
                   fontSize: '23px',
                   fontStyle: 'normal',
                   fontWeight: 700,
-                  lineHeight: 'normal',
+                  lineHeight: 'normal'
                 }}
               >
                 COURSE MANAGEMENT
@@ -674,7 +813,7 @@ const ContentManagement = () => {
                   fontStyle: 'normal',
                   fontWeight: '400',
                   lineHeight: '20px',
-                  marginBottom: '0px',
+                  marginBottom: '0px'
                 }}
               >
                 View and edit course materials
@@ -689,23 +828,25 @@ const ContentManagement = () => {
           />
         </div>
       </div>
-      
-      <div className="content-management-container position-relative">
-        <img src={blueManagerBG} className='position-absolute' 
-        style={{
-          top: 0, 
-          left: '50%', 
-          transform: 'translateX(-50%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-          // opacity: 0.1,
-          width: '100dvw',
-          height: '100dvh'
-        }} 
-        alt="Decorative background"
-        aria-hidden="true"
-      />
-        <div className="header-tabs d-flex justify-content-between gap-3">
+
+      <div className='content-management-container position-relative'>
+        <img
+          src={blueManagerBG}
+          className='position-absolute'
+          style={{
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 0,
+            pointerEvents: 'none',
+            // opacity: 0.1,
+            width: '100dvw',
+            height: '100dvh'
+          }}
+          alt='Decorative background'
+          aria-hidden='true'
+        />
+        <div className='header-tabs d-flex justify-content-between gap-3'>
           {levelsData.map((level) => (
             <button
               key={level.id}
@@ -718,131 +859,159 @@ const ContentManagement = () => {
         </div>
 
         <div className='main-search-table-container'>
-
-
-        <div className="search-actions-bar">
-          <div className="search-container">
-            <div className="search-input-wrapper">
-              <input
-                type="text"
-                placeholder="Search for content"
-                value={searchQuery}
-                onChange={handleSearch}
-                className="search-input"
-              />
-              <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          </div>
-
-          <div className="actions-container">
-            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
-              <div>
-                <AcademyBtn
-                  title="add new level"
-                  icon={faPlus}
-                  onClick={() => {
-                    addNewLevel()
-                  }}
+          <div className='search-actions-bar'>
+            <div className='search-container'>
+              <div className='search-input-wrapper'>
+                <input
+                  type='text'
+                  placeholder='Search for content'
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  className='search-input'
                 />
-              </div>
-            </div>
-
-            <div>
-              <AcademyBtn
-                title="Add New Content"
-                icon={faPlus}
-                onClick={addNewContent}
-            />
-            </div>
-
-            <div>
-              <AcademyBtn
-                title="View Uncategorized Tasks"
-                icon={btnIcon}
-                onClick={viewUncategorizedTasks}
-              />
-            </div>
-
-            <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
-              <div 
-                className="bulk-actions"
-                onClick={() => {
-                  setShowBulkDropdown(!showBulkDropdown)
-                  setShowAddDropdown(false)
-                }}
-              >
-                <span>BULK ACTIONS</span>
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  className='search-icon'
+                  width='16'
+                  height='16'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                >
+                  <path
+                    d='M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z'
+                    stroke='#666'
+                    strokeWidth='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
                 </svg>
               </div>
+            </div>
 
-              {showBulkDropdown && (
-                <div 
-                  className="dropdown-menu"
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    right: 0,
-                    background: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    zIndex: 9999,
-                    marginTop: '4px',
-                    minWidth: '200px',
-                    display: 'block'
+            <div className='actions-container'>
+              <div
+                className='dropdown-wrapper'
+                style={{ position: 'relative' }}
+                ref={addDropdownRef}
+              >
+                <div>
+                  <AcademyBtn
+                    title='add new level'
+                    icon={faPlus}
+                    onClick={() => {
+                      addNewLevel()
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <AcademyBtn
+                  title='Add New Content'
+                  icon={faPlus}
+                  onClick={addNewContent}
+                />
+              </div>
+
+              <div>
+                <AcademyBtn
+                  title='View Uncategorized Tasks'
+                  icon={btnIcon}
+                  onClick={viewUncategorizedTasks}
+                />
+              </div>
+
+              <div
+                className='dropdown-wrapper'
+                style={{ position: 'relative' }}
+                ref={bulkDropdownRef}
+              >
+                <div
+                  className='bulk-actions'
+                  onClick={() => {
+                    setShowBulkDropdown(!showBulkDropdown)
+                    setShowAddDropdown(false)
                   }}
                 >
-                  {bulkOptions.map((option, index) => (
-                    <div 
-                      key={index}
-                      className="dropdown-item"
-                      style={{
-                        padding: '12px 16px',
-                        color: 'black',
-                        fontFamily: 'Montserrat',
-                        fontSize: '12px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-                      onClick={() => {
-                        option.action()
-                      }}
-                    >
-                      {option.svg}
-                      <span>{option.name}</span>
-                    </div>
-                  ))}
+                  <span>BULK ACTIONS</span>
+                  <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
+                    <path
+                      d='M1 1.5L6 6.5L11 1.5'
+                      stroke='#666'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
                 </div>
-              )}
+
+                {showBulkDropdown && (
+                  <div
+                    className='dropdown-menu'
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      background: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      zIndex: 9999,
+                      marginTop: '4px',
+                      minWidth: '200px',
+                      display: 'block'
+                    }}
+                  >
+                    {bulkOptions.map((option, index) => (
+                      <div
+                        key={index}
+                        className='dropdown-item'
+                        style={{
+                          padding: '12px 16px',
+                          color: 'black',
+                          fontFamily: 'Montserrat',
+                          fontSize: '12px',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = '#f9fafb')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = 'white')
+                        }
+                        onClick={() => {
+                          option.action()
+                        }}
+                      >
+                        {option.svg}
+                        <span>{option.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="table-container">
-          <DataTable
-            columns={columns}
-            data={tasksData}
-            searchQuery={searchQuery}
-            onRowAction={handleRowAction}
-            onReorder={handleReorder}
-            onSelectionChange={handleSelectionChange}
-            selectedItems={selectedItems}
-            showCheckbox={true}
-            activeTab="Content"
-            loading={loading}
-          />
-        </div>
+          <div className='table-container'>
+            <DataTable
+              columns={columns}
+              data={tasksData}
+              searchQuery={searchQuery}
+              onRowAction={handleRowAction}
+              onReorder={handleReorder}
+              onSelectionChange={handleSelectionChange}
+              selectedItems={selectedItems}
+              showCheckbox={true}
+              activeTab='Content'
+              loading={loading}
+            />
+          </div>
 
-        {/* <div className="pagination-container">
+          {/* <div className="pagination-container">
           <button className="pagination-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -867,9 +1036,8 @@ const ContentManagement = () => {
             </svg>
           </button>
         </div> */}
+        </div>
       </div>
-
-              </div>
 
       <AddTaskModal
         show={showAddTaskModal}
@@ -900,10 +1068,12 @@ const ContentManagement = () => {
           return null
         })()}
         journalLevelId={(() => {
-          const activeLevelObj = levelsData.find(level => level.title === activeLevel)
+          const activeLevelObj = levelsData.find(
+            (level) => level.title === activeLevel
+          )
           return activeLevelObj?.id
         })()}
-        category="entrepreneurship"
+        category='entrepreneurship'
       />
 
       <AddLevelModal
@@ -917,7 +1087,7 @@ const ContentManagement = () => {
         show={showAssignModal}
         onHide={() => setShowAssignModal(false)}
         onSave={handleSaveAssignments}
-        type="content"
+        type='content'
         levels={levelsData}
       />
 
@@ -925,10 +1095,10 @@ const ContentManagement = () => {
         show={showPublishPopup}
         onHide={handlePublishCancel}
         onConfirm={handleConfirmPublish}
-        title="Publish Task?"
+        title='Publish Task?'
         message="Are you sure you want to publish this task? Once it's published, it will be available to all learners with access to this curriculum."
-        cancelText="NO, TAKE ME BACK"
-        confirmText="YES, PUBLISH TASK"
+        cancelText='NO, TAKE ME BACK'
+        confirmText='YES, PUBLISH TASK'
         loading={loading}
       />
 
@@ -936,10 +1106,10 @@ const ContentManagement = () => {
         show={showUnpublishPopup}
         onHide={handleUnpublishCancel}
         onConfirm={handleConfirmUnpublish}
-        title="Unpublish Task?"
+        title='Unpublish Task?'
         message="Are you sure you want to unpublish this task? Once it's unpublished, it will no longer be available to learners."
-        cancelText="NO, TAKE ME BACK"
-        confirmText="YES, UNPUBLISH TASK"
+        cancelText='NO, TAKE ME BACK'
+        confirmText='YES, UNPUBLISH TASK'
         loading={loading}
       />
 
@@ -947,10 +1117,10 @@ const ContentManagement = () => {
         show={showDeleteTaskPopup}
         onHide={handleDeleteTaskCancel}
         onConfirm={handleConfirmDeleteTask}
-        title="Delete Task?"
-        message="Are you sure you want to delete this task?"
-        cancelText="NO, TAKE ME BACK"
-        confirmText="YES, DELETE TASK"
+        title='Delete Task?'
+        message='Are you sure you want to delete this task?'
+        cancelText='NO, TAKE ME BACK'
+        confirmText='YES, DELETE TASK'
         loading={loading}
       />
 
@@ -958,10 +1128,10 @@ const ContentManagement = () => {
         show={showDeleteLevelPopup}
         onHide={handleDeleteLevelCancel}
         onConfirm={handleConfirmDeleteLevel}
-        title="Delete Level?"
-        message="Are you sure you want to delete this level? Deleting this level will NOT remove tasks assigned to it, but they will no longer be accessible to learners."
-        cancelText="NO, TAKE ME BACK"
-        confirmText="YES, DELETE LEVEL"
+        title='Delete Level?'
+        message='Are you sure you want to delete this level? Deleting this level will NOT remove tasks assigned to it, but they will no longer be accessible to learners.'
+        cancelText='NO, TAKE ME BACK'
+        confirmText='YES, DELETE LEVEL'
         loading={loading}
       />
     </div>

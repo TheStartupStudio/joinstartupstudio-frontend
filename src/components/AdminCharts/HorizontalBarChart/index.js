@@ -45,7 +45,8 @@ const HorizontalBarChart = ({
   const chartHeight = height - chartPadding.top - chartPadding.bottom
 
   // Find max value for scaling
-  const maxValue = maxXValue || Math.ceil(Math.max(...data.map(d => d.value)) / 40) * 40
+  const maxValue =
+    maxXValue || Math.ceil(Math.max(...data.map((d) => d.value)) / 40) * 40
 
   // Calculate X-axis steps
   const xSteps = 10
@@ -62,10 +63,10 @@ const HorizontalBarChart = ({
   }
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="horizontal-bar-chart-wrapper" 
-      style={{ 
+      className='horizontal-bar-chart-wrapper'
+      style={{
         width: '100%',
         boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.25)',
         borderRadius: '20px',
@@ -74,22 +75,23 @@ const HorizontalBarChart = ({
         overflow: 'hidden'
       }}
     >
-      <svg width="100%" height={height} style={{ display: 'block' }}>
+      <svg width='100%' height={height} style={{ display: 'block' }}>
         {/* Grid lines */}
-        {showGrid && Array.from({ length: xSteps + 1 }).map((_, index) => {
-          const x = chartPadding.left + (chartWidth / xSteps) * index
-          return (
-            <line
-              key={`grid-${index}`}
-              x1={x}
-              y1={chartPadding.top}
-              x2={x}
-              y2={height - chartPadding.bottom}
-              stroke={gridColor}
-              strokeWidth={gridStrokeWidth}
-            />
-          )
-        })}
+        {showGrid &&
+          Array.from({ length: xSteps + 1 }).map((_, index) => {
+            const x = chartPadding.left + (chartWidth / xSteps) * index
+            return (
+              <line
+                key={`grid-${index}`}
+                x1={x}
+                y1={chartPadding.top}
+                x2={x}
+                y2={height - chartPadding.bottom}
+                stroke={gridColor}
+                strokeWidth={gridStrokeWidth}
+              />
+            )
+          })}
 
         {/* X-axis labels */}
         {Array.from({ length: xSteps + 1 }).map((_, index) => {
@@ -100,10 +102,10 @@ const HorizontalBarChart = ({
               key={`x-label-${index}`}
               x={x}
               y={height - chartPadding.bottom + 20}
-              textAnchor="middle"
+              textAnchor='middle'
               fontSize={axisFontSize}
               fill={axisColor}
-              fontFamily="Montserrat, sans-serif"
+              fontFamily='Montserrat, sans-serif'
             >
               {Math.round(value)}
             </text>
@@ -122,22 +124,28 @@ const HorizontalBarChart = ({
               <text
                 x={chartPadding.left - 10}
                 y={y + barHeight / 2 + 5}
-                textAnchor="end"
+                textAnchor='end'
                 fontSize={labelFontSize}
                 fill={axisColor}
-                fontFamily="Montserrat, sans-serif"
+                fontFamily='Montserrat, sans-serif'
               >
                 {item.label}
               </text>
 
               {/* Bar with gradient */}
               <defs>
-                <linearGradient id={`h-gradient-${index}`} x1="100%" y1="0%" x2="0%" y2="0%">
-                  <stop offset="0%" stopColor={itemColor} stopOpacity="0.2" />
-                  <stop offset="100%" stopColor={itemColor} stopOpacity="1" />
+                <linearGradient
+                  id={`h-gradient-${index}`}
+                  x1='100%'
+                  y1='0%'
+                  x2='0%'
+                  y2='0%'
+                >
+                  <stop offset='0%' stopColor={itemColor} stopOpacity='0.2' />
+                  <stop offset='100%' stopColor={itemColor} stopOpacity='1' />
                 </linearGradient>
               </defs>
-              
+
               <rect
                 x={chartPadding.left}
                 y={y}
@@ -148,16 +156,16 @@ const HorizontalBarChart = ({
                 ry={barRadius}
               />
 
-              {/* Value on the right of bar */}   
+              {/* Value on the right of bar */}
               {showValues && (
                 <text
                   x={chartPadding.left + barWidth + 10}
                   y={y + barHeight / 2 + 5}
-                  textAnchor="start"
+                  textAnchor='start'
                   fontSize={valueFontSize}
                   fill={valueColor}
-                  fontWeight="500"
-                  fontFamily="Montserrat, sans-serif"
+                  fontWeight='500'
+                  fontFamily='Montserrat, sans-serif'
                 >
                   {item.value}
                 </text>
@@ -189,26 +197,32 @@ const HorizontalBarChart = ({
 
       {/* Legend */}
       {showLegend && (
-        <div 
-          className="chart-legend" 
-          style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
+        <div
+          className='chart-legend'
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
             gap: '10px',
             marginTop: '15px'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <span 
-              style={{ 
-                width: '10px', 
-                height: '10px', 
-                borderRadius: '50%', 
+            <span
+              style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
                 backgroundColor: legendColor,
                 display: 'inline-block'
               }}
             />
-            <span style={{ fontSize: `${axisFontSize}px`, color: axisColor, fontFamily: 'Montserrat, sans-serif' }}>
+            <span
+              style={{
+                fontSize: `${axisFontSize}px`,
+                color: axisColor,
+                fontFamily: 'Montserrat, sans-serif'
+              }}
+            >
               {legendLabel}
             </span>
           </div>

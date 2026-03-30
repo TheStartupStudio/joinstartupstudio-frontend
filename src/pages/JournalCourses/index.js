@@ -65,26 +65,32 @@ const JournalCourses = memo(() => {
 
   const fetchLessons = async () => {
     try {
-      const response = await axiosInstance.get(`/journal-courses/lessons?category=${contentData?.title}`)
+      const response = await axiosInstance.get(
+        `/journal-courses/lessons?category=${contentData?.title}`
+      )
       if (response.data) {
         setLessons(response.data)
 
-        if (contentData?.ltsJournalLevels && Array.isArray(contentData.ltsJournalLevels)) {
-          const mappedLevels = contentData.ltsJournalLevels.map((level, index) => ({
-            title: level.title,
-            description: level.detailsText || `Welcome to ${level.title}`,
-            active: index === 0,
-            id: level.id
-          }))
+        if (
+          contentData?.ltsJournalLevels &&
+          Array.isArray(contentData.ltsJournalLevels)
+        ) {
+          const mappedLevels = contentData.ltsJournalLevels.map(
+            (level, index) => ({
+              title: level.title,
+              description: level.detailsText || `Welcome to ${level.title}`,
+              active: index === 0,
+              id: level.id
+            })
+          )
           setLevels(mappedLevels)
         }
       }
     } catch (error) {
-      console.error('ardi 4: Error fetching journal lessons:', error)
+      console.error('Error fetching journal lessons:', error)
       setLessons({})
     }
   }
-
 
   useEffect(() => {
     const fetchContentData = async () => {
@@ -93,7 +99,7 @@ const JournalCourses = memo(() => {
         const data = response.data.data || response.data
         setContentData(data)
       } catch (error) {
-        console.error('ardi 7: Error fetching content data:', error)
+        console.error('Error fetching content data:', error)
       }
     }
     if (category) {
@@ -103,8 +109,8 @@ const JournalCourses = memo(() => {
 
   useEffect(() => {
     if (contentData?.title) {
-      fetchLessons();
-      setLoading(false);
+      fetchLessons()
+      setLoading(false)
     }
   }, [contentData?.title])
 
@@ -112,16 +118,24 @@ const JournalCourses = memo(() => {
     const result = {}
 
     levels.forEach((level, levelIndex) => {
-      const sectionKey = levelIndex === 0 ? 'one' : levelIndex === 1 ? 'two' : 'three'
+      const sectionKey =
+        levelIndex === 0 ? 'one' : levelIndex === 1 ? 'two' : 'three'
       const levelLessons = lessons[levelIndex.toString()] || []
 
       const levelSections = []
 
       if (levelLessons.length > 0) {
-        const matchingLesson = levelLessons.find(lesson => lesson.title === level.title)
+        const matchingLesson = levelLessons.find(
+          (lesson) => lesson.title === level.title
+        )
 
         if (matchingLesson) {
-          const lessonComponent = <SectionTwo setIsReflection={setIsReflection} lessonId={matchingLesson.id} />
+          const lessonComponent = (
+            <SectionTwo
+              setIsReflection={setIsReflection}
+              lessonId={matchingLesson.id}
+            />
+          )
 
           levelSections.push({
             title: level.title,
@@ -132,7 +146,13 @@ const JournalCourses = memo(() => {
             component: lessonComponent
           })
         } else {
-          const levelOverviewComponent = <SectionOne setIsReflection={setIsReflection} lessonId={level.id} contentData={contentData} />
+          const levelOverviewComponent = (
+            <SectionOne
+              setIsReflection={setIsReflection}
+              lessonId={level.id}
+              contentData={contentData}
+            />
+          )
           levelSections.push({
             title: level.title,
             value: level.title,
@@ -143,7 +163,13 @@ const JournalCourses = memo(() => {
           })
         }
       } else {
-        const levelOverviewComponent = <SectionOne setIsReflection={setIsReflection} lessonId={level.id} contentData={contentData} />
+        const levelOverviewComponent = (
+          <SectionOne
+            setIsReflection={setIsReflection}
+            lessonId={level.id}
+            contentData={contentData}
+          />
+        )
         levelSections.push({
           title: level.title,
           value: level.title,
@@ -161,125 +187,134 @@ const JournalCourses = memo(() => {
   }, [levels, lessons, contentData, setIsReflection])
 
   useEffect(() => {
-
     if (levels.length === 0) {
-      return;
+      return
     }
 
     const tabs = levels.map((level, index) => {
-      const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three';
-      const sectionLessons = sections[sectionKey] || [];
+      const sectionKey = index === 0 ? 'one' : index === 1 ? 'two' : 'three'
+      const sectionLessons = sections[sectionKey] || []
 
-      const tabOptions = sectionLessons.length > 0 ? sectionLessons.map((lesson) => ({
-        label: lesson.title,
-        value: lesson.title,
-        isNext: true, 
-        id: lesson.id,
-        redirectId: lesson.redirectId
-      })) : [{
-        label: level.title,
-        value: level.title,
-        isNext: true,
-        id: level.id || index + 1,
-        redirectId: null
-      }];
+      const tabOptions =
+        sectionLessons.length > 0
+          ? sectionLessons.map((lesson) => ({
+              label: lesson.title,
+              value: lesson.title,
+              isNext: true,
+              id: lesson.id,
+              redirectId: lesson.redirectId
+            }))
+          : [
+              {
+                label: level.title,
+                value: level.title,
+                isNext: true,
+                id: level.id || index + 1,
+                redirectId: null
+              }
+            ]
 
       return {
         title: level.title,
         options: tabOptions
-      };
-    });
+      }
+    })
 
-    setAllTabs(tabs);
+    setAllTabs(tabs)
 
     if (tabs.length > 0 && !activeTabData.option) {
-      const firstTab = tabs[0];
+      const firstTab = tabs[0]
       if (firstTab.options && firstTab.options.length > 0) {
         setActiveTabData({
           activeTab: 0,
           option: firstTab.options[0]
-        });
+        })
       }
     }
-  }, [levels, sections, lessons]); 
+  }, [levels, sections, lessons])
 
   useEffect(() => {
     if (contentData?.title) {
-      dispatch(fetchJournalFinishedContent(contentData.title));
+      dispatch(fetchJournalFinishedContent(contentData.title))
     }
-  }, [dispatch, contentData?.title]);
-
+  }, [dispatch, contentData?.title])
 
   useEffect(() => {
-    if (!finishedContent || finishedContent.length === 0) return;
+    if (!finishedContent || finishedContent.length === 0) return
 
-    setAllTabs(prevTabs => {
-      if (prevTabs.length === 0) return prevTabs;
+    setAllTabs((prevTabs) => {
+      if (prevTabs.length === 0) return prevTabs
 
-      const updatedTabs = [...prevTabs];
+      const updatedTabs = [...prevTabs]
 
       const updateNextFlags = (options) => {
-        let foundNext = false;
+        let foundNext = false
 
-        return options.map(option => {
-          const finished = finishedContent.includes(option.label);
-          const isNext = !finished && !foundNext;
-          if (isNext) foundNext = true;
+        return options.map((option) => {
+          const finished = finishedContent.includes(option.label)
+          const isNext = !finished && !foundNext
+          if (isNext) foundNext = true
 
           return {
             ...option,
             isNext
-          };
-        });
-      };
+          }
+        })
+      }
 
       updatedTabs.forEach((tab, index) => {
         if (tab && tab.options) {
-          updatedTabs[index].options = updateNextFlags(tab.options);
+          updatedTabs[index].options = updateNextFlags(tab.options)
         }
-      });
+      })
 
-      return updatedTabs;
-    });
-  }, [finishedContent]); 
+      return updatedTabs
+    })
+  }, [finishedContent])
 
   const canAccessSection = (index) => {
-    if (index === 0) return true;
+    if (index === 0) return true
 
-    const prevSectionLessons = sections[index === 1 ? 'one' : index === 2 ? 'two' : 'three'] || [];
+    const prevSectionLessons =
+      sections[index === 1 ? 'one' : index === 2 ? 'two' : 'three'] || []
 
-    return prevSectionLessons.length > 0 && finishedContent.includes(prevSectionLessons[0].title);
-  };
+    return (
+      prevSectionLessons.length > 0 &&
+      finishedContent.includes(prevSectionLessons[0].title)
+    )
+  }
 
   const handleSaveAndContinue = async () => {
     try {
-      setIsSaving(true);
+      setIsSaving(true)
 
       if (showOverview) {
-        setShowOverview(false);
+        setShowOverview(false)
         if (allTabs.length > 0) {
           setActiveTabData({
             activeTab: 0,
             option: allTabs[0].options[0]
-          });
+          })
         }
-        setIsSaving(false);
-        return;
+        setIsSaving(false)
+        return
       }
 
-      const currentComponent = valueRefs.current[activeTabData.option?.value];
+      const currentComponent = valueRefs.current[activeTabData.option?.value]
 
       if (currentComponent?.saveChanges) {
-        await currentComponent.saveChanges();
+        await currentComponent.saveChanges()
       }
 
-      await dispatch(fetchJournalFinishedContent(contentData.title));
-      const { journal: { finishedContent: updatedContent } } = store.getState();
+      await dispatch(fetchJournalFinishedContent(contentData.title))
+      const {
+        journal: { finishedContent: updatedContent }
+      } = store.getState()
 
       if (!updatedContent.includes(activeTabData.option?.value)) {
-        setShowLockModal(true);
-        setIsSaving(false);
-        return;
+        setShowLockModal(true)
+        setIsSaving(false)
+        return
       }
 
       if (activeTabData.activeTab < allTabs.length - 1) {
@@ -287,111 +322,126 @@ const JournalCourses = memo(() => {
           setActiveTabData({
             activeTab: activeTabData.activeTab + 1,
             option: allTabs[activeTabData.activeTab + 1].options[0]
-          });
+          })
         } else {
-          setShowLockModal(true);
+          setShowLockModal(true)
         }
       } else {
-        window.location.href = `/journal-courses/${category}`;
-        return;
+        window.location.href = `/journal-courses/${category}`
+        return
       }
 
-      setAllTabs(prevTabs => {
-        if (prevTabs.length === 0) return prevTabs;
+      setAllTabs((prevTabs) => {
+        if (prevTabs.length === 0) return prevTabs
 
-        const updatedTabs = [...prevTabs];
+        const updatedTabs = [...prevTabs]
 
         const updateNextFlags = (options) => {
-          let foundNext = false;
-          return options.map(option => {
-            const finished = updatedContent.includes(option.label);
-            const isNext = !finished && !foundNext;
-            if (isNext) foundNext = true;
-            return { ...option, isNext };
-          });
-        };
+          let foundNext = false
+          return options.map((option) => {
+            const finished = updatedContent.includes(option.label)
+            const isNext = !finished && !foundNext
+            if (isNext) foundNext = true
+            return { ...option, isNext }
+          })
+        }
 
         updatedTabs.forEach((tab, index) => {
           if (tab && tab.options) {
-            updatedTabs[index].options = updateNextFlags(tab.options);
+            updatedTabs[index].options = updateNextFlags(tab.options)
           }
-        });
+        })
 
-        return updatedTabs;
-      });
-
+        return updatedTabs
+      })
     } catch (error) {
-      console.error('ardi 48: Error saving:', error);
-      setIsSaving(false);
+      console.error('Error saving:', error)
+      setIsSaving(false)
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   const isOptionDisabled = (option) => {
     if (!canAccessSection(activeTabData.activeTab)) {
-      return true;
+      return true
     }
 
-    return !finishedContent.includes(option.label) && !option.isNext;
-  };
+    return !finishedContent.includes(option.label) && !option.isNext
+  }
 
   const isIntroSection = useMemo(() => {
-    if (showOverview) return false; 
+    if (showOverview) return false
 
-    return false;
-  }, [activeTabData, sections, showOverview]);
+    return false
+  }, [activeTabData, sections, showOverview])
 
   const renderedSection = useMemo(() => {
-
     if (showOverview) {
-      return <SectionOne setIsReflection={setIsReflection} contentData={contentData} />;
+      return (
+        <SectionOne
+          setIsReflection={setIsReflection}
+          contentData={contentData}
+        />
+      )
     }
 
     if (allTabs.length === 0) {
-      return null;
+      return null
     }
 
-    const sectionKey = activeTabData.activeTab === 0 ? 'one' : activeTabData.activeTab === 1 ? 'two' : 'three';
+    const sectionKey =
+      activeTabData.activeTab === 0
+        ? 'one'
+        : activeTabData.activeTab === 1
+          ? 'two'
+          : 'three'
 
     const selectedSection = sections[sectionKey]?.find(
-      section => section.title === activeTabData.option?.value
-    );
+      (section) => section.title === activeTabData.option?.value
+    )
 
-    return selectedSection ? selectedSection.component : null;
-  }, [activeTabData, allTabs, sections, showOverview, contentData, setIsReflection]);
+    return selectedSection ? selectedSection.component : null
+  }, [
+    activeTabData,
+    allTabs,
+    sections,
+    showOverview,
+    contentData,
+    setIsReflection
+  ])
 
   useEffect(() => {
     if (activeTabData.option) {
-      setCurrentTitle(activeTabData.option.label);
+      setCurrentTitle(activeTabData.option.label)
     } else {
-      const tabTitle = allTabs[activeTabData.activeTab]?.title;
-      setCurrentTitle(tabTitle);
+      const tabTitle = allTabs[activeTabData.activeTab]?.title
+      setCurrentTitle(tabTitle)
     }
-  }, [activeTabData, allTabs]);
+  }, [activeTabData, allTabs])
 
   const handleTabClick = (index) => {
     if (!canAccessSection(index)) {
-      setShowLockModal(true);
-      return;
+      setShowLockModal(true)
+      return
     }
 
     if (showOverview) {
-      setShowOverview(false);
+      setShowOverview(false)
     }
 
-    const tabOptions = allTabs[index]?.options || [];
-    const firstOption = tabOptions[0];
+    const tabOptions = allTabs[index]?.options || []
+    const firstOption = tabOptions[0]
 
     if (firstOption) {
       setActiveTabData({
         activeTab: index,
         option: firstOption
-      });
+      })
     } else {
-      console.log('ardi 32: no firstOption found');
+      console.log('No firstOption found')
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -408,7 +458,7 @@ const JournalCourses = memo(() => {
                 </p>
               </div>
             </div>
-            <div className="d-flex align-items-center justify-content-center">
+            <div className='d-flex align-items-center justify-content-center'>
               {userRole === 2 ? <NotificationBell /> : null}
               <img
                 src={MenuIcon}
@@ -419,7 +469,10 @@ const JournalCourses = memo(() => {
             </div>
           </div>
           <div className='academy-dashboard-layout lead-class mb-5'>
-            <div className='w-100 d-flex justify-content-center align-items-center' style={{ minHeight: '400px' }}>
+            <div
+              className='w-100 d-flex justify-content-center align-items-center'
+              style={{ minHeight: '400px' }}
+            >
               <div className='spinner-border text-primary' role='status'>
                 <span className='visually-hidden'>Loading...</span>
               </div>
@@ -445,7 +498,7 @@ const JournalCourses = memo(() => {
                 </p>
               </div>
             </div>
-            <div className="d-flex align-items-center justify-content-center">
+            <div className='d-flex align-items-center justify-content-center'>
               {userRole === 2 ? <NotificationBell /> : null}
               <img
                 src={MenuIcon}
@@ -483,7 +536,7 @@ const JournalCourses = memo(() => {
               </p>
             </div>
           </div>
-          <div className="d-flex align-items-center justify-content-center">
+          <div className='d-flex align-items-center justify-content-center'>
             {userRole === 2 ? <NotificationBell /> : null}
             <img
               src={MenuIcon}
@@ -502,14 +555,17 @@ const JournalCourses = memo(() => {
                 {allTabs.map((tab, index) => (
                   <span
                     key={index}
-                    className={`fs-14 fw-medium text-center p-2 cursor-pointer w-100-mob ${activeTabData.activeTab === index && !showOverview
-                      ? 'active-leadership'
-                      : ''
-                      }`}
+                    className={`fs-14 fw-medium text-center p-2 cursor-pointer w-100-mob ${
+                      activeTabData.activeTab === index && !showOverview
+                        ? 'active-leadership'
+                        : ''
+                    }`}
                     onClick={() => handleTabClick(index)}
                     style={{
                       color: canAccessSection(index) ? '#000' : '#999',
-                      cursor: canAccessSection(index) ? 'pointer' : 'not-allowed',
+                      cursor: canAccessSection(index)
+                        ? 'pointer'
+                        : 'not-allowed',
                       width: '100%'
                     }}
                   >
@@ -522,37 +578,61 @@ const JournalCourses = memo(() => {
                   <SelectCourses
                     selectedCourse={activeTabData}
                     setSelectedCourse={(newData) => {
-                      if (showOverview && newData.option && newData.option.value !== 'Course Overview') {
-                        setShowOverview(false);
+                      if (
+                        showOverview &&
+                        newData.option &&
+                        newData.option.value !== 'Course Overview'
+                      ) {
+                        setShowOverview(false)
                         setActiveTabData({
                           activeTab: 0,
                           option: newData.option
-                        });
+                        })
                       } else {
-                        setActiveTabData(newData);
+                        setActiveTabData(newData)
                       }
                     }}
-                    options={showOverview ? [
-                      {
-                        label: 'Course Overview',
-                        value: 'Course Overview',
-                        isNext: true,
-                        id: null,
-                        redirectId: null
-                      },
-                      ...(allTabs[0]?.options || []) 
-                    ] : (allTabs[activeTabData.activeTab]?.options || [])}
-                    placeholder={
-                      currentTitle || (showOverview ? 'Select Lesson' : (allTabs[activeTabData.activeTab]?.title || 'Select Journal Sections'))
+                    options={
+                      showOverview
+                        ? [
+                            {
+                              label: 'Course Overview',
+                              value: 'Course Overview',
+                              isNext: true,
+                              id: null,
+                              redirectId: null
+                            },
+                            ...(allTabs[0]?.options || [])
+                          ]
+                        : allTabs[activeTabData.activeTab]?.options || []
                     }
-                    isDisabled={showOverview ? ((option) => {
-                      return option.value === 'Course Overview' ? false : !canAccessSection(0);
-                    }) : isOptionDisabled}
+                    placeholder={
+                      currentTitle ||
+                      (showOverview
+                        ? 'Select Lesson'
+                        : allTabs[activeTabData.activeTab]?.title ||
+                          'Select Journal Sections')
+                    }
+                    isDisabled={
+                      showOverview
+                        ? (option) => {
+                            return option.value === 'Course Overview'
+                              ? false
+                              : !canAccessSection(0)
+                          }
+                        : isOptionDisabled
+                    }
                   />
                 </div>
                 <div className='d-flex gap-3 flex-col-mob align-items-end-mob saveContinue-btn'>
                   <AcademyBtn
-                    title={showOverview ? 'Continue' : (isReflection ? 'Save and Continue' : 'Continue')}
+                    title={
+                      showOverview
+                        ? 'Continue'
+                        : isReflection
+                          ? 'Save and Continue'
+                          : 'Continue'
+                    }
                     icon={isSaving ? faSpinner : faArrowRight}
                     onClick={handleSaveAndContinue}
                     disabled={isSaving}
@@ -571,7 +651,11 @@ const JournalCourses = memo(() => {
                       onClick={() => setShowLockModal(false)}
                       style={{ zIndex: '1' }}
                     >
-                      <img className='left-arrow-modal' src={leftArrow} alt='left' />
+                      <img
+                        className='left-arrow-modal'
+                        src={leftArrow}
+                        alt='left'
+                      />
                     </span>
                     <ModalBody>
                       <img src={lockSign} alt='lock' className='mb-3' />
@@ -582,7 +666,10 @@ const JournalCourses = memo(() => {
                       </div>
 
                       <div className='mt-5'>
-                        <p className='text-secondary text-center'>This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.</p>
+                        <p className='text-secondary text-center'>
+                          This lesson is currently locked. You must complete the
+                          lesson before it to gain access to this lesson.
+                        </p>
                       </div>
                     </ModalBody>
                   </Modal>

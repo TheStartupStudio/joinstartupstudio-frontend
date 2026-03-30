@@ -1,14 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFileLines, faPencilAlt, faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons'
+import {
+  faFileLines,
+  faPencilAlt,
+  faChevronDown,
+  faTrash
+} from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = null, source = 'content', initialLevel = null }) => {
+const AddTaskModal = ({
+  show,
+  onHide,
+  onSave,
+  levels,
+  mode = 'add',
+  taskData = null,
+  source = 'content',
+  initialLevel = null
+}) => {
   const [taskTitle, setTaskTitle] = useState('')
   const [selectedLevel, setSelectedLevel] = useState('')
   const [activeTab, setActiveTab] = useState('video')
@@ -36,12 +50,14 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
   const isLeadership = source === 'leadership'
 
   const quillModules = {
-    toolbar: isViewMode ? false : [
-      ['bold', 'italic', 'blockquote'],
-      [{ 'align': [] }, { 'align': 'center' }, { 'align': 'right' }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['link', 'image']
-    ]
+    toolbar: isViewMode
+      ? false
+      : [
+          ['bold', 'italic', 'blockquote'],
+          [{ align: [] }, { align: 'center' }, { align: 'right' }],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['link', 'image']
+        ]
   }
 
   const quillFormats = [
@@ -67,28 +83,37 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   useEffect(() => {
     if (taskData && taskData.id) {
-
       setIsLoadingData(true)
 
       setTaskTitle(taskData.title || '')
       setSelectedLevel(taskData.level || '')
       setActiveTab(taskData.contentType || 'video')
 
-      const infoField = isMasterClass ? (taskData.journalData?.description || taskData.information || '') : (taskData.information || '')
+      const infoField = isMasterClass
+        ? taskData.journalData?.description || taskData.information || ''
+        : taskData.information || ''
       setInformation(infoField)
 
       if (isMasterClass && taskData.journalData?.journalLevel === 12) {
         setDescription(taskData.journalData?.description || '')
       }
 
-      if (taskData.reflectionItems && Array.isArray(taskData.reflectionItems) && taskData.reflectionItems.length > 0) {
+      if (
+        taskData.reflectionItems &&
+        Array.isArray(taskData.reflectionItems) &&
+        taskData.reflectionItems.length > 0
+      ) {
         setReflectionItems(taskData.reflectionItems)
       } else if (currentMode === 'add') {
         setReflectionItems([{ id: 1, question: '', instructions: '' }])
       }
 
-      const videoUrlField = isMasterClass ? (taskData.journalData?.url || taskData.videoUrl || '') : (taskData.videoUrl || '')
-      const thumbnailUrlField = isMasterClass ? (taskData.journalData?.thumbnail || taskData.thumbnailUrl || '') : (taskData.thumbnailUrl || '')
+      const videoUrlField = isMasterClass
+        ? taskData.journalData?.url || taskData.videoUrl || ''
+        : taskData.videoUrl || ''
+      const thumbnailUrlField = isMasterClass
+        ? taskData.journalData?.thumbnail || taskData.thumbnailUrl || ''
+        : taskData.thumbnailUrl || ''
 
       if (videoUrlField) {
         setVideoPreview(videoUrlField)
@@ -98,8 +123,21 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       }
 
       setIsLoadingData(false)
+    } else if (show && mode === 'add') {
+      setTaskTitle('')
+      setSelectedLevel(initialLevel || '')
+      setActiveTab('video')
+      setVideoFile(null)
+      setThumbnailFile(null)
+      setVideoPreview(null)
+      setThumbnailPreview(null)
+      setInformation('')
+      setDescription('')
+      setReflectionItems([{ id: 1, question: '', instructions: '' }])
+      setShowDeleteModal(false)
+      setTaskToDelete(null)
     }
-  }, [taskData?.id, taskData?.reflectionItems]) 
+  }, [show, mode, initialLevel, taskData])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -132,13 +170,17 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       if (videoFile && videoFile instanceof File) {
         const videoFormData = new FormData()
         videoFormData.append('video', videoFile)
-        
-        const videoUploadResponse = await axiosInstance.post('/upload/journal-video', videoFormData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+
+        const videoUploadResponse = await axiosInstance.post(
+          '/upload/journal-video',
+          videoFormData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
           }
-        })
-        
+        )
+
         if (videoUploadResponse.data.success) {
           videoUrl = videoUploadResponse.data.fileLocation
         }
@@ -147,45 +189,63 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       if (thumbnailFile && thumbnailFile instanceof File) {
         const thumbnailFormData = new FormData()
         thumbnailFormData.append('img', thumbnailFile)
-        
-        const thumbnailUploadResponse = await axiosInstance.post('/upload/journal-img', thumbnailFormData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+
+        const thumbnailUploadResponse = await axiosInstance.post(
+          '/upload/journal-img',
+          thumbnailFormData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
           }
-        })
-        
+        )
+
         if (thumbnailUploadResponse.data.success) {
           thumbnailUrl = thumbnailUploadResponse.data.fileLocation
         }
       }
 
-      const selectedLevelObj = levels.find(l => {
+      const selectedLevelObj = levels.find((l) => {
         const levelTitle = typeof l === 'string' ? l : l.title
         return levelTitle === selectedLevel
       })
-      const levelId = selectedLevelObj && typeof selectedLevelObj !== 'string' ? selectedLevelObj.id : null
+      const levelId =
+        selectedLevelObj && typeof selectedLevelObj !== 'string'
+          ? selectedLevelObj.id
+          : null
 
-      const filteredReflectionItems = (activeTab === 'reflection' || isLeadership)
-        ? reflectionItems.filter(item => {
-            if (isLeadership) {
-              return item.question && item.question.trim() !== ''
-            } else {
-              const tempDiv = document.createElement('div')
-              tempDiv.innerHTML = item.question
-              const textContent = tempDiv.textContent || tempDiv.innerText || ''
-              return textContent.trim() !== ''
-            }
-          })
-        : []
+      const filteredReflectionItems =
+        activeTab === 'reflection' || isLeadership
+          ? reflectionItems.filter((item) => {
+              if (isLeadership) {
+                return item.question && item.question.trim() !== ''
+              } else {
+                const tempDiv = document.createElement('div')
+                tempDiv.innerHTML = item.question
+                const textContent =
+                  tempDiv.textContent || tempDiv.innerText || ''
+                return textContent.trim() !== ''
+              }
+            })
+          : []
 
-      let categoryValue = isMasterClass ? 'master' : isLeadership ? 'student-leadership' : 'entrepreneurship'
+      let categoryValue = isMasterClass
+        ? 'master'
+        : isLeadership
+          ? 'student-leadership'
+          : 'entrepreneurship'
 
       if (isEditMode && taskData?.id && isMasterClass) {
         const typeField = taskData?.journalData?.type || taskData?.type
         if (typeField) {
-          const preservedTypes = ['guidance', 'master', 'podcast', 'startup-live']
+          const preservedTypes = [
+            'guidance',
+            'master',
+            'podcast',
+            'startup-live'
+          ]
           if (preservedTypes.includes(typeField)) {
-            categoryValue = typeField 
+            categoryValue = typeField
           }
         }
       }
@@ -199,26 +259,41 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
         parentId: null,
         videoUrl: videoUrl || null,
         thumbnailUrl: thumbnailUrl || null,
-        information: isLeadership ? (information || null) : null,
-        description: isMasterClass && (levelId === 12 || selectedLevel === 'Career Guidance Videos') ? (description || null) : null,
+        information: isLeadership ? information || null : null,
+        description:
+          isMasterClass &&
+          (levelId === 12 || selectedLevel === 'Career Guidance Videos')
+            ? description || null
+            : null,
         reflectionItems: filteredReflectionItems
       }
 
       let response
       if (isEditMode && taskData?.id) {
         if (isMasterClass) {
-          response = await axiosInstance.put(`/contents/${taskData.id}`, payload)
+          response = await axiosInstance.put(
+            `/contents/${taskData.id}`,
+            payload
+          )
         } else {
-          response = await axiosInstance.put(`/LtsJournals/${taskData.id}/edit-with-content`, payload)
+          response = await axiosInstance.put(
+            `/LtsJournals/${taskData.id}/edit-with-content`,
+            payload
+          )
         }
         toast.success('Task updated successfully!')
       } else {
         if (isMasterClass) {
           response = await axiosInstance.post('/contents', payload)
         } else {
-          response = await axiosInstance.post('/LtsJournals/create-with-content', payload)
+          response = await axiosInstance.post(
+            '/LtsJournals/create-with-content',
+            payload
+          )
         }
-        toast.success(`${isMasterClass ? 'Video' : 'Task'} created successfully!`)
+        toast.success(
+          `${isMasterClass ? 'Video' : 'Task'} created successfully!`
+        )
       }
 
       // Response structure:
@@ -231,7 +306,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       //   }
       // }
 
-      onSave(isMasterClass ? response.data : response.data.journal || response.data)
+      onSave(
+        isMasterClass ? response.data : response.data.journal || response.data
+      )
       handleClose()
     } catch (error) {
       console.error('Error saving journal:', error)
@@ -262,18 +339,17 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     )
     setIsDropdownOpen(false)
     setShowDeleteModal(false)
-    setTaskToDelete(null) 
+    setTaskToDelete(null)
     setCurrentMode(mode)
     onHide()
   }
 
   const handleSwitchToEditMode = () => {
-
     if (taskData) {
       const updatedTaskData = {
         ...taskData,
-        reflectionItems: reflectionItems, 
-        information: information, 
+        reflectionItems: reflectionItems,
+        information: information,
         title: taskTitle,
         level: selectedLevel,
         contentType: activeTab,
@@ -283,14 +359,14 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
     }
 
     setCurrentMode('edit')
-    setActiveTab("video")
+    setActiveTab('video')
   }
 
   const handleDelete = () => {
     if (!taskData?.id) return
     setTaskToDelete(taskData)
     setShowDeleteModal(true)
-    onHide() 
+    onHide()
   }
 
   const confirmDelete = async () => {
@@ -307,7 +383,9 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
       if (isMasterClass) {
         await axiosInstance.delete(`/contents/${taskToDelete.id}`)
       } else {
-        await axiosInstance.delete(`/LtsJournals/${taskToDelete.id}/delete-with-content`)
+        await axiosInstance.delete(
+          `/LtsJournals/${taskToDelete.id}/delete-with-content`
+        )
       }
       toast.success('Task deleted successfully!')
       onSave({ deleted: true, id: taskToDelete.id })
@@ -364,8 +442,8 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const handleQuestionChange = (id, value) => {
     if (isViewMode) return
-    setReflectionItems(prevItems =>
-      prevItems.map(item =>
+    setReflectionItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === id ? { ...item, question: value } : item
       )
     )
@@ -373,8 +451,8 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const handleInstructionsChange = (id, value) => {
     if (isViewMode) return
-    setReflectionItems(prevItems =>
-      prevItems.map(item =>
+    setReflectionItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === id ? { ...item, instructions: value } : item
       )
     )
@@ -382,16 +460,19 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   const addNewReflectionItem = () => {
     if (isViewMode) return
-    const newId = Math.max(...reflectionItems.map(item => item.id), 0) + 1
-    setReflectionItems([...reflectionItems, { id: newId, question: '', instructions: '' }])
+    const newId = Math.max(...reflectionItems.map((item) => item.id), 0) + 1
+    setReflectionItems([
+      ...reflectionItems,
+      { id: newId, question: '', instructions: '' }
+    ])
   }
 
   const deleteReflectionItem = (id) => {
     if (isViewMode) return
     if (isLeadership && reflectionItems.length > 1) {
-      setReflectionItems(reflectionItems.filter(item => item.id !== id))
+      setReflectionItems(reflectionItems.filter((item) => item.id !== id))
     } else if (!isLeadership && reflectionItems.length > 1) {
-      setReflectionItems(reflectionItems.filter(item => item.id !== id))
+      setReflectionItems(reflectionItems.filter((item) => item.id !== id))
     }
   }
 
@@ -406,554 +487,961 @@ const AddTaskModal = ({ show, onHide, onSave, levels, mode = 'add', taskData = n
 
   return (
     <>
-    <Modal show={show} onHide={handleClose} centered size="lg" className="add-task-content-management-modal">
-      {show && (
-      <Modal.Body className="add-task-modal-body">
-        <div className="modal-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M3.33301 10.0003V2.26699C3.33301 1.93562 3.60164 1.66699 3.93301 1.66699H13.5011C13.6603 1.66699 13.8129 1.73021 13.9254 1.84273L16.4906 4.40792C16.6031 4.52044 16.6663 4.67306 16.6663 4.83219V17.7337C16.6663 18.065 16.3977 18.3337 16.0663 18.3337H9.16634" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M13.333 1.66699V4.40033C13.333 4.7317 13.6016 5.00033 13.933 5.00033H16.6663" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M1.66016 15.833H4.16016M6.66016 15.833H4.16016M4.16016 15.833V13.333M4.16016 15.833V18.333" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        
-        <h5 className="modal-title">
-          {isViewMode ? (isMasterClass ? 'View Studio Guidance' : 'View Task') : isEditMode ? (isMasterClass ? 'Edit Studio Guidance' : 'Edit Task') : (isMasterClass ? 'Add New Studio Guidance' : 'Add New Task')}
-        </h5>
-
-        {isViewMode && (
-          <div className="modal-close-edit-container">
-            <div 
-              onClick={handleSwitchToEditMode}
-              style={{ cursor: 'pointer' }}
-              title={isMasterClass ? "Edit studio guidance" : "Edit task"}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-
-            <div 
-              onClick={handleClose}
-              style={{ cursor: 'pointer' }}
-              title="Close modal"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <path d="M8.44686 21.5533L15.0002 15M21.5535 8.4467L15.0002 15M15.0002 15L8.44686 8.4467M15.0002 15L21.5535 21.5533" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-          </div>
-        )}
-
-        <div className="form-group">
-          <label className="form-label">{isMasterClass ? 'STUDIO GUIDANCE TITLE:' : 'TASK TITLE:'}</label>
-          <div className="input-wrapper">
-            <input
-              type="text"
-              className="form-control task-title-input"
-              placeholder={isMasterClass ? "Add studio guidance title here..." : "Add task title here..."}
-              value={taskTitle}
-              onChange={(e) => setTaskTitle(e.target.value)}
-              readOnly={isViewMode}
-              disabled={isViewMode}
-              style={isViewMode ? { backgroundColor: '#f9fafb', cursor: 'not-allowed' } : {}}
-            />
-            {!isViewMode && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">{isMasterClass ? 'CONNECTED STUDIO GUIDANCE LEVEL' : 'CONNECTED LEVEL'}</label>
-          <div className="custom-level-dropdown" ref={dropdownRef}>
-            <div 
-              className="level-dropdown-trigger"
-              onClick={toggleDropdown}
-              style={isViewMode ? { cursor: 'not-allowed', opacity: 0.7 } : { cursor: 'pointer' }}
-            >
-              <span className={selectedLevel ? 'selected-text' : 'placeholder-text'}>
-                {selectedLevel || (isMasterClass ? 'Select studio guidance level' : 'Select level')}
-              </span>
-              {!isViewMode && (
-                <FontAwesomeIcon 
-                  icon={faChevronDown} 
-                  className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}
+      <Modal
+        show={show}
+        onHide={handleClose}
+        centered
+        size='lg'
+        className='add-task-content-management-modal'
+      >
+        {show && (
+          <Modal.Body className='add-task-modal-body'>
+            <div className='modal-icon'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='20'
+                height='20'
+                viewBox='0 0 20 20'
+                fill='none'
+              >
+                <path
+                  d='M3.33301 10.0003V2.26699C3.33301 1.93562 3.60164 1.66699 3.93301 1.66699H13.5011C13.6603 1.66699 13.8129 1.73021 13.9254 1.84273L16.4906 4.40792C16.6031 4.52044 16.6663 4.67306 16.6663 4.83219V17.7337C16.6663 18.065 16.3977 18.3337 16.0663 18.3337H9.16634'
+                  stroke='black'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                 />
-              )}
+                <path
+                  d='M13.333 1.66699V4.40033C13.333 4.7317 13.6016 5.00033 13.933 5.00033H16.6663'
+                  stroke='black'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
+                <path
+                  d='M1.66016 15.833H4.16016M6.66016 15.833H4.16016M4.16016 15.833V13.333M4.16016 15.833V18.333'
+                  stroke='black'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
+              </svg>
             </div>
-            
-            {isDropdownOpen && !isViewMode && (
-              <div className="level-dropdown-menu">
-                {levels.map((level, index) => {
-                  const levelTitle = typeof level === 'string' ? level : level.title
-                  return (
-                    <div
-                      key={typeof level === 'string' ? index : level.id}
-                      className="level-dropdown-item"
-                      onClick={() => handleLevelSelect(level)}
-                    >
-                      {levelTitle}
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-        </div>
 
-        {!isMasterClass && !isLeadership && (
-          <div className="form-group">
-            <label className="form-label">CONTENT:</label>
-            <div className="content-tabs">
-              <button
-                className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
-                onClick={() => handleTabChange('video')}
-                style={{ cursor: 'pointer' }}
-              >
-                Video
-              </button>
-              <button
-                className={`tab-btn ${activeTab === 'reflection' ? 'active' : ''}`}
-                onClick={() => handleTabChange('reflection')}
-                style={{ cursor: 'pointer' }}
-              >
-                Reflection
-              </button>
-            </div>
-          </div>
-        )}
+            <h5 className='modal-title'>
+              {isViewMode
+                ? isMasterClass
+                  ? 'View Studio Guidance'
+                  : 'View Task'
+                : isEditMode
+                  ? isMasterClass
+                    ? 'Edit Studio Guidance'
+                    : 'Edit Task'
+                  : isMasterClass
+                    ? 'Add New Studio Guidance'
+                    : 'Add New Task'}
+            </h5>
 
-        {isLeadership && (
-          <div className="form-group">
-            <label className="form-label">CONTENT:</label>
-            <div className="content-tabs">
-              <button
-                className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
-                onClick={() => handleTabChange('video')}
-                style={{ cursor: 'pointer' }}
-              >
-                Video
-              </button>
-              <button
-                className={`tab-btn ${activeTab === 'reflection' ? 'active' : ''}`}
-                onClick={() => handleTabChange('reflection')}
-                style={{ cursor: 'pointer' }}
-              >
-                Reflection
-              </button>
-            </div>
-          </div>
-        )}
+            {isViewMode && (
+              <div className='modal-close-edit-container'>
+                <div
+                  onClick={handleSwitchToEditMode}
+                  style={{ cursor: 'pointer' }}
+                  title={isMasterClass ? 'Edit studio guidance' : 'Edit task'}
+                >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='30'
+                    height='30'
+                    viewBox='0 0 30 30'
+                    fill='none'
+                  >
+                    <path
+                      d='M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678'
+                      stroke='black'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </div>
 
-        {isMasterClass && (selectedLevel === 'Career Guidance Videos' || taskData?.journalData?.journalLevel === 12) && (
-              <div className="form-group" style={{ marginTop: '24px' }}>
-                <label className="form-label">AUTHOR:</label>
-                <div className="input-wrapper">
-                  <input
-                    type="text"
-                    className="form-control task-title-input"
-                    placeholder="Add author name here..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    readOnly={isViewMode}
-                    disabled={isViewMode}
-                    style={isViewMode ? { cursor: 'not-allowed' } : {}}
-                  />
-                  {!isViewMode && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                <div
+                  onClick={handleClose}
+                  style={{ cursor: 'pointer' }}
+                  title='Close modal'
+                >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='30'
+                    height='30'
+                    viewBox='0 0 30 30'
+                    fill='none'
+                  >
+                    <path
+                      d='M8.44686 21.5533L15.0002 15M21.5535 8.4467L15.0002 15M15.0002 15L8.44686 8.4467M15.0002 15L21.5535 21.5533'
+                      stroke='black'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
                 </div>
               </div>
             )}
 
-        {(isMasterClass || activeTab === 'video') ? (
-          <>
-            <div className="upload-section">
-              <div className="upload-box">
-                <div className="upload-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3699_20014)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_3699_20014">
-                        <rect width="20" height="20" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                  <span>Upload Video</span>
-                </div>
-                
-                {videoPreview ? (
-                  <div className="upload-preview">
-                    {!isViewMode && (
-                      <button 
-                        className="delete-preview-btn"
-                        onClick={handleDeleteVideo}
-                        type="button"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    )}
-                    <video 
-                      src={videoPreview} 
-                      controls 
-                      className="video-preview"
-                    >
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                ) : !isViewMode && (
-                  <>
-                    <input
-                      type="file"
-                      id="video-upload"
-                      accept="video/*"
-                      onChange={handleVideoUpload}
-                      style={{ display: 'none' }}
-                    />
-                    <label htmlFor="video-upload" className="upload-area">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <g clipPath="url(#clip0_3778_12543)">
-                          <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_3778_12543">
-                            <rect width="20" height="20" fill="white"/>
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <div className="d-flex flex-column text-center">
-                        <p className="upload-text">Click to upload</p>
-                        <p className="upload-subtext">or drag and drop</p>
-                      </div>
-                      <p className="upload-info">
-                        Only mp4, avi, or webm file format<br />
-                        supported (max. 50Mb)
-                      </p>
-                    </label>
-                  </>
-                )}
-              </div>
-
-              <div className="upload-box">
-                <div className="upload-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3699_20014)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_3699_20014">
-                        <rect width="20" height="20" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                  <span>Upload Thumbnail</span>
-                </div>
-                
-                {thumbnailPreview ? (
-                  <div className="upload-preview">
-                    {!isViewMode && (
-                      <button 
-                        className="delete-preview-btn"
-                        onClick={handleDeleteThumbnail}
-                        type="button"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    )}
-                    <img 
-                      src={thumbnailPreview} 
-                      alt="Thumbnail preview"
-                      className="thumbnail-preview"
-                    />
-                  </div>
-                ) : !isViewMode && (
-                  <>
-                    <input
-                      type="file"
-                      id="thumbnail-upload"
-                      accept="image/*"
-                      onChange={handleThumbnailUpload}
-                      style={{ display: 'none' }}
-                    />
-                    <label htmlFor="thumbnail-upload" className="upload-area">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <g clipPath="url(#clip0_3778_12543)">
-                          <path d="M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_3778_12543">
-                            <rect width="20" height="20" fill="white"/>
-                          </clipPath>
-                        </defs>
-                      </svg>
-                      <div className="d-flex flex-column text-center">
-                        <p className="upload-text">Click to upload</p>
-                        <p className="upload-subtext">or drag and drop</p>
-                      </div>
-                      <p className="upload-info">
-                        Only png, jpg, or jpeg file format<br />
-                        supported (max. 2Mb)
-                      </p>
-                    </label>
-                  </>
+            <div className='form-group'>
+              <label className='form-label'>
+                {isMasterClass ? 'STUDIO GUIDANCE TITLE:' : 'TASK TITLE:'}
+              </label>
+              <div className='input-wrapper'>
+                <input
+                  type='text'
+                  className='form-control task-title-input'
+                  placeholder={
+                    isMasterClass
+                      ? 'Add studio guidance title here...'
+                      : 'Add task title here...'
+                  }
+                  value={taskTitle}
+                  onChange={(e) => setTaskTitle(e.target.value)}
+                  readOnly={isViewMode}
+                  disabled={isViewMode}
+                  style={
+                    isViewMode
+                      ? { backgroundColor: '#f9fafb', cursor: 'not-allowed' }
+                      : {}
+                  }
+                />
+                {!isViewMode && (
+                  <FontAwesomeIcon icon={faPencilAlt} className='input-icon' />
                 )}
               </div>
             </div>
 
+            <div className='form-group'>
+              <label className='form-label'>
+                {isMasterClass
+                  ? 'CONNECTED STUDIO GUIDANCE LEVEL'
+                  : 'CONNECTED LEVEL'}
+              </label>
+              <div className='custom-level-dropdown' ref={dropdownRef}>
+                <div
+                  className='level-dropdown-trigger'
+                  onClick={toggleDropdown}
+                  style={
+                    isViewMode
+                      ? { cursor: 'not-allowed', opacity: 0.7 }
+                      : { cursor: 'pointer' }
+                  }
+                >
+                  <span
+                    className={
+                      selectedLevel ? 'selected-text' : 'placeholder-text'
+                    }
+                  >
+                    {selectedLevel ||
+                      (isMasterClass
+                        ? 'Select studio guidance level'
+                        : 'Select level')}
+                  </span>
+                  {!isViewMode && (
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className={`dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}
+                    />
+                  )}
+                </div>
+
+                {isDropdownOpen && !isViewMode && (
+                  <div className='level-dropdown-menu'>
+                    {levels.map((level, index) => {
+                      const levelTitle =
+                        typeof level === 'string' ? level : level.title
+                      return (
+                        <div
+                          key={typeof level === 'string' ? index : level.id}
+                          className='level-dropdown-item'
+                          onClick={() => handleLevelSelect(level)}
+                        >
+                          {levelTitle}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {!isMasterClass && !isLeadership && (
+              <div className='form-group'>
+                <label className='form-label'>CONTENT:</label>
+                <div className='content-tabs'>
+                  <button
+                    className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
+                    onClick={() => handleTabChange('video')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Video
+                  </button>
+                  <button
+                    className={`tab-btn ${activeTab === 'reflection' ? 'active' : ''}`}
+                    onClick={() => handleTabChange('reflection')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Reflection
+                  </button>
+                </div>
+              </div>
+            )}
 
             {isLeadership && (
-              <div className="reflection-section" style={{ marginTop: '24px' }}>
-                <div className="reflection-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3699_20014)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_3699_20014">
-                        <rect width="20" height="20" fill="white"/>
-                      </clipPath>
-                    </defs>
-                  </svg>
-                  <span>Information</span>
-                </div>
-                <div className="reflection-editor-area">
-                  <ReactQuill
-                    theme="snow"
-                    value={information ?? ''}
-                    onChange={(value) => setInformation(value)}
-                    modules={quillModules}
-                    formats={quillFormats}
-                    placeholder="Add information..."
-                    className="reflection-quill-editor"
-                    readOnly={isViewMode}
-                  />
+              <div className='form-group'>
+                <label className='form-label'>CONTENT:</label>
+                <div className='content-tabs'>
+                  <button
+                    className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
+                    onClick={() => handleTabChange('video')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Video
+                  </button>
+                  <button
+                    className={`tab-btn ${activeTab === 'reflection' ? 'active' : ''}`}
+                    onClick={() => handleTabChange('reflection')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Reflection
+                  </button>
                 </div>
               </div>
             )}
-          </>
-        ) : (
-          <div className="reflection-content">
-            {reflectionItems.map((item, index) => (
-              <React.Fragment key={item.id}>
-                <div className="reflection-section">
-                  <div className="reflection-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <g clipPath="url(#clip0_3699_20014)">
-                        <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_3699_20014">
-                          <rect width="20" height="20" fill="white"/>
-                        </clipPath>
-                      </defs>
-                    </svg>
-                    <span>{isLeadership ? `Reflection Question ${index + 1}` : 'Question'}</span>
-                  </div>
-                  <div className="reflection-editor-area">
-                    <ReactQuill
-                      theme="snow"
-                      value={item.question ?? ''}
-                      onChange={(value) => handleQuestionChange(item.id, value)}
-                      modules={quillModules}
-                      formats={quillFormats}
-                      placeholder={isLeadership ? "Add reflection question..." : "Add question..."}
-                      className="reflection-quill-editor"
+
+            {isMasterClass &&
+              (selectedLevel === 'Career Guidance Videos' ||
+                taskData?.journalData?.journalLevel === 12) && (
+                <div className='form-group' style={{ marginTop: '24px' }}>
+                  <label className='form-label'>AUTHOR:</label>
+                  <div className='input-wrapper'>
+                    <input
+                      type='text'
+                      className='form-control task-title-input'
+                      placeholder='Add author name here...'
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
                       readOnly={isViewMode}
+                      disabled={isViewMode}
+                      style={isViewMode ? { cursor: 'not-allowed' } : {}}
                     />
-                  </div>
-
-                    {isLeadership && !isViewMode && (
-                      <div className="d-flex align-item-center justify-content-between">
-                      <button 
-                        className="delete-reflection-btn"
-                        onClick={() => deleteReflectionItem(item.id)}
-                        type="button"
-                      >
-                        <svg class="warning-triangle" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z" stroke="black" stroke-width="1.5" stroke-linecap="round" />
-                            <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round" />
-                            <path d="M10 14.1743L10.0083 14.1651" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-
-                        Delete Item(s)
-                      </button>
-
-                      <button onClick={addNewReflectionItem} className="delete-reflection-btn">
-                        Add New Reflection Question
-
-                        <svg class="plus" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                      </button>
-                    </div>
+                    {!isViewMode && (
+                      <FontAwesomeIcon
+                        icon={faPencilAlt}
+                        className='input-icon'
+                      />
                     )}
+                  </div>
                 </div>
+              )}
 
-                {!isLeadership && (
-                  <div className="reflection-section">
-                    <div className="reflection-header">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <g clipPath="url(#clip0_3699_20014)">
-                          <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+            {isMasterClass || activeTab === 'video' ? (
+              <>
+                <div className='upload-section'>
+                  <div className='upload-box'>
+                    <div className='upload-header'>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='20'
+                        height='20'
+                        viewBox='0 0 20 20'
+                        fill='none'
+                      >
+                        <g clipPath='url(#clip0_3699_20014)'>
+                          <path
+                            d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                            stroke='black'
+                            strokeWidth='1.5'
+                            strokeLinejoin='round'
+                          />
                         </g>
                         <defs>
-                          <clipPath id="clip0_3699_20014">
-                            <rect width="20" height="20" fill="white"/>
+                          <clipPath id='clip0_3699_20014'>
+                            <rect width='20' height='20' fill='white' />
                           </clipPath>
                         </defs>
                       </svg>
-                      <span>Instructions</span>
+                      <span>Upload Video</span>
                     </div>
-                    <div className="reflection-editor-area">
+
+                    {videoPreview ? (
+                      <div className='upload-preview'>
+                        {!isViewMode && (
+                          <button
+                            className='delete-preview-btn'
+                            onClick={handleDeleteVideo}
+                            type='button'
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        )}
+                        <video
+                          src={videoPreview}
+                          controls
+                          className='video-preview'
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+                    ) : (
+                      !isViewMode && (
+                        <>
+                          <input
+                            type='file'
+                            id='video-upload'
+                            accept='video/*'
+                            onChange={handleVideoUpload}
+                            style={{ display: 'none' }}
+                          />
+                          <label htmlFor='video-upload' className='upload-area'>
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              width='20'
+                              height='20'
+                              viewBox='0 0 20 20'
+                              fill='none'
+                            >
+                              <g clipPath='url(#clip0_3778_12543)'>
+                                <path
+                                  d='M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507'
+                                  stroke='black'
+                                  strokeWidth='1.5'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                />
+                                <path
+                                  d='M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721'
+                                  stroke='black'
+                                  strokeWidth='1.5'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id='clip0_3778_12543'>
+                                  <rect width='20' height='20' fill='white' />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <div className='d-flex flex-column text-center'>
+                              <p className='upload-text'>Click to upload</p>
+                              <p className='upload-subtext'>or drag and drop</p>
+                            </div>
+                            <p className='upload-info'>
+                              Only mp4, avi, or webm file format
+                              <br />
+                              supported (max. 50Mb)
+                            </p>
+                          </label>
+                        </>
+                      )
+                    )}
+                  </div>
+
+                  <div className='upload-box'>
+                    <div className='upload-header'>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='20'
+                        height='20'
+                        viewBox='0 0 20 20'
+                        fill='none'
+                      >
+                        <g clipPath='url(#clip0_3699_20014)'>
+                          <path
+                            d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                            stroke='black'
+                            strokeWidth='1.5'
+                            strokeLinejoin='round'
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id='clip0_3699_20014'>
+                            <rect width='20' height='20' fill='white' />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <span>Upload Thumbnail</span>
+                    </div>
+
+                    {thumbnailPreview ? (
+                      <div className='upload-preview'>
+                        {!isViewMode && (
+                          <button
+                            className='delete-preview-btn'
+                            onClick={handleDeleteThumbnail}
+                            type='button'
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        )}
+                        <img
+                          src={thumbnailPreview}
+                          alt='Thumbnail preview'
+                          className='thumbnail-preview'
+                        />
+                      </div>
+                    ) : (
+                      !isViewMode && (
+                        <>
+                          <input
+                            type='file'
+                            id='thumbnail-upload'
+                            accept='image/*'
+                            onChange={handleThumbnailUpload}
+                            style={{ display: 'none' }}
+                          />
+                          <label
+                            htmlFor='thumbnail-upload'
+                            className='upload-area'
+                          >
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              width='20'
+                              height='20'
+                              viewBox='0 0 20 20'
+                              fill='none'
+                            >
+                              <g clipPath='url(#clip0_3778_12543)'>
+                                <path
+                                  d='M9.99967 18.334V10.834M9.99967 10.834L12.9163 13.7507M9.99967 10.834L7.08301 13.7507'
+                                  stroke='black'
+                                  strokeWidth='1.5'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                />
+                                <path
+                                  d='M16.6663 14.6721C17.9111 14.1845 19.1663 13.0734 19.1663 10.8327C19.1663 7.49935 16.3886 6.66602 14.9997 6.66602C14.9997 4.99935 14.9997 1.66602 9.99967 1.66602C4.99967 1.66602 4.99967 4.99935 4.99967 6.66602C3.61079 6.66602 0.833008 7.49935 0.833008 10.8327C0.833008 13.0734 2.08824 14.1845 3.33301 14.6721'
+                                  stroke='black'
+                                  strokeWidth='1.5'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id='clip0_3778_12543'>
+                                  <rect width='20' height='20' fill='white' />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <div className='d-flex flex-column text-center'>
+                              <p className='upload-text'>Click to upload</p>
+                              <p className='upload-subtext'>or drag and drop</p>
+                            </div>
+                            <p className='upload-info'>
+                              Only png, jpg, or jpeg file format
+                              <br />
+                              supported (max. 2Mb)
+                            </p>
+                          </label>
+                        </>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {isLeadership && (
+                  <div
+                    className='reflection-section'
+                    style={{ marginTop: '24px' }}
+                  >
+                    <div className='reflection-header'>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='20'
+                        height='20'
+                        viewBox='0 0 20 20'
+                        fill='none'
+                      >
+                        <g clipPath='url(#clip0_3699_20014)'>
+                          <path
+                            d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                            stroke='black'
+                            strokeWidth='1.5'
+                            strokeLinejoin='round'
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id='clip0_3699_20014'>
+                            <rect width='20' height='20' fill='white' />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <span>Information</span>
+                    </div>
+                    <div className='reflection-editor-area'>
                       <ReactQuill
-                        theme="snow"
-                        value={item.instructions ?? ''}
-                        onChange={(value) => handleInstructionsChange(item.id, value)}
+                        theme='snow'
+                        value={information ?? ''}
+                        onChange={(value) => setInformation(value)}
                         modules={quillModules}
                         formats={quillFormats}
-                        placeholder="Add overview items..."
-                        className="reflection-quill-editor"
+                        placeholder='Add information...'
+                        className='reflection-quill-editor'
                         readOnly={isViewMode}
                       />
                     </div>
                   </div>
                 )}
-              </React.Fragment>
-            ))}
+              </>
+            ) : (
+              <div className='reflection-content'>
+                {reflectionItems.map((item, index) => (
+                  <React.Fragment key={item.id}>
+                    <div className='reflection-section'>
+                      <div className='reflection-header'>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='20'
+                          height='20'
+                          viewBox='0 0 20 20'
+                          fill='none'
+                        >
+                          <g clipPath='url(#clip0_3699_20014)'>
+                            <path
+                              d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                              stroke='black'
+                              strokeWidth='1.5'
+                              strokeLinejoin='round'
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id='clip0_3699_20014'>
+                              <rect width='20' height='20' fill='white' />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                        <span>
+                          {isLeadership
+                            ? `Reflection Question ${index + 1}`
+                            : 'Question'}
+                        </span>
+                      </div>
+                      <div className='reflection-editor-area'>
+                        <ReactQuill
+                          theme='snow'
+                          value={item.question ?? ''}
+                          onChange={(value) =>
+                            handleQuestionChange(item.id, value)
+                          }
+                          modules={quillModules}
+                          formats={quillFormats}
+                          placeholder={
+                            isLeadership
+                              ? 'Add reflection question...'
+                              : 'Add question...'
+                          }
+                          className='reflection-quill-editor'
+                          readOnly={isViewMode}
+                        />
+                      </div>
 
-            {!isViewMode && !isLeadership && (
-              <div className="reflection-actions">
-                {reflectionItems.length > 1 && (
-                  <div className="delete-action" onClick={() => deleteReflectionItem(reflectionItems[reflectionItems.length - 1].id)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M10 14.1743L10.0083 14.1651" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <span>Delete Item(s)</span>
+                      {isLeadership && !isViewMode && (
+                        <div className='d-flex align-item-center justify-content-between'>
+                          <button
+                            className='delete-reflection-btn'
+                            onClick={() => deleteReflectionItem(item.id)}
+                            type='button'
+                          >
+                            <svg
+                              class='warning-triangle'
+                              width='20'
+                              height='20'
+                              viewBox='0 0 20 20'
+                              fill='none'
+                              xmlns='http://www.w3.org/2000/svg'
+                            >
+                              <path
+                                d='M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z'
+                                stroke='black'
+                                stroke-width='1.5'
+                                stroke-linecap='round'
+                              />
+                              <path
+                                d='M10 7.5V10.8333'
+                                stroke='black'
+                                stroke-width='1.5'
+                                stroke-linecap='round'
+                              />
+                              <path
+                                d='M10 14.1743L10.0083 14.1651'
+                                stroke='black'
+                                stroke-width='1.5'
+                                stroke-linecap='round'
+                                stroke-linejoin='round'
+                              />
+                            </svg>
+                            Delete Item(s)
+                          </button>
+
+                          <button
+                            onClick={addNewReflectionItem}
+                            className='delete-reflection-btn'
+                          >
+                            Add New Reflection Question
+                            <svg
+                              class='plus'
+                              width='20'
+                              height='20'
+                              viewBox='0 0 20 20'
+                              fill='none'
+                              xmlns='http://www.w3.org/2000/svg'
+                            >
+                              <path
+                                d='M5 10H10M15 10H10M10 10V5M10 10V15'
+                                stroke='black'
+                                stroke-width='1.5'
+                                stroke-linecap='round'
+                                stroke-linejoin='round'
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {!isLeadership && (
+                      <div className='reflection-section'>
+                        <div className='reflection-header'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            width='20'
+                            height='20'
+                            viewBox='0 0 20 20'
+                            fill='none'
+                          >
+                            <g clipPath='url(#clip0_3699_20014)'>
+                              <path
+                                d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                                stroke='black'
+                                strokeWidth='1.5'
+                                strokeLinejoin='round'
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id='clip0_3699_20014'>
+                                <rect width='20' height='20' fill='white' />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          <span>Instructions</span>
+                        </div>
+                        <div className='reflection-editor-area'>
+                          <ReactQuill
+                            theme='snow'
+                            value={item.instructions ?? ''}
+                            onChange={(value) =>
+                              handleInstructionsChange(item.id, value)
+                            }
+                            modules={quillModules}
+                            formats={quillFormats}
+                            placeholder='Add overview items...'
+                            className='reflection-quill-editor'
+                            readOnly={isViewMode}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+
+                {!isViewMode && !isLeadership && (
+                  <div className='reflection-actions'>
+                    {reflectionItems.length > 1 && (
+                      <div
+                        className='delete-action'
+                        onClick={() =>
+                          deleteReflectionItem(
+                            reflectionItems[reflectionItems.length - 1].id
+                          )
+                        }
+                      >
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='20'
+                          height='20'
+                          viewBox='0 0 20 20'
+                          fill='none'
+                        >
+                          <path
+                            d='M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z'
+                            stroke='black'
+                            strokeWidth='1.5'
+                            strokeLinecap='round'
+                          />
+                          <path
+                            d='M10 7.5V10.8333'
+                            stroke='black'
+                            strokeWidth='1.5'
+                            strokeLinecap='round'
+                          />
+                          <path
+                            d='M10 14.1743L10.0083 14.1651'
+                            stroke='black'
+                            strokeWidth='1.5'
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                          />
+                        </svg>
+                        <span>Delete Item(s)</span>
+                      </div>
+                    )}
+                    <button
+                      type='button'
+                      className='add-question-btn'
+                      onClick={addNewReflectionItem}
+                    >
+                      Add New Question and Instructions
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='20'
+                        height='20'
+                        viewBox='0 0 20 20'
+                        fill='none'
+                      >
+                        <path
+                          d='M5 10H10M15 10H10M10 10V5M10 10V15'
+                          stroke='black'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                      </svg>
+                    </button>
                   </div>
                 )}
-                <button type="button" className="add-question-btn" onClick={addNewReflectionItem}>
-                  Add New Question and Instructions
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
               </div>
             )}
-          </div>
+
+            {!isViewMode && (
+              <div className='modal-actions'>
+                {isEditMode && (
+                  <div
+                    className='delete-action'
+                    onClick={handleDelete}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='20'
+                      height='20'
+                      viewBox='0 0 20 20'
+                      fill='none'
+                    >
+                      <path
+                        d='M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                      />
+                      <path
+                        d='M10 7.5V10.8333'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                      />
+                      <path
+                        d='M10 14.1743L10.0083 14.1651'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                    </svg>
+                    <span>
+                      {isMasterClass ? 'Delete Studio Guidance' : 'Delete Task'}
+                    </span>
+                  </div>
+                )}
+
+                <div className='d-flex gap-2'>
+                  <button
+                    className='btn-cancel'
+                    onClick={handleClose}
+                    disabled={loading}
+                  >
+                    CANCEL
+                  </button>
+                  <button
+                    className='btn-save'
+                    onClick={
+                      !isMasterClass &&
+                      (videoPreview || thumbnailPreview) &&
+                      activeTab === 'video'
+                        ? handleSaveAndContinue
+                        : handleSave
+                    }
+                    disabled={loading}
+                  >
+                    {loading
+                      ? 'SAVING...'
+                      : !isMasterClass &&
+                          (videoPreview || thumbnailPreview) &&
+                          activeTab === 'video'
+                        ? 'SAVE AND CONTINUE'
+                        : isEditMode
+                          ? 'UPDATE AND CLOSE'
+                          : 'SAVE AND CLOSE'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </Modal.Body>
         )}
+      </Modal>
 
-        {!isViewMode && (
-          <div className="modal-actions">
-            {isEditMode && (
-              <div className="delete-action" onClick={handleDelete} style={{ cursor: 'pointer' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M16.1266 17.5007H3.87405C2.33601 17.5007 1.37357 15.837 2.14023 14.5037L8.26651 3.84931C9.03552 2.5119 10.9651 2.5119 11.7341 3.84931L17.8604 14.5037C18.6271 15.837 17.6646 17.5007 16.1266 17.5007Z" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M10 7.5V10.8333" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M10 14.1743L10.0083 14.1651" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span>{isMasterClass ? 'Delete Studio Guidance' : 'Delete Task'}</span>
-              </div>
-            )}
-
-            <div className="d-flex gap-2">
-              <button className="btn-cancel" onClick={handleClose} disabled={loading}>
-                CANCEL
-              </button>
-              <button
-                className="btn-save"
-                onClick={(!isMasterClass && (videoPreview || thumbnailPreview) && activeTab === 'video') ? handleSaveAndContinue : handleSave}
-                disabled={loading}
+      {/* Delete Confirmation Modal */}
+      <Modal
+        show={showDeleteModal}
+        onHide={() => {
+          setShowDeleteModal(false)
+          setTaskToDelete(null)
+        }}
+        centered
+        className='custom-delete-modal-add-task'
+        style={{
+          zIndex: 10000,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          padding: '40px !important'
+        }}
+      >
+        <Modal.Body className='text-center p-4'>
+          <div className='mb-4'>
+            <div className='d-flex flex-column gap-2'>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#E2E6EC',
+                  borderRadius: '50%'
+                }}
               >
-                {loading ? 'SAVING...' :
-                 (!isMasterClass && (videoPreview || thumbnailPreview) && activeTab === 'video') ? 'SAVE AND CONTINUE' :
-                 (isEditMode ? 'UPDATE AND CLOSE' : 'SAVE AND CLOSE')}
-              </button>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='20'
+                  height='20'
+                  viewBox='0 0 20 20'
+                  fill='none'
+                >
+                  <path
+                    d='M16.1256 17.4997H3.87307C2.33504 17.4997 1.37259 15.8361 2.13926 14.5027L8.26554 3.84833C9.03455 2.51092 10.9641 2.51092 11.7332 3.84833L17.8594 14.5027C18.6261 15.8361 17.6637 17.4997 16.1256 17.4997Z'
+                    stroke='black'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                  />
+                  <path
+                    d='M10 7.5V10.8333'
+                    stroke='black'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                  />
+                  <path
+                    d='M10 14.1753L10.0083 14.1661'
+                    stroke='black'
+                    stroke-width='1.5'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'
+                  />
+                </svg>
+              </div>
+              <p
+                className='mb-5'
+                style={{
+                  fontSize: '15px',
+                  fontWeight: '500',
+                  marginBottom: '16px',
+                  color: '#231F20',
+                  width: 'fit-content'
+                }}
+              >
+                {' '}
+                {isMasterClass ? 'Delete Video' : 'Delete Task'}?
+              </p>
             </div>
+            <p
+              className='mb-5'
+              style={{
+                fontSize: '15px',
+                fontWeight: '400',
+                marginBottom: '16px',
+                color: '#231F20'
+              }}
+            >
+              Are you sure you want to delete this{' '}
+              {isMasterClass ? 'video' : 'task'}?
+            </p>
           </div>
-        )}
-      </Modal.Body>
-      )}
-    </Modal>
 
-    {/* Delete Confirmation Modal */}
-    <Modal show={showDeleteModal} onHide={() => {
-      setShowDeleteModal(false)
-      setTaskToDelete(null) 
-    }} centered className="custom-delete-modal-add-task" style={{ zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '40px !important' }}>
-      <Modal.Body className="text-center p-4">
-        <div className="mb-4">
-          <div className="d-flex flex-column gap-2">
-            <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#E2E6EC', borderRadius: '50%' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M16.1256 17.4997H3.87307C2.33504 17.4997 1.37259 15.8361 2.13926 14.5027L8.26554 3.84833C9.03455 2.51092 10.9641 2.51092 11.7332 3.84833L17.8594 14.5027C18.6261 15.8361 17.6637 17.4997 16.1256 17.4997Z" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M10 7.5V10.8333" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M10 14.1753L10.0083 14.1661" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <p className="mb-5" style={{ fontSize: '15px', fontWeight: '500', marginBottom: '16px', color: '#231F20', width: 'fit-content' }}> {isMasterClass ? 'Delete Video' : 'Delete Task'}?</p>
+          <div className='d-flex gap-3 justify-content-center'>
+            <button
+              style={{
+                borderRadius: '8px',
+                background: '#51C7DF',
+                boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+                display: 'flex',
+                width: '250px',
+                height: '53px',
+                minWidth: '250px',
+                maxHeight: '54px',
+                padding: '6px 12px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '12px',
+                color: '#FFF',
+                fontFamily: 'Montserrat',
+                fontSize: '17px',
+                fontWeight: '600',
+                border: 'none'
+              }}
+              onClick={() => {
+                setShowDeleteModal(false)
+                setTaskToDelete(null)
+              }}
+              disabled={loading}
+            >
+              NO, TAKE ME BACK
+            </button>
+            <button
+              style={{
+                borderRadius: '8px',
+                background: '#FFF',
+                boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
+                display: 'flex',
+                width: '250px',
+                height: '53px',
+                minWidth: '250px',
+                maxHeight: '54px',
+                padding: '6px 12px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '12px',
+                color: '#F39',
+                fontFamily: 'Montserrat',
+                fontSize: '17px',
+                fontWeight: '600',
+                border: 'none'
+              }}
+              onClick={confirmDelete}
+              disabled={loading}
+            >
+              {loading
+                ? 'Deleting...'
+                : `YES, DELETE THIS ${isMasterClass ? 'VIDEO' : 'TASK'}`}
+            </button>
           </div>
-          <p className="mb-5" style={{ fontSize: '15px', fontWeight: '400', marginBottom: '16px', color: '#231F20' }}>Are you sure you want to delete this {isMasterClass ? 'video' : 'task'}?</p>
-        </div>
-
-        <div className="d-flex gap-3 justify-content-center">
-          <button
-            style={{ borderRadius: "8px",
-              background: "#51C7DF",
-              boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.25)',
-              display: 'flex',
-              width: '250px',
-              height: '53px',
-              minWidth: '250px',
-              maxHeight: '54px',
-              padding: '6px 12px',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '12px',
-              color: "#FFF",
-              fontFamily: 'Montserrat',
-              fontSize: '17px',
-              fontWeight: '600',
-              border: 'none',
-             }}
-            onClick={() => {
-              setShowDeleteModal(false)
-              setTaskToDelete(null)
-            }}
-            disabled={loading}
-          >
-            NO, TAKE ME BACK
-          </button>
-          <button
-            style={{ borderRadius: "8px",
-              background: "#FFF",
-              boxShadow: "0 4px 10px 0 rgba(0, 0, 0, 0.25)",
-              display: 'flex',
-              width: '250px',
-              height: '53px',
-              minWidth: '250px',
-              maxHeight: '54px',
-              padding: '6px 12px',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '12px',
-              color: "#F39",
-              fontFamily: 'Montserrat',
-              fontSize: '17px',
-              fontWeight: '600',
-              border: 'none',
-              
-             }}
-            onClick={confirmDelete}
-            disabled={loading}
-          >
-            {loading ? 'Deleting...' : `YES, DELETE THIS ${isMasterClass ? 'VIDEO' : 'TASK'}`}
-          </button>
-        </div>
-      </Modal.Body>
-    </Modal>
+        </Modal.Body>
+      </Modal>
     </>
   )
 }

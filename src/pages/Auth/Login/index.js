@@ -4,7 +4,12 @@ import CustomLoginInput from './ui/CustomLoginInput'
 import SUSLogo from '../../../assets/images/LTS-logo-horizontal.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './index.css'
-import { loginLoading, userLogin, fetchOrganizationBranding, loadOrganizationBrandingFromCache } from '../../../redux'
+import {
+  loginLoading,
+  userLogin,
+  fetchOrganizationBranding,
+  loadOrganizationBrandingFromCache
+} from '../../../redux'
 import { Col, NavLink, Row } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
@@ -31,7 +36,9 @@ const ChooseLogin = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const isLoading = useSelector((state) => state.user.loginLoading)
-  const organizationLogo = useSelector((state) => state.organizationBranding?.logo)
+  const organizationLogo = useSelector(
+    (state) => state.organizationBranding?.logo
+  )
   const [user, setUser] = useState({})
   const location = useLocation()
   const [faqModal, setFaqModal] = useState(false)
@@ -48,7 +55,6 @@ const ChooseLogin = () => {
       [name]: value
     }))
   }
-
 
   useEffect(() => {
     const trackVisitor = async () => {
@@ -79,7 +85,6 @@ const ChooseLogin = () => {
   useEffect(() => {
     if (organizationLogo) preloadImage(organizationLogo)
   }, [organizationLogo])
-
 
   // Helper function to determine dashboard route based on role
   const getDashboardRoute = (roleId) => {
@@ -125,7 +130,7 @@ const ChooseLogin = () => {
                 // Get user role from localStorage after successful login
                 const storedUser = JSON.parse(localStorage.getItem('user'))
                 const roleId = storedUser?.user?.role_id
-                
+
                 // Redirect based on role
                 const dashboardRoute = getDashboardRoute(roleId)
                 // Loading will be cleared after navigation
@@ -192,91 +197,87 @@ const ChooseLogin = () => {
     if (e.key.toLowerCase() === 'enter') handleSubmit(e)
   }
 
+  const toggleMenu = () => {
+    const navbar = document.querySelector('nav')
+    const navList = document.getElementById('navList')
+    const body = document.querySelector('body')
+    const hamburger = document.getElementById('hamburger')
+    const close = document.getElementById('close')
 
-    const toggleMenu = () => {
-    const navbar = document.querySelector("nav");
-    const navList = document.getElementById("navList");
-    const body = document.querySelector("body");
-    const hamburger = document.getElementById("hamburger");
-    const close = document.getElementById("close");
-
-    navbar.classList.toggle("active");
-    if (navList.style.display === "flex") {
-      navList.style.display = "";
-      hamburger.classList.remove("d-none");
-      close.classList.add("d-none");
+    navbar.classList.toggle('active')
+    if (navList.style.display === 'flex') {
+      navList.style.display = ''
+      hamburger.classList.remove('d-none')
+      close.classList.add('d-none')
     } else {
-      navList.style.display = "flex";
-      hamburger.classList.add("d-none");
-      close.classList.remove("d-none");
+      navList.style.display = 'flex'
+      hamburger.classList.add('d-none')
+      close.classList.remove('d-none')
     }
-    body.classList.toggle("nav-open");
-  };
+    body.classList.toggle('nav-open')
+  }
 
   // Handle window resize
   React.useEffect(() => {
     const handleResize = () => {
-      const navList = document.getElementById("navList");
+      const navList = document.getElementById('navList')
       if (window.innerWidth > 768) {
-        if (navList) navList.style.display = "";
+        if (navList) navList.style.display = ''
       }
-    };
+    }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <div className='container-fluid md-px-5 ps-md-5 choose-login_container-academy gradient-background'>
-
-<div className="header-login">
-      <header className=" py-4 px-5 d-flex justify-content-between align-items-start px-1-mob">
-      {/* <img
+      <div className='header-login'>
+        <header className=' py-4 px-5 d-flex justify-content-between align-items-start px-1-mob'>
+          {/* <img
         className="cursor-pointer w-200-mob img-register-login"
         src={StartupStudioLogo}
         alt="course logo"
         onClick={() => window.location.href = '/'}
       /> */}
 
-      <div>
-        
-      </div>
+          <div></div>
 
-      <nav className="mt-4">
-        <ul className="list-unstyled gap-2-2" id="navList">
-          <li>
-            <a
-              className="fs-13 fw-medium text-decoration-none text-black"
-              href="https://joinstartupstudio.com/"
-            >
-              HOME
-            </a>
-          </li>
-          <li>
-            <a
-              className="fs-13 fw-medium text-decoration-none text-black"
-              href="https://joinstartupstudio.com/contact.html"
-            >
-              CONTACT US
-            </a>
-          </li>
-        </ul>
-        <div className="hamburger" id="hamburger" onClick={toggleMenu}>
-          <span className="bar background-black"></span>
-          <span className="bar background-black"></span>
-          <span className="bar background-black"></span>
-        </div>
-        <img
-          className="d-none pos-abs right-5"
-          id="close"
-          onClick={toggleMenu}
-          src={closeBtn}
-          alt="Close"
-            style={{ filter: 'brightness(0) invert(1)', cursor: 'pointer' }}
-        />
-      </nav>
-    </header>
-    </div>
+          <nav className='mt-4'>
+            <ul className='list-unstyled gap-2-2' id='navList'>
+              <li>
+                <a
+                  className='fs-13 fw-medium text-decoration-none text-black'
+                  href='https://joinstartupstudio.com/'
+                >
+                  HOME
+                </a>
+              </li>
+              <li>
+                <a
+                  className='fs-13 fw-medium text-decoration-none text-black'
+                  href='https://joinstartupstudio.com/contact.html'
+                >
+                  CONTACT US
+                </a>
+              </li>
+            </ul>
+            <div className='hamburger' id='hamburger' onClick={toggleMenu}>
+              <span className='bar background-black'></span>
+              <span className='bar background-black'></span>
+              <span className='bar background-black'></span>
+            </div>
+            <img
+              className='d-none pos-abs right-5'
+              id='close'
+              onClick={toggleMenu}
+              src={closeBtn}
+              alt='Close'
+              style={{ filter: 'brightness(0) invert(1)', cursor: 'pointer' }}
+            />
+          </nav>
+        </header>
+      </div>
 
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
         <Col md='10' lg='8' className='main-login-container'>
@@ -286,7 +287,7 @@ const ChooseLogin = () => {
                 <img
                   src={organizationLogo || StartupStudioLogo}
                   alt='logo'
-                  style={{ width: '200px' }}
+                  style={{ width: '300px' }}
                 />
               </div>
               {confirmEmail ? (
@@ -302,9 +303,8 @@ const ChooseLogin = () => {
                 <>
                   <h1 className='login-title text-black'>Welcome back...</h1>
                   <p className='text-black fs-5 fw-light'>
-                    Every time you show up, you grow. <br/>
-                        Step back into the Studio and let’s keep going.
-                        {' '}
+                    Every time you show up, you grow. <br />
+                    Step back into the Studio and let’s keep going.{' '}
                     {/* <br className='d-none-mob' /> powered by Learn to Start.
                     Please log in or create <br className='d-none-mob' /> an
                     account. */}
@@ -348,7 +348,8 @@ const ChooseLogin = () => {
                   justifyContent: 'center',
                   width: '150px',
                   borderRadius: '8px',
-                  background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                  background:
+                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
                   padding: '2px',
                   height: '58px',
                   boxShadow: '0px 4px 10px 0px #00000040'
@@ -361,9 +362,9 @@ const ChooseLogin = () => {
                   onClick={handleSubmit}
                 >
                   {isLoading ? (
-                    <div className="d-flex align-items-center justify-content-center gap-2">
-                      <span 
-                        className='spinner-border spinner-border-sm' 
+                    <div className='d-flex align-items-center justify-content-center gap-2'>
+                      <span
+                        className='spinner-border spinner-border-sm'
                         style={{
                           width: '1.2rem',
                           height: '1.2rem',
