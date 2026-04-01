@@ -17,10 +17,13 @@ function SelectLessons({
   const isRootPath =
     location.pathname === '/my-course-in-entrepreneurship/journal'
 
-  // Get the first lesson ID from options (first lesson in the list)
+  // Get the first real lesson ID from options (exclude synthetic welcome entry and separators)
   // Check both value (lesson.id) and redirectId to handle different URL formats
-  const firstLessonId = options?.[0]?.value
-  const firstLessonRedirectId = options?.[0]?.redirectId
+  const firstRealLessonOption = options?.find(
+    (option) => !option?.isSeparator && !option?.isWelcomeOption
+  )
+  const firstLessonId = firstRealLessonOption?.value
+  const firstLessonRedirectId = firstRealLessonOption?.redirectId
   const firstLesson =
     journalId &&
     ((firstLessonId && parseInt(journalId) === firstLessonId) ||
@@ -42,9 +45,9 @@ function SelectLessons({
   useEffect(() => {
     if (isRootPath) {
       setCurrentPlaceholder('Welcome to Level 1')
-    } else if (firstLesson && options?.[0]) {
+    } else if (firstLesson && firstRealLessonOption) {
       // Use the first lesson's label from options
-      setCurrentPlaceholder(options[0].label)
+      setCurrentPlaceholder(firstRealLessonOption.label)
     } else if (journalId) {
       const numericId = parseInt(journalId)
       const lessonTitle = getLessonTitleByRedirectId(numericId)
@@ -61,7 +64,8 @@ function SelectLessons({
     activeLevel,
     setCurrentPlaceholder,
     firstLesson,
-    options
+    options,
+    firstRealLessonOption
   ])
 
   useEffect(() => {

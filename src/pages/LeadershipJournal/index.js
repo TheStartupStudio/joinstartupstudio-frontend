@@ -206,8 +206,6 @@ const LeadershipJournal = memo(() => {
       if (response.data) {
         const modifiedLessons = { ...response.data }
 
-        console.log('ridon209', modifiedLessons)
-
         if (
           modifiedLessons['0'] &&
           modifiedLessons['0'].length > 0 &&
@@ -612,8 +610,6 @@ const LeadershipJournal = memo(() => {
       option: initialOption
     })
   }
-
-  console.log('ridon611', allTabs[activeTabData.activeTab])
 
   return (
     <div className='container-fluid h-100' style={{ '--bs-gutter-x': '0' }}>

@@ -198,6 +198,8 @@ const LeadershipJournalManagement = () => {
     await fetchLevels()
   }
 
+  console.log('ridon78', tasksData)
+
   const columns = useMemo(
     () => [
       {
@@ -208,7 +210,13 @@ const LeadershipJournalManagement = () => {
         render: (value, item) => (
           <div className='task-name-cell'>
             <div className={`status-dot ${item.status}`}></div>
-            <span>{value}</span>
+            <span>
+              {/^video\.[a-z]+(_[a-z]+)*$/.test(
+                item?.fullData?.video?.title || ''
+              )
+                ? value
+                : item?.fullData?.video?.title || value}
+            </span>
           </div>
         )
       }
