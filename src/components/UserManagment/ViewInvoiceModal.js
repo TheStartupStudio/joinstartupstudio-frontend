@@ -38,7 +38,7 @@ const ViewInvoiceModal = ({
     dueDate: '2025/10/27',
     items: [
       {
-        description: 'TSS Learner Access',
+        description: 'Learner Access',
         quantity: '1000',
         price: '15',
         total: 15000
@@ -867,21 +867,18 @@ const ViewInvoiceModal = ({
                     <>
                       <div className='item-cell description-col'>
                         <span className='item-description'>
-                          {item.description
-                            ?.replace(/\b(TSS|AIE)\b/g, '')
-                            .replace(/\s+/g, ' ')
-                            .trim()}
+                          {item?.description}
                         </span>
                       </div>
                       <div className='item-cell qty-col'>
-                        <span className='item-quantity'>{item.quantity}</span>
+                        <span className='item-quantity'>{item?.quantity}</span>
                       </div>
                       <div className='item-cell price-col'>
-                        <span className='item-price'>${item.price}</span>
+                        <span className='item-price'>${item?.price}</span>
                       </div>
                       <div className='item-cell total-col'>
                         <span className='item-total'>
-                          ${parseFloat(item.total).toLocaleString()}
+                          ${parseFloat(item?.total).toLocaleString()}
                         </span>
                         {mode === 'edit' && (
                           <>
