@@ -1,5 +1,6 @@
 import './index.css'
 import React, { useState, useEffect, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import AcademyBtn from '../../components/AcademyBtn'
@@ -16,6 +17,7 @@ import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 
 const ManageContentSite = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const [showAddJournalModal, setShowAddJournalModal] = useState(false)
   const [showAddJournalIntroductionModal, setShowAddJournalIntroductionModal] = useState(false)
   const [journalData, setJournalData] = useState(null)
@@ -293,32 +295,13 @@ const ManageContentSite = () => {
     }
   }, [showBulkDropdown, showActionDropdown, showFilterDropdown])
 
-  const handleViewContent = async (content) => {
-    console.log('View clicked for content:', content)
-    console.log('Available content properties:', Object.keys(content))
-    console.log('Content ID value:', content.id)
-
-    if (content.id) {
-      try {
-        console.log('Fetching full data for contentId:', content.id)
-        const response = await axiosInstance.get(`/manage-content/full/${content.id}`)
-        if (response.data.success) {
-          console.log('Full data fetched:', response.data.data)
-          setSelectedJournalData(response.data.data)
-          setModalMode('view')
-          setSelectedContentId(content.id)
-          setShowAddJournalModal(true)
-        } else {
-          toast.error('Failed to load content data')
-        }
-      } catch (error) {
-        console.error('Error fetching full content:', error)
-        toast.error('Failed to load content data')
-      }
-    } else {
-      console.log('No ID found on content object')
-      toast.error('Content ID is required for viewing')
+  const handleManageLeadershipContent = (content) => {
+    if (!content?.id) {
+      toast.error('Content ID is required for managing')
+      return
     }
+
+    history.push(`/leadership-journal-management?contentId=${content.id}`)
   }
 
   const handleEditContent = async (content) => {
@@ -1185,7 +1168,7 @@ const ManageContentSite = () => {
                           <div className="action-buttons">
                             <button
                               className="action-btn view-btn"
-                              onClick={() => handleViewContent(content)}
+                              onClick={() => handleManageLeadershipContent(content)}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                               <path d="M2.5 10.834C5.5 4.16732 14.5 4.16732 17.5 10.834" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
