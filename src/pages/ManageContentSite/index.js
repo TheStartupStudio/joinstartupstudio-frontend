@@ -14,12 +14,12 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 
-
 const ManageContentSite = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const [showAddJournalModal, setShowAddJournalModal] = useState(false)
-  const [showAddJournalIntroductionModal, setShowAddJournalIntroductionModal] = useState(false)
+  const [showAddJournalIntroductionModal, setShowAddJournalIntroductionModal] =
+    useState(false)
   const [journalData, setJournalData] = useState(null)
   const [modalMode, setModalMode] = useState('add') // 'add', 'edit', 'view'
   const [selectedJournalData, setSelectedJournalData] = useState(null)
@@ -45,7 +45,7 @@ const ManageContentSite = () => {
   const EditContentForm = ({ content, onSave, onCancel }) => {
     const handleChange = (e) => {
       const { name, value } = e.target
-      setEditFormData(prev => ({
+      setEditFormData((prev) => ({
         ...prev,
         [name]: value
       }))
@@ -73,93 +73,97 @@ const ManageContentSite = () => {
 
     return (
       <form onSubmit={handleSubmit}>
-        <div className="row">
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Title</label>
+        <div className='row'>
+          <div className='col-md-6 mb-3'>
+            <label className='form-label'>Title</label>
             <input
-              type="text"
-              className="form-control"
-              name="title"
+              type='text'
+              className='form-control'
+              name='title'
               value={editFormData.title || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Icon</label>
+          <div className='col-md-6 mb-3'>
+            <label className='form-label'>Icon</label>
             <input
-              type="text"
-              className="form-control"
-              name="icon"
+              type='text'
+              className='form-control'
+              name='icon'
               value={editFormData.icon || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Instructor Name</label>
+          <div className='col-md-6 mb-3'>
+            <label className='form-label'>Instructor Name</label>
             <input
-              type="text"
-              className="form-control"
-              name="instructorName"
+              type='text'
+              className='form-control'
+              name='instructorName'
               value={editFormData.instructorName || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Instructor Title</label>
+          <div className='col-md-6 mb-3'>
+            <label className='form-label'>Instructor Title</label>
             <input
-              type="text"
-              className="form-control"
-              name="instructorTitle"
+              type='text'
+              className='form-control'
+              name='instructorTitle'
               value={editFormData.instructorTitle || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Intro Title</label>
+          <div className='col-md-6 mb-3'>
+            <label className='form-label'>Intro Title</label>
             <input
-              type="text"
-              className="form-control"
-              name="introTitle"
+              type='text'
+              className='form-control'
+              name='introTitle'
               value={editFormData.introTitle || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Video URL</label>
+          <div className='col-md-6 mb-3'>
+            <label className='form-label'>Video URL</label>
             <input
-              type="url"
-              className="form-control"
-              name="videoUrl"
+              type='url'
+              className='form-control'
+              name='videoUrl'
               value={editFormData.videoUrl || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Video Thumbnail</label>
+          <div className='col-md-6 mb-3'>
+            <label className='form-label'>Video Thumbnail</label>
             <input
-              type="url"
-              className="form-control"
-              name="videoThumbnail"
+              type='url'
+              className='form-control'
+              name='videoThumbnail'
               value={editFormData.videoThumbnail || ''}
               onChange={handleChange}
             />
           </div>
-          <div className="col-12 mb-3">
-            <label className="form-label">Intro Description</label>
+          <div className='col-12 mb-3'>
+            <label className='form-label'>Intro Description</label>
             <textarea
-              className="form-control"
-              name="introDescription"
+              className='form-control'
+              name='introDescription'
               value={editFormData.introDescription || ''}
               onChange={handleChange}
-              rows="6"
+              rows='6'
             />
           </div>
         </div>
-        <div className="d-flex justify-content-end gap-2">
-          <button type="button" className="btn btn-secondary" onClick={onCancel}>
+        <div className='d-flex justify-content-end gap-2'>
+          <button
+            type='button'
+            className='btn btn-secondary'
+            onClick={onCancel}
+          >
             Cancel
           </button>
-          <button type="submit" className="btn btn-primary">
+          <button type='submit' className='btn btn-primary'>
             Save Changes
           </button>
         </div>
@@ -170,36 +174,39 @@ const ManageContentSite = () => {
   const columns = [
     {
       key: 'name',
-      title: "CONTENT NAME",
+      title: 'CONTENT NAME',
       sortable: false,
       filterable: true,
       className: 'manage-content-name-column',
       width: '40%',
       render: (value, item) => (
-        <div className="task-name-cell">
+        <div className='task-name-cell'>
           <span>{value}</span>
         </div>
       )
     },
     {
       key: 'status',
-      title: "STATUS",
+      title: 'STATUS',
       sortable: false,
       filterable: false,
       className: 'manage-content-status-column',
       render: (value, item) => (
-        <div className="status-cell">
-          <div className={`status-dot ${(!item.archiveStatus && item.publishedStatus) ? 'active' : 'inactive'}`}></div>
-          <span className="status-text" style={{fontWeight: 500}}>
-            {(!item.archiveStatus && item.publishedStatus) ? 'Published' : 'Unpublished'}
+        <div className='status-cell'>
+          <div
+            className={`status-dot ${!item.archiveStatus && item.publishedStatus ? 'active' : 'inactive'}`}
+          ></div>
+          <span className='status-text' style={{ fontWeight: 500 }}>
+            {!item.archiveStatus && item.publishedStatus
+              ? 'Published'
+              : 'Unpublished'}
           </span>
         </div>
       )
     }
   ]
 
-  const handleSearch = (e) => {
-  }
+  const handleSearch = (e) => {}
 
   const handleOpenAddJournalModal = () => {
     setShowAddJournalModal(true)
@@ -259,7 +266,10 @@ const ManageContentSite = () => {
 
   const updateContent = async (contentId, updateData) => {
     try {
-      const response = await axiosInstance.put(`/manage-content/${contentId}`, updateData)
+      const response = await axiosInstance.put(
+        `/manage-content/${contentId}`,
+        updateData
+      )
       if (response.data.success) {
         toast.success('Content updated successfully')
         await fetchContents()
@@ -312,7 +322,9 @@ const ManageContentSite = () => {
     if (content.id) {
       try {
         console.log('Fetching full data for contentId:', content.id)
-        const response = await axiosInstance.get(`/manage-content/full/${content.id}`)
+        const response = await axiosInstance.get(
+          `/manage-content/full/${content.id}`
+        )
         if (response.data.success) {
           console.log('Full data fetched:', response.data.data)
           setSelectedJournalData(response.data.data)
@@ -339,10 +351,10 @@ const ManageContentSite = () => {
   }
 
   const handleSelectionChange = (contentId) => {
-    setSelectedItems(prev => {
+    setSelectedItems((prev) => {
       const isSelected = prev.includes(contentId)
       if (isSelected) {
-        return prev.filter(id => id !== contentId)
+        return prev.filter((id) => id !== contentId)
       } else {
         return [...prev, contentId]
       }
@@ -354,7 +366,7 @@ const ManageContentSite = () => {
     if (selectedItems.length === filteredContents.length) {
       setSelectedItems([])
     } else {
-      setSelectedItems(filteredContents.map(content => content.id))
+      setSelectedItems(filteredContents.map((content) => content.id))
     }
   }
 
@@ -371,7 +383,9 @@ const ManageContentSite = () => {
       })
 
       if (response.data.success) {
-        toast.success(`Successfully toggled archive status for ${selectedItems.length} items`)
+        toast.success(
+          `Successfully toggled archive status for ${selectedItems.length} items`
+        )
         setSelectedItems([])
         fetchContents()
       } else {
@@ -407,17 +421,19 @@ const ManageContentSite = () => {
       setLoading(true)
 
       // Delete each selected item individually using the full delete endpoint
-      const deletePromises = deleteModalData.selectedItems.map(contentId =>
+      const deletePromises = deleteModalData.selectedItems.map((contentId) =>
         axiosInstance.delete(`/manage-content/full/${contentId}`)
       )
 
       const responses = await Promise.all(deletePromises)
 
       // Check if all deletions were successful
-      const allSuccessful = responses.every(response => response.data.success)
+      const allSuccessful = responses.every((response) => response.data.success)
 
       if (allSuccessful) {
-        toast.success(`Successfully deleted ${deleteModalData.selectedItems.length} items and all related content`)
+        toast.success(
+          `Successfully deleted ${deleteModalData.selectedItems.length} items and all related content`
+        )
         setSelectedItems([])
         fetchContents()
       } else {
@@ -438,17 +454,19 @@ const ManageContentSite = () => {
       setLoading(true)
 
       // Archive each selected item
-      const archivePromises = deleteModalData.selectedItems.map(contentId =>
+      const archivePromises = deleteModalData.selectedItems.map((contentId) =>
         axiosInstance.put('/manage-content/bulk/archive', { ids: [contentId] })
       )
 
       const responses = await Promise.all(archivePromises)
 
       // Check if all archives were successful
-      const allSuccessful = responses.every(response => response.data.success)
+      const allSuccessful = responses.every((response) => response.data.success)
 
       if (allSuccessful) {
-        toast.success(`Successfully archived ${deleteModalData.selectedItems.length} items`)
+        toast.success(
+          `Successfully archived ${deleteModalData.selectedItems.length} items`
+        )
         setSelectedItems([])
         fetchContents()
       } else {
@@ -477,7 +495,9 @@ const ManageContentSite = () => {
       })
 
       if (response.data.success) {
-        toast.success(`Successfully toggled publish status for ${selectedItems.length} items`)
+        toast.success(
+          `Successfully toggled publish status for ${selectedItems.length} items`
+        )
         setSelectedItems([])
         fetchContents()
       } else {
@@ -502,6 +522,7 @@ const ManageContentSite = () => {
       if (response.data.success) {
         toast.success('Content archive status updated successfully')
         fetchContents()
+        fetchArchivedContents()
       } else {
         toast.error('Failed to update archive status')
       }
@@ -537,11 +558,13 @@ const ManageContentSite = () => {
   const handleDeleteContent = async (contentId) => {
     try {
       setLoading(true)
-      const response = await axiosInstance.delete(`/manage-content/${contentId}`)
+      const response = await axiosInstance.delete(
+        `/manage-content/${contentId}`
+      )
 
       if (response.data.success) {
         toast.success('Content deleted successfully')
-        setSelectedItems(prev => prev.filter(id => id !== contentId))
+        setSelectedItems((prev) => prev.filter((id) => id !== contentId))
         fetchContents()
       } else {
         toast.error('Failed to delete content')
@@ -564,6 +587,7 @@ const ManageContentSite = () => {
       if (response.data.success) {
         toast.success('Content archived successfully')
         fetchContents()
+        fetchArchivedContents()
       } else {
         toast.error('Failed to archive content')
       }
@@ -578,7 +602,7 @@ const ManageContentSite = () => {
   const handleShowDeleteModal = (contentId) => {
     // Find the content to check if it's archived
     const currentContents = isArchiveMode ? archivedContents : contents
-    const content = currentContents.find(c => c.id === contentId)
+    const content = currentContents.find((c) => c.id === contentId)
 
     setDeleteModalData({
       contentId,
@@ -595,7 +619,9 @@ const ManageContentSite = () => {
   const handleArchiveFromModal = () => {
     if (deleteModalData?.contentId) {
       handleArchiveContentForDelete(deleteModalData.contentId)
-      setSelectedItems(prev => prev.filter(id => id !== deleteModalData.contentId))
+      setSelectedItems((prev) =>
+        prev.filter((id) => id !== deleteModalData.contentId)
+      )
     }
   }
 
@@ -608,12 +634,15 @@ const ManageContentSite = () => {
   const fetchArchivedContents = async () => {
     try {
       setArchiveLoading(true)
-      const response = await axiosInstance.get('/manage-content/full/archived', {
-        params: {
-          page: 1,
-          limit: 10, // Increased limit to show more items
+      const response = await axiosInstance.get(
+        '/manage-content/full/archived',
+        {
+          params: {
+            page: 1,
+            limit: 10 // Increased limit to show more items
+          }
         }
-      })
+      )
 
       if (response.data.success && response.data.data) {
         setArchivedContents(response.data.data)
@@ -656,9 +685,13 @@ const ManageContentSite = () => {
     if (contentFilter === 'all') {
       return currentContents
     } else if (contentFilter === 'published') {
-      return currentContents.filter(content => content.publishedStatus && !content.archiveStatus)
+      return currentContents.filter(
+        (content) => content.publishedStatus && !content.archiveStatus
+      )
     } else if (contentFilter === 'unpublished') {
-      return currentContents.filter(content => !content.publishedStatus || content.archiveStatus)
+      return currentContents.filter(
+        (content) => !content.publishedStatus || content.archiveStatus
+      )
     }
 
     return currentContents
@@ -671,7 +704,7 @@ const ManageContentSite = () => {
   }
 
   return (
-    <div className="manage-content">
+    <div className='manage-content'>
       <AddJournalModal
         show={showAddJournalModal}
         onClose={handleCloseAddJournalModal}
@@ -692,30 +725,46 @@ const ManageContentSite = () => {
       <DeleteJournalContentModal
         show={showDeleteModal}
         onClose={handleCloseDeleteModal}
-        onArchive={deleteModalData?.type === 'bulk' ? handleBulkArchiveFromModal : handleArchiveFromModal}
-        onDelete={deleteModalData?.type === 'bulk' ? handleBulkDeleteFromModal : handleDeleteFromModal}
-        title={deleteModalData?.type === 'bulk' ? `Delete ${deleteModalData?.selectedItems?.length || 0} Items` : "Delete Content"}
-        message={deleteModalData?.type === 'bulk'
-          ? `Are you sure you want to delete ${deleteModalData?.selectedItems?.length || 0} items and all their related content?`
-          : "What would you like to do with this content?"
+        onArchive={
+          deleteModalData?.type === 'bulk'
+            ? handleBulkArchiveFromModal
+            : handleArchiveFromModal
+        }
+        onDelete={
+          deleteModalData?.type === 'bulk'
+            ? handleBulkDeleteFromModal
+            : handleDeleteFromModal
+        }
+        title={
+          deleteModalData?.type === 'bulk'
+            ? `Delete ${deleteModalData?.selectedItems?.length || 0} Items`
+            : 'Delete Content'
+        }
+        message={
+          deleteModalData?.type === 'bulk'
+            ? `Are you sure you want to delete ${deleteModalData?.selectedItems?.length || 0} items and all their related content?`
+            : 'What would you like to do with this content?'
         }
         isArchived={deleteModalData?.isArchived || false}
       />
 
       {/* Edit Content Modal */}
       {showEditModal && selectedContent && (
-        <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit Content</h5>
+        <div
+          className='modal fade show d-block'
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <div className='modal-dialog modal-lg'>
+            <div className='modal-content'>
+              <div className='modal-header'>
+                <h5 className='modal-title'>Edit Content</h5>
                 <button
-                  type="button"
-                  className="btn-close"
+                  type='button'
+                  className='btn-close'
                   onClick={() => setShowEditModal(false)}
                 ></button>
               </div>
-              <div className="modal-body">
+              <div className='modal-body'>
                 <EditContentForm
                   content={selectedContent}
                   onSave={handleUpdateContent}
@@ -727,17 +776,21 @@ const ManageContentSite = () => {
         </div>
       )}
       <div>
-        <div className="col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4">
-          <div className="d-flex justify-content-between flex-col-tab align-start-tab" style={{padding: '40px 40px 10px 30px'}}>
-            <div className="d-flex flex-column gap-2">
-              <h3 className="text-black mb-0"
+        <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+          <div
+            className='d-flex justify-content-between flex-col-tab align-start-tab'
+            style={{ padding: '40px 40px 10px 30px' }}
+          >
+            <div className='d-flex flex-column gap-2'>
+              <h3
+                className='text-black mb-0'
                 style={{
                   color: '#231F20',
                   fontFamily: 'Montserrat',
                   fontSize: '23px',
                   fontStyle: 'normal',
                   fontWeight: 700,
-                  lineHeight: 'normal',
+                  lineHeight: 'normal'
                 }}
               >
                 {isArchiveMode ? 'CONTENT ARCHIVE' : 'Content Management'}
@@ -750,14 +803,16 @@ const ManageContentSite = () => {
                   fontStyle: 'normal',
                   fontWeight: '400',
                   lineHeight: '20px',
-                  marginBottom: '0px',
+                  marginBottom: '0px'
                 }}
               >
-                {isArchiveMode ? 'View and restore archived content' : 'View and content management elements'}
+                {isArchiveMode
+                  ? 'View and restore archived content'
+                  : 'View and content management elements'}
               </p>
             </div>
           </div>
-          <div className="menu-icon-container">
+          <div className='menu-icon-container'>
             <img
               src={MenuIcon}
               alt='menu'
@@ -768,62 +823,103 @@ const ManageContentSite = () => {
         </div>
       </div>
 
-      <div className="manage-content-container position-relative">
-        <img src={blueManagerBG} className='position-absolute'
-        style={{
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-          width: '100dvw',
-          height: '100dvh'
-        }}
-        alt="Decorative background"
-        aria-hidden="true"
-      />
+      <div className='manage-content-container position-relative'>
+        <img
+          src={blueManagerBG}
+          className='position-absolute'
+          style={{
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 0,
+            pointerEvents: 'none',
+            width: '100dvw',
+            height: '100dvh'
+          }}
+          alt='Decorative background'
+          aria-hidden='true'
+        />
 
         <div className='main-search-table-container'>
-          <div className="search-actions-bar">
+          <div className='search-actions-bar'>
             {isArchiveMode && (
-              <div className="archive-return-btn d-flex align-items-center gap-2" onClick={toggleArchiveMode}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M6.52103 10.8333L10.6044 14.9167C10.771 15.0833 10.851 15.2778 10.8444 15.5C10.8377 15.7222 10.7508 15.9167 10.5835 16.0833C10.4169 16.2361 10.2224 16.3161 10.0002 16.3233C9.77797 16.3306 9.58353 16.2506 9.41686 16.0833L3.91686 10.5833C3.83353 10.5 3.77436 10.4097 3.73936 10.3125C3.70436 10.2153 3.68742 10.1111 3.68853 10C3.68964 9.88889 3.70714 9.78472 3.74103 9.6875C3.77492 9.59028 3.83381 9.5 3.91769 9.41667L9.41769 3.91667C9.57047 3.76389 9.76158 3.6875 9.99103 3.6875C10.2205 3.6875 10.4183 3.76389 10.5844 3.91667C10.751 4.08333 10.8344 4.28139 10.8344 4.51083C10.8344 4.74028 10.751 4.93806 10.5844 5.10417L6.52103 9.16667H15.8335C16.0696 9.16667 16.2677 9.24667 16.4277 9.40667C16.5877 9.56667 16.6674 9.76444 16.6669 10C16.6663 10.2356 16.5863 10.4336 16.4269 10.5942C16.2674 10.7547 16.0696 10.8344 15.8335 10.8333H6.52103Z" fill="black"/>
+              <div
+                className='archive-return-btn d-flex align-items-center gap-2'
+                onClick={toggleArchiveMode}
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='20'
+                  height='20'
+                  viewBox='0 0 20 20'
+                  fill='none'
+                >
+                  <path
+                    d='M6.52103 10.8333L10.6044 14.9167C10.771 15.0833 10.851 15.2778 10.8444 15.5C10.8377 15.7222 10.7508 15.9167 10.5835 16.0833C10.4169 16.2361 10.2224 16.3161 10.0002 16.3233C9.77797 16.3306 9.58353 16.2506 9.41686 16.0833L3.91686 10.5833C3.83353 10.5 3.77436 10.4097 3.73936 10.3125C3.70436 10.2153 3.68742 10.1111 3.68853 10C3.68964 9.88889 3.70714 9.78472 3.74103 9.6875C3.77492 9.59028 3.83381 9.5 3.91769 9.41667L9.41769 3.91667C9.57047 3.76389 9.76158 3.6875 9.99103 3.6875C10.2205 3.6875 10.4183 3.76389 10.5844 3.91667C10.751 4.08333 10.8344 4.28139 10.8344 4.51083C10.8344 4.74028 10.751 4.93806 10.5844 5.10417L6.52103 9.16667H15.8335C16.0696 9.16667 16.2677 9.24667 16.4277 9.40667C16.5877 9.56667 16.6674 9.76444 16.6669 10C16.6663 10.2356 16.5863 10.4336 16.4269 10.5942C16.2674 10.7547 16.0696 10.8344 15.8335 10.8333H6.52103Z'
+                    fill='black'
+                  />
                 </svg>
-                <p style={{ fontSize: '15px', fontWeight: '500', color: 'black', marginBottom: '0px', cursor: 'pointer', width: 'max-content' }}>
+                <p
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: '500',
+                    color: 'black',
+                    marginBottom: '0px',
+                    cursor: 'pointer',
+                    width: 'max-content'
+                  }}
+                >
                   Return to Current Management
                 </p>
               </div>
             )}
 
-
-{!isArchiveMode && (
-            <div className="search-container">
-              <div className="search-input-wrapper" style={{ width: '100%', maxWidth: 'unset' }}>
-                <input
-                  type="text"
-                  placeholder="Search for content"
-                  value=""
-                  onChange={handleSearch}
-                  className="search-input"
-                  style={{ width: '100%' }}
-                />
-                <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </div>
-)}
-
-
-            <div className="actions-container" style={isArchiveMode ? { width: '100%' } : { width: 'fit-content' }}>
-              {!isArchiveMode && (
-                <div className="dropdown-wrapper">
-                  <div onClick={handleOpenAddJournalModal} style={{ cursor: 'pointer' }}>
-                    <AcademyBtn
-                      title="add new journal"
-                      icon={faPlus}
+            {!isArchiveMode && (
+              <div className='search-container'>
+                <div
+                  className='search-input-wrapper'
+                  style={{ width: '100%', maxWidth: 'unset' }}
+                >
+                  <input
+                    type='text'
+                    placeholder='Search for content'
+                    value=''
+                    onChange={handleSearch}
+                    className='search-input'
+                    style={{ width: '100%' }}
+                  />
+                  <svg
+                    className='search-icon'
+                    width='16'
+                    height='16'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                  >
+                    <path
+                      d='M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z'
+                      stroke='#666'
+                      strokeWidth='2'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
+                  </svg>
+                </div>
+              </div>
+            )}
+
+            <div
+              className='actions-container'
+              style={
+                isArchiveMode ? { width: '100%' } : { width: 'fit-content' }
+              }
+            >
+              {!isArchiveMode && (
+                <div className='dropdown-wrapper'>
+                  <div
+                    onClick={handleOpenAddJournalModal}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <AcademyBtn title='add new journal' icon={faPlus} />
                   </div>
                 </div>
               )}
@@ -831,160 +927,260 @@ const ManageContentSite = () => {
               {!isArchiveMode && (
                 <div>
                   <AcademyBtn
-                    title="View Archive"
+                    title='View Archive'
                     icon={btnIcon}
                     onClick={toggleArchiveMode}
                   />
                 </div>
               )}
-  
-  <div className="d-flex gap-3 align-items-center" style={isArchiveMode ? { width: '100%', justifyContent: 'end' } : { width: 'fit-content', justifyContent: 'flex-end' }}>
-  {isArchiveMode && (
-            <div className="search-container">
-              <div className="search-input-wrapper" style={{ width: '100%', maxWidth: 'unset' }}>
-                <input
-                  type="text"
-                  placeholder="Search for content"
-                  value=""
-                  onChange={handleSearch}
-                  className="search-input"
-                  style={{ width: '100%',
-                    
-                   }}
-                />
-                <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </div>
-)}
 
-              <div className="dropdown-wrapper" style={{ position: 'relative' }}>
-                <div
-                  className="bulk-actions"
-                  onClick={() => setShowBulkDropdown(!showBulkDropdown)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <span>BULK ACTIONS</span>
-                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-
-                {showBulkDropdown && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '100%',
-                      right: 0,
-                      background: 'white',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                      zIndex: 9999,
-                      minWidth: '180px',
-                      marginTop: '4px'
-                    }}
-                  >
-                    <button
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        border: 'none',
-                        background: 'none',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        color: 'black',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                      onClick={handleBulkArchive}
+              <div
+                className='d-flex gap-3 align-items-center'
+                style={
+                  isArchiveMode
+                    ? { width: '100%', justifyContent: 'end' }
+                    : { width: 'fit-content', justifyContent: 'flex-end' }
+                }
+              >
+                {isArchiveMode && (
+                  <div className='search-container'>
+                    <div
+                      className='search-input-wrapper'
+                      style={{ width: '100%', maxWidth: 'unset' }}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                      <path d="M15 5.00065H16.6667M18.3333 5.00065H16.6667M16.6667 5.00065V3.33398M16.6667 5.00065V6.66732" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                      <path d="M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                      <path d="M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                      {isArchiveMode ? 'Unarchive' : 'Archive'}
-                    </button>
-
-                    <button
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        border: 'none',
-                        background: 'none',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        color: 'black',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                      onClick={handleBulkPublish}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                          <g clip-path="url(#clip0_4916_28085)">
-                                            <path d="M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                          </g>
-                                          <defs>
-                                            <clipPath id="clip0_4916_28085">
-                                              <rect width="20" height="20" fill="white"/>
-                                            </clipPath>
-                                          </defs>
-                                        </svg>
-                      Reactivate/Deactivate
-                    </button>
-
-                    <button
-                      style={{
-                        width: '100%',
-                        padding: '12px 16px',
-                        border: 'none',
-                        background: 'none',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        color: 'black',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                      onClick={handleBulkDelete}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M16.6668 7.5L15.0043 16.9552C14.8642 17.7522 14.172 18.3333 13.3629 18.3333H6.63745C5.82832 18.3333 5.13608 17.7522 4.99596 16.9552L3.3335 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <input
+                        type='text'
+                        placeholder='Search for content'
+                        value=''
+                        onChange={handleSearch}
+                        className='search-input'
+                        style={{ width: '100%' }}
+                      />
+                      <svg
+                        className='search-icon'
+                        width='16'
+                        height='16'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                      >
+                        <path
+                          d='M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z'
+                          stroke='#666'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
                       </svg>
-                      Delete Content
-                    </button>
+                    </div>
                   </div>
                 )}
-              </div>
 
+                <div
+                  className='dropdown-wrapper'
+                  style={{ position: 'relative' }}
+                >
+                  <div
+                    className='bulk-actions'
+                    onClick={() => setShowBulkDropdown(!showBulkDropdown)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <span>BULK ACTIONS</span>
+                    <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
+                      <path
+                        d='M1 1.5L6 6.5L11 1.5'
+                        stroke='#666'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                    </svg>
+                  </div>
+
+                  {showBulkDropdown && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        right: 0,
+                        background: 'white',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                        zIndex: 9999,
+                        minWidth: '180px',
+                        marginTop: '4px'
+                      }}
+                    >
+                      <button
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'none',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          color: 'black',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = '#f9fafb')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = 'transparent')
+                        }
+                        onClick={handleBulkArchive}
+                      >
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='20'
+                          height='20'
+                          viewBox='0 0 20 20'
+                          fill='none'
+                        >
+                          <path
+                            d='M15 5.00065H16.6667M18.3333 5.00065H16.6667M16.6667 5.00065V3.33398M16.6667 5.00065V6.66732'
+                            stroke='black'
+                            stroke-width='1.5'
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                          />
+                          <path
+                            d='M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z'
+                            stroke='black'
+                            stroke-width='1.5'
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                          />
+                          <path
+                            d='M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665'
+                            stroke='black'
+                            stroke-width='1.5'
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                          />
+                        </svg>
+                        {isArchiveMode ? 'Unarchive' : 'Archive'}
+                      </button>
+
+                      {!isArchiveMode && (
+                        <button
+                          style={{
+                            width: '100%',
+                            padding: '12px 16px',
+                            border: 'none',
+                            background: 'none',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            color: 'black',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.target.style.backgroundColor = '#f9fafb')
+                          }
+                          onMouseLeave={(e) =>
+                            (e.target.style.backgroundColor = 'transparent')
+                          }
+                          onClick={handleBulkPublish}
+                        >
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            width='20'
+                            height='20'
+                            viewBox='0 0 20 20'
+                            fill='none'
+                          >
+                            <g clip-path='url(#clip0_4916_28085)'>
+                              <path
+                                d='M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327'
+                                stroke='black'
+                                stroke-width='1.5'
+                                stroke-linecap='round'
+                                stroke-linejoin='round'
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id='clip0_4916_28085'>
+                                <rect width='20' height='20' fill='white' />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                          Reactivate/Deactivate
+                        </button>
+                      )}
+
+                      <button
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'none',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          color: 'black',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px'
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = '#f9fafb')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = 'transparent')
+                        }
+                        onClick={handleBulkDelete}
+                      >
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='20'
+                          height='20'
+                          viewBox='0 0 20 20'
+                          fill='none'
+                        >
+                          <path
+                            d='M16.6668 7.5L15.0043 16.9552C14.8642 17.7522 14.172 18.3333 13.3629 18.3333H6.63745C5.82832 18.3333 5.13608 17.7522 4.99596 16.9552L3.3335 7.5'
+                            stroke='black'
+                            stroke-width='1.5'
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                          />
+                          <path
+                            d='M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125'
+                            stroke='black'
+                            stroke-width='1.5'
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                          />
+                        </svg>
+                        Delete Content
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="table-container">
-            <div className="data-table-container">
-              <table className="data-table">
+          <div className='table-container'>
+            <div className='data-table-container'>
+              <table className='data-table'>
                 <thead>
                   <tr>
-                    <th className="checkbox-column">
+                    <th className='checkbox-column'>
                       <input
-                        type="checkbox"
-                        className="checkbox"
-                        checked={selectedItems.length === getFilteredContents().length && getFilteredContents().length > 0}
+                        type='checkbox'
+                        className='checkbox'
+                        checked={
+                          selectedItems.length ===
+                            getFilteredContents().length &&
+                          getFilteredContents().length > 0
+                        }
                         onChange={handleSelectAll}
                       />
                     </th>
@@ -994,18 +1190,35 @@ const ManageContentSite = () => {
                         className={column.className || ''}
                         style={{ flex: 1 }}
                       >
-                        <div className="header-with-icons">
+                        <div className='header-with-icons'>
                           {column.title}
                           {column.filterable && (
-                            <div className="header-icons" style={{ position: 'relative' }}>
+                            <div
+                              className='header-icons'
+                              style={{ position: 'relative' }}
+                            >
                               <div
-                                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                                onClick={() =>
+                                  setShowFilterDropdown(!showFilterDropdown)
+                                }
                                 style={{ cursor: 'pointer' }}
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                  <path d="M3.99961 3H19.9997C20.552 3 20.9997 3.44764 20.9997 3.99987L20.9999 5.58569C21 5.85097 20.8946 6.10538 20.707 6.29295L14.2925 12.7071C14.105 12.8946 13.9996 13.149 13.9996 13.4142L13.9996 19.7192C13.9996 20.3698 13.3882 20.8472 12.7571 20.6894L10.7571 20.1894C10.3119 20.0781 9.99961 19.6781 9.99961 19.2192L9.99961 13.4142C9.99961 13.149 9.89425 12.8946 9.70672 12.7071L3.2925 6.29289C3.10496 6.10536 2.99961 5.851 2.99961 5.58579V4C2.99961 3.44772 3.44732 3 3.99961 3Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='24'
+                                  height='24'
+                                  viewBox='0 0 24 24'
+                                  fill='none'
+                                >
+                                  <path
+                                    d='M3.99961 3H19.9997C20.552 3 20.9997 3.44764 20.9997 3.99987L20.9999 5.58569C21 5.85097 20.8946 6.10538 20.707 6.29295L14.2925 12.7071C14.105 12.8946 13.9996 13.149 13.9996 13.4142L13.9996 19.7192C13.9996 20.3698 13.3882 20.8472 12.7571 20.6894L10.7571 20.1894C10.3119 20.0781 9.99961 19.6781 9.99961 19.2192L9.99961 13.4142C9.99961 13.149 9.89425 12.8946 9.70672 12.7071L3.2925 6.29289C3.10496 6.10536 2.99961 5.851 2.99961 5.58579V4C2.99961 3.44772 3.44732 3 3.99961 3Z'
+                                    stroke='black'
+                                    stroke-width='1.5'
+                                    stroke-linecap='round'
+                                    stroke-linejoin='round'
+                                  />
                                 </svg>
-                                </div>
+                              </div>
 
                               {showFilterDropdown && (
                                 <div
@@ -1036,8 +1249,14 @@ const ManageContentSite = () => {
                                       alignItems: 'center',
                                       gap: '8px'
                                     }}
-                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                    onMouseEnter={(e) =>
+                                      (e.target.style.backgroundColor =
+                                        '#f9fafb')
+                                    }
+                                    onMouseLeave={(e) =>
+                                      (e.target.style.backgroundColor =
+                                        'transparent')
+                                    }
                                     onClick={() => handleFilterChange('all')}
                                   >
                                     All Content
@@ -1052,23 +1271,76 @@ const ManageContentSite = () => {
                                       textAlign: 'left',
                                       cursor: 'pointer',
                                       fontSize: '14px',
-                                      color: contentFilter === 'published' ? '#059669' : '#374151',
+                                      color:
+                                        contentFilter === 'published'
+                                          ? '#059669'
+                                          : '#374151',
                                       display: 'flex',
                                       alignItems: 'center',
                                       gap: '8px'
                                     }}
-                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                                    onClick={() => handleFilterChange('published')}
+                                    onMouseEnter={(e) =>
+                                      (e.target.style.backgroundColor =
+                                        '#f9fafb')
+                                    }
+                                    onMouseLeave={(e) =>
+                                      (e.target.style.backgroundColor =
+                                        'transparent')
+                                    }
+                                    onClick={() =>
+                                      handleFilterChange('published')
+                                    }
                                   >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                                      <g clipPath="url(#clip0_3778_10072)">
-                                        <path d="M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M2.19141 12.916H10.0001" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M2.19141 7.08301H17.8087" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="currentColor" strokeWidth="1.5"/>
+                                    <svg
+                                      xmlns='http://www.w3.org/2000/svg'
+                                      width='16'
+                                      height='16'
+                                      viewBox='0 0 20 20'
+                                      fill='none'
+                                    >
+                                      <g clipPath='url(#clip0_3778_10072)'>
+                                        <path
+                                          d='M18.3332 10.0003C18.3332 5.39795 14.6022 1.66699 9.99984 1.66699C5.39746 1.66699 1.6665 5.39795 1.6665 10.0003C1.6665 14.6027 5.39746 18.3337 9.99984 18.3337'
+                                          stroke='currentColor'
+                                          strokeWidth='1.5'
+                                          strokeLinecap='round'
+                                          strokeLinejoin='round'
+                                        />
+                                        <path
+                                          d='M10.8335 1.70801C10.8335 1.70801 13.3335 5.00019 13.3335 10.0002'
+                                          stroke='currentColor'
+                                          strokeWidth='1.5'
+                                          strokeLinecap='round'
+                                          strokeLinejoin='round'
+                                        />
+                                        <path
+                                          d='M9.1665 18.2924C9.1665 18.2924 6.6665 15.0002 6.6665 10.0002C6.6665 5.00019 9.1665 1.70801 9.1665 1.70801'
+                                          stroke='currentColor'
+                                          strokeWidth='1.5'
+                                          strokeLinecap='round'
+                                          strokeLinejoin='round'
+                                        />
+                                        <path
+                                          d='M2.19141 12.916H10.0001'
+                                          stroke='currentColor'
+                                          strokeWidth='1.5'
+                                          strokeLinecap='round'
+                                          strokeLinejoin='round'
+                                        />
+                                        <path
+                                          d='M2.19141 7.08301H17.8087'
+                                          stroke='currentColor'
+                                          strokeWidth='1.5'
+                                          strokeLinecap='round'
+                                          strokeLinejoin='round'
+                                        />
+                                        <path
+                                          fillRule='evenodd'
+                                          clipRule='evenodd'
+                                          d='M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z'
+                                          stroke='currentColor'
+                                          strokeWidth='1.5'
+                                        />
                                       </g>
                                     </svg>
                                     Published
@@ -1083,19 +1355,52 @@ const ManageContentSite = () => {
                                       textAlign: 'left',
                                       cursor: 'pointer',
                                       fontSize: '14px',
-                                      color: contentFilter === 'unpublished' ? '#059669' : '#374151',
+                                      color:
+                                        contentFilter === 'unpublished'
+                                          ? '#059669'
+                                          : '#374151',
                                       display: 'flex',
                                       alignItems: 'center',
                                       gap: '8px'
                                     }}
-                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                                    onClick={() => handleFilterChange('unpublished')}
+                                    onMouseEnter={(e) =>
+                                      (e.target.style.backgroundColor =
+                                        '#f9fafb')
+                                    }
+                                    onMouseLeave={(e) =>
+                                      (e.target.style.backgroundColor =
+                                        'transparent')
+                                    }
+                                    onClick={() =>
+                                      handleFilterChange('unpublished')
+                                    }
                                   >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none">
-                                      <path d="M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                      <path d="M10 7.5V10.8333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                      <path d="M10 14.1753L10.0083 14.1661" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <svg
+                                      xmlns='http://www.w3.org/2000/svg'
+                                      width='16'
+                                      height='16'
+                                      viewBox='0 0 20 20'
+                                      fill='none'
+                                    >
+                                      <path
+                                        d='M16.1261 17.4997H3.87356C2.33553 17.4997 1.37308 15.8361 2.13974 14.5027L8.26603 3.84833C9.03504 2.51092 10.9646 2.51092 11.7336 3.84833L17.8599 14.5027C18.6266 15.8361 17.6641 17.4997 16.1261 17.4997Z'
+                                        stroke='currentColor'
+                                        strokeWidth='1.5'
+                                        strokeLinecap='round'
+                                      />
+                                      <path
+                                        d='M10 7.5V10.8333'
+                                        stroke='currentColor'
+                                        strokeWidth='1.5'
+                                        strokeLinecap='round'
+                                      />
+                                      <path
+                                        d='M10 14.1753L10.0083 14.1661'
+                                        stroke='currentColor'
+                                        strokeWidth='1.5'
+                                        strokeLinecap='round'
+                                        strokeLinejoin='round'
+                                      />
                                     </svg>
                                     Unpublished
                                   </button>
@@ -1106,29 +1411,38 @@ const ManageContentSite = () => {
                         </div>
                       </th>
                     ))}
-                    <th className="actions-column">ACTIONS</th>
+                    <th className='actions-column'>ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {(loading || archiveLoading) ? (
+                  {loading || archiveLoading ? (
                     <tr>
-                      <td colSpan="4" className="text-center py-4">
-                        <div className="d-flex justify-content-center align-items-center">
-                          <div className="spinner-border text-primary me-2" role="status">
-                            <span className="visually-hidden">Loading...</span>
+                      <td colSpan='4' className='text-center py-4'>
+                        <div className='d-flex justify-content-center align-items-center'>
+                          <div
+                            className='spinner-border text-primary me-2'
+                            role='status'
+                          >
+                            <span className='visually-hidden'>Loading...</span>
                           </div>
-                          {isArchiveMode ? 'Loading archived content...' : 'Loading content...'}
+                          {isArchiveMode
+                            ? 'Loading archived content...'
+                            : 'Loading content...'}
                         </div>
                       </td>
                     </tr>
                   ) : error ? (
                     <tr>
-                      <td colSpan="4" className="text-center py-4">
-                        <div className="alert alert-danger mb-0">
+                      <td colSpan='4' className='text-center py-4'>
+                        <div className='alert alert-danger mb-0'>
                           {error}
                           <button
-                            className="btn btn-link p-0 ms-2"
-                            onClick={isArchiveMode ? fetchArchivedContents : fetchContents}
+                            className='btn btn-link p-0 ms-2'
+                            onClick={
+                              isArchiveMode
+                                ? fetchArchivedContents
+                                : fetchContents
+                            }
                           >
                             Retry
                           </button>
@@ -1137,9 +1451,11 @@ const ManageContentSite = () => {
                     </tr>
                   ) : getFilteredContents().length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="text-center py-4">
-                        <div className=" mb-0" style={{ color: '#6c757d' }}>
-                          {isArchiveMode ? 'No archived content found.' : 'No content found.'}
+                      <td colSpan='4' className='text-center py-4'>
+                        <div className=' mb-0' style={{ color: '#6c757d' }}>
+                          {isArchiveMode
+                            ? 'No archived content found.'
+                            : 'No content found.'}
                         </div>
                       </td>
                     </tr>
@@ -1147,10 +1463,10 @@ const ManageContentSite = () => {
                     getFilteredContents().map((content, index) => {
                       return (
                         <tr key={content.timestamp || index}>
-                          <td className="checkbox-column">
+                          <td className='checkbox-column'>
                             <input
-                              type="checkbox"
-                              className="checkbox"
+                              type='checkbox'
+                              className='checkbox'
                               checked={selectedItems.includes(content.id)}
                               onChange={() => handleSelectionChange(content.id)}
                             />
@@ -1161,177 +1477,376 @@ const ManageContentSite = () => {
                               className={column.className || ''}
                               style={{ width: column.width }}
                             >
-                              {column.render(content[column.key] || content.title || 'Untitled Content', content)}
+                              {column.render(
+                                content[column.key] ||
+                                  content.title ||
+                                  'Untitled Content',
+                                content
+                              )}
                             </td>
                           ))}
-                        <td className="actions-column">
-                          <div className="action-buttons">
-                            <button
-                              className="action-btn view-btn"
-                              onClick={() => handleManageLeadershipContent(content)}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                              <path d="M2.5 10.834C5.5 4.16732 14.5 4.16732 17.5 10.834" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                              <path d="M10 14.166C8.61929 14.166 7.5 13.0467 7.5 11.666C7.5 10.2853 8.61929 9.16602 10 9.16602C11.3807 9.16602 12.5 10.2853 12.5 11.666C12.5 13.0467 11.3807 14.166 10 14.166Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                              Manage
-                            </button>
-                            <button
-                              className="action-btn edit-btn"
-                              onClick={() => handleEditContent(content)}
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M11.9691 4.71029L12.9668 3.71266C13.7478 2.93162 15.0141 2.93162 15.7952 3.71266L16.5023 4.41977C17.2833 5.20082 17.2833 6.46715 16.5023 7.2482L15.5047 8.24582M11.9691 4.71029L4.04176 12.6377C3.70968 12.9697 3.50506 13.4081 3.46373 13.8759L3.29016 15.8407C3.23539 16.4607 3.75427 16.9796 4.37428 16.9248L6.33907 16.7512C6.80688 16.7099 7.24522 16.5053 7.57729 16.1732L15.5047 8.24582M11.9691 4.71029L15.5047 8.24582" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                              </svg>
-                              Edit
-                            </button>
-                            <div className="dropdown-wrapper" style={{ position: 'relative' }}>
+                          <td className='actions-column'>
+                            <div className='action-buttons'>
                               <button
-                                className="action-btn more-actions-btn"
-                                onClick={() => setShowActionDropdown(showActionDropdown === content.id ? null : content.id)}
+                                className='action-btn view-btn'
+                                onClick={() =>
+                                  handleManageLeadershipContent(content)
+                                }
                               >
-                                <svg width="16" height="4" viewBox="0 0 16 4" fill="none">
-                                  <circle cx="2" cy="2" r="2" fill="currentColor" />
-                                  <circle cx="8" cy="2" r="2" fill="currentColor" />
-                                  <circle cx="14" cy="2" r="2" fill="currentColor" />
-                                </svg>
-                              </button>
-
-                              {showActionDropdown === content.id && (
-                                <div
-                                  style={{
-                                    position: 'absolute',
-                                    top: '100%',
-                                    right: 0,
-                                    background: 'white',
-                                    border: '1px solid #e5e7eb',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                                    zIndex: 9999,
-                                    minWidth: '200px',
-                                    marginTop: '4px'
-                                  }}
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'
                                 >
-                                  <button
-                                    style={{
-                                      width: '100%',
-                                      padding: '10px 16px',
-                                      border: 'none',
-                                      background: 'none',
-                                      textAlign: 'left',
-                                      cursor: 'pointer',
-                                      fontSize: '14px',
-                                      color: '#374151',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '8px',
-                                      color: 'black',
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                                    onClick={() => {
-                                      handleArchiveContent(content.id)
-                                      setShowActionDropdown(null)
-                                    }}
+                                  <path
+                                    d='M2.5 10.834C5.5 4.16732 14.5 4.16732 17.5 10.834'
+                                    stroke='black'
+                                    stroke-width='1.5'
+                                    stroke-linecap='round'
+                                    stroke-linejoin='round'
+                                  />
+                                  <path
+                                    d='M10 14.166C8.61929 14.166 7.5 13.0467 7.5 11.666C7.5 10.2853 8.61929 9.16602 10 9.16602C11.3807 9.16602 12.5 10.2853 12.5 11.666C12.5 13.0467 11.3807 14.166 10 14.166Z'
+                                    stroke='black'
+                                    stroke-width='1.5'
+                                    stroke-linecap='round'
+                                    stroke-linejoin='round'
+                                  />
+                                </svg>
+                                Manage
+                              </button>
+                              <button
+                                className='action-btn edit-btn'
+                                onClick={() => handleEditContent(content)}
+                              >
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  width='20'
+                                  height='20'
+                                  viewBox='0 0 20 20'
+                                  fill='none'
+                                >
+                                  <path
+                                    d='M11.9691 4.71029L12.9668 3.71266C13.7478 2.93162 15.0141 2.93162 15.7952 3.71266L16.5023 4.41977C17.2833 5.20082 17.2833 6.46715 16.5023 7.2482L15.5047 8.24582M11.9691 4.71029L4.04176 12.6377C3.70968 12.9697 3.50506 13.4081 3.46373 13.8759L3.29016 15.8407C3.23539 16.4607 3.75427 16.9796 4.37428 16.9248L6.33907 16.7512C6.80688 16.7099 7.24522 16.5053 7.57729 16.1732L15.5047 8.24582M11.9691 4.71029L15.5047 8.24582'
+                                    stroke='black'
+                                    stroke-width='1.5'
+                                    stroke-linecap='round'
+                                    stroke-linejoin='round'
+                                  />
+                                </svg>
+                                Edit
+                              </button>
+                              <div
+                                className='dropdown-wrapper'
+                                style={{ position: 'relative' }}
+                              >
+                                <button
+                                  className='action-btn more-actions-btn'
+                                  onClick={() =>
+                                    setShowActionDropdown(
+                                      showActionDropdown === content.id
+                                        ? null
+                                        : content.id
+                                    )
+                                  }
+                                >
+                                  <svg
+                                    width='16'
+                                    height='4'
+                                    viewBox='0 0 16 4'
+                                    fill='none'
                                   >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                      <path d="M15 5.00065H16.6667M18.3333 5.00065H16.6667M16.6667 5.00065V3.33398M16.6667 5.00065V6.66732" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                      <path d="M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                      <path d="M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    {isArchiveMode ? 'Unarchive Content' : 'Archive Content'}
-                                  </button>
+                                    <circle
+                                      cx='2'
+                                      cy='2'
+                                      r='2'
+                                      fill='currentColor'
+                                    />
+                                    <circle
+                                      cx='8'
+                                      cy='2'
+                                      r='2'
+                                      fill='currentColor'
+                                    />
+                                    <circle
+                                      cx='14'
+                                      cy='2'
+                                      r='2'
+                                      fill='currentColor'
+                                    />
+                                  </svg>
+                                </button>
 
-                                  <button
+                                {showActionDropdown === content.id && (
+                                  <div
                                     style={{
-                                      width: '100%',
-                                      padding: '10px 16px',
-                                      border: 'none',
-                                      background: 'none',
-                                      textAlign: 'left',
-                                      cursor: 'pointer',
-                                      fontSize: '14px',
-                                      color: "black",
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '8px'
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                                    onClick={() => {
-                                      handlePublishContent(content.id)
-                                      setShowActionDropdown(null)
+                                      position: 'absolute',
+                                      top: '100%',
+                                      right: 0,
+                                      background: 'white',
+                                      border: '1px solid #e5e7eb',
+                                      borderRadius: '8px',
+                                      boxShadow:
+                                        '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                      zIndex: 9999,
+                                      minWidth: '200px',
+                                      marginTop: '4px'
                                     }}
                                   >
-                                    {content.publishedStatus ? (
-                                      <>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                          <g clip-path="url(#clip0_4916_28085)">
-                                            <path d="M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                          </g>
-                                          <defs>
-                                            <clipPath id="clip0_4916_28085">
-                                              <rect width="20" height="20" fill="white"/>
-                                            </clipPath>
-                                          </defs>
-                                        </svg>
-                                        Deactivate Content
-                                      </>
-                                    ) : (
-                                      <>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                          <g clip-path="url(#clip0_4950_3009)">
-                                            <path d="M18.3332 9.99935C18.3332 5.39698 14.6022 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 14.6017 5.39746 18.3327 9.99984 18.3327" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M10.8335 1.70703C10.8335 1.70703 13.3335 4.99922 13.3335 9.99922" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M9.1665 18.2914C9.1665 18.2914 6.6665 14.9992 6.6665 9.99922C6.6665 4.99922 9.1665 1.70703 9.1665 1.70703" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M2.19141 12.916H10.0001" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M2.19141 7.08398H17.8087" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z" stroke="black" stroke-width="1.5"/>
-                                          </g>
-                                          <defs>
-                                            <clipPath id="clip0_4950_3009">
-                                              <rect width="20" height="20" fill="white"/>
-                                            </clipPath>
-                                          </defs>
-                                        </svg>
-                                        Reactivate Content
-                                      </>
+                                    <button
+                                      style={{
+                                        width: '100%',
+                                        padding: '10px 16px',
+                                        border: 'none',
+                                        background: 'none',
+                                        textAlign: 'left',
+                                        cursor: 'pointer',
+                                        fontSize: '14px',
+                                        color: '#374151',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        color: 'black'
+                                      }}
+                                      onMouseEnter={(e) =>
+                                        (e.target.style.backgroundColor =
+                                          '#f9fafb')
+                                      }
+                                      onMouseLeave={(e) =>
+                                        (e.target.style.backgroundColor =
+                                          'transparent')
+                                      }
+                                      onClick={() => {
+                                        handleArchiveContent(content.id)
+                                        setShowActionDropdown(null)
+                                      }}
+                                    >
+                                      <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        width='20'
+                                        height='20'
+                                        viewBox='0 0 20 20'
+                                        fill='none'
+                                      >
+                                        <path
+                                          d='M15 5.00065H16.6667M18.3333 5.00065H16.6667M16.6667 5.00065V3.33398M16.6667 5.00065V6.66732'
+                                          stroke='black'
+                                          stroke-width='1.5'
+                                          stroke-linecap='round'
+                                          stroke-linejoin='round'
+                                        />
+                                        <path
+                                          d='M17.7332 16.666H2.2665C1.93513 16.666 1.6665 16.3974 1.6665 16.066V9.16602H17.7332C18.0645 9.16602 18.3332 9.43464 18.3332 9.76602V16.066C18.3332 16.3974 18.0645 16.666 17.7332 16.666Z'
+                                          stroke='black'
+                                          stroke-width='1.5'
+                                          stroke-linecap='round'
+                                          stroke-linejoin='round'
+                                        />
+                                        <path
+                                          d='M1.6665 9.16732V3.93398C1.6665 3.60261 1.93513 3.33398 2.2665 3.33398H7.27788C7.42111 3.33398 7.55961 3.38522 7.66836 3.47843L10.248 5.68954C10.3567 5.78275 10.4952 5.83398 10.6385 5.83398H11.6665'
+                                          stroke='black'
+                                          stroke-width='1.5'
+                                          stroke-linecap='round'
+                                          stroke-linejoin='round'
+                                        />
+                                      </svg>
+                                      {isArchiveMode
+                                        ? 'Unarchive Content'
+                                        : 'Archive Content'}
+                                    </button>
+
+                                    {!isArchiveMode && (
+                                      <button
+                                        style={{
+                                          width: '100%',
+                                          padding: '10px 16px',
+                                          border: 'none',
+                                          background: 'none',
+                                          textAlign: 'left',
+                                          cursor: 'pointer',
+                                          fontSize: '14px',
+                                          color: 'black',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          gap: '8px'
+                                        }}
+                                        onMouseEnter={(e) =>
+                                          (e.target.style.backgroundColor =
+                                            '#f9fafb')
+                                        }
+                                        onMouseLeave={(e) =>
+                                          (e.target.style.backgroundColor =
+                                            'transparent')
+                                        }
+                                        onClick={() => {
+                                          handlePublishContent(content.id)
+                                          setShowActionDropdown(null)
+                                        }}
+                                      >
+                                        {content.publishedStatus ? (
+                                          <>
+                                            <svg
+                                              xmlns='http://www.w3.org/2000/svg'
+                                              width='20'
+                                              height='20'
+                                              viewBox='0 0 20 20'
+                                              fill='none'
+                                            >
+                                              <g clip-path='url(#clip0_4916_28085)'>
+                                                <path
+                                                  d='M15.951 4.16602C14.4386 2.62321 12.331 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 12.2706 2.5751 14.3296 4.04864 15.8327M15.951 4.16602C17.4246 5.66914 18.3332 7.72814 18.3332 9.99935C18.3332 14.6017 14.6022 18.3327 9.99984 18.3327C7.66868 18.3327 5.56108 17.3755 4.04864 15.8327M15.951 4.16602L4.04864 15.8327'
+                                                  stroke='black'
+                                                  stroke-width='1.5'
+                                                  stroke-linecap='round'
+                                                  stroke-linejoin='round'
+                                                />
+                                              </g>
+                                              <defs>
+                                                <clipPath id='clip0_4916_28085'>
+                                                  <rect
+                                                    width='20'
+                                                    height='20'
+                                                    fill='white'
+                                                  />
+                                                </clipPath>
+                                              </defs>
+                                            </svg>
+                                            Deactivate Content
+                                          </>
+                                        ) : (
+                                          <>
+                                            <svg
+                                              xmlns='http://www.w3.org/2000/svg'
+                                              width='20'
+                                              height='20'
+                                              viewBox='0 0 20 20'
+                                              fill='none'
+                                            >
+                                              <g clip-path='url(#clip0_4950_3009)'>
+                                                <path
+                                                  d='M18.3332 9.99935C18.3332 5.39698 14.6022 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 14.6017 5.39746 18.3327 9.99984 18.3327'
+                                                  stroke='black'
+                                                  stroke-width='1.5'
+                                                  stroke-linecap='round'
+                                                  stroke-linejoin='round'
+                                                />
+                                                <path
+                                                  d='M10.8335 1.70703C10.8335 1.70703 13.3335 4.99922 13.3335 9.99922'
+                                                  stroke='black'
+                                                  stroke-width='1.5'
+                                                  stroke-linecap='round'
+                                                  stroke-linejoin='round'
+                                                />
+                                                <path
+                                                  d='M9.1665 18.2914C9.1665 18.2914 6.6665 14.9992 6.6665 9.99922C6.6665 4.99922 9.1665 1.70703 9.1665 1.70703'
+                                                  stroke='black'
+                                                  stroke-width='1.5'
+                                                  stroke-linecap='round'
+                                                  stroke-linejoin='round'
+                                                />
+                                                <path
+                                                  d='M2.19141 12.916H10.0001'
+                                                  stroke='black'
+                                                  stroke-width='1.5'
+                                                  stroke-linecap='round'
+                                                  stroke-linejoin='round'
+                                                />
+                                                <path
+                                                  d='M2.19141 7.08398H17.8087'
+                                                  stroke='black'
+                                                  stroke-width='1.5'
+                                                  stroke-linecap='round'
+                                                  stroke-linejoin='round'
+                                                />
+                                                <path
+                                                  fill-rule='evenodd'
+                                                  clip-rule='evenodd'
+                                                  d='M18.2326 14.9312C18.6441 15.1843 18.6188 15.8004 18.195 15.8485L16.0561 16.0909L15.0968 18.0178C14.9067 18.3997 14.3191 18.2127 14.222 17.7395L13.1759 12.6428C13.0938 12.2428 13.4533 11.9911 13.8011 12.2051L18.2326 14.9312Z'
+                                                  stroke='black'
+                                                  stroke-width='1.5'
+                                                />
+                                              </g>
+                                              <defs>
+                                                <clipPath id='clip0_4950_3009'>
+                                                  <rect
+                                                    width='20'
+                                                    height='20'
+                                                    fill='white'
+                                                  />
+                                                </clipPath>
+                                              </defs>
+                                            </svg>
+                                            {content?.wasActivated
+                                              ? 'Reactivate Content'
+                                              : 'Activate Content'}
+                                          </>
+                                        )}
+                                      </button>
                                     )}
-                                  </button>
+                                    {console.log(
+                                      'content in action dropdown:',
+                                      content?.wasActivated
+                                    )}
 
-                                  <button
-                                    style={{
-                                      width: '100%',
-                                      padding: '10px 16px',
-                                      border: 'none',
-                                      background: 'none',
-                                      textAlign: 'left',
-                                      cursor: 'pointer',
-                                      fontSize: '14px',
-                                      color: 'black',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '8px'
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                                    onClick={() => {
-                                      handleShowDeleteModal(content.id)
-                                      setShowActionDropdown(null)
-                                    }}
-                                  >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                      <path d="M16.6668 7.5L15.0043 16.9552C14.8642 17.7522 14.172 18.3333 13.3629 18.3333H6.63745C5.82832 18.3333 5.13608 17.7522 4.99596 16.9552L3.3335 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                      <path d="M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    Delete Content
-                                  </button>
-                                </div>
-                              )}
+                                    <button
+                                      style={{
+                                        width: '100%',
+                                        padding: '10px 16px',
+                                        border: 'none',
+                                        background: 'none',
+                                        textAlign: 'left',
+                                        cursor: 'pointer',
+                                        fontSize: '14px',
+                                        color: 'black',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                      }}
+                                      onMouseEnter={(e) =>
+                                        (e.target.style.backgroundColor =
+                                          '#f9fafb')
+                                      }
+                                      onMouseLeave={(e) =>
+                                        (e.target.style.backgroundColor =
+                                          'transparent')
+                                      }
+                                      onClick={() => {
+                                        handleShowDeleteModal(content.id)
+                                        setShowActionDropdown(null)
+                                      }}
+                                    >
+                                      <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        width='20'
+                                        height='20'
+                                        viewBox='0 0 20 20'
+                                        fill='none'
+                                      >
+                                        <path
+                                          d='M16.6668 7.5L15.0043 16.9552C14.8642 17.7522 14.172 18.3333 13.3629 18.3333H6.63745C5.82832 18.3333 5.13608 17.7522 4.99596 16.9552L3.3335 7.5'
+                                          stroke='black'
+                                          stroke-width='1.5'
+                                          stroke-linecap='round'
+                                          stroke-linejoin='round'
+                                        />
+                                        <path
+                                          d='M17.5 4.99935H12.8125M2.5 4.99935H7.1875M7.1875 4.99935V3.33268C7.1875 2.41221 7.93369 1.66602 8.85417 1.66602H11.1458C12.0663 1.66602 12.8125 2.41221 12.8125 3.33268V4.99935M7.1875 4.99935H12.8125'
+                                          stroke='black'
+                                          stroke-width='1.5'
+                                          stroke-linecap='round'
+                                          stroke-linejoin='round'
+                                        />
+                                      </svg>
+                                      Delete Content
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
+                          </td>
+                        </tr>
                       )
                     })
                   )}

@@ -6302,6 +6302,15 @@ strong {
   border: 0 !important;
 }
 
+.course-logo-studio {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  background-color: #e2e6ec;
+  border-radius: 50%;
+  padding: 0.4rem;
+}
+
 /* .quill .ql-container.ql-snow {
   border: 0 !important;
 } */
