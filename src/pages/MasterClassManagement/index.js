@@ -40,8 +40,15 @@ const MasterClassManagement = () => {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedLevel, setSelectedLevel] = useState(null)
 
-  const [levelsData, setLevelsData] = useState([]) 
-  const [levels, setLevels] = useState([]) 
+  const [levelsData, setLevelsData] = useState([])
+  const [levels, setLevels] = useState([])
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [allTasksData, setAllTasksData] = useState([]) // Store all data for client-side pagination 
 
   useEffect(() => {
     fetchLevels()
@@ -49,9 +56,43 @@ const MasterClassManagement = () => {
 
   useEffect(() => {
     if (activeLevel && levelsData.length > 0) {
-      fetchContentByLevel()
+      fetchContentByLevel(1)
     }
-  }, [activeLevel]) 
+  }, [activeLevel])
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      applyPagination(allTasksData, page)
+    }
+  }
+
+  // Handle search and pagination
+  useEffect(() => {
+    if (allTasksData.length > 0) {
+      let filteredData = allTasksData
+
+      // Apply search filter if there's a search query
+      if (searchQuery.trim()) {
+        filteredData = allTasksData.filter(item =>
+          item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.status?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      }
+
+      // Update pagination info
+      const calculatedTotalPages = Math.ceil(filteredData.length / itemsPerPage)
+      setTotalPages(calculatedTotalPages || 1)
+      setTotalItems(filteredData.length)
+
+      // Reset to first page when searching
+      if (searchQuery.trim() && currentPage > calculatedTotalPages) {
+        setCurrentPage(1)
+        applyPagination(filteredData, 1)
+      } else {
+        applyPagination(filteredData, currentPage)
+      }
+    }
+  }, [searchQuery, allTasksData, currentPage, itemsPerPage]) 
 
   const fetchLevels = async () => {
     try {
@@ -92,8 +133,6 @@ const MasterClassManagement = () => {
 
   const handleViewContent = async (contentId, mode) => {
     try {
-      setLoading(true)
-
       const response = await axiosInstance.get(`/contents/${contentId}`)
       const content = response.data
 
@@ -115,18 +154,19 @@ const MasterClassManagement = () => {
     } catch (error) {
       console.error('Error fetching content:', error)
       toast.error('Failed to load content')
-    } finally {
-      setLoading(false)
     }
   }
 
-  const fetchContentByLevel = async () => {
+  const fetchContentByLevel = async (page = null) => {
     try {
       setLoading(true)
 
       const activeLevelObj = levelsData.find(l => l.title === activeLevel)
       if (!activeLevelObj) {
+        setAllTasksData([])
         setTasksData([])
+        setTotalPages(1)
+        setTotalItems(0)
         return
       }
 
@@ -141,21 +181,42 @@ const MasterClassManagement = () => {
         return {
           id: content.id,
           name: translateVideoTitle(content.title),
-          status: content.published ? 'published' : 'unpublished',
+          status: (content.published === true || content.publishedStatus === true) ? 'published' : 'unpublished',
           hasContent: hasVideoContent,
           order: content.order || 0,
           journalData: content
         }
       })
 
-      setTasksData(transformedContent)
+      // Store all data for client-side pagination
+      setAllTasksData(transformedContent)
+      setTotalItems(transformedContent.length)
+
+      // Calculate total pages
+      const calculatedTotalPages = Math.ceil(transformedContent.length / itemsPerPage)
+      setTotalPages(calculatedTotalPages || 1)
+
+      // Set current page data
+      const pageToUse = page !== null ? page : currentPage
+      applyPagination(transformedContent, pageToUse)
     } catch (error) {
       console.error('Error fetching content by level:', error)
       toast.error('Failed to fetch content')
+      setAllTasksData([])
       setTasksData([])
+      setTotalPages(1)
+      setTotalItems(0)
     } finally {
       setLoading(false)
     }
+  }
+
+  const applyPagination = (data, page) => {
+    const startIndex = (page - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const paginatedData = data.slice(startIndex, endIndex)
+    setTasksData(paginatedData)
+    setCurrentPage(page)
   }
 
 
@@ -190,9 +251,8 @@ const MasterClassManagement = () => {
         handleViewContent(item.id, 'edit')
         break
       case 'publish':
-        // setSelectedTask(item)
-        // setShowPublishPopup(true)
-        toast.success('Video already published!')
+        setSelectedTask(item)
+        setShowPublishPopup(true)
         break
       case 'unpublish':
         setSelectedTask(item)
@@ -262,7 +322,7 @@ const MasterClassManagement = () => {
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} master class videos published successfully!`)
+      toast.success(`${selectedTasks.length} video(s) published successfully!`)
 
       if (activeLevel) {
         await fetchContentByLevel()
@@ -273,8 +333,7 @@ const MasterClassManagement = () => {
       )
 
     } catch (error) {
-      console.error('Error bulk publishing master class videos:', error)
-      toast.error('Failed to publish master class videos')
+      toast.error('Failed to publish videos')
     } finally {
       setLoading(false)
       setShowBulkDropdown(false)
@@ -293,13 +352,13 @@ const MasterClassManagement = () => {
     try {
       const updatePromises = selectedTasks.map(async (task) => {
         return axiosInstance.put(`/contents/${task.id}`, {
-          journalLevel: null
+          published: false
         })
       })
 
       await Promise.all(updatePromises)
 
-      toast.success(`${selectedTasks.length} master class videos unpublished successfully!`)
+      toast.success(`${selectedTasks.length} video(s) unpublished successfully!`)
 
       if (activeLevel) {
         await fetchContentByLevel()
@@ -310,26 +369,32 @@ const MasterClassManagement = () => {
       )
 
     } catch (error) {
-      console.error('Error bulk unpublishing master class videos:', error)
-      toast.error('Failed to unpublish master class videos')
+      toast.error('Failed to unpublish videos')
     } finally {
       setLoading(false)
       setShowBulkDropdown(false)
     }
   }
 
-  const handleSaveTask = (taskData) => {
-    console.log('Master class data:', taskData)
-    
+  const handleSaveTask = async (taskData) => {
+
+    // Handle deletion
+    if (taskData.deleted) {
+      // Refetch data from API to ensure table is updated
+      if (activeLevel) {
+        await fetchContentByLevel()
+      }
+      return
+    }
+
     if (modalMode === 'edit') {
-      setTasksData(prevTasks => 
-        prevTasks.map(task => 
-          task.id === editingTask.id 
+      setTasksData(prevTasks =>
+        prevTasks.map(task =>
+          task.id === editingTask.id
             ? { ...task, name: taskData.title, ...taskData }
             : task
         )
       )
-      toast.success('Master class updated successfully!')
     } else {
       const newTask = {
         id: tasksData.length + 1,
@@ -350,8 +415,6 @@ const MasterClassManagement = () => {
     try {
       setLoading(true)
 
-      console.log('Master class assignments to process:', assignments)
-
       const validAssignments = assignments.filter(assignment => {
         if (!assignment.levelId || assignment.levelId === '') {
           console.warn(`Skipping assignment for content ${assignment.contentId} - invalid levelId:`, assignment.levelId)
@@ -369,19 +432,19 @@ const MasterClassManagement = () => {
 
       const updatePromises = validAssignments.map(async (assignment) => {
         try {
-          console.log(`Assigning master class content ${assignment.contentId} to level ${assignment.levelId}`)
+          console.log(`Assigning video content ${assignment.contentId} to level ${assignment.levelId}`)
           return await axiosInstance.put(`/contents/${assignment.contentId}`, {
             journalLevel: assignment.levelId
           })
         } catch (individualError) {
-          console.error(`Error assigning master class content ${assignment.contentId}:`, individualError)
+          console.error(`Error assigning video content ${assignment.contentId}:`, individualError)
           throw individualError 
         }
       })
 
       await Promise.all(updatePromises)
 
-      toast.success(`${validAssignments.length} master class content(s) assigned successfully!`)
+      toast.success(`${validAssignments.length} video(s) assigned successfully!`)
 
       await fetchLevels()
       if (activeLevel) {
@@ -391,8 +454,7 @@ const MasterClassManagement = () => {
       setShowAssignModal(false)
 
     } catch (error) {
-      console.error('Error assigning master class content:', error)
-      toast.error('Failed to assign master class content')
+      toast.error('Failed to assign video')
     } finally {
       setLoading(false)
     }
@@ -419,7 +481,6 @@ const MasterClassManagement = () => {
   }
 
   const handleConfirmPublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/contents/${selectedTask.id}`, {
         published: true
@@ -429,36 +490,29 @@ const MasterClassManagement = () => {
         await fetchContentByLevel()
       }
 
-      toast.success(`Master class "${selectedTask.name}" published successfully!`)
+      toast.success(`Video "${selectedTask.name}" published successfully!`)
       setShowPublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      console.error('Error publishing master class:', error)
-      toast.error('Failed to publish master class')
-    } finally {
-      setLoading(false)
+      toast.error('Failed to publish video')
     }
   }
 
   const handleConfirmUnpublish = async () => {
-    setLoading(true)
     try {
       await axiosInstance.put(`/contents/${selectedTask.id}`, {
-        journalLevel: null
+        published: false
       })
 
       if (activeLevel) {
         await fetchContentByLevel()
       }
 
-      toast.success(`Master class "${selectedTask.name}" unpublished successfully!`)
+      toast.success(`Video "${selectedTask.name}" unpublished successfully!`)
       setShowUnpublishPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      console.error('Error unpublishing master class:', error)
-      toast.error('Failed to unpublish master class')
-    } finally {
-      setLoading(false)
+      toast.error('Failed to unpublish video')
     }
   }
 
@@ -471,11 +525,11 @@ const MasterClassManagement = () => {
         prevTasks.filter(task => task.id !== selectedTask.id)
       )
       
-      toast.success(`Master class "${selectedTask.name}" deleted successfully!`)
+      toast.success(`Video "${selectedTask.name}" deleted successfully!`)
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
     } catch (error) {
-      toast.error('Failed to delete master class')
+      toast.error('Failed to delete video')
     } finally {
       setLoading(false)
     }
@@ -641,7 +695,7 @@ const MasterClassManagement = () => {
               <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={addDropdownRef}>
                 <div>
                   <AcademyBtn
-                    title="ADD NEW LEVEL"
+                    title="add new category"
                     icon={faPlus}
                     onClick={() => {
                       addNewLevel()
@@ -737,6 +791,8 @@ const MasterClassManagement = () => {
               onReorder={handleReorder}
               showCheckbox={true}
               activeTab="Content"
+              actionLabel="Video"
+              loading={loading}
               onSelectionChange={(selectedItems) => {
                 setTasksData(prevTasks =>
                   prevTasks.map(task => ({
@@ -749,10 +805,52 @@ const MasterClassManagement = () => {
             />
           </div>
 
+               {/* Pagination */}
+            <div className="pagination-container">
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(1)}
+                disabled={currentPage === 1}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                  <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <span className="pagination-info">{currentPage} / {totalPages}</span>
+              <button
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                  <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <button
+                className="pagination-btn"
+                onClick={() => handlePageChange(totalPages)}
+                disabled={currentPage === totalPages}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 6L11 12L5 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
         </div>
       </div>
 
-      <AddTaskModal 
+      <AddTaskModal
         show={showAddTaskModal}
         onHide={() => {
           setShowAddTaskModal(false)
@@ -764,6 +862,7 @@ const MasterClassManagement = () => {
         mode={modalMode}
         taskData={editingTask}
         source="masterclass"
+        initialLevel={activeLevel}
       />
 
       <AddLevelModal
@@ -786,8 +885,8 @@ const MasterClassManagement = () => {
         show={showPublishPopup}
         onHide={handlePublishCancel}
         onConfirm={handleConfirmPublish}
-        title="Publish Master Class?"
-        message="Are you sure you want to publish this master class video? Once it's published, it will be available to all learners with access to this content."
+        title="Publish Video?"
+        message="Are you sure you want to publish this video? Once it's published, it will be available to all learners with access to this content."
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, PUBLISH VIDEO"
         loading={loading}
@@ -797,8 +896,8 @@ const MasterClassManagement = () => {
         show={showUnpublishPopup}
         onHide={handleUnpublishCancel}
         onConfirm={handleConfirmUnpublish}
-        title="Unpublish Master Class?"
-        message="Are you sure you want to unpublish this master class video? Once it's unpublished, it will no longer be available to learners."
+        title="Unpublish Video?"
+        message="Are you sure you want to unpublish this video? Once it's unpublished, it will no longer be available to learners."
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, UNPUBLISH VIDEO"
         loading={loading}
@@ -808,8 +907,8 @@ const MasterClassManagement = () => {
         show={showDeleteTaskPopup}
         onHide={handleDeleteTaskCancel}
         onConfirm={handleConfirmDeleteTask}
-        title="Delete Master Class?"
-        message="Are you sure you want to delete this master class video?"
+        title="Delete Video?"
+        message="Are you sure you want to delete this video?"
         cancelText="NO, TAKE ME BACK"
         confirmText="YES, DELETE VIDEO"
         loading={loading}

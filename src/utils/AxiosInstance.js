@@ -11,23 +11,30 @@ const getSubdomain = () => {
   return subdomain
 }
 
-// Check if we're on a joinstartupstudio.com subdomain (master branch/production)
-// Must have a subdomain (e.g., fma.joinstartupstudio.com, not just joinstartupstudio.com)
-const isJoinstartupstudioDomain = () => {
+// Production hosts: each tenant subdomain calls https://api.joinstartupstudio.com/{path}
+// e.g. fma.joinstudioos.com → /fma; studio.joinstudioos.com → /academy; other subdomains → /{subdomain}
+const isProductionSubdomainHost = () => {
   const hostname = window.location.hostname
-  // Check if it's a joinstartupstudio.com domain with a subdomain
-  // Pattern: subdomain.joinstartupstudio.com (at least 3 parts when split by '.')
   const parts = hostname.split('.')
-  return hostname.includes('joinstartupstudio.com') && parts.length >= 3 && parts[0] !== 'api'
+  if (parts.length < 3 || parts[0] === 'api') return false
+  return (
+    hostname.includes('joinstartupstudio.com') ||
+    hostname.includes('joinstudioos.com')
+  )
 }
 
-// Construct baseURL: for master branch use api.joinstartupstudio.com/{subdomain}, otherwise use env variable
+const getApiPathSegment = (subdomain) => {
+  if (subdomain === 'studio') return 'academy'
+  return subdomain
+}
+
+// Construct baseURL: on production subdomain hosts use api.joinstartupstudio.com/{segment}; else env
 const getBaseURL = () => {
-  if (isJoinstartupstudioDomain()) {
+  if (isProductionSubdomainHost()) {
     const subdomain = getSubdomain()
-    // Only use the new pattern if we have a valid subdomain
     if (subdomain && subdomain !== 'www' && subdomain !== 'api') {
-      return `https://api.joinstartupstudio.com/${subdomain}`
+      const segment = getApiPathSegment(subdomain)
+      return `https://api.joinstartupstudio.com/${segment}`
     }
   }
   return process.env.REACT_APP_SERVER_BASE_URL

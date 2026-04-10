@@ -4,15 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
+import AlertPopup from '../../UserManagment/AlertPopup/index'
 import './index.css'
 
 const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = 'entrepreneurship', selectedCategory = 'Leadership Journal', manageContentId }) => {
   const [levels, setLevels] = useState([])
   const [hasNewLevel, setHasNewLevel] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  console.log('AddLevelModal props:', { selectedCategory, manageContentId, category, show })
-
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false)
+  const [levelToDelete, setLevelToDelete] = useState(null)
 
   const getApiEndpoint = (action, id = null) => {
     if (category === 'leadership') {
@@ -131,9 +131,15 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       return
     }
 
-    const levelToDelete = levels.find(level => level.id === id)
+    setLevelToDelete(id)
+    setShowDeleteAlert(true)
+  }
 
-    if (levelToDelete && !levelToDelete.isNew) {
+  const confirmDeleteLevel = () => {
+    const id = levelToDelete
+    const levelToDeleteObj = levels.find(level => level.id === id)
+
+    if (levelToDeleteObj && !levelToDeleteObj.isNew) {
       // If it's an existing level, mark it for deletion but don't remove from UI yet
       setLevels(prevLevels =>
         prevLevels.map(level =>
@@ -155,6 +161,14 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       const hasNewLevels = renumberedLevels.some(level => level.isNew)
       setHasNewLevel(hasNewLevels)
     }
+
+    setShowDeleteAlert(false)
+    setLevelToDelete(null)
+  }
+
+  const cancelDeleteLevel = () => {
+    setShowDeleteAlert(false)
+    setLevelToDelete(null)
   }
 
   const handleSave = async () => {
@@ -231,6 +245,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
       toast.success('Changes saved successfully!')
       if (onSave) {
         onSave()
+        handleClose()
       }
     } catch (error) {
       console.error('Error saving changes:', error)
@@ -260,7 +275,8 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   }
 
   return (
-    <Modal show={show} onHide={handleClose} centered size="lg" className="add-level-modal">
+    <>
+    <Modal show={show && !showDeleteAlert} onHide={handleClose} centered size="lg" className="add-level-modal">
       <Modal.Body className="add-level-modal-body">
         <div className="modal-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -270,7 +286,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           </svg>
         </div>
         
-        <h5 className="modal-title">Add New Level</h5>
+        <h5 className="modal-title">Add New {category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'}</h5>
 
         <div className="form-group">
           <label className="form-label">LEVEL TITLE:</label>
@@ -331,7 +347,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
                     }}
                     onClick={() => !loading && addNewLevelAfter(level.id)}
                   >
-                    Add New Level Here
+                    Add New {category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'} Here
                     <svg className="plus" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -353,6 +369,17 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         </div>
       </Modal.Body>
     </Modal>
+
+    <AlertPopup
+      show={showDeleteAlert}
+      onHide={cancelDeleteLevel}
+      onConfirm={confirmDeleteLevel}
+      title={`Delete ${category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'}?`}
+      message={`Are you sure you want to delete this ${category === 'leadership' ? 'section' : category === 'masterclass' ? 'category' : 'level'}? Deleting this level will NOT remove tasks assigned to it, but they will no longer be accessible to learners.`}
+      confirmText={`Yes, Delete ${category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'}`}
+      loading={loading}
+    />
+    </>
   )
 }
 

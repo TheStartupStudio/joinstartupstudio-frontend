@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
-import courseLogo from '../../assets/images/academy-icons/course-progress.png'
+import courseLogo from '../../assets/images/academy-icons/academy-logo.png'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import progressLogo from '../../assets/images/academy-icons/progress-details-logo.png'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
@@ -31,22 +31,24 @@ function CourseProgress() {
     try {
       setProgressLoading(true)
 
-      const response = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent')
+      const response = await axiosInstance.get(
+        '/ltsJournals/LtsCoursefinishedContent'
+      )
 
       if (response.data) {
         const finishedContentData = response.data.finishedContent || []
         const levelProgressData = response.data.levelProgress || {}
-
 
         setFinishedContent(finishedContentData)
         setLevelProgress(levelProgressData)
       } else {
         console.log('No data in response')
       }
-
     } catch (error) {
       console.error('Error fetching user progress:', error)
-      console.log('API call failed, this might be due to authentication or API issues')
+      console.log(
+        'API call failed, this might be due to authentication or API issues'
+      )
     } finally {
       setProgressLoading(false)
     }
@@ -55,10 +57,12 @@ function CourseProgress() {
   const fetchLessons = async () => {
     try {
       setLessonsLoading(true)
-      const response = await axiosInstance.get('/LtsJournals/entrepreneurship/lessons')
+      const response = await axiosInstance.get(
+        '/LtsJournals/entrepreneurship/lessons'
+      )
       if (response.data) {
         const transformedLessons = {}
-        Object.keys(response.data).forEach(key => {
+        Object.keys(response.data).forEach((key) => {
           const numericKey = parseInt(key)
           if (!isNaN(numericKey)) {
             if (numericKey === 2) {
@@ -66,7 +70,7 @@ function CourseProgress() {
               const nestedLessons = []
               let currentSection = null
 
-              level2Lessons.forEach(lesson => {
+              level2Lessons.forEach((lesson) => {
                 if (lesson.separate) {
                   if (currentSection) {
                     nestedLessons.push(currentSection)
@@ -102,12 +106,14 @@ function CourseProgress() {
 
               transformedLessons[numericKey] = nestedLessons
             } else {
-              transformedLessons[numericKey] = (response.data[key] || []).map(lesson => ({
-                id: lesson.id || lesson.redirectId || 0,
-                title: lesson.title || '',
-                status: lesson.status || 'notStarted',
-                redirectId: lesson.redirectId || parseInt(lesson.id) || 0
-              }))
+              transformedLessons[numericKey] = (response.data[key] || []).map(
+                (lesson) => ({
+                  id: lesson.id || lesson.redirectId || 0,
+                  title: lesson.title || '',
+                  status: lesson.status || 'notStarted',
+                  redirectId: lesson.redirectId || parseInt(lesson.id) || 0
+                })
+              )
             }
           }
         })
@@ -145,7 +151,6 @@ function CourseProgress() {
     }
   }
 
-
   const isLevelAccessible = (level) => {
     if (level === 0) return true
 
@@ -157,7 +162,9 @@ function CourseProgress() {
     })
 
     // Find the current level index
-    const currentLevelIndex = levelKeys.findIndex(key => parseInt(key.replace('level', '')) === level)
+    const currentLevelIndex = levelKeys.findIndex(
+      (key) => parseInt(key.replace('level', '')) === level
+    )
 
     if (currentLevelIndex === -1) return false
 
@@ -189,9 +196,7 @@ function CourseProgress() {
     }
 
     const nextAvailableId =
-      finishedContent.length > 0
-        ? Math.max(...finishedContent) + 1
-        : 51
+      finishedContent.length > 0 ? Math.max(...finishedContent) + 1 : 51
 
     if (lessonId === nextAvailableId) {
       return 'inProgress'
@@ -200,13 +205,12 @@ function CourseProgress() {
     return 'notStarted'
   }
 
-
   return (
     <>
       <div className='d-grid academy-dashboard-card grid-row-none-mob progress-dashboard-card '>
         <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 gap-2'>
           <div className='d-flex gap-3 align-items-center'>
-            <img src={courseLogo} alt='course' />
+            <img src={courseLogo} alt='course' className='course-logo-studio' />
             <h4 className='fs-9 my-details-header'>My Studio Progress</h4>
           </div>
           <div
@@ -218,26 +222,32 @@ function CourseProgress() {
           </div>
         </div>
         <div className='d-flex gap-4 justify-content-around flex-col-mob mt-2rem-mob flex-wrap'>
-          {Object.keys(levelProgress).sort((a, b) => {
-            const aNum = parseInt(a.replace('level', ''))
-            const bNum = parseInt(b.replace('level', ''))
-            return aNum - bNum
-          }).map((levelKey) => {
-            const levelData = levelProgress[levelKey]
-            const levelNumber = parseInt(levelKey.replace('level', ''))
+          {Object.keys(levelProgress)
+            .sort((a, b) => {
+              const aNum = parseInt(a.replace('level', ''))
+              const bNum = parseInt(b.replace('level', ''))
+              return aNum - bNum
+            })
+            .map((levelKey) => {
+              const levelData = levelProgress[levelKey]
+              const levelNumber = parseInt(levelKey.replace('level', ''))
 
-            return (
-              <div
-                key={levelKey}
-                className='d-flex flex-column gap-4 progress-circular-container'
-                style={!isLevelAccessible(levelNumber) ? { opacity: 0.6, pointerEvents: 'none' } : {}}
-              >
-                <div style={{ position: 'relative' }}>
-                  <CircularProgress
-                    percentage={levelData?.percentage || 0}
-                    level={levelNumber}
-                  />
-                  {/* {!isLevelAccessible(levelNumber) && (
+              return (
+                <div
+                  key={levelKey}
+                  className='d-flex flex-column gap-4 progress-circular-container'
+                  style={
+                    !isLevelAccessible(levelNumber)
+                      ? { opacity: 0.6, pointerEvents: 'none' }
+                      : {}
+                  }
+                >
+                  <div style={{ position: 'relative' }}>
+                    <CircularProgress
+                      percentage={levelData?.percentage || 0}
+                      level={levelNumber}
+                    />
+                    {/* {!isLevelAccessible(levelNumber) && (
                     <div style={{
                       position: 'absolute',
                       top: '50%',
@@ -257,13 +267,13 @@ function CourseProgress() {
                       />
                     </div>
                   )} */}
+                  </div>
+                  <p className='text-center'>
+                    {levelData?.levelTitle || `Level ${levelNumber}`}
+                  </p>
                 </div>
-                <p className='text-center'>
-                  {levelData?.levelTitle || `Level ${levelNumber}`}
-                </p>
-              </div>
-            )
-          })}
+              )
+            })}
         </div>
       </div>
 
@@ -284,86 +294,129 @@ function CourseProgress() {
           </div>
 
           <div className='accordion mt-5' id='progressAccordion'>
-            {Object.keys(levelProgress).sort((a, b) => {
-              const aNum = parseInt(a.replace('level', ''))
-              const bNum = parseInt(b.replace('level', ''))
-              return aNum - bNum
-            }).map((levelKey, index) => {
-              const levelData = levelProgress[levelKey]
-              const levelNumber = parseInt(levelKey.replace('level', ''))
-              const levelLessons = lessonsByLevel[levelNumber - 1] || []
+            {Object.keys(levelProgress)
+              .sort((a, b) => {
+                const aNum = parseInt(a.replace('level', ''))
+                const bNum = parseInt(b.replace('level', ''))
+                return aNum - bNum
+              })
+              .map((levelKey, index) => {
+                const levelData = levelProgress[levelKey]
+                const levelNumber = parseInt(levelKey.replace('level', ''))
+                const levelLessons = lessonsByLevel[levelNumber - 1] || []
 
-              return (
-                <div key={levelKey} className='accordion-item progress-details-accordion'>
-                  <h2 className='accordion-header' id={`heading${levelNumber}`}>
-                    <button
-                      className='accordion-button collapsed text-secondary fw-medium'
-                      type='button'
-                      onClick={(e) => handleAccordionClick(index, e)}
-                      aria-expanded='false'
-                      aria-controls={`collapse${levelNumber}`}
-                    >
-                      LEVEL {levelNumber} | {levelData?.levelTitle || `Level ${levelNumber}`}
-                    </button>
-                  </h2>
+                return (
                   <div
-                    id={`collapse${levelNumber}`}
-                    ref={(el) => (accordionRefs.current[index] = el)}
-                    className='accordion-collapse collapse'
-                    aria-labelledby={`heading${levelNumber}`}
-                    data-bs-parent='#progressAccordion'
+                    key={levelKey}
+                    className='accordion-item progress-details-accordion'
                   >
-                    <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
-                      <div className='d-flex flex-column gap-4'>
-                        <CircularProgress
-                          percentage={levelData?.percentage || 0}
-                          level={levelNumber}
-                        />
-                      </div>
-                      <div className='d-flex flex-column gap-3 text-black'>
-                        {lessonsLoading ? (
-                          <div className='text-center text-secondary'>Loading lessons...</div>
-                        ) : levelLessons.length > 0 ? (
-                          levelLessons.map((lesson, lessonIndex) => {
-                            // Handle different lesson structures
-                            if (lesson.children && Array.isArray(lesson.children)) {
-                              // Level 3 style with sections
-                              return (
-                                <React.Fragment key={`section-${lesson.id}-${lessonIndex}`}>
-                                  <p className='mb-0'>{lesson.title}</p>
-                                  {lesson.children.map((childLesson, childIndex) => {
-                                    const status = getCourseStatus(childLesson.id)
-                                    return status === 'done' ? (
-                                      <ProgressDone key={`lesson-${levelNumber}-${childLesson.id}-${childIndex}`} title={childLesson.title} />
-                                    ) : status === 'inProgress' ? (
-                                      <InProggresCourse key={`lesson-${levelNumber}-${childLesson.id}-${childIndex}`} title={childLesson.title} />
-                                    ) : (
-                                      <CourseNotStarted key={`lesson-${levelNumber}-${childLesson.id}-${childIndex}`} title={childLesson.title} />
-                                    )
-                                  })}
-                                </React.Fragment>
-                              )
-                            } else {
-                              // Regular lesson style
-                              const status = getCourseStatus(lesson.id, levelNumber === 1 ? levelLessons : null)
-                              return status === 'done' ? (
-                                <ProgressDone key={`lesson-${levelNumber}-${lesson.id}-${lessonIndex}`} title={lesson.title} />
-                              ) : status === 'inProgress' ? (
-                                <InProggresCourse key={`lesson-${levelNumber}-${lesson.id}-${lessonIndex}`} title={lesson.title} />
-                              ) : (
-                                <CourseNotStarted key={`lesson-${levelNumber}-${lesson.id}-${lessonIndex}`} title={lesson.title} />
-                              )
-                            }
-                          })
-                        ) : (
-                          <div className='text-center text-secondary'>No lessons available</div>
-                        )}
+                    <h2
+                      className='accordion-header'
+                      id={`heading${levelNumber}`}
+                    >
+                      <button
+                        className='accordion-button collapsed text-secondary fw-medium'
+                        type='button'
+                        onClick={(e) => handleAccordionClick(index, e)}
+                        aria-expanded='false'
+                        aria-controls={`collapse${levelNumber}`}
+                      >
+                        LEVEL {levelNumber} |{' '}
+                        {levelData?.levelTitle || `Level ${levelNumber}`}
+                      </button>
+                    </h2>
+                    <div
+                      id={`collapse${levelNumber}`}
+                      ref={(el) => (accordionRefs.current[index] = el)}
+                      className='accordion-collapse collapse'
+                      aria-labelledby={`heading${levelNumber}`}
+                      data-bs-parent='#progressAccordion'
+                    >
+                      <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
+                        <div className='d-flex flex-column gap-4'>
+                          <CircularProgress
+                            percentage={levelData?.percentage || 0}
+                            level={levelNumber}
+                          />
+                        </div>
+                        <div className='d-flex flex-column gap-3 text-black'>
+                          {lessonsLoading ? (
+                            <div className='text-center text-secondary'>
+                              Loading lessons...
+                            </div>
+                          ) : levelLessons.length > 0 ? (
+                            levelLessons.map((lesson, lessonIndex) => {
+                              // Handle different lesson structures
+                              if (
+                                lesson.children &&
+                                Array.isArray(lesson.children)
+                              ) {
+                                // Level 3 style with sections
+                                return (
+                                  <React.Fragment
+                                    key={`section-${lesson.id}-${lessonIndex}`}
+                                  >
+                                    <p className='mb-0'>{lesson.title}</p>
+                                    {lesson.children.map(
+                                      (childLesson, childIndex) => {
+                                        const status = getCourseStatus(
+                                          childLesson.id
+                                        )
+                                        return status === 'done' ? (
+                                          <ProgressDone
+                                            key={`lesson-${levelNumber}-${childLesson.id}-${childIndex}`}
+                                            title={childLesson.title}
+                                          />
+                                        ) : status === 'inProgress' ? (
+                                          <InProggresCourse
+                                            key={`lesson-${levelNumber}-${childLesson.id}-${childIndex}`}
+                                            title={childLesson.title}
+                                          />
+                                        ) : (
+                                          <CourseNotStarted
+                                            key={`lesson-${levelNumber}-${childLesson.id}-${childIndex}`}
+                                            title={childLesson.title}
+                                          />
+                                        )
+                                      }
+                                    )}
+                                  </React.Fragment>
+                                )
+                              } else {
+                                // Regular lesson style
+                                const status = getCourseStatus(
+                                  lesson.id,
+                                  levelNumber === 1 ? levelLessons : null
+                                )
+                                return status === 'done' ? (
+                                  <ProgressDone
+                                    key={`lesson-${levelNumber}-${lesson.id}-${lessonIndex}`}
+                                    title={lesson.title}
+                                  />
+                                ) : status === 'inProgress' ? (
+                                  <InProggresCourse
+                                    key={`lesson-${levelNumber}-${lesson.id}-${lessonIndex}`}
+                                    title={lesson.title}
+                                  />
+                                ) : (
+                                  <CourseNotStarted
+                                    key={`lesson-${levelNumber}-${lesson.id}-${lessonIndex}`}
+                                    title={lesson.title}
+                                  />
+                                )
+                              }
+                            })
+                          ) : (
+                            <div className='text-center text-secondary'>
+                              No lessons available
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
           </div>
         </ModalBody>
       </Modal>

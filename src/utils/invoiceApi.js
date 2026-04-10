@@ -108,7 +108,7 @@ export const invoiceApi = {
    * Unarchive invoice - removes from archive
    */
   unarchiveInvoice: async (invoiceId) => {
-    const response = await axiosInstance.delete(`/invoices/${invoiceId}/unarchive`)
+    const response = await axiosInstance.delete(`/client/invoices/${invoiceId}/unarchive`)
     return response.data
   },
 
@@ -135,9 +135,9 @@ export const invoiceApi = {
    * Get all invoices for the logged-in client's organization
    */
   getClientInvoices: async (params = {}) => {
-    const { page = 1, limit = 10, search = '', organizationName, dateFrom, dateTo } = params
+    const { page = 1, limit = 10, search = '', organizationName, dateFrom, dateTo, status } = params
     const response = await axiosInstance.get('/client/invoices', {
-      params: { page, limit, search, organizationName, dateFrom, dateTo }
+      params: { page, limit, search, organizationName, dateFrom, dateTo, status }
     })
     return response.data
   },

@@ -158,12 +158,21 @@ export const saveFinishedCourses = (data) => async (dispatch) => {
   })
 }
 
+// Track ongoing requests to prevent duplicates
+const ongoingRequests = new Set()
+
 export const getJournalData = (id) => async (dispatch) => {
+  // Prevent duplicate requests for the same id
+  if (ongoingRequests.has(id)) {
+    return
+  }
+
   try {
+    ongoingRequests.add(id)
     dispatch({ type: GET_JOURNAL_DATA_REQUEST })
-    
+
     const { data } = await axiosInstance.get(`/ltsJournals/${id}/`)
-    
+
     dispatch({
       type: GET_JOURNAL_DATA_SUCCESS,
       payload: data
@@ -173,6 +182,9 @@ export const getJournalData = (id) => async (dispatch) => {
       type: GET_JOURNAL_DATA_ERROR,
       payload: error?.response?.data?.message || 'Failed to fetch journal data'
     })
+  } finally {
+    // Always remove from ongoing requests, even on error
+    ongoingRequests.delete(id)
   }
 }
 

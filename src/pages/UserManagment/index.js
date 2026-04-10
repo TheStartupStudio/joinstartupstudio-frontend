@@ -78,6 +78,7 @@ const UserManagement = () => {
   const [showResetPasswordPopup, setShowResetPasswordPopup] = useState(false)
   const [showDeactivatePopup, setShowDeactivatePopup] = useState(false)
   const [showActivatePopup, setShowActivatePopup] = useState(false)
+  const [showToggleOrganizationStatusPopup, setShowToggleOrganizationStatusPopup] = useState(false)
   const [selectedItems, setSelectedItems] = useState([])
   const [actionContext, setActionContext] = useState('') 
   const [isSingleAction, setIsSingleAction] = useState(false) 
@@ -112,11 +113,15 @@ const UserManagement = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
-      setCurrentPage(1) 
     }, 500)
 
     return () => clearTimeout(timer)
   }, [searchQuery])
+
+  // Reset to page 1 when search or filter changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [debouncedSearchQuery, searchFilter])
 
   const fetchOrganizations = async (page = 1, search = '') => {
     setOrganizationsLoading(true)
@@ -152,7 +157,13 @@ const UserManagement = () => {
         }))
 
         setOrganizationsData(mappedData)
-        setOrganizationsPagination(response.data.pagination)
+        const paginationData = response.data.pagination || {}
+        setOrganizationsPagination({
+          total: paginationData.total || 0,
+          page: paginationData.page || 1,
+          limit: paginationData.limit || 10,
+          totalPages: Math.max(paginationData.totalPages || 1, 1)
+        })
       }
     } catch (error) {
       console.error('Error fetching organizations:', error)
@@ -190,7 +201,13 @@ const UserManagement = () => {
         }))
 
         setUsersData(mappedData)
-        setUsersPagination(response.data.pagination)
+        const paginationData = response.data.pagination || {}
+        setUsersPagination({
+          total: paginationData.total || 0,
+          page: paginationData.page || 1,
+          limit: paginationData.limit || 10,
+          totalPages: Math.max(paginationData.totalPages || 1, 1)
+        })
       }
     } catch (error) {
       console.error('Error fetching users:', error)
@@ -207,6 +224,7 @@ const UserManagement = () => {
       fetchOrganizations(currentPage, debouncedSearchQuery)
     }
   }, [activeTab, currentPage, debouncedSearchQuery, searchFilter])
+
 
   const organizationsColumns = useMemo(() => [
     {
@@ -342,11 +360,11 @@ const UserManagement = () => {
       case 'edit-organization':
         handleEditOrganization(item)
         break
-      case 'deactivate-organization':
+      case 'toggle-organization-status':
         setActionContext('organizations')
         setSelectedItems([item])
         setIsSingleAction(true)
-        setShowDeactivatePopup(true)
+        setShowToggleOrganizationStatusPopup(true)
         break
       case 'delete-organization':
         setActionContext('organizations')
@@ -362,6 +380,12 @@ const UserManagement = () => {
         setSelectedItems([item])
         setIsSingleAction(true)
         setShowDeactivatePopup(true)
+        break
+      case 'activate-learner':
+        setActionContext('users')
+        setSelectedItems([item])
+        setIsSingleAction(true)
+        setShowActivatePopup(true)
         break
       case 'delete-learner':
         setActionContext('users')
@@ -660,17 +684,6 @@ const UserManagement = () => {
     setShowBulkDropdown(false)
   }
 
-  const deactivateOrganizations = () => {
-    if (selectedOrganizations.length === 0) {
-      toast.warning('Please select at least one organization')
-      return
-    }
-    setActionContext('organizations')
-    setSelectedItems(selectedOrganizations)
-    setIsSingleAction(false)
-    setShowDeactivatePopup(true)
-    setShowBulkDropdown(false)
-  }
 
   const deleteOrganizations = () => {
     if (selectedOrganizations.length === 0) {
@@ -711,16 +724,6 @@ const UserManagement = () => {
   ]
 
   const bulkOptionsOrganizations = [
-    {
-      name: 'Activate Organizations',
-      action: () => activateOrganizations(),
-      icons: <img src={userPlus} alt="activate" className="admin-icons-dropdown" />
-    },
-    {
-      name: 'Deactivate Organizations',
-      action: () => deactivateOrganizations(),
-      icons: <img src={userDeactivate} alt="deactivate" className="admin-icons-dropdown" />
-    },
     {
       name: 'Delete Organizations',
       action: () => deleteOrganizations(),
@@ -781,6 +784,12 @@ const UserManagement = () => {
 
   const handleActivateCancel = () => {
     setShowActivatePopup(false)
+    setSelectedItems([])
+    setIsSingleAction(false)
+  }
+
+  const handleToggleOrganizationStatusCancel = () => {
+    setShowToggleOrganizationStatusPopup(false)
     setSelectedItems([])
     setIsSingleAction(false)
   }
@@ -876,6 +885,32 @@ const UserManagement = () => {
     }
   }
 
+  const handleConfirmToggleOrganizationStatus = async () => {
+    setLoading(true)
+    try {
+      if (isSingleAction) {
+        const organizationId = selectedItems[0].id
+        const response = await axiosInstance.post(`/super-admin/organizations/${organizationId}/deactivate`)
+
+        if (response.data.success) {
+          toast.success(response.data.message || 'Organization status updated successfully!')
+        }
+
+        setSelectedOrganizations([])
+        fetchOrganizations(currentPage, debouncedSearchQuery)
+      }
+
+      setShowToggleOrganizationStatusPopup(false)
+      setSelectedItems([])
+      setIsSingleAction(false)
+    } catch (error) {
+      console.error('Toggle organization status error:', error)
+      toast.error(error.response?.data?.message || 'Failed to update organization status')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleConfirmDeactivate = async () => {
     setLoading(true)
     try {
@@ -947,8 +982,8 @@ const UserManagement = () => {
   }, [])
 
   const handlePageChange = (newPage) => {
-    const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
-    if (newPage >= 1 && newPage <= pagination.totalPages) {
+    const maxPages = totalPages
+    if (newPage >= 1 && newPage <= maxPages && !isLoading && newPage !== currentPage) {
       setCurrentPage(newPage)
     }
   }
@@ -959,6 +994,16 @@ const UserManagement = () => {
   const currentBulkOptions = activeTab === 'Organizations' ? bulkOptionsOrganizations : bulkOptionsUsers
   const isLoading = activeTab === 'Users' ? usersLoading : organizationsLoading
   const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+  const totalPages = Math.max(currentPagination?.totalPages || 1, 1)
+
+  // Reset current page if it exceeds total pages after search/filter changes
+  useEffect(() => {
+    const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
+    const maxPages = pagination?.totalPages || 1
+    if (currentPage > maxPages && maxPages >= 1 && !isLoading) {
+      setCurrentPage(Math.max(1, maxPages))
+    }
+  }, [usersPagination?.totalPages, organizationsPagination?.totalPages, activeTab, isLoading])
 
   const handleSelectionChange = (selectedItems) => {
     if (activeTab === 'Users') {
@@ -969,33 +1014,6 @@ const UserManagement = () => {
   }
 
 
-  const activateOrganizations = async () => {
-    if (selectedOrganizations.length === 0) {
-      toast.warning('Please select at least one organization')
-      return
-    }
-
-    try {
-      setLoading(true)
-      const organizationIds = selectedOrganizations.map(org => org.id)
-      
-      const response = await axiosInstance.post('/super-admin/organizations/bulk-activate', {
-        organizationIds
-      })
-
-      if (response.data.success) {
-        toast.success(`${response.data.affectedOrganizations} organization(s) and their users activated successfully!`)
-        setSelectedOrganizations([])
-        fetchOrganizations(currentPage, debouncedSearchQuery)
-      }
-    } catch (error) {
-      console.error('Error activating organizations:', error)
-      toast.error(error.response?.data?.error || 'Failed to activate organizations')
-    } finally {
-      setLoading(false)
-      setShowBulkDropdown(false)
-    }
-  }
 
   return (
     <div>
@@ -1238,10 +1256,9 @@ const UserManagement = () => {
         </div>
 
         <div className="table-container">
-          <DataTable 
+          <DataTable
             columns={currentColumns}
             data={currentData}
-            searchQuery={searchQuery}
             onRowAction={handleRowAction}
             showCheckbox={true}
             activeTab={activeTab}
@@ -1252,39 +1269,39 @@ const UserManagement = () => {
         </div>
 
         <div className="pagination-container">
-          <button 
+          <button
             className="pagination-btn"
             onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1}
+            disabled={currentPage <= 1 || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M11 6L5 12L11 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M19 6L13 12L19 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <button 
+          <button
             className="pagination-btn"
             onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            disabled={currentPage <= 1 || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
               <path d="M15.75 6L9.75 12L15.75 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <span className="pagination-info">{currentPage} / {currentPagination.totalPages}</span>
-          <button 
+          <span className="pagination-info">{currentPage} / {totalPages}</span>
+          <button
             className="pagination-btn"
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === currentPagination.totalPages}
+            disabled={currentPage >= totalPages || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
               <path d="M9.25 6L15.25 12L9.25 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <button 
+          <button
             className="pagination-btn"
-            onClick={() => handlePageChange(currentPagination.totalPages)}
-            disabled={currentPage === currentPagination.totalPages}
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage >= totalPages || isLoading}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M13 6L19 12L13 18" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1414,6 +1431,29 @@ const UserManagement = () => {
           isSingleAction
             ? "YES, ACTIVATE USER"
             : "YES, ACTIVATE USER(S)"
+        }
+        loading={loading}
+      />
+
+      <UserManagementPopup
+        show={showToggleOrganizationStatusPopup}
+        onHide={handleToggleOrganizationStatusCancel}
+        onConfirm={handleConfirmToggleOrganizationStatus}
+        title={
+          isSingleAction
+            ? `${selectedItems[0]?.isActive ? 'Deactivate' : 'Activate'} Organization?`
+            : `${selectedItems[0]?.isActive ? 'Deactivate' : 'Activate'} Organization(s)?`
+        }
+        message={
+          isSingleAction
+            ? `Are you sure you want to ${selectedItems[0]?.isActive ? 'deactivate' : 'activate'} this organization? ${selectedItems[0]?.isActive ? 'Work and settings will be preserved, but they will no longer have access to the platform.' : 'The organization and its users will regain access to the platform.'}`
+            : `Are you sure you want to ${selectedItems[0]?.isActive ? 'deactivate' : 'activate'} the selected organization(s)? ${selectedItems[0]?.isActive ? 'Work and settings will be preserved, but they will no longer have access to the platform.' : 'The organizations and their users will regain access to the platform.'}`
+        }
+        cancelText="NO, TAKE ME BACK"
+        confirmText={
+          isSingleAction
+            ? `YES, ${selectedItems[0]?.isActive ? 'DEACTIVATE' : 'ACTIVATE'} ORGANIZATION`
+            : `YES, ${selectedItems[0]?.isActive ? 'DEACTIVATE' : 'ACTIVATE'} ORGANIZATION(S)`
         }
         loading={loading}
       />

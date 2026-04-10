@@ -386,6 +386,52 @@ backdrop-filter: blur(60.064998626708984px);
   align-items: center;
 }
 
+.course-access-toggles-type {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* flex-direction: column; */
+
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .course-access-toggles-type{
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+.course-access-toggles-type span{
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.organization-type-option {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.organization-type-option.selected {
+  border-color: #51c7df;
+  background: rgba(81, 199, 223, 0.08);
+}
+
+.organization-type-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.organization-type-option p {
+  margin: 5px 0;
+  /* color: #6b7280; */
+  font-size: 13px;
+}
+
 .toggle-label {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;

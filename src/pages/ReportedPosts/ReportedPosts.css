@@ -33,44 +33,66 @@
 }
 
 .reported-posts-page .search-container {
+  position: relative !important;
   flex: 1;
-  min-width: 300px;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  max-width: 640px;
 }
 
 .reported-posts-page .search-input-wrapper {
   position: relative;
   width: 100%;
+  margin-bottom: 0;
 }
 
 .reported-posts-page .search-input {
   width: 100%;
-  padding: 12px 16px 12px 44px;
-  border: 1px solid #e5e7eb;
+  padding: 12px 50px 12px 16px;
+  border: none;
   border-radius: 8px;
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s ease;
-  background-color: white;
+  background: white;
 }
 
 .reported-posts-page .search-input:focus {
-  border-color: #52C7DE;
+  border-color: #51C7DF;
 }
 
-.reported-posts-page .search-icon {
+.reported-posts-page .search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.reported-posts-page .filter-toggle-btn.search-icon {
   position: absolute;
-  left: 16px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  z-index: 100;
+}
+
+.reported-posts-page .filter-toggle-btn.search-icon:hover {
+  background: rgba(81, 199, 223, 0.1);
 }
 
 .reported-posts-page .actions-container {
   display: flex;
   gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 
 .reported-posts-page .bulk-actions {
@@ -88,6 +110,9 @@
   color: #231F20;
   transition: all 0.2s ease;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  height: -webkit-fill-available;
+  width: 100%;
+  max-width: 192px;
 }
 
 .reported-posts-page .bulk-actions:hover {
@@ -98,7 +123,7 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  /* overflow: hidden; */
   /* margin-bottom: 24px; */
 }
 
@@ -123,11 +148,6 @@
   transition: all 0.2s ease;
   outline: none;
   border: none;
-}
-
-.reported-posts-page .pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .reported-posts-page .pagination-info {

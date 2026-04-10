@@ -21,7 +21,7 @@ import backButtonReducer from './backButtonReducer'
 import sidebarReducer from './sidebar/Reducer'
 import trialTimerReducer from './trialTimer/reducer'
 import adminDashboardReducer from './adminDashboard/reducer'
-
+import organizationBrandingReducer from './organizationBranding/Reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -44,7 +44,8 @@ const rootReducer = combineReducers({
   backButton: backButtonReducer,
   sidebar: sidebarReducer,
   trialTimer: trialTimerReducer,
-  adminDashboard: adminDashboardReducer
+  adminDashboard: adminDashboardReducer,
+  organizationBranding: organizationBrandingReducer
 
 })
 export default rootReducer

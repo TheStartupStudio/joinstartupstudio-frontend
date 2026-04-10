@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -11,6 +11,7 @@ import ViewReportedContentModal from '../../components/Modals/ViewReportedConten
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import axiosInstance from '../../utils/AxiosInstance'
+import ReportFilters from '../../components/ReportFilters'
 
 import './ReportedPosts.css'
 
@@ -24,26 +25,61 @@ const ReportedPosts = () => {
   const [selectedReports, setSelectedReports] = useState([])
   const [showViewModal, setShowViewModal] = useState(false)
   const [selectedReportId, setSelectedReportId] = useState(null)
+  const [modalMode, setModalMode] = useState('view') // 'view' or 'edit'
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [limit] = useState(10)
   const [isArchiveView, setIsArchiveView] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [tableFilters, setTableFilters] = useState({})
+  const [showFilters, setShowFilters] = useState(false)
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const bulkDropdownRef = useRef(null)
+  const searchContainerRef = useRef(null)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+      setCurrentPage(1)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   useEffect(() => {
     fetchReports()
-  }, [currentPage, isArchiveView])
+  }, [currentPage, isArchiveView, tableFilters, debouncedSearchQuery])
 
   const fetchReports = async () => {
     try {
       setLoading(true)
-      const endpoint = isArchiveView 
-        ? `/forum/reports/archived?page=${currentPage}&limit=${limit}`
-        : `/forum/reports?page=${currentPage}&limit=${limit}`
-      
-      const response = await axiosInstance.get(endpoint)
+      const params = new URLSearchParams()
+      params.set('page', currentPage)
+      params.set('limit', limit)
+      if (debouncedSearchQuery && debouncedSearchQuery.trim()) {
+        params.set('search', debouncedSearchQuery.trim())
+      }
+      // Apply column filters for API
+      if (tableFilters.reportDate?.from) {
+        params.set('dateFrom', tableFilters.reportDate.from instanceof Date ? tableFilters.reportDate.from.toISOString().split('T')[0] : tableFilters.reportDate.from)
+      }
+      if (tableFilters.reportDate?.to) {
+        params.set('dateTo', tableFilters.reportDate.to instanceof Date ? tableFilters.reportDate.to.toISOString().split('T')[0] : tableFilters.reportDate.to)
+      }
+      if (tableFilters.status) {
+        const statusValue = tableFilters.status === 'Complete' ? 'complete' : tableFilters.status === 'Incomplete' ? 'incomplete' : tableFilters.status.toLowerCase()
+        params.set('status', statusValue)
+      }
+      if (tableFilters.reportType) {
+        params.set('reasonFlagged', tableFilters.reportType.toLowerCase())
+      }
+      if (tableFilters.resolution) {
+        const resolutionValue = tableFilters.resolution.toLowerCase().replace(/\s+/g, '_')
+        params.set('resolution', resolutionValue)
+      }
+      const queryString = params.toString()
+      const base = isArchiveView ? '/forum/reports/archived' : '/forum/reports'
+      const response = await axiosInstance.get(`${base}?${queryString}`)
       
       console.log('API Response:', response.data)
       
@@ -125,7 +161,7 @@ const ReportedPosts = () => {
       sortable: true,
       filterable: true,
       width: '25%',
-      render: (value) => <span>{value}</span>
+      render: (value) => <span>{value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()}</span>
     }
   ], [])
 
@@ -139,10 +175,16 @@ const ReportedPosts = () => {
 
   const handleRowAction = async (actionType, item) => {
     console.log(`${actionType} action for:`, item)
-    
+
     switch (actionType) {
       case 'view':
         setSelectedReportId(item.id)
+        setModalMode('view')
+        setShowViewModal(true)
+        break
+      case 'edit':
+        setSelectedReportId(item.id)
+        setModalMode('edit')
         setShowViewModal(true)
         break
       case 'archive':
@@ -344,6 +386,22 @@ const ReportedPosts = () => {
     }
   }
 
+  const handleFiltersChange = useCallback((newFilters) => {
+    setTableFilters(prev => {
+      if (
+        prev.reportDate?.from !== newFilters?.reportDate?.from ||
+        prev.reportDate?.to !== newFilters?.reportDate?.to ||
+        prev.status !== newFilters?.status ||
+        prev.reportType !== newFilters?.reportType ||
+        prev.resolution !== newFilters?.resolution
+      ) {
+        return newFilters || {}
+      }
+      return prev
+    })
+    setCurrentPage(1)
+  }, [])
+
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage)
@@ -471,19 +529,56 @@ const ReportedPosts = () => {
                 </svg>
                 {isArchiveView ? 'Return to Current Reports' : 'Return to Forum'}
             </div>
-            <div className="search-container">
+            <div
+              className="search-container"
+              ref={searchContainerRef}
+              style={{ position: 'relative' }}
+            >
               <div className="search-input-wrapper">
                 <input
                   type="text"
-                  placeholder="Search reports"
+                  placeholder="Search Reports"
                   value={searchQuery}
                   onChange={handleSearch}
                   className="search-input"
                 />
-                <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <button
+                  className="filter-toggle-btn search-icon"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setShowFilters(!showFilters)
+                  }}
+                  title="Open Filters"
+                  type="button"
+                >
+                  <svg
+                    className="filter-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M21.25 11.9999H8.895M4.534 11.9999H2.75M4.534 11.9999C4.534 11.4217 4.76368 10.8672 5.17251 10.4584C5.58134 10.0496 6.13583 9.81989 6.714 9.81989C7.29217 9.81989 7.84666 10.0496 8.25549 10.4584C8.66432 10.8672 8.894 11.4217 8.894 11.9999C8.894 12.5781 8.66432 13.1326 8.25549 13.5414C7.84666 13.9502 7.29217 14.1799 6.714 14.1799C6.13583 14.1799 5.58134 13.9502 5.17251 13.5414C4.76368 13.1326 4.534 12.5781 4.534 11.9999ZM21.25 18.6069H15.502M15.502 18.6069C15.502 19.1852 15.2718 19.7403 14.8628 20.1492C14.4539 20.5582 13.8993 20.7879 13.321 20.7879C12.7428 20.7879 12.1883 20.5572 11.7795 20.1484C11.3707 19.7396 11.141 19.1851 11.141 18.6069M15.502 18.6069C15.502 18.0286 15.2718 17.4745 14.8628 17.0655C14.4539 16.6566 13.8993 16.4269 13.321 16.4269C12.7428 16.4269 12.1883 16.6566 11.7795 17.0654C11.3707 17.4742 11.141 18.0287 11.141 18.6069M11.141 18.6069H2.75M21.25 5.39289H18.145M13.784 5.39289H2.75M13.784 5.39289C13.784 4.81472 14.0137 4.26023 14.4225 3.8514C14.8313 3.44257 15.3858 3.21289 15.964 3.21289C16.2503 3.21289 16.5338 3.26928 16.7983 3.37883C17.0627 3.48839 17.3031 3.64897 17.5055 3.8514C17.7079 4.05383 17.8685 4.29415 17.9781 4.55864C18.0876 4.82313 18.144 5.10661 18.144 5.39289C18.144 5.67917 18.0876 5.96265 17.9781 6.22714C17.8685 6.49163 17.7079 6.73195 17.5055 6.93438C17.3031 7.13681 17.0627 7.29739 16.7983 7.40695C16.5338 7.5165 16.2503 7.57289 15.964 7.57289C15.3858 7.57289 14.8313 7.34321 14.4225 6.93438C14.0137 6.52555 13.784 5.97106 13.784 5.39289Z"
+                      stroke="black"
+                      strokeWidth="2"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
               </div>
+
+              {showFilters && (
+                <ReportFilters
+                  show={showFilters}
+                  onHide={() => setShowFilters(false)}
+                  anchorRef={searchContainerRef}
+                  onApplyFilters={handleFiltersChange}
+                  initialFilters={tableFilters}
+                />
+              )}
             </div>
 
             <div className="actions-container">
@@ -497,7 +592,7 @@ const ReportedPosts = () => {
                 </div>
               )}
 
-              <div className="dropdown-wrapper" style={{ position: 'relative' }} ref={bulkDropdownRef}>
+              <div className="dropdown-wrapper" style={{ position: 'relative', height:"-webkit-fill-available" }} ref={bulkDropdownRef}>
                 <div 
                   className="bulk-actions"
                   onClick={() => {
@@ -564,6 +659,7 @@ const ReportedPosts = () => {
               data={reportsData}
               searchQuery={searchQuery}
               onRowAction={handleRowAction}
+              onFilterChange={handleFiltersChange}
               showCheckbox={true}
               activeTab="Reports"
               selectedItems={selectedReports}
@@ -610,9 +706,11 @@ const ReportedPosts = () => {
         toggle={() => {
           setShowViewModal(false)
           setSelectedReportId(null)
+          setModalMode('view')
         }}
         reportId={selectedReportId}
         onSubmit={handleModalSubmit}
+        mode={modalMode}
       />
 
       <Modal isOpen={showDeleteModal} toggle={handleDeleteCancel} className="delete-confirmation-modal" size="md">

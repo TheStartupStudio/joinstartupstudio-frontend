@@ -117,7 +117,7 @@ export const VideoModal = (props) => {
             )} */}
           </div>
           {!playVideo ? (
-            <div className="d-flex align-items-center">
+            <div className="">
               <img
                 src={videoData?.thumbnail}
                 width="100%"

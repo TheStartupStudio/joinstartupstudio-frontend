@@ -13,6 +13,9 @@ import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
 
+const isSubscriptionExempt = (value) =>
+  value === true || value === 'true' || value === 1 || value === '1'
+
 
 // const stripePromise = loadStripe(
 //   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
@@ -85,9 +88,13 @@ useEffect(() => {
       console.log('✅ Organization pricing response:', response.data)
 
       if (response.data.success) {
-        if (response.data.subscriptionExempt) {
-          toast.info('You have subscription access!')
-          history.push('/dashboard')
+        if (isSubscriptionExempt(response.data.subscriptionExempt)) {
+          if (history.location.pathname !== '/dashboard') {
+            toast.info('You have subscription access!', {
+              toastId: 'subscription-access',
+            })
+            history.push('/dashboard')
+          }
           return
         }
 
@@ -154,16 +161,26 @@ useEffect(() => {
   }
 
   fetchOrganizationPricing()
-}, [user, history])
+}, [user?.id, history])
 
 
   useEffect(() => {
     if (user && user.id) {
-      if ((user.subscription_status === 'active' && user.stripe_subscription_id) || user.subscription_exempt) {
-        toast.info(user.subscription_exempt 
-          ? 'You have subscription access!' 
-          : 'You already have an active subscription!')
-        history.push('/dashboard')
+      if (
+        (user.subscription_status === 'active' && user.stripe_subscription_id) ||
+        isSubscriptionExempt(user.subscription_exempt)
+      ) {
+        if (history.location.pathname !== '/dashboard') {
+          toast.info(
+            isSubscriptionExempt(user.subscription_exempt)
+              ? 'You have subscription access!'
+              : 'You already have an active subscription!',
+            {
+              toastId: isSubscriptionExempt(user.subscription_exempt) ? 'subscription-access' : 'subscription-active',
+            }
+          )
+          history.push('/dashboard')
+        }
         return
       }
 
@@ -183,7 +200,16 @@ useEffect(() => {
       setIsReturningUser(false)
       setUserTrialUsed(false)
     }
-  }, [history, user])
+  }, [
+    history,
+    user?.id,
+    user?.subscription_status,
+    user?.stripe_subscription_id,
+    user?.subscription_exempt,
+    user?.trial_used,
+    user?.name,
+    user?.email,
+  ])
 
   const handleClick = async () => {
     if (!registrationData) {

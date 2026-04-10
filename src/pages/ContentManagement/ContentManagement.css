@@ -70,6 +70,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
 
 .content-management .search-input-wrapper {
   position: relative;
+  max-width: unset;
+  width: 100%;
 }
 
 .content-management .search-input {
@@ -260,12 +262,12 @@ box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.25);
 
 .content-management .task-name-cell .status-dot.published {
   background-color: var(--COLORS-Green, #9C3);
-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
+box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15) inset;
 }
 
 .content-management .task-name-cell .status-dot.unpublished {
-  /* background-color: var(--COLORS-Grey, #AEAEAE); */
-  background-color: #9C3;
+  background-color: var(--COLORS-Grey, #AEAEAE);
+  /* background-color: #9C3; */
 box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 }
 
@@ -319,9 +321,17 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
 
 .content-management .content-management-container .action-buttons {
   width: max-content;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 
 .content-management .content-management-container tbody tr td:nth-child(2) {
-  width: 100%;
+  width: 60%;
 }
+
+
+/* .content-management .content-management-container tbody tr td:nth-child(3) {
+  width: 50%;
+} */

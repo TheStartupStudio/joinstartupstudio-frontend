@@ -1,5 +1,7 @@
 .user-management-popup-modal .modal-dialog {
   max-width: 742px;
+  position: relative;
+  z-index: 10000;
 }
 
 .user-management-popup-modal .modal-content {
@@ -54,6 +56,8 @@ font-weight: 500;
     text-align: center;
     font-size: 15px;
     font-weight: 500;
+    width: 100%;
+    align-items: center;
 }
 
 /* Action Buttons */

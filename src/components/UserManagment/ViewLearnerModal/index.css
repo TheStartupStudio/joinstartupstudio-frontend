@@ -593,3 +593,151 @@ box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
     font-size: 14px;
   }
 }
+
+/* Payments Section */
+.view-learner-modal .payments-section {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.view-learner-modal .payments-table-container {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.view-learner-modal .payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.view-learner-modal .payments-table thead {
+  background: #f8f9fa;
+}
+
+.view-learner-modal .payments-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 600;
+  color: #231F20;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.view-learner-modal .payments-table tbody tr{
+border: 1px solid rgba(110, 110, 110, 0.25);
+}
+
+.view-learner-modal .payments-table td {
+  padding: 12px 16px;
+  font-family: Montserrat;
+  font-size: 12px;
+  color: #231F20;
+  border-bottom: 1px solid #f1f3f4;
+  border: none;
+}
+
+.view-learner-modal .payments-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.view-learner-modal .payment-date-header {
+  width: 30%;
+}
+
+.view-learner-modal .payment-amount-header {
+  width: 30%;
+}
+
+.view-learner-modal .payment-status-header {
+  width: 40%;
+}
+
+.view-learner-modal .payment-date {
+  font-weight: 500;
+}
+
+.view-learner-modal .payment-amount {
+  font-weight: 600;
+  color: #059669;
+}
+
+.view-learner-modal .payment-status-badge {
+  width: 11px;
+height: 11px;
+border-radius: 50%;
+}
+
+.view-learner-modal .payment-status-badge.status-completed {
+  background: #9C3;
+}
+
+.view-learner-modal .payment-status-badge.status-failed {
+  background: #F39;
+}
+
+.view-learner-modal .payment-status-badge.status-pending {
+  background: #d97706;
+}
+
+.view-learner-modal .payment-status-badge.status-scheduled {
+  background: #51C7DF;
+}
+
+.view-learner-modal .no-payments-message {
+  text-align: center;
+  padding: 24px 16px;
+  color: #6b7280;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  background: #f9fafb;
+}
+
+.view-learner-modal .payments-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.view-learner-modal .payments-pagination-info {
+  font-family: Montserrat;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.view-learner-modal .payments-pagination-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.view-learner-modal .payments-pagination-btn {
+  font-family: Montserrat;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  color: #374151;
+  cursor: pointer;
+}
+
+.view-learner-modal .payments-pagination-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.view-learner-modal .payments-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

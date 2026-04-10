@@ -548,7 +548,7 @@ const ViewOrganizationLearnersModal = ({ show, onHide, organizationName, organiz
             </div>
 
             {/* Search and Actions Bar */}
-            <div className="search-actions-bar">
+            <div className="search-actions-bar" style={{ padding: '10px' }}>
               <div className="search-container">
                 <div className="search-input-wrapper">
                   <input

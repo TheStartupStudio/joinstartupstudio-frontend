@@ -2,31 +2,15 @@ const csvToArrayLearners = (str, delimiter = ',') => {
   str = str.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
 
   const firstLine = str.slice(0, str.indexOf('\n'))
-  delimiter = firstLine.includes(';') ? ';' : ','
+  if (firstLine.includes('\t')) {
+    delimiter = '\t'
+  } else if (firstLine.includes(';')) {
+    delimiter = ';'
+  } else {
+    delimiter = ','
+  }
 
-  const headers = firstLine.split(delimiter).map((header) => {
-    if (
-      [
-        'Password',
-        'Level',
-        'Year',
-        'Period',
-        'Year',
-        'Name',
-        'Email',
-        'Profession',
-        'Gender',
-        'BirthDate',
-        'Address',
-        'City',
-        'State',
-        'UniversityId'
-      ].includes(header)
-    ) {
-      return header.toLowerCase()
-    }
-    return header
-  })
+  const headers = firstLine.split(delimiter).map((header) => header.trim())
 
   if (headers[0] === 'School Assignment') {
     headers[0] = 'universityName'
@@ -40,19 +24,40 @@ const csvToArrayLearners = (str, delimiter = ',') => {
     headers[2] = 'name'
   }
 
-  // Updated header validation for learners
+  const expectedNewHeaders = [
+    'learnerName',
+    'email',
+    'password',
+    'gender',
+    'birthDate',
+    'address',
+    'city',
+    'country',
+    'organization'
+  ]
+
+  const expectedLegacyHeaders = [
+    'learnerName',
+    'email',
+    'password',
+    'gender',
+    'birthDate',
+    'address',
+    'city',
+    'state',
+    'universityId'
+  ]
+
+  const matchesHeaders = (expectedHeaders) =>
+    expectedHeaders.every((header, index) => headers[index] === header)
+
   if (
-    headers[0] !== 'learnerName' ||
-    headers[1] !== 'email' ||
-    headers[2] !== 'password' ||
-    headers[3] !== 'gender' ||
-    headers[4] !== 'birthDate' ||
-    headers[5] !== 'address' ||
-    headers[6] !== 'city' ||
-    headers[7] !== 'state' ||
-    headers[8] !== 'universityId'
+    !matchesHeaders(expectedNewHeaders) &&
+    !matchesHeaders(expectedLegacyHeaders)
   ) {
-    throw new Error('Invalid CSV Format for Learners')
+    throw new Error(
+      'Invalid CSV Format for Learners. Expected headers: learnerName, email, password, gender, birthDate, address, city, country, organization'
+    )
   }
 
   const rows = str.slice(str.indexOf('\n') + 1).split('\n')

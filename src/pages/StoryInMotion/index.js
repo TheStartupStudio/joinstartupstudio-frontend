@@ -25,7 +25,7 @@ function StoryInMotion({ intl }) {
 
   const [levels, setLevels] = useState([]);
   const [levelContents, setLevelContents] = useState({});
-  const [activeLevel, setActiveLevel] = useState(2);
+  const [activeLevel, setActiveLevel] = useState(0);
   const [pageTitle, setPageTitle] = useState('');
   const [pageDescription, setPageDescription] = useState('');
   const [pageVideos, setPageVideos] = useState([]);

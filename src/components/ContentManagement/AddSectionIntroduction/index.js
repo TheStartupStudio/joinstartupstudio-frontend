@@ -3,9 +3,9 @@ import './index.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown, faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
+import CreateJournalTaskModal from '../CreateJournalTaskModal'
 
-const AddSectionIntroduction = ({ show, onClose, sectionData }) => {
-    const [journalTitle, setJournalTitle] = useState('')
+const AddSectionIntroduction = ({ show, onClose, sectionData, mode = 'add', contentId }) => {
     const [selectedIcon, setSelectedIcon] = useState('')
     const [activeTab, setActiveTab] = useState('intro') // 'intro' or 'video'
     const [isIconDropdownOpen, setIsIconDropdownOpen] = useState(false)
@@ -17,6 +17,7 @@ const AddSectionIntroduction = ({ show, onClose, sectionData }) => {
     const [thumbnailFile, setThumbnailFile] = useState(null)
     const [videoPreview, setVideoPreview] = useState(null)
     const [thumbnailPreview, setThumbnailPreview] = useState(null)
+    const [showSecondModal, setShowSecondModal] = useState(false)
 
     const iconOptions = [
         {
@@ -106,9 +107,28 @@ const AddSectionIntroduction = ({ show, onClose, sectionData }) => {
         if (thumbnailInput) thumbnailInput.value = ''
     }
 
+    const handleSave = () => {
+        if (mode === 'add') {
+            // Only open second modal in add mode
+            setShowSecondModal(true)
+        } else {
+            // In view/edit mode, just close the modal
+            onClose()
+        }
+    }
+
+    const handleSecondModalClose = () => {
+        setShowSecondModal(false)
+    }
+
+    const handleSecondModalSave = () => {
+        // Journal creation is handled by the CreateJournalTaskModal component
+        setShowSecondModal(false)
+        onClose()
+    }
+
     const handleCancel = () => {
         // Reset form
-        setJournalTitle('')
         setSections([{ id: 1, name: '' }, { id: 2, name: '' }])
         setActiveTab('intro')
         setIsIconDropdownOpen(false)
@@ -116,10 +136,12 @@ const AddSectionIntroduction = ({ show, onClose, sectionData }) => {
         setThumbnailFile(null)
         setVideoPreview(null)
         setThumbnailPreview(null)
+        setShowSecondModal(false)
         onClose()
     }
 
     return (
+        <>
         <div className="add-section-introduction-modal-overlay">
             <div className="add-section-modal">
                 <div className="modal-header">
@@ -322,12 +344,20 @@ const AddSectionIntroduction = ({ show, onClose, sectionData }) => {
                         <button className="cancel-btn" onClick={handleCancel}>
                             Cancel
                         </button>
-                        <button className="save-btn">
+                        <button className="save-btn" onClick={handleSave}>
                             Save
                         </button>
                     </div>
             </div>
         </div>
+
+        {/* Second Modal - Only shows in add mode */}
+        <CreateJournalTaskModal
+            show={showSecondModal && mode === 'add'}
+            onClose={handleSecondModalClose}
+            contentId={contentId}
+        />
+        </>
     )
 }
 

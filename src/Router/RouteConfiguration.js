@@ -251,7 +251,7 @@ export const adminRoutes = [
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN
   },
   {
-    path: '/master-class-management',
+    path: '/studio-guidance-management',
     component: MasterClassManagement,
     breadcrumb: 'Studio Guidance Management',
     requiredRole: ROUTE_ACCESS.SUPER_ADMIN,
@@ -648,7 +648,12 @@ export const redirects = [
       window.location.pathname !== '/subscription/cancel' &&
       user?.user?.is_active === true &&
       !user?.user?.stripe_subscription_id &&
-      !user?.user?.subscription_exempt
+      !(
+        user?.user?.subscription_exempt === true ||
+        user?.user?.subscription_exempt === 'true' ||
+        user?.user?.subscription_exempt === 1 ||
+        user?.user?.subscription_exempt === '1'
+      )
   },
   {
     from: '*',

@@ -20,6 +20,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const [pendingSave, setPendingSave] = useState(false)
   const [invoiceHistory, setInvoiceHistory] = useState([])
   const [originalPricing, setOriginalPricing] = useState({
+    organizationType: '',
     organizationPricing: { amount: '', frequency: 'monthly' },
     learnerPricing: []
   })
@@ -34,6 +35,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     administratorName: '',
     administratorEmail: '',
     domainURL: '',
+    organizationType: '',
     courseAccess: {
       financialLiteracyJournal: false,
       forumAccess: false,
@@ -91,6 +93,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
               administratorName: orgData.administratorName || '',
               administratorEmail: orgData.administratorEmail || '',
               domainURL: orgData.domainURL || '',
+              organizationType: orgData.organizationType || '',
               courseAccess: orgData.courseAccess || {
                 financialLiteracyJournal: false,
                 forumAccess: false,
@@ -107,6 +110,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             })
             
             setOriginalPricing({
+              organizationType: orgData.organizationType || '',
               organizationPricing: JSON.parse(JSON.stringify(orgData.organizationPricing || { amount: '', frequency: 'monthly' })),
               learnerPricing: JSON.parse(JSON.stringify(orgData.learnerPricing || []))
             })
@@ -127,6 +131,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           administratorName: '',
           administratorEmail: '',
           domainURL: '',
+          organizationType: '',
           courseAccess: {
             financialLiteracyJournal: false,
             forumAccess: false,
@@ -145,6 +150,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           ]
         })
         setOriginalPricing({
+          organizationType: '',
           organizationPricing: { amount: '', frequency: 'monthly' },
           learnerPricing: []
         })
@@ -248,6 +254,15 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     return true
   }
 
+  const validatePricingTab = () => {
+    if (!formData.organizationType) {
+      toast.error('Please select an organization type')
+      return false
+    }
+
+    return true
+  }
+
   const isDetailsValid = () => {
     const { organizationName, administratorName, administratorEmail, domainURL } = formData
     
@@ -265,10 +280,15 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
 
   const hasPricingChanged = () => {
     if (mode !== 'edit') return false
+    const isPartnership = formData.organizationType === 'partnership'
     
     const orgPricingChanged = 
-      formData.organizationPricing.amount !== originalPricing.organizationPricing.amount ||
-      formData.organizationPricing.frequency !== originalPricing.organizationPricing.frequency
+      !isPartnership &&
+      (
+        formData.organizationPricing.amount !== originalPricing.organizationPricing.amount ||
+        formData.organizationPricing.frequency !== originalPricing.organizationPricing.frequency
+      )
+    const organizationTypeChanged = (formData.organizationType || '') !== (originalPricing.organizationType || '')
     
     if (formData.learnerPricing.length !== originalPricing.learnerPricing.length) {
       return true
@@ -280,7 +300,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
       return tier.amount !== original.amount || tier.frequency !== original.frequency
     })
 
-    return orgPricingChanged || learnerPricingChanged
+    return orgPricingChanged || learnerPricingChanged || organizationTypeChanged
   }
 
   const handleSubmit = async () => {
@@ -291,6 +311,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     }
 
     if (!validateForm()) return
+    if (!validatePricingTab()) return
 
     if (mode === 'edit' && hasPricingChanged()) {
       setPendingSave(true)
@@ -318,8 +339,12 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
         administratorName: formData.administratorName,
         administratorEmail: formData.administratorEmail,
         domainURL: formData.domainURL,
+        organizationType: formData.organizationType,
         courseAccess: formData.courseAccess,
-        organizationPricing: formData.organizationPricing,
+        organizationPricing:
+          formData.organizationType === 'partnership'
+            ? { amount: '', frequency: formData.organizationPricing.frequency || 'monthly' }
+            : formData.organizationPricing,
         learnerPricing: formData.learnerPricing,
         applyToCurrentUsers
       }
@@ -393,6 +418,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
   const isEditMode = mode === 'edit'
   const isViewMode = mode === 'view'
   const isReadOnly = isViewMode
+  const isPartnership = formData.organizationType === 'partnership'
+  const isPricingValid = () => !!formData.organizationType
 
   return (
     <>
@@ -574,7 +601,66 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
 
             {activeTab === 'pricing' && (
               <>
-                <div className="form-section">
+                              <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Organization Type</span>
+                  </div>
+                  
+                  <div className="course-access-toggles-type">
+                    <div
+                      className={`organization-type-option ${formData.organizationType === 'partnership' ? 'selected' : ''}`}
+                      onClick={() => !isReadOnly && handleInputChange('organizationType', 'partnership')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (!isReadOnly && (e.key === 'Enter' || e.key === ' ')) {
+                          e.preventDefault()
+                          handleInputChange('organizationType', 'partnership')
+                        }
+                      }}
+                    >
+                      <div className="organization-type-option-header">
+                        <span >Partnership</span>
+                        <input
+                          type="radio"
+                          name="organizationType"
+                          checked={formData.organizationType === 'partnership'}
+                          onChange={() => !isReadOnly && handleInputChange('organizationType', 'partnership')}
+                          disabled={isReadOnly}
+                        />
+                      </div>
+                      <p>Learner pricing only. Organization is not billed directly.</p>
+                    </div>
+
+                    <div
+                      className={`organization-type-option ${formData.organizationType === 'stand-alone' ? 'selected' : ''}`}
+                      onClick={() => !isReadOnly && handleInputChange('organizationType', 'stand-alone')}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (!isReadOnly && (e.key === 'Enter' || e.key === ' ')) {
+                          e.preventDefault()
+                          handleInputChange('organizationType', 'stand-alone')
+                        }
+                      }}
+                    >
+                      <div className="organization-type-option-header">
+                        
+                        <span >Stand-alone</span>
+                        <input
+                          type="radio"
+                          name="organizationType"
+                          checked={formData.organizationType === 'stand-alone'}
+                          onChange={() => !isReadOnly && handleInputChange('organizationType', 'stand-alone')}
+                          disabled={isReadOnly}
+                        />
+                      </div>
+                      <p>Organization and learner pricing both apply.</p>
+                    </div>
+                  </div>
+                </div>
+              <div className="form-section">
                   <div className="section-header">
                     <img src={spark} alt="Spark Icon" />
                     <span>Course Details</span>
@@ -614,43 +700,46 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                   </div>
                 </div>
 
-                <div className="form-section">
-                  <div className="section-header">
-                    <img src={spark} alt="Spark Icon" />
-                    <span>Organization Pricing Details</span>
-                  </div>
-                  
-                  <div className="pricing-inputs">
-                    <div className="input-group pricing-amount" onClick={() => !isReadOnly && handleInputFocus('orgPricingAmount')}>
-                      <input
-                        type="text"
-                        value={formData.organizationPricing.amount}
-                        onChange={(e) => !isReadOnly && handleOrganizationPricingChange('amount', e.target.value)}
-                        className="form-input"
-                        placeholder=" "
-                        id="orgPricingAmount"
-                        disabled={isReadOnly}
-                      />
-                      <label className="input-label" htmlFor="orgPricingAmount">Add dollar amount (ie. $15)</label>
-                      {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
-                    </div>
 
-                    <div className="frequency-dropdown">
-                      <select
-                        value={formData.organizationPricing.frequency}
-                        onChange={(e) => !isReadOnly && handleOrganizationPricingChange('frequency', e.target.value)}
-                        className="frequency-select"
-                        disabled={isReadOnly}
-                      >
-                        {frequencyOptions.map(option => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                {!isPartnership && (
+                  <div className="form-section">
+                    <div className="section-header">
+                      <img src={spark} alt="Spark Icon" />
+                      <span>Organization Pricing Details</span>
+                    </div>
+                    
+                    <div className="pricing-inputs">
+                      <div className="input-group pricing-amount" onClick={() => !isReadOnly && handleInputFocus('orgPricingAmount')}>
+                        <input
+                          type="text"
+                          value={formData.organizationPricing.amount}
+                          onChange={(e) => !isReadOnly && handleOrganizationPricingChange('amount', e.target.value)}
+                          className="form-input"
+                          placeholder=" "
+                          id="orgPricingAmount"
+                          disabled={isReadOnly}
+                        />
+                        <label className="input-label" htmlFor="orgPricingAmount">Add dollar amount (ie. $15)</label>
+                        {!isReadOnly && <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />}
+                      </div>
+
+                      <div className="frequency-dropdown">
+                        <select
+                          value={formData.organizationPricing.frequency}
+                          onChange={(e) => !isReadOnly && handleOrganizationPricingChange('frequency', e.target.value)}
+                          className="frequency-select"
+                          disabled={isReadOnly}
+                        >
+                          {frequencyOptions.map(option => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 <div className="form-section">
                   <div className="section-header">
@@ -805,7 +894,11 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                   type="button"
                   className="add-btn"
                   onClick={handleSubmit}
-                  disabled={loading || (activeTab === 'details' && !isDetailsValid()) || (activeTab === 'pricing' && !isDetailsValid())}
+                    disabled={
+                      loading ||
+                      (activeTab === 'details' && !isDetailsValid()) ||
+                      (activeTab === 'pricing' && (!isDetailsValid() || !isPricingValid()))
+                    }
                 >
                   {loading ? (
                     <span className="spinner-border spinner-border-sm" />

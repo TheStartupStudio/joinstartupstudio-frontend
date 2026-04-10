@@ -26,6 +26,13 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
   const [acknowledgeWarning, setAcknowledgeWarning] = useState(false)
   
   const currentUser = useSelector(state => state.user?.user?.user || state.user?.user)
+
+  const formatPostDate = (dateString) => {
+    if (!dateString) return '—'
+    const d = new Date(dateString)
+    if (isNaN(d.getTime())) return '—'
+    return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`
+  }
   
   const [formData, setFormData] = useState({
     message: ''
@@ -261,6 +268,22 @@ const AddCommentModal = ({ show, onHide, originalPost, editingComment, onSuccess
                   <h6 className="mb-1" style={{ fontWeight: '600', color: '#333', fontSize: '20px' }}>
                     {originalPost.title}
                   </h6>
+                  <div className="d-flex flex-wrap gap-3 align-items-center mb-2" style={{ fontSize: '14px', color: '#666' }}>
+                    <div className="d-flex align-items-center gap-2">
+                      <img src={messageText} alt="" style={{ width: '14px', height: '14px', opacity: 0.8 }} />
+                      <span>Posted: <span>{originalPost.date || formatPostDate(originalPost.createdAt)}</span></span>
+                    </div>
+                    <div className="d-flex align-items-center gap-2">
+                      <img src={reply} alt="" style={{ width: '14px', height: '14px', opacity: 0.8 }} />
+                      <span>Latest reply from <span>{(() => {
+                        const raw = originalPost.lastReplyUser || originalPost.latestReplyFrom
+                        const name = typeof raw === 'object' && raw !== null
+                          ? (raw.name || raw.username || '')
+                          : (raw ? String(raw) : '')
+                        return name ? (name.startsWith('@') ? name : `@${name}`) : 'No replies yet'
+                      })()}</span></span>
+                    </div>
+                  </div>
                   <div 
                     className="mb-0" 
                     style={{ 

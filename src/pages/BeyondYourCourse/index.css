@@ -741,8 +741,8 @@
 
 .search-input-wrapper {
     position: relative;
-    display: inline-block;
-    max-width: 500px
+    /* display: inline-block;
+    max-width: 500px */
 }
 
 .custom-pagination {

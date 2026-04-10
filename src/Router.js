@@ -35,6 +35,9 @@ function Router(props) {
     (state) => state.user
   )
 
+  const isSubscriptionExempt = (value) =>
+    value === true || value === 'true' || value === 1 || value === '1'
+
   const hasActiveSubscription = () => {
     if (!user?.user) return false
     
@@ -42,7 +45,7 @@ function Router(props) {
     const stripeSubscriptionId = user.user.stripe_subscription_id
     const subscriptionExempt = user.user.subscription_exempt 
     
-    return subscriptionExempt === true || 
+    return isSubscriptionExempt(subscriptionExempt) ||
            subscriptionStatus === 'active' || 
            (subscriptionStatus === 'canceling' && stripeSubscriptionId)
   }

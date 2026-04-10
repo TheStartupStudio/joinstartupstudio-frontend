@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 
 const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add', contentId = null }) => {
     const initializeState = () => {
@@ -66,6 +67,17 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
     const [thumbnailPreview, setThumbnailPreview] = useState(initialState.thumbnailPreview)
     const [videoUrl, setVideoUrl] = useState(initialState.videoUrl)
     const [videoThumbnailUrl, setVideoThumbnailUrl] = useState(initialState.videoThumbnailUrl)
+
+    // Separate state for the journal creation modal (starts completely empty)
+    const [journalTitle, setJournalTitle] = useState('')
+    const [journalText, setJournalText] = useState('')
+    const [journalVideoUrl, setJournalVideoUrl] = useState('')
+    const [journalVideoThumbnailUrl, setJournalVideoThumbnailUrl] = useState('')
+    const [journalVideoFile, setJournalVideoFile] = useState(null)
+    const [journalThumbnailFile, setJournalThumbnailFile] = useState(null)
+    const [journalVideoPreview, setJournalVideoPreview] = useState(null)
+    const [journalThumbnailPreview, setJournalThumbnailPreview] = useState(null)
+    const [journalActiveTab, setJournalActiveTab] = useState('intro') // 'intro' or 'video'
 
     useEffect(() => {
         if (show && journalData && (mode === 'edit' || mode === 'view')) {
@@ -148,11 +160,11 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                     console.log('Video uploaded successfully:', videoUploadResponse.data.fileLocation)
                 } else {
                     console.error('Video upload failed')
-                    alert('Failed to upload video')
+                    toast.error('Failed to upload video')
                 }
             } catch (error) {
                 console.error('Error uploading video:', error)
-                alert('Failed to upload video: ' + error.message)
+                toast.error('Failed to upload video: ' + error.message)
             }
         }
     }
@@ -179,11 +191,11 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                     console.log('Thumbnail uploaded successfully:', thumbnailUploadResponse.data.fileLocation)
                 } else {
                     console.error('Thumbnail upload failed')
-                    alert('Failed to upload thumbnail')
+                    toast.error('Failed to upload thumbnail')
                 }
             } catch (error) {
                 console.error('Error uploading thumbnail:', error)
-                alert('Failed to upload thumbnail: ' + error.message)
+                toast.error('Failed to upload thumbnail: ' + error.message)
             }
         }
     }
@@ -209,11 +221,11 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                 } else {
                     console.error('Headshot upload failed')
                     setInstructorHeadshot(previewUrl)
-                    alert('Failed to upload headshot')
+                    toast.error('Failed to upload headshot')
                 }
             } catch (error) {
                 console.error('Error uploading headshot:', error)
-                alert('Failed to upload headshot: ' + error.message)
+                toast.error('Failed to upload headshot: ' + error.message)
             }
         }
     }
@@ -240,6 +252,122 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
         if (headshotInput) headshotInput.value = ''
     }
 
+    // Journal modal specific handlers
+    const handleJournalVideoUpload = async (e) => {
+        const file = e.target.files[0]
+        if (file) {
+            try {
+                setJournalVideoFile(file)
+                setJournalVideoPreview(URL.createObjectURL(file))
+
+                const videoFormData = new FormData()
+                videoFormData.append('video', file)
+
+                const videoUploadResponse = await axiosInstance.post('/upload/journal-video', videoFormData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+
+                if (videoUploadResponse.data.success) {
+                    setJournalVideoUrl(videoUploadResponse.data.fileLocation)
+                    console.log('Journal video uploaded successfully:', videoUploadResponse.data.fileLocation)
+                } else {
+                    console.error('Journal video upload failed')
+                    toast.error('Failed to upload journal video')
+                }
+            } catch (error) {
+                console.error('Error uploading journal video:', error)
+                toast.error('Failed to upload journal video: ' + error.message)
+            }
+        }
+    }
+
+    const handleJournalThumbnailUpload = async (e) => {
+        const file = e.target.files[0]
+        if (file) {
+            try {
+                setJournalThumbnailFile(file)
+                setJournalThumbnailPreview(URL.createObjectURL(file))
+
+                const thumbnailFormData = new FormData()
+                thumbnailFormData.append('img', file)
+
+                const thumbnailUploadResponse = await axiosInstance.post('/upload/journal-img', thumbnailFormData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+
+                if (thumbnailUploadResponse.data.success) {
+                    setJournalVideoThumbnailUrl(thumbnailUploadResponse.data.fileLocation)
+                    setJournalThumbnailPreview(thumbnailUploadResponse.data.fileLocation)
+                    console.log('Journal thumbnail uploaded successfully:', thumbnailUploadResponse.data.fileLocation)
+                } else {
+                    console.error('Journal thumbnail upload failed')
+                    toast.error('Failed to upload journal thumbnail')
+                }
+            } catch (error) {
+                console.error('Error uploading journal thumbnail:', error)
+                toast.error('Failed to upload journal thumbnail: ' + error.message)
+            }
+        }
+    }
+
+    const handleDeleteJournalVideo = () => {
+        setJournalVideoFile(null)
+        setJournalVideoPreview(null)
+        setJournalVideoUrl('')
+        const videoInput = document.getElementById('journal-video-upload')
+        if (videoInput) videoInput.value = ''
+    }
+
+    const handleDeleteJournalThumbnail = () => {
+        setJournalThumbnailFile(null)
+        setJournalThumbnailPreview(null)
+        setJournalVideoThumbnailUrl('')
+        const thumbnailInput = document.getElementById('journal-thumbnail-upload')
+        if (thumbnailInput) thumbnailInput.value = ''
+    }
+
+    const handleSecondModalClose = () => {
+        // Reset journal state
+        setJournalTitle('')
+        setJournalText('')
+        setJournalVideoUrl('')
+        setJournalVideoThumbnailUrl('')
+        setJournalVideoFile(null)
+        setJournalThumbnailFile(null)
+        setJournalVideoPreview(null)
+        setJournalThumbnailPreview(null)
+        setJournalActiveTab('intro')
+    }
+
+    const handleSecondModalSave = async () => {
+        try {
+            const journalData = {
+                title: journalTitle,
+                text: journalText,
+                video: journalVideoUrl,
+                thumbnail: journalVideoThumbnailUrl
+            }
+
+            const contentIdToUse = contentId || journalData?.manageContent?.id || 1
+
+            const response = await axiosInstance.post(`/manage-content/${contentIdToUse}/journal`, journalData)
+
+            if (response.data.success) {
+                toast.success('Journal task created successfully!')
+                onClose()
+            } else {
+                throw new Error('Failed to create journal task')
+            }
+        } catch (error) {
+            console.error('Error creating journal task:', error)
+            toast.error(`Failed to create journal task: ${error.message}`)
+        }
+    }
+
     const handleCancel = () => {
         // Reset form
         setInstructorName('')
@@ -256,6 +384,16 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
         setThumbnailPreview(null)
         setVideoUrl('')
         setVideoThumbnailUrl('')
+        // Reset journal state
+        setJournalTitle('')
+        setJournalText('')
+        setJournalVideoUrl('')
+        setJournalVideoThumbnailUrl('')
+        setJournalVideoFile(null)
+        setJournalThumbnailFile(null)
+        setJournalVideoPreview(null)
+        setJournalThumbnailPreview(null)
+        setJournalActiveTab('intro')
         onClose()
     }
 
@@ -280,18 +418,19 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
             const response = await axiosInstance.put(`/manage-content/full/${contentIdToUse}`, updateData)
 
             if (response.data.success) {
-                alert('Introduction data updated successfully!')
+                toast.success('Introduction data updated successfully!')
                 onClose()
             } else {
                 throw new Error('Failed to update introduction data')
             }
         } catch (error) {
             console.error('Error updating introduction data:', error)
-            alert(`Failed to update introduction data: ${error.message}`)
+            toast.error(`Failed to update introduction data: ${error.message}`)
         }
     }
 
     return (
+        <>
         <div className="add-journal-instructor-modal-overlay">
             <div className="add-journal-modal">
                 <div className="modal-header">
@@ -328,7 +467,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                                     className={`tab-btn ${activeTab === 'intro' ? 'active' : ''}`}
                                     onClick={() => setActiveTab('intro')}
                                 >
-                                    Section Details
+                                    Journal Intro
                                 </button>
                                 <button
                                     className={`tab-btn ${activeTab === 'video' ? 'active' : ''}`}
@@ -464,7 +603,6 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                                                 <label>Introduction Title:</label>
                                                 <input
                                                     style={{
-                                                        border: '1px solid rgba(227, 229, 233, 0.50)',
                                                         borderRadius: '8px',
                                                         padding: '12px 18px',
                                                         width: '100%',
@@ -474,6 +612,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                                                         color: '#333',
                                                         backgroundColor: 'transparent',
                                                         marginBottom: '10px',
+                                                        boxShadow: '0px 4px 10px 0px rgba(0, 0, 0, 0.15)',
                                                     }}
                                                     type="text"
                                                     placeholder="Add introduction title..."
@@ -649,6 +788,9 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                     </div>
             </div>
         </div>
+
+        {/* Second Modal - Empty Journal Creation Modal */}
+        </>
     )
 }
 

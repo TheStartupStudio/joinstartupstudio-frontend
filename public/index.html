@@ -1,10 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <!-- Add ICO format first -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <!-- <link rel="icon" href="/academy-logo-1.png" /> -->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" href="/favicon.ico" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -12,74 +15,107 @@
     <meta name="description" content="Learn To Start" />
     <meta name="author" content="Learn To Start" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>The Startup Studio</title>
+    <title>StudioOS</title>
 
     <!-- Meta Pixel Code -->
     <script>
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
+      if (
+        window.location.hostname !== 'localhost' &&
+        window.location.hostname !== '127.0.0.1'
+      ) {
+        !(function (f, b, e, v, n, t, s) {
+          if (f.fbq) return
+          n = f.fbq = function () {
+            n.callMethod
+              ? n.callMethod.apply(n, arguments)
+              : n.queue.push(arguments)
+          }
+          if (!f._fbq) f._fbq = n
+          n.push = n
+          n.loaded = !0
+          n.version = '2.0'
+          n.queue = []
+          t = b.createElement(e)
+          t.async = !0
+          t.src = v
+          s = b.getElementsByTagName(e)[0]
+          s.parentNode.insertBefore(t, s)
+        })(
+          window,
+          document,
+          'script',
+          'https://connect.facebook.net/en_US/fbevents.js'
+        )
 
-        fbq('init', '1515917456224895', {}, {
-            autoConfig: false 
-        });
+        fbq(
+          'init',
+          '1515917456224895',
+          {},
+          {
+            autoConfig: false
+          }
+        )
 
-        fbq('track', 'PageView');
+        fbq('track', 'PageView')
 
-        window.fbq = fbq;
+        window.fbq = fbq
       }
     </script>
     <noscript>
-      <img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id=1515917456224895&ev=PageView&noscript=1" />
+      <img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=1515917456224895&ev=PageView&noscript=1"
+      />
     </noscript>
 
-   <!-- Google Analytics 4 (GA4) - Production-Safe Setup -->
+    <!-- Google Analytics 4 (GA4) - Production-Safe Setup -->
     <script>
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        (function() {
+      if (
+        window.location.hostname !== 'localhost' &&
+        window.location.hostname !== '127.0.0.1'
+      ) {
+        ;(function () {
           // Load gtag.js
-          var gtagScript = document.createElement('script');
-          gtagScript.async = true;
-          gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-C3K19TT4W5';
-          document.head.appendChild(gtagScript);
+          var gtagScript = document.createElement('script')
+          gtagScript.async = true
+          gtagScript.src =
+            'https://www.googletagmanager.com/gtag/js?id=G-C3K19TT4W5'
+          document.head.appendChild(gtagScript)
 
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          window.gtag = gtag;
-          
-          gtag('js', new Date());
+          window.dataLayer = window.dataLayer || []
+          function gtag() {
+            dataLayer.push(arguments)
+          }
+          window.gtag = gtag
+
+          gtag('js', new Date())
           gtag('config', 'G-C3K19TT4W5', {
-            'send_page_view': true,
-            'cookie_flags': 'SameSite=None;Secure',
-            'allow_google_signals': true,
-            'custom_map': {
-              'dimension1': 'user_role',
-              'dimension2': 'subscription_status'
+            send_page_view: true,
+            cookie_flags: 'SameSite=None;Secure',
+            allow_google_signals: true,
+            custom_map: {
+              dimension1: 'user_role',
+              dimension2: 'subscription_status'
             }
-          });
+          })
 
           gtag('consent', 'default', {
-            'analytics_storage': 'granted',
-            'ad_storage': 'granted'
-          });
+            analytics_storage: 'granted',
+            ad_storage: 'granted'
+          })
 
           // ✅ FIXED: Optimized scroll tracking with RAF
           // var scrollTracked = {};
           // var ticking = false;
-          
+
           // window.addEventListener('scroll', function() {
           //   if (!ticking) {
           //     window.requestAnimationFrame(function() {
           //       try {
           //         var scrollPercentage = Math.round((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight * 100);
-                  
+
           //         [25, 50, 75, 90].forEach(function(milestone) {
           //           if (scrollPercentage >= milestone && !scrollTracked[milestone]) {
           //             scrollTracked[milestone] = true;
@@ -100,243 +136,294 @@
           // }, { passive: true });
 
           // ✅ FIXED: Time on page (single listener)
-          var startTime = Date.now();
-          window.addEventListener('beforeunload', function() {
-            try {
-              var timeOnPage = Math.round((Date.now() - startTime) / 1000);
-              gtag('event', 'timing_complete', {
-                'name': 'page_engagement',
-                'value': timeOnPage,
-                'event_category': 'engagement'
-              });
-            } catch (error) {
-              console.error('GA4 timing error:', error);
-            }
-          }, { once: true }); // ✅ Only fires once
+          var startTime = Date.now()
+          window.addEventListener(
+            'beforeunload',
+            function () {
+              try {
+                var timeOnPage = Math.round((Date.now() - startTime) / 1000)
+                gtag('event', 'timing_complete', {
+                  name: 'page_engagement',
+                  value: timeOnPage,
+                  event_category: 'engagement'
+                })
+              } catch (error) {
+                console.error('GA4 timing error:', error)
+              }
+            },
+            { once: true }
+          ) // ✅ Only fires once
 
           // ✅ FIXED: Outbound links with event delegation
-          document.body.addEventListener('click', function(e) {
-            try {
-              var target = e.target.closest('a');
-              if (!target || !target.href) return;
-              
-              var url = new URL(target.href, window.location.href);
-              if (url.hostname !== window.location.hostname) {
-                gtag('event', 'click', {
-                  'event_category': 'outbound',
-                  'event_label': url.href,
-                  'transport_type': 'beacon'
-                });
+          document.body.addEventListener(
+            'click',
+            function (e) {
+              try {
+                var target = e.target.closest('a')
+                if (!target || !target.href) return
+
+                var url = new URL(target.href, window.location.href)
+                if (url.hostname !== window.location.hostname) {
+                  gtag('event', 'click', {
+                    event_category: 'outbound',
+                    event_label: url.href,
+                    transport_type: 'beacon'
+                  })
+                }
+
+                // File downloads
+                var fileExtensions = /\.(pdf|docx|xlsx|zip|mp4|mp3)$/i
+                if (fileExtensions.test(target.href)) {
+                  gtag('event', 'file_download', {
+                    event_category: 'downloads',
+                    event_label: target.href,
+                    file_name: target.href.split('/').pop()
+                  })
+                }
+              } catch (error) {
+                console.error('GA4 click error:', error)
               }
-              
-              // File downloads
-              var fileExtensions = /\.(pdf|docx|xlsx|zip|mp4|mp3)$/i;
-              if (fileExtensions.test(target.href)) {
-                gtag('event', 'file_download', {
-                  'event_category': 'downloads',
-                  'event_label': target.href,
-                  'file_name': target.href.split('/').pop()
-                });
-              }
-            } catch (error) {
-              console.error('GA4 click error:', error);
-            }
-          }, { passive: true });
+            },
+            { passive: true }
+          )
 
           // ✅ FIXED: Video tracking with event delegation (prevents duplicates)
-          var videoTracked = new WeakMap();
-          
-          document.body.addEventListener('play', function(e) {
-            if (e.target.tagName !== 'VIDEO') return;
-            
-            var video = e.target;
-            if (!videoTracked.has(video)) {
-              videoTracked.set(video, {});
-            }
-            
-            var tracked = videoTracked.get(video);
-            
-            if (!tracked.start) {
-              tracked.start = true;
-              gtag('event', 'video_start', {
-                'event_category': 'video',
-                'event_label': video.src || video.currentSrc
-              });
-            }
-          }, true);
+          var videoTracked = new WeakMap()
 
-          document.body.addEventListener('ended', function(e) {
-            if (e.target.tagName !== 'VIDEO') return;
-            
-            gtag('event', 'video_complete', {
-              'event_category': 'video',
-              'event_label': e.target.src || e.target.currentSrc
-            });
-          }, true);
+          document.body.addEventListener(
+            'play',
+            function (e) {
+              if (e.target.tagName !== 'VIDEO') return
 
-          document.body.addEventListener('timeupdate', function(e) {
-            if (e.target.tagName !== 'VIDEO') return;
-            
-            var video = e.target;
-            if (!videoTracked.has(video)) {
-              videoTracked.set(video, {});
-            }
-            
-            var tracked = videoTracked.get(video);
-            var percentComplete = Math.round((video.currentTime / video.duration) * 100);
-            
-            [25, 50, 75].forEach(function(milestone) {
-              if (percentComplete >= milestone && !tracked[milestone]) {
-                tracked[milestone] = true;
-                gtag('event', 'video_progress', {
-                  'event_category': 'video',
-                  'event_label': video.src || video.currentSrc,
-                  'value': milestone
-                });
+              var video = e.target
+              if (!videoTracked.has(video)) {
+                videoTracked.set(video, {})
               }
-            });
-          }, true);
+
+              var tracked = videoTracked.get(video)
+
+              if (!tracked.start) {
+                tracked.start = true
+                gtag('event', 'video_start', {
+                  event_category: 'video',
+                  event_label: video.src || video.currentSrc
+                })
+              }
+            },
+            true
+          )
+
+          document.body.addEventListener(
+            'ended',
+            function (e) {
+              if (e.target.tagName !== 'VIDEO') return
+
+              gtag('event', 'video_complete', {
+                event_category: 'video',
+                event_label: e.target.src || e.target.currentSrc
+              })
+            },
+            true
+          )
+
+          document.body.addEventListener(
+            'timeupdate',
+            function (e) {
+              if (e.target.tagName !== 'VIDEO') return
+
+              var video = e.target
+              if (!videoTracked.has(video)) {
+                videoTracked.set(video, {})
+              }
+
+              var tracked = videoTracked.get(video)
+              var percentComplete = Math.round(
+                (video.currentTime / video.duration) * 100
+              )
+
+              ;[25, 50, 75].forEach(function (milestone) {
+                if (percentComplete >= milestone && !tracked[milestone]) {
+                  tracked[milestone] = true
+                  gtag('event', 'video_progress', {
+                    event_category: 'video',
+                    event_label: video.src || video.currentSrc,
+                    value: milestone
+                  })
+                }
+              })
+            },
+            true
+          )
 
           // ✅ FIXED: Form tracking with event delegation
-          var formTracked = new WeakMap();
-          
-          document.body.addEventListener('focusin', function(e) {
-            var form = e.target.closest('form');
-            if (!form) return;
-            
-            if (!formTracked.has(form)) {
-              formTracked.set(form, true);
-              gtag('event', 'form_start', {
-                'event_category': 'form',
-                'event_label': form.id || form.name || 'unnamed_form'
-              });
-            }
-          }, true);
+          var formTracked = new WeakMap()
 
-          document.body.addEventListener('submit', function(e) {
-            var form = e.target;
-            if (form.tagName !== 'FORM') return;
-            
-            gtag('event', 'form_submit', {
-              'event_category': 'form',
-              'event_label': form.id || form.name || 'unnamed_form'
-            });
-          }, true);
+          document.body.addEventListener(
+            'focusin',
+            function (e) {
+              var form = e.target.closest('form')
+              if (!form) return
+
+              if (!formTracked.has(form)) {
+                formTracked.set(form, true)
+                gtag('event', 'form_start', {
+                  event_category: 'form',
+                  event_label: form.id || form.name || 'unnamed_form'
+                })
+              }
+            },
+            true
+          )
+
+          document.body.addEventListener(
+            'submit',
+            function (e) {
+              var form = e.target
+              if (form.tagName !== 'FORM') return
+
+              gtag('event', 'form_submit', {
+                event_category: 'form',
+                event_label: form.id || form.name || 'unnamed_form'
+              })
+            },
+            true
+          )
 
           // ✅ Helper functions
-          window.trackGA4Purchase = function(data) {
+          window.trackGA4Purchase = function (data) {
             try {
               gtag('event', 'purchase', {
-                'transaction_id': data.transactionId,
-                'value': parseFloat(data.value),
-                'currency': data.currency || 'USD',
-                'items': data.items || []
-              });
+                transaction_id: data.transactionId,
+                value: parseFloat(data.value),
+                currency: data.currency || 'USD',
+                items: data.items || []
+              })
             } catch (error) {
-              console.error('GA4 purchase error:', error);
+              console.error('GA4 purchase error:', error)
             }
-          };
+          }
 
-          window.trackGA4Signup = function(data) {
+          window.trackGA4Signup = function (data) {
             try {
               gtag('event', 'sign_up', {
-                'method': data.method || 'email',
-                'user_role': data.role || 'student'
-              });
-              
-              gtag('set', 'user_properties', {
-                'user_id': data.userId,
-                'user_role': data.role || 'student'
-              });
-            } catch (error) {
-              console.error('GA4 signup error:', error);
-            }
-          };
+                method: data.method || 'email',
+                user_role: data.role || 'student'
+              })
 
-          window.trackGA4TrialStart = function(data) {
+              gtag('set', 'user_properties', {
+                user_id: data.userId,
+                user_role: data.role || 'student'
+              })
+            } catch (error) {
+              console.error('GA4 signup error:', error)
+            }
+          }
+
+          window.trackGA4TrialStart = function (data) {
             try {
               gtag('event', 'begin_trial', {
-                'trial_type': data.plan || 'free_trial',
-                'value': 0,
-                'currency': 'USD'
-              });
+                trial_type: data.plan || 'free_trial',
+                value: 0,
+                currency: 'USD'
+              })
             } catch (error) {
-              console.error('GA4 trial error:', error);
+              console.error('GA4 trial error:', error)
             }
-          };
+          }
 
-          window.trackGA4Subscribe = function(data) {
+          window.trackGA4Subscribe = function (data) {
             try {
               gtag('event', 'subscribe', {
-                'value': parseFloat(data.value),
-                'currency': 'USD',
-                'subscription_plan': data.plan
-              });
+                value: parseFloat(data.value),
+                currency: 'USD',
+                subscription_plan: data.plan
+              })
             } catch (error) {
-              console.error('GA4 subscribe error:', error);
+              console.error('GA4 subscribe error:', error)
             }
-          };
+          }
 
-          window.trackGA4CancelSubscription = function(data) {
+          window.trackGA4CancelSubscription = function (data) {
             try {
               gtag('event', 'cancel_subscription', {
-                'cancellation_reason': data.reason,
-                'subscription_value': data.value || 0
-              });
+                cancellation_reason: data.reason,
+                subscription_value: data.value || 0
+              })
             } catch (error) {
-              console.error('GA4 cancel error:', error);
+              console.error('GA4 cancel error:', error)
             }
-          };
+          }
 
-          window.trackGA4ContentEngagement = function(data) {
+          window.trackGA4ContentEngagement = function (data) {
             try {
               gtag('event', 'select_content', {
-                'content_type': data.type,
-                'content_id': data.id
-              });
+                content_type: data.type,
+                content_id: data.id
+              })
             } catch (error) {
-              console.error('GA4 content error:', error);
+              console.error('GA4 content error:', error)
             }
-          };
+          }
 
-          window.trackGA4Search = function(query, resultsCount) {
+          window.trackGA4Search = function (query, resultsCount) {
             try {
               gtag('event', 'search', {
-                'search_term': query,
-                'search_results': resultsCount || 0
-              });
+                search_term: query,
+                search_results: resultsCount || 0
+              })
             } catch (error) {
-              console.error('GA4 search error:', error);
+              console.error('GA4 search error:', error)
             }
-          };
+          }
 
-          window.trackGA4Error = function(errorMessage, errorType) {
+          window.trackGA4Error = function (errorMessage, errorType) {
             try {
               gtag('event', 'exception', {
-                'description': errorMessage,
-                'error_type': errorType || 'unknown',
-                'fatal': false
-              });
+                description: errorMessage,
+                error_type: errorType || 'unknown',
+                fatal: false
+              })
             } catch (error) {
-              console.error('GA4 error tracking error:', error);
+              console.error('GA4 error tracking error:', error)
             }
-          };
+          }
 
           // Stub remaining functions
-          window.trackGA4AddToCart = window.trackGA4RemoveFromCart = window.trackGA4CheckoutProgress = window.trackGA4Refund = window.trackGA4EnhancedConversion = window.grantGA4Consent = window.denyGA4Consent = function() {};
-
-        })();
+          window.trackGA4AddToCart =
+            window.trackGA4RemoveFromCart =
+            window.trackGA4CheckoutProgress =
+            window.trackGA4Refund =
+            window.trackGA4EnhancedConversion =
+            window.grantGA4Consent =
+            window.denyGA4Consent =
+              function () {}
+        })()
       } else {
         // Localhost stubs
-        window.dataLayer = [];
-        window.gtag = function() { console.log('[GA4 Localhost]', arguments); };
-        window.trackGA4Purchase = window.trackGA4Signup = window.trackGA4TrialStart = window.trackGA4Subscribe = window.trackGA4CancelSubscription = window.trackGA4ContentEngagement = window.trackGA4Search = window.trackGA4Error = window.trackGA4AddToCart = window.trackGA4RemoveFromCart = window.trackGA4CheckoutProgress = window.trackGA4Refund = window.trackGA4EnhancedConversion = window.grantGA4Consent = window.denyGA4Consent = function() {};
+        window.dataLayer = []
+        window.gtag = function () {
+          console.log('[GA4 Localhost]', arguments)
+        }
+        window.trackGA4Purchase =
+          window.trackGA4Signup =
+          window.trackGA4TrialStart =
+          window.trackGA4Subscribe =
+          window.trackGA4CancelSubscription =
+          window.trackGA4ContentEngagement =
+          window.trackGA4Search =
+          window.trackGA4Error =
+          window.trackGA4AddToCart =
+          window.trackGA4RemoveFromCart =
+          window.trackGA4CheckoutProgress =
+          window.trackGA4Refund =
+          window.trackGA4EnhancedConversion =
+          window.grantGA4Consent =
+          window.denyGA4Consent =
+            function () {}
       }
     </script>
 
     <link rel="manifest" href="/manifest.json" />
-    <link rel="icon" type="image/png" href="/academy-phone-48.png" />
-    <link rel="apple-touch-icon" href="/academy-phone-48.png" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="theme-color" content="#ffffff" />
   </head>

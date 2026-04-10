@@ -6,6 +6,9 @@ import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
 import AcademyBtn from '../../../components/AcademyBtn'
 import { useHistory } from 'react-router-dom'
+import DeleteJournalContentModal from '../DeleteJournalContentModal'
+import AddJournalIntroduction from '../AddJournalIntroduction'
+import { toast } from 'react-toastify'
 
 const AddJournalModal = ({
     show,
@@ -18,6 +21,7 @@ const AddJournalModal = ({
 }) => {
     const history = useHistory()
     const [journalTitle, setJournalTitle] = useState('')
+    const [journalSubtitle, setJournalSubtitle] = useState('')
     const [selectedIcon, setSelectedIcon] = useState('')
     const [selectedColor, setSelectedColor] = useState('#E0EBC5')
     const [activeTab, setActiveTab] = useState('names')
@@ -26,6 +30,8 @@ const AddJournalModal = ({
         { id: 1, name: '', detailsText: '', detailsRich: '' },
     ])
     const [loading, setLoading] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showIntroductionModal, setShowIntroductionModal] = useState(false)
 
     const fetchJournalData = useCallback(async (id) => {
         try {
@@ -50,6 +56,7 @@ const AddJournalModal = ({
         if (data.manageContent) {
             console.log('Setting journal title:', data.manageContent.title, 'icon:', data.manageContent.icon, 'color:', data.manageContent.color)
             setJournalTitle(data.manageContent.title || '')
+            setJournalSubtitle(data.manageContent.subtitle || '')
             setSelectedIcon(data.manageContent.icon || '')
             setSelectedColor(data.manageContent.color || '#E0EBC5')
         }
@@ -69,8 +76,8 @@ const AddJournalModal = ({
                     id: level.id || (index + 1),
                     journalId: level.relatedJournals && level.relatedJournals.length > 0 ? level.relatedJournals[0].id : null,
                     name: level.title || '',
-                    detailsText: plainText,
-                    detailsRich: htmlContent
+                    detailsText: level.detailsText || htmlContent, // Use API detailsText, fallback to related journal content
+                    detailsRich: level.detailsText || htmlContent
                 };
             })
             console.log('Mapped sections:', mappedSections)
@@ -84,6 +91,7 @@ const AddJournalModal = ({
 
     const resetForm = useCallback(() => {
         setJournalTitle('')
+        setJournalSubtitle('')
         setSelectedIcon('')
         setSelectedColor('#E0EBC5')
         setSections([
@@ -112,7 +120,7 @@ const AddJournalModal = ({
                 }).catch(error => {
                     if (isMountedRef.current) {
                         console.error('Failed to load journal data:', error)
-                        alert(`Failed to load journal data: ${error.message}`)
+                        toast.error(`Failed to load journal data: ${error.message}`)
                     }
                 })
             } else {
@@ -143,7 +151,7 @@ const AddJournalModal = ({
                     detailsText: section.detailsText,
                     order: section.id,
                     published: true,
-                    category: 'student-leadership',
+                    category: journalData.title,
                     content: section.detailsRich || '' 
                 }))
             } : {
@@ -283,7 +291,7 @@ const AddJournalModal = ({
 
     const handleSectionDetailsRichChange = useCallback((id, value) => {
         setSections(prevSections => prevSections.map(section =>
-            section.id === id ? { ...section, detailsRich: value } : section
+            section.id === id ? { ...section, detailsText: value, detailsRich: value } : section
         ))
     }, [])
 
@@ -349,11 +357,23 @@ const AddJournalModal = ({
         return true
     }
 
+    const validateSectionDetails = () => {
+        const hasEmptyDetails = sections.some(section =>
+            !section.detailsRich || section.detailsRich.trim() === '<p><br></p>' || section.detailsRich.trim() === ''
+        )
+        return !hasEmptyDetails
+    }
+
     const handleSave = async () => {
-        if (mode === 'view') return 
+        if (mode === 'view') return
 
         if (!validateForm()) {
-            alert('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            toast.error('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            return
+        }
+
+        if (activeTab === 'details' && !validateSectionDetails()) {
+            toast.error('Please fill in all section details before creating the journal')
             return
         }
 
@@ -368,23 +388,23 @@ const AddJournalModal = ({
                 manageContent: {
                     ...(mode === 'edit' && contentId ? { id: contentId } : {}),
                     title: journalTitle,
+                    subtitle: journalSubtitle,
                     icon: selectedIcon,
                     color: normalizedColor
                     // Other fields will be added in AddJournalIntroduction
                 },
                 // Only send journalLevels for new journal creation, not for updates
-                ...(mode === 'add' ? {
                     journalLevels: sections
                         .filter(section => section.name && section.name.trim() !== '')
                         .map((section, index) => ({
                             title: section.name,
                             order: index + 1,
                             published: true,
-                            category: 'student-leadership',
+                            category: journalTitle,
                             detailsText: section.detailsText,
                             content: section.detailsRich || ''
                         }))
-                } : {})
+                
             }
 
             console.log('Saving journal data:', journalData)
@@ -405,19 +425,23 @@ const AddJournalModal = ({
                     // For new journal creation, proceed to introduction modal immediately
                     if (onProceedToIntroduction) {
                         onProceedToIntroduction(response.data.data)
+                        // Reset form fields after successful creation
+                        resetForm()
                     } else {
-                        alert('Journal created successfully!')
+                        toast.success('Journal created successfully!')
                         onClose()
                         // Refresh the content list in the parent component
                         if (onContentChange) {
                             onContentChange()
                         }
+                        // Reset form fields after successful creation
+                        resetForm()
                     }
                 } else if (mode === 'edit') {
                     if (onProceedToIntroduction) {
                         onProceedToIntroduction(response.data.data)
                     } else {
-                        alert('Journal updated successfully!')
+                        toast.success('Journal updated successfully!')
                         onClose()
                         // Refresh the content list in the parent component
                         if (onContentChange) {
@@ -429,17 +453,22 @@ const AddJournalModal = ({
                 throw new Error(response.data.error || 'Failed to save journal')
             }
         } catch (error) {
-            alert(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
+            toast.error(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
         } finally {
             setLoading(false)
         }
     }
 
+    const handleContinueToDetails = () => {
+        if (!validateForm()) {
+            toast.error('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            return
+        }
+        setActiveTab('details')
+    }
+
     const handleDelete = async () => {
         if (!contentId) return
-
-        const confirmDelete = window.confirm('Are you sure you want to delete this journal and all its related content? This action cannot be undone.')
-        if (!confirmDelete) return
 
         setLoading(true)
 
@@ -447,7 +476,7 @@ const AddJournalModal = ({
             const response = await axiosInstance.delete(`/manage-content/full/${contentId}`)
 
             if (response.data.success) {
-                alert('Journal and all related content deleted successfully!')
+                toast.success('Journal and all related content deleted successfully!')
                 onClose()
                 // Refresh the content list in the parent component
                 if (onContentChange) {
@@ -458,11 +487,57 @@ const AddJournalModal = ({
             }
         } catch (error) {
             console.error('Error deleting journal:', error)
-            alert(`Failed to delete journal: ${error.response?.data?.message || error.message}`)
+            toast.error(`Failed to delete journal: ${error.response?.data?.message || error.message}`)
         } finally {
             setLoading(false)
         }
     }
+
+    const handleArchive = async () => {
+        if (!contentId) return
+
+        setLoading(true)
+
+        try {
+            const response = await axiosInstance.put('/manage-content/bulk/archive', {
+                ids: [contentId]
+            })
+
+            if (response.data.success) {
+                toast.success('Journal archived successfully!')
+                onClose()
+                // Refresh the content list in the parent component
+                if (onContentChange) {
+                    onContentChange()
+                }
+            } else {
+                throw new Error('Failed to archive journal')
+            }
+        } catch (error) {
+            console.error('Error archiving journal:', error)
+            toast.error(`Failed to archive journal: ${error.response?.data?.message || error.message}`)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+  const handleShowDeleteModal = () => {
+    setShowDeleteModal(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false)
+  }
+
+  const handleViewIntroduction = () => {
+    setShowIntroductionModal(true)
+  }
+
+  const handleCloseIntroductionModal = () => {
+    setShowIntroductionModal(false)
+  }
+
+  const isContentArchived = existingData?.manageContent?.archiveStatus || false
 
     const handleCancel = () => {
         if (mode === 'add') {
@@ -475,7 +550,7 @@ const AddJournalModal = ({
 
     return (
         <>
-            {loading && (
+            {/* {loading && (
                 <div className="loading-overlay">
                     <div className="loading-spinner">
                         <div className="spinner-border text-primary" role="status">
@@ -484,7 +559,7 @@ const AddJournalModal = ({
                         <p>Loading journal data...</p>
                     </div>
                 </div>
-            )}
+            )} */}
 
             <div className="add-journal-modal-overlay">
                 <div className="add-journal-modal">
@@ -556,6 +631,18 @@ const AddJournalModal = ({
                                         placeholder="Add Journal Title (i.e. Leadership Journal)..."
                                         value={journalTitle}
                                         onChange={(e) => setJournalTitle(e.target.value)}
+                                        className="journal-input"
+                                        disabled={mode === 'view'}
+                                    />
+                                    <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+                                </div>
+
+                                <div className="input-box flex-1">
+                                    <input
+                                        type="text"
+                                        placeholder="Add Journal Subtitle..."
+                                        value={journalSubtitle}
+                                        onChange={(e) => setJournalSubtitle(e.target.value)}
                                         className="journal-input"
                                         disabled={mode === 'view'}
                                     />
@@ -727,52 +814,43 @@ const AddJournalModal = ({
                             {activeTab === 'details' && (
                                 <div className="sections-panel">
                                     <div className="sections-box">
-                                        {sections.map((section) => (
-                                            <div key={section.id} className="section-detail-item" style={{ marginBottom: '30px' }}>
-                                                <div className="section-header" style={{ marginBottom: '15px' }}>
-                                                    <div className="section-header-content">
-                                                        <div className="spark-icon">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                                <g clip-path="url(#clip0_4724_21225)">
-                                                                    <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" stroke-width="1.5" stroke-linejoin="round" />
-                                                                </g>
-                                                                <defs>
-                                                                    <clipPath id="clip0_4724_21225">
-                                                                        <rect width="20" height="20" fill="white" />
-                                                                    </clipPath>
-                                                                </defs>
-                                                            </svg>
+                                        {sections.map((section) => {
+                                            const isEmpty = !section.detailsRich || section.detailsRich.trim() === '<p><br></p>' || section.detailsRich.trim() === ''
+                                            return (
+                                                <div key={section.id} className="section-detail-item" style={{ marginBottom: '30px' }}>
+                                                    <div className="section-header" style={{ marginBottom: '15px' }}>
+                                                        <div className="section-header-content">
+                                                            <div className="spark-icon">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                                    <g clip-path="url(#clip0_4724_21225)">
+                                                                        <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" stroke-width="1.5" stroke-linejoin="round" />
+                                                                    </g>
+                                                                    <defs>
+                                                                        <clipPath id="clip0_4724_21225">
+                                                                            <rect width="20" height="20" fill="white" />
+                                                                        </clipPath>
+                                                                    </defs>
+                                                                </svg>
+                                                            </div>
+                                                            <span>Section {sections.indexOf(section) + 1}: {section.name || 'Unnamed Section'}</span>
+                                                            {/* {isEmpty && (
+                                                                <span style={{ color: '#dc3545', fontSize: '12px', marginLeft: '10px' }}>
+                                                                    (Required)
+                                                                </span>
+                                                            )} */}
                                                         </div>
-                                                        <span>Section {section.id}: {section.name || 'Unnamed Section'}</span>
+                                                    </div>
+                                                    <div className="section-details-content">
+                                                        <ReactQuill
+                                                            value={section.detailsText}
+                                                            onChange={(value) => handleSectionDetailsRichChange(section.id, value)}
+                                                            readOnly={mode === 'view'}
+                                                            placeholder="Add section details..."
+                                                        />
                                                     </div>
                                                 </div>
-                                                <div className="section-details-content">
-                                                    {/* <input
-                                                        style={{
-                                                            border: '1px solid rgba(227, 229, 233, 0.50)',
-                                                            borderRadius: '8px',
-                                                            padding: '12px 18px',
-                                                            width: '100%',
-                                                            fontSize: '16px',
-                                                            fontWeight: '500',
-                                                            color: '#333',
-                                                            backgroundColor: 'transparent',
-                                                            marginBottom: '10px',
-                                                        }}
-                                                        type="text"
-                                                        placeholder="Add section details..."
-                                                        value={section.detailsText}
-                                                        onChange={(e) => handleSectionDetailsTextChange(section.id, e.target.value)}
-                                                        disabled={mode === 'view'}
-                                                    /> */}
-                                                    <ReactQuill
-                                                        value={section.detailsRich}
-                                                        onChange={(value) => handleSectionDetailsRichChange(section.id, value)}
-                                                        readOnly={mode === 'view'}
-                                                    />
-                                                </div>
-                                            </div>
-                                        ))}
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             )}
@@ -786,7 +864,7 @@ const AddJournalModal = ({
                     <div>
                         {(mode === 'edit') && contentId && (
                             <button
-                                onClick={handleDelete}
+                                onClick={handleShowDeleteModal}
                                 disabled={loading}
                                 style={{
                                     backgroundColor: 'transparent',
@@ -823,27 +901,44 @@ const AddJournalModal = ({
                             />
                             <AcademyBtn
                                 title="edit sections"
-                                onClick={() => history.push('/leadership-journal-management')}
+                                onClick={() => history.push(`/leadership-journal-management?contentId=${contentId}`)}
                                 disabled={loading}
                             />
                         </div>
                     )}
 
 
-                    {/* Action buttons - only for edit mode */}
+                    {/* Action buttons - only for add mode */}
                     {mode === 'add' && (
                         <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
                             <div onClick={handleCancel} disabled={loading} className="cancel-btn">
                                 Cancel
                             </div>
-                            <div onClick={handleSave} disabled={loading} className="save-btn">
-                                Save
-                            </div>
+                            {activeTab === 'names' ? (
+                                <div onClick={handleContinueToDetails} disabled={loading} className="save-btn">
+                                    Save and Continue
+                                </div>
+                            ) : (
+                                <div
+                                    onClick={handleSave}
+                                    disabled={loading || !validateSectionDetails()}
+                                    className={`save-btn ${!validateSectionDetails() ? 'disabled' : ''}`}
+                                    style={!validateSectionDetails() ? { opacity: 0.8, cursor: 'not-allowed' } : {}}
+                                >
+                                    {loading ? 'Saving...' : 'Save'}
+                                </div>
+                            )}
                         </div>
                     )}
 
                     {mode === 'view' && (
                         <div style={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
+                            <div style={{ width: '100%' }}>
+                                <AcademyBtn
+                                    title="view intro"
+                                    onClick={handleViewIntroduction}
+                                />
+                            </div>
                             <button className="cancel-btn" onClick={handleCancel}>
                                 Cancel
                             </button>
@@ -852,6 +947,24 @@ const AddJournalModal = ({
                 </div>
                 </div>
             </div>
+
+            <DeleteJournalContentModal
+                show={showDeleteModal}
+                onClose={handleCloseDeleteModal}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+                title="Delete Journal Content"
+                message="What would you like to do with this journal and all its related content?"
+                isArchived={isContentArchived}
+            />
+
+            <AddJournalIntroduction
+                show={showIntroductionModal}
+                onClose={handleCloseIntroductionModal}
+                journalData={existingData}
+                mode="view"
+                contentId={contentId}
+            />
         </>
     )
 }
