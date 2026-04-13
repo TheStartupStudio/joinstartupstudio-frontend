@@ -661,9 +661,9 @@ const LeadershipJournal = memo(() => {
                 style={{ minHeight: '200px' }}
               >
                 <div className='text-center'>
-                  <div className='spinner-border text-primary' role='status'>
+                  {/* <div className='spinner-border' style={{ color: 'cyan' }} role='status'>
                     <span className='visually-hidden'>Loading...</span>
-                  </div>
+                  </div> */}
                   <p className='mt-2'>Loading journal content...</p>
                 </div>
               </div>
