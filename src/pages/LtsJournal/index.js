@@ -410,17 +410,23 @@ function LtsJournal(props) {
     }
   }
 
+  console.log('lessonsByLevel:', lessonsByLevel)
+
   const options =
     lessonsByLevel[activeLevel] && Array.isArray(lessonsByLevel[activeLevel])
       ? [
-          {
-            value: 'welcome-level-1',
-            label: 'Welcome to Level 1',
-            icon: tickSign,
-            textColor: activeLevel === 0 ? 'text-dark' : 'text-secondary',
-            disabled: activeLevel !== 0,
-            isWelcomeOption: true
-          },
+          ...(activeLevel === 0
+            ? [
+                {
+                  value: 'welcome-level-1',
+                  label: 'Welcome to Level 1',
+                  icon: tickSign,
+                  textColor: 'text-dark',
+                  disabled: false,
+                  isWelcomeOption: true
+                }
+              ]
+            : []),
           ...lessonsByLevel[activeLevel].map((lesson) => {
             const status = getOptionStatus(
               lesson.id,

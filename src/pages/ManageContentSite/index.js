@@ -566,6 +566,7 @@ const ManageContentSite = () => {
         toast.success('Content deleted successfully')
         setSelectedItems((prev) => prev.filter((id) => id !== contentId))
         fetchContents()
+        fetchArchivedContents()
       } else {
         toast.error('Failed to delete content')
       }

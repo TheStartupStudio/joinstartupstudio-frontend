@@ -2,7 +2,13 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faPencilAlt, faTrash, faPlus, faMail } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowLeft,
+  faPencilAlt,
+  faTrash,
+  faPlus,
+  faMail
+} from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
@@ -13,7 +19,6 @@ import PayInvoiceModal from '../PayInvoiceModal'
 import ContactLTSModal from '../ContactLTSModal'
 import StartupStudioLogo from '../../../assets/images/Startup Studio Logo v1x1200.png'
 import AcademyBulb from '../../../../public/academy-logo-192.png'
-
 
 const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const history = useHistory()
@@ -32,10 +37,10 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const [tempLogo2, setTempLogo2] = useState(null)
   const logo1InputRef = useRef(null)
   const logo2InputRef = useRef(null)
-  
+
   // ✅ Add this state to store the original fetched data
   const [originalData, setOriginalData] = useState(null)
-  
+
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -59,8 +64,10 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const fetchOrganizationData = async () => {
     setFetchingData(true)
     try {
-      const { data } = await axiosInstance.get(`/admin-info/organization/${universityId}`)
-      
+      const { data } = await axiosInstance.get(
+        `/admin-info/organization/${universityId}`
+      )
+
       if (data.success) {
         const orgData = {
           name: data.data.name || '',
@@ -73,7 +80,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
           logo1: data.data.logo1 || null,
           logo2: data.data.logo2 || null
         }
-        
+
         setFormData(orgData)
         // ✅ Store the original data for cancel functionality
         setOriginalData(JSON.parse(JSON.stringify(orgData)))
@@ -105,7 +112,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   }
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
@@ -117,7 +124,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
       ...updatedPricing[index],
       [field]: value
     }
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       pricing: updatedPricing
     }))
@@ -129,21 +136,21 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
       ...updatedOrgPricing[index],
       [field]: value
     }
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       orgPrice: updatedOrgPricing
     }))
   }
 
   const addNewPricingTier = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       pricing: [...prev.pricing, { amount: '', frequency: 'Per month' }]
     }))
   }
 
   const addNewOrgPricingTier = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       orgPrice: [...prev.orgPrice, { amount: '', frequency: 'Per year' }]
     }))
@@ -152,7 +159,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const removePricingTier = (index) => {
     if (formData.pricing.length > 1) {
       const updatedPricing = formData.pricing.filter((_, i) => i !== index)
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         pricing: updatedPricing
       }))
@@ -162,7 +169,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const removeOrgPricingTier = (index) => {
     if (formData.orgPrice.length > 1) {
       const updatedOrgPricing = formData.orgPrice.filter((_, i) => i !== index)
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         orgPrice: updatedOrgPricing
       }))
@@ -176,7 +183,9 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
 
     const pricingChanged = formData.pricing.some((tier, index) => {
       const original = originalPricing[index]
-      return tier.amount !== original.amount || tier.frequency !== original.frequency
+      return (
+        tier.amount !== original.amount || tier.frequency !== original.frequency
+      )
     })
 
     if (pricingChanged) return true
@@ -187,7 +196,9 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
 
     const orgPricingChanged = formData.orgPrice.some((tier, index) => {
       const original = originalOrgPricing[index]
-      return tier.amount !== original.amount || tier.frequency !== original.frequency
+      return (
+        tier.amount !== original.amount || tier.frequency !== original.frequency
+      )
     })
 
     return orgPricingChanged
@@ -215,21 +226,27 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
         adminEmail: formData.adminEmail
       }
 
-      const { data } = await axiosInstance.patch(`/admin-info/organization/${universityId}`, payload)
-      
+      const { data } = await axiosInstance.patch(
+        `/admin-info/organization/${universityId}`,
+        payload
+      )
+
       if (data.success) {
         toast.success('Administrator details updated successfully!')
         setIsEditMode(false)
-        
+
         // Update original data after successful save
         setOriginalData(JSON.parse(JSON.stringify(formData)))
-        
+
         // Refresh data
         await fetchOrganizationData()
       }
     } catch (error) {
       console.error('Error saving administrator details:', error)
-      toast.error(error.response?.data?.message || 'Failed to update administrator details')
+      toast.error(
+        error.response?.data?.message ||
+          'Failed to update administrator details'
+      )
     } finally {
       setLoading(false)
     }
@@ -251,24 +268,29 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
         applyToCurrentUsers
       }
 
-      const { data } = await axiosInstance.patch(`/admin-info/organization/${universityId}`, payload)
-      
+      const { data } = await axiosInstance.patch(
+        `/admin-info/organization/${universityId}`,
+        payload
+      )
+
       if (data.success) {
         toast.success('Organization updated successfully!')
         setIsEditMode(false)
         setOriginalPricing(JSON.parse(JSON.stringify(formData.pricing)))
         setOriginalOrgPricing(JSON.parse(JSON.stringify(formData.orgPrice)))
         setShowPricingChangeModal(false)
-        
+
         // ✅ Update original data after successful save
         setOriginalData(JSON.parse(JSON.stringify(formData)))
-        
+
         // Refresh data
         await fetchOrganizationData()
       }
     } catch (error) {
       console.error('Error saving organization:', error)
-      toast.error(error.response?.data?.message || 'Failed to update organization')
+      toast.error(
+        error.response?.data?.message || 'Failed to update organization'
+      )
     } finally {
       setLoading(false)
     }
@@ -280,7 +302,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
 
   const handlePricingChangeCancel = () => {
     setShowPricingChangeModal(false)
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       pricing: JSON.parse(JSON.stringify(originalPricing)),
       orgPrice: JSON.parse(JSON.stringify(originalOrgPricing))
@@ -298,7 +320,6 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const handleViewLearners = () => {
     history.push('/user-managment')
   }
-
 
   const handleViewBilling = () => {
     history.push('/view-invoices')
@@ -351,25 +372,32 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
       return
     }
 
-    const setUploading = logoType === 'logo1' ? setUploadingLogo1 : setUploadingLogo2
+    const setUploading =
+      logoType === 'logo1' ? setUploadingLogo1 : setUploadingLogo2
 
     try {
       setUploading(true)
       const formDataToUpload = new FormData()
       formDataToUpload.append('img', file)
 
-      const response = await axiosInstance.post('/upload/img-transform', formDataToUpload, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axiosInstance.post(
+        '/upload/img-transform',
+        formDataToUpload,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      })
+      )
 
       if (response.data.fileLocation) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           [logoType]: response.data.fileLocation
         }))
-        toast.success(`${logoType === 'logo1' ? 'Logo' : 'Banner'} uploaded successfully!`)
+        toast.success(
+          `${logoType === 'logo1' ? 'Logo' : 'Banner'} uploaded successfully!`
+        )
       }
     } catch (error) {
       console.error('Error uploading logo:', error)
@@ -397,7 +425,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   }
 
   const handleRemoveLogo = (logoType) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [logoType]: null
     }))
@@ -410,7 +438,8 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   }
 
   const handleTempLogoUpload = async (file, logoType) => {
-    const setUploading = logoType === 'logo1' ? setUploadingLogo1 : setUploadingLogo2
+    const setUploading =
+      logoType === 'logo1' ? setUploadingLogo1 : setUploadingLogo2
 
     if (!file) return
 
@@ -432,11 +461,15 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
       const formDataToUpload = new FormData()
       formDataToUpload.append('img', file)
 
-      const response = await axiosInstance.post('/upload/img-transform', formDataToUpload, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axiosInstance.post(
+        '/upload/img-transform',
+        formDataToUpload,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      })
+      )
 
       if (response.data.fileLocation) {
         if (logoType === 'logo1') {
@@ -484,14 +517,19 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
         logo1: tempLogo1,
         logo2: tempLogo2
       }
-      const { data } = await axiosInstance.patch(`/admin-info/organization/${universityId}`, payload)
+      const { data } = await axiosInstance.patch(
+        `/admin-info/organization/${universityId}`,
+        payload
+      )
       if (data.success) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           logo1: tempLogo1,
           logo2: tempLogo2
         }))
-        setOriginalData(prev => prev ? { ...prev, logo1: tempLogo1, logo2: tempLogo2 } : null)
+        setOriginalData((prev) =>
+          prev ? { ...prev, logo1: tempLogo1, logo2: tempLogo2 } : null
+        )
         setShowEditLogoModal(false)
         toast.success('Logos updated successfully')
         await fetchOrganizationData()
@@ -514,212 +552,356 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
         show={show}
         onHide={onHide}
         centered
-        size="md"
+        size='md'
         className={`view-organization-modal ${isEditMode ? 'edit-mode' : ''}`}
       >
-        <Modal.Header className="view-org-modal-header">
-          <div className="header-btn-container">
-            <button 
-              className="back-button"
-              onClick={handleBackClick}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <path d="M23.125 15H7.5M7.5 15L15 7.5M7.5 15L15 22.5" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <Modal.Header className='view-org-modal-header'>
+          <div className='header-btn-container'>
+            <button className='back-button' onClick={handleBackClick}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='30'
+                height='30'
+                viewBox='0 0 30 30'
+                fill='none'
+              >
+                <path
+                  d='M23.125 15H7.5M7.5 15L15 7.5M7.5 15L15 22.5'
+                  stroke='black'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
               </svg>
             </button>
 
             {!isEditMode && (
-              <button 
-                className="edit-button-view-org"
+              <button
+                className='edit-button-view-org'
                 onClick={handleEditClick}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                  <path d="M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='30'
+                  height='30'
+                  viewBox='0 0 30 30'
+                  fill='none'
+                >
+                  <path
+                    d='M17.9539 7.06445L20.1575 4.86091C20.9385 4.07986 22.2049 4.07986 22.9859 4.86091L25.4608 7.33579C26.2418 8.11683 26.2418 9.38316 25.4608 10.1642L23.2572 12.3678M17.9539 7.06445L5.80585 19.2125C5.47378 19.5446 5.26915 19.983 5.22783 20.4508L4.88296 24.3546C4.82819 24.9746 5.34707 25.4935 5.96708 25.4387L9.87093 25.0939C10.3387 25.0525 10.7771 24.8479 11.1092 24.5158L23.2572 12.3678M17.9539 7.06445L23.2572 12.3678'
+                    stroke='black'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
                 </svg>
               </button>
             )}
           </div>
 
-          <div className="modal-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M5.83301 7.50833L5.84134 7.49907" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M9.16699 7.50833L9.17533 7.49907" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5.83301 10.8416L5.84134 10.8323" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M9.16699 10.8416L9.17533 10.8323" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5.83301 14.1751L5.84134 14.1658" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M9.16699 14.1751L9.17533 14.1658" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12.5 17.5H3.1C2.76863 17.5 2.5 17.2314 2.5 16.9V4.76667C2.5 4.4353 2.76863 4.16667 3.1 4.16667H7.5V3.1C7.5 2.76863 7.76863 2.5 8.1 2.5H11.9C12.2314 2.5 12.5 2.76863 12.5 3.1V7.5M12.5 17.5H16.9C17.2314 17.5 17.5 17.2314 17.5 16.9V8.1C17.5 7.76863 17.2314 7.5 16.9 7.5H12.5M12.5 17.5V14.1667M12.5 7.5V10.8333M12.5 10.8333H14.1667M12.5 10.8333V14.1667M12.5 14.1667H14.1667" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <div className='modal-icon'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='20'
+              height='20'
+              viewBox='0 0 20 20'
+              fill='none'
+            >
+              <path
+                d='M5.83301 7.50833L5.84134 7.49907'
+                stroke='black'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M9.16699 7.50833L9.17533 7.49907'
+                stroke='black'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M5.83301 10.8416L5.84134 10.8323'
+                stroke='black'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M9.16699 10.8416L9.17533 10.8323'
+                stroke='black'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M5.83301 14.1751L5.84134 14.1658'
+                stroke='black'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M9.16699 14.1751L9.17533 14.1658'
+                stroke='black'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M12.5 17.5H3.1C2.76863 17.5 2.5 17.2314 2.5 16.9V4.76667C2.5 4.4353 2.76863 4.16667 3.1 4.16667H7.5V3.1C7.5 2.76863 7.76863 2.5 8.1 2.5H11.9C12.2314 2.5 12.5 2.76863 12.5 3.1V7.5M12.5 17.5H16.9C17.2314 17.5 17.5 17.2314 17.5 16.9V8.1C17.5 7.76863 17.2314 7.5 16.9 7.5H12.5M12.5 17.5V14.1667M12.5 7.5V10.8333M12.5 10.8333H14.1667M12.5 10.8333V14.1667M12.5 14.1667H14.1667'
+                stroke='black'
+                strokeWidth='1.5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
             </svg>
           </div>
-          <h5 className="modal-title">{isEditMode ? 'Edit Organization' : 'View Organization'}</h5>
+          <h5 className='modal-title'>
+            {isEditMode ? 'Edit Organization' : 'View Organization'}
+          </h5>
         </Modal.Header>
 
-        <Modal.Body className="view-org-modal-body">
+        <Modal.Body className='view-org-modal-body'>
           {fetchingData ? (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="sr-only">Loading...</span>
+            <div className='text-center py-5'>
+              <div className='spinner-border text-primary' role='status'>
+                <span className='sr-only'>Loading...</span>
               </div>
-              <p className="mt-2">Loading organization data...</p>
+              <p className='mt-2'>Loading organization data...</p>
             </div>
           ) : (
             <>
-              <div className="org-section">
-                <div className="section-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3587_14186)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+              <div className='org-section'>
+                <div className='section-header'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                  >
+                    <g clipPath='url(#clip0_3587_14186)'>
+                      <path
+                        d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinejoin='round'
+                      />
                     </g>
                   </svg>
                   <span>Organization Details</span>
                 </div>
-                <div className="org-details">
+                <div className='org-details'>
                   {isEditMode === 'full' ? (
                     <>
                       <input
-                        type="text"
-                        className="org-name"
+                        type='text'
+                        className='org-name'
                         value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        placeholder="Organization Name"
+                        onChange={(e) =>
+                          handleInputChange('name', e.target.value)
+                        }
+                        placeholder='Organization Name'
                       />
                       <input
-                        className="org-address"
+                        className='org-address'
                         value={formData.address}
-                        onChange={(e) => handleInputChange('address', e.target.value)}
-                        placeholder="Organization Address"
+                        onChange={(e) =>
+                          handleInputChange('address', e.target.value)
+                        }
+                        placeholder='Organization Address'
                         rows={2}
                       />
                     </>
                   ) : (
                     <>
-                      <div className="org-name" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>{formData.name}</div>
-                      <div className="org-address" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>{formData.address}</div>
+                      <div
+                        className='org-name'
+                        style={
+                          isEditMode === 'adminOnly'
+                            ? { opacity: 0.5, pointerEvents: 'none' }
+                            : {}
+                        }
+                      >
+                        {formData.name}
+                      </div>
+                      <div
+                        className='org-address'
+                        style={
+                          isEditMode === 'adminOnly'
+                            ? { opacity: 0.5, pointerEvents: 'none' }
+                            : {}
+                        }
+                      >
+                        {formData.address}
+                      </div>
                     </>
                   )}
                 </div>
               </div>
 
               {/* Logo Section - UPDATED */}
-              <div className="org-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
-                <div className="section-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3587_14757)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+              <div
+                className='org-section'
+                style={
+                  isEditMode === 'adminOnly'
+                    ? { opacity: 0.5, pointerEvents: 'none' }
+                    : {}
+                }
+              >
+                <div className='section-header'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                  >
+                    <g clipPath='url(#clip0_3587_14757)'>
+                      <path
+                        d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinejoin='round'
+                      />
                     </g>
                   </svg>
                   <span>Organizational Mark & Logo</span>
                   {!isEditMode && (
-                    <button className="edit-btn" onClick={handleEditLogoClick}>
+                    <button className='edit-btn' onClick={handleEditLogoClick}>
                       <span>Edit Mark or Logo</span>
                       <FontAwesomeIcon icon={faPencilAlt} />
                     </button>
                   )}
                 </div>
-                <div className="org-logos">
+                <div className='org-logos'>
                   {/* Logo 1 */}
-                  <div className="logo-container">
-                    <div 
+                  <div className='logo-container'>
+                    <div
                       className={`logo-wrapper ${isEditMode ? 'editable' : ''} ${uploadingLogo1 ? 'uploading' : ''}`}
                       onClick={() => handleLogoClick('logo1')}
                     >
                       {uploadingLogo1 ? (
-                        <div className="logo-uploading">
-                          <div className="spinner-border spinner-border-sm text-primary" role="status">
-                            <span className="sr-only">Uploading...</span>
+                        <div className='logo-uploading'>
+                          <div
+                            className='spinner-border spinner-border-sm text-primary'
+                            role='status'
+                          >
+                            <span className='sr-only'>Uploading...</span>
                           </div>
-                          <p className="mt-2">Uploading...</p>
+                          <p className='mt-2'>Uploading...</p>
                         </div>
                       ) : formData.logo1 ? (
                         <>
-                          <img 
-                            src={formData.logo1} 
-                            alt="Organization Logo 1" 
-                            className="org-logo"
+                          <img
+                            src={formData.logo1}
+                            alt='Organization Logo 1'
+                            className='org-logo'
                           />
                           {isEditMode && (
-                            <div className="logo-overlay">
-                              <FontAwesomeIcon icon={faPencilAlt} size="2x" />
+                            <div className='logo-overlay'>
+                              <FontAwesomeIcon icon={faPencilAlt} size='2x' />
                               <p>Click to change</p>
                             </div>
                           )}
                         </>
                       ) : (
-                        <div className="logo-placeholder" style={{width: "unset", height: "unset", padding: '15px', aspectRatio: "1/1" }}>
-                          <p>{isEditMode ? 'Click to upload logo' : 'No mark has been added yet'}</p>
+                        <div
+                          className='logo-placeholder'
+                          style={{
+                            width: 'unset',
+                            height: 'unset',
+                            padding: '15px',
+                            aspectRatio: '1/1'
+                          }}
+                        >
+                          <p>
+                            {isEditMode
+                              ? 'Click to upload logo'
+                              : 'No mark has been added yet'}
+                          </p>
                         </div>
                       )}
                     </div>
                     {isEditMode && formData.logo1 && (
-                      <button 
-                        className="remove-logo-btn"
+                      <button
+                        className='remove-logo-btn'
                         onClick={(e) => {
                           e.stopPropagation()
                           handleRemoveLogo('logo1')
                         }}
-                        type="button"
+                        type='button'
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
                     )}
                     <input
                       ref={logo1InputRef}
-                      type="file"
-                      accept="image/png,image/jpeg,image/jpg"
+                      type='file'
+                      accept='image/png,image/jpeg,image/jpg'
                       onChange={(e) => handleLogoChange(e, 'logo1')}
                       style={{ display: 'none' }}
                     />
                   </div>
 
                   {/* Logo 2 */}
-                  <div className="logo-container">
-                    <div 
+                  <div className='logo-container'>
+                    <div
                       className={`logo-wrapper horizontal ${isEditMode ? 'editable' : ''} ${uploadingLogo2 ? 'uploading' : ''}`}
                       onClick={() => handleLogoClick('logo2')}
                     >
                       {uploadingLogo2 ? (
-                        <div className="logo-uploading">
-                          <div className="spinner-border spinner-border-sm text-primary" role="status">
-                            <span className="sr-only">Uploading...</span>
+                        <div className='logo-uploading'>
+                          <div
+                            className='spinner-border spinner-border-sm text-primary'
+                            role='status'
+                          >
+                            <span className='sr-only'>Uploading...</span>
                           </div>
-                          <p className="mt-2">Uploading...</p>
+                          <p className='mt-2'>Uploading...</p>
                         </div>
                       ) : formData.logo2 ? (
                         <>
-                          <img 
-                            src={formData.logo2} 
-                            alt="Organization Logo 2" 
-                            className="org-logo-horizontal"
+                          <img
+                            src={formData.logo2}
+                            alt='Organization Logo 2'
+                            className='org-logo-horizontal'
                           />
                           {isEditMode && (
-                            <div className="logo-overlay">
-                              <FontAwesomeIcon icon={faPencilAlt} size="2x" />
+                            <div className='logo-overlay'>
+                              <FontAwesomeIcon icon={faPencilAlt} size='2x' />
                               <p>Click to change</p>
                             </div>
                           )}
                         </>
                       ) : (
-                        <div className="logo-placeholder">
-                          <p>{isEditMode ? 'Click to upload banner' : 'No logo has been added yet'}</p>
+                        <div className='logo-placeholder'>
+                          <p>
+                            {isEditMode
+                              ? 'Click to upload banner'
+                              : 'No logo has been added yet'}
+                          </p>
                         </div>
                       )}
                     </div>
                     {isEditMode && formData.logo2 && (
-                      <button 
-                        className="remove-logo-btn"
+                      <button
+                        className='remove-logo-btn'
                         onClick={(e) => {
                           e.stopPropagation()
                           handleRemoveLogo('logo2')
                         }}
-                        type="button"
+                        type='button'
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
                     )}
                     <input
                       ref={logo2InputRef}
-                      type="file"
-                      accept="image/png,image/jpeg,image/jpg"
+                      type='file'
+                      accept='image/png,image/jpeg,image/jpg'
                       onChange={(e) => handleLogoChange(e, 'logo2')}
                       style={{ display: 'none' }}
                     />
@@ -727,67 +909,105 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                 </div>
               </div>
 
-              <div className="org-section">
-                <div className="section-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3587_14757)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+              <div className='org-section'>
+                <div className='section-header'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                  >
+                    <g clipPath='url(#clip0_3587_14757)'>
+                      <path
+                        d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinejoin='round'
+                      />
                     </g>
                   </svg>
                   <span>Administrator Details</span>
                   {!isEditMode && (
-                    <button className="edit-btn" onClick={handleEditAdminDetails}>
+                    <button
+                      className='edit-btn'
+                      onClick={handleEditAdminDetails}
+                    >
                       <span>Edit Administrator Details</span>
                       <FontAwesomeIcon icon={faPencilAlt} />
                     </button>
                   )}
                 </div>
-                <div className="admin-details">
+                <div className='admin-details'>
                   {isEditMode ? (
                     <>
                       <input
-                        type="text"
-                        className="admin-name"
+                        type='text'
+                        className='admin-name'
                         value={formData.adminName}
-                        onChange={(e) => handleInputChange('adminName', e.target.value)}
-                        placeholder="Administrator Name"
+                        onChange={(e) =>
+                          handleInputChange('adminName', e.target.value)
+                        }
+                        placeholder='Administrator Name'
                       />
                       <input
-                        type="email"
-                        className="admin-email"
+                        type='email'
+                        className='admin-email'
                         value={formData.adminEmail}
-                        onChange={(e) => handleInputChange('adminEmail', e.target.value)}
-                        placeholder="Administrator Email"
+                        onChange={(e) =>
+                          handleInputChange('adminEmail', e.target.value)
+                        }
+                        placeholder='Administrator Email'
                       />
                     </>
                   ) : (
                     <>
-                      <div className="admin-name">{formData.adminName}</div>
-                      <div className="admin-email">{formData.adminEmail}</div>
+                      <div className='admin-name'>{formData.adminName}</div>
+                      <div className='admin-email'>{formData.adminEmail}</div>
                     </>
                   )}
                 </div>
               </div>
 
-              <div className="org-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
-                <div className="section-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3587_14757)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+              <div
+                className='org-section'
+                style={
+                  isEditMode === 'adminOnly'
+                    ? { opacity: 0.5, pointerEvents: 'none' }
+                    : {}
+                }
+              >
+                <div className='section-header'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                  >
+                    <g clipPath='url(#clip0_3587_14757)'>
+                      <path
+                        d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinejoin='round'
+                      />
                     </g>
                   </svg>
                   <span>Domain Details</span>
                 </div>
-                <div className="domain-details">
-                  <label className="pricing-label-small">Domain URL:</label>
+                <div className='domain-details'>
+                  <label className='pricing-label-small'>Domain URL:</label>
                   {isEditMode === 'full' ? (
                     <>
                       <input
-                        type="text"
-                        className="org-input domain-input"
+                        type='text'
+                        className='org-input domain-input'
                         value={formData.domain}
-                        onChange={(e) => handleInputChange('domain', e.target.value)}
-                        placeholder="domain.aie.com"
+                        onChange={(e) =>
+                          handleInputChange('domain', e.target.value)
+                        }
+                        placeholder='domain.aie.com'
                       />
                     </>
                   ) : (
@@ -797,177 +1017,328 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
               </div>
 
               {/* NEW: Organizational Pricing Section */}
-              <div className="org-section pricing-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
-                <div className="section-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3587_14757)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+              <div
+                className='org-section pricing-section'
+                style={
+                  isEditMode === 'adminOnly'
+                    ? { opacity: 0.5, pointerEvents: 'none' }
+                    : {}
+                }
+              >
+                <div className='section-header'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                  >
+                    <g clipPath='url(#clip0_3587_14757)'>
+                      <path
+                        d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinejoin='round'
+                      />
                     </g>
                   </svg>
                   <span>Organizational Pricing</span>
                   {!isEditMode && (
-                    <button className="edit-btn" onClick={handleEditPricingClick}>
+                    <button
+                      className='edit-btn'
+                      onClick={handleEditPricingClick}
+                    >
                       <span>Edit Payment Method</span>
                       <FontAwesomeIcon icon={faPencilAlt} />
                     </button>
                   )}
                 </div>
-                <div className={`pricing-details ${isEditMode === 'full' ? 'edit-mode' : ''}`}>
+                <div
+                  className={`pricing-details ${isEditMode === 'full' ? 'edit-mode' : ''}`}
+                >
                   {isEditMode === 'full' ? (
                     <>
                       {formData.orgPrice.map((price, index) => (
-                        <div key={index} className="pricing-item-edit">
-                          <div className="pricing-inputs">
-                            <div className="price-input-group">
-                              <label className="pricing-label-small">Price:</label>
-                              <div className="price-input-wrapper">
-                                <span className="dollar-sign">$</span>
+                        <div key={index} className='pricing-item-edit'>
+                          <div className='pricing-inputs'>
+                            <div className='price-input-group'>
+                              <label className='pricing-label-small'>
+                                Price:
+                              </label>
+                              <div className='price-input-wrapper'>
+                                <span className='dollar-sign'>$</span>
                                 <input
-                                  type="text"
-                                  className="price-input"
+                                  type='text'
+                                  className='price-input'
                                   value={price.amount}
-                                  onChange={(e) => handleOrgPricingChange(index, 'amount', e.target.value)}
-                                  placeholder="0"
+                                  onChange={(e) =>
+                                    handleOrgPricingChange(
+                                      index,
+                                      'amount',
+                                      e.target.value
+                                    )
+                                  }
+                                  placeholder='0'
                                 />
                               </div>
                             </div>
-                            <div className="frequency-input-group">
+                            <div className='frequency-input-group'>
                               <select
-                                className="frequency-select"
+                                className='frequency-select'
                                 value={price.frequency}
-                                onChange={(e) => handleOrgPricingChange(index, 'frequency', e.target.value)}
+                                onChange={(e) =>
+                                  handleOrgPricingChange(
+                                    index,
+                                    'frequency',
+                                    e.target.value
+                                  )
+                                }
                               >
-                                <option value="Per month">Per month</option>
-                                <option value="Per year">Per year</option>
-                                <option value="Per quarter">Per quarter</option>
-                                <option value="One-time">One-time</option>
+                                <option value='Per month'>Per month</option>
+                                <option value='Per year'>Per year</option>
+                                <option value='Per quarter'>Per quarter</option>
+                                <option value='One-time'>One-time</option>
                               </select>
                             </div>
                           </div>
                           {formData.orgPrice.length > 1 && (
-                            <button 
-                              className="remove-pricing-btn"
+                            <button
+                              className='remove-pricing-btn'
                               onClick={() => removeOrgPricingTier(index)}
-                              type="button"
+                              type='button'
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.6663 7.5L15.0038 16.9553C14.8638 17.7522 14.1715 18.3333 13.3624 18.3333H6.63696C5.82783 18.3333 5.13559 17.7522 4.99547 16.9553L3.33301 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17.5 4.99984H12.8125M2.5 4.99984H7.1875M7.1875 4.99984V3.33317C7.1875 2.4127 7.93369 1.6665 8.85417 1.6665H11.1458C12.0663 1.6665 12.8125 2.4127 12.8125 3.33317V4.99984M7.1875 4.99984H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                width='20'
+                                height='20'
+                                viewBox='0 0 20 20'
+                                fill='none'
+                              >
+                                <path
+                                  d='M16.6663 7.5L15.0038 16.9553C14.8638 17.7522 14.1715 18.3333 13.3624 18.3333H6.63696C5.82783 18.3333 5.13559 17.7522 4.99547 16.9553L3.33301 7.5'
+                                  stroke='black'
+                                  stroke-width='1.5'
+                                  stroke-linecap='round'
+                                  stroke-linejoin='round'
+                                />
+                                <path
+                                  d='M17.5 4.99984H12.8125M2.5 4.99984H7.1875M7.1875 4.99984V3.33317C7.1875 2.4127 7.93369 1.6665 8.85417 1.6665H11.1458C12.0663 1.6665 12.8125 2.4127 12.8125 3.33317V4.99984M7.1875 4.99984H12.8125'
+                                  stroke='black'
+                                  stroke-width='1.5'
+                                  stroke-linecap='round'
+                                  stroke-linejoin='round'
+                                />
                               </svg>
                             </button>
                           )}
                         </div>
                       ))}
-                      <button 
-                        className="add-pricing-tier-btn"
+                      <button
+                        className='add-pricing-tier-btn'
                         onClick={addNewOrgPricingTier}
-                        type="button"
+                        type='button'
                       >
                         <span>Add new pricing tier</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                          <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='20'
+                          height='20'
+                          viewBox='0 0 20 20'
+                          fill='none'
+                        >
+                          <path
+                            d='M5 10H10M15 10H10M10 10V5M10 10V15'
+                            stroke='black'
+                            stroke-width='1.5'
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                          />
                         </svg>
                       </button>
                     </>
                   ) : (
                     formData.orgPrice.map((price, index) => (
-                      <div key={index} className="pricing-item">
-                        <div className="price-item-conatiner">
-                          <div className="pricing-label">Price:</div>
-                          <div className="pricing-value">${price.amount}</div>
+                      <div key={index} className='pricing-item'>
+                        <div className='price-item-conatiner'>
+                          <div className='pricing-label'>Price:</div>
+                          <div className='pricing-value'>${price.amount}</div>
                         </div>
-                        <div className="pricing-frequency">{price.frequency}</div>
+                        <div className='pricing-frequency'>
+                          {price.frequency}
+                        </div>
                       </div>
                     ))
                   )}
                 </div>
               </div>
 
-              <div className="org-section pricing-section" style={isEditMode === 'adminOnly' ? {opacity: 0.5, pointerEvents: 'none'} : {}}>
-                <div className="section-header">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <g clipPath="url(#clip0_3587_14757)">
-                      <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+              <div
+                className='org-section pricing-section'
+                style={
+                  isEditMode === 'adminOnly'
+                    ? { opacity: 0.5, pointerEvents: 'none' }
+                    : {}
+                }
+              >
+                <div className='section-header'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                  >
+                    <g clipPath='url(#clip0_3587_14757)'>
+                      <path
+                        d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                        stroke='black'
+                        strokeWidth='1.5'
+                        strokeLinejoin='round'
+                      />
                     </g>
                   </svg>
-                  <span>Pricing Details</span>
+                  <span>Learner Pricing</span>
                   {!isEditMode && (
-                    <button className="edit-btn" onClick={handleContactLTS}>
+                    <button className='edit-btn' onClick={handleContactLTS}>
                       <span>Contact LTS to Make Changes</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M5.83301 7.49984L9.99968 10.4165L14.1663 7.49984" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M1.66699 13.8332V6.1665C1.66699 5.06193 2.56242 4.1665 3.66699 4.1665H16.3337C17.4382 4.1665 18.3337 5.06194 18.3337 6.16651V13.8332C18.3337 14.9377 17.4382 15.8332 16.3337 15.8332H3.66699C2.56242 15.8332 1.66699 14.9377 1.66699 13.8332Z" stroke="black" stroke-width="1.5"/>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='20'
+                        height='20'
+                        viewBox='0 0 20 20'
+                        fill='none'
+                      >
+                        <path
+                          d='M5.83301 7.49984L9.99968 10.4165L14.1663 7.49984'
+                          stroke='black'
+                          stroke-width='1.5'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                        <path
+                          d='M1.66699 13.8332V6.1665C1.66699 5.06193 2.56242 4.1665 3.66699 4.1665H16.3337C17.4382 4.1665 18.3337 5.06194 18.3337 6.16651V13.8332C18.3337 14.9377 17.4382 15.8332 16.3337 15.8332H3.66699C2.56242 15.8332 1.66699 14.9377 1.66699 13.8332Z'
+                          stroke='black'
+                          stroke-width='1.5'
+                        />
                       </svg>
                     </button>
                   )}
                 </div>
-                <div className={`pricing-details ${isEditMode === 'full' ? 'edit-mode' : ''}`}>
+                <div
+                  className={`pricing-details ${isEditMode === 'full' ? 'edit-mode' : ''}`}
+                >
                   {isEditMode === 'full' ? (
                     <>
                       {formData.pricing.map((price, index) => (
-                        <div key={index} className="pricing-item-edit">
-                          <div className="pricing-inputs">
-                            <div className="price-input-group">
-                              <label className="pricing-label-small">Price:</label>
-                              <div className="price-input-wrapper">
-                                <span className="dollar-sign">$</span>
+                        <div key={index} className='pricing-item-edit'>
+                          <div className='pricing-inputs'>
+                            <div className='price-input-group'>
+                              <label className='pricing-label-small'>
+                                Price:
+                              </label>
+                              <div className='price-input-wrapper'>
+                                <span className='dollar-sign'>$</span>
                                 <input
-                                  type="number"
-                                  className="price-input"
+                                  type='number'
+                                  className='price-input'
                                   value={price.amount}
-                                  onChange={(e) => handlePricingChange(index, 'amount', e.target.value)}
-                                  placeholder="0"
-                                  min="0"
-                                  step="0.01"
+                                  onChange={(e) =>
+                                    handlePricingChange(
+                                      index,
+                                      'amount',
+                                      e.target.value
+                                    )
+                                  }
+                                  placeholder='0'
+                                  min='0'
+                                  step='0.01'
                                 />
                               </div>
                             </div>
-                            <div className="frequency-input-group">
+                            <div className='frequency-input-group'>
                               <select
-                                className="frequency-select"
+                                className='frequency-select'
                                 value={price.frequency}
-                                onChange={(e) => handlePricingChange(index, 'frequency', e.target.value)}
+                                onChange={(e) =>
+                                  handlePricingChange(
+                                    index,
+                                    'frequency',
+                                    e.target.value
+                                  )
+                                }
                               >
-                                <option value="Per month">Per month</option>
-                                <option value="Per year">Per year</option>
-                                <option value="Per quarter">Per quarter</option>
-                                <option value="One-time">One-time</option>
+                                <option value='Per month'>Per month</option>
+                                <option value='Per year'>Per year</option>
+                                <option value='Per quarter'>Per quarter</option>
+                                <option value='One-time'>One-time</option>
                               </select>
                             </div>
                           </div>
                           {formData.pricing.length > 1 && (
-                            <button 
-                              className="remove-pricing-btn"
+                            <button
+                              className='remove-pricing-btn'
                               onClick={() => removePricingTier(index)}
-                              type="button"
+                              type='button'
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M16.6663 7.5L15.0038 16.9553C14.8638 17.7522 14.1715 18.3333 13.3624 18.3333H6.63696C5.82783 18.3333 5.13559 17.7522 4.99547 16.9553L3.33301 7.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M17.5 4.99984H12.8125M2.5 4.99984H7.1875M7.1875 4.99984V3.33317C7.1875 2.4127 7.93369 1.6665 8.85417 1.6665H11.1458C12.0663 1.6665 12.8125 2.4127 12.8125 3.33317V4.99984M7.1875 4.99984H12.8125" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                width='20'
+                                height='20'
+                                viewBox='0 0 20 20'
+                                fill='none'
+                              >
+                                <path
+                                  d='M16.6663 7.5L15.0038 16.9553C14.8638 17.7522 14.1715 18.3333 13.3624 18.3333H6.63696C5.82783 18.3333 5.13559 17.7522 4.99547 16.9553L3.33301 7.5'
+                                  stroke='black'
+                                  stroke-width='1.5'
+                                  stroke-linecap='round'
+                                  stroke-linejoin='round'
+                                />
+                                <path
+                                  d='M17.5 4.99984H12.8125M2.5 4.99984H7.1875M7.1875 4.99984V3.33317C7.1875 2.4127 7.93369 1.6665 8.85417 1.6665H11.1458C12.0663 1.6665 12.8125 2.4127 12.8125 3.33317V4.99984M7.1875 4.99984H12.8125'
+                                  stroke='black'
+                                  stroke-width='1.5'
+                                  stroke-linecap='round'
+                                  stroke-linejoin='round'
+                                />
                               </svg>
                             </button>
                           )}
                         </div>
                       ))}
-                      <button 
-                        className="add-pricing-tier-btn"
+                      <button
+                        className='add-pricing-tier-btn'
                         onClick={addNewPricingTier}
-                        type="button"
+                        type='button'
                       >
                         <span>Add new pricing tier</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                          <path d="M5 10H10M15 10H10M10 10V5M10 10V15" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='20'
+                          height='20'
+                          viewBox='0 0 20 20'
+                          fill='none'
+                        >
+                          <path
+                            d='M5 10H10M15 10H10M10 10V5M10 10V15'
+                            stroke='black'
+                            stroke-width='1.5'
+                            stroke-linecap='round'
+                            stroke-linejoin='round'
+                          />
                         </svg>
                       </button>
                     </>
                   ) : (
                     formData.pricing.map((price, index) => (
-                      <div key={index} className="pricing-item">
-                        <div className="price-item-conatiner">
-                          <div className="pricing-label">Price:</div>
-                          <div className="pricing-value">${price.amount}</div>
+                      <div key={index} className='pricing-item'>
+                        <div className='price-item-conatiner'>
+                          <div className='pricing-label'>Price:</div>
+                          <div className='pricing-value'>${price.amount}</div>
                         </div>
-                        <div className="pricing-frequency">{price.frequency}</div>
+                        <div className='pricing-frequency'>
+                          {price.frequency}
+                        </div>
                       </div>
                     ))
                   )}
@@ -975,16 +1346,16 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
               </div>
 
               {isEditMode ? (
-                <div className="modal-actions">
-                  <button 
-                    className="btn-cancel-org"
+                <div className='modal-actions'>
+                  <button
+                    className='btn-cancel-org'
                     onClick={handleCancel}
                     disabled={loading}
                   >
                     CANCEL
                   </button>
-                  <button 
-                    className="btn-save-org"
+                  <button
+                    className='btn-save-org'
                     onClick={handleSaveChanges}
                     disabled={loading}
                   >
@@ -992,19 +1363,17 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                   </button>
                 </div>
               ) : (
-
                 <div className='d-flex gap-4 justify-content-between'>
-                   <AcademyBtn 
-                      title="VIEW ORGANIZATION LEARNERS" 
-                      onClick={handleViewLearners}
-                    />
+                  <AcademyBtn
+                    title='VIEW ORGANIZATION LEARNERS'
+                    onClick={handleViewLearners}
+                  />
 
-                    <AcademyBtn 
-                      title="View Billing" 
-                      onClick={handleViewBilling}
-                    />
+                  <AcademyBtn
+                    title='View Billing'
+                    onClick={handleViewBilling}
+                  />
                 </div>
-                
               )}
             </>
           )}
@@ -1039,53 +1408,85 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
         show={showEditLogoModal}
         onHide={handleCancelEditLogo}
         centered
-        dialogClassName="edit-logo-modal"
-        backdrop="static"
+        dialogClassName='edit-logo-modal'
+        backdrop='static'
       >
-        <Modal.Body className="edit-logo-modal-body">
-          <div className="edit-logo-header">
-            <div className="edit-logo-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M11.9696 4.7098L12.9672 3.71218C13.7483 2.93113 15.0146 2.93113 15.7957 3.71218L16.5028 4.41928C17.2838 5.20033 17.2838 6.46666 16.5028 7.24771L15.5052 8.24533M11.9696 4.7098L4.04225 12.6372C3.71017 12.9692 3.50554 13.4076 3.46422 13.8754L3.29065 15.8402C3.23588 16.4602 3.75475 16.9791 4.37477 16.9243L6.33956 16.7507C6.80736 16.7094 7.2457 16.5048 7.57778 16.1727L15.5052 8.24533M11.9696 4.7098L15.5052 8.24533" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <Modal.Body className='edit-logo-modal-body'>
+          <div className='edit-logo-header'>
+            <div className='edit-logo-icon'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='20'
+                height='20'
+                viewBox='0 0 20 20'
+                fill='none'
+              >
+                <path
+                  d='M11.9696 4.7098L12.9672 3.71218C13.7483 2.93113 15.0146 2.93113 15.7957 3.71218L16.5028 4.41928C17.2838 5.20033 17.2838 6.46666 16.5028 7.24771L15.5052 8.24533M11.9696 4.7098L4.04225 12.6372C3.71017 12.9692 3.50554 13.4076 3.46422 13.8754L3.29065 15.8402C3.23588 16.4602 3.75475 16.9791 4.37477 16.9243L6.33956 16.7507C6.80736 16.7094 7.2457 16.5048 7.57778 16.1727L15.5052 8.24533M11.9696 4.7098L15.5052 8.24533'
+                  stroke='black'
+                  stroke-width='1.5'
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                />
               </svg>
             </div>
-            <h3 className="edit-logo-title">Edit Logo</h3>
+            <h3 className='edit-logo-title'>Edit Logo</h3>
           </div>
 
           {/* Organizational Mark Section */}
-          <div className="logo-upload-section">
-            <div className="section-title">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+          <div className='logo-upload-section'>
+            <div className='section-title'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='20'
+                height='20'
+                viewBox='0 0 20 20'
+                fill='none'
+              >
+                <path
+                  d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                  stroke='black'
+                  strokeWidth='1.5'
+                  strokeLinejoin='round'
+                />
               </svg>
               <span>Add/Edit Organizational Mark</span>
             </div>
-            <p className="section-description">Upload the logo mark for your organization. This appears at the top of the navigation menu when it is closed, and it appears on your login page</p>
-            
-            <div className="logo-upload-container">
-              <div className="upload-area-wrapper">
-                <div className="label-row">
-                  <span className="upload-label">YOUR ORGANIZATIONAL MARK</span>
-                  <span className="upload-label">EXAMPLE</span>
+            <p className='section-description'>
+              Upload the logo mark for your organization. This appears at the
+              top of the navigation menu when it is closed, and it appears on
+              your login page
+            </p>
+
+            <div className='logo-upload-container'>
+              <div className='upload-area-wrapper'>
+                <div className='label-row'>
+                  <span className='upload-label'>YOUR ORGANIZATIONAL MARK</span>
+                  <span className='upload-label'>EXAMPLE</span>
                 </div>
-                <div className="upload-row">
+                <div className='upload-row'>
                   {/* Upload Area */}
-                  <div 
+                  <div
                     className={`upload-area ${uploadingLogo1 ? 'uploading' : ''}`}
-                    onClick={() => !uploadingLogo1 && handleTempLogoClick('logo1')}
+                    onClick={() =>
+                      !uploadingLogo1 && handleTempLogoClick('logo1')
+                    }
                   >
                     {uploadingLogo1 ? (
-                      <div className="upload-spinner">
-                        <div className="spinner-border text-primary" role="status">
-                          <span className="sr-only">Uploading...</span>
+                      <div className='upload-spinner'>
+                        <div
+                          className='spinner-border text-primary'
+                          role='status'
+                        >
+                          <span className='sr-only'>Uploading...</span>
                         </div>
                         <p>Uploading...</p>
                       </div>
                     ) : tempLogo1 ? (
-                      <div className="uploaded-logo-preview">
-                        <img src={tempLogo1} alt="Organizational Mark" />
-                        <button 
-                          className="remove-uploaded-logo"
+                      <div className='uploaded-logo-preview'>
+                        <img src={tempLogo1} alt='Organizational Mark' />
+                        <button
+                          className='remove-uploaded-logo'
                           onClick={(e) => {
                             e.stopPropagation()
                             handleRemoveTempLogo('logo1')
@@ -1096,64 +1497,117 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                       </div>
                     ) : (
                       <>
-                        <div className="upload-icon">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M17 8L12 3L7 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M12 3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <div className='upload-icon'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            width='24'
+                            height='24'
+                            viewBox='0 0 24 24'
+                            fill='none'
+                          >
+                            <path
+                              d='M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15'
+                              stroke='currentColor'
+                              strokeWidth='2'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M17 8L12 3L7 8'
+                              stroke='currentColor'
+                              strokeWidth='2'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M12 3V15'
+                              stroke='currentColor'
+                              strokeWidth='2'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
                           </svg>
                         </div>
-                        <p className="upload-text">Click to upload</p>
-                        <p className="upload-subtext">Or drag and drop</p>
-                        <p className="upload-format">PNG, JPG or JPEG (max. 2MB)</p>
+                        <p className='upload-text'>Click to upload</p>
+                        <p className='upload-subtext'>Or drag and drop</p>
+                        <p className='upload-format'>
+                          PNG, JPG or JPEG (max. 2MB)
+                        </p>
                       </>
                     )}
                   </div>
 
                   {/* Example Image */}
-                  <div className="example-area">
-                    <img src={AcademyBulb} alt="Logo Example" className='example-image' />
+                  <div className='example-area'>
+                    <img
+                      src={AcademyBulb}
+                      alt='Logo Example'
+                      className='example-image'
+                    />
                   </div>
                 </div>
-                <p className="upload-requirements">PNG, JPG or JPEG file format supported (max. 2MB)<br />Image should be square and at least 100px x 100px</p>
+                <p className='upload-requirements'>
+                  PNG, JPG or JPEG file format supported (max. 2MB)
+                  <br />
+                  Image should be square and at least 100px x 100px
+                </p>
               </div>
             </div>
           </div>
 
           {/* Organizational Logo Section */}
-          <div className="logo-upload-section">
-            <div className="section-title">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z" stroke="black" strokeWidth="1.5" strokeLinejoin="round"/>
+          <div className='logo-upload-section'>
+            <div className='section-title'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='20'
+                height='20'
+                viewBox='0 0 20 20'
+                fill='none'
+              >
+                <path
+                  d='M1 10C7.26752 10 10 7.36306 10 1C10 7.36306 12.7134 10 19 10C12.7134 10 10 12.7134 10 19C10 12.7134 7.26752 10 1 10Z'
+                  stroke='black'
+                  strokeWidth='1.5'
+                  strokeLinejoin='round'
+                />
               </svg>
               <span>Add/Edit Organizational Logo</span>
             </div>
-            <p className="section-description">Upload the horizontal logo for your organization. This appears at the top of the navigation menu when it is opened</p>
-            
-            <div className="logo-upload-container">
-              <div className="upload-area-wrapper">
-                <div className="label-row">
-                  <span className="upload-label">YOUR ORGANIZATIONAL LOGO</span>
-                  <span className="upload-label">EXAMPLE</span>
+            <p className='section-description'>
+              Upload the horizontal logo for your organization. This appears at
+              the top of the navigation menu when it is opened
+            </p>
+
+            <div className='logo-upload-container'>
+              <div className='upload-area-wrapper'>
+                <div className='label-row'>
+                  <span className='upload-label'>YOUR ORGANIZATIONAL LOGO</span>
+                  <span className='upload-label'>EXAMPLE</span>
                 </div>
-                <div className="upload-row">
+                <div className='upload-row'>
                   {/* Upload Area */}
-                  <div 
+                  <div
                     className={`upload-area horizontal ${uploadingLogo2 ? 'uploading' : ''}`}
-                    onClick={() => !uploadingLogo2 && handleTempLogoClick('logo2')}
+                    onClick={() =>
+                      !uploadingLogo2 && handleTempLogoClick('logo2')
+                    }
                   >
                     {uploadingLogo2 ? (
-                      <div className="upload-spinner">
-                        <div className="spinner-border text-primary" role="status">
-                          <span className="sr-only">Uploading...</span>
+                      <div className='upload-spinner'>
+                        <div
+                          className='spinner-border text-primary'
+                          role='status'
+                        >
+                          <span className='sr-only'>Uploading...</span>
                         </div>
                         <p>Uploading...</p>
                       </div>
                     ) : tempLogo2 ? (
-                      <div className="uploaded-logo-preview horizontal">
-                        <img src={tempLogo2} alt="Organizational Logo" />
-                        <button 
-                          className="remove-uploaded-logo"
+                      <div className='uploaded-logo-preview horizontal'>
+                        <img src={tempLogo2} alt='Organizational Logo' />
+                        <button
+                          className='remove-uploaded-logo'
                           onClick={(e) => {
                             e.stopPropagation()
                             handleRemoveTempLogo('logo2')
@@ -1164,36 +1618,70 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                       </div>
                     ) : (
                       <>
-                        <div className="upload-icon">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M17 8L12 3L7 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M12 3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <div className='upload-icon'>
+                          <svg
+                            xmlns='http://www.w3.org/2000/svg'
+                            width='24'
+                            height='24'
+                            viewBox='0 0 24 24'
+                            fill='none'
+                          >
+                            <path
+                              d='M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15'
+                              stroke='currentColor'
+                              strokeWidth='2'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M17 8L12 3L7 8'
+                              stroke='currentColor'
+                              strokeWidth='2'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
+                            <path
+                              d='M12 3V15'
+                              stroke='currentColor'
+                              strokeWidth='2'
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                            />
                           </svg>
                         </div>
-                        <p className="upload-text">Click to upload</p>
-                        <p className="upload-subtext">Or drag and drop</p>
-                        <p className="upload-format">PNG, JPG or JPEG (max. 2MB)</p>
+                        <p className='upload-text'>Click to upload</p>
+                        <p className='upload-subtext'>Or drag and drop</p>
+                        <p className='upload-format'>
+                          PNG, JPG or JPEG (max. 2MB)
+                        </p>
                       </>
                     )}
                   </div>
 
                   {/* Example Image */}
-                  <div className="example-area horizontal">
-                    <img src={StartupStudioLogo} alt="Mark Example" className='example-image' />
+                  <div className='example-area horizontal'>
+                    <img
+                      src={StartupStudioLogo}
+                      alt='Mark Example'
+                      className='example-image'
+                    />
                   </div>
                 </div>
-                <p className="upload-requirements">PNG, JPG or JPEG file format supported (max. 2MB)<br />Image should be square and at least 100px x 100px</p>
+                <p className='upload-requirements'>
+                  PNG, JPG or JPEG file format supported (max. 2MB)
+                  <br />
+                  Image should be square and at least 100px x 100px
+                </p>
               </div>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="edit-logo-actions">
-            <button className="btn-cancel-logo" onClick={handleCancelEditLogo}>
+          <div className='edit-logo-actions'>
+            <button className='btn-cancel-logo' onClick={handleCancelEditLogo}>
               CANCEL
             </button>
-            <button className="btn-save-logo" onClick={handleSaveLogos}>
+            <button className='btn-save-logo' onClick={handleSaveLogos}>
               SAVE CHANGES
             </button>
           </div>
@@ -1201,15 +1689,15 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
           {/* Hidden file inputs */}
           <input
             ref={logo1InputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/jpg"
+            type='file'
+            accept='image/png,image/jpeg,image/jpg'
             onChange={(e) => handleTempLogoChange(e, 'logo1')}
             style={{ display: 'none' }}
           />
           <input
             ref={logo2InputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/jpg"
+            type='file'
+            accept='image/png,image/jpeg,image/jpg'
             onChange={(e) => handleTempLogoChange(e, 'logo2')}
             style={{ display: 'none' }}
           />
