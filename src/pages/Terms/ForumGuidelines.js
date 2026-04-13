@@ -4,7 +4,7 @@ import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.p
 const ForumGuidelines = () => {
   return (
     <>
-        <a href='https://joinstartupstudio.com/' className='logo-register' style={{marginLeft: '2rem'}}>
+        <a href='https://joinstudioos.com/' className='logo-register' style={{marginLeft: '2rem'}}>
         <img
           src={StartupStudioLogo}
           alt='course-logo'

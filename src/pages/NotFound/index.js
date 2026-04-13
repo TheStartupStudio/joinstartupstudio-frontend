@@ -20,7 +20,7 @@ function NotFound() {
             </p>
             <p>
               Or, if you think there’s been a mistake, you can email us at
-              mycourse@joinstartupstudio.com
+              mycourse@joinstudioos.com
             </p>
           </div>
           <div className='row'>

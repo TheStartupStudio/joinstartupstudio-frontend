@@ -439,7 +439,7 @@ function RegistrationForm() {
                 <li>
                   <a
                     className="fs-13 fw-medium text-decoration-none text-black"
-                    href="https://joinstartupstudio.com/"
+                    href="https://joinstudioos.com/"
                   >
                     HOME
                   </a>
@@ -447,7 +447,7 @@ function RegistrationForm() {
                 <li>
                   <a
                     className="fs-13 fw-medium text-decoration-none text-black"
-                    href="https://joinstartupstudio.com/contact.html"
+                    href="https://joinstudioos.com/contact.html"
                   >
                     CONTACT US
                   </a>
