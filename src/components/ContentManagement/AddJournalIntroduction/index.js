@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { attachGlobalIdToPayload } from '../../../utils/clientHostname'
 import { toast } from 'react-toastify'
 
 const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add', contentId = null }) => {
@@ -415,7 +416,13 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
 
             const contentIdToUse = contentId || journalData?.manageContent?.id || 1
 
-            const response = await axiosInstance.put(`/manage-content/full/${contentIdToUse}`, updateData)
+            const response = await axiosInstance.put(
+                `/manage-content/full/${contentIdToUse}`,
+                attachGlobalIdToPayload(
+                    updateData,
+                    journalData?.manageContent?.globalId ?? journalData?.globalId
+                )
+            )
 
             if (response.data.success) {
                 toast.success('Introduction data updated successfully!')

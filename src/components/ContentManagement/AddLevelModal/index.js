@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
+import {
+  attachGlobalIdToPayload,
+  canChooseClientInUI,
+  getClientAndGlobalBody,
+  getClientPayloadValue,
+  getHostnameSubdomainLabel
+} from '../../../utils/clientHostname'
 import AlertPopup from '../../UserManagment/AlertPopup/index'
 import './index.css'
 
@@ -13,6 +20,12 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   const [loading, setLoading] = useState(false)
   const [showDeleteAlert, setShowDeleteAlert] = useState(false)
   const [levelToDelete, setLevelToDelete] = useState(null)
+  const [clients, setClients] = useState([])
+  const [selectedClient, setSelectedClient] = useState('all')
+  /** Prevents re-sync from parent wiping local edits; reset when modal closes. */
+  const hasSeededLevelsForOpenRef = useRef(false)
+  /** Monotonic UI id per modal session — never rely on API `id` alone for React/list identity. */
+  const nextRowKeyIdRef = useRef(0)
 
   const getApiEndpoint = (action, id = null) => {
     if (category === 'leadership') {
@@ -43,64 +56,116 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   }
 
   useEffect(() => {
-    if (show) {
-      if (existingLevels.length > 0) {
-        const levelsArray = existingLevels.map((level, index) => {
-          if (typeof level === 'string') {
-            return {
-              id: null,
-              title: level,
-              order: index + 1,
-              isEditing: false,
-              isNew: false,
-              isEdited: false,
-              isDeleted: false
-            }
-          } else {
-            return {
-              id: level.id,
-              title: level.title,
-              order: level.order || index + 1,
-              isEditing: false,
-              isNew: false,
-              isEdited: false,
-              isDeleted: false,
-              originalTitle: level.title
-            }
-          }
-        })
-        setLevels(levelsArray)
-      }
-      setHasNewLevel(false)
+    if (!show) {
+      hasSeededLevelsForOpenRef.current = false
+      nextRowKeyIdRef.current = 0
+      return
     }
+    // Do not re-run when parent passes a new `existingLevels` array reference while
+    // the user is editing — that was resetting every row and syncing inputs.
+    if (hasSeededLevelsForOpenRef.current) return
+    if (existingLevels.length === 0) return
+
+    const levelsArray = existingLevels.map((level, index) => {
+      const rowKey = `rk-${++nextRowKeyIdRef.current}`
+
+      if (typeof level === 'string') {
+        return {
+          rowKey,
+          id: null,
+          title: level,
+          order: index + 1,
+          originalOrder: index + 1,
+          isEditing: false,
+          isNew: false,
+          isEdited: false,
+          isDeleted: false
+        }
+      }
+      return {
+        rowKey,
+        id: level.id,
+        title: level.title,
+        order: level.order || index + 1,
+        originalOrder: level.order || index + 1,
+        isEditing: false,
+        isNew: false,
+        isEdited: false,
+        isDeleted: false,
+        originalTitle: level.title,
+        globalId: level.globalId
+      }
+    })
+    setLevels(levelsArray)
+    setHasNewLevel(false)
+    hasSeededLevelsForOpenRef.current = true
   }, [show, existingLevels])
 
-  const handleLevelChange = (id, value) => {
-    setLevels(prevLevels =>
-      prevLevels.map(level =>
-        level.id === id ? { ...level, title: value, isEdited: true } : level
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await axiosInstance.get('/clients-config')
+        const clientsList = response?.data?.clients
+        if (Array.isArray(clientsList)) {
+          setClients(clientsList)
+          setSelectedClient((prev) => prev || 'all')
+        } else {
+          setClients([])
+          setSelectedClient('all')
+        }
+      } catch (error) {
+        console.error('Error fetching clients:', error)
+        setClients([])
+        setSelectedClient('all')
+      }
+    }
+
+    if (
+      show &&
+      canChooseClientInUI() &&
+      (category === 'entrepreneurship' ||
+        category === 'masterclass' ||
+        category === 'leadership')
+    ) {
+      fetchClients()
+    }
+  }, [show, category])
+
+  const handleLevelChange = (rowKey, value) => {
+    if (rowKey == null || rowKey === '') return
+    setLevels(prevLevels => {
+      const idx = prevLevels.findIndex((l) => l.rowKey === rowKey)
+      if (idx === -1) return prevLevels
+      return prevLevels.map((level, i) =>
+        i === idx ? { ...level, title: value, isEdited: true } : level
       )
-    )
+    })
   }
 
-  const toggleEditing = (id) => {
-    setLevels(prevLevels =>
-      prevLevels.map(l =>
-        l.id === id ? { ...l, isEditing: !l.isEditing } : l
+  const toggleEditing = (rowKey) => {
+    if (rowKey == null || rowKey === '') return
+    setLevels(prevLevels => {
+      const idx = prevLevels.findIndex((l) => l.rowKey === rowKey)
+      if (idx === -1) return prevLevels
+      return prevLevels.map((l, i) =>
+        i === idx ? { ...l, isEditing: !l.isEditing } : l
       )
-    )
+    })
   }
 
-  const addNewLevelAfter = (afterId) => {
-    const insertIndex = levels.findIndex(level => level.id === afterId)
+  const addNewLevelAfter = (afterRowKey) => {
+    const insertIndex = levels.findIndex((level) => level.rowKey === afterRowKey)
+    if (insertIndex === -1) return
     const newOrder = insertIndex + 2
 
     const newTitle = category === 'leadership' ? 'Add Section title...' : 'Add Level title...'
 
     // Generate a temporary ID for the new level
     const tempId = `temp-${Date.now()}`
+    const rowKey = `rk-${++nextRowKeyIdRef.current}`
 
     const newLevel = {
+      rowKey,
       id: tempId,
       title: newTitle,
       order: newOrder,
@@ -125,45 +190,58 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
     setHasNewLevel(true)
   }
 
-  const deleteLevel = (id) => {
+  const deleteLevel = (rowKey) => {
     if (levels.length <= 1) {
       toast.warning('Cannot delete the last level')
       return
     }
 
-    setLevelToDelete(id)
+    setLevelToDelete(rowKey)
     setShowDeleteAlert(true)
   }
 
-  const confirmDeleteLevel = () => {
-    const id = levelToDelete
-    const levelToDeleteObj = levels.find(level => level.id === id)
+  const confirmDeleteLevel = async () => {
+    const rowKey = levelToDelete
+    const levelToDeleteObj = levels.find((level) => level.rowKey === rowKey)
 
-    if (levelToDeleteObj && !levelToDeleteObj.isNew) {
-      // If it's an existing level, mark it for deletion but don't remove from UI yet
-      setLevels(prevLevels =>
-        prevLevels.map(level =>
-          level.id === id ? { ...level, isDeleted: true } : level
-        )
-      )
-    } else {
-      // If it's a new level that hasn't been saved yet, just remove it
-      const filteredLevels = levels.filter(level => level.id !== id)
-
-      // Renumber remaining levels
-      const renumberedLevels = filteredLevels.map((level, index) => ({
-        ...level,
-        order: index + 1
-      }))
-
-      setLevels(renumberedLevels)
-
-      const hasNewLevels = renumberedLevels.some(level => level.isNew)
-      setHasNewLevel(hasNewLevels)
+    if (!levelToDeleteObj) {
+      setShowDeleteAlert(false)
+      setLevelToDelete(null)
+      return
     }
 
-    setShowDeleteAlert(false)
-    setLevelToDelete(null)
+    try {
+      setLoading(true)
+
+      if (!levelToDeleteObj.isNew && levelToDeleteObj.id) {
+        await axiosInstance.delete(
+          getApiEndpoint('delete', levelToDeleteObj.id),
+          { data: getClientAndGlobalBody(selectedClient, levelToDeleteObj.globalId) }
+        )
+      }
+
+      const remaining = levels.filter((level) => level.rowKey !== rowKey)
+      const renumbered = remaining.map((level, index) => ({
+        ...level,
+        order: index + 1,
+        originalOrder: index + 1
+      }))
+
+      setLevels(renumbered)
+      setHasNewLevel(renumbered.some(level => level.isNew))
+
+      if (!levelToDeleteObj.isNew) {
+        toast.success('Level deleted successfully!')
+        if (onSave) onSave()
+      }
+    } catch (error) {
+      console.error('Error deleting level:', error)
+      toast.error(error.response?.data?.message || 'Failed to delete level')
+    } finally {
+      setLoading(false)
+      setShowDeleteAlert(false)
+      setLevelToDelete(null)
+    }
   }
 
   const cancelDeleteLevel = () => {
@@ -176,21 +254,26 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
     try {
       const activeLevels = levels.filter(level => !level.isDeleted)
 
-      // Handle deletions first
-      for (const level of levels) {
-        if (level.isDeleted && level.id && !level.isNew) {
-          await axiosInstance.delete(getApiEndpoint('delete', level.id))
-        }
-      }
-
-      // First, create all new levels
+      // Create all new levels
       for (const level of activeLevels) {
-        if (level.isNew && level.id.startsWith('temp-')) {
+        if (
+          level.isNew &&
+          level.id &&
+          String(level.id).startsWith('temp-')
+        ) {
           // Create new level
           const createPayload = {
             title: level.title,
             order: level.order,
             published: true
+          }
+
+          if (
+            category === 'entrepreneurship' ||
+            category === 'masterclass' ||
+            category === 'leadership'
+          ) {
+            createPayload.client = getClientPayloadValue(selectedClient)
           }
 
           // If category is 'leadership', include selectedCategory and manageContentId in payload
@@ -205,21 +288,39 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           const response = await axiosInstance.post(getApiEndpoint('create'), createPayload)
           // Update the temp ID with the real ID
           level.id = response.data.id
+          // Keep existing rowKey so rows stay distinct in the UI (do not reuse srv-${id} only).
         }
       }
 
-      // Then update all levels with correct order and any changes
+      // Only update levels whose title or order actually changed
       for (let i = 0; i < activeLevels.length; i++) {
         const level = activeLevels[i]
         const correctOrder = i + 1
 
-        // Always update the order to ensure correct sequencing
+        if (level.id == null || String(level.id).startsWith('temp-')) {
+          continue
+        }
+
+        const titleChanged = level.isEdited || level.title !== level.originalTitle
+        const orderChanged = correctOrder !== level.originalOrder
+
+        if (!titleChanged && !orderChanged) {
+          continue
+        }
+
         const updatePayload = {
           title: level.title,
           order: correctOrder
         }
 
-        // If category is 'leadership', include selectedCategory and manageContentId in payload
+        if (
+          category === 'entrepreneurship' ||
+          category === 'masterclass' ||
+          category === 'leadership'
+        ) {
+          updatePayload.client = getClientPayloadValue(selectedClient)
+        }
+
         if (category === 'leadership') {
           updatePayload.category = selectedCategory
           if (manageContentId) {
@@ -227,17 +328,22 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
           }
         }
 
-        await axiosInstance.put(getApiEndpoint('update', level.id), updatePayload)
+        console.log('[AddLevelModal] PUT only changed level:', level.id, { titleChanged, orderChanged })
+        await axiosInstance.put(
+          getApiEndpoint('update', level.id),
+          attachGlobalIdToPayload(updatePayload, level.globalId)
+        )
       }
 
       // Update local state to reflect saved changes
-      const updatedLevels = activeLevels.map(level => ({
+      const updatedLevels = activeLevels.map((level, i) => ({
         ...level,
         isNew: false,
         isEdited: false,
         isEditing: false,
         isDeleted: false,
-        originalTitle: level.title
+        originalTitle: level.title,
+        originalOrder: i + 1
       }))
       setLevels(updatedLevels)
       setHasNewLevel(false)
@@ -288,25 +394,61 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
         
         <h5 className="modal-title">Add New {category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'}</h5>
 
+        {(category === 'entrepreneurship' ||
+          category === 'masterclass' ||
+          category === 'leadership') && (
+          <div className="form-group">
+            <label className="form-label">CLIENT:</label>
+            {canChooseClientInUI() ? (
+              <select
+                className="form-control client-select"
+                value={selectedClient}
+                onChange={(e) => setSelectedClient(e.target.value)}
+                disabled={loading}
+              >
+                <option value="all">All</option>
+                {clients.map((client) => (
+                  <option key={client} value={client}>
+                    {client}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div
+                className="form-control client-select client-readonly"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: 0
+                }}
+              >
+                {getHostnameSubdomainLabel() || '—'}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="form-group">
           <label className="form-label">LEVEL TITLE:</label>
           
           <div className="levels-list">
             {levels.filter(level => !level.isDeleted).map((level) => (
-              <div key={level.id}>
+              <div key={level.rowKey}>
                 <div className={`level-item ${level.isNew ? 'new-level' : ''}`}>
                   <input
                     type="text"
                     className="form-control level-input"
                     placeholder="Enter level title..."
                     value={level.title}
-                    onChange={(e) => handleLevelChange(level.id, e.target.value)}
+                    onChange={(e) =>
+                      handleLevelChange(level.rowKey, e.target.value)
+                    }
                     disabled={!level.isEditing}
                   />
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       className="edit-level-btn"
-                      onClick={() => toggleEditing(level.id)}
+                      onClick={() => toggleEditing(level.rowKey)}
                       type="button"
                       disabled={loading}
                       title={level.isEditing ? 'Save changes' : 'Edit level'}
@@ -323,7 +465,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
                     </button>
                     <button 
                       className="delete-level-btn"
-                      onClick={() => deleteLevel(level.id)}
+                      onClick={() => deleteLevel(level.rowKey)}
                       type="button"
                       disabled={levels.length === 1 || loading}
                       title="Delete level"
@@ -345,7 +487,7 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
                       cursor: loading ? 'not-allowed' : 'pointer',
                       opacity: loading ? 0.5 : 1
                     }}
-                    onClick={() => !loading && addNewLevelAfter(level.id)}
+                    onClick={() => !loading && addNewLevelAfter(level.rowKey)}
                   >
                     Add New {category === 'leadership' ? 'Section' : category === 'masterclass' ? 'Category' : 'Level'} Here
                     <svg className="plus" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

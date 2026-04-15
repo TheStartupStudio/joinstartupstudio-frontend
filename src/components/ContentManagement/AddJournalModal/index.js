@@ -4,6 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
+import {
+  attachGlobalIdToPayload,
+  canChooseClientInUI,
+  getClientAndGlobalBody,
+  getClientPayloadValue,
+  getHostnameSubdomainLabel
+} from '../../../utils/clientHostname'
 import AcademyBtn from '../../../components/AcademyBtn'
 import { useHistory } from 'react-router-dom'
 import DeleteJournalContentModal from '../DeleteJournalContentModal'
@@ -32,6 +39,9 @@ const AddJournalModal = ({
     const [loading, setLoading] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showIntroductionModal, setShowIntroductionModal] = useState(false)
+    const [clients, setClients] = useState([])
+    const [selectedClient, setSelectedClient] = useState('all')
+    const [recordGlobalId, setRecordGlobalId] = useState(null)
 
     const fetchJournalData = useCallback(async (id) => {
         try {
@@ -59,6 +69,13 @@ const AddJournalModal = ({
             setJournalSubtitle(data.manageContent.subtitle || '')
             setSelectedIcon(data.manageContent.icon || '')
             setSelectedColor(data.manageContent.color || '#E0EBC5')
+            const clientVal = data.manageContent.client ?? data.client
+            setSelectedClient(clientVal || 'all')
+            const gid =
+                data.manageContent.globalId ?? data.globalId ?? null
+            setRecordGlobalId(gid || null)
+        } else if (data.globalId != null && String(data.globalId).trim() !== '') {
+            setRecordGlobalId(String(data.globalId).trim())
         }
 
         if (data.journalLevels && Array.isArray(data.journalLevels)) {
@@ -99,6 +116,8 @@ const AddJournalModal = ({
         ])
         setActiveTab('names')
         setIsIconDropdownOpen(false)
+        setSelectedClient('all')
+        setRecordGlobalId(null)
     }, [])
 
     const isMountedRef = useRef(true)
@@ -135,6 +154,21 @@ const AddJournalModal = ({
             isMountedRef.current = false
         }
     }, [mode, existingData, contentId, fetchJournalData, initializeFormData, resetForm])
+
+    useEffect(() => {
+        if (!show || !canChooseClientInUI()) return
+        const fetchClients = async () => {
+            try {
+                const response = await axiosInstance.get('/clients-config')
+                const clientsList = response?.data?.clients
+                setClients(Array.isArray(clientsList) ? clientsList : [])
+            } catch (error) {
+                console.error('Error fetching clients:', error)
+                setClients([])
+            }
+        }
+        fetchClients()
+    }, [show])
 
     const sendJournalDataToAPI = useCallback(async (journalData, isEdit = false) => {
         try {
@@ -385,6 +419,7 @@ const AddJournalModal = ({
             const normalizedColor = selectedColor.startsWith('rgb') ? rgbToHex(selectedColor) : selectedColor
 
             const journalData = {
+                client: getClientPayloadValue(selectedClient),
                 manageContent: {
                     ...(mode === 'edit' && contentId ? { id: contentId } : {}),
                     title: journalTitle,
@@ -412,7 +447,10 @@ const AddJournalModal = ({
             let response
             if (mode === 'edit' && contentId) {
                 // Use PUT for updating existing journal
-                response = await axiosInstance.put(`/manage-content/full/${contentId}`, journalData)
+                response = await axiosInstance.put(
+                    `/manage-content/full/${contentId}`,
+                    attachGlobalIdToPayload(journalData, recordGlobalId)
+                )
                 console.log('Journal updated successfully:', response.data.data)
             } else {
                 // Use POST for creating new journal
@@ -473,7 +511,10 @@ const AddJournalModal = ({
         setLoading(true)
 
         try {
-            const response = await axiosInstance.delete(`/manage-content/full/${contentId}`)
+            const response = await axiosInstance.delete(
+                `/manage-content/full/${contentId}`,
+                { data: getClientAndGlobalBody(selectedClient, recordGlobalId) }
+            )
 
             if (response.data.success) {
                 toast.success('Journal and all related content deleted successfully!')
@@ -647,6 +688,36 @@ const AddJournalModal = ({
                                         disabled={mode === 'view'}
                                     />
                                     <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
+                                </div>
+
+                                <div className="input-box flex-1 add-journal-client-row" style={{ width: '100%' }}>
+                                    <label className="add-journal-client-label" htmlFor="add-journal-client">
+                                        Client
+                                    </label>
+                                    {canChooseClientInUI() ? (
+                                        <select
+                                            id="add-journal-client"
+                                            className="journal-input add-journal-client-select"
+                                            value={selectedClient}
+                                            onChange={(e) => setSelectedClient(e.target.value)}
+                                            disabled={mode === 'view' || loading}
+                                        >
+                                            <option value="all">All</option>
+                                            {clients.map((client) => (
+                                                <option key={client} value={client}>
+                                                    {client}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <span
+                                            id="add-journal-client"
+                                            className="journal-input add-journal-client-select"
+                                            style={{ display: 'block', width: '100%' }}
+                                        >
+                                            {getHostnameSubdomainLabel() || '—'}
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="d-flex gap-2 w-100">

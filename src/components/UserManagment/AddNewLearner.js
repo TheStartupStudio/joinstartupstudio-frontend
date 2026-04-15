@@ -12,6 +12,13 @@ import UserManagementPopup from '../../components/UserManagment/AlertPopup'
 import CustomBirthDateCalendar from '../../components/CustomBirthDateCalendar'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
+import {
+  attachGlobalIdToPayload,
+  canChooseClientInUI,
+  getClientAndGlobalBody,
+  getClientPayloadValue,
+  getHostnameSubdomainLabel
+} from '../../utils/clientHostname'
 
 const AddNewLearner = ({
   show,
@@ -282,20 +289,29 @@ const AddNewLearner = ({
   }, [mode, learnerData, show, isClient, currentUser])
 
   useEffect(() => {
-    if (isAdmin) {
+    if (isAdmin && canChooseClientInUI()) {
       const fetchOrganizations = async () => {
         try {
-          const response = await axiosInstance.get(
-            'super-admin/organization/simple'
-          )
-          if (response.data.success) {
-            setOrganizations(response.data.data)
+          const response = await axiosInstance.get('/clients-config')
+          const clients = response?.data?.clients
+          if (Array.isArray(clients)) {
+            setOrganizations(
+              clients.map((client) => ({
+                id: client,
+                name: client
+              }))
+            )
+          } else {
+            setOrganizations([])
           }
         } catch (error) {
           console.error('Error fetching organizations:', error)
+          setOrganizations([])
         }
       }
       fetchOrganizations()
+    } else if (isAdmin) {
+      setOrganizations([])
     }
   }, [isAdmin])
 
@@ -509,7 +525,7 @@ const AddNewLearner = ({
               return `${year}-${month}-${day}`
             })()
           : null,
-        universityId: formData.organization || null,
+        client: getClientPayloadValue(formData.organization),
         activeStatus: isUserActive ? 1 : 0,
         role_id: formData.roleId
       }
@@ -525,7 +541,7 @@ const AddNewLearner = ({
 
         await axiosInstance.put(
           `/super-admin/learners/${learnerData.id}`,
-          payload
+          attachGlobalIdToPayload(payload, learnerData?.globalId)
         )
         toast.success('Learner updated successfully!')
       } else {
@@ -633,7 +649,13 @@ const AddNewLearner = ({
     setLoading(true)
     try {
       await axiosInstance.delete(
-        `/super-admin/users/${learnerData.id}?hardDelete=true`
+        `/super-admin/users/${learnerData.id}?hardDelete=true`,
+        {
+          data: getClientAndGlobalBody(
+            formData.organization,
+            learnerData?.globalId
+          )
+        }
       )
       toast.success('Learner deleted successfully!')
       setShowDeletePopup(false)
@@ -664,7 +686,12 @@ const AddNewLearner = ({
         )
         toast.success('User activated successfully!')
       } else {
-        await axiosInstance.delete(`/super-admin/users/${learnerData.id}`)
+        await axiosInstance.delete(`/super-admin/users/${learnerData.id}`, {
+          data: getClientAndGlobalBody(
+            formData.organization,
+            learnerData?.globalId
+          )
+        })
         toast.success('User deactivated successfully!')
       }
 
@@ -686,8 +713,13 @@ const AddNewLearner = ({
 
   const isEditMode = mode === 'edit'
 
+  const subdomainClientSlug = getHostnameSubdomainLabel()
   const selectedOrganization = isAdmin
-    ? organizations.find((org) => org.id === formData.organization)
+    ? canChooseClientInUI()
+      ? organizations.find((org) => org.id === formData.organization)
+      : subdomainClientSlug
+        ? { id: subdomainClientSlug, name: subdomainClientSlug }
+        : null
     : currentUser?.University
 
   const selectedRole = roleOptions.find((role) => role.id === formData.roleId)
@@ -1218,51 +1250,69 @@ const AddNewLearner = ({
 
             {/* Select Organization */}
             {isAdmin ? (
-              <div className='custom-dropdown-learner'>
-                <div
-                  className='dropdown-trigger-learner'
-                  onClick={() =>
-                    !loading &&
-                    setShowOrganizationDropdown(!showOrganizationDropdown)
-                  }
-                >
-                  <span
-                    className={
-                      formData.organization
-                        ? 'selected-value'
-                        : 'placeholder-value'
+              canChooseClientInUI() ? (
+                <div className='custom-dropdown-learner'>
+                  <div
+                    className='dropdown-trigger-learner'
+                    onClick={() =>
+                      !loading &&
+                      setShowOrganizationDropdown(!showOrganizationDropdown)
                     }
                   >
-                    {selectedOrganization
-                      ? selectedOrganization.name
-                      : 'Select Organization'}
-                  </span>
-                  <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
-                    <path
-                      d='M1 1.5L6 6.5L11 1.5'
-                      stroke='#666'
-                      strokeWidth='1.5'
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                    />
-                  </svg>
-                </div>
-                {showOrganizationDropdown && (
-                  <div className='dropdown-menu-learner'>
-                    {organizations.map((organization) => (
-                      <div
-                        key={organization.id}
-                        className='dropdown-item-learner'
-                        onClick={() =>
-                          handleDropdownSelect('organization', organization.id)
-                        }
-                      >
-                        {organization.name}
-                      </div>
-                    ))}
+                    <span
+                      className={
+                        formData.organization
+                          ? 'selected-value'
+                          : 'placeholder-value'
+                      }
+                    >
+                      {selectedOrganization
+                        ? selectedOrganization.name
+                        : 'Select Organization'}
+                    </span>
+                    <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
+                      <path
+                        d='M1 1.5L6 6.5L11 1.5'
+                        stroke='#666'
+                        strokeWidth='1.5'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                    </svg>
                   </div>
-                )}
-              </div>
+                  {showOrganizationDropdown && (
+                    <div className='dropdown-menu-learner'>
+                      {organizations.map((organization) => (
+                        <div
+                          key={organization.id}
+                          className='dropdown-item-learner'
+                          onClick={() =>
+                            handleDropdownSelect(
+                              'organization',
+                              organization.id
+                            )
+                          }
+                        >
+                          {organization.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className='input-group'>
+                  <input
+                    type='text'
+                    value={subdomainClientSlug || ''}
+                    className='form-input'
+                    placeholder=' '
+                    disabled={true}
+                    readOnly
+                    style={{ cursor: 'not-allowed', opacity: 0.85 }}
+                  />
+                  <label className='input-label'>Organization (client)</label>
+                </div>
+              )
             ) : (
               <div className='input-group'>
                 <input
