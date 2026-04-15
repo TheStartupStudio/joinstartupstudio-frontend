@@ -8,6 +8,7 @@ import AcademyBtn from '../../components/AcademyBtn'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import DataTable from '../../components/DataTable'
 import axiosInstance from '../../utils/AxiosInstance'
+import { attachGlobalIdToPayload, getClientAndGlobalBody } from '../../utils/clientHostname'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import UserManagementPopup from '../../components/UserManagment/AlertPopup'
@@ -131,10 +132,11 @@ const MasterClassManagement = () => {
     return titleKey
   }
 
-  const handleViewContent = async (contentId, mode) => {
+  const handleViewContent = async (contentId, mode, existingItem) => {
     try {
       const response = await axiosInstance.get(`/contents/${contentId}`)
       const content = response.data
+      const knownGlobalId = content.globalId ?? existingItem?.journalData?.globalId
 
       const taskData = {
         id: content.id,
@@ -145,7 +147,8 @@ const MasterClassManagement = () => {
         thumbnailUrl: content.thumbnail,
         information: content.description || '',
         reflectionItems: [], 
-        journalData: content
+        journalData: content,
+        globalId: knownGlobalId
       }
 
       setEditingTask(taskData)
@@ -245,10 +248,10 @@ const MasterClassManagement = () => {
     
     switch (actionType) {
       case 'view':
-        handleViewContent(item.id, 'view')
+        handleViewContent(item.id, 'view', item)
         break
       case 'edit':
-        handleViewContent(item.id, 'edit')
+        handleViewContent(item.id, 'edit', item)
         break
       case 'publish':
         setSelectedTask(item)
@@ -315,9 +318,11 @@ const MasterClassManagement = () => {
     setLoading(true)
     try {
       const updatePromises = selectedTasks.map(async (task) => {
-        return axiosInstance.put(`/contents/${task.id}`, {
-          published: true
-        })
+        const taskGlobalId = task?.journalData?.globalId ?? task?.globalId
+        return axiosInstance.put(
+          `/contents/${task.id}`,
+          attachGlobalIdToPayload({ published: true }, taskGlobalId)
+        )
       })
 
       await Promise.all(updatePromises)
@@ -351,9 +356,11 @@ const MasterClassManagement = () => {
     setLoading(true)
     try {
       const updatePromises = selectedTasks.map(async (task) => {
-        return axiosInstance.put(`/contents/${task.id}`, {
-          published: false
-        })
+        const taskGlobalId = task?.journalData?.globalId ?? task?.globalId
+        return axiosInstance.put(
+          `/contents/${task.id}`,
+          attachGlobalIdToPayload({ published: false }, taskGlobalId)
+        )
       })
 
       await Promise.all(updatePromises)
@@ -433,9 +440,13 @@ const MasterClassManagement = () => {
       const updatePromises = validAssignments.map(async (assignment) => {
         try {
           console.log(`Assigning video content ${assignment.contentId} to level ${assignment.levelId}`)
-          return await axiosInstance.put(`/contents/${assignment.contentId}`, {
-            journalLevel: assignment.levelId
-          })
+          return await axiosInstance.put(
+            `/contents/${assignment.contentId}`,
+            attachGlobalIdToPayload(
+              { journalLevel: assignment.levelId },
+              assignment.globalId
+            )
+          )
         } catch (individualError) {
           console.error(`Error assigning video content ${assignment.contentId}:`, individualError)
           throw individualError 
@@ -482,9 +493,11 @@ const MasterClassManagement = () => {
 
   const handleConfirmPublish = async () => {
     try {
-      await axiosInstance.put(`/contents/${selectedTask.id}`, {
-        published: true
-      })
+      const taskGlobalId = selectedTask?.journalData?.globalId ?? selectedTask?.globalId
+      await axiosInstance.put(
+        `/contents/${selectedTask.id}`,
+        attachGlobalIdToPayload({ published: true }, taskGlobalId)
+      )
 
       if (activeLevel) {
         await fetchContentByLevel()
@@ -500,9 +513,11 @@ const MasterClassManagement = () => {
 
   const handleConfirmUnpublish = async () => {
     try {
-      await axiosInstance.put(`/contents/${selectedTask.id}`, {
-        published: false
-      })
+      const taskGlobalId = selectedTask?.journalData?.globalId ?? selectedTask?.globalId
+      await axiosInstance.put(
+        `/contents/${selectedTask.id}`,
+        attachGlobalIdToPayload({ published: false }, taskGlobalId)
+      )
 
       if (activeLevel) {
         await fetchContentByLevel()
@@ -519,16 +534,20 @@ const MasterClassManagement = () => {
   const handleConfirmDeleteTask = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
+      const taskGlobalId = selectedTask?.journalData?.globalId ?? selectedTask?.globalId
+      await axiosInstance.delete(`/contents/${selectedTask.id}`, {
+        data: getClientAndGlobalBody(null, taskGlobalId)
+      })
+
       setTasksData(prevTasks =>
         prevTasks.filter(task => task.id !== selectedTask.id)
       )
-      
+
       toast.success(`Video "${selectedTask.name}" deleted successfully!`)
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error deleting video:', error)
       toast.error('Failed to delete video')
     } finally {
       setLoading(false)
@@ -538,13 +557,20 @@ const MasterClassManagement = () => {
   const handleConfirmDeleteLevel = async () => {
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      toast.success(`Level "${selectedLevel}" deleted successfully!`)
+      const levelGlobalId = selectedLevel?.globalId
+      await axiosInstance.delete(
+        `/contents/masterclass/levels/${selectedLevel?.id || selectedLevel}`,
+        { data: getClientAndGlobalBody(null, levelGlobalId) }
+      )
+
+      await fetchLevels()
+
+      toast.success('Category deleted successfully!')
       setShowDeleteLevelPopup(false)
       setSelectedLevel(null)
     } catch (error) {
-      toast.error('Failed to delete level')
+      console.error('Error deleting category:', error)
+      toast.error('Failed to delete category')
     } finally {
       setLoading(false)
     }

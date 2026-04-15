@@ -151,6 +151,30 @@
   width: 100%;
 }
 
+.add-journal-modal-overlay .input-box.add-journal-client-row {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  height: auto;
+  min-height: 54px;
+  gap: 8px;
+}
+
+.add-journal-modal-overlay .add-journal-client-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #231f20;
+  margin: 0;
+  align-self: flex-start;
+}
+
+.add-journal-modal-overlay .add-journal-client-select {
+  width: 100%;
+  padding: 0;
+  box-shadow: none;
+}
+
 .add-journal-modal-overlay .input-box.icon-select {
   width: 100%;
   cursor: pointer;

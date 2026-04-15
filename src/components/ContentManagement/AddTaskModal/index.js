@@ -11,6 +11,13 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
+import {
+  attachGlobalIdToPayload,
+  canChooseClientInUI,
+  getClientAndGlobalBody,
+  getClientPayloadValue,
+  getHostnameSubdomainLabel
+} from '../../../utils/clientHostname'
 import './index.css'
 
 const AddTaskModal = ({
@@ -48,6 +55,11 @@ const AddTaskModal = ({
   const isAddMode = currentMode === 'add'
   const isMasterClass = source === 'masterclass'
   const isLeadership = source === 'leadership'
+  const isCourseContent = !isMasterClass && !isLeadership
+  const includeClient = true
+
+  const [clients, setClients] = useState([])
+  const [selectedClient, setSelectedClient] = useState('all')
 
   const quillModules = {
     toolbar: isViewMode
@@ -122,6 +134,12 @@ const AddTaskModal = ({
         setThumbnailPreview(thumbnailUrlField)
       }
 
+      const clientFromTask =
+        taskData.client ??
+        taskData.journal?.client ??
+        taskData.journalData?.client
+      setSelectedClient(clientFromTask || 'all')
+
       setIsLoadingData(false)
     } else if (show && mode === 'add') {
       setTaskTitle('')
@@ -136,6 +154,7 @@ const AddTaskModal = ({
       setReflectionItems([{ id: 1, question: '', instructions: '' }])
       setShowDeleteModal(false)
       setTaskToDelete(null)
+      setSelectedClient('all')
     }
   }, [show, mode, initialLevel, taskData])
 
@@ -151,6 +170,27 @@ const AddTaskModal = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await axiosInstance.get('/clients-config')
+        const clientsList = response?.data?.clients
+        if (Array.isArray(clientsList)) {
+          setClients(clientsList)
+        } else {
+          setClients([])
+        }
+      } catch (error) {
+        console.error('Error fetching clients:', error)
+        setClients([])
+      }
+    }
+
+    if (show && includeClient && canChooseClientInUI()) {
+      fetchClients()
+    }
+  }, [show, includeClient])
 
   const handleSaveAndContinue = async () => {
     setActiveTab('reflection')
@@ -268,17 +308,26 @@ const AddTaskModal = ({
         reflectionItems: filteredReflectionItems
       }
 
+      if (includeClient) {
+        payload.client = getClientPayloadValue(selectedClient)
+      }
+
+      const taskGlobalId =
+        taskData?.globalId ??
+        taskData?.journal?.globalId ??
+        taskData?.journalData?.globalId
+
       let response
       if (isEditMode && taskData?.id) {
         if (isMasterClass) {
           response = await axiosInstance.put(
             `/contents/${taskData.id}`,
-            payload
+            attachGlobalIdToPayload(payload, taskGlobalId)
           )
         } else {
           response = await axiosInstance.put(
             `/LtsJournals/${taskData.id}/edit-with-content`,
-            payload
+            attachGlobalIdToPayload(payload, taskGlobalId)
           )
         }
         toast.success('Task updated successfully!')
@@ -340,6 +389,7 @@ const AddTaskModal = ({
     setIsDropdownOpen(false)
     setShowDeleteModal(false)
     setTaskToDelete(null)
+    setSelectedClient('all')
     setCurrentMode(mode)
     onHide()
   }
@@ -380,11 +430,19 @@ const AddTaskModal = ({
     setShowDeleteModal(false)
     setLoading(true)
     try {
+      const deleteGlobalId =
+        taskToDelete?.globalId ??
+        taskToDelete?.journal?.globalId ??
+        taskToDelete?.journalData?.globalId
+      const deleteBody = getClientAndGlobalBody(selectedClient, deleteGlobalId)
       if (isMasterClass) {
-        await axiosInstance.delete(`/contents/${taskToDelete.id}`)
+        await axiosInstance.delete(`/contents/${taskToDelete.id}`, {
+          data: deleteBody
+        })
       } else {
         await axiosInstance.delete(
-          `/LtsJournals/${taskToDelete.id}/delete-with-content`
+          `/LtsJournals/${taskToDelete.id}/delete-with-content`,
+          { data: deleteBody }
         )
       }
       toast.success('Task deleted successfully!')
@@ -672,6 +730,38 @@ const AddTaskModal = ({
                 )}
               </div>
             </div>
+
+            {includeClient && (
+              <div className='form-group'>
+                <label className='form-label'>CLIENT:</label>
+                {canChooseClientInUI() ? (
+                  <select
+                    className='level-select client-select'
+                    value={selectedClient}
+                    onChange={(e) => setSelectedClient(e.target.value)}
+                    disabled={loading || isViewMode}
+                  >
+                    <option value='all'>All</option>
+                    {clients.map((client) => (
+                      <option key={client} value={client}>
+                        {client}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div
+                    className='level-select client-select'
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      opacity: isViewMode ? 0.7 : 1
+                    }}
+                  >
+                    {getHostnameSubdomainLabel() || '—'}
+                  </div>
+                )}
+              </div>
+            )}
 
             {!isMasterClass && !isLeadership && (
               <div className='form-group'>

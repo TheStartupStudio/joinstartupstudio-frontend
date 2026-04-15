@@ -11,6 +11,7 @@ import AddJournalModal from '../../components/ContentManagement/AddJournalModal'
 import AddJournalIntroduction from '../../components/ContentManagement/AddJournalIntroduction'
 import DeleteJournalContentModal from '../../components/ContentManagement/DeleteJournalContentModal'
 import axiosInstance from '../../utils/AxiosInstance'
+import { attachGlobalIdToPayload, getClientAndGlobalBody } from '../../utils/clientHostname'
 import { toast } from 'react-toastify'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 
@@ -266,9 +267,11 @@ const ManageContentSite = () => {
 
   const updateContent = async (contentId, updateData) => {
     try {
+      const content = contents.find((c) => c.id === contentId)
+      const contentGlobalId = content?.globalId
       const response = await axiosInstance.put(
         `/manage-content/${contentId}`,
-        updateData
+        attachGlobalIdToPayload(updateData, contentGlobalId)
       )
       if (response.data.success) {
         toast.success('Content updated successfully')
@@ -315,19 +318,20 @@ const ManageContentSite = () => {
   }
 
   const handleEditContent = async (content) => {
-    console.log('Edit clicked for content:', content)
-    console.log('Available content properties:', Object.keys(content))
-    console.log('Content ID value:', content.id)
-
     if (content.id) {
       try {
-        console.log('Fetching full data for contentId:', content.id)
         const response = await axiosInstance.get(
           `/manage-content/full/${content.id}`
         )
         if (response.data.success) {
-          console.log('Full data fetched:', response.data.data)
-          setSelectedJournalData(response.data.data)
+          const fullData = response.data.data
+          if (!fullData.globalId && content.globalId) {
+            fullData.globalId = content.globalId
+          }
+          if (fullData.manageContent && !fullData.manageContent.globalId && content.globalId) {
+            fullData.manageContent.globalId = content.globalId
+          }
+          setSelectedJournalData(fullData)
           setModalMode('edit')
           setSelectedContentId(content.id)
           setShowAddJournalModal(true)
@@ -339,7 +343,6 @@ const ManageContentSite = () => {
         toast.error('Failed to load content data')
       }
     } else {
-      console.log('No ID found on content object')
       toast.error('Content ID is required for editing')
     }
   }
@@ -379,7 +382,8 @@ const ManageContentSite = () => {
     try {
       setLoading(true)
       const response = await axiosInstance.put('/manage-content/bulk/archive', {
-        ids: selectedItems
+        ids: selectedItems,
+        globalIds: selectedItems.map((id) => contents.find((c) => c.id === id)?.globalId).filter(Boolean)
       })
 
       if (response.data.success) {
@@ -420,10 +424,13 @@ const ManageContentSite = () => {
     try {
       setLoading(true)
 
-      // Delete each selected item individually using the full delete endpoint
-      const deletePromises = deleteModalData.selectedItems.map((contentId) =>
-        axiosInstance.delete(`/manage-content/full/${contentId}`)
-      )
+      const allContents = [...contents, ...archivedContents]
+      const deletePromises = deleteModalData.selectedItems.map((contentId) => {
+        const content = allContents.find((c) => c.id === contentId)
+        return axiosInstance.delete(`/manage-content/full/${contentId}`, {
+          data: { globalId: content?.globalId }
+        })
+      })
 
       const responses = await Promise.all(deletePromises)
 
@@ -453,10 +460,14 @@ const ManageContentSite = () => {
     try {
       setLoading(true)
 
-      // Archive each selected item
-      const archivePromises = deleteModalData.selectedItems.map((contentId) =>
-        axiosInstance.put('/manage-content/bulk/archive', { ids: [contentId] })
-      )
+      const allContents = [...contents, ...archivedContents]
+      const archivePromises = deleteModalData.selectedItems.map((contentId) => {
+        const content = allContents.find((c) => c.id === contentId)
+        return axiosInstance.put('/manage-content/bulk/archive', {
+          ids: [contentId],
+          globalId: content?.globalId
+        })
+      })
 
       const responses = await Promise.all(archivePromises)
 
@@ -491,7 +502,8 @@ const ManageContentSite = () => {
     try {
       setLoading(true)
       const response = await axiosInstance.put('/manage-content/bulk/publish', {
-        ids: selectedItems
+        ids: selectedItems,
+        globalIds: selectedItems.map((id) => contents.find((c) => c.id === id)?.globalId).filter(Boolean)
       })
 
       if (response.data.success) {
@@ -515,8 +527,10 @@ const ManageContentSite = () => {
   const handleArchiveContent = async (contentId) => {
     try {
       setLoading(true)
+      const content = contents.find((c) => c.id === contentId)
       const response = await axiosInstance.put('/manage-content/bulk/archive', {
-        ids: [contentId]
+        ids: [contentId],
+        globalId: content?.globalId
       })
 
       if (response.data.success) {
@@ -537,8 +551,10 @@ const ManageContentSite = () => {
   const handlePublishContent = async (contentId) => {
     try {
       setLoading(true)
+      const content = contents.find((c) => c.id === contentId)
       const response = await axiosInstance.put('/manage-content/bulk/publish', {
-        ids: [contentId]
+        ids: [contentId],
+        globalId: content?.globalId
       })
 
       if (response.data.success) {
@@ -558,8 +574,11 @@ const ManageContentSite = () => {
   const handleDeleteContent = async (contentId) => {
     try {
       setLoading(true)
+      const allContents = [...contents, ...archivedContents]
+      const content = allContents.find((c) => c.id === contentId)
       const response = await axiosInstance.delete(
-        `/manage-content/${contentId}`
+        `/manage-content/${contentId}`,
+        { data: { globalId: content?.globalId } }
       )
 
       if (response.data.success) {
@@ -581,8 +600,11 @@ const ManageContentSite = () => {
   const handleArchiveContentForDelete = async (contentId) => {
     try {
       setLoading(true)
+      const allContents = [...contents, ...archivedContents]
+      const content = allContents.find((c) => c.id === contentId)
       const response = await axiosInstance.put('/manage-content/bulk/archive', {
-        ids: [contentId]
+        ids: [contentId],
+        globalId: content?.globalId
       })
 
       if (response.data.success) {

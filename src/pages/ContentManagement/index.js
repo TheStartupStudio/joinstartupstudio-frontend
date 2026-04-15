@@ -10,6 +10,7 @@ import btnIcon from '../../assets/images/academy-icons/svg/material-symbols_file
 import DataTable from '../../components/DataTable'
 import blueManagerBG from '../../assets/images/academy-icons/svg/bg-blue-menager.png'
 import axiosInstance from '../../utils/AxiosInstance'
+import { attachGlobalIdToPayload, getClientAndGlobalBody } from '../../utils/clientHostname'
 import AddTaskModal from '../../components/ContentManagement/AddTaskModal/index.js'
 import AddLevelModal from '../../components/ContentManagement/AddLevelModal/index.js'
 import CreateJournalTaskModal from '../../components/ContentManagement/CreateJournalTaskModal'
@@ -201,10 +202,10 @@ const ContentManagement = () => {
   const handleRowAction = (actionType, item) => {
     switch (actionType) {
       case 'view':
-        handleViewEditJournal(item.id, actionType)
+        handleViewEditJournal(item.id, actionType, item)
         break
       case 'edit':
-        handleViewEditJournal(item.id, actionType)
+        handleViewEditJournal(item.id, actionType, item)
         break
       case 'publish':
         setSelectedTask(item)
@@ -228,11 +229,13 @@ const ContentManagement = () => {
 
       setTasksData(updatedData)
 
-      const reorderPromises = updatedData.map((task) =>
-        axiosInstance.put(`/LtsJournals/${task.id}/order`, {
-          order: task.order
-        })
-      )
+      const reorderPromises = updatedData.map((task) => {
+        const taskGlobalId = task?.journalData?.globalId ?? task?.globalId
+        return axiosInstance.put(
+          `/LtsJournals/${task.id}/order`,
+          attachGlobalIdToPayload({ order: task.order }, taskGlobalId)
+        )
+      })
       await Promise.all(reorderPromises)
 
       const reorderedItems = updatedData.map((item) => ({
@@ -285,19 +288,17 @@ const ContentManagement = () => {
 
     try {
       const updatePromises = selectedItems.map(async (task) => {
-        return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
-          published: true
-        })
+        const taskGlobalId = task?.journalData?.globalId ?? task?.globalId
+        return axiosInstance.put(
+          `/LtsJournals/${task.id}/edit-with-content`,
+          attachGlobalIdToPayload({ published: true }, taskGlobalId)
+        )
       })
 
       await Promise.all(updatePromises)
 
       toast.success(`${selectedItems.length} tasks published successfully!`)
-
-      // Refresh data
       await fetchTasksByLevel()
-
-      // Clear selections
       setSelectedItems([])
     } catch (error) {
       console.error('Error bulk publishing tasks:', error)
@@ -315,19 +316,17 @@ const ContentManagement = () => {
 
     try {
       const updatePromises = selectedItems.map(async (task) => {
-        return axiosInstance.put(`/LtsJournals/${task.id}/edit-with-content`, {
-          published: false
-        })
+        const taskGlobalId = task?.journalData?.globalId ?? task?.globalId
+        return axiosInstance.put(
+          `/LtsJournals/${task.id}/edit-with-content`,
+          attachGlobalIdToPayload({ published: false }, taskGlobalId)
+        )
       })
 
       await Promise.all(updatePromises)
 
       toast.success(`${selectedItems.length} tasks unpublished successfully!`)
-
-      // Refresh data
       await fetchTasksByLevel()
-
-      // Clear selections
       setSelectedItems([])
     } catch (error) {
       console.error('Error bulk unpublishing tasks:', error)
@@ -337,13 +336,16 @@ const ContentManagement = () => {
     }
   }
 
-  const handleViewEditJournal = async (journalId, mode) => {
+  const handleViewEditJournal = async (journalId, mode, existingItem) => {
     try {
       const response = await axiosInstance.get(
         `/LtsJournals/${journalId}/view-with-content`
       )
 
       const journal = response.data
+      const knownGlobalId = journal.globalId
+        ?? journal.journalData?.globalId
+        ?? existingItem?.journalData?.globalId
 
       let formattedReflectionItems = []
 
@@ -442,7 +444,8 @@ const ContentManagement = () => {
           thumbnailUrl: journal.thumbnailUrl,
           information: journal.information || '',
           reflectionItems: formattedReflectionItems,
-          order: journal.order
+          order: journal.order,
+          globalId: knownGlobalId
         }
 
         setEditingTask(taskData)
@@ -450,7 +453,6 @@ const ContentManagement = () => {
         setShowAddTaskModal(true)
       } else {
         // Task has no reflection content - use CreateJournalTaskModal
-        // This is the first task or a basic journal task without reflection
         const taskData = {
           id: journal.id,
           title: journal.title,
@@ -458,7 +460,8 @@ const ContentManagement = () => {
           videoTitle: journal?.journalData?.video?.title || '',
           thumbnailUrl: journal.thumbnailUrl || journal.JournalImg?.url || '',
           information: journal.information || '',
-          order: journal.order
+          order: journal.order,
+          globalId: knownGlobalId
         }
 
         setEditingTask(taskData)
@@ -522,9 +525,10 @@ const ContentManagement = () => {
           )
           return await axiosInstance.put(
             `/LtsJournals/${assignment.journalId}/edit-with-content`,
-            {
-              journalLevel: assignment.levelId
-            }
+            attachGlobalIdToPayload(
+              { journalLevel: assignment.levelId },
+              assignment.globalId
+            )
           )
         } catch (individualError) {
           console.error(
@@ -577,14 +581,12 @@ const ContentManagement = () => {
 
   const handleConfirmPublish = async () => {
     try {
+      const taskGlobalId = selectedTask?.journalData?.globalId ?? selectedTask?.globalId
       await axiosInstance.put(
         `/LtsJournals/${selectedTask.id}/edit-with-content`,
-        {
-          published: true
-        }
+        attachGlobalIdToPayload({ published: true }, taskGlobalId)
       )
 
-      // Refresh data from API
       await fetchTasksByLevel()
 
       toast.success(`Task "${selectedTask.name}" published successfully!`)
@@ -598,14 +600,12 @@ const ContentManagement = () => {
 
   const handleConfirmUnpublish = async () => {
     try {
+      const taskGlobalId = selectedTask?.journalData?.globalId ?? selectedTask?.globalId
       await axiosInstance.put(
         `/LtsJournals/${selectedTask.id}/edit-with-content`,
-        {
-          published: false
-        }
+        attachGlobalIdToPayload({ published: false }, taskGlobalId)
       )
 
-      // Refresh data from API
       await fetchTasksByLevel()
 
       toast.success(`Task "${selectedTask.name}" unpublished successfully!`)
@@ -619,7 +619,10 @@ const ContentManagement = () => {
 
   const handleConfirmDeleteTask = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const taskGlobalId = selectedTask?.journalData?.globalId ?? selectedTask?.globalId
+      await axiosInstance.delete(`/LtsJournals/${selectedTask.id}`, {
+        data: getClientAndGlobalBody(null, taskGlobalId)
+      })
 
       setTasksData((prevTasks) =>
         prevTasks.filter((task) => task.id !== selectedTask.id)
@@ -629,18 +632,26 @@ const ContentManagement = () => {
       setShowDeleteTaskPopup(false)
       setSelectedTask(null)
     } catch (error) {
+      console.error('Error deleting task:', error)
       toast.error('Failed to delete task')
     }
   }
 
   const handleConfirmDeleteLevel = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const levelGlobalId = selectedLevel?.globalId
+      await axiosInstance.delete(
+        `/LtsJournals/entrepreneurship/levels/${selectedLevel?.id || selectedLevel}`,
+        { data: getClientAndGlobalBody(null, levelGlobalId) }
+      )
 
-      toast.success(`Level "${selectedLevel}" deleted successfully!`)
+      await fetchLevels()
+
+      toast.success(`Level deleted successfully!`)
       setShowDeleteLevelPopup(false)
       setSelectedLevel(null)
     } catch (error) {
+      console.error('Error deleting level:', error)
       toast.error('Failed to delete level')
     }
   }

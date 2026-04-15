@@ -3,6 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
+import {
+  attachGlobalIdToPayload,
+  getClientAndGlobalBody,
+  getClientPayloadValue
+} from '../../../utils/clientHostname'
 import { toast } from 'react-toastify'
 import UserManagementPopup from '../../UserManagment/AlertPopup'
 import './index.css'
@@ -190,6 +195,11 @@ const CreateJournalTaskModal = ({
 
     setLoading(true)
     try {
+      const taskGlobalId =
+        taskData?.globalId ??
+        taskData?.journal?.globalId ??
+        taskData?.journalData?.globalId
+
       const payload = {
         title: journalTitle,
         category: category,
@@ -202,14 +212,15 @@ const CreateJournalTaskModal = ({
         thumbnailUrl: journalVideoThumbnailUrl || null,
         information: journalText || null,
         reflectionItems: [],
-        isSection: modalHeaderTitle === 'Section Intro'
+        isSection: modalHeaderTitle === 'Section Intro',
+        client: getClientPayloadValue(null)
       }
 
       let response
       if (isEditMode && taskData?.id) {
         response = await axiosInstance.put(
           `/LtsJournals/${taskData.id}/edit-with-content`,
-          payload
+          attachGlobalIdToPayload(payload, taskGlobalId)
         )
         toast.success('Journal task updated successfully!')
       } else {
@@ -265,8 +276,13 @@ const CreateJournalTaskModal = ({
 
     setLoading(true)
     try {
+      const deleteGlobalId =
+        taskData?.globalId ??
+        taskData?.journal?.globalId ??
+        taskData?.journalData?.globalId
       await axiosInstance.delete(
-        `/LtsJournals/${taskData.id}/delete-with-content`
+        `/LtsJournals/${taskData.id}/delete-with-content`,
+        { data: getClientAndGlobalBody(null, deleteGlobalId) }
       )
       toast.success('Journal task deleted successfully!')
       setShowDeleteModal(false)

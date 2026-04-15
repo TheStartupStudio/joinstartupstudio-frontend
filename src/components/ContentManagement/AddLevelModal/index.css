@@ -33,6 +33,20 @@
   margin-bottom: 24px;
 }
 
+.add-level-modal .client-select {
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid rgba(227, 229, 233, 0.9);
+  box-shadow: 0px 3px 6px #00000014;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+
+.add-level-modal .client-select:focus {
+  border-color: #51c7df;
+  box-shadow: 0 0 0 3px rgba(81, 199, 223, 0.1);
+}
+
 .add-level-modal .form-label {
   color: #231F20;
   font-family: 'Montserrat', sans-serif;
