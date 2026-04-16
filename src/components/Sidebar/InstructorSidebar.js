@@ -108,7 +108,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'course-entrepreneurship',
-    title: 'Studio Sessions',
+    title: 'Course Sessions',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
     roles: [2, 1],
@@ -429,25 +429,15 @@ const InstructorSidebar = (props) => {
       if (shouldInsertStudioJournalSection && contentManagementChildren.length > 0) {
         result.push({
           id: 'content-management-new-parent',
-          title: 'Studio Journal',
-          srcImage: LeadershipIcon,
+          title: userRoleId === 3 ? 'Content Management' : 'Studio Journals',
+          srcImage: userRoleId === 3 ? ContentSiteIcon : LeadershipIcon,
+          to: userRoleId === 3 ? '/manage-content-site' : '#',
+          isAdminParent: userRoleId === 3,
           isHierarchy: true,
           children: contentManagementChildren
         })
       }
 
-      if (userRoleId === 3 && currentItem.id === 'studio-guidance-management') {
-        const legacyContentManagementItem = staticItems.find(
-          (item) => item.id === 'manage-content-site'
-        )
-
-        if (legacyContentManagementItem) {
-          result.push({
-            ...legacyContentManagementItem,
-            id: 'manage-content-site-legacy',
-          })
-        }
-      }
     }
 
     return result
@@ -621,6 +611,15 @@ const InstructorSidebar = (props) => {
   }
 
   const isHierarchyItemActive = (hierarchyItem) => {
+    if (
+      hierarchyItem?.isAdminParent &&
+      hierarchyItem?.to &&
+      hierarchyItem.to !== '#' &&
+      location.pathname.includes(hierarchyItem.to)
+    ) {
+      return true
+    }
+
     return (hierarchyItem.children || []).some((child) => {
       if (typeof child.getClassName === 'function') {
         return child.getClassName(location) === 'active'
@@ -649,33 +648,47 @@ const InstructorSidebar = (props) => {
             <React.Fragment key={item.id}>
               <li className='sub-li'>
                 <Link
-                  to='#'
+                  to={item.to || '#'}
                   className={isHierarchyItemActive(item) ? 'active' : ''}
-                  onClick={(e) => e.preventDefault()}
+                  onClick={(e) => {
+                    if (item.isAdminParent) {
+                      handleMenuItemClick(item)
+                      return
+                    }
+
+                    e.preventDefault()
+                    setIsContentManagementOpen((prevOpen) => !prevOpen)
+                  }}
                 >
                   <div
                     className='d-flex w-100'
                     style={{ alignItems: 'center' }}
-                    onClick={() =>
-                      setIsContentManagementOpen((prevOpen) => !prevOpen)
-                    }
                   >
                     <Col md='2' className='col-2 icon_container'>
                       <img src={item.srcImage} alt='Icon' />
                     </Col>
-                    <div className='flex-grow-1 ms-1'>
-                      <span className='text-uppercase'>
+                    <div className='ms-1' style={{ width: 'fit-content' }}>
+                      <span className='text-uppercase flex-grow-1' style={{ width: 'fit-content' }}>
                         {isTextVisible && !isCollapsed && item.title}
                       </span>
                     </div>
                     {isTextVisible && !isCollapsed && (
+                      <div className='flex-grow-1 d-flex justify-content-end align-items-end' 
+                        style={{ minWidth: '25px' }}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setIsContentManagementOpen((prevOpen) => !prevOpen)
+                        }}
+                      >
                       <FontAwesomeIcon
                         icon={
                           isContentManagementOpen ? faAngleDown : faAngleRight
                         }
                         className='me-2 me-md-0'
-                        style={{ fontSize: '16px', color: '#333D3D' }}
+                        style={{ fontSize: '16px', color: '#333D3D', alignItems: 'end', justifyContent: 'end' }}
                       />
+                      </div>
                     )}
                   </div>
                 </Link>

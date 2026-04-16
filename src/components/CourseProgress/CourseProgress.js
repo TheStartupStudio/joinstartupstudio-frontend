@@ -211,7 +211,7 @@ function CourseProgress() {
         <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 gap-2'>
           <div className='d-flex gap-3 align-items-center'>
             <img src={courseLogo} alt='course' className='course-logo-studio' />
-            <h4 className='fs-9 my-details-header'>My Studio Progress</h4>
+            <h4 className='fs-9 my-details-header'>My Course Progress</h4>
           </div>
           <div
             className='progress-details cursor-pointer'

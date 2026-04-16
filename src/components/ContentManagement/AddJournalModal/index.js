@@ -690,7 +690,9 @@ const AddJournalModal = ({
                                     <FontAwesomeIcon icon={faPencilAlt} className="input-icon" />
                                 </div>
 
-                                <div className="input-box flex-1 add-journal-client-row" style={{ width: '100%' }}>
+                                <div className="d-flex gap-2 w-100 align-items-center">
+
+                                <div className="input-box flex-1 add-journal-client-row" style={{ flex: 1 }}>
                                     <label className="add-journal-client-label" htmlFor="add-journal-client">
                                         Client
                                     </label>
@@ -720,9 +722,8 @@ const AddJournalModal = ({
                                     )}
                                 </div>
 
-                                <div className="d-flex gap-2 w-100">
 
-                                <div className="position-relative w-100">
+                                {/* <div className="position-relative w-100">
                                     <div className="input-box icon-select" onClick={mode !== 'view' ? handleIconDropdownToggle : undefined} style={{ cursor: mode === 'view' ? 'default' : 'pointer' }}>
                                         {selectedIcon ? (
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -755,8 +756,8 @@ const AddJournalModal = ({
                                         </div>
                                     )}
 
-                                </div>
-                                <div className="input-box color-select w-100" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                </div> */}
+                                <div className="input-box color-select" style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, height: '100%' }}>
                                     
                                     <input
                                         id="color-picker"
