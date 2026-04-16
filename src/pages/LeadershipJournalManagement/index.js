@@ -844,7 +844,7 @@ const LeadershipJournalManagement = () => {
                   lineHeight: 'normal'
                 }}
               >
-                LEADERSHIP JOURNAL MANAGEMENT
+                {selectedCategory || 'LEADERSHIP JOURNAL MANAGEMENT'}
               </h3>
               <p
                 style={{
@@ -857,7 +857,7 @@ const LeadershipJournalManagement = () => {
                   marginBottom: '0px'
                 }}
               >
-                View and edit Leadership Journal Tasks
+                {selectedCategory ? 'View and edit ' + selectedCategory + ' Tasks' : 'View and edit Leadership Journal Tasks'}
               </p>
             </div>
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import ExpandLogo from '../../assets/images/academy-icons/fast-arrow-right.png'
 import LogOutIcon from '../../assets/images/academy-icons/svg/LogOut.svg'
 import CoursEnIcon from '../../assets/images/academy-icons/svg/course-in-e.svg'
@@ -76,16 +78,16 @@ const SIDEBAR_MENU_ITEMS = [
     className: (pathname) =>
       pathname.includes('studio-guidance-management') ? 'active' : ''
   },
-  {
-    id: 'leadership-journal-management',
-    title: 'Leadership Journal Management',
-    srcImage: LeadershipIcon,
-    to: '/leadership-journal-management',
-    roles: [3],
-    requiresUniversitySetting: 'hasLeadershipJournal',
-    className: (pathname) =>
-      pathname.includes('leadership-journal-management') ? 'active' : ''
-  },
+  // {
+  //   id: 'leadership-journal-management',
+  //   title: 'Leadership Journal Management',
+  //   srcImage: LeadershipIcon,
+  //   to: '/leadership-journal-management',
+  //   roles: [3],
+  //   requiresUniversitySetting: 'hasLeadershipJournal',
+  //   className: (pathname) =>
+  //     pathname.includes('leadership-journal-management') ? 'active' : ''
+  // },
   {
     id: 'manage-content-site',
     title: 'Content Management',
@@ -186,6 +188,7 @@ const InstructorSidebar = (props) => {
   const [hasCheckedAgreement, setHasCheckedAgreement] = useState(false)
   const [manageContentData, setManageContentData] = useState([])
   const [manageContentLoading, setManageContentLoading] = useState(false)
+  const [isContentManagementOpen, setIsContentManagementOpen] = useState(false)
 
   const hasPermission = (itemRoles, userRoleId) => {
     if (itemRoles.includes('all')) return true
@@ -362,34 +365,106 @@ const InstructorSidebar = (props) => {
       return true
     })
 
-    const dynamicItems = manageContentData.map((content) => ({
-      id: `journal-course-${content.id}`,
-      title: content.title,
-      srcImage: getIconSvg(content.icon),
-      to: `/journal-courses/${content.id}`,
+    const dynamicItems = manageContentData.map((content) => {
+      const isAdmin = userRoleId === 3
+      const to = isAdmin
+        ? `/leadership-journal-management?contentId=${content.id}`
+        : `/journal-courses/${content.id}`
 
-      roles: [1, 2, 3],
-      className: (pathname) => {
-        if (pathname === `/journal-courses/${content.id}`) return 'active'
-        if (pathname === '/leadership-journal' && content.id === 1)
-          return 'active'
-        return ''
-      },
-      category: content.title // Add category for API calls
-    }))
+      return {
+        id: `journal-course-${content.id}`,
+        title: content.title,
+        srcImage: getIconSvg(content.icon),
+        to,
+        roles: [1, 2, 3],
+        className: (pathname) => {
+          if (!isAdmin) {
+            if (pathname === `/journal-courses/${content.id}`) return 'active'
+            if (pathname === '/leadership-journal' && content.id === 1)
+              return 'active'
+          }
+          return ''
+        },
+        getClassName: (locationObj) => {
+          if (!isAdmin) return ''
+          if (!locationObj.pathname.includes('/leadership-journal-management')) {
+            return ''
+          }
+
+          const searchParams = new URLSearchParams(locationObj.search || '')
+          return searchParams.get('contentId') === String(content.id)
+            ? 'active'
+            : ''
+        },
+        category: content.title
+      }
+    })
+
+    const leadershipManagementItem = staticItems.find(
+      (item) => item.id === 'leadership-journal-management'
+    )
+
+    const contentManagementChildren = [
+      ...(leadershipManagementItem ? [leadershipManagementItem] : []),
+      ...dynamicItems
+    ]
 
     const result = []
     for (let i = 0; i < staticItems.length; i++) {
-      result.push(staticItems[i])
+      const currentItem = staticItems[i]
 
-      if (staticItems[i].id === 'master-classes') {
-        // // if (staticItems[i].id === 'forum') {
-        result.push(...dynamicItems)
+      if (
+        currentItem.id === 'leadership-journal-management' ||
+        currentItem.id === 'manage-content-site'
+      ) {
+        continue
+      }
+
+      result.push(currentItem)
+
+      const shouldInsertStudioJournalSection =
+        (userRoleId === 3 && currentItem.id === 'studio-guidance-management') ||
+        (userRoleId !== 3 && currentItem.id === 'master-classes')
+
+      if (shouldInsertStudioJournalSection && contentManagementChildren.length > 0) {
+        result.push({
+          id: 'content-management-new-parent',
+          title: 'Studio Journal',
+          srcImage: LeadershipIcon,
+          isHierarchy: true,
+          children: contentManagementChildren
+        })
+      }
+
+      if (userRoleId === 3 && currentItem.id === 'studio-guidance-management') {
+        const legacyContentManagementItem = staticItems.find(
+          (item) => item.id === 'manage-content-site'
+        )
+
+        if (legacyContentManagementItem) {
+          result.push({
+            ...legacyContentManagementItem,
+            id: 'manage-content-site-legacy',
+          })
+        }
       }
     }
 
     return result
   }
+
+  useEffect(() => {
+    const menuItems = getVisibleMenuItems()
+    const contentManagementParent = menuItems.find(
+      (item) => item.id === 'content-management-new-parent'
+    )
+    const shouldOpen = (contentManagementParent?.children || []).some(
+      (child) =>
+        typeof child.className === 'function' &&
+        child.className(location.pathname) === 'active'
+    )
+    setIsContentManagementOpen(shouldOpen)
+  }, [location.pathname, manageContentData, user])
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -421,6 +496,12 @@ const InstructorSidebar = (props) => {
     }, 250)
 
     return () => clearTimeout(timer)
+  }, [isCollapsed])
+
+  useEffect(() => {
+    if (isCollapsed) {
+      setIsContentManagementOpen(false)
+    }
   }, [isCollapsed])
 
   useEffect(() => {
@@ -539,6 +620,18 @@ const InstructorSidebar = (props) => {
     return true
   }
 
+  const isHierarchyItemActive = (hierarchyItem) => {
+    return (hierarchyItem.children || []).some((child) => {
+      if (typeof child.getClassName === 'function') {
+        return child.getClassName(location) === 'active'
+      }
+      if (typeof child.className === 'function') {
+        return child.className(location.pathname) === 'active'
+      }
+      return child.className === 'active'
+    })
+  }
+
   const navHeight = props.navHeight
 
   return (
@@ -551,21 +644,87 @@ const InstructorSidebar = (props) => {
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
         id='side-menu-main'
       >
-        {getVisibleMenuItems().map((item) => (
-          <SidebarItem
-            key={item.id}
-            onClick={() => handleMenuItemClick(item)}
-            to={item.to}
-            className={
-              typeof item.className === 'function'
-                ? item.className(location.pathname)
-                : item.className
-            }
-            srcImage={item.srcImage}
-            title={isTextVisible && !isCollapsed && item.title}
-            isDropdown={false}
-          />
-        ))}
+        {getVisibleMenuItems().map((item) =>
+          item.isHierarchy ? (
+            <React.Fragment key={item.id}>
+              <li className='sub-li'>
+                <Link
+                  to='#'
+                  className={isHierarchyItemActive(item) ? 'active' : ''}
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <div
+                    className='d-flex w-100'
+                    style={{ alignItems: 'center' }}
+                    onClick={() =>
+                      setIsContentManagementOpen((prevOpen) => !prevOpen)
+                    }
+                  >
+                    <Col md='2' className='col-2 icon_container'>
+                      <img src={item.srcImage} alt='Icon' />
+                    </Col>
+                    <div className='flex-grow-1 ms-1'>
+                      <span className='text-uppercase'>
+                        {isTextVisible && !isCollapsed && item.title}
+                      </span>
+                    </div>
+                    {isTextVisible && !isCollapsed && (
+                      <FontAwesomeIcon
+                        icon={
+                          isContentManagementOpen ? faAngleDown : faAngleRight
+                        }
+                        className='me-2 me-md-0'
+                        style={{ fontSize: '16px', color: '#333D3D' }}
+                      />
+                    )}
+                  </div>
+                </Link>
+              </li>
+
+              {isContentManagementOpen &&
+                item.children.map((child) => (
+                  <li className='sub-li' style={{ margin: '0px 10px 0px 24px', padding:'0px 0px' }} key={child.id}>
+                    <Link
+                      to={child.to}
+                      className={
+                        typeof child.getClassName === 'function'
+                          ? child.getClassName(location)
+                          : typeof child.className === 'function'
+                            ? child.className(location.pathname)
+                            : child.className
+                      }
+                      onClick={() => handleMenuItemClick(child)}
+                    >
+                      <div
+                        className='d-flex'
+                        style={{ alignItems: 'center', height: '25px', width: 'fit-content' }}
+                      >
+                        <div className='flex-grow-1 ms-1'>
+                          <span className='text-uppercase'>
+                            {isTextVisible && !isCollapsed && child.title}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+            </React.Fragment>
+          ) : (
+            <SidebarItem
+              key={item.id}
+              onClick={() => handleMenuItemClick(item)}
+              to={item.to}
+              className={
+                typeof item.className === 'function'
+                  ? item.className(location.pathname)
+                  : item.className
+              }
+              srcImage={item.srcImage}
+              title={isTextVisible && !isCollapsed && item.title}
+              isDropdown={false}
+            />
+          )
+        )}
       </ul>
 
       <ul
