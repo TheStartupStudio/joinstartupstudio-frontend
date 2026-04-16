@@ -858,7 +858,7 @@ outline: none;
   text-transform: uppercase;
 }
 
-.upload-row {
+.edit-logo-modal-body .upload-row {
   display: flex;
   gap: 20px;
   margin-bottom: 12px;
@@ -952,11 +952,14 @@ outline: none;
   transform: scale(1.1);
 }
 
-.upload-icon {
+.edit-logo-modal-body .upload-icon {
   width: 48px;
   height: 48px;
   margin-bottom: 12px;
   color: #6F6F6F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .upload-text {
