@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -18,10 +19,13 @@ import ManagePaymentModal from '../ManagePaymentModal'
 import PayInvoiceModal from '../PayInvoiceModal'
 import ContactLTSModal from '../ContactLTSModal'
 import StartupStudioLogo from '../../../assets/images/Startup Studio Logo v1x1200.png'
-import AcademyBulb from '../../../../public/academy-logo-192.png'
+import AcademyBulb from '../../../assets/images/academy-icons/academy-logo.png'
+import { getOrganizationBrandingByDomain } from '../../../redux/organizationBranding/Service'
+import { fetchOrganizationBranding } from '../../../redux'
 
 const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [isEditMode, setIsEditMode] = useState(false)
   const [loading, setLoading] = useState(false)
   const [fetchingData, setFetchingData] = useState(false)
@@ -37,6 +41,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
   const [tempLogo2, setTempLogo2] = useState(null)
   const logo1InputRef = useRef(null)
   const logo2InputRef = useRef(null)
+  
 
   // ✅ Add this state to store the original fetched data
   const [originalData, setOriginalData] = useState(null)
@@ -218,6 +223,41 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
     await performSave(false)
   }
 
+  const refreshBrandingByDomain = async (domain) => {
+    const normalizedDomain = (domain || '').toString().trim()
+    if (!normalizedDomain) return
+
+    try {
+      const brandingResponse =
+        await getOrganizationBrandingByDomain(normalizedDomain)
+
+      if (!brandingResponse?.success) return
+
+      const updatedLogo1 = brandingResponse.logo || null
+      const updatedLogo2 = brandingResponse.banner || null
+
+      setFormData((prev) => ({
+        ...prev,
+        logo1: updatedLogo1,
+        logo2: updatedLogo2
+      }))
+
+      setOriginalData((prev) =>
+        prev
+          ? {
+              ...prev,
+              logo1: updatedLogo1,
+              logo2: updatedLogo2
+            }
+          : prev
+      )
+
+      await dispatch(fetchOrganizationBranding(normalizedDomain))
+    } catch (error) {
+      console.error('Error refreshing branding by domain:', error)
+    }
+  }
+
   const performSaveAdminOnly = async () => {
     setLoading(true)
     try {
@@ -237,9 +277,6 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
 
         // Update original data after successful save
         setOriginalData(JSON.parse(JSON.stringify(formData)))
-
-        // Refresh data
-        await fetchOrganizationData()
       }
     } catch (error) {
       console.error('Error saving administrator details:', error)
@@ -274,6 +311,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
       )
 
       if (data.success) {
+        await refreshBrandingByDomain(formData.domain)
         toast.success('Organization updated successfully!')
         setIsEditMode(false)
         setOriginalPricing(JSON.parse(JSON.stringify(formData.pricing)))
@@ -281,10 +319,14 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
         setShowPricingChangeModal(false)
 
         // ✅ Update original data after successful save
-        setOriginalData(JSON.parse(JSON.stringify(formData)))
-
-        // Refresh data
-        await fetchOrganizationData()
+        setOriginalData((prev) =>
+          JSON.parse(
+            JSON.stringify({
+              ...(prev || {}),
+              ...formData
+            })
+          )
+        )
       }
     } catch (error) {
       console.error('Error saving organization:', error)
@@ -531,8 +573,8 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
           prev ? { ...prev, logo1: tempLogo1, logo2: tempLogo2 } : null
         )
         setShowEditLogoModal(false)
+        await refreshBrandingByDomain(formData.domain)
         toast.success('Logos updated successfully')
-        await fetchOrganizationData()
       }
     } catch (error) {
       console.error('Error saving logos:', error)
@@ -1619,7 +1661,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                     ) : (
                       <>
                         <div className='upload-icon'>
-                          <svg
+                        <svg
                             xmlns='http://www.w3.org/2000/svg'
                             width='24'
                             height='24'
@@ -1627,7 +1669,7 @@ const ViewOrganizationModal = ({ show, onHide, universityId }) => {
                             fill='none'
                           >
                             <path
-                              d='M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15'
+                              d='M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15'
                               stroke='currentColor'
                               strokeWidth='2'
                               strokeLinecap='round'
