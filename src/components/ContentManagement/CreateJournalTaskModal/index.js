@@ -34,6 +34,8 @@ const CreateJournalTaskModal = ({
   const [activeTab, setActiveTab] = useState('video')
   const [currentMode, setCurrentMode] = useState(mode)
   const [loading, setLoading] = useState(false)
+  const [uploadingVideo, setUploadingVideo] = useState(false)
+  const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [modalHeaderTitle, setModalHeaderTitle] = useState('Section Intro')
 
@@ -98,76 +100,66 @@ const CreateJournalTaskModal = ({
 
   const handleJournalVideoUpload = async (e) => {
     const file = e.target.files[0]
-    if (file) {
-      try {
-        setJournalVideoFile(file)
-        setJournalVideoPreview(URL.createObjectURL(file))
+    if (!file) return
 
-        const videoFormData = new FormData()
-        videoFormData.append('video', file)
+    setJournalVideoFile(file)
+    setJournalVideoPreview(URL.createObjectURL(file))
+    setUploadingVideo(true)
 
-        const videoUploadResponse = await axiosInstance.post(
-          '/upload/journal-video',
-          videoFormData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        )
+    try {
+      const videoFormData = new FormData()
+      videoFormData.append('video', file)
 
-        if (videoUploadResponse.data.success) {
-          setJournalVideoUrl(videoUploadResponse.data.fileLocation)
-          console.log(
-            'Journal video uploaded successfully:',
-            videoUploadResponse.data.fileLocation
-          )
-        } else {
-          console.error('Journal video upload failed')
-          toast.error('Failed to upload journal video')
-        }
-      } catch (error) {
-        console.error('Error uploading journal video:', error)
-        toast.error('Failed to upload journal video: ' + error.message)
+      const videoUploadResponse = await axiosInstance.post(
+        '/upload/journal-video',
+        videoFormData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      )
+
+      if (videoUploadResponse.data.success) {
+        setJournalVideoUrl(videoUploadResponse.data.fileLocation)
+        toast.success('Video uploaded successfully')
+      } else {
+        toast.error('Failed to upload journal video')
       }
+    } catch (error) {
+      console.error('Error uploading journal video:', error)
+      toast.error('Failed to upload journal video: ' + error.message)
+    } finally {
+      setUploadingVideo(false)
     }
   }
 
   const handleJournalThumbnailUpload = async (e) => {
     const file = e.target.files[0]
-    if (file) {
-      try {
-        setJournalThumbnailFile(file)
-        setJournalThumbnailPreview(URL.createObjectURL(file))
+    if (!file) return
 
-        const thumbnailFormData = new FormData()
-        thumbnailFormData.append('img', file)
+    setJournalThumbnailFile(file)
+    setJournalThumbnailPreview(URL.createObjectURL(file))
+    setUploadingThumbnail(true)
 
-        const thumbnailUploadResponse = await axiosInstance.post(
-          '/upload/journal-img',
-          thumbnailFormData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        )
+    try {
+      const thumbnailFormData = new FormData()
+      thumbnailFormData.append('img', file)
 
-        if (thumbnailUploadResponse.data.success) {
-          setJournalVideoThumbnailUrl(thumbnailUploadResponse.data.fileLocation)
-          setJournalThumbnailPreview(thumbnailUploadResponse.data.fileLocation)
-          console.log(
-            'Journal thumbnail uploaded successfully:',
-            thumbnailUploadResponse.data.fileLocation
-          )
-        } else {
-          console.error('Journal thumbnail upload failed')
-          toast.error('Failed to upload journal thumbnail')
-        }
-      } catch (error) {
-        console.error('Error uploading journal thumbnail:', error)
-        toast.error('Failed to upload journal thumbnail: ' + error.message)
+      const thumbnailUploadResponse = await axiosInstance.post(
+        '/upload/journal-img',
+        thumbnailFormData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      )
+
+      if (thumbnailUploadResponse.data.success) {
+        setJournalVideoThumbnailUrl(thumbnailUploadResponse.data.fileLocation)
+        setJournalThumbnailPreview(thumbnailUploadResponse.data.fileLocation)
+        toast.success('Thumbnail uploaded successfully')
+      } else {
+        toast.error('Failed to upload journal thumbnail')
       }
+    } catch (error) {
+      console.error('Error uploading journal thumbnail:', error)
+      toast.error('Failed to upload journal thumbnail: ' + error.message)
+    } finally {
+      setUploadingThumbnail(false)
     }
   }
 
@@ -496,8 +488,18 @@ const CreateJournalTaskModal = ({
                           </div>
 
                           {journalVideoPreview ? (
-                            <div className='upload-preview'>
-                              {!isViewMode && (
+                            <div className='upload-preview' style={{ position: 'relative' }}>
+                              {uploadingVideo && (
+                                <div style={{
+                                  position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)',
+                                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                  zIndex: 10, borderRadius: '12px'
+                                }}>
+                                  <div className='spinner-border text-primary' role='status' />
+                                  <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>Uploading video...</span>
+                                </div>
+                              )}
+                              {!isViewMode && !uploadingVideo && (
                                 <button
                                   className='delete-preview-btn'
                                   onClick={handleDeleteJournalVideo}
@@ -610,8 +612,18 @@ const CreateJournalTaskModal = ({
                           </div>
 
                           {journalThumbnailPreview ? (
-                            <div className='upload-preview'>
-                              {!isViewMode && (
+                            <div className='upload-preview' style={{ position: 'relative' }}>
+                              {uploadingThumbnail && (
+                                <div style={{
+                                  position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)',
+                                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                  zIndex: 10, borderRadius: '12px'
+                                }}>
+                                  <div className='spinner-border text-primary' role='status' />
+                                  <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>Uploading thumbnail...</span>
+                                </div>
+                              )}
+                              {!isViewMode && !uploadingThumbnail && (
                                 <button
                                   className='delete-preview-btn'
                                   onClick={handleDeleteJournalThumbnail}
@@ -787,14 +799,18 @@ const CreateJournalTaskModal = ({
                   justifyContent: 'flex-end'
                 }}
               >
-                <button className='cancel-btn' onClick={handleClose}>
+                <button
+                  className='cancel-btn'
+                  onClick={handleClose}
+                  disabled={loading || uploadingVideo || uploadingThumbnail}
+                >
                   {isViewMode ? 'CLOSE' : 'CANCEL'}
                 </button>
                 {!isViewMode && (
                   <button
                     className='save-btn'
                     onClick={handleSave}
-                    disabled={loading}
+                    disabled={loading || uploadingVideo || uploadingThumbnail}
                   >
                     <p
                       style={{
@@ -803,11 +819,13 @@ const CreateJournalTaskModal = ({
                         paddingBottom: '0 !important'
                       }}
                     >
-                      {loading
-                        ? 'SAVING...'
-                        : isEditMode
-                          ? 'UPDATE AND CLOSE'
-                          : 'SAVE AND CLOSE'}
+                      {uploadingVideo || uploadingThumbnail
+                        ? 'UPLOADING...'
+                        : loading
+                          ? 'SAVING...'
+                          : isEditMode
+                            ? 'UPDATE AND CLOSE'
+                            : 'SAVE AND CLOSE'}
                     </p>
                   </button>
                 )}
