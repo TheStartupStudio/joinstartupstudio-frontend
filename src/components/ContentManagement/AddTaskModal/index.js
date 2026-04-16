@@ -48,6 +48,10 @@ const AddTaskModal = ({
   const [isLoadingData, setIsLoadingData] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [taskToDelete, setTaskToDelete] = useState(null)
+  const [uploadingVideo, setUploadingVideo] = useState(false)
+  const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState(null)
+  const [uploadedThumbnailUrl, setUploadedThumbnailUrl] = useState(null)
   const dropdownRef = useRef(null)
 
   const isViewMode = currentMode === 'view'
@@ -149,6 +153,8 @@ const AddTaskModal = ({
       setThumbnailFile(null)
       setVideoPreview(null)
       setThumbnailPreview(null)
+      setUploadedVideoUrl(null)
+      setUploadedThumbnailUrl(null)
       setInformation('')
       setDescription('')
       setReflectionItems([{ id: 1, question: '', instructions: '' }])
@@ -204,46 +210,8 @@ const AddTaskModal = ({
 
     setLoading(true)
     try {
-      let videoUrl = videoPreview
-      let thumbnailUrl = thumbnailPreview
-
-      if (videoFile && videoFile instanceof File) {
-        const videoFormData = new FormData()
-        videoFormData.append('video', videoFile)
-
-        const videoUploadResponse = await axiosInstance.post(
-          '/upload/journal-video',
-          videoFormData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        )
-
-        if (videoUploadResponse.data.success) {
-          videoUrl = videoUploadResponse.data.fileLocation
-        }
-      }
-
-      if (thumbnailFile && thumbnailFile instanceof File) {
-        const thumbnailFormData = new FormData()
-        thumbnailFormData.append('img', thumbnailFile)
-
-        const thumbnailUploadResponse = await axiosInstance.post(
-          '/upload/journal-img',
-          thumbnailFormData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        )
-
-        if (thumbnailUploadResponse.data.success) {
-          thumbnailUrl = thumbnailUploadResponse.data.fileLocation
-        }
-      }
+      const videoUrl = uploadedVideoUrl || videoPreview
+      const thumbnailUrl = uploadedThumbnailUrl || thumbnailPreview
 
       const selectedLevelObj = levels.find((l) => {
         const levelTitle = typeof l === 'string' ? l : l.title
@@ -375,6 +343,8 @@ const AddTaskModal = ({
     setThumbnailFile(null)
     setVideoPreview(null)
     setThumbnailPreview(null)
+    setUploadedVideoUrl(null)
+    setUploadedThumbnailUrl(null)
     setInformation('')
     setDescription('')
     setReflectionItems(
@@ -393,6 +363,8 @@ const AddTaskModal = ({
     setCurrentMode(mode)
     onHide()
   }
+
+  const isUploading = uploadingVideo || uploadingThumbnail
 
   const handleSwitchToEditMode = () => {
     if (taskData) {
@@ -458,21 +430,63 @@ const AddTaskModal = ({
     }
   }
 
-  const handleVideoUpload = (e) => {
+  const handleVideoUpload = async (e) => {
     if (isViewMode) return
     const file = e.target.files[0]
-    if (file) {
-      setVideoFile(file)
-      setVideoPreview(URL.createObjectURL(file))
+    if (!file) return
+
+    setVideoFile(file)
+    setVideoPreview(URL.createObjectURL(file))
+    setUploadedVideoUrl(null)
+    setUploadingVideo(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('video', file)
+      const res = await axiosInstance.post('/upload/journal-video', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      if (res.data.success) {
+        setUploadedVideoUrl(res.data.fileLocation)
+        toast.success('Video uploaded successfully')
+      } else {
+        toast.error('Video upload failed')
+      }
+    } catch (err) {
+      console.error('Video upload error:', err)
+      toast.error('Video upload failed')
+    } finally {
+      setUploadingVideo(false)
     }
   }
 
-  const handleThumbnailUpload = (e) => {
+  const handleThumbnailUpload = async (e) => {
     if (isViewMode) return
     const file = e.target.files[0]
-    if (file) {
-      setThumbnailFile(file)
-      setThumbnailPreview(URL.createObjectURL(file))
+    if (!file) return
+
+    setThumbnailFile(file)
+    setThumbnailPreview(URL.createObjectURL(file))
+    setUploadedThumbnailUrl(null)
+    setUploadingThumbnail(true)
+
+    try {
+      const formData = new FormData()
+      formData.append('img', file)
+      const res = await axiosInstance.post('/upload/journal-img', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      if (res.data.success) {
+        setUploadedThumbnailUrl(res.data.fileLocation)
+        toast.success('Thumbnail uploaded successfully')
+      } else {
+        toast.error('Thumbnail upload failed')
+      }
+    } catch (err) {
+      console.error('Thumbnail upload error:', err)
+      toast.error('Thumbnail upload failed')
+    } finally {
+      setUploadingThumbnail(false)
     }
   }
 
@@ -480,6 +494,7 @@ const AddTaskModal = ({
     if (isViewMode) return
     setVideoFile(null)
     setVideoPreview(null)
+    setUploadedVideoUrl(null)
     const videoInput = document.getElementById('video-upload')
     if (videoInput) videoInput.value = ''
   }
@@ -488,6 +503,7 @@ const AddTaskModal = ({
     if (isViewMode) return
     setThumbnailFile(null)
     setThumbnailPreview(null)
+    setUploadedThumbnailUrl(null)
     const thumbnailInput = document.getElementById('thumbnail-upload')
     if (thumbnailInput) thumbnailInput.value = ''
   }
@@ -863,8 +879,18 @@ const AddTaskModal = ({
                     </div>
 
                     {videoPreview ? (
-                      <div className='upload-preview'>
-                        {!isViewMode && (
+                      <div className='upload-preview' style={{ position: 'relative' }}>
+                        {uploadingVideo && (
+                          <div style={{
+                            position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                            zIndex: 10, borderRadius: '12px'
+                          }}>
+                            <div className='spinner-border text-primary' role='status' />
+                            <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>Uploading video...</span>
+                          </div>
+                        )}
+                        {!isViewMode && !uploadingVideo && (
                           <button
                             className='delete-preview-btn'
                             onClick={handleDeleteVideo}
@@ -963,8 +989,18 @@ const AddTaskModal = ({
                     </div>
 
                     {thumbnailPreview ? (
-                      <div className='upload-preview'>
-                        {!isViewMode && (
+                      <div className='upload-preview' style={{ position: 'relative' }}>
+                        {uploadingThumbnail && (
+                          <div style={{
+                            position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                            zIndex: 10, borderRadius: '12px'
+                          }}>
+                            <div className='spinner-border text-primary' role='status' />
+                            <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>Uploading thumbnail...</span>
+                          </div>
+                        )}
+                        {!isViewMode && !uploadingThumbnail && (
                           <button
                             className='delete-preview-btn'
                             onClick={handleDeleteThumbnail}
@@ -1356,7 +1392,7 @@ const AddTaskModal = ({
                   <button
                     className='btn-cancel'
                     onClick={handleClose}
-                    disabled={loading}
+                    disabled={loading || isUploading}
                   >
                     CANCEL
                   </button>
@@ -1369,17 +1405,19 @@ const AddTaskModal = ({
                         ? handleSaveAndContinue
                         : handleSave
                     }
-                    disabled={loading}
+                    disabled={loading || isUploading}
                   >
-                    {loading
-                      ? 'SAVING...'
-                      : !isMasterClass &&
-                          (videoPreview || thumbnailPreview) &&
-                          activeTab === 'video'
-                        ? 'SAVE AND CONTINUE'
-                        : isEditMode
-                          ? 'UPDATE AND CLOSE'
-                          : 'SAVE AND CLOSE'}
+                    {isUploading
+                      ? 'UPLOADING...'
+                      : loading
+                        ? 'SAVING...'
+                        : !isMasterClass &&
+                            (videoPreview || thumbnailPreview) &&
+                            activeTab === 'video'
+                          ? 'SAVE AND CONTINUE'
+                          : isEditMode
+                            ? 'UPDATE AND CLOSE'
+                            : 'SAVE AND CLOSE'}
                   </button>
                 </div>
               </div>
