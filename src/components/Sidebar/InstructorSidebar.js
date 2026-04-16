@@ -99,7 +99,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'intro-course',
-    title: 'Intro to the Studio',
+    title: 'Intro to the Course',
     srcImage: IntroToIcon,
     to: '/my-course-in-entrepreneurship',
     roles: [2, 1],

@@ -16,6 +16,8 @@ import CircleIcon from '../../assets/images/academy-icons/academy-logo.png'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import NotificationBell from '../../components/NotificationBell'
+import courseLogo from '../../assets/images/academy-icons/academy-logo.png'
+
 
 
 function MyCourseEntrepreneurship() {
@@ -88,7 +90,7 @@ function MyCourseEntrepreneurship() {
         <div className='col-12 col-md-12 pe-0 me-0 d-flex justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
           <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
             <div>
-              <h3 className='page-title bold-page-title text-black mb-0'>Intro to the STUDIO</h3>
+              <h3 className='page-title bold-page-title text-black mb-0'>Intro to the Course</h3>
               <p className='fs-13 fw-light text-black'>Embarking on the Entrepreneurial Journey</p>
             </div>
           </div>
@@ -108,10 +110,8 @@ function MyCourseEntrepreneurship() {
       <div className='gradient-background-course'>
         <div className='welcome-journey-text'>
           <div className='title-container'>
-            <div style={{ width: '36px', height: '36px', backgroundColor: '#E2E6EC', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className='welcome-journey-text__icon'>
-            <img src={CircleIcon} alt='logo' style={{ width: '19px', height: '24px' }} />
-            
-            </div>
+            <img src={courseLogo} alt='course' className='course-logo-studio' />
+
              <p className='welcome-journey-text__title'>Welcome to the Journey</p>
           </div>
           <p className='welcome-journey-text__description'>
