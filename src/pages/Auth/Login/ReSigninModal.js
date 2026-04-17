@@ -7,26 +7,26 @@ import { setGeneralLoading } from '../../../redux/general/Actions'
 import { useDispatch } from 'react-redux'
 import { userLogout } from '../../../redux'
 import { setAuthModal } from '../../../redux/user/Actions'
+import { useHistory } from 'react-router-dom'
 
 const ReSigninModal = ({ show }) => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const handleAuthModalClose = async () => {
     dispatch(setGeneralLoading(true))
-    await dispatch(userLogout())
-      .then(() => {
-        localStorage.clear()
-        dispatch(setAuthModal(false))
-        window.location.href = '/'
-      })
-      .catch((error) => {
-        console.log('error', error)
-        dispatch(setGeneralLoading(false))
-      })
-      .finally(() => {
-        // window.location.href = '/'
-        dispatch(setGeneralLoading(false))
-      })
+    try {
+      await dispatch(userLogout())
+      localStorage.clear()
+      dispatch(setAuthModal(false))
+      history.push('/ims-login')
+    } catch (error) {
+      console.log('error', error)
+      dispatch(setAuthModal(false))
+      history.push('/ims-login')
+    } finally {
+      dispatch(setGeneralLoading(false))
+    }
   }
   return (
     <Modal

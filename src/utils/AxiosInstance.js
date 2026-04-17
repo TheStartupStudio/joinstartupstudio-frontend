@@ -4,6 +4,8 @@ import {
   refreshAccessToken,
   saveAccessToken
 } from './tokenUtils'
+import { setAuthModal } from '../redux/user/Actions'
+import store from '../redux/store'
 
 const getSubdomain = () => {
   const hostname = window.location.hostname
@@ -29,15 +31,25 @@ axiosInstance.interceptors.response.use(
     if (error?.response?.status === 401) {
       originalRequest._retry = true
 
-      if (refreshToken) {
-        try {
-          const { newAccessToken } = await refreshAccessToken()
-          saveAccessToken(newAccessToken)
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-          return axiosInstance(originalRequest)
-        } catch (refreshError) {
-          return new Promise(() => {})
+      if (!refreshToken) {
+        store.dispatch(setAuthModal(true))
+        return Promise.reject(error)
+      }
+
+      try {
+        const tokenData = await refreshAccessToken()
+
+        if (!tokenData?.newAccessToken) {
+          store.dispatch(setAuthModal(true))
+          return Promise.reject(error)
         }
+
+        saveAccessToken(tokenData.newAccessToken)
+        originalRequest.headers.Authorization = `Bearer ${tokenData.newAccessToken}`
+        return axiosInstance(originalRequest)
+      } catch (refreshError) {
+        store.dispatch(setAuthModal(true))
+        return Promise.reject(refreshError)
       }
     }
     return Promise.reject(error)
