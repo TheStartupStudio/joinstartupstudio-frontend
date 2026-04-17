@@ -12,7 +12,7 @@ import { changeSidebarState } from '../../redux'
 import { useDispatch, useSelector } from 'react-redux'
 import './index.css'
 import { EditRecommendationModal } from '../../components/Portfolio/Recommendation/editRecommendationModal'
-import CircleIcon from '../../assets/images/circle-startup-icon.png'
+import CircleIcon from '../../assets/images/academy-icons/academy-logo.png'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import NotificationBell from '../../components/NotificationBell'
@@ -108,8 +108,11 @@ function MyCourseEntrepreneurship() {
       <div className='gradient-background-course'>
         <div className='welcome-journey-text'>
           <div className='title-container'>
-            <img src={CircleIcon} alt='logo' style={{ width: '36px', height: '36px' }} className='welcome-journey-text__icon' />
-            <p className='welcome-journey-text__title'>Welcome to the Journey</p>
+            <div style={{ width: '36px', height: '36px', backgroundColor: '#E2E6EC', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className='welcome-journey-text__icon'>
+            <img src={CircleIcon} alt='logo' style={{ width: '19px', height: '24px' }} />
+            
+            </div>
+             <p className='welcome-journey-text__title'>Welcome to the Journey</p>
           </div>
           <p className='welcome-journey-text__description'>
             Entrepreneurship is about building <span className='you-href'>YOU</span>. As such, in this course you will set the pace of your development.
