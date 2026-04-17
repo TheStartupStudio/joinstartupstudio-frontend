@@ -327,7 +327,7 @@ const LeadershipJournalManagement = () => {
       await Promise.all(updatePromises)
 
       toast.success(
-        `${selectedItems.length} leadership tasks published successfully!`
+        `${selectedItems.length} tasks published successfully!`
       )
 
       if (activeLevel) {
@@ -364,7 +364,7 @@ const LeadershipJournalManagement = () => {
       await Promise.all(updatePromises)
 
       toast.success(
-        `${selectedItems.length} leadership tasks unpublished successfully!`
+        `${selectedItems.length} tasks unpublished successfully!`
       )
 
       if (activeLevel) {
