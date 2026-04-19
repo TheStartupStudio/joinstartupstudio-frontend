@@ -444,17 +444,10 @@ const InstructorSidebar = (props) => {
   }
 
   useEffect(() => {
-    const menuItems = getVisibleMenuItems()
-    const contentManagementParent = menuItems.find(
-      (item) => item.id === 'content-management-new-parent'
-    )
-    const shouldOpen = (contentManagementParent?.children || []).some(
-      (child) =>
-        typeof child.className === 'function' &&
-        child.className(location.pathname) === 'active'
-    )
-    setIsContentManagementOpen(shouldOpen)
-  }, [location.pathname, manageContentData, user])
+    if (isCollapsed) {
+      setIsContentManagementOpen(false)
+    }
+  }, [isCollapsed])
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -606,6 +599,8 @@ const InstructorSidebar = (props) => {
     }
 
     dispatch(setAccordionToggled(false))
+    setIsContentManagementOpen(false)
+    dispatch(collapseTrue())
     props.props.hideHeaderIcons()
     return true
   }
@@ -694,7 +689,8 @@ const InstructorSidebar = (props) => {
                 </Link>
               </li>
 
-              {isContentManagementOpen &&
+              {!isCollapsed &&
+                isContentManagementOpen &&
                 item.children.map((child) => (
                   <li className='sub-li' style={{ margin: '0px 10px 0px 24px', padding:'0px 0px' }} key={child.id}>
                     <Link

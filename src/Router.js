@@ -148,7 +148,7 @@ function Router(props) {
         onError={() => ''}
       >
         <>
-          {authModal ? <ReSigninModal show={authModal} /> : null}
+          {authModal && isAuthenticated ? <ReSigninModal show={authModal} /> : null}
           {isAuthenticated && !isResetPasswordRoute ? (
             <Layout>
               <Switch>

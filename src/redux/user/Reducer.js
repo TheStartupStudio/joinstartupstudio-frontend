@@ -129,6 +129,7 @@ const userReducer = (state = initialState, action) => {
         user: payload,
         loading: false,
         isAuthenticated: true,
+        authModal: false,
         successMessage: null,
         errorMessage: null
       }
@@ -142,6 +143,7 @@ const userReducer = (state = initialState, action) => {
         isAuthenticated: false,
         loading: false,
         user: null,
+        authModal: false,
         successMessage: 'Successfully Logout'
       }
     case USER_LOGIN_ERROR:

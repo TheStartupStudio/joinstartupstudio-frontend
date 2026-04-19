@@ -11,36 +11,7 @@ const getSubdomain = () => {
   return subdomain
 }
 
-// Production hosts: each tenant subdomain calls https://api.joinstartupstudio.com/{path}
-// e.g. fma.joinstudioos.com → /fma; studio.joinstudioos.com → /academy; other subdomains → /{subdomain}
-const isProductionSubdomainHost = () => {
-  const hostname = window.location.hostname
-  const parts = hostname.split('.')
-  if (parts.length < 3 || parts[0] === 'api') return false
-  return (
-    hostname.includes('joinstartupstudio.com') ||
-    hostname.includes('joinstudioos.com')
-  )
-}
-
-const getApiPathSegment = (subdomain) => {
-  if (subdomain === 'studio') return 'academy'
-  return subdomain
-}
-
-// Construct baseURL: on production subdomain hosts use api.joinstartupstudio.com/{segment}; else env
-const getBaseURL = () => {
-  if (isProductionSubdomainHost()) {
-    const subdomain = getSubdomain()
-    if (subdomain && subdomain !== 'www' && subdomain !== 'api') {
-      const segment = getApiPathSegment(subdomain)
-      return `https://api.joinstartupstudio.com/${segment}`
-    }
-  }
-  return process.env.REACT_APP_SERVER_BASE_URL
-}
-
-const baseURL = getBaseURL()
+const baseURL = process.env.REACT_APP_SERVER_BASE_URL
 
 const axiosInstance = axios.create({
   baseURL
