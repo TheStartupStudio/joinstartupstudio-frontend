@@ -1110,7 +1110,7 @@ function LtsJournal(props) {
                   <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
                     <div>
                       <h3 className='page-title bold-page-title text-black mb-0'>
-                        Studio Sessions
+                        Course Sessions
                       </h3>
                       <p className='fs-13 fw-light text-black'>
                         Embarking on the Entrepreneurial Journey

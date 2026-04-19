@@ -250,7 +250,7 @@ function Dashboard() {
                 <img src={AcademyLogo} alt='logo' style={{ width: '150px' }} />
               </div>
               <h3 className='page-title bold-page-title text-black mb-0 text-center-mob'>
-                STUDIO SESSIONS - BUILDING YOU FIRST
+                Course Sessions - BUILDING YOU FIRST
               </h3>
             </div>
             <AcademyBtn

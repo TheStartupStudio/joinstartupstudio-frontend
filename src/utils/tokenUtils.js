@@ -3,8 +3,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { setAuthModal } from '../redux/user/Actions'
 import store from '../redux/store'
-
-const baseURL = process.env.REACT_APP_SERVER_BASE_URL
+import getBaseURL from './getBaseURL'
 let tokenRefreshInterval = null
 
 const isTokenExpired = (token) => {
@@ -41,7 +40,7 @@ const refreshAccessToken = async () => {
   }
 
   try {
-    const response = await axios.post(`${baseURL}auth/refreshToken`, {
+    const response = await axios.post(`${getBaseURL()}auth/refreshToken`, {
       refresh_token: refreshToken
     })
 
