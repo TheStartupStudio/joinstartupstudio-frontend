@@ -314,14 +314,19 @@ const ManageContentSite = () => {
       return
     }
 
-    history.push(`/leadership-journal-management?contentId=${content.id}`)
+    const routeIdentifier = content.globalId || content.id
+    const routeParam = content.globalId ? 'globalId' : 'contentId'
+    history.push(`/leadership-journal-management?${routeParam}=${routeIdentifier}`)
   }
 
   const handleEditContent = async (content) => {
     if (content.id) {
       try {
         const response = await axiosInstance.get(
-          `/manage-content/full/${content.id}`
+          `/manage-content/full/${content.id}`,
+          {
+            params: { client: content.client || 'all' }
+          }
         )
         if (response.data.success) {
           const fullData = response.data.data

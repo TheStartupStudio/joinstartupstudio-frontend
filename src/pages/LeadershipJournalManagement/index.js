@@ -68,12 +68,21 @@ const LeadershipJournalManagement = () => {
         setManageContentData(contentData)
 
         if (contentData.length > 0) {
-          // Check if there's a contentId in the URL query parameters
+          // Check if there's a globalId/contentId in the URL query parameters
           const urlParams = new URLSearchParams(location.search)
+          const globalIdParam = urlParams.get('globalId')
           const contentIdParam = urlParams.get('contentId')
 
-          if (contentIdParam) {
-            // Find the content with matching ID
+          if (globalIdParam) {
+            const matchingContent = contentData.find(
+              (content) => String(content.globalId) === globalIdParam
+            )
+            if (matchingContent) {
+              setSelectedCategory(matchingContent.title)
+              return
+            }
+          } else if (contentIdParam) {
+            // Backward compatibility for old links that still use contentId
             const matchingContent = contentData.find(
               (content) => content.id.toString() === contentIdParam
             )
@@ -115,6 +124,7 @@ const LeadershipJournalManagement = () => {
 
       const transformedData = response.data.map((journal, index) => ({
         id: journal.id,
+        globalId: journal.globalId || null,
         name: journal.title,
         status: journal.published ? 'published' : 'unpublished',
         hasContent: journal.entries && journal.entries.length > 0,
@@ -186,7 +196,7 @@ const LeadershipJournalManagement = () => {
         (level) => level.title === activeLevel
       )
       if (activeLevelObj) {
-        fetchContentByLevel(activeLevelObj.id)
+        fetchContentByLevel(activeLevelObj.globalId || activeLevelObj.id)
       }
     } else {
       // Clear selected items when switching levels
@@ -238,7 +248,7 @@ const LeadershipJournalManagement = () => {
     switch (actionType) {
       case 'view':
       case 'edit':
-        handleViewEditJournal(item.id, actionType)
+        handleViewEditJournal(item, actionType)
         break
       case 'publish':
         setSelectedTask(item)
@@ -276,7 +286,7 @@ const LeadershipJournalManagement = () => {
       if (activeLevel && levelsData.length > 0) {
         const activeLevelObj = levelsData.find((l) => l.title === activeLevel)
         if (activeLevelObj) {
-          fetchContentByLevel(activeLevelObj.id)
+          fetchContentByLevel(activeLevelObj.globalId || activeLevelObj.id)
         }
       }
     }
@@ -335,7 +345,7 @@ const LeadershipJournalManagement = () => {
           (level) => level.title === activeLevel
         )
         if (activeLevelObj) {
-          await fetchContentByLevel(activeLevelObj.id)
+          await fetchContentByLevel(activeLevelObj.globalId || activeLevelObj.id)
         }
       }
 
@@ -372,7 +382,7 @@ const LeadershipJournalManagement = () => {
           (level) => level.title === activeLevel
         )
         if (activeLevelObj) {
-          await fetchContentByLevel(activeLevelObj.id)
+          await fetchContentByLevel(activeLevelObj.globalId || activeLevelObj.id)
         }
       }
 
@@ -385,9 +395,14 @@ const LeadershipJournalManagement = () => {
     }
   }
 
-  const handleViewEditJournal = async (journalId, mode) => {
+  const handleViewEditJournal = async (journalItem, mode) => {
     try {
-      const response = await axiosInstance.get(`/LtsJournals/${journalId}`)
+      const journalId = journalItem?.id
+      const journalGlobalId =
+        journalItem?.globalId || journalItem?.fullData?.globalId || null
+      const response = await axiosInstance.get(`/LtsJournals/${journalId}`, {
+        params: journalGlobalId ? { globalId: journalGlobalId } : {}
+      })
 
       const journal = response.data
 
@@ -578,7 +593,7 @@ const LeadershipJournalManagement = () => {
           (level) => level.title === activeLevel
         )
         if (activeLevelObj) {
-          await fetchContentByLevel(activeLevelObj.id)
+          await fetchContentByLevel(activeLevelObj.globalId || activeLevelObj.id)
         }
       }
 
@@ -623,7 +638,7 @@ const LeadershipJournalManagement = () => {
           (level) => level.title === activeLevel
         )
         if (activeLevelObj) {
-          await fetchContentByLevel(activeLevelObj.id)
+          await fetchContentByLevel(activeLevelObj.globalId || activeLevelObj.id)
         }
       }
 
@@ -650,7 +665,7 @@ const LeadershipJournalManagement = () => {
           (level) => level.title === activeLevel
         )
         if (activeLevelObj) {
-          await fetchContentByLevel(activeLevelObj.id)
+          await fetchContentByLevel(activeLevelObj.globalId || activeLevelObj.id)
         }
       }
 
@@ -1235,7 +1250,7 @@ const LeadershipJournalManagement = () => {
           const activeLevelObj = levelsData.find(
             (level) => level.title === activeLevel
           )
-          return activeLevelObj?.id
+          return activeLevelObj?.globalId || activeLevelObj?.id
         })()}
       />
 

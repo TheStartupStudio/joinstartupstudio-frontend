@@ -367,8 +367,10 @@ const InstructorSidebar = (props) => {
 
     const dynamicItems = manageContentData.map((content) => {
       const isAdmin = userRoleId === 3
+      const routeIdentifier = content.globalId || content.id
+      const routeParam = content.globalId ? 'globalId' : 'contentId'
       const to = isAdmin
-        ? `/leadership-journal-management?contentId=${content.id}`
+        ? `/leadership-journal-management?${routeParam}=${routeIdentifier}`
         : `/journal-courses/${content.id}`
 
       return {
@@ -392,7 +394,12 @@ const InstructorSidebar = (props) => {
           }
 
           const searchParams = new URLSearchParams(locationObj.search || '')
-          return searchParams.get('contentId') === String(content.id)
+          const queryGlobalId = searchParams.get('globalId')
+          const queryContentId = searchParams.get('contentId')
+          return (
+            (content.globalId && queryGlobalId === String(content.globalId)) ||
+            queryContentId === String(content.id)
+          )
             ? 'active'
             : ''
         },

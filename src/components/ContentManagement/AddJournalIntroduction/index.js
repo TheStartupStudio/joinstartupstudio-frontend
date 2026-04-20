@@ -8,6 +8,16 @@ import { attachGlobalIdToPayload } from '../../../utils/clientHostname'
 import { toast } from 'react-toastify'
 
 const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add', contentId = null }) => {
+    const selectedClientValue =
+        journalData?.manageContent?.client ??
+        journalData?.client ??
+        null
+    const selectedClientParam = selectedClientValue || 'all'
+    const selectedGlobalId =
+        journalData?.manageContent?.globalId ??
+        journalData?.globalId ??
+        null
+
     const initializeState = () => {
         if (journalData && (mode === 'edit' || mode === 'view')) {
             const manageContent = journalData.manageContent || {}
@@ -68,6 +78,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
     const [thumbnailPreview, setThumbnailPreview] = useState(initialState.thumbnailPreview)
     const [videoUrl, setVideoUrl] = useState(initialState.videoUrl)
     const [videoThumbnailUrl, setVideoThumbnailUrl] = useState(initialState.videoThumbnailUrl)
+    const [uploadingVideo, setUploadingVideo] = useState(false)
 
     // Separate state for the journal creation modal (starts completely empty)
     const [journalTitle, setJournalTitle] = useState('')
@@ -145,6 +156,8 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
             try {
                 setVideoFile(file)
                 setVideoPreview(URL.createObjectURL(file))
+                setVideoUrl('')
+                setUploadingVideo(true)
 
                 // Upload video to S3
                 const videoFormData = new FormData()
@@ -166,6 +179,8 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
             } catch (error) {
                 console.error('Error uploading video:', error)
                 toast.error('Failed to upload video: ' + error.message)
+            } finally {
+                setUploadingVideo(false)
             }
         }
     }
@@ -235,6 +250,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
         setVideoFile(null)
         setVideoPreview(null)
         setVideoUrl('')
+        setUploadingVideo(false)
         const videoInput = document.getElementById('video-upload')
         if (videoInput) videoInput.value = ''
     }
@@ -350,7 +366,8 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                 title: journalTitle,
                 text: journalText,
                 video: journalVideoUrl,
-                thumbnail: journalVideoThumbnailUrl
+                thumbnail: journalVideoThumbnailUrl,
+                ...(selectedClientValue ? { client: selectedClientValue } : {})
             }
 
             const contentIdToUse = contentId || journalData?.manageContent?.id || 1
@@ -385,6 +402,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
         setThumbnailPreview(null)
         setVideoUrl('')
         setVideoThumbnailUrl('')
+        setUploadingVideo(false)
         // Reset journal state
         setJournalTitle('')
         setJournalText('')
@@ -400,9 +418,37 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
 
     const handleSave = async () => {
         if (mode === 'view') return
+        if (uploadingVideo) return
 
         try {
+            const contentIdToUse = contentId || journalData?.manageContent?.id || 1
+            let globalIdToUse = selectedGlobalId
+
+            // For client=all backend requires globalId; fetch it if modal data does not include it.
+            if (!globalIdToUse && contentIdToUse) {
+                try {
+                    const fullResponse = await axiosInstance.get(
+                        `/manage-content/full/${contentIdToUse}`,
+                        { params: { client: selectedClientParam } }
+                    )
+                    const fullData = fullResponse?.data?.data
+                    globalIdToUse =
+                        fullData?.manageContent?.globalId ??
+                        fullData?.globalId ??
+                        null
+                } catch (globalIdError) {
+                    console.error('Failed to resolve globalId before save:', globalIdError)
+                }
+            }
+
+            if (selectedClientParam === 'all' && !globalIdToUse) {
+                toast.error('Unable to save: missing globalId for client "all".')
+                return
+            }
+
             const updateData = {
+                ...(globalIdToUse ? { globalId: globalIdToUse } : {}),
+                client: selectedClientParam,
                 manageContent: {
                     instructorName,
                     instructorTitle,
@@ -413,19 +459,28 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                     instructorHeadshot
                 }
             }
-
-            const contentIdToUse = contentId || journalData?.manageContent?.id || 1
+            const endpointId =
+                selectedClientParam === 'all' && globalIdToUse
+                    ? globalIdToUse
+                    : contentIdToUse
 
             const response = await axiosInstance.put(
-                `/manage-content/full/${contentIdToUse}`,
+                `/manage-content/full/${endpointId}`,
                 attachGlobalIdToPayload(
                     updateData,
-                    journalData?.manageContent?.globalId ?? journalData?.globalId
-                )
+                    globalIdToUse
+                ),
+                {
+                    params: {
+                        client: selectedClientParam,
+                        ...(globalIdToUse ? { globalId: globalIdToUse } : {})
+                    }
+                }
             )
 
             if (response.data.success) {
                 toast.success('Introduction data updated successfully!')
+                setUploadingVideo(false)
                 onClose()
             } else {
                 throw new Error('Failed to update introduction data')
@@ -435,6 +490,8 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
             toast.error(`Failed to update introduction data: ${error.message}`)
         }
     }
+
+    const isVideoUploadPending = uploadingVideo || (videoFile && !videoUrl)
 
     return (
         <>
@@ -660,14 +717,32 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                                             </div>
 
                                             {videoPreview ? (
-                                                <div className="upload-preview">
-                                                    <button
-                                                        className="delete-preview-btn"
-                                                        onClick={handleDeleteVideo}
-                                                        type="button"
-                                                    >
-                                                        <FontAwesomeIcon icon={faTrash} />
-                                                    </button>
+                                                <div className="upload-preview" style={{ position: 'relative' }}>
+                                                    {uploadingVideo && (
+                                                        <div style={{
+                                                            position: 'absolute',
+                                                            inset: 0,
+                                                            background: 'rgba(255,255,255,0.8)',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            zIndex: 10,
+                                                            borderRadius: '12px'
+                                                        }}>
+                                                            <div className="spinner-border text-primary" role="status" />
+                                                            <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>Uploading video...</span>
+                                                        </div>
+                                                    )}
+                                                    {!uploadingVideo && (
+                                                        <button
+                                                            className="delete-preview-btn"
+                                                            onClick={handleDeleteVideo}
+                                                            type="button"
+                                                        >
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </button>
+                                                    )}
                                                     <video
                                                         src={videoPreview}
                                                         controls
@@ -788,8 +863,13 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                             {mode === 'view' ? 'Close' : 'Cancel'}
                         </button>
                         {mode !== 'view' && (
-                            <button className="save-btn" onClick={handleSave}>
-                                Save
+                            <button
+                                className="save-btn"
+                                onClick={handleSave}
+                                disabled={isVideoUploadPending}
+                                style={isVideoUploadPending ? { opacity: 0.8, cursor: 'not-allowed' } : {}}
+                            >
+                                {isVideoUploadPending ? 'Uploading...' : 'Save'}
                             </button>
                         )}
                     </div>
