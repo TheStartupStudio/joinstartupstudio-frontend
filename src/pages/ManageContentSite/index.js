@@ -43,6 +43,18 @@ const ManageContentSite = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteModalData, setDeleteModalData] = useState(null)
 
+  const resolveEditClient = (content) => {
+    if (content?.client && content.client !== 'all') return content.client
+
+    // Prefer tenant from API base url like ".../academy" when available.
+    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL || ''
+    const match = baseUrl.match(/\/([^/]+)\/?$/)
+    if (match?.[1]) return match[1]
+
+    // Fallback to academy to avoid cross-client "all" fetch on edit.
+    return 'academy'
+  }
+
   const EditContentForm = ({ content, onSave, onCancel }) => {
     const handleChange = (e) => {
       const { name, value } = e.target
@@ -325,7 +337,7 @@ const ManageContentSite = () => {
         const response = await axiosInstance.get(
           `/manage-content/full/${content.id}`,
           {
-            params: { client: content.client || 'all' }
+            params: { client: resolveEditClient(content) }
           }
         )
         if (response.data.success) {
