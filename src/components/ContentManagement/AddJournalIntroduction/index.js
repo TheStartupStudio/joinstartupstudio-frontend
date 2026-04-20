@@ -13,6 +13,11 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
         journalData?.client ??
         null
     const selectedClientParam = selectedClientValue || 'all'
+    const fallbackClientFromBaseUrl = (() => {
+        const baseUrl = process.env.REACT_APP_SERVER_BASE_URL || ''
+        const match = baseUrl.match(/\/([^/]+)\/?$/)
+        return match?.[1] || 'academy'
+    })()
     const selectedGlobalId =
         journalData?.manageContent?.globalId ??
         journalData?.globalId ??
@@ -441,14 +446,15 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                 }
             }
 
-            if (selectedClientParam === 'all' && !globalIdToUse) {
-                toast.error('Unable to save: missing globalId for client "all".')
-                return
-            }
+            // Legacy records may not have globalId. In that case, avoid client=all and save by numeric id.
+            const effectiveClientForSave =
+                selectedClientParam === 'all' && !globalIdToUse
+                    ? fallbackClientFromBaseUrl
+                    : selectedClientParam
 
             const updateData = {
                 ...(globalIdToUse ? { globalId: globalIdToUse } : {}),
-                client: selectedClientParam,
+                client: effectiveClientForSave,
                 manageContent: {
                     instructorName,
                     instructorTitle,
@@ -460,7 +466,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                 }
             }
             const endpointId =
-                selectedClientParam === 'all' && globalIdToUse
+                effectiveClientForSave === 'all' && globalIdToUse
                     ? globalIdToUse
                     : contentIdToUse
 
@@ -472,7 +478,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                 ),
                 {
                     params: {
-                        client: selectedClientParam,
+                        client: effectiveClientForSave,
                         ...(globalIdToUse ? { globalId: globalIdToUse } : {})
                     }
                 }
