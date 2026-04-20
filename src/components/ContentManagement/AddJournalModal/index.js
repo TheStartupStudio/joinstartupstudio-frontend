@@ -46,7 +46,9 @@ const AddJournalModal = ({
     const fetchJournalData = useCallback(async (id) => {
         try {
             setLoading(true)
-            const response = await axiosInstance.get(`/manage-content/full/${id}`)
+            const response = await axiosInstance.get(`/manage-content/full/${id}`, {
+                params: { client: getClientPayloadValue(selectedClient) }
+            })
             if (response.data.success) {
                 return response.data.data
             } else {
@@ -58,7 +60,7 @@ const AddJournalModal = ({
         } finally {
             setLoading(false)
         }
-    }, [])
+    }, [selectedClient])
 
     const initializeFormData = useCallback((data) => {
         console.log('Initializing form data:', data)
@@ -459,10 +461,66 @@ const AddJournalModal = ({
             }
 
             if (response.data.success) {
+                const buildIntroductionPayload = () => {
+                    const responseBody = response?.data || {}
+                    const responseData = responseBody?.data
+                    const topLevelGlobalId = responseBody?.globalId || responseData?.globalId || null
+
+                    if (!responseData) {
+                        return {
+                            globalId: topLevelGlobalId,
+                            client: getClientPayloadValue(selectedClient)
+                        }
+                    }
+
+                    // New multi-client create response: data is an array with per-client payloads
+                    if (Array.isArray(responseData)) {
+                        const selectedClientValue = getClientPayloadValue(selectedClient)
+                        const preferredItem =
+                            responseData.find((item) => item?.client === selectedClientValue) ||
+                            responseData[0] ||
+                            null
+
+                        return {
+                            client: responseBody?.requestedClient || selectedClientValue || preferredItem?.client || 'all',
+                            globalId: topLevelGlobalId || preferredItem?.globalId || null,
+                            manageContent: {
+                                ...(preferredItem?.data?.manageContent || {}),
+                                globalId:
+                                    preferredItem?.data?.manageContent?.globalId ||
+                                    preferredItem?.globalId ||
+                                    topLevelGlobalId ||
+                                    null,
+                                client:
+                                    responseBody?.requestedClient ||
+                                    selectedClientValue ||
+                                    preferredItem?.client ||
+                                    'all'
+                            },
+                            journalLevels: preferredItem?.data?.journalLevels || []
+                        }
+                    }
+
+                    // Legacy/single-client response shape
+                    return {
+                        ...responseData,
+                        globalId:
+                            responseData?.globalId ??
+                            responseData?.manageContent?.globalId ??
+                            topLevelGlobalId ??
+                            null,
+                        client:
+                            responseData?.client ??
+                            responseData?.manageContent?.client ??
+                            responseBody?.requestedClient ??
+                            getClientPayloadValue(selectedClient)
+                    }
+                }
+
                 if (mode === 'add') {
                     // For new journal creation, proceed to introduction modal immediately
                     if (onProceedToIntroduction) {
-                        onProceedToIntroduction(response.data.data)
+                        onProceedToIntroduction(buildIntroductionPayload())
                         // Reset form fields after successful creation
                         resetForm()
                     } else {
@@ -477,7 +535,7 @@ const AddJournalModal = ({
                     }
                 } else if (mode === 'edit') {
                     if (onProceedToIntroduction) {
-                        onProceedToIntroduction(response.data.data)
+                        onProceedToIntroduction(buildIntroductionPayload())
                     } else {
                         toast.success('Journal updated successfully!')
                         onClose()
@@ -972,7 +1030,20 @@ const AddJournalModal = ({
                             />
                             <AcademyBtn
                                 title="edit sections"
-                                onClick={() => history.push(`/leadership-journal-management?contentId=${contentId}`)}
+                                onClick={() => {
+                                    const routeIdentifier =
+                                        recordGlobalId ||
+                                        existingData?.manageContent?.globalId ||
+                                        existingData?.globalId ||
+                                        contentId
+                                    const routeParam =
+                                        recordGlobalId ||
+                                        existingData?.manageContent?.globalId ||
+                                        existingData?.globalId
+                                            ? 'globalId'
+                                            : 'contentId'
+                                    history.push(`/leadership-journal-management?${routeParam}=${routeIdentifier}`)
+                                }}
                                 disabled={loading}
                             />
                         </div>
