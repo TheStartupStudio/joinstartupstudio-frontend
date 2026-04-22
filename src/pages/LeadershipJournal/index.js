@@ -260,24 +260,38 @@ const LeadershipJournal = memo(() => {
   useEffect(() => {
     if (levels.length === 0 || Object.keys(lessons).length === 0) return
 
+    const applyNextFlags = (options) => {
+      let foundNext = false
+      return options.map((option) => {
+        const finished = finishedContent.some(
+          (item) => stripHtmlTags(item) === option.value
+        )
+        const isNext = !finished && !foundNext
+        if (isNext) foundNext = true
+        return { ...option, isNext }
+      })
+    }
+
     const tabs = levels.map((level, index) => {
-      const sectionKey = index.toString() // Use level index as string directly as section key
+      const sectionKey = index.toString()
       const sectionLessons = sections[sectionKey] || []
 
       return {
         title: level.title,
-        options: sectionLessons.map((lesson) => ({
-          label: lesson.videoTitle || stripHtmlTags(lesson.title),
-          value: stripHtmlTags(lesson.title),
-          isNext: false,
-          id: lesson.id,
-          redirectId: lesson.redirectId
-        }))
+        options: applyNextFlags(
+          sectionLessons.map((lesson) => ({
+            label: lesson.videoTitle || stripHtmlTags(lesson.title),
+            value: stripHtmlTags(lesson.title),
+            isNext: false,
+            id: lesson.id,
+            redirectId: lesson.redirectId
+          }))
+        )
       }
     })
 
     setAllTabs(tabs)
-  }, [levels, sections, lessons])
+  }, [levels, sections, lessons, finishedContent])
 
   useEffect(() => {
     fetchManageContent()
@@ -331,40 +345,6 @@ const LeadershipJournal = memo(() => {
     }
   }, [routeId])
 
-  useEffect(() => {
-    if (!finishedContent || finishedContent.length === 0) return
-
-    setAllTabs((prevTabs) => {
-      if (prevTabs.length === 0) return prevTabs
-
-      const updatedTabs = [...prevTabs]
-
-      const updateNextFlags = (options) => {
-        let foundNext = false
-
-        return options.map((option) => {
-          const finished = finishedContent.some(
-            (finishedItem) => stripHtmlTags(finishedItem) === option.value
-          )
-          const isNext = !finished && !foundNext
-          if (isNext) foundNext = true
-
-          return {
-            ...option,
-            isNext
-          }
-        })
-      }
-
-      updatedTabs.forEach((tab, index) => {
-        if (tab && tab.options) {
-          updatedTabs[index].options = updateNextFlags(tab.options)
-        }
-      })
-
-      return updatedTabs
-    })
-  }, [finishedContent])
 
   const canAccessSection = (index) => {
     if (index === 0) return true
