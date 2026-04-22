@@ -408,6 +408,11 @@ const LeadershipJournal = memo(() => {
       const currentComponent = valueRefs.current[activeTabData.option?.value]
 
       if (isReflection) {
+        if (currentComponent?.hasAllEntriesAnswered && !currentComponent.hasAllEntriesAnswered()) {
+          toast.error('Please answer all reflection questions before continuing.')
+          return
+        }
+
         if (currentComponent?.saveChanges) {
           await currentComponent.saveChanges()
         }
