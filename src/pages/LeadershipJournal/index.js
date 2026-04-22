@@ -62,6 +62,36 @@ const LeadershipJournal = memo(() => {
   const valueRefs = useRef({})
   const initialRouteIdRef = useRef(routeId)
   const abortControllerRef = useRef(null)
+  const introProgressKey = `lts_intro_finished_${finalRouteId}`
+
+  const getIntroTitle = () => stripHtmlTags(manageContentData?.title || '')
+
+  const isIntroFinishedLocally = () => {
+    try {
+      return localStorage.getItem(introProgressKey) === '1'
+    } catch (error) {
+      return false
+    }
+  }
+
+  const markIntroFinishedLocally = () => {
+    try {
+      localStorage.setItem(introProgressKey, '1')
+    } catch (error) {
+      // ignore localStorage write failures
+    }
+  }
+
+  const isLessonFinished = (title) => {
+    const normalizedTitle = stripHtmlTags(title)
+    const introTitle = getIntroTitle()
+    if (normalizedTitle === introTitle && isIntroFinishedLocally()) {
+      return true
+    }
+    return finishedContent.some(
+      (finishedItem) => stripHtmlTags(finishedItem) === normalizedTitle
+    )
+  }
 
   // Function to lighten a hex color
   const lightenColor = (hex, percent) => {
@@ -263,9 +293,7 @@ const LeadershipJournal = memo(() => {
     const applyNextFlags = (options) => {
       let foundNext = false
       return options.map((option) => {
-        const finished = finishedContent.some(
-          (item) => stripHtmlTags(item) === option.value
-        )
+        const finished = isLessonFinished(option.value)
         const isNext = !finished && !foundNext
         if (isNext) foundNext = true
         return { ...option, isNext }
@@ -291,7 +319,7 @@ const LeadershipJournal = memo(() => {
     })
 
     setAllTabs(tabs)
-  }, [levels, sections, lessons, finishedContent])
+  }, [levels, sections, lessons, finishedContent, manageContentData])
 
   useEffect(() => {
     fetchManageContent()
@@ -309,7 +337,7 @@ const LeadershipJournal = memo(() => {
   useEffect(() => {
     if (manageContentData && !isLoading && currentRouteId === routeId) {
       const category = manageContentData.title
-      dispatch(fetchJournalFinishedContent(category, manageContentData.title))
+      dispatch(fetchJournalFinishedContent(category))
       fetchLevels()
       fetchLessons()
     }
@@ -352,12 +380,11 @@ const LeadershipJournal = memo(() => {
     const prevIndex = index - 1
     const sectionKey = prevIndex.toString() // Use level index as string directly as section key
     const prevSectionLessons = sections[sectionKey] || []
+    if (prevSectionLessons.length === 0) return false
 
     return prevSectionLessons.every((lesson) => {
       const strippedLessonTitle = stripHtmlTags(lesson.title)
-      return finishedContent.some(
-        (finishedItem) => stripHtmlTags(finishedItem) === strippedLessonTitle
-      )
+      return isLessonFinished(strippedLessonTitle)
     })
   }
 
@@ -400,7 +427,7 @@ const LeadershipJournal = memo(() => {
         // Update finished content state
         const category = manageContentData?.title
         await dispatch(
-          fetchJournalFinishedContent(category, manageContentData?.title)
+          fetchJournalFinishedContent(category)
         )
 
         // Wait for state to update before proceeding
@@ -418,9 +445,7 @@ const LeadershipJournal = memo(() => {
 
         if (!isWelcomeSection && activeTabData.option?.id) {
           const optionTitle = activeTabData.option.value
-          const alreadySeen = finishedContent.some(
-            (item) => stripHtmlTags(item) === stripHtmlTags(optionTitle)
-          )
+          const alreadySeen = isLessonFinished(optionTitle)
 
           if (!alreadySeen) {
             // Optimistic update: add to finished list immediately (no PENDING/loading flash)
@@ -454,6 +479,23 @@ const LeadershipJournal = memo(() => {
       }
 
       if (currentOptionIndex < currentSection.length - 1) {
+        const introTitle = getIntroTitle()
+        const currentOptionTitle = stripHtmlTags(activeTabData.option?.value || '')
+        const isOpeningLesson =
+          activeTabData.activeTab === 0 &&
+          currentOptionIndex === 0 &&
+          currentOptionTitle === introTitle
+
+        if (isOpeningLesson) {
+          const wasAlreadyFinished = isLessonFinished(introTitle)
+          markIntroFinishedLocally()
+          if (!wasAlreadyFinished) {
+            dispatch(
+              fetchJournalFinishedContentFulfilled([...finishedContent, introTitle])
+            )
+          }
+        }
+
         // Move to next option in current section
         const nextOption = currentSection[currentOptionIndex + 1]
         if (nextOption) {
@@ -473,11 +515,17 @@ const LeadershipJournal = memo(() => {
         const sectionKey = currentTab.toString() // Use level index as string directly as section key
 
         const prevSectionLessons = sections[sectionKey] || []
+        if (prevSectionLessons.length === 0) {
+          setShowLockModal(true)
+          return
+        }
         const canAccess = prevSectionLessons.every((lesson) => {
           const strippedLessonTitle = stripHtmlTags(lesson.title)
-          return currentFinishedContent.some(
-            (finishedItem) =>
-              stripHtmlTags(finishedItem) === strippedLessonTitle
+          return (
+            currentFinishedContent.some(
+              (finishedItem) =>
+                stripHtmlTags(finishedItem) === strippedLessonTitle
+            ) || isLessonFinished(strippedLessonTitle)
           )
         })
 
@@ -516,9 +564,7 @@ const LeadershipJournal = memo(() => {
     }
 
     return (
-      !finishedContent.some(
-        (finishedItem) => stripHtmlTags(finishedItem) === option.value
-      ) && !option.isNext
+      !isLessonFinished(option.value) && !option.isNext
     )
   }
 
