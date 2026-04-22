@@ -114,7 +114,15 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'public/manifest.json', to: 'manifest.json' },
-        { from: 'public/academy-phone-*.png', to: '[name][ext]' }
+        { from: 'public/robots.txt', to: 'robots.txt' },
+        { from: 'public/favicon-16x16.png', to: 'favicon-16x16.png' },
+        { from: 'public/favicon-32x32.png', to: 'favicon-32x32.png' },
+        { from: 'public/favicon.ico', to: 'favicon.ico' },
+        { from: 'public/apple-touch-icon.png', to: 'apple-touch-icon.png' },
+        { from: 'public/android-chrome-192x192.png', to: 'android-chrome-192x192.png' },
+        { from: 'public/android-chrome-512x512.png', to: 'android-chrome-512x512.png' },
+        { from: 'public/android-chrome-192x192-maskable.png', to: 'android-chrome-192x192-maskable.png' },
+        { from: 'public/android-chrome-512x512-maskable.png', to: 'android-chrome-512x512-maskable.png' }
       ]
     })
   ],
