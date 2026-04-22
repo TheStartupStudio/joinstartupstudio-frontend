@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, memo, useMemo } from 'react'
 import './LeadershipJournal.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { fetchJournalFinishedContent } from '../../redux/journal/Actions'
+import { fetchJournalFinishedContent, fetchJournalFinishedContentFulfilled } from '../../redux/journal/Actions'
 
 // Utility function to strip HTML tags from text
 const stripHtmlTags = (html) => {
@@ -420,6 +420,35 @@ const LeadershipJournal = memo(() => {
 
         // Wait for state to update before proceeding
         await new Promise((resolve) => setTimeout(resolve, 200))
+      } else {
+        // No tasks journal — mark as seen on Continue click
+        const currentTab = activeTabData.activeTab
+        const sectionKey = currentTab.toString()
+        const selectedSection = sections[sectionKey]?.find(
+          (section) => section.title === activeTabData.option?.value
+        )
+        // Skip the welcome/intro item (SectionOne) — it uses the manageContent id, not a journal id
+        const isWelcomeSection =
+          selectedSection?.lessonIndex === 0 && selectedSection?.levelIndex === '0'
+
+        if (!isWelcomeSection && activeTabData.option?.id) {
+          const optionTitle = activeTabData.option.value
+          const alreadySeen = finishedContent.some(
+            (item) => stripHtmlTags(item) === stripHtmlTags(optionTitle)
+          )
+
+          if (!alreadySeen) {
+            // Optimistic update: add to finished list immediately (no PENDING/loading flash)
+            dispatch(fetchJournalFinishedContentFulfilled([...finishedContent, optionTitle]))
+
+            // Fire-and-forget — doesn't block navigation
+            axiosInstance.post('/ltsJournals/LtsJournalSeen', {
+              journalId: activeTabData.option.id
+            }).catch((err) => {
+              console.error('Error marking journal as seen:', err)
+            })
+          }
+        }
       }
 
       // Now handle navigation logic after saving (if needed)

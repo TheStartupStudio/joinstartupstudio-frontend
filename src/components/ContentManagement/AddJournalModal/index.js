@@ -17,6 +17,8 @@ import DeleteJournalContentModal from '../DeleteJournalContentModal'
 import AddJournalIntroduction from '../AddJournalIntroduction'
 import { toast } from 'react-toastify'
 
+const DEFAULT_JOURNAL_ICON = 'book'
+
 const AddJournalModal = ({
     show,
     onClose,
@@ -29,7 +31,7 @@ const AddJournalModal = ({
     const history = useHistory()
     const [journalTitle, setJournalTitle] = useState('')
     const [journalSubtitle, setJournalSubtitle] = useState('')
-    const [selectedIcon, setSelectedIcon] = useState('')
+    const [selectedIcon, setSelectedIcon] = useState(DEFAULT_JOURNAL_ICON)
     const [selectedColor, setSelectedColor] = useState('#E0EBC5')
     const [activeTab, setActiveTab] = useState('names')
     const [isIconDropdownOpen, setIsIconDropdownOpen] = useState(false)
@@ -69,7 +71,7 @@ const AddJournalModal = ({
             console.log('Setting journal title:', data.manageContent.title, 'icon:', data.manageContent.icon, 'color:', data.manageContent.color)
             setJournalTitle(data.manageContent.title || '')
             setJournalSubtitle(data.manageContent.subtitle || '')
-            setSelectedIcon(data.manageContent.icon || '')
+            setSelectedIcon(data.manageContent.icon || DEFAULT_JOURNAL_ICON)
             setSelectedColor(data.manageContent.color || '#E0EBC5')
             const clientVal = data.manageContent.client ?? data.client
             setSelectedClient(clientVal || 'all')
@@ -111,7 +113,7 @@ const AddJournalModal = ({
     const resetForm = useCallback(() => {
         setJournalTitle('')
         setJournalSubtitle('')
-        setSelectedIcon('')
+        setSelectedIcon(DEFAULT_JOURNAL_ICON)
         setSelectedColor('#E0EBC5')
         setSections([
             { id: 1, journalId: null, name: '', detailsText: '', detailsRich: '' }
@@ -377,10 +379,6 @@ const AddJournalModal = ({
             return false
         }
 
-        if (!selectedIcon) {
-            return false
-        }
-
         if (!selectedColor || !validateColor(selectedColor)) {
             return false
         }
@@ -404,7 +402,7 @@ const AddJournalModal = ({
         if (mode === 'view') return
 
         if (!validateForm()) {
-            toast.error('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            toast.error('Please fill in all required fields: Journal Title and Section Names')
             return
         }
 
@@ -426,7 +424,7 @@ const AddJournalModal = ({
                     ...(mode === 'edit' && contentId ? { id: contentId } : {}),
                     title: journalTitle,
                     subtitle: journalSubtitle,
-                    icon: selectedIcon,
+                    icon: selectedIcon || DEFAULT_JOURNAL_ICON,
                     color: normalizedColor
                     // Other fields will be added in AddJournalIntroduction
                 },
@@ -557,7 +555,7 @@ const AddJournalModal = ({
 
     const handleContinueToDetails = () => {
         if (!validateForm()) {
-            toast.error('Please fill in all required fields: Journal Title, Icon, and Section Names')
+            toast.error('Please fill in all required fields: Journal Title and Section Names')
             return
         }
         setActiveTab('details')
@@ -780,7 +778,7 @@ const AddJournalModal = ({
 
                                 <div className="d-flex gap-2 w-100">
 
-                                <div className="position-relative w-100">
+                                {/* <div className="position-relative w-100">
                                     <div className="input-box icon-select" onClick={mode !== 'view' ? handleIconDropdownToggle : undefined} style={{ cursor: mode === 'view' ? 'default' : 'pointer' }}>
                                         {selectedIcon ? (
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -813,7 +811,7 @@ const AddJournalModal = ({
                                         </div>
                                     )}
 
-                                </div>
+                                </div> */}
                                 <div className="input-box color-select w-100" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                     
                                     <input
