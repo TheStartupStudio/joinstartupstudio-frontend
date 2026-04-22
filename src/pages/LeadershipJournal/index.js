@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, memo, useMemo } from 'react'
 import './LeadershipJournal.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { fetchJournalFinishedContent } from '../../redux/journal/Actions'
+import { fetchJournalFinishedContent, fetchJournalFinishedContentFulfilled } from '../../redux/journal/Actions'
 
 // Utility function to strip HTML tags from text
 const stripHtmlTags = (html) => {
@@ -260,24 +260,38 @@ const LeadershipJournal = memo(() => {
   useEffect(() => {
     if (levels.length === 0 || Object.keys(lessons).length === 0) return
 
+    const applyNextFlags = (options) => {
+      let foundNext = false
+      return options.map((option) => {
+        const finished = finishedContent.some(
+          (item) => stripHtmlTags(item) === option.value
+        )
+        const isNext = !finished && !foundNext
+        if (isNext) foundNext = true
+        return { ...option, isNext }
+      })
+    }
+
     const tabs = levels.map((level, index) => {
-      const sectionKey = index.toString() // Use level index as string directly as section key
+      const sectionKey = index.toString()
       const sectionLessons = sections[sectionKey] || []
 
       return {
         title: level.title,
-        options: sectionLessons.map((lesson) => ({
-          label: lesson.videoTitle || stripHtmlTags(lesson.title),
-          value: stripHtmlTags(lesson.title),
-          isNext: false,
-          id: lesson.id,
-          redirectId: lesson.redirectId
-        }))
+        options: applyNextFlags(
+          sectionLessons.map((lesson) => ({
+            label: lesson.videoTitle || stripHtmlTags(lesson.title),
+            value: stripHtmlTags(lesson.title),
+            isNext: false,
+            id: lesson.id,
+            redirectId: lesson.redirectId
+          }))
+        )
       }
     })
 
     setAllTabs(tabs)
-  }, [levels, sections, lessons])
+  }, [levels, sections, lessons, finishedContent])
 
   useEffect(() => {
     fetchManageContent()
@@ -331,40 +345,6 @@ const LeadershipJournal = memo(() => {
     }
   }, [routeId])
 
-  useEffect(() => {
-    if (!finishedContent || finishedContent.length === 0) return
-
-    setAllTabs((prevTabs) => {
-      if (prevTabs.length === 0) return prevTabs
-
-      const updatedTabs = [...prevTabs]
-
-      const updateNextFlags = (options) => {
-        let foundNext = false
-
-        return options.map((option) => {
-          const finished = finishedContent.some(
-            (finishedItem) => stripHtmlTags(finishedItem) === option.value
-          )
-          const isNext = !finished && !foundNext
-          if (isNext) foundNext = true
-
-          return {
-            ...option,
-            isNext
-          }
-        })
-      }
-
-      updatedTabs.forEach((tab, index) => {
-        if (tab && tab.options) {
-          updatedTabs[index].options = updateNextFlags(tab.options)
-        }
-      })
-
-      return updatedTabs
-    })
-  }, [finishedContent])
 
   const canAccessSection = (index) => {
     if (index === 0) return true
@@ -408,6 +388,11 @@ const LeadershipJournal = memo(() => {
       const currentComponent = valueRefs.current[activeTabData.option?.value]
 
       if (isReflection) {
+        if (currentComponent?.hasAllEntriesAnswered && !currentComponent.hasAllEntriesAnswered()) {
+          toast.error('Please answer all reflection questions before continuing.')
+          return
+        }
+
         if (currentComponent?.saveChanges) {
           await currentComponent.saveChanges()
         }
@@ -420,6 +405,35 @@ const LeadershipJournal = memo(() => {
 
         // Wait for state to update before proceeding
         await new Promise((resolve) => setTimeout(resolve, 200))
+      } else {
+        // No tasks journal — mark as seen on Continue click
+        const currentTab = activeTabData.activeTab
+        const sectionKey = currentTab.toString()
+        const selectedSection = sections[sectionKey]?.find(
+          (section) => section.title === activeTabData.option?.value
+        )
+        // Skip the welcome/intro item (SectionOne) — it uses the manageContent id, not a journal id
+        const isWelcomeSection =
+          selectedSection?.lessonIndex === 0 && selectedSection?.levelIndex === '0'
+
+        if (!isWelcomeSection && activeTabData.option?.id) {
+          const optionTitle = activeTabData.option.value
+          const alreadySeen = finishedContent.some(
+            (item) => stripHtmlTags(item) === stripHtmlTags(optionTitle)
+          )
+
+          if (!alreadySeen) {
+            // Optimistic update: add to finished list immediately (no PENDING/loading flash)
+            dispatch(fetchJournalFinishedContentFulfilled([...finishedContent, optionTitle]))
+
+            // Fire-and-forget — doesn't block navigation
+            axiosInstance.post('/ltsJournals/LtsJournalSeen', {
+              journalId: activeTabData.option.id
+            }).catch((err) => {
+              console.error('Error marking journal as seen:', err)
+            })
+          }
+        }
       }
 
       // Now handle navigation logic after saving (if needed)

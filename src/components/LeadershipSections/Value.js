@@ -192,12 +192,39 @@ const Value = forwardRef((props, ref) => {
         isExisting: data.isExisting,
         journalId: currentId,
         entryId: entryId,
+        questionId: data.questionId,
         order: typeof data.order === 'number' ? data.order : 0
       }
     }))
   }
 
+  const isContentEmpty = (content) => {
+    if (!content) return true
+    const stripped = content.replace(/<[^>]*>/g, '').trim()
+    return stripped === ''
+  }
+
   useImperativeHandle(ref, () => ({
+    hasAllEntriesAnswered: () => {
+      if (!journalData?.entries || journalData.entries.length === 0) return true
+
+      return journalData.entries.every((entry) => {
+        // pendingChanges is keyed by reflection ID, not entry ID.
+        // Each pending change stores questionId = the entry/question id.
+        const hasPendingContent = Object.values(pendingChanges).some(
+          (change) => change.questionId === entry.id && !isContentEmpty(change.content)
+        )
+        if (hasPendingContent) return true
+
+        // Fall back to already-saved answers
+        if (entry.userAnswers && entry.userAnswers.length > 0) {
+          return entry.userAnswers.some((answer) => !isContentEmpty(answer.content))
+        }
+
+        return false
+      })
+    },
+
     saveChanges: async () => {
       try {
         const savePromises = Object.entries(pendingChanges).map(
