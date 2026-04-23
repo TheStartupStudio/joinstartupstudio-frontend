@@ -55,6 +55,22 @@ const ManageContentSite = () => {
     return 'academy'
   }
 
+  const resolveContentGlobalId = async (contentId) => {
+    const content = contents.find((c) => c.id === contentId)
+    if (content?.globalId) return content.globalId
+
+    try {
+      const response = await axiosInstance.get(`/manage-content/full/${contentId}`, {
+        params: { client: resolveEditClient(content) }
+      })
+      const fullData = response?.data?.data
+      return fullData?.manageContent?.globalId || fullData?.globalId || null
+    } catch (error) {
+      console.error(`Failed to resolve globalId for content ${contentId}:`, error)
+      return null
+    }
+  }
+
   const EditContentForm = ({ content, onSave, onCancel }) => {
     const handleChange = (e) => {
       const { name, value } = e.target
@@ -398,9 +414,14 @@ const ManageContentSite = () => {
 
     try {
       setLoading(true)
+      const selectedGlobalIdsRaw = await Promise.all(
+        selectedItems.map((id) => resolveContentGlobalId(id))
+      )
+      const selectedGlobalIds = selectedGlobalIdsRaw.filter(Boolean)
       const response = await axiosInstance.put('/manage-content/bulk/archive', {
         ids: selectedItems,
-        globalIds: selectedItems.map((id) => contents.find((c) => c.id === id)?.globalId).filter(Boolean)
+        globalIds: selectedGlobalIds,
+        ...(selectedGlobalIds.length > 0 ? { globalId: selectedGlobalIds[0] } : {})
       })
 
       if (response.data.success) {
@@ -478,11 +499,14 @@ const ManageContentSite = () => {
       setLoading(true)
 
       const allContents = [...contents, ...archivedContents]
-      const archivePromises = deleteModalData.selectedItems.map((contentId) => {
+      const archivePromises = deleteModalData.selectedItems.map(async (contentId) => {
         const content = allContents.find((c) => c.id === contentId)
+        const resolvedGlobalId =
+          content?.globalId || (await resolveContentGlobalId(contentId))
         return axiosInstance.put('/manage-content/bulk/archive', {
           ids: [contentId],
-          globalId: content?.globalId
+          ...(resolvedGlobalId ? { globalId: resolvedGlobalId } : {}),
+          ...(resolvedGlobalId ? { globalIds: [resolvedGlobalId] } : {})
         })
       })
 
@@ -518,9 +542,14 @@ const ManageContentSite = () => {
 
     try {
       setLoading(true)
+      const selectedGlobalIdsRaw = await Promise.all(
+        selectedItems.map((id) => resolveContentGlobalId(id))
+      )
+      const selectedGlobalIds = selectedGlobalIdsRaw.filter(Boolean)
       const response = await axiosInstance.put('/manage-content/bulk/publish', {
         ids: selectedItems,
-        globalIds: selectedItems.map((id) => contents.find((c) => c.id === id)?.globalId).filter(Boolean)
+        globalIds: selectedGlobalIds,
+        ...(selectedGlobalIds.length > 0 ? { globalId: selectedGlobalIds[0] } : {})
       })
 
       if (response.data.success) {
@@ -544,10 +573,11 @@ const ManageContentSite = () => {
   const handleArchiveContent = async (contentId) => {
     try {
       setLoading(true)
-      const content = contents.find((c) => c.id === contentId)
+      const resolvedGlobalId = await resolveContentGlobalId(contentId)
       const response = await axiosInstance.put('/manage-content/bulk/archive', {
         ids: [contentId],
-        globalId: content?.globalId
+        ...(resolvedGlobalId ? { globalId: resolvedGlobalId } : {}),
+        ...(resolvedGlobalId ? { globalIds: [resolvedGlobalId] } : {})
       })
 
       if (response.data.success) {
@@ -568,10 +598,11 @@ const ManageContentSite = () => {
   const handlePublishContent = async (contentId) => {
     try {
       setLoading(true)
-      const content = contents.find((c) => c.id === contentId)
+      const resolvedGlobalId = await resolveContentGlobalId(contentId)
       const response = await axiosInstance.put('/manage-content/bulk/publish', {
         ids: [contentId],
-        globalId: content?.globalId
+        ...(resolvedGlobalId ? { globalId: resolvedGlobalId } : {}),
+        ...(resolvedGlobalId ? { globalIds: [resolvedGlobalId] } : {})
       })
 
       if (response.data.success) {
@@ -593,9 +624,15 @@ const ManageContentSite = () => {
       setLoading(true)
       const allContents = [...contents, ...archivedContents]
       const content = allContents.find((c) => c.id === contentId)
+      const resolvedGlobalId =
+        content?.globalId || (await resolveContentGlobalId(contentId))
       const response = await axiosInstance.delete(
         `/manage-content/${contentId}`,
-        { data: { globalId: content?.globalId } }
+        {
+          data: {
+            ...(resolvedGlobalId ? { globalId: resolvedGlobalId } : {})
+          }
+        }
       )
 
       if (response.data.success) {
@@ -619,9 +656,12 @@ const ManageContentSite = () => {
       setLoading(true)
       const allContents = [...contents, ...archivedContents]
       const content = allContents.find((c) => c.id === contentId)
+      const resolvedGlobalId =
+        content?.globalId || (await resolveContentGlobalId(contentId))
       const response = await axiosInstance.put('/manage-content/bulk/archive', {
         ids: [contentId],
-        globalId: content?.globalId
+        ...(resolvedGlobalId ? { globalId: resolvedGlobalId } : {}),
+        ...(resolvedGlobalId ? { globalIds: [resolvedGlobalId] } : {})
       })
 
       if (response.data.success) {
