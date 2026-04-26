@@ -186,7 +186,7 @@ const UserManagement = () => {
       })
 
       if (response.data.success) {
-        const mappedData = response.data.data.map(user => ({
+        const mappedData = (response.data.data || []).map(user => ({
           id: user.id,
           name: user.name,
           organization_name: user.organization_name,
@@ -1120,6 +1120,7 @@ const UserManagement = () => {
                       <div className="filter-option" onClick={() => { setSearchFilter('all'); setShowFilterDropdown(false); }}>All</div>
                       <div className="filter-option" onClick={() => { setSearchFilter('admin'); setShowFilterDropdown(false); }}>Admin</div>
                       <div className="filter-option" onClick={() => { setSearchFilter('client'); setShowFilterDropdown(false); }}>Client</div>
+                      <div className="filter-option" onClick={() => { setSearchFilter('instructor'); setShowFilterDropdown(false); }}>Instructor</div>
                       <div className="filter-option" onClick={() => { setSearchFilter('learner'); setShowFilterDropdown(false); }}>Learner</div>
                     </div>
                   )}

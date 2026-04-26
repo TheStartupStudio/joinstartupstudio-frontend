@@ -111,6 +111,14 @@ function LtsJournal(props) {
   )
 
   const userRole = user?.role_id || localStorage.getItem('role')
+  const isInstructorUser =
+    Number(
+      user?.user?.isInstructor ??
+        user?.user?.is_instructor ??
+        user?.isInstructor ??
+        user?.is_instructor ??
+        0
+    ) === 1
 
   const [levels, setLevels] = useState([])
   const [lessonsByLevel, setLessonsByLevel] = useState({})
@@ -274,6 +282,7 @@ function LtsJournal(props) {
     }
 
     if (
+      !isInstructorUser &&
       !user?.user?.stripe_subscription_id &&
       !user?.user?.subscription_exempt
     ) {
@@ -287,7 +296,7 @@ function LtsJournal(props) {
     const isInTrial =
       !user?.user?.subscription_exempt && isUserInFreeTrial(user.user.createdAt)
 
-    if (isInTrial) {
+    if (!isInstructorUser && isInTrial) {
       if (clickedLevel === 1) {
         setSubscriptionModalparagraph(
           'To access Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.'
@@ -301,7 +310,7 @@ function LtsJournal(props) {
       return
     }
 
-    if (clickedLevel > 0) {
+    if (!isInstructorUser && clickedLevel > 0) {
       const previousLevel = clickedLevel - 1
       const previousLevelLessons = lessonsByLevel[previousLevel]
 
@@ -379,6 +388,11 @@ function LtsJournal(props) {
   }
 
   const getOptionStatus = (lessonId, lessons) => {
+    if (isInstructorUser) {
+      const completed = finishedContent.includes(lessonId)
+      return { status: completed ? 'done' : 'inProgress', disabled: false }
+    }
+
     const lesson = lessons.find((l) => l.id === lessonId)
     if (!lesson) {
       return { status: 'notStarted', disabled: true }
@@ -466,6 +480,8 @@ function LtsJournal(props) {
       : []
 
   const isContentAccessible = (journalId) => {
+    if (isInstructorUser) return true
+
     const numericId = parseInt(journalId)
 
     for (let level = 0; level < levels.length; level++) {
@@ -525,7 +541,7 @@ function LtsJournal(props) {
   const findNextLesson = (currentId) => {
     const numericId = parseInt(currentId)
 
-    if (!user?.user?.stripe_subscription_id) {
+    if (!isInstructorUser && !user?.user?.stripe_subscription_id) {
       setSubscriptionModalparagraph(
         'This content is only available to subscribed users. Subscribe now to access all levels and features.'
       )
@@ -536,7 +552,7 @@ function LtsJournal(props) {
 
     const isInFreeTrial = isUserInFreeTrial(user.user.createdAt)
 
-    if (isInFreeTrial && numericId >= 58) {
+    if (!isInstructorUser && isInFreeTrial && numericId >= 58) {
       if (numericId === 58) {
         setSubscriptionModalparagraph(
           'Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.'
@@ -551,7 +567,7 @@ function LtsJournal(props) {
       return null
     }
 
-    if (!isInFreeTrial) {
+    if (!isInstructorUser && !isInFreeTrial) {
       for (let levelIndex = 1; levelIndex < levels.length; levelIndex++) {
         const currentLevelLessons = lessonsByLevel[levelIndex]
         if (!currentLevelLessons || currentLevelLessons.length === 0) continue
@@ -693,6 +709,7 @@ function LtsJournal(props) {
         const numericId = parseInt(currentId)
 
         if (
+          !isInstructorUser &&
           !user?.user?.stripe_subscription_id &&
           !user?.user?.subscription_exempt
         ) {
@@ -708,7 +725,7 @@ function LtsJournal(props) {
           !user?.user?.subscription_exempt &&
           isUserInFreeTrial(user.user.createdAt)
 
-        if (isInTrial && numericId >= 58) {
+        if (!isInstructorUser && isInTrial && numericId >= 58) {
           if (numericId === 58) {
             setSubscriptionModalparagraph(
               'Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.'
@@ -723,7 +740,7 @@ function LtsJournal(props) {
           return null
         }
 
-        if (!isInTrial) {
+        if (!isInstructorUser && !isInTrial) {
           for (let levelIndex = 1; levelIndex < levels.length; levelIndex++) {
             const currentLevelLessons = lessonsByLevel[levelIndex]
             if (!currentLevelLessons || currentLevelLessons.length === 0)
@@ -1144,6 +1161,7 @@ function LtsJournal(props) {
                           } else {
                             // Dynamic check: level is accessible if all previous level lessons are completed
                             const isLevelAccessible =
+                              isInstructorUser ||
                               index === 0 ||
                               (index > 0 &&
                                 lessonsByLevel[index - 1] &&

@@ -20,6 +20,11 @@ import {
   getHostnameSubdomainLabel
 } from '../../utils/clientHostname'
 
+const ROLE_STUDENT = 1
+const ROLE_CLIENT = 2
+const ROLE_SUPER_ADMIN = 3
+const ROLE_INSTRUCTOR = 4 // UI-only role: maps to student + isInstructor = 1
+
 const AddNewLearner = ({
   show,
   onHide,
@@ -57,7 +62,8 @@ const AddNewLearner = ({
     learnerType: '',
     birthDate: null,
     organization: '',
-    roleId: 1,
+    roleId: ROLE_STUDENT,
+    isInstructor: false,
     subscriptionExempt: false
   })
 
@@ -338,7 +344,12 @@ const AddNewLearner = ({
             })()
           : null,
         organization: data.University?.id || data.organizationId || '',
-        roleId: data.role_id || 1,
+        roleId:
+          Number(data.role_id) === ROLE_STUDENT &&
+          Number(data.isInstructor || data.is_instructor) === 1
+            ? ROLE_INSTRUCTOR
+            : data.role_id || ROLE_STUDENT,
+        isInstructor: Number(data.isInstructor || data.is_instructor) === 1,
         subscriptionExempt: data.subscription_exempt || false
       })
 
@@ -378,13 +389,14 @@ const AddNewLearner = ({
 
   const roleOptions = isAdmin
     ? [
-        { id: 1, name: 'Student' },
-        { id: 2, name: 'Client' },
-        { id: 3, name: 'Super Admin' }
+        { id: ROLE_STUDENT, name: 'Student' },
+        { id: ROLE_INSTRUCTOR, name: 'Instructor' },
+        { id: ROLE_CLIENT, name: 'Client' },
+        { id: ROLE_SUPER_ADMIN, name: 'Super Admin' }
       ]
     : [
-        { id: 1, name: 'Student' },
-        { id: 2, name: 'Client' }
+        { id: ROLE_STUDENT, name: 'Student' },
+        { id: ROLE_CLIENT, name: 'Client' }
       ]
 
   const handleInputChange = (field, value) => {
@@ -410,10 +422,18 @@ const AddNewLearner = ({
   }
 
   const handleDropdownSelect = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value
-    }))
+    if (field === 'roleId') {
+      setFormData((prev) => ({
+        ...prev,
+        roleId: value,
+        isInstructor: value === ROLE_INSTRUCTOR
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value
+      }))
+    }
     setShowGenderDropdown(false)
     setShowCountryDropdown(false)
     setShowTypeDropdown(false)
@@ -527,7 +547,8 @@ const AddNewLearner = ({
           : null,
         client: getClientPayloadValue(formData.organization),
         activeStatus: isUserActive ? 1 : 0,
-        role_id: formData.roleId
+        role_id: formData.roleId === ROLE_INSTRUCTOR ? ROLE_STUDENT : formData.roleId,
+        isInstructor: formData.roleId === ROLE_INSTRUCTOR || formData.isInstructor ? 1 : 0
       }
 
       if (isAdmin) {
@@ -568,6 +589,7 @@ const AddNewLearner = ({
             ? currentUser.universityId || currentUser.University?.id
             : '',
           roleId: 1,
+          isInstructor: false,
           subscriptionExempt: false
         })
       }
@@ -601,6 +623,7 @@ const AddNewLearner = ({
         ? currentUser.universityId || currentUser.University?.id
         : '',
       roleId: 1,
+      isInstructor: false,
       subscriptionExempt: false
     })
     setIsUserActive(true)
@@ -726,11 +749,13 @@ const AddNewLearner = ({
 
   const getRoleLabel = (roleId) => {
     switch (roleId) {
-      case 1:
+      case ROLE_STUDENT:
         return 'Learner'
-      case 2:
+      case ROLE_INSTRUCTOR:
+        return 'Instructor'
+      case ROLE_CLIENT:
         return 'Client'
-      case 3:
+      case ROLE_SUPER_ADMIN:
         return 'Super Admin'
       default:
         return 'Learner'

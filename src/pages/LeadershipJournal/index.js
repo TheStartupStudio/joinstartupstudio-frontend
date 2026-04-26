@@ -149,6 +149,14 @@ const LeadershipJournal = memo(() => {
 
   const { user } = useSelector((state) => state.user.user)
   const userRole = user?.role_id || localStorage.getItem('role')
+  const isInstructorUser =
+    Number(
+      user?.isInstructor ??
+        user?.is_instructor ??
+        user?.user?.isInstructor ??
+        user?.user?.is_instructor ??
+        0
+    ) === 1
 
   const fetchLevels = async () => {
     try {
@@ -294,7 +302,9 @@ const LeadershipJournal = memo(() => {
       let foundNext = false
       return options.map((option) => {
         const finished = isLessonFinished(option.value)
-        const isNext = !finished && !foundNext
+        const isNext = isInstructorUser
+          ? !finished
+          : !finished && !foundNext
         if (isNext) foundNext = true
         return { ...option, isNext }
       })
@@ -375,6 +385,7 @@ const LeadershipJournal = memo(() => {
 
 
   const canAccessSection = (index) => {
+    if (isInstructorUser) return true
     if (index === 0) return true
 
     const prevIndex = index - 1
@@ -511,6 +522,21 @@ const LeadershipJournal = memo(() => {
           journal: { finishedContent: currentFinishedContent }
         } = store.getState()
 
+        if (isInstructorUser) {
+          const nextTabData = allTabs[activeTabData.activeTab + 1]
+          if (
+            nextTabData &&
+            nextTabData.options &&
+            nextTabData.options.length > 0
+          ) {
+            setActiveTabData({
+              activeTab: activeTabData.activeTab + 1,
+              option: nextTabData.options[0]
+            })
+          }
+          return
+        }
+
         const currentTab = activeTabData.activeTab
         const sectionKey = currentTab.toString() // Use level index as string directly as section key
 
@@ -559,6 +585,7 @@ const LeadershipJournal = memo(() => {
   }
 
   const isOptionDisabled = (option) => {
+    if (isInstructorUser) return false
     if (!canAccessSection(activeTabData.activeTab)) {
       return true
     }

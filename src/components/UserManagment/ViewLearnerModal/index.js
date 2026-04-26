@@ -285,6 +285,18 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   }
 
   const getRoleBasedTitle = () => {
+    const isInstructorUser =
+      Number(
+        displayData?.isInstructor ??
+          displayData?.is_instructor ??
+          learner?.isInstructor ??
+          learner?.is_instructor ??
+          0
+      ) === 1
+    if (isInstructorUser) {
+      return 'Instructor'
+    }
+
     const role = displayData?.role_id || learner?.role_id
     switch (role) {
       case 1:
