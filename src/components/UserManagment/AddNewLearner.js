@@ -390,7 +390,7 @@ const AddNewLearner = ({
   const roleOptions = isAdmin
     ? [
         { id: ROLE_STUDENT, name: 'Student' },
-        { id: ROLE_INSTRUCTOR, name: 'Instructor' },
+        { id: ROLE_INSTRUCTOR, name: 'Facilitator' },
         { id: ROLE_CLIENT, name: 'Client' },
         { id: ROLE_SUPER_ADMIN, name: 'Super Admin' }
       ]
@@ -752,7 +752,7 @@ const AddNewLearner = ({
       case ROLE_STUDENT:
         return 'Learner'
       case ROLE_INSTRUCTOR:
-        return 'Instructor'
+        return 'Facilitator'
       case ROLE_CLIENT:
         return 'Client'
       case ROLE_SUPER_ADMIN:

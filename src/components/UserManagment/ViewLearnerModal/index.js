@@ -294,7 +294,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
           0
       ) === 1
     if (isInstructorUser) {
-      return 'Instructor'
+      return 'Facilitator'
     }
 
     const role = displayData?.role_id || learner?.role_id

@@ -1120,7 +1120,7 @@ const UserManagement = () => {
                       <div className="filter-option" onClick={() => { setSearchFilter('all'); setShowFilterDropdown(false); }}>All</div>
                       <div className="filter-option" onClick={() => { setSearchFilter('admin'); setShowFilterDropdown(false); }}>Admin</div>
                       <div className="filter-option" onClick={() => { setSearchFilter('client'); setShowFilterDropdown(false); }}>Client</div>
-                      <div className="filter-option" onClick={() => { setSearchFilter('instructor'); setShowFilterDropdown(false); }}>Instructor</div>
+                      <div className="filter-option" onClick={() => { setSearchFilter('instructor'); setShowFilterDropdown(false); }}>Facilitator</div>
                       <div className="filter-option" onClick={() => { setSearchFilter('learner'); setShowFilterDropdown(false); }}>Learner</div>
                     </div>
                   )}
