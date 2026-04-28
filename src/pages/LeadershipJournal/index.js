@@ -85,7 +85,17 @@ const LeadershipJournal = memo(() => {
   const isLessonFinished = (title) => {
     const normalizedTitle = stripHtmlTags(title)
     const introTitle = getIntroTitle()
-    if (normalizedTitle === introTitle && isIntroFinishedLocally()) {
+    const secondLessonTitle = stripHtmlTags(sections?.['0']?.[1]?.title || '')
+    const isSecondLessonFinished = secondLessonTitle
+      ? finishedContent.some(
+          (finishedItem) => stripHtmlTags(finishedItem) === secondLessonTitle
+        )
+      : false
+
+    if (
+      normalizedTitle === introTitle &&
+      (isIntroFinishedLocally() || isSecondLessonFinished)
+    ) {
       return true
     }
     return finishedContent.some(
