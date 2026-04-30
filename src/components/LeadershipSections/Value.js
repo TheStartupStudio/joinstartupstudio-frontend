@@ -227,7 +227,13 @@ const Value = forwardRef((props, ref) => {
 
     saveChanges: async () => {
       try {
-        const savePromises = Object.entries(pendingChanges).map(
+        const entries = Object.entries(pendingChanges)
+
+        if (entries.length === 0) {
+          return true
+        }
+
+        const savePromises = entries.map(
           async ([entryId, data]) => {
             try {
               const postResponse = await axiosInstance.post(
