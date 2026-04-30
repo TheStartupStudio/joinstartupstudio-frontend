@@ -992,7 +992,7 @@ function LtsJournal(props) {
       }
 
       if (hasEmptyReflections) {
-        if (isJournalCompleted) {
+        if (isJournalCompleted || isInstructorUser) {
           await navigateToNextLesson()
           setSaving(false)
           return
@@ -1003,7 +1003,7 @@ function LtsJournal(props) {
       }
 
       if (savePromises.length === 0) {
-        if (isJournalCompleted) {
+        if (isJournalCompleted || isInstructorUser) {
           await navigateToNextLesson()
           setSaving(false)
           return
