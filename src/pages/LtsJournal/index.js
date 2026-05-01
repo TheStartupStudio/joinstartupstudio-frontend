@@ -601,8 +601,6 @@ function LtsJournal(props) {
       }
     }
 
-    if (numericId === 63) return { nextId: 65 }
-
     const getLevelTransition = (currentLessonId) => {
       let currentLevelIndex = -1
       for (let i = 0; i < levels.length; i++) {
@@ -774,8 +772,6 @@ function LtsJournal(props) {
             }
           }
         }
-
-        if (numericId === 63) return { nextId: 65 }
 
         const getLevelTransition = (currentLessonId) => {
           let currentLevelIndex = -1
