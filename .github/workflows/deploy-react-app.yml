@@ -55,6 +55,8 @@ jobs:
           fi
           
           # Create the .env file (webpack expects .env by default)
+          # SERVER_URL must be absolute (https://host/...). A host without a scheme is
+          # resolved as a path on the frontend origin (e.g. tss-dev.../dev-api.../...).
           echo "REACT_APP_CLIENT_BASE_URL=${{ secrets.REACT_APP_CLIENT_BASE_URL }}" >> .env
           echo "REACT_APP_SERVER_BASE_URL=$SERVER_URL" >> .env
           
