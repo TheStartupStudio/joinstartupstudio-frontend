@@ -87,7 +87,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Choose folder by branch, S3 bucket, and CloudFront distribution ID
+      # Choose folder by branch, S3 bucket, and CloudFront distributiossn ID
       - name: Select Target Folder, Bucket, and CloudFront ID
         id: vars
         run: |
