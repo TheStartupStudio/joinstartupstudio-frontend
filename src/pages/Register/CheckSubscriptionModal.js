@@ -261,11 +261,11 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
         
                   <div className='align-self-start mt-5 mb-5 payment-section mx-auto'>
                     <h3 className='fs-21 fw-medium text-black text-center'>
-                      {selectedPlan === 'annual' ? 'Annual' : 'Monthly'} Subscription to The Startup Studio Powered by Learn to Start
+                      {selectedPlan === 'annual' ? 'Annual' : 'Monthly'} Subscription to StudioOS Powered by Learn to Start
                     </h3>
                     <div className='d-flex mt-5 justify-content-between payment-border'>
                       <p className='fs-15 text-black'>
-                        Full Access to the Startup Studio
+                        Full Access to the StudioOS
                       </p>
                       <span>${planDetails[selectedPlan]?.price || '0.00'}</span>
                     </div>
