@@ -210,7 +210,7 @@ const CheckoutForm = () => {
 const Pay = () => {
   const currentLanguage = useSelector((state) => state.lang.locale)
   const stripePromise = loadStripe(
-    'pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4',
+    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4',
     {
       locale: currentLanguage
     }
