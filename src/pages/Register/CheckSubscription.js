@@ -22,7 +22,10 @@ const isSubscriptionExempt = (value) =>
 // )
 
 
-const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+const stripePromise = loadStripe(
+  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ||
+    'pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4'
+)
 
 
 function CheckSubscription() {
