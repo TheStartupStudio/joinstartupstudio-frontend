@@ -32,7 +32,9 @@ export function canChooseClientInUI() {
   if (typeof window === 'undefined') return true
   const hostname = window.location.hostname
   if (hostname === 'localhost' || hostname === '127.0.0.1') return true
-  return getHostnameSubdomainLabel() === 'studio'
+  const sub = getHostnameSubdomainLabel()
+  // Allow client picker on the studio tenant and on local tss subdomains used for development
+  return sub === 'studio' || sub === 'tss-dev' || sub === 'tss'
 }
 
 /**
