@@ -14,6 +14,17 @@ export function getHostnameSubdomainLabel() {
 }
 
 /**
+ * Canonical client mapping for hostname-derived slugs.
+ */
+export function normalizeClientName(clientValue) {
+  if (clientValue == null) return clientValue
+  const normalized = String(clientValue).trim()
+  if (!normalized) return normalized
+  if (normalized.toLowerCase() === 'tss-dev') return 'LOCAL'
+  return normalized
+}
+
+/**
  * Client picker is only shown on localhost or the studio tenant subdomain.
  * Other subdomains (e.g. fma) send client derived from the hostname.
  */
@@ -21,7 +32,9 @@ export function canChooseClientInUI() {
   if (typeof window === 'undefined') return true
   const hostname = window.location.hostname
   if (hostname === 'localhost' || hostname === '127.0.0.1') return true
-  return getHostnameSubdomainLabel() === 'studio'
+  const sub = getHostnameSubdomainLabel()
+  // Allow client picker on the studio tenant and on local tss subdomains used for development
+  return sub === 'studio' || sub === 'tss-dev' || sub === 'tss'
 }
 
 /**
@@ -30,12 +43,12 @@ export function canChooseClientInUI() {
 export function getClientPayloadValue(selectedFromForm) {
   if (canChooseClientInUI()) {
     if (selectedFromForm != null && selectedFromForm !== '') {
-      return selectedFromForm
+      return normalizeClientName(selectedFromForm)
     }
     return 'all'
   }
   const slug = getHostnameSubdomainLabel()
-  return slug || 'all'
+  return normalizeClientName(slug) || 'all'
 }
 
 /**

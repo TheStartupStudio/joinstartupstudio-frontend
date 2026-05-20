@@ -17,7 +17,8 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
 const stripePromise = loadStripe(
-  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4'
+  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ||
+    'pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4'
 )
 
 const CARD_ELEMENT_OPTIONS = {

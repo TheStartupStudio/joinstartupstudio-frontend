@@ -18,6 +18,21 @@ const getApiPathSegment = (subdomain) => {
   return subdomain
 }
 
+/**
+ * Env-only API roots must be absolute (https://host/...). Values like
+ * "dev-api.example.com" are treated as paths on the current site, producing
+ * https://current-frontend/dev-api.example.com/...
+ */
+const normalizeEnvServerBaseUrl = (raw) => {
+  if (raw == null || typeof raw !== 'string') return raw
+  const trimmed = raw.trim()
+  if (!trimmed) return trimmed
+  const withScheme = /^https?:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`
+  return withScheme.endsWith('/') ? withScheme : `${withScheme}/`
+}
+
 const getBaseURL = () => {
   if (isProductionSubdomainHost()) {
     const subdomain = getSubdomain()
@@ -26,7 +41,7 @@ const getBaseURL = () => {
       return `https://api.joinstartupstudio.com/${segment}/`
     }
   }
-  return process.env.REACT_APP_SERVER_BASE_URL
+  return normalizeEnvServerBaseUrl(process.env.REACT_APP_SERVER_BASE_URL)
 }
 
 export default getBaseURL

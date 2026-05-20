@@ -5,11 +5,12 @@ import {
   saveAccessToken
 } from './tokenUtils'
 import getBaseURL from './getBaseURL'
+import { normalizeClientName } from './clientHostname'
 
 const getSubdomain = () => {
   const hostname = window.location.hostname
   const subdomain = hostname.split('.')[0]
-  return subdomain
+  return normalizeClientName(subdomain)
 }
 
 const axiosInstance = axios.create({
