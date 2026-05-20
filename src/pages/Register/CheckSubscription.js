@@ -12,9 +12,13 @@ import './index.css'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
-
-const isSubscriptionExempt = (value) =>
-  value === true || value === 'true' || value === 1 || value === '1'
+import {
+  getOrganizationType,
+  grantSubscriptionAccess,
+  getPostSubscriptionAccessPath,
+  hasSubscriptionAccess,
+  shouldSkipSubscriptionFlow
+} from '../../utils/subscriptionHelpers'
 
 
 // const stripePromise = loadStripe(
@@ -91,13 +95,11 @@ useEffect(() => {
       console.log('✅ Organization pricing response:', response.data)
 
       if (response.data.success) {
-        if (isSubscriptionExempt(response.data.subscriptionExempt)) {
-          if (history.location.pathname !== '/dashboard') {
-            toast.info('You have subscription access!', {
-              toastId: 'subscription-access',
-            })
-            history.push('/dashboard')
-          }
+        if (shouldSkipSubscriptionFlow(response.data)) {
+          grantSubscriptionAccess(getOrganizationType(response.data), user?.id)
+          history.replace(
+            getPostSubscriptionAccessPath(user, history.location.pathname)
+          )
           return
         }
 
@@ -169,20 +171,16 @@ useEffect(() => {
 
   useEffect(() => {
     if (user && user.id) {
-      if (
-        (user.subscription_status === 'active' && user.stripe_subscription_id) ||
-        isSubscriptionExempt(user.subscription_exempt)
-      ) {
-        if (history.location.pathname !== '/dashboard') {
-          toast.info(
-            isSubscriptionExempt(user.subscription_exempt)
-              ? 'You have subscription access!'
-              : 'You already have an active subscription!',
-            {
-              toastId: isSubscriptionExempt(user.subscription_exempt) ? 'subscription-access' : 'subscription-active',
-            }
-          )
-          history.push('/dashboard')
+      if (hasSubscriptionAccess(user)) {
+        grantSubscriptionAccess(getOrganizationType(user), user?.id)
+
+        const targetPath = getPostSubscriptionAccessPath(
+          user,
+          history.location.pathname
+        )
+
+        if (history.location.pathname !== targetPath) {
+          history.replace(targetPath)
         }
         return
       }
@@ -209,6 +207,8 @@ useEffect(() => {
     user?.subscription_status,
     user?.stripe_subscription_id,
     user?.subscription_exempt,
+    user?.University?.organizationType,
+    user?.University?.organization_type,
     user?.trial_used,
     user?.name,
     user?.email,

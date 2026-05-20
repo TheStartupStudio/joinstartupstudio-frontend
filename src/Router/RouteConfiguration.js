@@ -15,6 +15,10 @@ import CancelSubscription from '../pages/Register/CancelSubscription'
 import AuthSuccess from '../pages/Auth/Social-Login/AuthSuccess'
 import PrivacyPolicy from '../pages/PrivacyPolicy'
 import path from 'path-browserify'
+import {
+  hasSubscriptionAccess,
+  isSubscriptionExempt
+} from '../utils/subscriptionHelpers'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const TermsOfService = React.lazy(() => import('../pages/Terms/TermsOfService'))
@@ -647,13 +651,7 @@ export const redirects = [
       window.location.pathname !== '/subscription/success' &&
       window.location.pathname !== '/subscription/cancel' &&
       user?.user?.is_active === true &&
-      !user?.user?.stripe_subscription_id &&
-      !(
-        user?.user?.subscription_exempt === true ||
-        user?.user?.subscription_exempt === 'true' ||
-        user?.user?.subscription_exempt === 1 ||
-        user?.user?.subscription_exempt === '1'
-      )
+      !hasSubscriptionAccess(user)
   },
   {
     from: '*',
