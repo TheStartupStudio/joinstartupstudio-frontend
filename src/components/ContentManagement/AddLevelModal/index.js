@@ -7,6 +7,8 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import {
   attachGlobalIdToPayload,
   canChooseClientInUI,
+  fetchClientsConfig,
+  parseClientsConfigResponse,
   getClientAndGlobalBody,
   getClientPayloadValue,
   getHostnameSubdomainLabel
@@ -104,9 +106,9 @@ const AddLevelModal = ({ show, onHide, onSave, existingLevels = [], category = '
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await axiosInstance.get('/clients-config')
-        const clientsList = response?.data?.clients
-        if (Array.isArray(clientsList)) {
+        const response = await fetchClientsConfig(axiosInstance)
+        const clientsList = parseClientsConfigResponse(response)
+        if (clientsList.length > 0) {
           setClients(clientsList)
           setSelectedClient((prev) => prev || 'all')
         } else {

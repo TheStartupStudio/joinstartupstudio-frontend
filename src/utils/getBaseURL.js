@@ -33,12 +33,28 @@ const normalizeEnvServerBaseUrl = (raw) => {
   return withScheme.endsWith('/') ? withScheme : `${withScheme}/`
 }
 
+const ACADEMY_API_SEGMENT = 'academy'
+const PRODUCTION_API_ORIGIN = 'https://api.joinstartupstudio.com'
+
+/** Shared admin routes (e.g. clients-config) live under /academy/ for all tenants. */
+export const getAcademyApiBaseUrl = () => {
+  if (isProductionSubdomainHost()) {
+    return `${PRODUCTION_API_ORIGIN}/${ACADEMY_API_SEGMENT}/`
+  }
+  return normalizeEnvServerBaseUrl(process.env.REACT_APP_SERVER_BASE_URL)
+}
+
+export const getClientsConfigUrl = () => {
+  const base = getAcademyApiBaseUrl()
+  return base.endsWith('/') ? `${base}clients-config` : `${base}/clients-config`
+}
+
 const getBaseURL = () => {
   if (isProductionSubdomainHost()) {
     const subdomain = getSubdomain()
     if (subdomain && subdomain !== 'www' && subdomain !== 'api') {
       const segment = getApiPathSegment(subdomain)
-      return `https://api.joinstartupstudio.com/${segment}/`
+      return `${PRODUCTION_API_ORIGIN}/${segment}/`
     }
   }
   return normalizeEnvServerBaseUrl(process.env.REACT_APP_SERVER_BASE_URL)
