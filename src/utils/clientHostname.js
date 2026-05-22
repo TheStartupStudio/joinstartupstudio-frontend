@@ -1,3 +1,5 @@
+import { getClientsConfigUrl } from './getBaseURL'
+
 /**
  * First hostname label when the app is on a tenant subdomain
  * (e.g. fma.joinstudioos.com → "fma"). Null for localhost or bare host.
@@ -24,29 +26,37 @@ export function normalizeClientName(clientValue) {
   return normalized
 }
 
+const MULTI_CLIENT_DEFAULT_SUBDOMAINS = new Set(['studio', 'tss', 'tss-dev'])
+
 /**
- * Client picker is only shown on localhost or the studio tenant subdomain.
- * Other subdomains (e.g. fma) send client derived from the hostname.
+ * Client picker is available on localhost and any tenant subdomain
+ * (studio, fma, etc.). Bare hosts without a tenant label are excluded.
  */
 export function canChooseClientInUI() {
   if (typeof window === 'undefined') return true
   const hostname = window.location.hostname
   if (hostname === 'localhost' || hostname === '127.0.0.1') return true
+  return getHostnameSubdomainLabel() != null
+}
+
+/** Studio/dev hosts default API client to "all"; other tenants default to their slug. */
+export function usesAllClientsDefault() {
+  if (typeof window === 'undefined') return true
+  const hostname = window.location.hostname
+  if (hostname === 'localhost' || hostname === '127.0.0.1') return true
   const sub = getHostnameSubdomainLabel()
-  // Allow client picker on the studio tenant and on local tss subdomains used for development
-  return sub === 'studio' || sub === 'tss-dev' || sub === 'tss'
+  return sub == null || MULTI_CLIENT_DEFAULT_SUBDOMAINS.has(sub)
 }
 
 /**
- * Value for API `client` fields: manual selection when allowed; otherwise subdomain slug.
+ * Value for API `client` fields: manual selection when set; otherwise "all"
+ * on studio/dev hosts or the current tenant slug (e.g. fma).
  */
 export function getClientPayloadValue(selectedFromForm) {
-  if (canChooseClientInUI()) {
-    if (selectedFromForm != null && selectedFromForm !== '') {
-      return normalizeClientName(selectedFromForm)
-    }
-    return 'all'
+  if (selectedFromForm != null && selectedFromForm !== '') {
+    return normalizeClientName(selectedFromForm)
   }
+  if (usesAllClientsDefault()) return 'all'
   const slug = getHostnameSubdomainLabel()
   return normalizeClientName(slug) || 'all'
 }
@@ -76,4 +86,18 @@ export function getClientAndGlobalBody(selectedFromForm, recordGlobalId) {
     { client: getClientPayloadValue(selectedFromForm) },
     recordGlobalId
   )
+}
+
+/**
+ * clients-config is served from the shared /academy/ API on production.
+ * Tenant subdomains (fma, etc.) use their own API root for other routes.
+ */
+export async function fetchClientsConfig(axiosInstance) {
+  return axiosInstance.get(getClientsConfigUrl())
+}
+
+/** @returns {string[]} */
+export function parseClientsConfigResponse(response) {
+  const clientsList = response?.data?.clients
+  return Array.isArray(clientsList) ? clientsList : []
 }

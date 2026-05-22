@@ -7,9 +7,11 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import {
   attachGlobalIdToPayload,
   canChooseClientInUI,
+  fetchClientsConfig,
   getClientAndGlobalBody,
   getClientPayloadValue,
-  getHostnameSubdomainLabel
+  getHostnameSubdomainLabel,
+  parseClientsConfigResponse
 } from '../../../utils/clientHostname'
 import AcademyBtn from '../../../components/AcademyBtn'
 import { useHistory } from 'react-router-dom'
@@ -163,9 +165,8 @@ const AddJournalModal = ({
         if (!show || !canChooseClientInUI()) return
         const fetchClients = async () => {
             try {
-                const response = await axiosInstance.get('/clients-config')
-                const clientsList = response?.data?.clients
-                setClients(Array.isArray(clientsList) ? clientsList : [])
+                const response = await fetchClientsConfig(axiosInstance)
+                setClients(parseClientsConfigResponse(response))
             } catch (error) {
                 console.error('Error fetching clients:', error)
                 setClients([])

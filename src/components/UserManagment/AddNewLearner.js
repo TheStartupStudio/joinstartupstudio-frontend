@@ -15,9 +15,11 @@ import { useSelector } from 'react-redux'
 import {
   attachGlobalIdToPayload,
   canChooseClientInUI,
+  fetchClientsConfig,
   getClientAndGlobalBody,
   getClientPayloadValue,
-  getHostnameSubdomainLabel
+  getHostnameSubdomainLabel,
+  parseClientsConfigResponse
 } from '../../utils/clientHostname'
 
 const ROLE_STUDENT = 1
@@ -302,18 +304,14 @@ const AddNewLearner = ({
     if (isAdmin && canChooseClientInUI()) {
       const fetchClients = async () => {
         try {
-          const response = await axiosInstance.get('/clients-config')
-          const clientsData = response?.data?.clients
-          if (Array.isArray(clientsData)) {
-            setClients(
-              clientsData.map((client) => ({
-                id: client,
-                name: client
-              }))
-            )
-          } else {
-            setClients([])
-          }
+          const response = await fetchClientsConfig(axiosInstance)
+          const clientsData = parseClientsConfigResponse(response)
+          setClients(
+            clientsData.map((client) => ({
+              id: client,
+              name: client
+            }))
+          )
         } catch (error) {
           console.error('Error fetching clients:', error)
           setClients([])

@@ -14,9 +14,11 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import {
   attachGlobalIdToPayload,
   canChooseClientInUI,
+  fetchClientsConfig,
   getClientAndGlobalBody,
   getClientPayloadValue,
-  getHostnameSubdomainLabel
+  getHostnameSubdomainLabel,
+  parseClientsConfigResponse
 } from '../../../utils/clientHostname'
 import './index.css'
 
@@ -180,13 +182,9 @@ const AddTaskModal = ({
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await axiosInstance.get('/clients-config')
-        const clientsList = response?.data?.clients
-        if (Array.isArray(clientsList)) {
-          setClients(clientsList)
-        } else {
-          setClients([])
-        }
+        const response = await fetchClientsConfig(axiosInstance)
+        const clientsList = parseClientsConfigResponse(response)
+        setClients(clientsList)
       } catch (error) {
         console.error('Error fetching clients:', error)
         setClients([])
