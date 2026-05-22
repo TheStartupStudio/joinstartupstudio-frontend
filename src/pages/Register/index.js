@@ -38,6 +38,10 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 import CustomBirthDateCalendar from '../../components/CustomBirthDateCalendar'
+import {
+  grantSubscriptionAccess,
+  shouldSkipSubscriptionFlow
+} from '../../utils/subscriptionHelpers'
 
 
 // Initialize Stripe
@@ -192,6 +196,45 @@ function RegistrationForm() {
     setShowCalendar(false)
   }
 
+  const proceedToSubscriptionOrRegister = async (registrationData) => {
+    try {
+      const orgResponse = await axiosInstance.post('/auth/check-organization-pricing', {
+        email: registrationData.email
+      })
+
+      if (orgResponse.data?.success && shouldSkipSubscriptionFlow(orgResponse.data)) {
+        grantSubscriptionAccess(
+          orgResponse.data.organizationType ||
+            orgResponse.data.organization_type ||
+            orgResponse.data.universityType ||
+            orgResponse.data.university_type,
+          null
+        )
+
+        const response = await axiosInstance.post('/auth/register-with-subscription', {
+          ...registrationData
+        })
+
+        if (response.data.success) {
+          sessionStorage.removeItem('registrationData')
+
+          if (response.data.tokens) {
+            localStorage.setItem('accessToken', response.data.tokens.accessToken)
+            localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
+          }
+
+          toast.success('Registration successful!')
+          history.push('/dashboard')
+          return
+        }
+      }
+    } catch (error) {
+      console.error('Stand-alone registration check failed:', error)
+    }
+
+    setShowCheckSubscription(true)
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
@@ -289,7 +332,7 @@ function RegistrationForm() {
       })
 
       setIsLoading(false)
-      setShowCheckSubscription(true)
+      await proceedToSubscriptionOrRegister(registrationData)
       
     } catch (error) {
       setIsLoading(false)
@@ -411,8 +454,10 @@ function RegistrationForm() {
         })
 
         e.complete('success')
-        
-        setShowCheckSubscription(true)
+
+        setIsLoading(true)
+        await proceedToSubscriptionOrRegister(registrationData)
+        setIsLoading(false)
       } catch (error) {
         e.complete('fail')
         console.error('Payment Request error:', error)

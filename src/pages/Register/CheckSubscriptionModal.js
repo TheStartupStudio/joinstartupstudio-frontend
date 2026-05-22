@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Modal } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -8,6 +8,10 @@ import courseLogo from '../../assets/images/academy-icons/svg/AIE Logo 3x.png'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { trackSubscribe, trackSignUp } from '../../utils/FacebookPixel'
 import StartupStudioLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
+import {
+  grantSubscriptionAccess,
+  shouldSkipSubscriptionFlow
+} from '../../utils/subscriptionHelpers'
 
 const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -35,6 +39,53 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
 
   const planDetails = organizationPricing || displayPlans
 
+  const handleSubscription = useCallback(async () => {
+    if (!registrationData || !registrationData.paymentMethodId) {
+      toast.error('Registration data not found. Please try again.')
+      onHide()
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const response = await axiosInstance.post('/auth/register-with-subscription', {
+        ...registrationData,
+        selectedPlan: selectedPlan
+      })
+
+      if (response.data.success) {
+        sessionStorage.removeItem('registrationData')
+
+        if (response.data.tokens) {
+          localStorage.setItem('accessToken', response.data.tokens.accessToken)
+          localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
+        }
+
+        const subscriptionValue = parseFloat(displayPlans[selectedPlan].price)
+
+        trackSignUp('email')
+        trackSubscribe({
+          value: subscriptionValue,
+          currency: 'USD',
+          predictedLifetimeValue: selectedPlan === 'monthly' ? 119.88 : 99.0
+        })
+
+        toast.success('Registration and subscription successful!')
+
+        onHide()
+        history.push('/dashboard')
+      }
+    } catch (error) {
+      console.error('Subscription error:', error)
+      const errorMessage =
+        error.response?.data?.error || 'Something went wrong during registration'
+      toast.error(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [registrationData, selectedPlan, onHide, history, displayPlans])
+
   // Fetch organization pricing based on email
   useEffect(() => {
     const fetchOrganizationPricing = async () => {
@@ -53,6 +104,18 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
         })
 
         console.log('✅ Organization pricing response:', response.data)
+
+        if (response.data.success && shouldSkipSubscriptionFlow(response.data)) {
+          grantSubscriptionAccess(
+            response.data.organizationType ||
+              response.data.organization_type ||
+              response.data.universityType ||
+              response.data.university_type,
+            null
+          )
+          await handleSubscription()
+          return
+        }
 
         if (response.data.success && response.data.hasOrganizationPricing && response.data.pricing) {
           console.log('✅ Organization pricing found:', response.data.pricing)
@@ -120,57 +183,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
     if (show) {
       fetchOrganizationPricing()
     }
-  }, [registrationData, show])
-
-  const handleSubscription = async () => {
-    if (!registrationData || !registrationData.paymentMethodId) {
-      toast.error('Registration data not found. Please try again.')
-      onHide()
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      // Don't send priceId - let backend fetch from org 27
-      const response = await axiosInstance.post('/auth/register-with-subscription', {
-        ...registrationData,
-        selectedPlan: selectedPlan
-        // priceId is OPTIONAL - backend will fetch it from org 27
-      })
-
-      if (response.data.success) {
-        sessionStorage.removeItem('registrationData')
-        
-        if (response.data.tokens) {
-          localStorage.setItem('accessToken', response.data.tokens.accessToken)
-          localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
-        }
-
-        const subscriptionValue = parseFloat(displayPlans[selectedPlan].price)
-        
-        trackSignUp('email')
-        trackSubscribe({
-          value: subscriptionValue,
-          currency: 'USD',
-          predictedLifetimeValue: selectedPlan === 'monthly' ? 119.88 : 99.00
-        })
-
-        toast.success('Registration and subscription successful!')
-        
-        onHide()
-        history.push('/dashboard') 
-      }
-    } catch (error) {
-      console.error('Subscription error:', error)
-      const errorMessage = error.response?.data?.error || 
-                          'Something went wrong during registration'
-      toast.error(errorMessage)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
+  }, [registrationData, show, handleSubscription])
 
   return (
     <Modal

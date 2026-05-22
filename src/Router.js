@@ -1,4 +1,5 @@
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import Layout from './pages/Layout'
 import { connect, useSelector } from 'react-redux'
 import { IntlProvider } from 'react-intl'
@@ -24,6 +25,12 @@ import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
 import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
 import SubscriptionSuccess from './pages/Register/SubscriptionSuccess'
 import { filterRoutesByAccess, getDefaultDashboard } from './utils/routeHelpers'
+import {
+  clearSubscriptionAccessCache,
+  hasCachedSubscriptionAccess,
+  hasSubscriptionAccess,
+  SUBSCRIPTION_ACCESS_GRANTED_EVENT
+} from './utils/subscriptionHelpers'
 import AdminDashboardPage from './pages/AdminDashboard'
 import TermsOfService from './pages/Terms/TermsOfService'
 import ForumGuidelines from './pages/Terms/ForumGuidelines'
@@ -34,20 +41,41 @@ function Router(props) {
   const { isAuthenticated, user, authModal } = useSelector(
     (state) => state.user
   )
+  const location = useLocation()
+  const [subscriptionAccessRevision, setSubscriptionAccessRevision] = useState(0)
 
-  const isSubscriptionExempt = (value) =>
-    value === true || value === 'true' || value === 1 || value === '1'
+  useEffect(() => {
+    const refreshSubscriptionRoutes = () => {
+      setSubscriptionAccessRevision((revision) => revision + 1)
+    }
+
+    window.addEventListener(
+      SUBSCRIPTION_ACCESS_GRANTED_EVENT,
+      refreshSubscriptionRoutes
+    )
+
+    return () => {
+      window.removeEventListener(
+        SUBSCRIPTION_ACCESS_GRANTED_EVENT,
+        refreshSubscriptionRoutes
+      )
+    }
+  }, [])
+
+  useEffect(() => {
+    const userId = user?.user?.id
+    if (userId && !hasCachedSubscriptionAccess(userId)) {
+      clearSubscriptionAccessCache()
+    }
+
+    if (userId && hasCachedSubscriptionAccess(userId)) {
+      setSubscriptionAccessRevision((revision) => revision + 1)
+    }
+  }, [location.pathname, user?.user?.id])
 
   const hasActiveSubscription = () => {
-    if (!user?.user) return false
-    
-    const subscriptionStatus = user.user.subscription_status
-    const stripeSubscriptionId = user.user.stripe_subscription_id
-    const subscriptionExempt = user.user.subscription_exempt 
-    
-    return isSubscriptionExempt(subscriptionExempt) ||
-           subscriptionStatus === 'active' || 
-           (subscriptionStatus === 'canceling' && stripeSubscriptionId)
+    void subscriptionAccessRevision
+    return hasSubscriptionAccess(user)
   }
 
   const roleRoutes = () => {
