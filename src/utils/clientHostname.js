@@ -28,15 +28,25 @@ export function normalizeClientName(clientValue) {
 
 const MULTI_CLIENT_DEFAULT_SUBDOMAINS = new Set(['studio', 'tss', 'tss-dev'])
 
+/** Subdomains where admins can pick a client from clients-config (e.g. fma vs academy). */
+const MULTI_CLIENT_CHOICE_SUBDOMAINS = new Set([
+  'studio',
+  'academy',
+  'tss',
+  'tss-dev'
+])
+
 /**
- * Client picker is available on localhost and any tenant subdomain
- * (studio, fma, etc.). Bare hosts without a tenant label are excluded.
+ * Client picker is available on localhost and shared admin hosts (studio, academy).
+ * Tenant-specific hosts (e.g. fma) lock the client to that subdomain.
  */
 export function canChooseClientInUI() {
   if (typeof window === 'undefined') return true
   const hostname = window.location.hostname
   if (hostname === 'localhost' || hostname === '127.0.0.1') return true
-  return getHostnameSubdomainLabel() != null
+  const sub = getHostnameSubdomainLabel()
+  if (sub == null) return false
+  return MULTI_CLIENT_CHOICE_SUBDOMAINS.has(sub)
 }
 
 /** Studio/dev hosts default API client to "all"; other tenants default to their slug. */

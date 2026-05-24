@@ -19,6 +19,7 @@ import {
   getClientAndGlobalBody,
   getClientPayloadValue,
   getHostnameSubdomainLabel,
+  normalizeClientName,
   parseClientsConfigResponse
 } from '../../utils/clientHostname'
 
@@ -348,6 +349,16 @@ const AddNewLearner = ({
     }
   }, [isAdmin])
 
+  useEffect(() => {
+    if (!show || !isAdmin || canChooseClientInUI()) return
+    const slug = getHostnameSubdomainLabel()
+    if (!slug) return
+    const lockedClient = normalizeClientName(slug) || slug
+    setFormData((prev) =>
+      prev.domain === lockedClient ? prev : { ...prev, domain: lockedClient }
+    )
+  }, [show, isAdmin])
+
   const fetchLearnerData = async (userId) => {
     try {
       const response = await axiosInstance.get(
@@ -576,7 +587,11 @@ const AddNewLearner = ({
               return `${year}-${month}-${day}`
             })()
           : null,
-        client: formData.domain || null,
+        client: canChooseClientInUI()
+          ? formData.domain || null
+          : normalizeClientName(getHostnameSubdomainLabel()) ||
+            formData.domain ||
+            null,
         universityId: getClientPayloadValue(formData.organization),
         activeStatus: isUserActive ? 1 : 0,
         role_id: formData.roleId === ROLE_INSTRUCTOR ? ROLE_STUDENT : formData.roleId,
@@ -771,15 +786,23 @@ const AddNewLearner = ({
   const isEditMode = mode === 'edit'
 
   const subdomainClientSlug = getHostnameSubdomainLabel()
+  const canChooseClient = canChooseClientInUI()
+  const lockedClientSlug =
+    subdomainClientSlug &&
+    normalizeClientName(subdomainClientSlug)
   const selectedOrganization = isAdmin
-    ? canChooseClientInUI()
+    ? canChooseClient
       ? organizations.find((org) => org.id === formData.organization)
       : subdomainClientSlug
         ? { id: subdomainClientSlug, name: subdomainClientSlug }
         : null
     : currentUser?.University
 
-  const selectedDomain = clients.find((c) => c.id === formData.domain)
+  const selectedDomain = canChooseClient
+    ? clients.find((c) => c.id === formData.domain)
+    : lockedClientSlug
+      ? { id: lockedClientSlug, name: lockedClientSlug }
+      : null
 
   const selectedRole = roleOptions.find((role) => role.id === formData.roleId)
 
@@ -1309,51 +1332,67 @@ const AddNewLearner = ({
               <span>Select Clients</span>
             </div>
 
-            <div className='custom-dropdown-learner'>
-              <div
-                className='dropdown-trigger-learner'
-                onClick={() =>
-                  !loading &&
-                  setShowDomainDropdown(!showDomainDropdown)
-                }
-              >
-                <span
-                  className={
-                    formData.domain ? 'selected-value' : 'placeholder-value'
+            {canChooseClient ? (
+              <div className='custom-dropdown-learner'>
+                <div
+                  className='dropdown-trigger-learner'
+                  onClick={() =>
+                    !loading && setShowDomainDropdown(!showDomainDropdown)
                   }
                 >
-                  {selectedDomain ? selectedDomain.name : 'Select Clients'}
-                </span>
-                <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
-                  <path
-                    d='M1 1.5L6 6.5L11 1.5'
-                    stroke='#666'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </svg>
-              </div>
-              {showDomainDropdown && (
-                <div className='dropdown-menu-learner'>
-                  {clients.length > 0 ? (
-                    clients.map((client) => (
-                      <div
-                        key={client.id}
-                        className='dropdown-item-learner'
-                        onClick={() => handleDropdownSelect('domain', client.id)}
-                      >
-                        {client.name}
-                      </div>
-                    ))
-                  ) : (
-                    <div className='dropdown-item-learner'>
-                      No domains available
-                    </div>
-                  )}
+                  <span
+                    className={
+                      formData.domain ? 'selected-value' : 'placeholder-value'
+                    }
+                  >
+                    {selectedDomain ? selectedDomain.name : 'Select Clients'}
+                  </span>
+                  <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
+                    <path
+                      d='M1 1.5L6 6.5L11 1.5'
+                      stroke='#666'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
                 </div>
-              )}
-            </div>
+                {showDomainDropdown && (
+                  <div className='dropdown-menu-learner'>
+                    {clients.length > 0 ? (
+                      clients.map((client) => (
+                        <div
+                          key={client.id}
+                          className='dropdown-item-learner'
+                          onClick={() =>
+                            handleDropdownSelect('domain', client.id)
+                          }
+                        >
+                          {client.name}
+                        </div>
+                      ))
+                    ) : (
+                      <div className='dropdown-item-learner'>
+                        No domains available
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className='input-group'>
+                <input
+                  type='text'
+                  value={lockedClientSlug || formData.domain || ''}
+                  className='form-input'
+                  placeholder=' '
+                  disabled={true}
+                  readOnly
+                  style={{ cursor: 'not-allowed', opacity: 0.85 }}
+                />
+                <label className='input-label'>Client</label>
+              </div>
+            )}
 
             {/* Organizational Details Section */}
             <div className='section-header'>
@@ -1363,7 +1402,7 @@ const AddNewLearner = ({
 
             {/* Select Organization */}
             {isAdmin ? (
-              canChooseClientInUI() ? (
+              canChooseClient ? (
                 <div className='custom-dropdown-learner'>
                   <div
                     className='dropdown-trigger-learner'
