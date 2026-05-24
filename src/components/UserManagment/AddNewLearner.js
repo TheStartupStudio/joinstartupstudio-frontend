@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import {
   attachGlobalIdToPayload,
   canChooseClientInUI,
+  canChooseClientsListInUI,
   fetchClientsConfig,
   getClientAndGlobalBody,
   getClientPayloadValue,
@@ -302,7 +303,9 @@ const AddNewLearner = ({
   }, [mode, learnerData, show, isClient, currentUser])
 
   useEffect(() => {
-    if (isAdmin && canChooseClientInUI()) {
+    if (!isAdmin) return
+
+    if (canChooseClientsListInUI()) {
       const fetchClients = async () => {
         try {
           const response = await fetchClientsConfig(axiosInstance)
@@ -319,6 +322,11 @@ const AddNewLearner = ({
         }
       }
       fetchClients()
+    } else {
+      setClients([])
+    }
+
+    if (canChooseClientInUI()) {
       const fetchOrganizations = async () => {
         try {
           const response = await axiosInstance.get('/super-admin/organizations', {
@@ -343,14 +351,13 @@ const AddNewLearner = ({
         }
       }
       fetchOrganizations()
-    } else if (isAdmin) {
+    } else {
       setOrganizations([])
-      setClients([])
     }
   }, [isAdmin])
 
   useEffect(() => {
-    if (!show || !isAdmin || canChooseClientInUI()) return
+    if (!show || !isAdmin || canChooseClientsListInUI()) return
     const slug = getHostnameSubdomainLabel()
     if (!slug) return
     const lockedClient = normalizeClientName(slug) || slug
@@ -587,7 +594,7 @@ const AddNewLearner = ({
               return `${year}-${month}-${day}`
             })()
           : null,
-        client: canChooseClientInUI()
+        client: canChooseClientsListInUI()
           ? formData.domain || null
           : normalizeClientName(getHostnameSubdomainLabel()) ||
             formData.domain ||
@@ -786,19 +793,19 @@ const AddNewLearner = ({
   const isEditMode = mode === 'edit'
 
   const subdomainClientSlug = getHostnameSubdomainLabel()
-  const canChooseClient = canChooseClientInUI()
+  const canChooseClientsList = canChooseClientsListInUI()
   const lockedClientSlug =
     subdomainClientSlug &&
     normalizeClientName(subdomainClientSlug)
   const selectedOrganization = isAdmin
-    ? canChooseClient
+    ? canChooseClientInUI()
       ? organizations.find((org) => org.id === formData.organization)
       : subdomainClientSlug
         ? { id: subdomainClientSlug, name: subdomainClientSlug }
         : null
     : currentUser?.University
 
-  const selectedDomain = canChooseClient
+  const selectedDomain = canChooseClientsList
     ? clients.find((c) => c.id === formData.domain)
     : lockedClientSlug
       ? { id: lockedClientSlug, name: lockedClientSlug }
@@ -1332,7 +1339,7 @@ const AddNewLearner = ({
               <span>Select Clients</span>
             </div>
 
-            {canChooseClient ? (
+            {canChooseClientsList ? (
               <div className='custom-dropdown-learner'>
                 <div
                   className='dropdown-trigger-learner'
@@ -1402,7 +1409,7 @@ const AddNewLearner = ({
 
             {/* Select Organization */}
             {isAdmin ? (
-              canChooseClient ? (
+              canChooseClientInUI() ? (
                 <div className='custom-dropdown-learner'>
                   <div
                     className='dropdown-trigger-learner'
