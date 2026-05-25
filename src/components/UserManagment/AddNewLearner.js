@@ -76,6 +76,8 @@ const AddNewLearner = ({
 
   const [organizations, setOrganizations] = useState([])
   const [clients, setClients] = useState([])
+  const [clientsLoading, setClientsLoading] = useState(false)
+  const [organizationsLoading, setOrganizationsLoading] = useState(false)
 
   const countryOptions = [
     'Afghanistan',
@@ -307,6 +309,8 @@ const AddNewLearner = ({
 
     if (canChooseClientsListInUI()) {
       const fetchClients = async () => {
+        setClientsLoading(true)
+        setShowDomainDropdown(false)
         try {
           const response = await fetchClientsConfig(axiosInstance)
           const clientsData = parseClientsConfigResponse(response)
@@ -319,42 +323,71 @@ const AddNewLearner = ({
         } catch (error) {
           console.error('Error fetching clients:', error)
           setClients([])
+        } finally {
+          setClientsLoading(false)
         }
       }
       fetchClients()
     } else {
       setClients([])
+      setClientsLoading(false)
     }
 
-    if (canChooseClientInUI()) {
-      const fetchOrganizations = async () => {
-        try {
-          const response = await axiosInstance.get('/super-admin/organizations', {
-            params: { page: 1, limit: 10 }
-          })
-          const organizationsData = response?.data?.data
-          if (Array.isArray(organizationsData)) {
-            setOrganizations(
-              organizationsData.map((organization) => ({
-                id: organization.id,
-                name: organization.name,
-                domain: organization.domain,
-                domainUrl: organization.domainUrl
-              }))
-            )
-          } else {
-            setOrganizations([])
-          }
-        } catch (error) {
-          console.error('Error fetching organizations:', error)
+  }, [isAdmin])
+
+  const getUniversitiesClientParam = () => {
+    if (canChooseClientsListInUI()) {
+      const domain = formData.domain?.trim()
+      return domain ? normalizeClientName(domain) : null
+    }
+    const slug = getHostnameSubdomainLabel()
+    return slug ? normalizeClientName(slug) || slug : null
+  }
+
+  useEffect(() => {
+    if (!isAdmin || !canChooseClientInUI()) {
+      setOrganizations([])
+      return
+    }
+
+    const client = getUniversitiesClientParam()
+    if (!client) {
+      setOrganizations([])
+      setOrganizationsLoading(false)
+      setShowOrganizationDropdown(false)
+      return
+    }
+
+    const fetchUniversities = async () => {
+      setOrganizationsLoading(true)
+      setShowOrganizationDropdown(false)
+      try {
+        const response = await axiosInstance.get('/super-admin/universities', {
+          params: { client }
+        })
+        const universitiesData = response?.data?.data
+        if (Array.isArray(universitiesData)) {
+          setOrganizations(
+            universitiesData.map((university) => ({
+              id: university.id,
+              name: university.name,
+              domain: university.domain,
+              domainUrl: university.domainUrl
+            }))
+          )
+        } else {
           setOrganizations([])
         }
+      } catch (error) {
+        console.error('Error fetching universities:', error)
+        setOrganizations([])
+      } finally {
+        setOrganizationsLoading(false)
       }
-      fetchOrganizations()
-    } else {
-      setOrganizations([])
     }
-  }, [isAdmin])
+
+    fetchUniversities()
+  }, [isAdmin, formData.domain, show])
 
   useEffect(() => {
     if (!show || !isAdmin || canChooseClientsListInUI()) return
@@ -475,6 +508,12 @@ const AddNewLearner = ({
         ...prev,
         roleId: value,
         isInstructor: value === ROLE_INSTRUCTOR
+      }))
+    } else if (field === 'domain') {
+      setFormData((prev) => ({
+        ...prev,
+        domain: value,
+        organization: ''
       }))
     } else {
       setFormData((prev) => ({
@@ -797,6 +836,14 @@ const AddNewLearner = ({
   const lockedClientSlug =
     subdomainClientSlug &&
     normalizeClientName(subdomainClientSlug)
+  const universitiesClient = canChooseClientsList
+    ? formData.domain
+      ? normalizeClientName(formData.domain)
+      : null
+    : lockedClientSlug
+  const organizationPickerReady =
+    Boolean(universitiesClient) && !organizationsLoading
+  const clientsPickerReady = !clientsLoading
   const selectedOrganization = isAdmin
     ? canChooseClientInUI()
       ? organizations.find((org) => org.id === formData.organization)
@@ -1344,7 +1391,14 @@ const AddNewLearner = ({
                 <div
                   className='dropdown-trigger-learner'
                   onClick={() =>
-                    !loading && setShowDomainDropdown(!showDomainDropdown)
+                    !loading &&
+                    clientsPickerReady &&
+                    setShowDomainDropdown(!showDomainDropdown)
+                  }
+                  style={
+                    !clientsPickerReady
+                      ? { cursor: 'not-allowed', opacity: 0.7 }
+                      : undefined
                   }
                 >
                   <span
@@ -1352,7 +1406,11 @@ const AddNewLearner = ({
                       formData.domain ? 'selected-value' : 'placeholder-value'
                     }
                   >
-                    {selectedDomain ? selectedDomain.name : 'Select Clients'}
+                    {clientsLoading
+                      ? 'Loading clients...'
+                      : selectedDomain
+                        ? selectedDomain.name
+                        : 'Select Clients'}
                   </span>
                   <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
                     <path
@@ -1364,7 +1422,7 @@ const AddNewLearner = ({
                     />
                   </svg>
                 </div>
-                {showDomainDropdown && (
+                {showDomainDropdown && clientsPickerReady && (
                   <div className='dropdown-menu-learner'>
                     {clients.length > 0 ? (
                       clients.map((client) => (
@@ -1415,7 +1473,13 @@ const AddNewLearner = ({
                     className='dropdown-trigger-learner'
                     onClick={() =>
                       !loading &&
+                      organizationPickerReady &&
                       setShowOrganizationDropdown(!showOrganizationDropdown)
+                    }
+                    style={
+                      !universitiesClient || organizationsLoading
+                        ? { cursor: 'not-allowed', opacity: 0.7 }
+                        : undefined
                     }
                   >
                     <span
@@ -1427,7 +1491,11 @@ const AddNewLearner = ({
                     >
                       {selectedOrganization
                         ? selectedOrganization.name
-                        : 'Select Organization'}
+                        : organizationsLoading
+                          ? 'Loading organizations...'
+                          : universitiesClient
+                            ? 'Select Organization'
+                            : 'Select a client first'}
                     </span>
                     <svg width='12' height='8' viewBox='0 0 12 8' fill='none'>
                       <path
@@ -1439,19 +1507,28 @@ const AddNewLearner = ({
                       />
                     </svg>
                   </div>
-                  {showOrganizationDropdown && (
+                  {showOrganizationDropdown && organizationPickerReady && (
                     <div className='dropdown-menu-learner'>
-                      {organizations.map((organization) => (
-                        <div
-                          key={organization.id}
-                          className='dropdown-item-learner'
-                          onClick={() =>
-                            handleDropdownSelect('organization', organization.id)
-                          }
-                        >
-                          {organization.name}
+                      {organizations.length > 0 ? (
+                        organizations.map((organization) => (
+                          <div
+                            key={organization.id}
+                            className='dropdown-item-learner'
+                            onClick={() =>
+                              handleDropdownSelect(
+                                'organization',
+                                organization.id
+                              )
+                            }
+                          >
+                            {organization.name}
+                          </div>
+                        ))
+                      ) : (
+                        <div className='dropdown-item-learner'>
+                          No organizations available
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
                 </div>
