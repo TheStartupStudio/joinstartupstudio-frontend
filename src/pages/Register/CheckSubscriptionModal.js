@@ -231,7 +231,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                       >
                         <h5>Monthly Plan</h5>
                         <p className='price'>${planDetails.monthly.price}/month</p>
-                        <p className='commitment'>12-months commitment</p>
+                        {/* <p className='commitment'>12-months commitment</p> */}
                       </div>
                     )}
 
@@ -243,7 +243,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                       >
                         <h5>6-Month Plan</h5>
                         <p className='price'>${planDetails['6-month'].price}/6 months</p>
-                        <p className='commitment'>{planDetails['6-month'].commitment}</p>
+                        {/* <p className='commitment'>{planDetails['6-month'].commitment}</p> */}
                       </div>
                     )}
 
@@ -255,7 +255,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                       >
                         <h5>Builders Plan</h5>
                         <p className='price'>${planDetails.annual.price}/year</p>
-                        <p className='commitment'>Get 2 months free when you pay for the entire year</p>
+                        {/* <p className='commitment'>Get 2 months free when you pay for the entire year</p> */}
                       </div>
                     )}
 
@@ -267,7 +267,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                       >
                         <h5>One-Time Payment</h5>
                         <p className='price'>${planDetails['one-time'].price}</p>
-                        <p className='commitment'>{planDetails['one-time'].commitment}</p>
+                        {/* <p className='commitment'>{planDetails['one-time'].commitment}</p> */}
                       </div>
                     )}
                   </div>

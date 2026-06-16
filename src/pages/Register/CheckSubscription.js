@@ -394,7 +394,7 @@ useEffect(() => {
               >
                 <h5>Monthly Plan</h5>
                 <p className='price'>${planDetails.monthly.price}/month</p>
-                <p className='commitment'>{planDetails.monthly.commitment}</p>
+                {/* <p className='commitment'>{planDetails.monthly.commitment}</p> */}
               </div>
             )}
 
@@ -406,7 +406,7 @@ useEffect(() => {
               >
                 <h5>6-Month Plan</h5>
                 <p className='price'>${planDetails['6-month'].price}/6 months</p>
-                <p className='commitment'>{planDetails['6-month'].commitment}</p>
+                {/* <p className='commitment'>{planDetails['6-month'].commitment}</p> */}
                 
               </div>
             )}
@@ -419,7 +419,7 @@ useEffect(() => {
               >
                 <h5>Builders Plan</h5>
                 <p className='price'>${planDetails.annual.price}/year</p>
-                <p className='commitment'>{planDetails.annual.commitment}</p>
+                {/* <p className='commitment'>{planDetails.annual.commitment}</p> */}
                 
               </div>
             )}
@@ -432,7 +432,7 @@ useEffect(() => {
               >
                 <h5>One-Time Payment</h5>
                 <p className='price'>${planDetails['one-time'].price}</p>
-                <p className='commitment'>{planDetails['one-time'].commitment}</p>
+                {/* <p className='commitment'>{planDetails['one-time'].commitment}</p> */}
                 
               </div>
             )}
