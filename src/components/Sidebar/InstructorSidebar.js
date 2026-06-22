@@ -139,7 +139,7 @@ const SIDEBAR_MENU_ITEMS = [
     title: 'Studio Forum',
     srcImage: ForumIcon,
     to: '/startup-forum',
-    roles: [3, 1],
+    roles: [3, 2, 1],
     requiresUniversitySetting: 'hasForumAccess',
     className: (pathname) =>
       pathname.includes('startup-forum') ? 'active' : ''
