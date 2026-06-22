@@ -1,14 +1,24 @@
 import React, { useState, useReducer } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import { FormattedMessage } from 'react-intl'
 import { validatePassword } from '../../../utils/helpers'
 import IntlMessages from '../../../utils/IntlMessages'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { userLogin } from '../../../redux'
+
+const getDashboardRoute = (roleId) => {
+  if (roleId === 2 || roleId === 3) {
+    return '/admin-dashboard'
+  }
+  return '/dashboard'
+}
 
 const PasswordChangeRequired = () => {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const [loading, setLoading] = useState(false)
-  const old_password = useSelector((state) => state.user.oldPassword)
 
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
@@ -33,8 +43,6 @@ const PasswordChangeRequired = () => {
 
     if (userInput.new_password === '') {
       toast.error(<IntlMessages id='reset.password_field_empty' />)
-    } else if (userInput.new_password === old_password) {
-      toast.error('New password cannot be the same as your old password!')
     } else if (userInput.new_password !== userInput.confirm_new_password) {
       toast.error(<IntlMessages id='reset.password_not_match' />)
     } else if (userInput.new_password && userInput.new_password.length < 8) {
@@ -43,39 +51,46 @@ const PasswordChangeRequired = () => {
       toast.error(<IntlMessages id='reset.password_conform_policy' />)
     } else {
       setLoading(true)
-      await axiosInstance
-        .post('/auth/update-password', { password: userInput.new_password })
-        .then(async () => {
-          await axiosInstance
-            .put(`/users/lastlogin`)
-            .then(() => {
-              toast.success(
-                <IntlMessages id='alert.my_account.password_change_success' />
-              )
-              setLoading(false)
-              setTimeout(() => {
-                window.location.href = `/`
-              }, 1500)
-            })
-            .catch((e) => {
-              toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-              setLoading(false)
-            })
+
+      try {
+        await axiosInstance.post('/auth/update-password', {
+          password: userInput.new_password
         })
-        .catch((err) => {
-          setLoading(false)
-          if (
-            err.code === 'ExpiredCodeException' ||
-            err.code === 'LimitExceededException'
+        await axiosInstance.put('/users/lastlogin')
+
+        const loginResult = await dispatch(userLogin(userInput.new_password))
+
+        if (!loginResult || loginResult === 'passwordResetRequired') {
+          toast.error(
+            'Password saved. Please sign in with your new password.'
           )
-            toast.error(err.message)
-          else
-            toast.error(
-              err.response.data.message || (
-                <IntlMessages id='alerts.something_went_wrong' />
-              )
+          history.push('/')
+          return
+        }
+
+        toast.success(
+          <IntlMessages id='alert.my_account.password_change_success' />
+        )
+
+        const storedUser = JSON.parse(localStorage.getItem('user'))
+        const roleId = storedUser?.user?.role_id
+        history.push(getDashboardRoute(roleId))
+      } catch (err) {
+        if (
+          err.code === 'ExpiredCodeException' ||
+          err.code === 'LimitExceededException'
+        ) {
+          toast.error(err.message)
+        } else {
+          toast.error(
+            err.response?.data?.message || (
+              <IntlMessages id='alerts.something_went_wrong' />
             )
-        })
+          )
+        }
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
