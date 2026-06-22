@@ -32,10 +32,12 @@ const DataTable = ({
   selectedItems = [],
   loading = false,
   onFilterChange,
+  onSortChange,
   invoiceArchiveView = false
 }) => {
   const [openFilterDropdown, setOpenFilterDropdown] = useState(null)
   const [activeFilters, setActiveFilters] = useState({})
+  const [sortConfig, setSortConfig] = useState(null)
   const [openMoreActionsDropdown, setOpenMoreActionsDropdown] = useState(null)
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 })
   const [draggedRow, setDraggedRow] = useState(null)
@@ -50,6 +52,13 @@ const DataTable = ({
 
   const { user } = useSelector((state) => state.user.user)
   const isInstructor = user?.role_id === 2
+
+  useEffect(() => {
+    setActiveFilters({})
+    setSortConfig(null)
+    setDateFilters({})
+    setOpenFilterDropdown(null)
+  }, [activeTab])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -105,13 +114,121 @@ const DataTable = ({
     }
   }, [selectedItems, data])
 
-  const filteredData = data.filter((item) => {
+  const getLevelOrder = (level) => {
+    const match = String(level || '').match(/L?(\d+)/i)
+    return match ? parseInt(match[1], 10) : 0
+  }
+
+  const matchesColumnFilter = (item, columnKey, filterValue) => {
+    if (!filterValue) return true
+
+    if (
+      typeof filterValue === 'object' &&
+      (filterValue.from != null || filterValue.to != null)
+    ) {
+      const itemDate = item[columnKey] ? new Date(item[columnKey]) : null
+      if (!itemDate || Number.isNaN(itemDate.getTime())) return false
+
+      if (filterValue.from) {
+        const fromDate = new Date(filterValue.from)
+        fromDate.setHours(0, 0, 0, 0)
+        if (itemDate < fromDate) return false
+      }
+
+      if (filterValue.to) {
+        const toDate = new Date(filterValue.to)
+        toDate.setHours(23, 59, 59, 999)
+        if (itemDate > toDate) return false
+      }
+
+      return true
+    }
+
+    if (columnKey === 'name') {
+      if (activeTab === 'Organizations') {
+        const isActive = item.isActive !== undefined ? item.isActive : true
+        return filterValue === 'Active' ? isActive : !isActive
+      }
+      const isActive =
+        item.activeStatus !== undefined ? item.activeStatus : true
+      return filterValue === 'Active' ? isActive : !isActive
+    }
+
+    if (columnKey === 'level') {
+      return item.level === filterValue
+    }
+
+    if (columnKey === 'status' && activeTab === 'Content') {
+      const isPublished = item.status === 'published'
+      return filterValue === 'Published' ? isPublished : !isPublished
+    }
+
+    const itemValue = item[columnKey]
+    if (itemValue == null) return false
+    return (
+      String(itemValue).toLowerCase() === String(filterValue).toLowerCase()
+    )
+  }
+
+  const sortRows = (rows, config) => {
+    if (!config?.key) return rows
+
+    const { key, direction } = config
+    const multiplier = direction === 'asc' ? 1 : -1
+
+    return [...rows].sort((a, b) => {
+      if (key === 'level') {
+        return (
+          (getLevelOrder(a.level) - getLevelOrder(b.level)) * multiplier
+        )
+      }
+
+      if (key === 'name') {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+        return (dateA - dateB) * multiplier
+      }
+
+      if (
+        ['last_active', 'trial_start', 'activation_date', 'created_at'].includes(
+          key
+        )
+      ) {
+        const dateA = a[key] ? new Date(a[key]).getTime() : 0
+        const dateB = b[key] ? new Date(b[key]).getTime() : 0
+        return (dateA - dateB) * multiplier
+      }
+
+      const valA = a[key] ?? ''
+      const valB = b[key] ?? ''
+
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        return (valA - valB) * multiplier
+      }
+
+      return String(valA).localeCompare(String(valB)) * multiplier
+    })
+  }
+
+  let filteredData = data.filter((item) => {
     if (!searchQuery) return true
 
     return Object.values(item).some((value) =>
       value?.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   })
+
+  if (!onFilterChange) {
+    filteredData = filteredData.filter((item) =>
+      Object.entries(activeFilters).every(([columnKey, filterValue]) =>
+        matchesColumnFilter(item, columnKey, filterValue)
+      )
+    )
+  }
+
+  if (!onSortChange) {
+    filteredData = sortRows(filteredData, sortConfig)
+  }
 
   const handleActionClick = (actionType, item) => {
     if (onRowAction) {
@@ -1715,7 +1832,44 @@ const DataTable = ({
     return []
   }
 
+  const getDefaultSortDirection = (columnKey) => {
+    if (columnKey === 'level') return 'asc'
+    return 'desc'
+  }
+
+  const isColumnFiltered = (columnKey) => {
+    const value = activeFilters[columnKey]
+    if (value == null) return false
+    if (typeof value === 'object') {
+      return !!(value.from || value.to)
+    }
+    return true
+  }
+
+  const handleSortClick = (columnKey) => {
+    setOpenFilterDropdown(null)
+    setOpenMoreActionsDropdown(null)
+
+    const newConfig =
+      sortConfig?.key === columnKey
+        ? {
+            key: columnKey,
+            direction: sortConfig.direction === 'desc' ? 'asc' : 'desc'
+          }
+        : {
+            key: columnKey,
+            direction: getDefaultSortDirection(columnKey)
+          }
+
+    setSortConfig(newConfig)
+
+    if (onSortChange) {
+      onSortChange(newConfig)
+    }
+  }
+
   const handleFilterClick = (columnKey, columnIndex, event) => {
+    event.stopPropagation()
     const dropdownKey = `${columnKey}-${columnIndex}`
 
     const rect = event.currentTarget.getBoundingClientRect()
@@ -1731,10 +1885,19 @@ const DataTable = ({
   }
 
   const handleFilterOptionClick = (columnKey, option) => {
-    const newFilters = {
-      ...activeFilters,
-      [columnKey]: option
+    const newFilters = { ...activeFilters }
+
+    if (option === 'None') {
+      delete newFilters[columnKey]
+      if (dateFilters[columnKey]) {
+        const newDateFilters = { ...dateFilters }
+        delete newDateFilters[columnKey]
+        setDateFilters(newDateFilters)
+      }
+    } else {
+      newFilters[columnKey] = option
     }
+
     setActiveFilters(newFilters)
     setOpenFilterDropdown(null)
 
@@ -2054,7 +2217,17 @@ const DataTable = ({
                   {column.title}
                   {column.sortable && (
                     <div className='header-icons'>
-                      <img src={graph} alt='graph' className='header-icon' />
+                      <img
+                        src={graph}
+                        alt='sort'
+                        className={`header-icon${
+                          sortConfig?.key === column.key
+                            ? ' header-icon--active'
+                            : ''
+                        }`}
+                        onClick={() => handleSortClick(column.key)}
+                        style={{ cursor: 'pointer' }}
+                      />
                     </div>
                   )}
                   {column.filterable && (
@@ -2069,8 +2242,14 @@ const DataTable = ({
                       <img
                         src={filter}
                         alt='filter'
-                        className='header-icon'
-                        onClick={(e) => handleFilterClick(column.key, index, e)}
+                        className={`header-icon${
+                          isColumnFiltered(column.key)
+                            ? ' header-icon--active'
+                            : ''
+                        }`}
+                        onClick={(e) =>
+                          handleFilterClick(column.key, index, e)
+                        }
                         style={{ cursor: 'pointer' }}
                       />
 
@@ -2095,7 +2274,7 @@ const DataTable = ({
                         >
                           {getFilterOptions(column.key) === null
                             ? renderDateFilter(column.key)
-                            : getFilterOptions(column.key).map(
+                            : ['None', ...getFilterOptions(column.key)].map(
                                 (option, optionIndex) => (
                                   <div
                                     key={optionIndex}
