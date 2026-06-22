@@ -109,6 +109,11 @@ const UserManagement = () => {
   const [selectedOrganizations, setSelectedOrganizations] = useState([])
   const [searchFilter, setSearchFilter] = useState('all')
   const [showFilterDropdown, setShowFilterDropdown] = useState(false)
+  const [tableFilters, setTableFilters] = useState({})
+  const [sortConfig, setSortConfig] = useState({
+    key: 'name',
+    direction: 'desc'
+  })
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -118,7 +123,7 @@ const UserManagement = () => {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  // Reset to page 1 when search or filter changes
+  // Reset to page 1 when search or role filter changes
   useEffect(() => {
     setCurrentPage(1)
   }, [debouncedSearchQuery, searchFilter])
@@ -173,16 +178,39 @@ const UserManagement = () => {
     }
   }
 
-  const fetchUsers = async (page = 1, search = '', role = 'all') => {
+  const fetchUsers = async (
+    page = 1,
+    search = '',
+    role = 'all',
+    filters = {},
+    sort = sortConfig
+  ) => {
     setUsersLoading(true)
     try {
+      const params = {
+        page,
+        limit: 10,
+        search: search || undefined,
+        role: role !== 'all' ? role : undefined
+      }
+
+      if (filters.level) {
+        params.level_filter = filters.level.replace(/^L/i, '')
+      }
+
+      if (filters.name === 'Active') {
+        params.activeStatus = 'true'
+      } else if (filters.name === 'Inactive') {
+        params.activeStatus = 'false'
+      }
+
+      if (sort?.key) {
+        params.sortBy = sort.key
+        params.sortOrder = sort.direction
+      }
+
       const response = await axiosInstance.get('/super-admin/users', {
-        params: {
-          page,
-          limit: 10,
-          search: search || undefined,
-          role: role !== 'all' ? role : undefined
-        }
+        params
       })
 
       if (response.data.success) {
@@ -196,7 +224,8 @@ const UserManagement = () => {
           total_paid: Math.round(user.total_paid),
           last_active: user.last_active,
           trial_start: user.trial_start,
-          activation_date: user.member_since,
+          activation_date: user.activation_date,
+          created_at: user.created_at,
           activeStatus: user.activeStatus
         }))
 
@@ -219,11 +248,24 @@ const UserManagement = () => {
 
   useEffect(() => {
     if (activeTab === 'Users') {
-      fetchUsers(currentPage, debouncedSearchQuery, searchFilter)
+      fetchUsers(
+        currentPage,
+        debouncedSearchQuery,
+        searchFilter,
+        tableFilters,
+        sortConfig
+      )
     } else if (activeTab === 'Organizations') {
       fetchOrganizations(currentPage, debouncedSearchQuery)
     }
-  }, [activeTab, currentPage, debouncedSearchQuery, searchFilter])
+  }, [
+    activeTab,
+    currentPage,
+    debouncedSearchQuery,
+    searchFilter,
+    tableFilters,
+    sortConfig
+  ])
 
 
   const organizationsColumns = useMemo(() => [
@@ -329,6 +371,16 @@ const UserManagement = () => {
       )
     }
   ], [])
+
+  const handleTableFilterChange = useCallback((newFilters) => {
+    setTableFilters(newFilters || {})
+    setCurrentPage(1)
+  }, [])
+
+  const handleTableSortChange = useCallback((newSort) => {
+    setSortConfig(newSort)
+    setCurrentPage(1)
+  }, [])
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
@@ -525,7 +577,7 @@ const UserManagement = () => {
   const handleLearnerModalSuccess = () => {
     setShowAddLearnerModal(false)
     if (activeTab === 'Users') {
-      fetchUsers(currentPage, debouncedSearchQuery)
+      fetchUsers(currentPage, debouncedSearchQuery, searchFilter, tableFilters, sortConfig)
     }
   }
 
@@ -820,7 +872,7 @@ const UserManagement = () => {
           toast.success(`${userIds.length} user(s) deleted successfully!`)
         }
         setSelectedUsers([])
-        fetchUsers(currentPage, debouncedSearchQuery)
+        fetchUsers(currentPage, debouncedSearchQuery, searchFilter, tableFilters, sortConfig)
       }
       
       setShowDeletePopup(false)
@@ -872,7 +924,7 @@ const UserManagement = () => {
       }
 
       setSelectedUsers([])
-      fetchUsers(currentPage, debouncedSearchQuery, searchFilter)
+      fetchUsers(currentPage, debouncedSearchQuery, searchFilter, tableFilters, sortConfig)
 
       setShowActivatePopup(false)
       setSelectedItems([])
@@ -936,7 +988,7 @@ const UserManagement = () => {
           toast.success(`${userIds.length} user(s) deactivated successfully!`)
         }
         setSelectedUsers([])
-        fetchUsers(currentPage, debouncedSearchQuery)
+        fetchUsers(currentPage, debouncedSearchQuery, searchFilter, tableFilters, sortConfig)
       }
 
       setShowDeactivatePopup(false)
@@ -953,6 +1005,8 @@ const UserManagement = () => {
   useEffect(() => {
     setSelectedUsers([])
     setSelectedOrganizations([])
+    setTableFilters({})
+    setSortConfig({ key: 'name', direction: 'desc' })
   }, [activeTab])
 
   const addDropdownRef = useRef(null)
@@ -1266,6 +1320,12 @@ const UserManagement = () => {
             loading={isLoading}
             onSelectionChange={handleSelectionChange}
             selectedItems={activeTab === 'Users' ? selectedUsers : selectedOrganizations}
+            onFilterChange={
+              activeTab === 'Users' ? handleTableFilterChange : undefined
+            }
+            onSortChange={
+              activeTab === 'Users' ? handleTableSortChange : undefined
+            }
           />
         </div>
 
@@ -1465,7 +1525,7 @@ const UserManagement = () => {
         onSuccess={() => {
           setShowBulkAddLearnersModal(false)
           toast.success('Learners added successfully!')
-          fetchUsers(currentPage, debouncedSearchQuery)
+          fetchUsers(currentPage, debouncedSearchQuery, searchFilter, tableFilters, sortConfig)
         }}
         mode="learners"
       />
