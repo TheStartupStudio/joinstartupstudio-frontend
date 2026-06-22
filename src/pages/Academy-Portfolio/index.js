@@ -100,7 +100,7 @@ function AcademyPortfolio() {
                       <img
                         src={AcademyLogo}
                         alt='course-logo'
-                        style={{ width: '80px', objectFit: 'contain' }}
+                        style={{ width: '60px', objectFit: 'contain' }}
                       />
                     </a>
               )}
