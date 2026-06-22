@@ -14,6 +14,8 @@ import { toast } from 'react-toastify'
 import AcademyBtn from '../../components/AcademyBtn'
 import StartupStudioLogo from './../../../public/academy-logo.png'
 import NotificationBell from '../../components/NotificationBell'
+import StudioOs from '../../assets/images/academy-icons/StudioOs.png'
+
 
 function AcademyPortfolio() {
   const [activeTab, setActiveTab] = useState(0)
@@ -95,7 +97,7 @@ function AcademyPortfolio() {
                {!user && (
               <a href='https://joinstudioos.com/'>
                       <img
-                        src={StartupStudioLogo}
+                        src={StudioOs}
                         alt='course-logo'
                         style={{ width: '80px', objectFit: 'contain' }}
                       />
