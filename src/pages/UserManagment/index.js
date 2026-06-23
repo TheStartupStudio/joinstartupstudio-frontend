@@ -195,7 +195,7 @@ const UserManagement = () => {
       }
 
       if (filters.level) {
-        params.level_filter = filters.level.replace(/^L/i, '')
+        params.level_filter = filters.level
       }
 
       if (filters.name === 'Active') {
@@ -1036,9 +1036,11 @@ const UserManagement = () => {
   }, [])
 
   const handlePageChange = (newPage) => {
-    const maxPages = totalPages
-    if (newPage >= 1 && newPage <= maxPages && !isLoading && newPage !== currentPage) {
-      setCurrentPage(newPage)
+    const maxPages = Math.max(totalPages, 1)
+    const targetPage = Math.min(Math.max(newPage, 1), maxPages)
+
+    if (targetPage !== currentPage) {
+      setCurrentPage(targetPage)
     }
   }
 
@@ -1050,14 +1052,14 @@ const UserManagement = () => {
   const currentPagination = activeTab === 'Users' ? usersPagination : organizationsPagination
   const totalPages = Math.max(currentPagination?.totalPages || 1, 1)
 
-  // Reset current page if it exceeds total pages after search/filter changes
+  // Keep current page in range when result set shrinks (e.g. after filters)
   useEffect(() => {
     const pagination = activeTab === 'Users' ? usersPagination : organizationsPagination
-    const maxPages = pagination?.totalPages || 1
-    if (currentPage > maxPages && maxPages >= 1 && !isLoading) {
-      setCurrentPage(Math.max(1, maxPages))
+    const maxPages = Math.max(pagination?.totalPages || 1, 1)
+    if (currentPage > maxPages) {
+      setCurrentPage(maxPages)
     }
-  }, [usersPagination?.totalPages, organizationsPagination?.totalPages, activeTab, isLoading])
+  }, [usersPagination?.totalPages, organizationsPagination?.totalPages, activeTab, currentPage])
 
   const handleSelectionChange = (selectedItems) => {
     if (activeTab === 'Users') {
