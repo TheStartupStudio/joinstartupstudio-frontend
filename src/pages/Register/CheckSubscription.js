@@ -19,6 +19,11 @@ import {
   hasSubscriptionAccess,
   shouldSkipSubscriptionFlow
 } from '../../utils/subscriptionHelpers'
+import {
+  DEFAULT_TRIAL_SETTINGS,
+  formatTrialLabel,
+  getTrialSettingsFromUniversity
+} from '../../utils/trialSettings'
 
 
 // const stripePromise = loadStripe(
@@ -40,6 +45,7 @@ function CheckSubscription() {
   const [userTrialUsed, setUserTrialUsed] = useState(false)
   const [organizationPricing, setOrganizationPricing] = useState(null) // ✅ New state
   const [loadingPricing, setLoadingPricing] = useState(true) // ✅ New state
+  const [trialSettings, setTrialSettings] = useState(DEFAULT_TRIAL_SETTINGS)
   const dispatch = useDispatch()
   const history = useHistory()
   
@@ -95,6 +101,10 @@ useEffect(() => {
       console.log('✅ Organization pricing response:', response.data)
 
       if (response.data.success) {
+        if (response.data.trialSettings) {
+          setTrialSettings(response.data.trialSettings)
+        }
+
         if (shouldSkipSubscriptionFlow(response.data)) {
           grantSubscriptionAccess(getOrganizationType(response.data), user?.id)
           history.replace(
@@ -154,12 +164,18 @@ useEffect(() => {
         } else {
           console.log('ℹ️ Using default pricing')
           setOrganizationPricing(null)
+          if (response.data.trialSettings) {
+            setTrialSettings(response.data.trialSettings)
+          }
         }
       }
     } catch (error) {
       console.error('❌ Error fetching organization pricing:', error)
       console.error('Error response:', error.response?.data)
       setOrganizationPricing(null)
+      if (user?.University) {
+        setTrialSettings(getTrialSettingsFromUniversity(user.University))
+      }
     } finally {
       setLoadingPricing(false)
     }
@@ -204,6 +220,7 @@ useEffect(() => {
   }, [
     history,
     user?.id,
+    user?.University,
     user?.subscription_status,
     user?.stripe_subscription_id,
     user?.subscription_exempt,
@@ -213,6 +230,16 @@ useEffect(() => {
     user?.name,
     user?.email,
   ])
+
+  useEffect(() => {
+    if (user?.University) {
+      setTrialSettings(getTrialSettingsFromUniversity(user.University))
+    }
+  }, [user?.University?.trialEnabled, user?.University?.trialPeriodDays])
+
+  const trialApplies =
+    isReturningUser && !userTrialUsed && trialSettings.trialEnabled
+  const trialLabel = formatTrialLabel(trialSettings.trialPeriodDays)
 
   const handleClick = async () => {
     if (!registrationData) {
@@ -450,11 +477,11 @@ useEffect(() => {
             </div>
             <div className='d-flex justify-content-between mt-3'>
               <p className='text-black mb-0 fw-bold'>
-                {isReturningUser && !userTrialUsed ? 'Trial Period' : 'Total Amount Due Today'}
+                {trialApplies ? 'Trial Period' : 'Total Amount Due Today'}
               </p>
               <span className="text-black fw-bold">
-                {isReturningUser && !userTrialUsed 
-                  ? '$0 (14-day trial)' 
+                {trialApplies
+                  ? `$0 (${trialLabel})`
                   : `$${planDetails[selectedPlan]?.total || '0.00'}`}
               </span>
             </div>

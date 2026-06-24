@@ -419,6 +419,36 @@ backdrop-filter: blur(60.064998626708984px);
   background: rgba(81, 199, 223, 0.08);
 }
 
+.trial-period-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.trial-period-input {
+  width: 120px;
+  min-width: 120px;
+  margin-bottom: 0;
+}
+
+.trial-period-input.disabled {
+  opacity: 0.5;
+}
+
+.trial-period-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.trial-settings-help {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
 .organization-type-option-header {
   display: flex;
   justify-content: space-between;

@@ -1,5 +1,5 @@
-tbody{
-  overflow-x: auto;
+tbody {
+  overflow: visible;
 }
 
 .data-table-container {
@@ -258,6 +258,8 @@ text-transform: uppercase;
   font-family: Montserrat;
   font-size: 15px;
   font-style: normal;
+  overflow: visible;
+  position: relative;
 }
 
 .action-buttons {
@@ -288,10 +290,10 @@ text-transform: uppercase;
   color: #6b7280;
 }
 
-/* Dropdown positioning - ensure it appears on top */
+/* Dropdown positioning - fixed so it escapes table overflow/stacking */
 .more-actions-dropdown-menu {
-  z-index: 9999 !important;
-  position: absolute !important;
+  position: fixed !important;
+  z-index: 10000 !important;
 }
 
 .filter-dropdown-menu {
