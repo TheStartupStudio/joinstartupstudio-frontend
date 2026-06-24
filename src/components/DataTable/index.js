@@ -401,16 +401,30 @@ const DataTable = ({
   }
 
   const handleMoreActionsClick = (itemId, event) => {
+    event.stopPropagation()
     const rect = event.currentTarget.getBoundingClientRect()
     setDropdownPosition({
-      top: rect.top,
-      left: rect.left
+      top: rect.bottom + 4,
+      left: rect.right
     })
     setOpenMoreActionsDropdown(
       openMoreActionsDropdown === itemId ? null : itemId
     )
     setOpenFilterDropdown(null)
   }
+
+  const getMoreActionsMenuStyle = () => ({
+    position: 'fixed',
+    top: dropdownPosition.top,
+    left: dropdownPosition.left,
+    transform: 'translateX(-100%)',
+    background: 'white',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    zIndex: 10000,
+    minWidth: '200px',
+    display: 'block'
+  })
 
   const handleMoreActionOptionClick = (action, item) => {
     handleActionClick(action, item)
@@ -640,18 +654,7 @@ const DataTable = ({
             {openMoreActionsDropdown === rowKey && (
               <div
                 className='more-actions-dropdown-menu'
-                style={{
-                  position: 'absolute !important',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '4px',
-                  background: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  zIndex: 9999,
-                  minWidth: '200px',
-                  display: 'block'
-                }}
+                style={getMoreActionsMenuStyle()}
               >
                 <div
                   className='more-actions-dropdown-item'
@@ -863,18 +866,7 @@ const DataTable = ({
             {openMoreActionsDropdown === rowKey && (
               <div
                 className='more-actions-dropdown-menu'
-                style={{
-                  position: 'absolute !important',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '4px',
-                  background: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  zIndex: 9999,
-                  minWidth: '200px',
-                  display: 'block'
-                }}
+                style={getMoreActionsMenuStyle()}
               >
                 {/* ✅ Export Invoice as PDF - First Option */}
                 <div
@@ -1167,18 +1159,7 @@ const DataTable = ({
             {openMoreActionsDropdown === rowKey && (
               <div
                 className='more-actions-dropdown-menu'
-                style={{
-                  position: 'absolute !important',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '4px',
-                  background: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  zIndex: 9999,
-                  minWidth: '200px',
-                  display: 'block'
-                }}
+                style={getMoreActionsMenuStyle()}
               >
                 <div
                   className='more-actions-dropdown-item'
@@ -1438,18 +1419,7 @@ const DataTable = ({
             {openMoreActionsDropdown === rowKey && (
               <div
                 className='more-actions-dropdown-menu'
-                style={{
-                  position: 'absolute !important',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '4px',
-                  background: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  zIndex: 9999,
-                  minWidth: '200px',
-                  display: 'block'
-                }}
+                style={getMoreActionsMenuStyle()}
               >
                 {getMoreActionsOptions(item).map((option, optionIndex) => (
                   <div
@@ -1750,18 +1720,7 @@ const DataTable = ({
             {openMoreActionsDropdown === rowKey && (
               <div
                 className='more-actions-dropdown-menu'
-                style={{
-                  position: 'absolute !important',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '4px',
-                  background: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                  zIndex: 9999,
-                  minWidth: '200px',
-                  display: 'block'
-                }}
+                style={getMoreActionsMenuStyle()}
               >
                 {getMoreActionsOptions(item).map((option, optionIndex) => (
                   <div

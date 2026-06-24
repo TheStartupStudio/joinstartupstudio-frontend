@@ -51,7 +51,11 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
         amount: '',
         frequency: 'monthly'
       }
-    ]
+    ],
+    trialSettings: {
+      trialEnabled: true,
+      trialPeriodDays: 14
+    }
   })
 
   const frequencyOptions = [
@@ -106,7 +110,11 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
               },
               learnerPricing: orgData.learnerPricing?.length > 0 
                 ? orgData.learnerPricing 
-                : [{ amount: '', frequency: 'monthly' }]
+                : [{ amount: '', frequency: 'monthly' }],
+              trialSettings: orgData.trialSettings || {
+                trialEnabled: true,
+                trialPeriodDays: 14
+              }
             })
             
             setOriginalPricing({
@@ -147,7 +155,11 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
               amount: '',
               frequency: 'monthly'
             }
-          ]
+          ],
+          trialSettings: {
+            trialEnabled: true,
+            trialPeriodDays: 14
+          }
         })
         setOriginalPricing({
           organizationType: '',
@@ -176,6 +188,27 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
       courseAccess: {
         ...prev.courseAccess,
         [course]: !prev.courseAccess[course]
+      }
+    }))
+  }
+
+  const handleTrialEnabledChange = () => {
+    setFormData(prev => ({
+      ...prev,
+      trialSettings: {
+        ...prev.trialSettings,
+        trialEnabled: !prev.trialSettings.trialEnabled
+      }
+    }))
+  }
+
+  const handleTrialPeriodDaysChange = (value) => {
+    const parsed = parseInt(value, 10)
+    setFormData(prev => ({
+      ...prev,
+      trialSettings: {
+        ...prev.trialSettings,
+        trialPeriodDays: Number.isFinite(parsed) && parsed >= 0 ? parsed : 0
       }
     }))
   }
@@ -346,6 +379,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             ? { amount: '', frequency: formData.organizationPricing.frequency || 'monthly' }
             : formData.organizationPricing,
         learnerPricing: formData.learnerPricing,
+        trialSettings: formData.trialSettings,
         applyToCurrentUsers
       }
 
@@ -697,6 +731,79 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                         )}
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <div className="section-header">
+                    <img src={spark} alt="Spark Icon" />
+                    <span>Free Trial</span>
+                  </div>
+
+                  <div className="course-access-toggles">
+                    <div className="toggle-item">
+                      <div className="toggle-label-container">
+                        <span className="toggle-label">Enable free trial for new learners</span>
+                        {isReadOnly && (
+                          <div className="course-access-indicator">
+                            {formData.trialSettings.trialEnabled ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                <circle cx="5.5" cy="5.5" r="5.5" fill="#99CC33"/>
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                <circle cx="5.5" cy="5.5" r="5.5" fill="#AEAEAE"/>
+                              </svg>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {!isReadOnly && (
+                        <label className="switch">
+                          <input
+                            type="checkbox"
+                            checked={formData.trialSettings.trialEnabled}
+                            onChange={handleTrialEnabledChange}
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      )}
+                    </div>
+
+                    <div className="trial-period-row">
+                      <span className="toggle-label">Trial period (days)</span>
+                      {isReadOnly ? (
+                        <span className="trial-period-value">
+                          {formData.trialSettings.trialEnabled
+                            ? formData.trialSettings.trialPeriodDays
+                            : 'Disabled'}
+                        </span>
+                      ) : (
+                        <div
+                          className={`input-group trial-period-input ${!formData.trialSettings.trialEnabled ? 'disabled' : ''}`}
+                          onClick={() => formData.trialSettings.trialEnabled && handleInputFocus('trialPeriodDays')}
+                        >
+                          <input
+                            type="number"
+                            min="0"
+                            max="90"
+                            value={formData.trialSettings.trialPeriodDays}
+                            onChange={(e) => handleTrialPeriodDaysChange(e.target.value)}
+                            className="form-input"
+                            placeholder=" "
+                            id="trialPeriodDays"
+                            disabled={!formData.trialSettings.trialEnabled || isReadOnly}
+                          />
+                          <label className="input-label" htmlFor="trialPeriodDays">Days</label>
+                        </div>
+                      )}
+                    </div>
+
+                    <p className="trial-settings-help">
+                      {formData.trialSettings.trialEnabled
+                        ? `New learners at this organization receive a ${formData.trialSettings.trialPeriodDays}-day free trial before billing begins.`
+                        : 'New learners will be charged immediately when they subscribe — no free trial.'}
+                    </p>
                   </div>
                 </div>
 

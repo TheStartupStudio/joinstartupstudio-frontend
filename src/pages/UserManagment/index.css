@@ -236,7 +236,7 @@ padding: 4px;
 .user-management-container .table-container{
   /* background-color: white; */
   position: relative;
-    z-index: 0;
+  overflow: visible;
 }
 
 .organization-details {
@@ -311,6 +311,13 @@ padding: 4px;
   padding: 10px;
   background: #ffffff;
   border-top: 1px solid #f3f4f6;
+  position: relative;
+  z-index: 2;
+}
+
+.user-management-container > img.position-absolute {
+  pointer-events: none;
+  z-index: 0;
 }
 
 .pagination-btn {
@@ -326,9 +333,14 @@ padding: 4px;
   color: #6b7280;
 }
 
-.pagination-btn:hover {
+.pagination-btn:hover:not(:disabled) {
   background: #f9fafb;
   border-color: #9ca3af;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .pagination-info {

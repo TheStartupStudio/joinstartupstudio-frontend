@@ -12,12 +12,17 @@ import {
   grantSubscriptionAccess,
   shouldSkipSubscriptionFlow
 } from '../../utils/subscriptionHelpers'
+import {
+  DEFAULT_TRIAL_SETTINGS,
+  formatTrialLabel
+} from '../../utils/trialSettings'
 
 const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState('monthly')
   const [organizationPricing, setOrganizationPricing] = useState(null)
   const [loadingPricing, setLoadingPricing] = useState(true)
+  const [trialSettings, setTrialSettings] = useState(DEFAULT_TRIAL_SETTINGS)
   const history = useHistory()
 
   const displayPlans = {
@@ -38,6 +43,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   }
 
   const planDetails = organizationPricing || displayPlans
+  const trialLabel = formatTrialLabel(trialSettings.trialPeriodDays)
 
   const handleSubscription = useCallback(async () => {
     if (!registrationData || !registrationData.paymentMethodId) {
@@ -104,6 +110,10 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
         })
 
         console.log('✅ Organization pricing response:', response.data)
+
+        if (response.data.trialSettings) {
+          setTrialSettings(response.data.trialSettings)
+        }
 
         if (response.data.success && shouldSkipSubscriptionFlow(response.data)) {
           grantSubscriptionAccess(
@@ -283,8 +293,14 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
                       <span>${planDetails[selectedPlan]?.price || '0.00'}</span>
                     </div>
                     <div className='d-flex justify-content-between mt-3'>
-                      <p className='text-black mb-0 fw-bold'>Trial Period</p>
-                      <span className="text-black fw-bold">$0 (14-day trial)</span>
+                      <p className='text-black mb-0 fw-bold'>
+                        {trialSettings.trialEnabled ? 'Trial Period' : 'Total Amount Due Today'}
+                      </p>
+                      <span className="text-black fw-bold">
+                        {trialSettings.trialEnabled
+                          ? `$0 (${trialLabel})`
+                          : `$${planDetails[selectedPlan]?.total || '0.00'}`}
+                      </span>
                     </div>
                   </div>
         
