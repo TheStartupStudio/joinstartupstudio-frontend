@@ -20,6 +20,7 @@ import taskLessonReducer from './taskLessons/reducer'
 import backButtonReducer from './backButtonReducer'
 import sidebarReducer from './sidebar/Reducer'
 import trialTimerReducer from './trialTimer/reducer'
+import studioChallengeReducer from './studioChallenge/reducer'
 import adminDashboardReducer from './adminDashboard/reducer'
 import organizationBrandingReducer from './organizationBranding/Reducer'
 
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   backButton: backButtonReducer,
   sidebar: sidebarReducer,
   trialTimer: trialTimerReducer,
+  studioChallenge: studioChallengeReducer,
   adminDashboard: adminDashboardReducer,
   organizationBranding: organizationBrandingReducer
 

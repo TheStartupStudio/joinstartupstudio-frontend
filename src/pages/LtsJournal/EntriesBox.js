@@ -88,7 +88,7 @@ const EntriesBox = (props) => {
 
       toast.success('Reflection deleted successfully');
       
-      await dispatch(fetchLtsCoursefinishedContent());
+      await dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }));
 
     } catch (error) {
       console.error('Delete reflection error:', error);

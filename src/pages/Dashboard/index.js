@@ -7,6 +7,7 @@ import AcademyLogo from '../../assets/images/Startup Studio Logo v1x1200.png'
 
 import profilePic from '../../assets/images/academy-icons/profile.jpeg'
 import CourseProgress from '../../components/CourseProgress/CourseProgress'
+import CourseProgressInitializer from '../../components/CourseProgress/CourseProgressInitializer'
 import UserDetails from '../../components/UserDetails/UserDetails'
 import useImpersonation from '../../hooks/useImpersonation'
 import { changeSidebarState } from '../../redux'
@@ -19,7 +20,7 @@ import {
 import IntlMessages from '../../utils/IntlMessages'
 import AcademyBtn from '../../components/AcademyBtn'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
-import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
+import { fetchCourseProgressData } from '../../redux/course/Actions'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions'
@@ -31,6 +32,8 @@ import UpcomingEventsCalendar from '../../components/UpcomingEventsCalendar'
 import ForumSection from '../../components/ForumSection'
 import LeaderBoard from '../../components/LeaderBoard'
 import StudioBuilderChallenge from '../../components/StudioBuilderChallenge/StudioBuilderChallenge'
+import StudioBuilderChallengeInitializer from '../../components/StudioBuilderChallenge/StudioBuilderChallengeInitializer'
+import { fetchChallengeProgressStart } from '../../redux/studioChallenge/Actions'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -52,7 +55,8 @@ function Dashboard() {
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
-    dispatch(fetchLtsCoursefinishedContent())
+    dispatch(fetchCourseProgressData())
+    dispatch(fetchChallengeProgressStart())
     dispatch(changeSidebarState(false))
   }, [dispatch])
 
@@ -182,6 +186,8 @@ function Dashboard() {
       <div className='row'>
         {/* Trial Countdown Banner */}
         <TrialTimerInitializer />
+        <StudioBuilderChallengeInitializer />
+        <CourseProgressInitializer />
         {isTrialActive && trialTimeRemaining && (
           <div 
             className='mb-1rem-tab'

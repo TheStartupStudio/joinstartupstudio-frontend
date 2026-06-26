@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import axiosInstance from '../../utils/AxiosInstance'
+import { useSelector } from 'react-redux'
 import {
   WIDGET_COPY,
   DAY_MODAL_COPY,
@@ -116,31 +116,48 @@ function TaskRow({ task }) {
   )
 }
 
+function ChallengeSkeleton() {
+  return (
+    <div className='studio-challenge studio-challenge--skeleton' aria-hidden='true'>
+      <div className='studio-challenge__header'>
+        <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--title' />
+        <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--link' />
+      </div>
+      <div className='studio-challenge__band'>
+        <div className='studio-challenge__skeleton-ring' />
+        <div className='studio-challenge__skeleton-copy'>
+          <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--headline' />
+          <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--subline' />
+          <div className='studio-challenge__skeleton-pill' />
+        </div>
+      </div>
+      {[1, 2, 3].map((row) => (
+        <div key={row} className='studio-challenge__skeleton-task'>
+          <div className='studio-challenge__skeleton-icon' />
+          <div className='studio-challenge__skeleton-task-copy'>
+            <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--task' />
+            <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--task-sub' />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 function StudioBuilderChallenge() {
-  const [progress, setProgress] = useState(null)
+  const { progress, loading, loaded, shouldShow } = useSelector(
+    (state) => state.studioChallenge
+  )
+  const { isTrialActive } = useSelector((state) => state.trialTimer)
   const [modal, setModal] = useState(null)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const loadProgress = () => {
-      axiosInstance
-        .get('/challenge/progress')
-        .then((response) => {
-          setProgress(response.data)
-          setLoading(false)
-        })
-        .catch(() => setLoading(false))
-    }
+  const showSkeleton = !loaded && (loading || isTrialActive)
 
-    loadProgress()
+  if (showSkeleton) {
+    return <ChallengeSkeleton />
+  }
 
-    const handleFocus = () => loadProgress()
-    window.addEventListener('focus', handleFocus)
-    return () => window.removeEventListener('focus', handleFocus)
-  }, [])
-
-  if (loading || !progress?.challengeAvailable || !progress?.isTrialing) {
+  if (!loaded || !shouldShow || !progress) {
     return null
   }
 
@@ -158,7 +175,7 @@ function StudioBuilderChallenge() {
 
   return (
     <>
-      <div className='studio-challenge'>
+      <div className='studio-challenge studio-challenge--loaded'>
         <div className='studio-challenge__header'>
           <div className='studio-challenge__brand'>
             <div className='studio-challenge__brand-icon'>

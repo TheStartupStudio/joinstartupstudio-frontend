@@ -221,7 +221,7 @@ function LtsJournal(props) {
   }, [dispatch, isRootPath])
 
   useEffect(() => {
-    dispatch(fetchLtsCoursefinishedContent())
+    dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }))
   }, [dispatch])
 
   useEffect(() => {
@@ -897,7 +897,7 @@ function LtsJournal(props) {
         }
       }
 
-      await dispatch(fetchLtsCoursefinishedContent())
+      await dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }))
       const finishedContentResponse = await axiosInstance.get(
         '/ltsJournals/LtsCoursefinishedContent'
       )
@@ -977,7 +977,7 @@ function LtsJournal(props) {
 
         if (nextLesson) {
           setSelectedLesson(nextLesson)
-          await dispatch(fetchLtsCoursefinishedContent())
+          await dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }))
           history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`)
         } else {
           console.error(
@@ -1017,7 +1017,7 @@ function LtsJournal(props) {
       setReflectionsData({})
       toast.success('Reflections saved successfully!')
 
-      await dispatch(fetchLtsCoursefinishedContent())
+      await dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }))
       const updatedFinishedResponse = await axiosInstance.get(
         '/ltsJournals/LtsCoursefinishedContent'
       )

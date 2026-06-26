@@ -11,10 +11,16 @@ import {
   NOTE_REMOVED_SUCCESS,
   FETCH_LTS_COURSE_FINISHED_CONTENT_PENDING,
   FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED,
-  FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED
+  FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED,
+  FETCH_ENTREPRENEURSHIP_LESSONS_PENDING,
+  FETCH_ENTREPRENEURSHIP_LESSONS_FULFILLED,
+  FETCH_ENTREPRENEURSHIP_LESSONS_REJECTED
 } from './Types'
 
 import axiosInstance from '../../utils/AxiosInstance'
+import { transformEntrepreneurshipLessons } from '../../utils/transformEntrepreneurshipLessons'
+
+const STALE_MS = 5 * 60 * 1000
 
 export const getVideosWatched = (data) => async (dispatch) => {
   try {
@@ -115,20 +121,89 @@ export const saveOrEditNote = (data) => async (dispatch) => {
   }
 }
 
-export const fetchLtsCoursefinishedContent = () => async (dispatch) => {
-  try {
-    dispatch({ type: FETCH_LTS_COURSE_FINISHED_CONTENT_PENDING })
-    
-    const response = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent')
-    
-    dispatch({
-      type: FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED,
-      payload: response.data
-    })
-  } catch (error) {
-    dispatch({
-      type: FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED,
-      payload: error?.response?.data?.message || 'Server Error'
-    })
+export const fetchLtsCoursefinishedContent =
+  ({ silent = false, force = false } = {}) =>
+  async (dispatch, getState) => {
+    const { course } = getState()
+    const { progressLoading, progressLoaded, lastProgressFetchTime } = course
+
+    if (progressLoading && !force) {
+      return
+    }
+
+    if (
+      !force &&
+      progressLoaded &&
+      lastProgressFetchTime &&
+      Date.now() - lastProgressFetchTime < STALE_MS
+    ) {
+      return
+    }
+
+    if (!silent && !progressLoaded) {
+      dispatch({ type: FETCH_LTS_COURSE_FINISHED_CONTENT_PENDING })
+    }
+
+    try {
+      const response = await axiosInstance.get(
+        '/ltsJournals/LtsCoursefinishedContent'
+      )
+
+      dispatch({
+        type: FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED,
+        payload: response.data
+      })
+    } catch (error) {
+      dispatch({
+        type: FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED,
+        payload: error?.response?.data?.message || 'Server Error'
+      })
+    }
   }
-}
+
+export const fetchEntrepreneurshipLessons =
+  ({ silent = false, force = false } = {}) =>
+  async (dispatch, getState) => {
+    const { course } = getState()
+    const { lessonsLoading, lessonsLoaded, lastLessonsFetchTime } = course
+
+    if (lessonsLoading && !force) {
+      return
+    }
+
+    if (
+      !force &&
+      lessonsLoaded &&
+      lastLessonsFetchTime &&
+      Date.now() - lastLessonsFetchTime < STALE_MS
+    ) {
+      return
+    }
+
+    if (!silent && !lessonsLoaded) {
+      dispatch({ type: FETCH_ENTREPRENEURSHIP_LESSONS_PENDING })
+    }
+
+    try {
+      const response = await axiosInstance.get(
+        '/LtsJournals/entrepreneurship/lessons'
+      )
+
+      dispatch({
+        type: FETCH_ENTREPRENEURSHIP_LESSONS_FULFILLED,
+        payload: transformEntrepreneurshipLessons(response.data)
+      })
+    } catch (error) {
+      dispatch({
+        type: FETCH_ENTREPRENEURSHIP_LESSONS_REJECTED,
+        payload: error?.response?.data?.message || 'Server Error'
+      })
+    }
+  }
+
+export const fetchCourseProgressData =
+  (options = {}) =>
+  (dispatch) => {
+    dispatch(fetchLtsCoursefinishedContent(options))
+    dispatch(fetchEntrepreneurshipLessons(options))
+  }
