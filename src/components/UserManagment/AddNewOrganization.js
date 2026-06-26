@@ -218,13 +218,44 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     }))
   }
 
+  const normalizeTrialPeriodDays = (value, fallback = 14) => {
+    const parsed = parseInt(String(value).replace(/[^\d]/g, ''), 10)
+    if (!Number.isFinite(parsed) || parsed <= 0) return fallback
+    return Math.min(90, parsed)
+  }
+
   const handleTrialPeriodDaysChange = (value) => {
-    const parsed = parseInt(value, 10)
+    const digitsOnly = value.replace(/[^\d]/g, '')
+
+    if (digitsOnly === '') {
+      setFormData(prev => ({
+        ...prev,
+        trialSettings: {
+          ...prev.trialSettings,
+          trialPeriodDays: ''
+        }
+      }))
+      return
+    }
+
+    const parsed = parseInt(digitsOnly, 10)
+    if (!Number.isFinite(parsed)) return
+
     setFormData(prev => ({
       ...prev,
       trialSettings: {
         ...prev.trialSettings,
-        trialPeriodDays: Number.isFinite(parsed) && parsed >= 0 ? parsed : 0
+        trialPeriodDays: Math.min(90, parsed)
+      }
+    }))
+  }
+
+  const handleTrialPeriodDaysBlur = () => {
+    setFormData(prev => ({
+      ...prev,
+      trialSettings: {
+        ...prev.trialSettings,
+        trialPeriodDays: normalizeTrialPeriodDays(prev.trialSettings.trialPeriodDays)
       }
     }))
   }
@@ -395,7 +426,10 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             ? { amount: '', frequency: formData.organizationPricing.frequency || 'monthly' }
             : formData.organizationPricing,
         learnerPricing: formData.learnerPricing,
-        trialSettings: formData.trialSettings,
+        trialSettings: {
+          ...formData.trialSettings,
+          trialPeriodDays: normalizeTrialPeriodDays(formData.trialSettings.trialPeriodDays)
+        },
         applyToCurrentUsers
       }
 
@@ -800,11 +834,12 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                           onClick={() => formData.trialSettings.trialEnabled && handleInputFocus('trialPeriodDays')}
                         >
                           <input
-                            type="number"
-                            min="0"
-                            max="90"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             value={formData.trialSettings.trialPeriodDays}
                             onChange={(e) => handleTrialPeriodDaysChange(e.target.value)}
+                            onBlur={handleTrialPeriodDaysBlur}
                             className="form-input"
                             placeholder=" "
                             id="trialPeriodDays"
@@ -817,7 +852,7 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
 
                     <p className="trial-settings-help">
                       {formData.trialSettings.trialEnabled
-                        ? `New learners at this organization receive a ${formData.trialSettings.trialPeriodDays}-day free trial before billing begins.`
+                        ? `New learners at this organization receive a ${normalizeTrialPeriodDays(formData.trialSettings.trialPeriodDays)}-day free trial before billing begins.`
                         : 'New learners will be charged immediately when they subscribe — no free trial.'}
                     </p>
 
