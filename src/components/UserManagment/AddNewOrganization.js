@@ -54,7 +54,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     ],
     trialSettings: {
       trialEnabled: true,
-      trialPeriodDays: 14
+      trialPeriodDays: 14,
+      challengeEnabled: false
     }
   })
 
@@ -113,7 +114,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                 : [{ amount: '', frequency: 'monthly' }],
               trialSettings: orgData.trialSettings || {
                 trialEnabled: true,
-                trialPeriodDays: 14
+                trialPeriodDays: 14,
+                challengeEnabled: false
               }
             })
             
@@ -158,7 +160,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           ],
           trialSettings: {
             trialEnabled: true,
-            trialPeriodDays: 14
+            trialPeriodDays: 14,
+            challengeEnabled: false
           }
         })
         setOriginalPricing({
@@ -197,7 +200,20 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
       ...prev,
       trialSettings: {
         ...prev.trialSettings,
-        trialEnabled: !prev.trialSettings.trialEnabled
+        trialEnabled: !prev.trialSettings.trialEnabled,
+        challengeEnabled: !prev.trialSettings.trialEnabled
+          ? false
+          : prev.trialSettings.challengeEnabled
+      }
+    }))
+  }
+
+  const handleChallengeEnabledChange = () => {
+    setFormData(prev => ({
+      ...prev,
+      trialSettings: {
+        ...prev.trialSettings,
+        challengeEnabled: !prev.trialSettings.challengeEnabled
       }
     }))
   }
@@ -803,6 +819,44 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                       {formData.trialSettings.trialEnabled
                         ? `New learners at this organization receive a ${formData.trialSettings.trialPeriodDays}-day free trial before billing begins.`
                         : 'New learners will be charged immediately when they subscribe — no free trial.'}
+                    </p>
+
+                    <div className="toggle-item" style={{ marginTop: '1rem' }}>
+                      <div className="toggle-label-container">
+                        <span className="toggle-label">Enable Studio Builder Challenge</span>
+                        {isReadOnly && (
+                          <div className="course-access-indicator">
+                            {formData.trialSettings.challengeEnabled ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                <circle cx="5.5" cy="5.5" r="5.5" fill="#99CC33"/>
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                <circle cx="5.5" cy="5.5" r="5.5" fill="#AEAEAE"/>
+                              </svg>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {!isReadOnly && (
+                        <label className="switch">
+                          <input
+                            type="checkbox"
+                            checked={formData.trialSettings.challengeEnabled}
+                            onChange={handleChallengeEnabledChange}
+                            disabled={!formData.trialSettings.trialEnabled}
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      )}
+                    </div>
+
+                    <p className="trial-settings-help">
+                      {formData.trialSettings.trialEnabled && formData.trialSettings.challengeEnabled
+                        ? 'Learners on a free trial can complete 5 tasks in 7 days to earn up to 5 extra trial days.'
+                        : formData.trialSettings.trialEnabled
+                          ? 'The challenge widget is hidden until you enable it for this organization.'
+                          : 'Enable the free trial first to offer the Studio Builder Challenge.'}
                     </p>
                   </div>
                 </div>

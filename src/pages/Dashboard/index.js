@@ -30,6 +30,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import UpcomingEventsCalendar from '../../components/UpcomingEventsCalendar'
 import ForumSection from '../../components/ForumSection'
 import LeaderBoard from '../../components/LeaderBoard'
+import StudioBuilderChallenge from '../../components/StudioBuilderChallenge/StudioBuilderChallenge'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -241,6 +242,8 @@ function Dashboard() {
           /> */}
 
           <CourseProgress />
+
+          <StudioBuilderChallenge />
 
           <UpcomingEventsCalendar />
 
