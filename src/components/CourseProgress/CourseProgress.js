@@ -136,7 +136,7 @@ function CourseProgress() {
   return (
     <>
       <div className='d-grid academy-dashboard-card grid-row-none-mob progress-dashboard-card course-progress--loaded'>
-        <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 gap-2'>
+        <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 gap-2 mb-4'>
           <div className='d-flex gap-3 align-items-center'>
             <img src={courseLogo} alt='course' className='course-logo-studio' />
             <h4 className='fs-9 my-details-header'>My Course Progress</h4>
@@ -149,7 +149,7 @@ function CourseProgress() {
             <img src={rightArrow} alt='right-arr' />
           </div>
         </div>
-        <div className='d-flex gap-4 justify-content-around flex-col-mob mt-2rem-mob flex-wrap'>
+        <div className='d-flex gap-4 justify-content-around flex-col-mob mt-2rem-mob flex-wrap mb-4'>
           {Object.keys(safeLevelProgress)
             .sort((a, b) => {
               const aNum = parseInt(a.replace('level', ''))
@@ -163,7 +163,7 @@ function CourseProgress() {
               return (
                 <div
                   key={levelKey}
-                  className='d-flex flex-column gap-4 progress-circular-container'
+                  className='d-flex flex-column gap-4 progress-circular-container align-items-center'
                   style={
                     !isLevelAccessible(levelNumber)
                       ? { opacity: 0.6, pointerEvents: 'none' }

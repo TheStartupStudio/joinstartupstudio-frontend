@@ -5167,7 +5167,8 @@ wave > wave:first-child {
 }
 
 .progress-dashboard-card {
-  height: 100%;
+  height: fit-content;
+  min-height: 70%;
 }
 
 @media (max-width: 1135px) {

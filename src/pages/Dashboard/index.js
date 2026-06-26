@@ -251,7 +251,7 @@ function Dashboard() {
 
           <StudioBuilderChallenge />
 
-          <UpcomingEventsCalendar />
+          {/* <UpcomingEventsCalendar /> */}
 
           <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between flex-col-mob mb-1rem-tab gap-1rem-mob '>
             <div className='d-flex align-items-center gap-3 flex-col-mob'>
