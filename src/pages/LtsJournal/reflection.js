@@ -126,7 +126,7 @@ function LtsJournalReflection(props) {
       setNotSaved(false);
       toast.success('Reflection saved successfully!');
       
-      dispatch(fetchLtsCoursefinishedContent());
+      dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }));
 
     } catch (error) {
       console.error('Save error:', error);

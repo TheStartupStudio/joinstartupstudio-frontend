@@ -5,6 +5,7 @@ import SectionActions from '../Actions/SectionActions'
 import TooltipAction from '../Actions/TooltipAction'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { useSelector } from 'react-redux'
+import axiosInstance from '../../../../utils/AxiosInstance'
 
 function SharePortfolioModal(props) {
   const loggedUser = useSelector((state) => state.user.user.user)
@@ -44,6 +45,7 @@ function SharePortfolioModal(props) {
   const handleCopy = () => {
     navigator.clipboard.writeText(portfolioUrl())
     setCopied(true)
+    axiosInstance.post('/challenge/invite-sent').catch(() => {})
   }
 
   return (

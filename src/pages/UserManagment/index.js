@@ -145,9 +145,8 @@ const UserManagement = () => {
           name: org.name,
           domain: org.domainUrl || org.domain,
           totalUsers: org.totalUsers || 0,
-          monthlyFee: org.organizationPricing && org.organizationPricing.length > 0
-            ? `$${org.organizationPricing[0].amount} / ${org.organizationPricing[0].frequency}`
-            : 'N/A',
+          monthlyFee: org.displayMonthlyFee || 'N/A',
+          organizationType: org.organizationType,
           address: org.address,
           city: org.city,
           state: org.state,

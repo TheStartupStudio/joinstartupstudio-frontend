@@ -54,7 +54,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
     ],
     trialSettings: {
       trialEnabled: true,
-      trialPeriodDays: 14
+      trialPeriodDays: 14,
+      challengeEnabled: false
     }
   })
 
@@ -113,7 +114,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                 : [{ amount: '', frequency: 'monthly' }],
               trialSettings: orgData.trialSettings || {
                 trialEnabled: true,
-                trialPeriodDays: 14
+                trialPeriodDays: 14,
+                challengeEnabled: false
               }
             })
             
@@ -158,7 +160,8 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
           ],
           trialSettings: {
             trialEnabled: true,
-            trialPeriodDays: 14
+            trialPeriodDays: 14,
+            challengeEnabled: false
           }
         })
         setOriginalPricing({
@@ -197,18 +200,62 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
       ...prev,
       trialSettings: {
         ...prev.trialSettings,
-        trialEnabled: !prev.trialSettings.trialEnabled
+        trialEnabled: !prev.trialSettings.trialEnabled,
+        challengeEnabled: !prev.trialSettings.trialEnabled
+          ? false
+          : prev.trialSettings.challengeEnabled
       }
     }))
   }
 
-  const handleTrialPeriodDaysChange = (value) => {
-    const parsed = parseInt(value, 10)
+  const handleChallengeEnabledChange = () => {
     setFormData(prev => ({
       ...prev,
       trialSettings: {
         ...prev.trialSettings,
-        trialPeriodDays: Number.isFinite(parsed) && parsed >= 0 ? parsed : 0
+        challengeEnabled: !prev.trialSettings.challengeEnabled
+      }
+    }))
+  }
+
+  const normalizeTrialPeriodDays = (value, fallback = 14) => {
+    const parsed = parseInt(String(value).replace(/[^\d]/g, ''), 10)
+    if (!Number.isFinite(parsed) || parsed <= 0) return fallback
+    return Math.min(90, parsed)
+  }
+
+  const handleTrialPeriodDaysChange = (value) => {
+    const digitsOnly = value.replace(/[^\d]/g, '')
+
+    if (digitsOnly === '') {
+      setFormData(prev => ({
+        ...prev,
+        trialSettings: {
+          ...prev.trialSettings,
+          trialPeriodDays: ''
+        }
+      }))
+      return
+    }
+
+    const parsed = parseInt(digitsOnly, 10)
+    if (!Number.isFinite(parsed)) return
+
+    setFormData(prev => ({
+      ...prev,
+      trialSettings: {
+        ...prev.trialSettings,
+        trialPeriodDays: Math.min(90, parsed)
+      }
+    }))
+  }
+
+  const handleTrialPeriodDaysBlur = () => {
+    setFormData(prev => ({
+      ...prev,
+      trialSettings: {
+        ...prev.trialSettings,
+        trialPeriodDays: normalizeTrialPeriodDays(prev.trialSettings.trialPeriodDays)
       }
     }))
   }
@@ -379,7 +426,10 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
             ? { amount: '', frequency: formData.organizationPricing.frequency || 'monthly' }
             : formData.organizationPricing,
         learnerPricing: formData.learnerPricing,
-        trialSettings: formData.trialSettings,
+        trialSettings: {
+          ...formData.trialSettings,
+          trialPeriodDays: normalizeTrialPeriodDays(formData.trialSettings.trialPeriodDays)
+        },
         applyToCurrentUsers
       }
 
@@ -784,11 +834,12 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
                           onClick={() => formData.trialSettings.trialEnabled && handleInputFocus('trialPeriodDays')}
                         >
                           <input
-                            type="number"
-                            min="0"
-                            max="90"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             value={formData.trialSettings.trialPeriodDays}
                             onChange={(e) => handleTrialPeriodDaysChange(e.target.value)}
+                            onBlur={handleTrialPeriodDaysBlur}
                             className="form-input"
                             placeholder=" "
                             id="trialPeriodDays"
@@ -801,8 +852,46 @@ const AddNewOrganization = ({ show, onHide, onSuccess, mode = 'add', organizatio
 
                     <p className="trial-settings-help">
                       {formData.trialSettings.trialEnabled
-                        ? `New learners at this organization receive a ${formData.trialSettings.trialPeriodDays}-day free trial before billing begins.`
+                        ? `New learners at this organization receive a ${normalizeTrialPeriodDays(formData.trialSettings.trialPeriodDays)}-day free trial before billing begins.`
                         : 'New learners will be charged immediately when they subscribe — no free trial.'}
+                    </p>
+
+                    <div className="toggle-item" style={{ marginTop: '1rem' }}>
+                      <div className="toggle-label-container">
+                        <span className="toggle-label">Enable Studio Builder Challenge</span>
+                        {isReadOnly && (
+                          <div className="course-access-indicator">
+                            {formData.trialSettings.challengeEnabled ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                <circle cx="5.5" cy="5.5" r="5.5" fill="#99CC33"/>
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                                <circle cx="5.5" cy="5.5" r="5.5" fill="#AEAEAE"/>
+                              </svg>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {!isReadOnly && (
+                        <label className="switch">
+                          <input
+                            type="checkbox"
+                            checked={formData.trialSettings.challengeEnabled}
+                            onChange={handleChallengeEnabledChange}
+                            disabled={!formData.trialSettings.trialEnabled}
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      )}
+                    </div>
+
+                    <p className="trial-settings-help">
+                      {formData.trialSettings.trialEnabled && formData.trialSettings.challengeEnabled
+                        ? 'Learners on a free trial can complete 5 tasks in 7 days to earn up to 5 extra trial days.'
+                        : formData.trialSettings.trialEnabled
+                          ? 'The challenge widget is hidden until you enable it for this organization.'
+                          : 'Enable the free trial first to offer the Studio Builder Challenge.'}
                     </p>
                   </div>
                 </div>

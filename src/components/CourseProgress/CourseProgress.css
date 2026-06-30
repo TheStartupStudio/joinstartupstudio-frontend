@@ -1,0 +1,92 @@
+.course-progress--loaded {
+  animation: course-progress-fade-in 0.35s ease;
+}
+
+@keyframes course-progress-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.course-progress--skeleton {
+  pointer-events: none;
+}
+
+.course-progress__skeleton-line,
+.course-progress__skeleton-ring,
+.course-progress__skeleton-logo {
+  background: linear-gradient(
+    90deg,
+    #e8f4fb 0%,
+    #f4fafd 50%,
+    #e8f4fb 100%
+  );
+  background-size: 200% 100%;
+  animation: course-progress-shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.course-progress__skeleton-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.course-progress__skeleton-line--title {
+  width: 160px;
+  height: 16px;
+}
+
+.course-progress__skeleton-line--link {
+  width: 110px;
+  height: 12px;
+}
+
+.course-progress__skeleton-ring {
+  width: 135px;
+  height: 135px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.course-progress__skeleton-line--level {
+  width: 90px;
+  height: 12px;
+  margin: 0 auto;
+}
+
+.course-progress__skeleton-levels {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.course-progress__skeleton-level {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+@keyframes course-progress-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.course-progress__modal-loading {
+  padding: 1rem 0;
+  text-align: center;
+  color: #6b8090;
+}

@@ -415,7 +415,6 @@ const LeadershipJournal = memo(() => {
 
     try {
       setIsSaving(true)
-      setNavigationLocked(true)
 
       if (!activeTabData.option) {
         const firstSection = allTabs[0]
@@ -436,13 +435,17 @@ const LeadershipJournal = memo(() => {
       const currentComponent = valueRefs.current[activeTabData.option?.value]
 
       if (isReflection) {
-        if (!isInstructorUser && currentComponent?.hasAllEntriesAnswered && !currentComponent.hasAllEntriesAnswered()) {
-          toast.error('Please answer all reflection questions before continuing.')
-          return
+        if (currentComponent?.saveChanges) {
+          await currentComponent.saveChanges({ suppressToast: true })
         }
 
-        if (currentComponent?.saveChanges) {
-          await currentComponent.saveChanges()
+        if (
+          !isInstructorUser &&
+          currentComponent?.hasAllEntriesAnswered &&
+          !currentComponent.hasAllEntriesAnswered()
+        ) {
+          toast.error('Please answer all reflection questions before continuing.')
+          return
         }
 
         // Update finished content state
@@ -520,6 +523,7 @@ const LeadershipJournal = memo(() => {
         // Move to next option in current section
         const nextOption = currentSection[currentOptionIndex + 1]
         if (nextOption) {
+          setNavigationLocked(true)
           setActiveTabData({
             ...activeTabData,
             option: nextOption
@@ -539,6 +543,7 @@ const LeadershipJournal = memo(() => {
             nextTabData.options &&
             nextTabData.options.length > 0
           ) {
+            setNavigationLocked(true)
             setActiveTabData({
               activeTab: activeTabData.activeTab + 1,
               option: nextTabData.options[0]
@@ -572,6 +577,7 @@ const LeadershipJournal = memo(() => {
             nextTabData.options &&
             nextTabData.options.length > 0
           ) {
+            setNavigationLocked(true)
             setActiveTabData({
               activeTab: activeTabData.activeTab + 1,
               option: nextTabData.options[0]
