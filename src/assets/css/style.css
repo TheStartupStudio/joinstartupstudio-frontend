@@ -5543,7 +5543,7 @@ wave > wave:first-child {
 
 @media (max-width: 768px) {
   .progress-dashboard-card {
-    max-height: none;
+    min-height: auto;
   }
   .dashboard-user-details {
     grid-template-rows: auto 1fr auto;

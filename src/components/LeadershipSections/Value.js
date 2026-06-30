@@ -225,7 +225,7 @@ const Value = forwardRef((props, ref) => {
       })
     },
 
-    saveChanges: async () => {
+    saveChanges: async ({ suppressToast = false } = {}) => {
       try {
         const entries = Object.entries(pendingChanges)
 
@@ -262,8 +262,10 @@ const Value = forwardRef((props, ref) => {
 
         await Promise.all(savePromises)
         setPendingChanges({})
-        await refreshData()
-        toast.success('Reflections submitted successfully!')
+        await dispatch(getJournalData(currentId))
+        if (!suppressToast) {
+          toast.success('Reflections submitted successfully!')
+        }
         return true
       } catch (error) {
         console.error('Error saving reflections:', error)
