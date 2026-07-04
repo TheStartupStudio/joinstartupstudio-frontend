@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { Button, Modal, ModalBody } from 'reactstrap'
-import courseLogo from '../../assets/images/academy-icons/course-progress.png'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import universityFlorida from '../../assets/images/academy-icons/Design-queen.png'
 import ModalInput from '../ModalInput/ModalInput'
@@ -21,6 +23,7 @@ function NewProject({ isOpen, setIsOpen }) {
     projectFile: '',
     contentUrl: '',
     coverUrl: '',
+    description: ''
   })
 
   const handleInputChange = (field, value) => {
@@ -112,7 +115,8 @@ function NewProject({ isOpen, setIsOpen }) {
       const payload = {
         title: formData.projectFile,
         contentUrl: formData.contentUrl,
-        coverUrl: coverUrl
+        coverUrl: coverUrl,
+        description: formData.description || ''
       }
 
       await dispatch(createMarketProject(payload))
@@ -121,7 +125,8 @@ function NewProject({ isOpen, setIsOpen }) {
       setFormData({
         projectFile: '',
         contentUrl: '',
-        coverUrl: ''
+        coverUrl: '',
+        description: ''
       })
       dispatch(getMarketProjects())
     } catch (error) {
@@ -134,7 +139,7 @@ function NewProject({ isOpen, setIsOpen }) {
   return (
     <Modal isOpen={isOpen} toggle={() => setIsOpen(false)} size='sm' style={{ maxWidth: '600px', width: '100%' }}>
       <ModalBody>
-        <img className='modal-credit rounded-circle p-2 mb-2' src={courseLogo} alt='Course logo' />
+        <img className='modal-credit rounded-circle p-2 mb-2 portfolio-modal-icon' src={academyBulb} alt='Course logo' />
         <p className='mb-0 fs-15 fw-medium'>Add New Project</p>
 
         <form onSubmit={handleSubmit}>
@@ -161,6 +166,27 @@ function NewProject({ isOpen, setIsOpen }) {
               />
               {errors.contentUrl && <span className="text-danger">{errors.contentUrl}</span>}
             </div>
+          </div>
+
+          <div className='mt-5'>
+            <h4 className='fs-15'>Description</h4>
+            
+            <p className='fs-14 fw-light text-secondary mb-2'>
+              Briefly describe the relevant outcomes of this project.
+            </p>
+            <ReactQuill
+              value={formData.description}
+              onChange={(content) => handleInputChange('description', content)}
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, 3, false] }],
+                  ['bold', 'italic', 'underline'],
+                  [{ list: 'ordered' }, { list: 'bullet' }],
+                  [{ align: [] }],
+                  ['link']
+                ]
+              }}
+            />
           </div>
           
           <div className='mt-5'>

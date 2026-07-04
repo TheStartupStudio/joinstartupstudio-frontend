@@ -5128,6 +5128,33 @@ wave > wave:first-child {
   object-fit: cover;
 }
 
+.portfolio-section-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.portfolio-modal-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.portfolio-section-description {
+  line-height: 1.5;
+  max-width: 720px;
+}
+
+.portfolio-experience-entry {
+  padding-bottom: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.portfolio-experience-entry--bordered {
+  border-bottom: 1px solid #dbe7ea;
+}
+
 .menu-icon-cie {
   display: none;
   width: 28px !important;

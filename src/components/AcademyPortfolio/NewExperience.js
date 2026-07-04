@@ -6,7 +6,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import Switch from 'react-switch'
 import { Button, Modal, ModalBody } from 'reactstrap'
-import experienceIcon from '../../assets/images/academy-icons/svg/experience.svg'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
@@ -80,9 +80,6 @@ function NewExperience({ isOpen, setIsOpen }) {
 
     if (!formData.organizationName?.trim()) {
       newErrors.organizationName = 'Organization name is required'
-    }
-    if (!formData.website) {
-      newErrors.website = 'Organization URL is required'
     }
     if (!formData.jobTitle?.trim()) {
       newErrors.jobTitle = 'Experience role is required'
@@ -171,7 +168,8 @@ function NewExperience({ isOpen, setIsOpen }) {
   return (
     <Modal isOpen={isOpen} toggle={() => setIsOpen(false)}>
       <ModalBody>
-        <img src={experienceIcon} alt='user' className='mb-3' />
+        
+        <img src={academyBulb} alt='Experience' className='mb-3 portfolio-modal-icon modal-credit rounded-circle p-2 mb-2 portfolio-modal-icon' />
         <div className='d-flex justify-content-between align-items-center'>
           <h3 className='fs-14' style={{ marginBottom: '0' }}>
             Add New Experience
@@ -192,7 +190,7 @@ function NewExperience({ isOpen, setIsOpen }) {
                     handleInputChange('organizationName', e.target.value)
                   }
                 />
-                {errors.startDate && (
+                {errors.organizationName && (
                   <span className='text-danger'>{errors.organizationName}</span>
                 )}
                 <ModalInput
@@ -202,9 +200,6 @@ function NewExperience({ isOpen, setIsOpen }) {
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                 />
-                {errors.startDate && (
-                  <span className='text-danger'>{errors.website}</span>
-                )}
                 <ModalInput
                   id={'jobTitle'}
                   labelTitle={'Experience Role*'}
@@ -214,7 +209,7 @@ function NewExperience({ isOpen, setIsOpen }) {
                     handleInputChange('jobTitle', e.target.value)
                   }
                 />
-                {errors.startDate && (
+                {errors.jobTitle && (
                   <span className='text-danger'>{errors.jobTitle}</span>
                 )}
               </div>
@@ -287,6 +282,8 @@ function NewExperience({ isOpen, setIsOpen }) {
                               </span>
                             </p>
                             <p className='fs-14'>
+                              Recommended size: 250 x 250px.
+                              <br />
                               Only png, jpg, or jpeg file format supported (max.
                               1MB)
                             </p>
@@ -423,6 +420,8 @@ function NewExperience({ isOpen, setIsOpen }) {
             </div>
             <div className='mt-5'>
               <h4 className='fs-15'>Description*</h4>
+              <p className='portfolio-section-description fs-14 fw-light text-black mb-1'>
+                Include relevant development of skills and knowledge, and the production of outcomes.</p>
               <ReactQuill
                 value={formData.description}
                 onChange={(content) =>

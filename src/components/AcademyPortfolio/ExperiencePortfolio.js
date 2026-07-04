@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import experienceIcon from '../../assets/images/academy-icons/svg/experience.svg'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
 import EditExperience from './EditExperience'
 import PortfolioContent from './PortfolioContent'
@@ -38,35 +38,44 @@ function ExperiencePortfolio({ experienceData = [], isUserPortfolio }) {
   return (
     <>
       <PortfolioWrapper
-        img={experienceIcon}
+        img={academyBulb}
         title={'Experience'}
+        description='Include relevant development of skills and knowledge, and the production of outcomes.'
         setOpenNew={isUserPortfolio ? setOpenNew : null}
       >
-        {displayData.map((experience) => (
-          <PortfolioContent
+        {displayData.map((experience, index) => (
+          <div
             key={experience.id}
-            setIsOpen={() => handleEdit(experience)}
-            imgSrc={experience.imageUrl || experienceDefault}
-            title={experience.organizationName || ''}
-            institution={experience.location || ''}
-            duration={
-              experience.startDate
-                ? `${new Date(experience.startDate).toLocaleDateString('en-US', {
-                    month: 'long',
-                    year: 'numeric'
-                  })} - ${
-                    experience.currentPosition
-                      ? 'Present'
-                      : new Date(experience.endDate).toLocaleDateString('en-US', 
-                          { month: 'long', year: 'numeric' }
-                        )
-                  }`
+            className={`portfolio-experience-entry${
+              index < displayData.length - 1
+                ? ' portfolio-experience-entry--bordered'
                 : ''
-            }
-            link={experience.website || ''}
-            fullText={experience.description || ''}
-            isUserPortfolio={isUserPortfolio}
-          />
+            }`}
+          >
+            <PortfolioContent
+              setIsOpen={() => handleEdit(experience)}
+              imgSrc={experience.imageUrl || experienceDefault}
+              title={experience.organizationName || ''}
+              institution={experience.location || ''}
+              duration={
+                experience.startDate
+                  ? `${new Date(experience.startDate).toLocaleDateString('en-US', {
+                      month: 'long',
+                      year: 'numeric'
+                    })} - ${
+                      experience.currentPosition
+                        ? 'Present'
+                        : new Date(experience.endDate).toLocaleDateString('en-US', 
+                            { month: 'long', year: 'numeric' }
+                          )
+                    }`
+                  : ''
+              }
+              link={experience.website || ''}
+              fullText={experience.description || ''}
+              isUserPortfolio={isUserPortfolio}
+            />
+          </div>
         ))}
       </PortfolioWrapper>
       {isUserPortfolio && (

@@ -58,18 +58,21 @@ function PortfolioContent({
           </div>
           <p className='mb-0 fs-15 fw-medium'>{institution}</p>
           <p className='mb-0 fs-15 fw-medium'>{duration}</p>
+          {link && (
           <div className='d-flex gap-3 align-items-center mt-2'>
 
             <a
               href={formatURL(link)}
               target='blank'
+              rel='noopener noreferrer'
               className='mb-0 fs-15 blue-color fw-medium word-break-portfolio d-flex align-items-center gap-1'
-              title={formatURL(link)} // Show full URL on hover
+              title={formatURL(link)}
             >
               <img src={blueInternet} alt='blue-internet' />
               {truncateUrl(link)}
             </a>
           </div>
+          )}
           <p
             className={`mt-3 fs-15 fw-light text-black text-break ${
               isExpanded ? 'width-50' : ''
