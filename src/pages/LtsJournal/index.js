@@ -49,7 +49,7 @@ import ReactQuill from 'react-quill'
 import lockSign from '../../assets/images/academy-icons/lock.png'
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import tickSign from '../../assets/images/academy-icons/tick-sign.png'
-import SelectLessons from './SelectLessons'
+import LessonNavPanel from './LessonNavPanel'
 import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
@@ -207,8 +207,8 @@ function LtsJournal(props) {
     }
   }
 
-  function journalChanged(journal) {
-    getJournals(false)
+  function journalChanged() {
+    dispatch(fetchLtsCoursefinishedContent({ silent: true }))
   }
 
   useEffect(() => {
@@ -897,12 +897,10 @@ function LtsJournal(props) {
         }
       }
 
-      await dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }))
-      const finishedContentResponse = await axiosInstance.get(
-        '/ltsJournals/LtsCoursefinishedContent'
+      const progressData = await dispatch(
+        fetchLtsCoursefinishedContent({ silent: true, force: true })
       )
-      const finishedContentData = finishedContentResponse.data
-      const finishedContentList = finishedContentData.finishedContent || []
+      const finishedContentList = progressData?.finishedContent || []
 
       const isJournalCompleted = finishedContentList.includes(currentJournalId)
 
@@ -977,7 +975,6 @@ function LtsJournal(props) {
 
         if (nextLesson) {
           setSelectedLesson(nextLesson)
-          await dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }))
           history.push(`/my-course-in-entrepreneurship/journal/${nextLessonId}`)
         } else {
           console.error(
@@ -1017,12 +1014,10 @@ function LtsJournal(props) {
       setReflectionsData({})
       toast.success('Reflections saved successfully!')
 
-      await dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }))
-      const updatedFinishedResponse = await axiosInstance.get(
-        '/ltsJournals/LtsCoursefinishedContent'
+      const updatedProgress = await dispatch(
+        fetchLtsCoursefinishedContent({ silent: true, force: true })
       )
-      const updatedFinishedList =
-        updatedFinishedResponse.data.finishedContent || []
+      const updatedFinishedList = updatedProgress?.finishedContent || []
 
       if (updatedFinishedList.includes(currentJournalId)) {
         await navigateToNextLesson()
@@ -1116,6 +1111,77 @@ function LtsJournal(props) {
     history.push(`/my-course-in-entrepreneurship/journal/${firstLessonId}`)
   }
 
+  const handleLessonSelect = (lesson) => {
+    if (!lesson?.id) return
+
+    setSelectedLesson({
+      value: lesson.id,
+      label: lesson.title,
+      redirectId: lesson.redirectId,
+      lessonId: lesson.id
+    })
+    setCurrentPlaceholder(lesson.title)
+
+    localStorage.setItem(
+      'selectedLesson',
+      JSON.stringify({
+        course: {
+          value: lesson.id,
+          label: lesson.title,
+          redirectId: lesson.redirectId,
+          lessonId: lesson.id
+        },
+        activeLevel: activeLevel
+      })
+    )
+
+    history.push(`/my-course-in-entrepreneurship/journal/${lesson.id}`)
+  }
+
+  const renderSaveButton = (isContinue = false) => (
+    <div
+      className='review-course-btn'
+      style={{
+        display: 'inline-block',
+        borderRadius: '8px',
+        background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+        padding: '3px',
+        boxShadow: '0px 4px 10px 0px #00000040'
+      }}
+    >
+      <button
+        style={{ padding: '.5rem' }}
+        className='review-progress-btn'
+        onClick={isContinue ? handleContinue : handleSaveAndContinue}
+        disabled={saving}
+      >
+        {saving ? (
+          <FontAwesomeIcon icon={faSpinner} spin />
+        ) : (
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+          >
+            {isContinue
+              ? props.intl.formatMessage({
+                  id: 'my_journal.continue',
+                  defaultMessage: 'Continue'
+                })
+              : props.intl.formatMessage({
+                  id: 'my_journal.save_and_continue',
+                  defaultMessage: 'Save and Continue'
+                })}
+            <FontAwesomeIcon icon={faArrowRight} />
+          </span>
+        )}
+      </button>
+    </div>
+  )
+
   return (
     <>
       <div id='main-body'>
@@ -1188,109 +1254,27 @@ function LtsJournal(props) {
                       </div>
 
                       <div className='course-section'>
-                        <div className='course-button-group'>
-                          <div className='select-lessons'>
-                            <SelectLessons
-                              options={options}
-                              selectedCourse={selectedLesson}
-                              setSelectedCourse={(selectedOption) => {
-                                if (!selectedOption || !selectedOption.value)
-                                  return
-
-                                if (selectedOption.isWelcomeOption) {
-                                  setSelectedLesson(selectedOption)
-                                  setCurrentPlaceholder(selectedOption.label)
-                                  history.push(
-                                    '/my-course-in-entrepreneurship/journal'
-                                  )
-                                  return
-                                }
-
-                                setSelectedLesson(selectedOption)
-
-                                const lessonId = selectedOption.value
-
-                                for (
-                                  let level = 0;
-                                  level < levels.length;
-                                  level++
-                                ) {
-                                  const lesson = lessonsByLevel[level]?.find(
-                                    (lesson) => lesson.id === lessonId
-                                  )
-                                  if (lesson) {
-                                    if (level !== activeLevel) {
-                                      setActiveLevel(level)
-                                    }
-                                    break
-                                  }
-                                }
-
-                                history.push(
-                                  `/my-course-in-entrepreneurship/journal/${lessonId}`
-                                )
-                              }}
-                              setShowLockModal={setShowLockModal}
-                              setLockModalMessage={setLockModalMessage}
-                              activeLevel={activeLevel}
-                              placeholder={currentPlaceholder}
-                              setCurrentPlaceholder={setCurrentPlaceholder}
-                            />
+                        {!isIntroVideo && (
+                          <div className='lts-save-row'>
+                            {renderSaveButton(isRootPath)}
                           </div>
-
-                          {!isIntroVideo && (
-                            <div
-                              className='review-course-btn'
-                              style={{
-                                display: 'inline-block',
-                                borderRadius: '8px',
-                                background:
-                                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                                padding: '3px',
-                                // height: '58px',
-                                boxShadow: '0px 4px 10px 0px #00000040'
-                              }}
-                            >
-                              <button
-                                style={{ padding: '.5rem' }}
-                                className='review-progress-btn'
-                                onClick={
-                                  isRootPath
-                                    ? handleContinue
-                                    : handleSaveAndContinue
-                                }
-                                disabled={saving}
-                              >
-                                {saving ? (
-                                  <FontAwesomeIcon icon={faSpinner} spin />
-                                ) : (
-                                  <span
-                                    style={{
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      gap: '8px'
-                                    }}
-                                  >
-                                    {isRootPath
-                                      ? props.intl.formatMessage({
-                                          id: 'my_journal.continue',
-                                          defaultMessage: 'Continue'
-                                        })
-                                      : props.intl.formatMessage({
-                                          id: 'my_journal.save_and_continue',
-                                          defaultMessage: 'Save and Continue'
-                                        })}
-                                    <FontAwesomeIcon icon={faArrowRight} />
-                                  </span>
-                                )}
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        )}
                       </div>
-                    </div>
 
+                      <div className='lts-main-grid'>
+                        <LessonNavPanel
+                          lessonsByLevel={lessonsByLevel}
+                          activeLevel={activeLevel}
+                          levels={levels}
+                          journalId={journalId}
+                          getOptionStatus={getOptionStatus}
+                          onLessonSelect={handleLessonSelect}
+                          setShowLockModal={setShowLockModal}
+                          setLockModalMessage={setLockModalMessage}
+                          lessonsLoading={lessonsLoading}
+                        />
+
+                        <div className='lts-content-col'>
                     <Switch>
                       <Route
                         exact
@@ -1298,7 +1282,6 @@ function LtsJournal(props) {
                         render={() => (
                           <div
                             className='d-flex justify-content-between align-items-start general-video-container-journal'
-                            style={{ gap: '2rem' }}
                           >
                             <div
                               id='video-container-journal'
@@ -1462,6 +1445,8 @@ function LtsJournal(props) {
                                 handleReflectionContentChange
                               }
                               onIntroVideoChange={handleIntroVideoChange}
+                              lessonsByLevel={lessonsByLevel}
+                              activeLevel={activeLevel}
                               noteButtonProps={{
                                 from: 'entrepreneurshipJournal',
                                 data: {
@@ -1486,52 +1471,9 @@ function LtsJournal(props) {
                         }}
                       />
                     </Switch>
-
-                    {!isIntroVideo && (
-                      <div className='d-flex justify-content-end mt-4 mb-4'>
-                        <div className='progress-details'>
-                          <button
-                            style={{
-                              padding: '.5rem',
-                              background: 'inherit',
-                              border: 'none',
-                              marginRight: '2rem'
-                            }}
-                            className='progress-details'
-                            onClick={
-                              isRootPath
-                                ? handleContinue
-                                : handleSaveAndContinue
-                            }
-                            disabled={saving}
-                          >
-                            {saving ? (
-                              <FontAwesomeIcon icon={faSpinner} spin />
-                            ) : (
-                              <span
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  gap: '8px'
-                                }}
-                              >
-                                {isRootPath
-                                  ? props.intl.formatMessage({
-                                      id: 'my_journal.continue',
-                                      defaultMessage: 'Continue'
-                                    })
-                                  : props.intl.formatMessage({
-                                      id: 'my_journal.save_and_continue',
-                                      defaultMessage: 'Save and Continue'
-                                    })}
-                                <FontAwesomeIcon icon={faArrowRight} />
-                              </span>
-                            )}
-                          </button>
-                        </div>
                       </div>
-                    )}
+                    </div>
+                    </div>
                   </div>
 
                   <div className='page-card__sidebar col-lg-4 col-md-5'>

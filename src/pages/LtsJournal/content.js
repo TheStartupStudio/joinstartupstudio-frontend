@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
@@ -24,6 +24,14 @@ import InstructorFeedback from './InstructorFeedback/InstructorFeedback.js'
 import circleIcon from '../../assets/images/circle-user-icon.png'
 import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 import { NotesButton } from '../../components/Notes/index.js'
+import BuildingTowardBanner from './BuildingTowardBanner'
+import PriorReflectionsStrip from './PriorReflectionsStrip'
+import {
+  getBuildsTowardTask,
+  getLessonsForLevel,
+  getPriorReflectionLessons,
+  isTaskLesson
+} from './lessonNavUtils'
 
 function LtsJournalContent(props) {
   const location = useLocation()
@@ -59,10 +67,32 @@ function LtsJournalContent(props) {
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${props.match.params.journalId}/student/${0}`
+        `/ltsJournals/${props.match.params.journalId}/student/0`,
+        { params: { scope: 'course' } }
       )
       return data
-    } catch (err) { }
+    } catch (err) {
+      return null
+    }
+  }
+
+  function groupUserJournalEntries(data) {
+    const groupedByJournalEntry = {}
+    if (!data) return groupedByJournalEntry
+
+    for (const userJournalEntry of data) {
+      if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
+        groupedByJournalEntry[userJournalEntry.journalEntryId].push(
+          userJournalEntry
+        )
+      } else {
+        groupedByJournalEntry[userJournalEntry.journalEntryId] = [
+          userJournalEntry
+        ]
+      }
+    }
+
+    return groupedByJournalEntry
   }
 
   async function getUserJournalEntries() {
@@ -70,29 +100,21 @@ function LtsJournalContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/${props.match.params.journalId}/userEntries`
       )
-      let groupedByJournalEntry = {}
-      if (data) {
-        for (var userJournalEntry of data) {
-          if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
-            groupedByJournalEntry[userJournalEntry.journalEntryId].push(
-              userJournalEntry
-            )
-          } else {
-            groupedByJournalEntry[userJournalEntry.journalEntryId] = [
-              userJournalEntry
-            ]
-          }
-        }
-      }
-
-      return groupedByJournalEntry
-    } catch (err) { }
+      return groupUserJournalEntries(data)
+    } catch (err) {
+      return {}
+    }
   }
 
   function loadData() {
     setLoading(true)
-    Promise.all([getJournal(), getUserJournalEntries()])
-      .then(([journalData, userJournalEntries]) => {
+    getJournal()
+      .then(async (journalData) => {
+        if (!journalData?.id) {
+          setLoading(false)
+          return
+        }
+
         setJournal(journalData)
 
         if (
@@ -106,7 +128,13 @@ function LtsJournalContent(props) {
             )
           } catch (err) { }
         }
-        setUserJournalEntries(userJournalEntries)
+
+        if (journalData.userJournalEntries) {
+          setUserJournalEntries(journalData.userJournalEntries)
+        } else {
+          const entries = await getUserJournalEntries()
+          setUserJournalEntries(entries)
+        }
 
         if (props.contentContainer && props.contentContainer.current) {
           props.contentContainer.current.scrollTop = 0
@@ -348,14 +376,51 @@ function LtsJournalContent(props) {
     };
   };
 
-  if (!journal) {
-    return null
+  const currentJournalId = parseInt(props.match.params.journalId)
+  const levelLessons = useMemo(
+    () =>
+      getLessonsForLevel(
+        props.lessonsByLevel || {},
+        props.activeLevel ?? 0
+      ),
+    [props.lessonsByLevel, props.activeLevel]
+  )
+  const isTask = useMemo(() => {
+    const fromList = levelLessons.some(
+      (l) =>
+        (l.id === currentJournalId || l.redirectId === currentJournalId) &&
+        isTaskLesson(l)
+    )
+    return fromList || isTaskLesson({ title: journal?.title })
+  }, [levelLessons, currentJournalId, journal?.title])
+  const priorReflectionLessonIds = useMemo(() => {
+    if (!isTask) return []
+    return getPriorReflectionLessons(currentJournalId, levelLessons).map(
+      (l) => l.id
+    )
+  }, [isTask, currentJournalId, levelLessons])
+  const buildsTowardTask = useMemo(() => {
+    if (isTask) return null
+    return getBuildsTowardTask(currentJournalId, levelLessons)
+  }, [isTask, currentJournalId, levelLessons])
+  const paneClass = isTask ? 'lts-pane-task-weight' : ''
+
+  if (loading || !journal?.id) {
+    return (
+      <div className='lts-content-loading'>
+        <div className='lts-content-loading-spinner' />
+        <span>Loading lesson…</span>
+      </div>
+    )
   }
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
-        <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%', position: 'relative' }}>
+      {isTask && priorReflectionLessonIds.length > 0 && (
+        <PriorReflectionsStrip lessonIds={priorReflectionLessonIds} />
+      )}
+      <div className="d-flex justify-content-between align-items-start general-video-container-journal">
+        <div id="video-container-journal" className={`video-container-bg ${paneClass}`} style={{ flex: '1 1 50%', position: 'relative' }}>
           <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 999999999 }}>
             <NotesButton 
               key={props.noteButtonProps?.journalId}
@@ -425,7 +490,10 @@ function LtsJournalContent(props) {
         </div>
 
 
-        <div id="content-container" className="content-container" style={{ flex: '1 1 50%', width: '100%', boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
+        <div id="content-container" className={`content-container ${paneClass}`} style={{ flex: '1 1 50%', width: '100%', boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
+          {!isTask && buildsTowardTask && (
+            <BuildingTowardBanner taskTitle={buildsTowardTask.title} />
+          )}
           <div className='d-flex align-items-center reflection-header'>
             <img
               src={WhoAmI}
