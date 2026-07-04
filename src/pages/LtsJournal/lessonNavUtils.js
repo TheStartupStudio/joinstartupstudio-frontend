@@ -103,20 +103,56 @@ export function findPreviousTask(lessons, fromIndex) {
   return null
 }
 
+/** Prefer exact journal id over redirectId (redirectId is often id + 1). */
+export function findLessonIndex(lessons, lessonId) {
+  const numericId = parseInt(lessonId, 10)
+  if (Number.isNaN(numericId)) return -1
+
+  const byId = lessons.findIndex((l) => l.id === numericId)
+  if (byId !== -1) return byId
+
+  return lessons.findIndex((l) => l.redirectId === numericId)
+}
+
+/** All non-task lessons between the previous task and this task (inclusive of section intros). */
+export function getLessonsBuildingTowardTask(taskLessonId, lessons) {
+  const taskIndex = findLessonIndex(lessons, taskLessonId)
+  if (taskIndex === -1 || !isTaskLesson(lessons[taskIndex])) return []
+
+  let startIndex = 0
+  for (let i = taskIndex - 1; i >= 0; i--) {
+    if (isTaskLesson(lessons[i])) {
+      startIndex = i + 1
+      break
+    }
+  }
+
+  const result = []
+  for (let i = startIndex; i < taskIndex; i++) {
+    const lesson = lessons[i]
+    if (!isSeparatorLesson(lesson) && !isTaskLesson(lesson)) {
+      result.push(lesson)
+    }
+  }
+  return result
+}
+
 /**
- * Build flat nav items for the left panel.
- * Parent lessons (section anchors) get nested reflection children until the next task/divider.
+ * Build nav items grouped by task: every lesson before a task builds toward it.
+ * Structure: [buildingGroup → task] [buildingGroup → task] …
  */
 export function buildNavItems(lessons) {
   const items = []
-  let reflectionBuffer = []
-  let sectionParent = null
+  let pendingLessons = []
 
-  const flushReflections = () => {
-    if (reflectionBuffer.length > 0) {
-      items.push({ type: 'reflectionGroup', reflections: [...reflectionBuffer] })
-      reflectionBuffer = []
-    }
+  const flushBuildingGroup = (targetTask) => {
+    if (pendingLessons.length === 0) return
+    items.push({
+      type: 'buildingGroup',
+      buildsToward: targetTask,
+      lessons: [...pendingLessons]
+    })
+    pendingLessons = []
   }
 
   for (let i = 0; i < lessons.length; i++) {
@@ -124,85 +160,33 @@ export function buildNavItems(lessons) {
 
     if (lesson.isWelcomeOption) continue
 
-    if (isSeparatorLesson(lesson)) {
-      flushReflections()
-      sectionParent = null
-      items.push({ type: 'divider' })
-      continue
-    }
+    if (isSeparatorLesson(lesson)) continue
 
     if (isTaskLesson(lesson)) {
-      flushReflections()
-      sectionParent = null
-      const hasNavContent = items.some(
-        (item) =>
-          item.type === 'task' ||
-          item.type === 'parent' ||
-          item.type === 'reflectionGroup'
-      )
-      if (hasNavContent) {
+      flushBuildingGroup(lesson)
+      if (items.length > 0) {
         items.push({ type: 'divider' })
       }
-      items.push({
-        type: 'task',
-        lesson,
-        buildsToward: findNextTask(lessons, i)
-      })
+      items.push({ type: 'task', lesson })
       continue
     }
 
-    if (!sectionParent) {
-      flushReflections()
-      sectionParent = lesson
-      items.push({ type: 'parent', lesson })
-      continue
-    }
-
-    reflectionBuffer.push({
-      lesson,
-      buildsToward: findNextTask(lessons, i)
-    })
+    pendingLessons.push(lesson)
   }
 
-  flushReflections()
   return items
 }
 
 export function getBuildsTowardTask(lessonId, lessons) {
-  const numericId = parseInt(lessonId)
-  const index = lessons.findIndex(
-    (l) => l.id === numericId || l.redirectId === numericId
-  )
+  const index = findLessonIndex(lessons, lessonId)
   if (index === -1) return null
   return findNextTask(lessons, index)
 }
 
 export function getPriorReflectionLessons(currentLessonId, lessons) {
-  const numericId = parseInt(currentLessonId)
-  const currentIndex = lessons.findIndex(
-    (l) => l.id === numericId || l.redirectId === numericId
-  )
-  if (currentIndex === -1) return []
-
-  const currentLesson = lessons[currentIndex]
-  if (!isTaskLesson(currentLesson)) return []
-
-  let startIndex = 0
-  for (let i = currentIndex - 1; i >= 0; i--) {
-    if (isTaskLesson(lessons[i])) {
-      startIndex = i + 1
-      break
-    }
-  }
-
-  const prior = []
-  for (let i = startIndex; i < currentIndex; i++) {
-    const lesson = lessons[i]
-    if (isSeparatorLesson(lesson) || isTaskLesson(lesson)) continue
-    prior.push(lesson)
-  }
-
-  return prior
+  const currentIndex = findLessonIndex(lessons, currentLessonId)
+  if (currentIndex === -1 || !isTaskLesson(lessons[currentIndex])) return []
+  return getLessonsBuildingTowardTask(currentLessonId, lessons)
 }
 
 export function getGroupTitle(levels, activeLevel, lessons) {

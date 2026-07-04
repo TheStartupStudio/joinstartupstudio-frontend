@@ -4,6 +4,7 @@ import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import lockSign from '../../assets/images/academy-icons/lock.png'
 import {
   buildNavItems,
+  findLessonIndex,
   getGroupTitle,
   getLessonsForLevel
 } from './lessonNavUtils'
@@ -66,8 +67,12 @@ function LessonNavPanel({
     )
   }
 
-  const isCurrent = (lesson) =>
-    currentId === lesson.id || currentId === lesson.redirectId
+  const currentLessonIndex = currentId != null ? findLessonIndex(lessons, currentId) : -1
+
+  const isCurrent = (lesson) => {
+    const lessonIndex = findLessonIndex(lessons, lesson.id)
+    return lessonIndex !== -1 && lessonIndex === currentLessonIndex
+  }
 
   const rowClass = (lesson, base) => {
     const { status } = getStatus(lesson.id)
@@ -118,40 +123,31 @@ function LessonNavPanel({
           return <div key={`divider-${idx}`} className='lts-nav-divider' />
         }
 
-        if (item.type === 'parent') {
-          const { lesson } = item
+        if (item.type === 'buildingGroup') {
+          const { buildsToward, lessons: groupLessons } = item
           return (
-            <React.Fragment key={`parent-${lesson.id}`}>
-              <div
-                className={rowClass(lesson, 'lts-nav-task-row')}
-                onClick={() => handleClick(lesson)}
-                role='button'
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && handleClick(lesson)}
-              >
-                {renderStatusIcon(lesson.id)}
-                <span>{lesson.title}</span>
-              </div>
-            </React.Fragment>
-          )
-        }
-
-        if (item.type === 'reflectionGroup') {
-          return (
-            <div key={`reflections-${idx}`} className='lts-nav-reflections'>
-              {item.reflections.map(({ lesson }) => (
-                <div
-                  key={lesson.id}
-                  className={rowClass(lesson, 'lts-nav-reflection-row')}
-                  onClick={() => handleClick(lesson)}
-                  role='button'
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === 'Enter' && handleClick(lesson)}
-                >
-                  {renderStatusIcon(lesson.id)}
-                  <span>{lesson.title}</span>
+            <div key={`building-${idx}`} className='lts-nav-building-group'>
+              {/* {buildsToward && (
+                <div className='lts-nav-building-label'>
+                  <span className='lts-nav-building-arrow'>↳</span>
+                  Building toward: {buildsToward.title}
                 </div>
-              ))}
+              )} */}
+              <div className='lts-nav-reflections'>
+                {groupLessons.map((lesson) => (
+                  <div
+                    key={lesson.id}
+                    className={rowClass(lesson, 'lts-nav-reflection-row')}
+                    onClick={() => handleClick(lesson)}
+                    role='button'
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && handleClick(lesson)}
+                  >
+                    {renderStatusIcon(lesson.id)}
+                    <span>{lesson.title}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )
         }

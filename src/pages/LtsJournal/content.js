@@ -27,6 +27,7 @@ import { NotesButton } from '../../components/Notes/index.js'
 import BuildingTowardBanner from './BuildingTowardBanner'
 import PriorReflectionsStrip from './PriorReflectionsStrip'
 import {
+  findLessonIndex,
   getBuildsTowardTask,
   getLessonsForLevel,
   getPriorReflectionLessons,
@@ -386,12 +387,9 @@ function LtsJournalContent(props) {
     [props.lessonsByLevel, props.activeLevel]
   )
   const isTask = useMemo(() => {
-    const fromList = levelLessons.some(
-      (l) =>
-        (l.id === currentJournalId || l.redirectId === currentJournalId) &&
-        isTaskLesson(l)
-    )
-    return fromList || isTaskLesson({ title: journal?.title })
+    const lesson = levelLessons[findLessonIndex(levelLessons, currentJournalId)]
+    if (lesson && isTaskLesson(lesson)) return true
+    return isTaskLesson({ title: journal?.title })
   }, [levelLessons, currentJournalId, journal?.title])
   const priorReflectionLessonIds = useMemo(() => {
     if (!isTask) return []
