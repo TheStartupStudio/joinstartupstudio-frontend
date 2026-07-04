@@ -803,10 +803,11 @@ display: flex
   width: 230px;
   flex-shrink: 0;
   background: #ffffff;
-  border: 1px solid #dbe7ea;
+  /* border: 1px solid #dbe7ea; */
   border-radius: 10px;
   padding: 14px 0;
   align-self: flex-start;
+  box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
 }
 
 .lts-nav-group-title {
