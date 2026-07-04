@@ -107,3 +107,11 @@ export const BRAND = {
   pink: '#ff3399',
   gradient: 'linear-gradient(45deg, #51c7df, #ff3399)'
 }
+
+export const TASK_ICON_KEYS = {
+  portfolio_updated: 'folder',
+  builder_connected: 'chat',
+  forum_intro_posted: 'wave',
+  iam_video_posted: 'video',
+  invite_sent: 'invite'
+}

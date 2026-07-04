@@ -18,7 +18,7 @@ const StudioBuilderChallengeInitializer = () => {
     if (!user?.id) return
 
     const handleFocus = () => {
-      dispatch(fetchChallengeProgressStart({ silent: true }))
+      dispatch(fetchChallengeProgressStart({ silent: true, force: true }))
     }
 
     window.addEventListener('focus', handleFocus)

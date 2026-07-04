@@ -4331,6 +4331,10 @@ wave > wave:first-child {
   padding-bottom: 20px;
 }
 
+.dashboard-challenge-row {
+  grid-column: span 2;
+}
+
 .academy-dashboard-layout {
   grid-template-columns: 3fr 4fr;
   padding-inline: 40px;
