@@ -21,6 +21,7 @@ import backButtonReducer from './backButtonReducer'
 import sidebarReducer from './sidebar/Reducer'
 import trialTimerReducer from './trialTimer/reducer'
 import studioChallengeReducer from './studioChallenge/reducer'
+import streakReducer from './streak/reducer'
 import adminDashboardReducer from './adminDashboard/reducer'
 import organizationBrandingReducer from './organizationBranding/Reducer'
 
@@ -46,6 +47,7 @@ const rootReducer = combineReducers({
   sidebar: sidebarReducer,
   trialTimer: trialTimerReducer,
   studioChallenge: studioChallengeReducer,
+  streak: streakReducer,
   adminDashboard: adminDashboardReducer,
   organizationBranding: organizationBrandingReducer
 

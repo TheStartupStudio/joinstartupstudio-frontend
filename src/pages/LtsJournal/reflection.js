@@ -21,6 +21,7 @@ import NotSavedModal from '../../components/Modals/notSavedNoteModal'
 import _ from 'lodash'
 import { ReflectionInfoBox } from '../../components/Modals/ReflectionInfoBox'
 import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions';
+import { refreshStreakProgress } from '../../utils/refreshStreakProgress';
 
 function LtsJournalReflection(props) {
   const dispatch = useDispatch()
@@ -127,6 +128,7 @@ function LtsJournalReflection(props) {
       toast.success('Reflection saved successfully!');
       
       dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }));
+      refreshStreakProgress(dispatch);
 
     } catch (error) {
       console.error('Save error:', error);

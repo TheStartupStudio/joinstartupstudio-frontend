@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import './styles.css'
 import JournalTable from './TableComponents/JournalTable'
@@ -9,9 +10,11 @@ import '../../../pages/LtsJournal/TableWrapper/index.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { refreshStreakProgress } from '../../../utils/refreshStreakProgress'
 import { useLocation } from 'react-router-dom'
 
 const JournalTables = (props) => {
+  const dispatch = useDispatch()
   const [tables, setTables] = useState([])
   const [paragraphs, setParagraphs] = useState([])
   const [loading, setLoading] = useState(false)
@@ -176,6 +179,7 @@ const JournalTables = (props) => {
       })
       .then(({ data }) => {
         props.saved && props.saved()
+        refreshStreakProgress(dispatch)
         if (data) {
           if (data.cloneCellId) {
             if (from !== 'fromClonedRows') {

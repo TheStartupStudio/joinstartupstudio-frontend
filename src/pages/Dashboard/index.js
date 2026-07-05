@@ -34,6 +34,9 @@ import LeaderBoard from '../../components/LeaderBoard'
 import StudioBuilderChallenge from '../../components/StudioBuilderChallenge/StudioBuilderChallenge'
 import StudioBuilderChallengeInitializer from '../../components/StudioBuilderChallenge/StudioBuilderChallengeInitializer'
 import { fetchChallengeProgressStart } from '../../redux/studioChallenge/Actions'
+import { fetchStreakStart } from '../../redux/streak/Actions'
+import StreakWidget from '../../components/StreakWidget/StreakWidget'
+import StreakWidgetInitializer from '../../components/StreakWidget/StreakWidgetInitializer'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -57,6 +60,7 @@ function Dashboard() {
     dispatch(getEventsStart())
     dispatch(fetchCourseProgressData())
     dispatch(fetchChallengeProgressStart({ force: true }))
+    dispatch(fetchStreakStart({ force: true }))
     dispatch(changeSidebarState(false))
   }, [dispatch])
 
@@ -187,6 +191,7 @@ function Dashboard() {
         {/* Trial Countdown Banner */}
         <TrialTimerInitializer />
         <StudioBuilderChallengeInitializer />
+        <StreakWidgetInitializer />
         <CourseProgressInitializer />
         {isTrialActive && trialTimeRemaining && (
           <div 
@@ -249,7 +254,10 @@ function Dashboard() {
 
           <CourseProgress />
 
-          <UpcomingEventsCalendar />
+          <div className='dashboard-right-col'>
+            <StreakWidget />
+            <UpcomingEventsCalendar />
+          </div>
 
           <div className='dashboard-challenge-row'>
             <StudioBuilderChallenge />

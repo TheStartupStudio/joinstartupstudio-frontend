@@ -4335,6 +4335,13 @@ wave > wave:first-child {
   grid-column: span 2;
 }
 
+.dashboard-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
 .academy-dashboard-layout {
   grid-template-columns: 3fr 4fr;
   padding-inline: 40px;

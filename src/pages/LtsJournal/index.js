@@ -51,6 +51,7 @@ import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import tickSign from '../../assets/images/academy-icons/tick-sign.png'
 import LessonNavPanel from './LessonNavPanel'
 import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
+import { refreshStreakProgress } from '../../utils/refreshStreakProgress'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
@@ -1013,6 +1014,7 @@ function LtsJournal(props) {
       await Promise.all(savePromises)
       setReflectionsData({})
       toast.success('Reflections saved successfully!')
+      refreshStreakProgress(dispatch)
 
       const updatedProgress = await dispatch(
         fetchLtsCoursefinishedContent({ silent: true, force: true })
