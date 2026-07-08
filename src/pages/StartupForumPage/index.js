@@ -27,6 +27,7 @@ import ReportPostModal from './ReportPostModal'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import CategoryList from './CategoryList'
 import CategoryManagementModal from './CategoryManagementModal'
+import UserAgreementModal from '../../components/UserAgreementModal'
 
 const ICON_MAP = {
   'wavingHand': wavingHand,
@@ -51,6 +52,7 @@ const StartupForumPage = () => {
   const [showDiscussionModal, setShowDiscussionModal] = useState(false)
   const [editingPost, setEditingPost] = useState(null)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [showUserAgreement, setShowUserAgreement] = useState(false)
 
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
@@ -251,6 +253,14 @@ useEffect(() => {
 
   return () => clearTimeout(delayedFetch)
 }, [selectedCategory, searchTerm, selectedFilter, currentPage]) 
+
+useEffect(() => {
+  // If the user hasn't accepted the forum agreement yet, prompt immediately
+  // so they don't hit backend gating later (which can feel like a reload).
+  if (currentUser && !currentUser?.forumAgreement) {
+    setShowUserAgreement(true)
+  }
+}, [currentUser?.forumAgreement])
 
   const handleDiscussionSuccess = (discussion, action = 'create') => {
     if (action === 'delete') {
@@ -892,6 +902,12 @@ useEffect(() => {
         show={showCategoryModal}
         onHide={() => setShowCategoryModal(false)}
         onSuccess={handleCategoryManagementSuccess}
+      />
+
+      <UserAgreementModal
+        show={showUserAgreement}
+        onSuccess={() => setShowUserAgreement(false)}
+        onHide={() => setShowUserAgreement(false)}
       />
     </>
   )
