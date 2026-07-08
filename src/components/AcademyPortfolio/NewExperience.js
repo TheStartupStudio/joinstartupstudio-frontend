@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { FaRegCalendarAlt } from 'react-icons/fa'
@@ -23,7 +23,7 @@ function NewExperience({ isOpen, setIsOpen }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [imageFile, setImageFile] = useState(null)
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     organizationName: '',
     location: '',
     website: '',
@@ -34,7 +34,25 @@ function NewExperience({ isOpen, setIsOpen }) {
     currentPosition: false,
     showSection: true,
     jobTitle: ''
+  }
+
+  const [formData, setFormData] = useState({
+    ...initialFormData
   })
+
+  const resetLocalState = () => {
+    setErrors({})
+    setIsSubmitting(false)
+    setImageFile(null)
+    setFormData({ ...initialFormData })
+  }
+
+  // This component stays mounted while the modal is toggled.
+  // Reset local image state whenever the modal is opened, so the previous
+  // experience’s preview image doesn’t carry over.
+  useEffect(() => {
+    if (isOpen) resetLocalState()
+  }, [isOpen])
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -146,18 +164,7 @@ function NewExperience({ isOpen, setIsOpen }) {
       toast.success('Experience added successfully!')
 
       setIsOpen(false)
-      setFormData({
-        organizationName: '',
-        location: '',
-        website: '',
-        startDate: null,
-        endDate: null,
-        description: '',
-        imageUrl: null,
-        currentPosition: false,
-        showSection: true,
-        jobTitle: ''
-      })
+      resetLocalState()
     } catch (error) {
       toast.error('Failed to add experience')
     } finally {
@@ -166,7 +173,13 @@ function NewExperience({ isOpen, setIsOpen }) {
   }
 
   return (
-    <Modal isOpen={isOpen} toggle={() => setIsOpen(false)}>
+    <Modal
+      isOpen={isOpen}
+      toggle={() => {
+        setIsOpen(false)
+        resetLocalState()
+      }}
+    >
       <ModalBody>
         
         <img src={academyBulb} alt='Experience' className='mb-3 portfolio-modal-icon modal-credit rounded-circle p-2 mb-2 portfolio-modal-icon' />
@@ -446,7 +459,10 @@ function NewExperience({ isOpen, setIsOpen }) {
             <div className='d-flex gap-3 flex-col-500 w-full-500'>
               <Button
                 className='close-btn w-full-500'
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false)
+                  resetLocalState()
+                }}
                 type='button'
               >
                 CANCEL

@@ -6,12 +6,16 @@ const StudioBuilderChallengeInitializer = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user.user)
   const { isTrialActive } = useSelector((state) => state.trialTimer)
-  const { loaded, lastFetchTime } = useSelector((state) => state.studioChallenge)
+  const { loaded, lastFetchTime, loading } = useSelector(
+    (state) => state.studioChallenge
+  )
 
   useEffect(() => {
     if (!user?.id) return
 
-    dispatch(fetchChallengeProgressStart())
+    // If the first page load left us stuck in `loading=true`,
+    // force-refresh so `loaded` eventually becomes true.
+    dispatch(fetchChallengeProgressStart({ force: loading && !loaded }))
   }, [dispatch, user?.id])
 
   useEffect(() => {

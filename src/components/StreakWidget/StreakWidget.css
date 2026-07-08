@@ -45,6 +45,22 @@
   margin-left: auto;
 }
 
+.streak-widget__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.streak-widget__day-label {
+  font-size: 9px;
+  color: #6b7a7d;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
 .streak-widget__day-circle {
   width: 18px;
   height: 18px;
@@ -56,6 +72,10 @@
   justify-content: center;
   font-size: 9px;
   color: #b9cdd1;
+}
+
+.streak-widget__day--today .streak-widget__day-label {
+  color: #ec1f6b;
 }
 
 .streak-widget__day--active .streak-widget__day-circle {
@@ -116,6 +136,20 @@
   display: flex;
   gap: 5px;
   margin-left: auto;
+}
+
+.streak-widget__skeleton-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.streak-widget__skeleton-label {
+  width: 10px;
+  height: 8px;
+  border-radius: 4px;
 }
 
 .streak-widget__skeleton-dot {

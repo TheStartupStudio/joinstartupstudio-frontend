@@ -18,13 +18,25 @@ function StreakSkeleton() {
         <div className='streak-widget__skeleton-count' />
         <div className='streak-widget__skeleton-week'>
           {[1, 2, 3, 4, 5, 6, 7].map((day) => (
-            <div key={day} className='streak-widget__skeleton-dot' />
+            <div key={day} className='streak-widget__skeleton-day'>
+              <div className='streak-widget__skeleton-label' />
+              <div className='streak-widget__skeleton-dot' />
+            </div>
           ))}
         </div>
         <div className='streak-widget__skeleton-best' />
       </div>
     </div>
   )
+}
+
+function weekdayLetterForDateKey(dateKey) {
+  // `dateKey` comes from the API in `YYYY-MM-DD` format.
+  // Use midnight UTC to avoid shifting the day due to local timezone.
+  const d = new Date(`${dateKey}T00:00:00Z`)
+  const day = d.getUTCDay() // 0=Sun, 6=Sat
+  const letters = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+  return letters[day] || ''
 }
 
 function StreakWidget() {
@@ -75,9 +87,11 @@ function StreakWidget() {
             } else if (day.active) {
               content = '✓'
             }
+            const letter = weekdayLetterForDateKey(day.date)
 
             return (
               <div key={day.date} className={classes}>
+                <div className='streak-widget__day-label'>{letter}</div>
                 <div className='streak-widget__day-circle'>{content}</div>
               </div>
             )

@@ -58,11 +58,17 @@ function Dashboard() {
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
-    dispatch(fetchCourseProgressData())
+
+    // On the first login, `user.id` (and token) may not be ready yet.
+    // If we kick off these requests too early, they can get stuck in `loading=true`
+    // and both widgets will never recover (their initializers block re-fetches while loading).
+    if (!user?.id) return
+
+    dispatch(fetchCourseProgressData({ force: true }))
     dispatch(fetchChallengeProgressStart({ force: true }))
     dispatch(fetchStreakStart({ force: true }))
     dispatch(changeSidebarState(false))
-  }, [dispatch])
+  }, [dispatch, user?.id])
 
   function getFormattedDate() {
     const today = new Date()

@@ -76,6 +76,21 @@ const WorkExperienceCardModal = (props) => {
         endDate: formatDateToInputValue(props.data?.endDate || new Date())
       })
       setImageUrl(props.data.imageUrl)
+    } else {
+      // Add-mode: clear any stale preview image from a previous edit session
+      setWorkExperienceData({
+        organizationName: '',
+        location: '',
+        website: '',
+        startDate: formatDateToInputValue(new Date()),
+        endDate: formatDateToInputValue(new Date()),
+        description: '',
+        jobTitle: '',
+        imageUrl: null,
+        currentPosition: false,
+        showSection: true
+      })
+      setImageUrl(null)
     }
   }, [props.data])
 

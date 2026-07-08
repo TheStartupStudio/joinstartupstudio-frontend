@@ -256,6 +256,11 @@ const AddTaskModal = ({
         }
       }
 
+      const taskGlobalId =
+        taskData?.globalId ??
+        taskData?.journal?.globalId ??
+        taskData?.journalData?.globalId
+
       const payload = {
         title: taskTitle,
         category: categoryValue,
@@ -275,13 +280,14 @@ const AddTaskModal = ({
       }
 
       if (includeClient) {
-        payload.client = getClientPayloadValue(selectedClient)
+        // Backend requires `globalId` when using client="all".
+        // Some records we get here are missing `globalId`, so avoid sending
+        // client="all" unless we also have a globalId to resolve the record.
+        const clientValue = getClientPayloadValue(selectedClient)
+        if (clientValue !== 'all') {
+          payload.client = clientValue
+        }
       }
-
-      const taskGlobalId =
-        taskData?.globalId ??
-        taskData?.journal?.globalId ??
-        taskData?.journalData?.globalId
 
       let response
       if (isEditMode && taskData?.id) {
@@ -404,7 +410,11 @@ const AddTaskModal = ({
         taskToDelete?.globalId ??
         taskToDelete?.journal?.globalId ??
         taskToDelete?.journalData?.globalId
-      const deleteBody = getClientAndGlobalBody(selectedClient, deleteGlobalId)
+      // If `client="all"` and we don't have globalId, omitting the client
+      // avoids backend errors.
+      const clientValue = getClientPayloadValue(selectedClient)
+      const deleteBody =
+        clientValue === 'all' ? {} : getClientAndGlobalBody(selectedClient, deleteGlobalId)
       if (isMasterClass) {
         await axiosInstance.delete(`/contents/${taskToDelete.id}`, {
           data: deleteBody
