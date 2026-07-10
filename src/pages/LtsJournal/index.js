@@ -5,7 +5,6 @@ import {
   useHistory,
   Switch,
   Route,
-  useParams,
   Redirect,
   useLocation
 } from 'react-router-dom'
@@ -58,6 +57,7 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 import { toast } from 'react-toastify'
 import FoulWords from '../../utils/FoulWords'
+import { removeHtmlFromString } from '../../utils/helpers'
 import { JOURNALS } from '../../utils/constants'
 import { NotesButton } from '../../components/Notes'
 import NotificationBell from '../../components/NotificationBell'
@@ -65,10 +65,13 @@ import NotificationBell from '../../components/NotificationBell'
 function LtsJournal(props) {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { journalId } = useParams()
   const location = useLocation()
   const isRootPath =
     location.pathname === '/my-course-in-entrepreneurship/journal'
+  // Parent route has no :journalId param — read it from the path instead.
+  const journalId = isRootPath
+    ? undefined
+    : location.pathname.split('/').filter(Boolean).pop()
   const [journals, setJournals] = useState([])
   const [journalsData, setJournalsData] = useState([])
   const [selectedLesson, setSelectedLesson] = useState(null)
@@ -87,6 +90,8 @@ function LtsJournal(props) {
   const [showVideoModal, setShowVideoModal] = useState(false)
   const [reflectionContent, setReflectionContent] = useState('')
   const [reflectionsData, setReflectionsData] = useState({})
+  const [lessonRequiresReflections, setLessonRequiresReflections] =
+    useState(false)
   const [saving, setSaving] = useState(false)
   const [reflectionData, setReflectionData] = useState({
     content: '',
@@ -294,8 +299,11 @@ function LtsJournal(props) {
       return
     }
 
+    // Only gate free-trial users who do not already have paid/exempt access.
     const isInTrial =
-      !user?.user?.subscription_exempt && isUserInFreeTrial(user.user.createdAt)
+      !user?.user?.subscription_exempt &&
+      !user?.user?.stripe_subscription_id &&
+      isUserInFreeTrial(user?.user?.createdAt)
 
     if (!isInstructorUser && isInTrial) {
       if (clickedLevel === 1) {
@@ -528,12 +536,59 @@ function LtsJournal(props) {
     return 'notStarted'
   }
 
+  const isUserInFreeTrial = (userCreatedDate) => {
+    if (!userCreatedDate) return false
+    const currentDate = new Date()
+    const trialEndDate = new Date(userCreatedDate)
+    trialEndDate.setDate(trialEndDate.getDate() + 14)
+    return currentDate <= trialEndDate
+  }
+
+  const isReflectionContentEmpty = (content) => {
+    if (content == null || typeof content !== 'string') return true
+    const text = removeHtmlFromString(content)
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/\u00a0/g, ' ')
+      .trim()
+    return text.length === 0
+  }
+
+  const currentJournalReflections = Object.values(reflectionsData).filter(
+    (reflection) =>
+      reflection?.journalId != null &&
+      journalId != null &&
+      String(reflection.journalId) === String(journalId)
+  )
+
+  // Disable only when this lesson needs reflections and at least one tracked
+  // reflection is blank. If none are tracked yet, keep the button enabled so
+  // we don't lock it before editors mount; save handler still validates.
+  const hasIncompleteReflections =
+    lessonRequiresReflections &&
+    currentJournalReflections.some((reflection) =>
+      isReflectionContentEmpty(reflection?.content)
+    )
+
   const handleReflectionContentChange = (content, data) => {
-    const reflectionKey = `${data.journalId}_${data.journalEntryId}_${data.entryId || 'new'}`
+    const resolvedJournalId = data.journalId || journalId
+    if (resolvedJournalId == null || data.journalEntryId == null) return
+
+    const reflectionKey = `${resolvedJournalId}_${data.journalEntryId}_${data.entryId || 'new'}`
+
+    if (data.remove) {
+      setReflectionsData((prev) => {
+        const updated = { ...prev }
+        delete updated[reflectionKey]
+        return updated
+      })
+      return
+    }
+
     setReflectionsData((prev) => ({
       ...prev,
       [reflectionKey]: {
         ...data,
+        journalId: resolvedJournalId,
         content
       }
     }))
@@ -542,7 +597,11 @@ function LtsJournal(props) {
   const findNextLesson = (currentId) => {
     const numericId = parseInt(currentId)
 
-    if (!isInstructorUser && !user?.user?.stripe_subscription_id) {
+    if (
+      !isInstructorUser &&
+      !user?.user?.stripe_subscription_id &&
+      !user?.user?.subscription_exempt
+    ) {
       setSubscriptionModalparagraph(
         'This content is only available to subscribed users. Subscribe now to access all levels and features.'
       )
@@ -551,9 +610,13 @@ function LtsJournal(props) {
       return null
     }
 
-    const isInFreeTrial = isUserInFreeTrial(user.user.createdAt)
+    // Paid/exempt users should never see the free-trial gate.
+    const isInTrial =
+      !user?.user?.subscription_exempt &&
+      !user?.user?.stripe_subscription_id &&
+      isUserInFreeTrial(user?.user?.createdAt)
 
-    if (!isInstructorUser && isInFreeTrial && numericId >= 58) {
+    if (!isInstructorUser && isInTrial && numericId >= 58) {
       if (numericId === 58) {
         setSubscriptionModalparagraph(
           'Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.'
@@ -568,7 +631,7 @@ function LtsJournal(props) {
       return null
     }
 
-    if (!isInstructorUser && !isInFreeTrial) {
+    if (!isInstructorUser && !isInTrial) {
       for (let levelIndex = 1; levelIndex < levels.length; levelIndex++) {
         const currentLevelLessons = lessonsByLevel[levelIndex]
         if (!currentLevelLessons || currentLevelLessons.length === 0) continue
@@ -699,184 +762,16 @@ function LtsJournal(props) {
 
   const handleSaveAndContinue = async () => {
     if (saving) return
+    if (hasIncompleteReflections) {
+      toast.error('Complete all reflections before continuing')
+      return
+    }
     setSaving(true)
 
     try {
       const currentPath = history.location.pathname
       const currentJournalId = parseInt(currentPath.split('/').pop())
       const myTraining = history.location.pathname.includes('my-training')
-
-      const findNextLesson = (currentId) => {
-        const numericId = parseInt(currentId)
-
-        if (
-          !isInstructorUser &&
-          !user?.user?.stripe_subscription_id &&
-          !user?.user?.subscription_exempt
-        ) {
-          setSubscriptionModalparagraph(
-            'This content is only available to subscribed users. Subscribe now to access all levels and features.'
-          )
-          setShowSubscriptionModal(true)
-          setSaving(false)
-          return null
-        }
-
-        const isInTrial =
-          !user?.user?.subscription_exempt &&
-          isUserInFreeTrial(user.user.createdAt)
-
-        if (!isInstructorUser && isInTrial && numericId >= 58) {
-          if (numericId === 58) {
-            setSubscriptionModalparagraph(
-              'Congratulations! You have finished Level 1. To continue to Level 2, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.'
-            )
-          } else {
-            setSubscriptionModalparagraph(
-              'To access this content, your free trial period must end and your subscription must be active. Your trial will automatically convert to a paid subscription.'
-            )
-          }
-          setShowSubscriptionModal(true)
-          setSaving(false)
-          return null
-        }
-
-        if (!isInstructorUser && !isInTrial) {
-          for (let levelIndex = 1; levelIndex < levels.length; levelIndex++) {
-            const currentLevelLessons = lessonsByLevel[levelIndex]
-            if (!currentLevelLessons || currentLevelLessons.length === 0)
-              continue
-
-            const accessingCurrentLevel = currentLevelLessons.some(
-              (lesson) => lesson.id === numericId
-            )
-            if (accessingCurrentLevel) {
-              const prevLevelLessons = lessonsByLevel[levelIndex - 1]
-              if (prevLevelLessons && prevLevelLessons.length > 0) {
-                const prevLevelLastLesson =
-                  prevLevelLessons[prevLevelLessons.length - 1]
-                const prevLevelCompleted = finishedContent.includes(
-                  prevLevelLastLesson.id
-                )
-
-                if (!prevLevelCompleted) {
-                  const prevLevelName =
-                    levels[levelIndex - 1]?.title || `Level ${levelIndex}`
-                  const currentLevelName =
-                    levels[levelIndex]?.title || `Level ${levelIndex + 1}`
-                  setLockModalMessage(
-                    `You must complete ${prevLevelName} before accessing ${currentLevelName}.`
-                  )
-                  setShowLockModal(true)
-                  setSaving(false)
-                  return null
-                }
-              }
-            }
-          }
-        }
-
-        if (numericId === 63) return { nextId: 65 }
-
-        const getLevelTransition = (currentLessonId) => {
-          let currentLevelIndex = -1
-          for (let i = 0; i < levels.length; i++) {
-            const levelLessons = lessonsByLevel[i]
-            if (
-              levelLessons &&
-              levelLessons.find((lesson) => lesson.id === currentLessonId)
-            ) {
-              currentLevelIndex = i
-              break
-            }
-          }
-
-          if (currentLevelIndex === -1) return null
-
-          const currentLevelLessons = lessonsByLevel[currentLevelIndex]
-          const lastLessonInLevel =
-            currentLevelLessons[currentLevelLessons.length - 1]
-
-          if (
-            currentLessonId === lastLessonInLevel.id &&
-            currentLevelIndex < levels.length - 1
-          ) {
-            const nextLevelIndex = currentLevelIndex + 1
-            const nextLevelLessons = lessonsByLevel[nextLevelIndex]
-            if (nextLevelLessons && nextLevelLessons.length > 0) {
-              const firstNonSeparatorLesson = nextLevelLessons.find(
-                (lesson) => !lesson.separate
-              )
-              if (firstNonSeparatorLesson) {
-                return {
-                  nextId: firstNonSeparatorLesson.id,
-                  nextLevel: nextLevelIndex
-                }
-              }
-            }
-          }
-
-          return null
-        }
-
-        const levelTransition = getLevelTransition(numericId)
-        if (levelTransition) {
-          return levelTransition
-        }
-
-        let currentLevel = activeLevel
-
-        for (let level = 0; level < levels.length; level++) {
-          const foundInCurrentLevel = lessonsByLevel[level]?.find(
-            (lesson) => lesson.id === numericId
-          )
-          if (foundInCurrentLevel) {
-            currentLevel = level
-            break
-          }
-        }
-
-        const lessons = lessonsByLevel[currentLevel] || []
-
-        if (lessons.length === 0) {
-          console.warn(
-            'Lessons not loaded for level:',
-            currentLevel,
-            lessonsByLevel
-          )
-          return null
-        }
-
-        const currentIndex = lessons.findIndex(
-          (lesson) => lesson.id === numericId
-        )
-
-        if (currentIndex === -1) {
-          console.warn(
-            'Lesson not found:',
-            numericId,
-            'in level:',
-            currentLevel
-          )
-          return null
-        }
-
-        if (currentIndex < lessons.length - 1) {
-          for (let i = currentIndex + 1; i < lessons.length; i++) {
-            const potentialNextLesson = lessons[i]
-            if (!potentialNextLesson.separate) {
-              return { nextId: potentialNextLesson.id }
-            }
-          }
-          return null
-        }
-
-        if (numericId === 126) {
-          return null
-        }
-
-        return null
-      }
 
       const resolveLessonTitle = (lessonId) => {
         switch (lessonId) {
@@ -909,21 +804,24 @@ function LtsJournal(props) {
       let savePromises = []
 
       Object.entries(reflectionsData).forEach(([key, reflectionData]) => {
-        const { content, journalId, journalEntryId, entryId } = reflectionData
-        const isEmpty =
-          !content || content.trim() === '' || content === '<p><br></p>'
-        if (isEmpty) {
+        if (String(reflectionData.journalId) !== String(currentJournalId)) {
+          return
+        }
+
+        const { content, journalId: reflectionJournalId, journalEntryId, entryId } =
+          reflectionData
+        if (isReflectionContentEmpty(content)) {
           hasEmptyReflections = true
           return
         }
 
         const endpoint = !entryId
-          ? `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`
-          : `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`
+          ? `/ltsJournals/${reflectionJournalId}/entries/${journalEntryId}/userEntries`
+          : `/ltsJournals/${reflectionJournalId}/entries/${journalEntryId}/userEntries/${entryId}`
         savePromises.push(
           axiosInstance[!entryId ? 'post' : 'put'](endpoint, {
             content,
-            trainingId: myTraining ? journalId : null
+            trainingId: myTraining ? reflectionJournalId : null
           })
         )
       })
@@ -932,7 +830,11 @@ function LtsJournal(props) {
         const nextLessonInfo = findNextLesson(currentJournalId)
 
         if (nextLessonInfo === null) {
-          toast.success('Course completed!')
+          // findNextLesson already opened lock/subscription UI when gated.
+          // Only treat the final lesson as course completion.
+          if (currentJournalId === 126) {
+            toast.success('Course completed!')
+          }
           return
         }
 
@@ -949,10 +851,6 @@ function LtsJournal(props) {
         const nextLessonTitle = resolveLessonTitle(nextLessonId)
         setCurrentPlaceholder(nextLessonTitle)
 
-        const targetLevel =
-          nextLessonInfo.nextLevel !== undefined
-            ? nextLessonInfo.nextLevel
-            : activeLevel
         let nextLesson = null
 
         for (let level = 0; level < levels.length; level++) {
@@ -960,7 +858,6 @@ function LtsJournal(props) {
             (l) => l.id === nextLessonId
           )
           if (found) {
-            console.log('Found next lesson:', found, 'in level:', level)
             nextLesson = {
               value: nextLessonId,
               label: found.title,
@@ -989,12 +886,7 @@ function LtsJournal(props) {
         }
       }
 
-      if (hasEmptyReflections) {
-        if (isJournalCompleted || isInstructorUser) {
-          await navigateToNextLesson()
-          setSaving(false)
-          return
-        }
+      if (hasEmptyReflections || (lessonRequiresReflections && savePromises.length === 0)) {
         toast.error('Complete all reflections before continuing')
         setSaving(false)
         return
@@ -1012,7 +904,15 @@ function LtsJournal(props) {
       }
 
       await Promise.all(savePromises)
-      setReflectionsData({})
+      setReflectionsData((prev) => {
+        const updated = { ...prev }
+        Object.keys(updated).forEach((key) => {
+          if (String(updated[key].journalId) === String(currentJournalId)) {
+            delete updated[key]
+          }
+        })
+        return updated
+      })
       toast.success('Reflections saved successfully!')
       refreshStreakProgress(dispatch)
 
@@ -1032,14 +932,6 @@ function LtsJournal(props) {
     } finally {
       setSaving(false)
     }
-  }
-
-  const isUserInFreeTrial = (userCreatedDate) => {
-    if (!userCreatedDate) return false
-    const currentDate = new Date()
-    const trialEndDate = new Date(userCreatedDate)
-    trialEndDate.setDate(trialEndDate.getDate() + 14)
-    return currentDate <= trialEndDate
   }
 
   useEffect(() => {
@@ -1148,14 +1040,20 @@ function LtsJournal(props) {
         borderRadius: '8px',
         background: 'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
         padding: '3px',
-        boxShadow: '0px 4px 10px 0px #00000040'
+        boxShadow: '0px 4px 10px 0px #00000040',
+        opacity: !isContinue && hasIncompleteReflections ? 0.5 : 1
       }}
     >
       <button
         style={{ padding: '.5rem' }}
         className='review-progress-btn'
         onClick={isContinue ? handleContinue : handleSaveAndContinue}
-        disabled={saving}
+        disabled={saving || (!isContinue && hasIncompleteReflections)}
+        title={
+          !isContinue && hasIncompleteReflections
+            ? 'Complete all reflections before continuing'
+            : undefined
+        }
       >
         {saving ? (
           <FontAwesomeIcon icon={faSpinner} spin />
@@ -1445,6 +1343,9 @@ function LtsJournal(props) {
                               saved={journalChanged}
                               onReflectionContentChange={
                                 handleReflectionContentChange
+                              }
+                              onReflectionRequirementsChange={
+                                setLessonRequiresReflections
                               }
                               onIntroVideoChange={handleIntroVideoChange}
                               lessonsByLevel={lessonsByLevel}

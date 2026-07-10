@@ -152,6 +152,22 @@ function LtsJournalContent(props) {
     loadData()
   }, [props.match.params.journalId])
 
+  useEffect(() => {
+    const entryCount = Array.isArray(journal?.entries) ? journal.entries.length : 0
+    const requiresReflections = !isIntroVideo && entryCount > 0
+
+    props.onReflectionRequirementsChange?.(requiresReflections)
+
+    return () => {
+      props.onReflectionRequirementsChange?.(false)
+    }
+  }, [
+    journal?.id,
+    journal?.entries?.length,
+    isIntroVideo,
+    props.match.params.journalId
+  ])
+
   const updateUserReflectionsTable = (updatedTable, index) => {
     const updatedJournal = { ...journal }
 
@@ -503,16 +519,15 @@ function LtsJournalContent(props) {
         : journal.title}</h6>
           </div>
           
-          {videos[currentVideoIndex] && 
-           ((videos[currentVideoIndex].id === 140 && props.match.params.journalId === '60') || 
+          {videos[currentVideoIndex] &&
+           ((videos[currentVideoIndex].id === 140 && props.match.params.journalId === '60') ||
             (videos[currentVideoIndex].id === 727 && props.match.params.journalId === '70')) && (
             <div className="journal-content" style={{marginTop:'1rem'}} >
               {getContentByVideo(videos[currentVideoIndex].id).content}
             </div>
           )}
 
-          {videos[currentVideoIndex] && 
-           !isIntroVideo && 
+          {!isIntroVideo &&
            (journal.entries && journal.entries.length > 0 ? (
             <div className="col-12">
               <div className="journal-entries">
@@ -520,6 +535,7 @@ function LtsJournalContent(props) {
                   entries={journal.entries}
                   entryBoxTitle={journal?.title}
                   journal={journal}
+                  routeJournalId={props.match.params.journalId}
                   isEditable={true} 
                   isDeletable={true}
                   userJournalEntries={userJournalEntries}

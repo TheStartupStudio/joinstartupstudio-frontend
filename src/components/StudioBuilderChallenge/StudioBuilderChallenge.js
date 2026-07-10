@@ -8,6 +8,7 @@ import {
   BRAND,
   TASK_ICON_KEYS
 } from '../../utils/challengeTasks'
+import ChallengeInviteModal from './ChallengeInviteModal'
 import './StudioBuilderChallenge.css'
 
 const CARD_ICONS = {
@@ -81,10 +82,34 @@ function ProgressRing({ completed, total }) {
   )
 }
 
-function TaskCard({ task }) {
+function TaskCard({ task, onInviteClick }) {
   const iconKey = TASK_ICON_KEYS[task.key] || 'default'
-  const FrontTag = task.completed ? 'div' : Link
-  const frontProps = task.completed ? {} : { to: task.href }
+  const opensInviteModal = task.opensModal || task.key === 'invite_sent'
+
+  const handleInviteClick = (event) => {
+    event.preventDefault()
+    onInviteClick?.()
+  }
+
+  const renderFrontFace = () => (
+    <>
+      <div className='studio-challenge__card-top'>
+        <div className='studio-challenge__card-icon-wrap'>
+          <svg width='15' height='15' viewBox='0 0 20 20' aria-hidden='true'>
+            {CARD_ICONS[iconKey] || CARD_ICONS.default}
+          </svg>
+        </div>
+        <span className='studio-challenge__card-reward-label'>Day {task.day}</span>
+      </div>
+      <div>
+        <div className='studio-challenge__card-title'>{task.title}</div>
+        <div className='studio-challenge__card-desc'>{task.description}</div>
+        {!task.completed && (
+          <div className='studio-challenge__card-cta'>{task.cta} →</div>
+        )}
+      </div>
+    </>
+  )
 
   return (
     <div className='studio-challenge__card'>
@@ -93,26 +118,26 @@ function TaskCard({ task }) {
           task.completed ? ' studio-challenge__card-inner--flipped' : ''
         }`}
       >
-        <FrontTag
-          {...frontProps}
-          className='studio-challenge__card-face studio-challenge__card-face--front'
-        >
-          <div className='studio-challenge__card-top'>
-            <div className='studio-challenge__card-icon-wrap'>
-              <svg width='15' height='15' viewBox='0 0 20 20' aria-hidden='true'>
-                {CARD_ICONS[iconKey] || CARD_ICONS.default}
-              </svg>
-            </div>
-            <span className='studio-challenge__card-reward-label'>Day {task.day}</span>
+        {task.completed ? (
+          <div className='studio-challenge__card-face studio-challenge__card-face--front'>
+            {renderFrontFace()}
           </div>
-          <div>
-            <div className='studio-challenge__card-title'>{task.title}</div>
-            <div className='studio-challenge__card-desc'>{task.description}</div>
-            {!task.completed && (
-              <div className='studio-challenge__card-cta'>{task.cta} →</div>
-            )}
-          </div>
-        </FrontTag>
+        ) : opensInviteModal ? (
+          <button
+            type='button'
+            className='studio-challenge__card-face studio-challenge__card-face--front studio-challenge__card-button'
+            onClick={handleInviteClick}
+          >
+            {renderFrontFace()}
+          </button>
+        ) : (
+          <Link
+            to={task.href}
+            className='studio-challenge__card-face studio-challenge__card-face--front'
+          >
+            {renderFrontFace()}
+          </Link>
+        )}
 
         <div className='studio-challenge__card-face studio-challenge__card-face--back'>
           <svg width='34' height='34' viewBox='0 0 40 40' fill='none' aria-hidden='true'>
@@ -158,6 +183,7 @@ function StudioBuilderChallenge() {
   )
   const { isTrialActive } = useSelector((state) => state.trialTimer)
   const [modal, setModal] = useState(null)
+  const [showInviteModal, setShowInviteModal] = useState(false)
   const prevDaysEarnedRef = useRef(null)
   const prevChallengeCompleteRef = useRef(false)
 
@@ -226,11 +252,11 @@ function StudioBuilderChallenge() {
             </div>
             <span className='studio-challenge__eyebrow'>{wc.eyebrow}</span>
           </div>
-          {wc.link && (
+          {/* {wc.link && (
             <Link to='/my-portfolio' className='studio-challenge__details-link'>
               {wc.link} →
             </Link>
-          )}
+          )} */}
         </div>
 
         <div className='studio-challenge__band'>
@@ -249,7 +275,11 @@ function StudioBuilderChallenge() {
             style={{ gridTemplateColumns: `repeat(${totalTasks}, minmax(0, 1fr))` }}
           >
             {safeTasks.map((task) => (
-              <TaskCard key={task.key} task={task} />
+              <TaskCard
+                key={task.key}
+                task={task}
+                onInviteClick={() => setShowInviteModal(true)}
+              />
             ))}
           </div>
         </div>
@@ -328,6 +358,11 @@ function StudioBuilderChallenge() {
           </div>
         </div>
       )}
+
+      <ChallengeInviteModal
+        show={showInviteModal}
+        onHide={() => setShowInviteModal(false)}
+      />
     </>
   )
 }

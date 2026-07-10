@@ -20,6 +20,7 @@ const EntriesBox = (props) => {
   const {
     userJournalEntries,
     journal,
+    routeJournalId,
     deleteReflection: deleteReflectionProp, // Rename prop
     updateReflection,
     addReflection,
@@ -107,11 +108,12 @@ const EntriesBox = (props) => {
   };
 
   const handleRemoveNewReflection = (entryId) => {
-    const reflectionToRemove = `${journal?.id}_${entryId}_new`;
+    const resolvedJournalId = routeJournalId || journal?.id
+    const reflectionToRemove = `${resolvedJournalId}_${entryId}_new`
     
     onReflectionContentChange(null, {
       content: null,
-      journalId: journal?.id,
+      journalId: resolvedJournalId,
       journalEntryId: entryId,
       entryId: null,
       remove: true // Add flag to indicate removal
@@ -166,6 +168,7 @@ const EntriesBox = (props) => {
                   <div key={userJournalEntry.id}>
                     <LtsJournalReflection
                       journal={journal}
+                      routeJournalId={routeJournalId || journal?.id}
                       journalEntry={entry}
                       userEntry={journal.userEntry}
                       entry={userJournalEntry}
@@ -184,6 +187,7 @@ const EntriesBox = (props) => {
                 <div className='mt-2'>
                   <LtsJournalReflection
                     journal={journal}
+                    routeJournalId={routeJournalId || journal?.id}
                     journalEntry={entry}
                     userEntry={journal.userEntry}
                     entry={null}
@@ -202,6 +206,7 @@ const EntriesBox = (props) => {
                 <div className='mt-2'>
                   <LtsJournalReflection
                     journal={journal}
+                    routeJournalId={routeJournalId || journal?.id}
                     journalEntry={entry}
                     userEntry={journal.userEntry}
                     entry={null}

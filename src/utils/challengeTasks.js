@@ -3,10 +3,11 @@ export const CHALLENGE_TASKS = [
     key: 'portfolio_updated',
     day: 1,
     title: 'Update your Portfolio',
-    description: 'Set up and update your Market-Ready Portfolio.',
+    description:
+      'Add a personal bio and at least 1 social media link to the "About Me" section in your portfolio.',
     cta: 'Go to Portfolio',
     href: '/my-portfolio',
-    toast: 'Day 1 earned. Your Portfolio is live.'
+    toast: 'Day 1 earned. Your About Me section is set up.'
   },
   {
     key: 'builder_connected',
@@ -31,9 +32,10 @@ export const CHALLENGE_TASKS = [
     key: 'iam_video_posted',
     day: 4,
     title: 'Post your I Am Video',
-    description: 'Share your I Am Video in the forum and ask for feedback.',
+    description:
+      'Share your I am Video in the forum in the "ask for feedback" channel.',
     cta: 'Post Your Video',
-    href: '/startup-forum',
+    href: '/startup-forum/ask-for-feedback',
     toast: 'Day 4 earned. Your I Am Video is live.'
   },
   {
@@ -41,9 +43,10 @@ export const CHALLENGE_TASKS = [
     day: 5,
     title: 'Invite a friend to The Studio',
     description:
-      'Send your unique invite link to someone who should be building.',
+      "Enter a friend's name and email and we'll send them an invite to join The Studio.",
     cta: 'Send an Invite',
-    href: '/my-portfolio',
+    href: null,
+    opensModal: true,
     toast: 'Day 5 earned. Your invite is on its way.'
   }
 ]

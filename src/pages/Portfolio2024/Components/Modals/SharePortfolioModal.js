@@ -4,12 +4,9 @@ import { IoMdCopy } from 'react-icons/io'
 import SectionActions from '../Actions/SectionActions'
 import TooltipAction from '../Actions/TooltipAction'
 import Tooltip from 'react-bootstrap/Tooltip'
-import { useDispatch, useSelector } from 'react-redux'
-import axiosInstance from '../../../../utils/AxiosInstance'
-import { fetchChallengeProgressStart } from '../../../../redux/studioChallenge/Actions'
+import { useSelector } from 'react-redux'
 
 function SharePortfolioModal(props) {
-  const dispatch = useDispatch()
   const loggedUser = useSelector((state) => state.user.user.user)
   const actions = [
     {
@@ -47,12 +44,6 @@ function SharePortfolioModal(props) {
   const handleCopy = async () => {
     navigator.clipboard.writeText(portfolioUrl())
     setCopied(true)
-    try {
-      await axiosInstance.post('/challenge/invite-sent')
-      dispatch(fetchChallengeProgressStart({ force: true, silent: true }))
-    } catch {
-      // Invite may already be recorded or the challenge window may have closed.
-    }
   }
 
   return (

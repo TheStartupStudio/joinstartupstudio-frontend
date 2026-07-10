@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
 import {
@@ -84,21 +84,42 @@ function LtsJournalReflection(props) {
     'align',
   ];
 
+  useEffect(() => {
+    const initialContent = props.entry?.content || ''
+    const resolvedJournalId = props.routeJournalId || props.journal?.id
+    setContent(initialContent)
+    props.onContentChange?.(initialContent, {
+      content: initialContent,
+      journalId: resolvedJournalId,
+      journalEntryId: props.journalEntry?.id,
+      entryId: props.entry?.id,
+      foulWords: null
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.routeJournalId,
+    props.journal?.id,
+    props.journalEntry?.id,
+    props.entry?.id,
+    props.entry?.content
+  ])
+
   const handleContentChange = (value) => {
-    setContent(value);
+    setContent(value)
+    const resolvedJournalId = props.routeJournalId || props.journal?.id
 
     props.onContentChange?.(value, {
       content: value,
-      journalId: props.journal?.id,
+      journalId: resolvedJournalId,
       journalEntryId: props.journalEntry?.id,
       entryId: props.entry?.id,
       foulWords: foulWords
-    });
+    })
 
     detectFoulWords(removeHtmlFromString(value), (data) => {
-      setFoulWords(data);
-    });
-  };
+      setFoulWords(data)
+    })
+  }
 
   const handleSubmit = async (content) => {
     if (saving) return;

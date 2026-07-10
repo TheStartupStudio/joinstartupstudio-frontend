@@ -325,6 +325,18 @@
   box-shadow: 0 4px 12px rgba(81, 199, 223, 0.12);
 }
 
+.studio-challenge__card-button {
+  width: 100%;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.studio-challenge__card-button:focus-visible {
+  outline: 2px solid #51c7df;
+  outline-offset: 2px;
+}
+
 .studio-challenge__card-face--back {
   background: linear-gradient(45deg, #51c7df, #ff3399);
   transform: rotateY(180deg);
@@ -505,6 +517,7 @@
   width: 100%;
   text-align: center;
   position: relative;
+  overflow: auto;
 }
 
 .studio-challenge__modal-accent {

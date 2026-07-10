@@ -2,13 +2,9 @@ import { Button, Modal, ModalBody } from 'reactstrap'
 import ShareModal from '../../assets/images/academy-icons/svg/share-link-modal.svg'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
-import axiosInstance from '../../utils/AxiosInstance'
-import { fetchChallengeProgressStart } from '../../redux/studioChallenge/Actions'
 
 function SharePortfolioModal({ sharePortfolio, setSharePortfolio, portfolioUrl }) {
-  const dispatch = useDispatch()
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -16,12 +12,6 @@ function SharePortfolioModal({ sharePortfolio, setSharePortfolio, portfolioUrl }
       await navigator.clipboard.writeText(portfolioUrl)
       setCopied(true)
       toast.success('Link copied to clipboard!')
-      try {
-        await axiosInstance.post('/challenge/invite-sent')
-        dispatch(fetchChallengeProgressStart({ force: true, silent: true }))
-      } catch {
-        // Invite may already be recorded or the challenge window may have closed.
-      }
       setTimeout(() => setCopied(false), 2000)
       setSharePortfolio(false)
     } catch (err) {
