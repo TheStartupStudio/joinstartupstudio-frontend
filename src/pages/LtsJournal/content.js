@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faArrowRight, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MediaLightbox from '../../components/MediaLightbox'
@@ -504,6 +504,7 @@ function LtsJournalContent(props) {
         </div>
 
 
+        <div className='lts-content-pane'>
         <div id="content-container" className={`content-container ${paneClass}`} style={{ boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
           {!isTask && buildsTowardTask && (
             <BuildingTowardBanner taskTitle={buildsTowardTask.title} />
@@ -558,6 +559,34 @@ function LtsJournalContent(props) {
           ) : (
             <p dangerouslySetInnerHTML={{ __html: journal.content }} style={{ fontFamily: 'Montserrat', fontSize: '16px', fontWeight: '400', color: '#000', padding: '1rem 0rem' }}></p>
           ))}
+        </div>
+        {!isIntroVideo && props.onSaveAndContinue && (
+          <button
+            type='button'
+            className='lts-save-continue-text'
+            onClick={props.onSaveAndContinue}
+            disabled={props.saving || props.hasIncompleteReflections}
+            title={
+              props.hasIncompleteReflections
+                ? 'Complete all reflections before continuing'
+                : undefined
+            }
+          >
+            {props.saving ? (
+              <FontAwesomeIcon icon={faSpinner} spin />
+            ) : (
+              <>
+                <span>
+                  {props.intl.formatMessage({
+                    id: 'my_journal.save_and_continue',
+                    defaultMessage: 'Save and Continue'
+                  })}
+                </span>
+                <FontAwesomeIcon icon={faArrowRight} />
+              </>
+            )}
+          </button>
+        )}
         </div>
       </div>
 

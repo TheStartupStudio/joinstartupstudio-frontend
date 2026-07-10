@@ -991,6 +991,49 @@ display: flex
   margin-bottom: 14px;
 }
 
+.lts-content-pane {
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.lts-content-pane .content-container {
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.lts-save-continue-text {
+  align-self: flex-end;
+  margin-top: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #51c7df;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.2;
+  margin-bottom: 50px;
+}
+
+.lts-save-continue-text:hover:not(:disabled) {
+  color: #3bb5ce;
+  text-decoration: underline;
+}
+
+.lts-save-continue-text:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
 /* Building toward banner */
 .lts-building-toward {
   font-size: 11px;

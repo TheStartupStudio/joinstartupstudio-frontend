@@ -1347,6 +1347,11 @@ function LtsJournal(props) {
                               onIntroVideoChange={handleIntroVideoChange}
                               lessonsByLevel={lessonsByLevel}
                               activeLevel={activeLevel}
+                              onSaveAndContinue={handleSaveAndContinue}
+                              saving={saving}
+                              hasIncompleteReflections={
+                                hasIncompleteReflections
+                              }
                               noteButtonProps={{
                                 from: 'entrepreneurshipJournal',
                                 data: {
