@@ -79,6 +79,7 @@ function LessonNavPanel({
     const classes = [base]
     if (isCurrent(lesson)) classes.push('current')
     if (status === 'done') classes.push('done')
+    if (status === 'inProgress') classes.push('in-progress')
     if (status === 'notStarted') classes.push('locked')
     return classes.join(' ')
   }

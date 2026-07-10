@@ -901,6 +901,15 @@ display: flex
   object-fit: contain;
 }
 
+/* Current lesson: tint tick + blue ball to a darker pink */
+.lts-nav-task-row.current.done .lts-nav-status-icon,
+.lts-nav-task-row.current.in-progress .lts-nav-status-icon,
+.lts-nav-reflection-row.current.done .lts-nav-status-icon,
+.lts-nav-reflection-row.current.in-progress .lts-nav-status-icon {
+  filter: brightness(0) saturate(100%) invert(18%) sepia(90%) saturate(2800%)
+    hue-rotate(325deg) brightness(0.82) contrast(1.05);
+}
+
 .lts-nav-reflections {
   margin: 0 0 6px;
 }
