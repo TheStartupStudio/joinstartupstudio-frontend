@@ -1186,7 +1186,6 @@ function LtsJournal(props) {
                             <div
                               id='video-container-journal'
                               className='video-container-bg'
-                              style={{ flex: '1 1 50%' }}
                             >
                               <div className='d-flex placeholder-content-img align-items-center'>
                                 <img
@@ -1272,8 +1271,6 @@ function LtsJournal(props) {
                               id='content-container'
                               className='content-container'
                               style={{
-                                flex: '1 1 50%',
-                                width: '100%',
                                 boxShadow:
                                   '0px 15px 20px 8px rgba(0, 0, 0, 0.09)',
                                 borderRadius: '20px',

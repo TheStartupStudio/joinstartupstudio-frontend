@@ -429,12 +429,12 @@ function LtsJournalContent(props) {
   }
 
   return (
-    <>
+    <div className='lts-lesson-body'>
       {isTask && priorReflectionLessonIds.length > 0 && (
         <PriorReflectionsStrip lessonIds={priorReflectionLessonIds} />
       )}
       <div className="d-flex justify-content-between align-items-start general-video-container-journal">
-        <div id="video-container-journal" className={`video-container-bg ${paneClass}`} style={{ flex: '1 1 50%', position: 'relative' }}>
+        <div id="video-container-journal" className={`video-container-bg ${paneClass}`} style={{ position: 'relative' }}>
           <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 999999999 }}>
             <NotesButton 
               key={props.noteButtonProps?.journalId}
@@ -504,7 +504,7 @@ function LtsJournalContent(props) {
         </div>
 
 
-        <div id="content-container" className={`content-container ${paneClass}`} style={{ flex: '1 1 50%', width: '100%', boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
+        <div id="content-container" className={`content-container ${paneClass}`} style={{ boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
           {!isTask && buildsTowardTask && (
             <BuildingTowardBanner taskTitle={buildsTowardTask.title} />
           )}
@@ -886,7 +886,7 @@ function LtsJournalContent(props) {
           />
         )}
       </div>
-    </>
+    </div>
   )
 }
 
