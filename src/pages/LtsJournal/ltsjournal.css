@@ -202,11 +202,13 @@ display: flex
   box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
   padding: 1.5rem;
   /* background-color: #ffffff; */
-  height: 100%;
+  /* height: auto; */
+  /* align-self: stretch; */
   display: flex;
   flex-direction: column;
   width: auto;
-  flex: 1 1 0%;
+  /* Give video a bit more width than the reflection pane */
+  flex: 1.2 1 0%;
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
@@ -384,8 +386,8 @@ display: flex
 
 .general-video-container-journal {
   display: flex;
-  gap: 2rem;
-  align-items: flex-start;
+  gap: 1.25rem;
+  /* align-items: stretch; */
   justify-content: space-between;
   /* padding: 1.2rem; */
   width: 100%;
@@ -817,7 +819,7 @@ display: flex
   flex: 1 1 0%;
   min-width: 0;
   max-width: calc(100% - 254px); /* nav 230 + gap 24 */
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   box-sizing: border-box;
 }
 
@@ -825,7 +827,7 @@ display: flex
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   box-sizing: border-box;
 }
 
