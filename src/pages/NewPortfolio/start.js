@@ -101,35 +101,41 @@ function Start(props) {
 
   return (
     <div>
-      <div className='section-description-container d-flex justify-content-between start-section-description-container'>
-        <div
-          className={`portf-section-maintitle ${
-            userRole === 'instructor' || userRole === 'admin'
-              ? `instructor-start-portfolio-container`
-              : `student-start-portfolio-container`
-          }`}
-        >
-          <div className='pe-2'>
-            <img
-              src={start}
-              alt='Start'
-              style={{ width: '72px', height: '70px' }}
-            />
-          </div>
-          <div>
-            <div className='align-items-center portfolio-section-title'>
-              <div className='section-title' style={{ fontSize: '20px' }}>
-                Start: {selectedSection?.label}
-              </div>
+      <div
+        className={`section-description-container d-flex justify-content-between start-section-description-container${
+          props.hideSectionHeader ? ' start-section-header-compact' : ''
+        }`}
+      >
+        {!props.hideSectionHeader && (
+          <div
+            className={`portf-section-maintitle ${
+              userRole === 'instructor' || userRole === 'admin'
+                ? `instructor-start-portfolio-container`
+                : `student-start-portfolio-container`
+            }`}
+          >
+            <div className='pe-2'>
+              <img
+                src={start}
+                alt='Start'
+                style={{ width: '72px', height: '70px' }}
+              />
             </div>
-            <div
-              className='section-description'
-              dangerouslySetInnerHTML={{
-                __html: description[selectedSection.value]
-              }}
-            />
+            <div>
+              <div className='align-items-center portfolio-section-title'>
+                <div className='section-title' style={{ fontSize: '20px' }}>
+                  Start: {selectedSection?.label}
+                </div>
+              </div>
+              <div
+                className='section-description'
+                dangerouslySetInnerHTML={{
+                  __html: description[selectedSection.value]
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
         {/* Dropdown Trigger */}
         <div
           style={{
@@ -138,7 +144,8 @@ function Start(props) {
             background: 'linear-gradient(to bottom, #EE3C96 0%, #52C7D3 100%)',
             padding: '1px',
             boxShadow: '0px 4px 10px 0px #00000040',
-            marginBottom: '20px'
+            marginBottom: '20px',
+            marginLeft: props.hideSectionHeader ? 'auto' : undefined
           }}
         >
           <Select

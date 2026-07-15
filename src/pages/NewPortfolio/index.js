@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import './Portfolio.css'
 import whoami from '../../assets/images/whoami.png'
@@ -144,7 +145,7 @@ const Portfolio = (props) => {
   const getPortfolioUrl = () => {
     const username = user?.user?.username || 'user'
     const currentOrigin = window.location.origin
-    return `${currentOrigin}/public-portfolio/${username}`
+    return `${currentOrigin}/public-portfolio/${encodeURIComponent(username)}`
   }
 
   const pages = [
@@ -232,6 +233,19 @@ const Portfolio = (props) => {
     setIsFullscreenView(!isFullscreenView)
     setIsPreviewMode(!isFullscreenView) // Set preview mode when entering fullscreen
   }
+
+  useEffect(() => {
+    if (!isFullscreenView) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.classList.add('portfolio-preview-open')
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.classList.remove('portfolio-preview-open')
+      document.body.style.overflow = previousOverflow
+    }
+  }, [isFullscreenView])
 
   const renderActiveSection = () => {
     switch (activeSection) {
@@ -350,7 +364,9 @@ const Portfolio = (props) => {
     <LtsContainerWrapper
       title={props.archived ? 'Archived Portfolio' : 'My Portfolio'}
       titleDescription='Complete your assigned tasks, work toward building your Market-Ready Portfolio and develop your Market-Ready skills.'
-      className='portfolio-lts-container'
+      className={`portfolio-lts-container${
+        isFullscreenView ? ' portfolio-lts-container--previewing' : ''
+      }`}
       showBreadcrumbs={false}
     >
       <div>
@@ -552,219 +568,86 @@ const Portfolio = (props) => {
               {renderNavigationButtons()}
             </div>
           </>
-        ) : (
-          // Fullscreen View
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 1000,
-              overflow: 'auto',
-              padding: '10px'
-            }}
-            className='portfolio-container  '
-          >
-            <div
-              onClick={handleToggleFullscreen}
-              style={{
-                position: 'fixed',
-                top: '0',
-                left: '0',
-                zIndex: 1001,
-                padding: '10px 15px',
-                background: '#FFF',
-                boxShadow: '0px 3px 14px #00000029',
-                width: '100%',
-                border: 'none',
-                cursor: 'pointer',
-                color: 'grey'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div>
-                  <img src={LeftArrow} width={25} />
-                </div>
-                <div
-                  style={{
-                    marginLeft: '10px',
-                    color: 'black',
-                    fontSize: '14px'
-                  }}
-                >
-                  {' '}
-                  Close Preview
-                </div>
-              </div>
-            </div>
+        ) : null}
 
-            <div className='portfolio-container preview-portfolio-container'>
-              {/* <div
-              className='section-description-container'
-              style={{ marginBottom: '15px' }}
-            >
-              <div
-                className='portf-section-maintitle'
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%'
-                }}
+        {isFullscreenView &&
+          createPortal(
+            <div className='portfolio-preview-overlay' role='dialog' aria-modal='true'>
+              <button
+                type='button'
+                className='portfolio-preview-close'
+                onClick={handleToggleFullscreen}
               >
+                <img src={LeftArrow} width={20} alt='' />
+                <span>Close Preview</span>
+              </button>
+
+              <div className='portfolio-preview-inner portfolio-container preview-portfolio-container'>
                 <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '5px'
-                  }}
+                  className='section-description-container'
+                  style={{ marginBottom: '15px' }}
                 >
-                  <img src={MyPortfolio} width={30} alt='Portfolio Icon' />
-                  <div>{props.archived ? 'ARCHIVED PORTFOLIO' : 'MY PORTFOLIO'}</div>
-                </div>
-                <div style={{ display: 'flex' }}>
-                  {sharingSettings && sharingSettings.isPublicShared && (
-                    <div
-                      style={{
-                        borderRadius: '8px',
-                        padding: '1px',
-                        boxShadow: '0px 4px 10px 0px #00000040',
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '2px',
-                        fontSize: '13px',
-                        margin: '0 5px'
-                      }}
-                      onClick={() => setIsUnpublishModalOpen(true)}
-                    >
-                      <div>
-                        <img src={UnPublishIcon} alt='UnPublishIcon' />
-                      </div>
-                      <div
-                        style={{
-                          background: 'white',
-                          padding: '7px',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        UNPUBLISH PORTFOLIO
-                      </div>
-                    </div>
-                  )}
                   <div
+                    className='portf-section-maintitle'
                     style={{
-                      borderRadius: '8px',
-                      padding: '1px',
-                      boxShadow: '0px 4px 10px 0px #00000040',
                       display: 'flex',
                       alignItems: 'center',
-                      padding: '2px',
-                      fontSize: '13px',
-                      margin: '0 5px'
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      margin: '10px 0'
                     }}
-                    onClick={() => setIsPublishModalOpen(true)}
                   >
-                    <div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '5px'
+                      }}
+                    >
                       <img
-                        src={PublishPortfolioIcon}
-                        alt='PublishPortfolioIcon'
+                        src={MyPortfolio}
+                        width={30}
+                        alt='Portfolio Icon'
                       />
-                    </div>
-                    <div
-                      style={{
-                        background: 'white',
-                        padding: '7px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {sharingSettings && sharingSettings.isPublicShared
-                        ? 'Republish Portfolio'
-                        : 'Publish Portfolio'}
-                    </div>
-                  </div>
-                  {sharingSettings && sharingSettings.isPublicShared && (
-                    <div
-                      style={{
-                        borderRadius: '8px',
-                        padding: '1px',
-                        boxShadow: '0px 4px 10px 0px #00000040',
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '2px',
-                        fontSize: '13px',
-                        margin: '0 5px'
-                      }}
-                      onClick={() => setIsShareModalOpen(true)}
-                    >
-                      <div>
-                        <img
-                          src={SharePortfolioIcon}
-                          alt='SharePortfolioIcon'
-                        />
-                      </div>
                       <div
                         style={{
-                          background: 'white',
-                          padding: '7px',
-                          cursor: 'pointer'
+                          fontFamily: 'Montserrat',
+                          fontSize: '21px',
+                          fontStyle: 'normal',
+                          fontWeight: '500',
+                          lineHeight: 'normal',
+                          textTransform: 'uppercase',
+                          marginLeft: '9px'
                         }}
                       >
-                        SHARE
+                        {props.archived
+                          ? 'ARCHIVED PORTFOLIO'
+                          : 'MY PORTFOLIO'}
                       </div>
-                    </div>
-                  )}
-                  <div
-                    style={{
-                      borderRadius: '8px',
-                      padding: '1px',
-                      boxShadow: '0px 4px 10px 0px #00000040',
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '2px',
-                      fontSize: '13px',
-                      margin: '0 5px'
-                    }}
-                    onClick={handleToggleFullscreen}
-                  >
-                    <div>
-                      <img src={ViewPortfolioIcon} alt='ViewPortfolioIcon' />
-                    </div>
-                    <div
-                      style={{
-                        background: 'white',
-                        padding: '7px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {sharingSettings && sharingSettings.isPublicShared
-                        ? 'View'
-                        : 'Preview'}
                     </div>
                   </div>
                 </div>
-              </div>
-            </div> */}
 
-              <div className='portfolio-navbar'>
-                {sections.map(({ key, label }) => (
-                  <div
-                    key={key}
-                    className={`portfolio-navbar-item ${activeSection === key ? 'active' : ''
+                <div className='portfolio-navbar'>
+                  {sections.map(({ key, label }) => (
+                    <div
+                      key={key}
+                      className={`portfolio-navbar-item ${
+                        activeSection === key ? 'active' : ''
                       }`}
-                    onClick={() => setActiveSection(key)}
-                  >
-                    {label}
-                  </div>
-                ))}
-              </div>
+                      onClick={() => setActiveSection(key)}
+                    >
+                      {label}
+                    </div>
+                  ))}
+                </div>
 
-              {renderActiveSection()}
-              {renderNavigationButtons()}
-            </div>
-          </div>
-        )}
+                {renderActiveSection()}
+                {renderNavigationButtons()}
+              </div>
+            </div>,
+            document.body
+          )}
 
         {isUnpublishModalOpen && (
           <div style={{ display: 'block' }} className='modal'>

@@ -127,13 +127,8 @@ const PeerPortfolio2024 = React.lazy(() =>
   import('../pages/Portfolio2024/peerPortfolio')
 )
 
-// const PublicPortfolio2024 = React.lazy(() =>
-//   import('../pages/NewPortfolio/index')
-// )
-
-
 const PublicPortfolio2024 = React.lazy(() =>
-  import('../pages/Academy-Portfolio/index')
+  import('../pages/Portfolio2024/publicPortfolio')
 )
 
 // ✅ ADD THIS LINE HERE - Move it up before it's used

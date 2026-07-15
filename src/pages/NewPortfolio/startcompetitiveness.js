@@ -88,7 +88,10 @@ function StartCompetitiveness(props) {
           setInitialData(props.competitivenessData)
         } else {
           try {
-            if (!isOwner) return
+            if (!isOwner) {
+              setIsLoading(false)
+              return
+            }
             const response = await axiosInstance.get(
               '/hsPortfolio/user-start-competitiveness'
             )

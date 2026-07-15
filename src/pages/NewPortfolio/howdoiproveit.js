@@ -167,26 +167,13 @@ const HowDoIProveIt = (props) => {
   }, [props.communityInvolvements, props.educations, props.workExperiences])
 
   useEffect(() => {
-    if (isPublicView) {
-      if (!props.workExperiences || props.workExperiences.length === 0) {
-        fetchWorkExperience()
-      }
+    // Public view relies on props from the shared portfolio API — never call
+    // owner-only endpoints for guests.
+    if (isPublicView) return
 
-      if (
-        !props.communityInvolvements ||
-        props.communityInvolvements.length === 0
-      ) {
-        fetchCommunityInvolvement()
-      }
-
-      if (!props.educations || props.educations.length === 0) {
-        fetchEducationData()
-      }
-    } else {
-      fetchWorkExperience()
-      fetchCommunityInvolvement()
-      fetchEducationData()
-    }
+    fetchWorkExperience()
+    fetchCommunityInvolvement()
+    fetchEducationData()
   }, [isPublicView, canEdit])
 
   const openEducationModal = (mode = 'add', item = null) => {
@@ -571,30 +558,32 @@ const HowDoIProveIt = (props) => {
         </div>
       ) : (
         <div>
-          <div className='section-description-container'>
-            <div className='portf-section-maintitle'>
-              <div className='pe-2'>
-                <img
-                  src={what}
-                  alt='What can I do'
-                  style={{ width: '72px', height: '70px' }}
-                />
-              </div>
-              <div>
-                <div className='align-items-center portfolio-section-title'>
-                  <div className='section-title' style={{ fontSize: '20px' }}>
-                    {props?.sectionTitle}
-                  </div>
+          {!props.hideSectionHeader && (
+            <div className='section-description-container'>
+              <div className='portf-section-maintitle'>
+                <div className='pe-2'>
+                  <img
+                    src={what}
+                    alt='What can I do'
+                    style={{ width: '72px', height: '70px' }}
+                  />
                 </div>
-                <div
-                  className='section-description'
-                  dangerouslySetInnerHTML={{
-                    __html: props?.sectionDescription
-                  }}
-                />
+                <div>
+                  <div className='align-items-center portfolio-section-title'>
+                    <div className='section-title' style={{ fontSize: '20px' }}>
+                      {props?.sectionTitle}
+                    </div>
+                  </div>
+                  <div
+                    className='section-description'
+                    dangerouslySetInnerHTML={{
+                      __html: props?.sectionDescription
+                    }}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className='whoami-container howdoiproveit-container'>
             <div>

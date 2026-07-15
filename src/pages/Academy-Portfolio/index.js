@@ -30,9 +30,8 @@ function AcademyPortfolio() {
 
           const userRole = user?.role_id || localStorage.getItem('role')
 
-  // Only redirect if user is viewing their own portfolio and is authenticated
   useEffect(() => {
-    if (user && username === user?.username) {
+    if (user && decodeURIComponent(username || '') === user?.username) {
       history.push('/my-portfolio')
       return
     }
@@ -41,13 +40,14 @@ function AcademyPortfolio() {
   useEffect(() => {
     const fetchPublicPortfolio = async () => {
       try {
+        const decodedUsername = decodeURIComponent(username || '')
         const response = await axiosInstance.get(
-          `/public-portfolio/${username}`
+          `/public-portfolio/${encodeURIComponent(decodedUsername)}`
         )
 
         const transformedUser = {
           ...response.data.user,
-          username: username,
+          username: decodedUsername,
           social_links: {
             ...response.data.user.social_links,
           }

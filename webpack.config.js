@@ -19,7 +19,12 @@ module.exports = {
     },
     open: true,
     hot: true,
-    historyApiFallback: true,
+    // Email usernames contain dots (e.g. andi.test@yopmail.com) — default
+    // historyApiFallback treats dotted paths as files and returns "Cannot GET".
+    historyApiFallback: {
+      disableDotRule: true,
+      index: '/'
+    },
     client: {
       overlay: {
         errors: (error) => {

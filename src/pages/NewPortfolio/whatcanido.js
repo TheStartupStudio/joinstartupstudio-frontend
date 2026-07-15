@@ -33,7 +33,8 @@ const WhatCanIDo = ({
   portfolioType,
   isPublicView,
   userBasicInfo,
-  isPreviewMode
+  isPreviewMode,
+  hideSectionHeader
 }) => {
   const isPublicView1 = isPublicView || portfolioType === 'public'
   const userData = useSelector((state) => state.user?.user)
@@ -709,32 +710,34 @@ const WhatCanIDo = ({
         (editMode || showEditProject || addMode || showDeleteConfirmation) && (
           <div className='modal-backdrop' />
         )}
-      <div className='section-description-container'>
-        <div className='portf-section-maintitle'>
-          <div className='pe-2'>
-            <img
-              src={what}
-              alt='What can I do'
-              style={{ width: '72px', height: '70px' }}
-            />
-          </div>
-          <div>
-            <div className='align-items-center portfolio-section-title'>
-              <div className='section-title' style={{ fontSize: '20px' }}>
-                {sectionTitle || 'WHAT CAN I DO?'}
-              </div>
+      {!hideSectionHeader && (
+        <div className='section-description-container'>
+          <div className='portf-section-maintitle'>
+            <div className='pe-2'>
+              <img
+                src={what}
+                alt='What can I do'
+                style={{ width: '72px', height: '70px' }}
+              />
             </div>
-            <div
-              className='section-description'
-              dangerouslySetInnerHTML={{
-                __html:
-                  sectionDescription ||
-                  'LTS participants communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
-              }}
-            />
+            <div>
+              <div className='align-items-center portfolio-section-title'>
+                <div className='section-title' style={{ fontSize: '20px' }}>
+                  {sectionTitle || 'WHAT CAN I DO?'}
+                </div>
+              </div>
+              <div
+                className='section-description'
+                dangerouslySetInnerHTML={{
+                  __html:
+                    sectionDescription ||
+                    'LTS participants communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className='whatcanido-container'>
         {validProjects.length > 0 ? (

@@ -19,7 +19,7 @@ function PortfolioNavigator(props) {
       name: 'How Do I Prove It?'
       // disabled: true
     },
-    { type: 'start-section', name: 'Start', disabled: true }
+    { type: 'start-section', name: 'Start' }
   ]
   const activeSectionIndex = sections.findIndex(
     (section, index) => section.type === activeSection

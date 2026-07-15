@@ -111,7 +111,7 @@
   opacity: 1;
   padding: 20px 20px;
   position: relative;
-  margin-right: 40px;
+  /* margin-right: 40px; */
   background: linear-gradient(180deg, rgba(228, 233, 244, 1) 0%, rgba(251, 251, 253, 1) 50%);
 }
 
@@ -550,13 +550,75 @@
   object-fit: contain;
 }
 
+/* TSS / Startup Studio branding for public portfolio header + nav */
+.tss-portfolio-logo-container {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 40px 18px;
+}
+
+.tss-portfolio-logo {
+  width: auto;
+  max-width: 280px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.tss-portfolio-academy-logo {
+  width: auto;
+  max-width: 160px;
+  height: 60px;
+  object-fit: contain;
+  opacity: 0.95;
+}
+
+.portfolio-tss-public .portfolio-nav-icons .nav-icon-title,
+.portfolio-tss-branded-header .portfolio-nav-icons .nav-icon-title {
+  color: #1c2b2f;
+}
+
+.portfolio-tss-public .portfolio-nav-icons .active .nav-icon-title,
+.portfolio-tss-branded-header .portfolio-nav-icons .active .nav-icon-title {
+  color: #51c7df;
+  /* font-weight: 700; */
+}
+
+.portfolio-tss-public .portfolio-nav-icons .horizontal-separator,
+.portfolio-tss-branded-header .portfolio-nav-icons .horizontal-separator {
+  background: #51c7df !important;
+}
+
+/* .portfolio-tss-public .portfolio-nav-icons .active .portfolio-nav-icon,
+.portfolio-tss-branded-header .portfolio-nav-icons .active .portfolio-nav-icon {
+  filter: hue-rotate(160deg) saturate(1.1);
+} */
+
+.portfolio-tss-public .portfolio-navigator-button,
+.portfolio-tss-public .portfolio-navigator-button span {
+  color: #51c7df;
+}
+
+@media (max-width: 768px) {
+  .tss-portfolio-logo {
+    max-width: 200px;
+    height: 52px;
+  }
+
+  .tss-portfolio-academy-logo {
+    max-width: 120px;
+    height: 30px;
+  }
+}
+
 /*///// Description Container /////*/
 
 .section-description-container {
   display: flex;
   padding: 15px 25px;
   gap: 20px;
-  align-items: baseline;
+  align-items: center;
   background-color: white;
   border-radius: 30px;
   box-shadow: 0px 5px 10px rgb(216, 216, 216);
@@ -832,7 +894,8 @@
 }
 
 .portf-section-maintitle {
-  display: flex
+  display: flex;
+  /* flex-direction: column; */
 }
 
 @media (max-width: 621px) {

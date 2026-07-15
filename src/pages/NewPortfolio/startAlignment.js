@@ -76,7 +76,10 @@ function StartAlignment(props) {
           setEditableAlignmentData(props.alignmentData)
         } else {
           try {
-            if (!isOwner) return
+            if (!isOwner) {
+              setIsLoading(false)
+              return
+            }
             const response = await axiosInstance.get(
               '/hsPortfolio/user-start-alignment'
             )

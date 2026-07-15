@@ -589,32 +589,34 @@ const WhoAmI = (props) => {
 
   return (
     <div>
-      <div className='section-description-container'>
-        <div className='portf-section-maintitle '>
-          <div className='pe-3'>
-            <img
-              src={who}
-              alt='Who am I'
-              style={{ width: '72px', height: '70px' }}
-            />
-          </div>
-          <div>
-            <div className='align-items-center portfolio-section-title'>
-              <div className='section-title' style={{ fontSize: '20px' }}>
-                {props?.sectionTitle || 'WHO AM I?'}
-              </div>
+      {!props.hideSectionHeader && (
+        <div className='section-description-container'>
+          <div className='portf-section-maintitle '>
+            <div className='pe-3'>
+              <img
+                src={who}
+                alt='Who am I'
+                style={{ width: '72px', height: '70px' }}
+              />
             </div>
-            <div
-              className='section-description'
-              dangerouslySetInnerHTML={{
-                __html:
-                  props?.sectionDescription ||
-                  'LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
-              }}
-            />
+            <div>
+              <div className='align-items-center portfolio-section-title'>
+                <div className='section-title' style={{ fontSize: '20px' }}>
+                  {props?.sectionTitle || 'WHO AM I?'}
+                </div>
+              </div>
+              <div
+                className='section-description'
+                dangerouslySetInnerHTML={{
+                  __html:
+                    props?.sectionDescription ||
+                    'LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div
         className='whoami-container'
