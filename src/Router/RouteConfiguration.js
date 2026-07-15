@@ -183,6 +183,8 @@ const AcademyPortfolio = React.lazy(() =>
   import('../pages/Academy-Portfolio/index')
 )
 
+const NewPortfolio = React.lazy(() => import('../pages/NewPortfolio/index'))
+
 const LeaderBoardPage = React.lazy(() =>
   import('../pages/LeaderBoardPage/index')
 )
@@ -326,7 +328,7 @@ export const mutualRoutes = [
   { path: '/savedMedia', component: SavedMedia },
   { path: '/csv-upload', component: CSVUpload },
   { path: '/portfolio', component: Portfolio },
-  { path: '/my-portfolio', component: AcademyPortfolio, exact: true },
+  { path: '/my-portfolio', component: NewPortfolio, exact: true },
   // { path: '/beyond-your-course', component: BeyondYourCourse, exact: true },
   { path: '/beyond-your-course/:id', component: BeyondYourCourse, exact: true },
   { path: '/story-in-motion', component: StoryInMotion },

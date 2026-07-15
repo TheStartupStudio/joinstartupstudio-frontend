@@ -1,0 +1,5 @@
+ @media (max-width:654px) {
+     .confirm-modal-content {
+         max-width: 90% !important;
+     }
+ }

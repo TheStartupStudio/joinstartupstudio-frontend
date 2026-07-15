@@ -16,6 +16,7 @@ import myImmersionReducer from './myImmersion/reducer'
 import PathwaysReducer from './pathways/reducer'
 import platformBadgesReducer from './platformBadges/reducer'
 import portfolioReducer from './portfolio/Reducer'
+import newPortfolioReducer from './newPortfolio/Reducer'
 import taskLessonReducer from './taskLessons/reducer'
 import backButtonReducer from './backButtonReducer'
 import sidebarReducer from './sidebar/Reducer'
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   platformBadges: platformBadgesReducer,
   lessons: taskLessonReducer,
   portfolio: portfolioReducer,
+  newPortfolio: newPortfolioReducer,
   backButton: backButtonReducer,
   sidebar: sidebarReducer,
   trialTimer: trialTimerReducer,
