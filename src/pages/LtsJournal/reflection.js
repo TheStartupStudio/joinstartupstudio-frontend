@@ -84,6 +84,7 @@ function LtsJournalReflection(props) {
     'align',
   ];
 
+  // Register / sync content when this editor's identity or saved content changes.
   useEffect(() => {
     const initialContent = props.entry?.content || ''
     const resolvedJournalId = props.routeJournalId || props.journal?.id
@@ -102,6 +103,29 @@ function LtsJournalReflection(props) {
     props.journalEntry?.id,
     props.entry?.id,
     props.entry?.content
+  ])
+
+  // Drop this editor from parent tracking only when it unmounts or its
+  // identity changes — not on every content sync (that re-added empty keys).
+  useEffect(() => {
+    const resolvedJournalId = props.routeJournalId || props.journal?.id
+    const journalEntryId = props.journalEntry?.id
+    const entryId = props.entry?.id
+
+    return () => {
+      props.onContentChange?.(null, {
+        journalId: resolvedJournalId,
+        journalEntryId,
+        entryId,
+        remove: true
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.routeJournalId,
+    props.journal?.id,
+    props.journalEntry?.id,
+    props.entry?.id
   ])
 
   const handleContentChange = (value) => {

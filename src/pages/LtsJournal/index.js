@@ -549,9 +549,17 @@ function LtsJournal(props) {
     const text = removeHtmlFromString(content)
       .replace(/&nbsp;/gi, ' ')
       .replace(/\u00a0/g, ' ')
+      .replace(/\u200b/g, '') // zero-width space from Quill
       .trim()
     return text.length === 0
   }
+
+  // Reset tracked reflections when navigating to another lesson so stale
+  // empty placeholders from the previous lesson cannot lock the button.
+  // Do not touch lessonRequiresReflections here — content.js owns that flag.
+  useEffect(() => {
+    setReflectionsData({})
+  }, [journalId])
 
   const currentJournalReflections = Object.values(reflectionsData).filter(
     (reflection) =>
@@ -560,14 +568,31 @@ function LtsJournal(props) {
       String(reflection.journalId) === String(journalId)
   )
 
-  // Disable only when this lesson needs reflections and at least one tracked
-  // reflection is blank. If none are tracked yet, keep the button enabled so
-  // we don't lock it before editors mount; save handler still validates.
+  // Group by journal entry. Prefer saved reflections (with entryId) over an
+  // optional empty `_new` "Add reflection" editor so that leftover placeholders
+  // cannot keep Save and Continue disabled.
+  const reflectionsByEntryId = currentJournalReflections.reduce(
+    (acc, reflection) => {
+      const entryKey = String(reflection.journalEntryId ?? 'unknown')
+      if (!acc[entryKey]) acc[entryKey] = []
+      acc[entryKey].push(reflection)
+      return acc
+    },
+    {}
+  )
+
   const hasIncompleteReflections =
     lessonRequiresReflections &&
-    currentJournalReflections.some((reflection) =>
-      isReflectionContentEmpty(reflection?.content)
-    )
+    Object.keys(reflectionsByEntryId).length > 0 &&
+    Object.values(reflectionsByEntryId).some((group) => {
+      const hasSaved = group.some((reflection) => reflection?.entryId != null)
+      const relevant = hasSaved
+        ? group.filter((reflection) => reflection?.entryId != null)
+        : group
+      return relevant.every((reflection) =>
+        isReflectionContentEmpty(reflection?.content)
+      )
+    })
 
   const handleReflectionContentChange = (content, data) => {
     const resolvedJournalId = data.journalId || journalId
@@ -579,19 +604,32 @@ function LtsJournal(props) {
       setReflectionsData((prev) => {
         const updated = { ...prev }
         delete updated[reflectionKey]
+        // Also clear matching `_new` placeholder when a real entry replaces it
+        if (data.entryId) {
+          delete updated[
+            `${resolvedJournalId}_${data.journalEntryId}_new`
+          ]
+        }
         return updated
       })
       return
     }
 
-    setReflectionsData((prev) => ({
-      ...prev,
-      [reflectionKey]: {
-        ...data,
-        journalId: resolvedJournalId,
-        content
+    setReflectionsData((prev) => {
+      const updated = {
+        ...prev,
+        [reflectionKey]: {
+          ...data,
+          journalId: resolvedJournalId,
+          content
+        }
       }
-    }))
+      // Once a real saved reflection is tracked, drop the empty `_new` twin
+      if (data.entryId && !isReflectionContentEmpty(content)) {
+        delete updated[`${resolvedJournalId}_${data.journalEntryId}_new`]
+      }
+      return updated
+    })
   }
 
   const findNextLesson = (currentId) => {
@@ -803,27 +841,47 @@ function LtsJournal(props) {
       let hasEmptyReflections = false
       let savePromises = []
 
-      Object.entries(reflectionsData).forEach(([key, reflectionData]) => {
-        if (String(reflectionData.journalId) !== String(currentJournalId)) {
-          return
-        }
+      const reflectionsForJournal = Object.entries(reflectionsData).filter(
+        ([, reflectionData]) =>
+          String(reflectionData.journalId) === String(currentJournalId)
+      )
 
-        const { content, journalId: reflectionJournalId, journalEntryId, entryId } =
-          reflectionData
-        if (isReflectionContentEmpty(content)) {
-          hasEmptyReflections = true
-          return
-        }
+      const byEntryId = reflectionsForJournal.reduce((acc, [key, data]) => {
+        const entryKey = String(data.journalEntryId ?? 'unknown')
+        if (!acc[entryKey]) acc[entryKey] = []
+        acc[entryKey].push({ key, data })
+        return acc
+      }, {})
 
-        const endpoint = !entryId
-          ? `/ltsJournals/${reflectionJournalId}/entries/${journalEntryId}/userEntries`
-          : `/ltsJournals/${reflectionJournalId}/entries/${journalEntryId}/userEntries/${entryId}`
-        savePromises.push(
-          axiosInstance[!entryId ? 'post' : 'put'](endpoint, {
+      Object.values(byEntryId).forEach((group) => {
+        const hasSaved = group.some(({ data }) => data?.entryId != null)
+        const relevant = hasSaved
+          ? group.filter(({ data }) => data?.entryId != null)
+          : group
+
+        relevant.forEach(({ data: reflectionData }) => {
+          const {
             content,
-            trainingId: myTraining ? reflectionJournalId : null
-          })
-        )
+            journalId: reflectionJournalId,
+            journalEntryId,
+            entryId
+          } = reflectionData
+
+          if (isReflectionContentEmpty(content)) {
+            hasEmptyReflections = true
+            return
+          }
+
+          const endpoint = !entryId
+            ? `/ltsJournals/${reflectionJournalId}/entries/${journalEntryId}/userEntries`
+            : `/ltsJournals/${reflectionJournalId}/entries/${journalEntryId}/userEntries/${entryId}`
+          savePromises.push(
+            axiosInstance[!entryId ? 'post' : 'put'](endpoint, {
+              content,
+              trainingId: myTraining ? reflectionJournalId : null
+            })
+          )
+        })
       })
 
       const navigateToNextLesson = async () => {
