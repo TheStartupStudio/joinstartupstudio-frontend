@@ -11,6 +11,7 @@ import {
   getClientAndGlobalBody,
   getClientPayloadValue,
   getHostnameSubdomainLabel,
+  isValidApiClientKey,
   parseClientsConfigResponse
 } from '../../../utils/clientHostname'
 import AcademyBtn from '../../../components/AcademyBtn'
@@ -51,7 +52,12 @@ const AddJournalModal = ({
         try {
             setLoading(true)
             const response = await axiosInstance.get(`/manage-content/full/${id}`, {
-                params: { client: getClientPayloadValue(selectedClient) }
+                params: (() => {
+                    const params = {}
+                    const client = getClientPayloadValue(selectedClient)
+                    if (client) params.client = client
+                    return params
+                })()
             })
             if (response.data.success) {
                 return response.data.data
@@ -76,7 +82,9 @@ const AddJournalModal = ({
             setSelectedIcon(data.manageContent.icon || DEFAULT_JOURNAL_ICON)
             setSelectedColor(data.manageContent.color || '#E0EBC5')
             const clientVal = data.manageContent.client ?? data.client
-            setSelectedClient(clientVal || 'all')
+            setSelectedClient(
+              clientVal && isValidApiClientKey(clientVal) ? clientVal : 'all'
+            )
             const gid =
                 data.manageContent.globalId ?? data.globalId ?? null
             setRecordGlobalId(gid || null)
@@ -419,8 +427,9 @@ const AddJournalModal = ({
             // Normalize color to hex format
             const normalizedColor = selectedColor.startsWith('rgb') ? rgbToHex(selectedColor) : selectedColor
 
+            const clientPayload = getClientPayloadValue(selectedClient)
             const journalData = {
-                client: getClientPayloadValue(selectedClient),
+                ...(clientPayload ? { client: clientPayload } : {}),
                 manageContent: {
                     ...(mode === 'edit' && contentId ? { id: contentId } : {}),
                     title: journalTitle,

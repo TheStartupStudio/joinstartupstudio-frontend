@@ -192,6 +192,7 @@ const CreateJournalTaskModal = ({
         taskData?.journal?.globalId ??
         taskData?.journalData?.globalId
 
+      const clientPayload = getClientPayloadValue(null)
       const payload = {
         title: journalTitle,
         category: category,
@@ -205,7 +206,9 @@ const CreateJournalTaskModal = ({
         information: journalText || null,
         reflectionItems: [],
         isSection: modalHeaderTitle === 'Section Intro',
-        client: getClientPayloadValue(null)
+        ...(clientPayload && clientPayload !== 'all'
+          ? { client: clientPayload }
+          : {})
       }
 
       let response

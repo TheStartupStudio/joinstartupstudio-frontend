@@ -711,12 +711,12 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               imageSide={true}
               onClick={handleViewPortfolio}
             />
-            <AcademyBtn
+            {/* <AcademyBtn
               title={`View Performance Data`}
               icon={graphUp}
               imageSide={true}
               onClick={handleViewPerformanceData}
-            />
+            /> */}
           </div>
         </div>
       </Modal>

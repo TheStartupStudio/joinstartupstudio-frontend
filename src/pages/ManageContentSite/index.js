@@ -11,7 +11,12 @@ import AddJournalModal from '../../components/ContentManagement/AddJournalModal'
 import AddJournalIntroduction from '../../components/ContentManagement/AddJournalIntroduction'
 import DeleteJournalContentModal from '../../components/ContentManagement/DeleteJournalContentModal'
 import axiosInstance from '../../utils/AxiosInstance'
-import { attachGlobalIdToPayload, getClientAndGlobalBody } from '../../utils/clientHostname'
+import {
+  attachGlobalIdToPayload,
+  getClientAndGlobalBody,
+  isValidApiClientKey,
+  normalizeClientName
+} from '../../utils/clientHostname'
 import { toast } from 'react-toastify'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 
@@ -43,16 +48,31 @@ const ManageContentSite = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteModalData, setDeleteModalData] = useState(null)
 
+  /**
+   * Client for edit/fetch: use the content's stored client key when valid.
+   * Never parse REACT_APP_SERVER_BASE_URL (that produced "localhost:8000" /
+   * "dev-api.joinstudioos.com" and broke manage-content/full).
+   * Omit client when unknown so the request uses this API's own DB (same as list).
+   * Do NOT force client=all for globalId — that requires CLIENTS/CLIENTS_DEV
+   * and fails on local/single-DB APIs. Pass globalId alone instead.
+   */
   const resolveEditClient = (content) => {
-    if (content?.client && content.client !== 'all') return content.client
+    if (
+      content?.client &&
+      isValidApiClientKey(content.client) &&
+      String(content.client).toLowerCase() !== 'all'
+    ) {
+      return normalizeClientName(content.client)
+    }
+    return undefined
+  }
 
-    // Prefer tenant from API base url like ".../academy" when available.
-    const baseUrl = process.env.REACT_APP_SERVER_BASE_URL || ''
-    const match = baseUrl.match(/\/([^/]+)\/?$/)
-    if (match?.[1]) return match[1]
-
-    // Fallback to academy to avoid cross-client "all" fetch on edit.
-    return 'academy'
+  const buildManageContentParams = (content) => {
+    const params = {}
+    const client = resolveEditClient(content)
+    if (client) params.client = client
+    if (content?.globalId) params.globalId = content.globalId
+    return params
   }
 
   const resolveContentGlobalId = async (contentId) => {
@@ -61,7 +81,7 @@ const ManageContentSite = () => {
 
     try {
       const response = await axiosInstance.get(`/manage-content/full/${contentId}`, {
-        params: { client: resolveEditClient(content) }
+        params: buildManageContentParams(content)
       })
       const fullData = response?.data?.data
       return fullData?.manageContent?.globalId || fullData?.globalId || null
@@ -353,7 +373,7 @@ const ManageContentSite = () => {
         const response = await axiosInstance.get(
           `/manage-content/full/${content.id}`,
           {
-            params: { client: resolveEditClient(content) }
+            params: buildManageContentParams(content)
           }
         )
         if (response.data.success) {
