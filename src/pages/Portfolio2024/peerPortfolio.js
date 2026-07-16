@@ -43,7 +43,11 @@ function PeerPortfolio() {
 
   if (privatePortfolioMessage) {
     return (
-      <div className='private-portfolio-message'>{privatePortfolioMessage}</div>
+      <div className='private-portfolio-message' role='status'>
+        <p className='private-portfolio-message-text'>
+          {privatePortfolioMessage}
+        </p>
+      </div>
     )
   }
 

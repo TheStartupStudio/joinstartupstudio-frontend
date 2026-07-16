@@ -247,8 +247,13 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
   }
 
   const handleViewPortfolio = () => {
+    const portfolioUsername = displayData?.username || learner?.username
+    if (!portfolioUsername) {
+      toast.error('This user has not published their portfolio yet')
+      return
+    }
     window.open(
-      `/public-portfolio/${encodeURIComponent(displayData.username || learner.id)}`,
+      `/public-portfolio/${encodeURIComponent(portfolioUsername)}`,
       '_blank'
     )
   }

@@ -10,6 +10,16 @@
   justify-content: center;
 }
 
+.private-portfolio-message-text {
+  margin: 0;
+  max-width: 640px;
+  color: #1a1a1a;
+  font-family: Montserrat, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .portfolio-loader {
   background: #e4e9f4 0% 0% no-repeat padding-box;
   opacity: 1;
