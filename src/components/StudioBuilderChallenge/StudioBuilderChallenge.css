@@ -285,8 +285,11 @@
 }
 
 .studio-challenge__card {
-  aspect-ratio: 1 / 1;
-  perspective: 1000px;
+  /* aspect-ratio: 1 / 1;
+  perspective: 1000px; */
+  min-height: 200px;
+  height: 100%;
+  max-height: 300px;
 }
 
 .studio-challenge__card-inner {
@@ -309,7 +312,7 @@
 }
 
 .studio-challenge__card-face--front {
-  padding: 12px;
+  padding: clamp(10px, 1.1vw, 16px);
   background: #fff;
   border: 1px solid #e2f0f9;
   text-decoration: none;
@@ -330,6 +333,7 @@
   cursor: pointer;
   font: inherit;
   text-align: left;
+  height: 100%;
 }
 
 .studio-challenge__card-button:focus-visible {
@@ -346,18 +350,19 @@
   justify-content: center;
   text-align: center;
   color: #fff;
-  padding: 12px;
+  padding: clamp(10px, 1.1vw, 16px);
 }
 
 .studio-challenge__card-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  margin-bottom: 20px;
 }
 
 .studio-challenge__card-icon-wrap {
-  width: 26px;
-  height: 26px;
+  width: clamp(26px, 2.2vw, 34px);
+  height: clamp(26px, 2.2vw, 34px);
   border-radius: 8px;
   background: linear-gradient(45deg, rgba(81, 199, 223, 0.08), rgba(255, 51, 153, 0.08));
   display: flex;
@@ -366,13 +371,13 @@
 }
 
 .studio-challenge__card-reward-label {
-  font-size: 8.5px;
+  font-size: clamp(0.6rem, 0.48rem + 0.25vw, 0.75rem);
   font-weight: 700;
   color: #a0b8c4;
 }
 
 .studio-challenge__card-title {
-  font-size: 11px;
+  font-size: clamp(0.75rem, 0.55rem + 0.42vw, 1rem);
   font-weight: 700;
   color: #1a1a2e;
   line-height: 1.25;
@@ -380,20 +385,20 @@
 }
 
 .studio-challenge__card-desc {
-  font-size: 9px;
+  font-size: clamp(0.65rem, 0.5rem + 0.32vw, 0.825rem);
   color: #6b8090;
   line-height: 1.35;
 }
 
 .studio-challenge__card-cta {
-  font-size: 9px;
+  font-size: clamp(0.65rem, 0.48rem + 0.35vw, 0.825rem);
   font-weight: 700;
   color: #ff3399;
   margin-top: 6px;
 }
 
 .studio-challenge__card-earned-label {
-  font-size: 9px;
+  font-size: clamp(0.65rem, 0.5rem + 0.3vw, 0.825rem);
   font-weight: 600;
   opacity: 0.9;
   text-transform: uppercase;
@@ -401,13 +406,13 @@
 }
 
 .studio-challenge__card-reward {
-  font-size: 13px;
+  font-size: clamp(0.8rem, 0.62rem + 0.38vw, 1.05rem);
   font-weight: 700;
   margin-top: 2px;
 }
 
 .studio-challenge__skeleton-card {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   border-radius: 14px;
   background: linear-gradient(90deg, #e8f4fb 0%, #f4fafd 50%, #e8f4fb 100%);
   background-size: 200% 100%;
