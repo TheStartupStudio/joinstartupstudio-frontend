@@ -653,6 +653,17 @@
   line-height: 35px;
 }
 
+.whatcanido-card-container{
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 1133px) {
+  .whatcanido-card-container{
+    flex-direction: column;
+  }
+}
+
 .section-description {
   text-align: left;
   letter-spacing: 0px;

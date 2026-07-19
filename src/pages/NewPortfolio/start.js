@@ -15,6 +15,21 @@ import StartAlignment from './startAlignment'
 import StartProd from './startProd'
 import StartCompetitiveness from './startcompetitiveness'
 
+const DEFAULT_START_OPTIONS = [
+  { value: 'alignment', label: 'Alignment' },
+  { value: 'productivity', label: 'Productivity' },
+  { value: 'competitiveness', label: 'Competitiveness' }
+]
+
+const STARTING_PAGE_TO_OPTION = {
+  'Start - Alignment': { value: 'alignment', label: 'Alignment' },
+  'Start - Productivity': { value: 'productivity', label: 'Productivity' },
+  'Start - Competitiveness': {
+    value: 'competitiveness',
+    label: 'Competitiveness'
+  }
+}
+
 function Start(props) {
   const isPublicView = props.isPublicView || props.portfolioType === 'public'
 
@@ -25,17 +40,40 @@ function Start(props) {
     loggedInUserId && props?.userBasicInfo?.userId === loggedInUserId
   const canEdit = !isPublicView && !props.isPreviewMode && isOwner
 
-  const [selectedSection, setSelectedSection] = useState({
-    value: 'alignment',
-    label: 'Alignment'
-  })
+  const options =
+    Array.isArray(props.publishedStartOptions) &&
+    props.publishedStartOptions.length > 0
+      ? props.publishedStartOptions
+      : DEFAULT_START_OPTIONS
+
+  const optionValuesKey = options.map((option) => option.value).join(',')
+
+  const getInitialOption = () => {
+    const fromStartingPage = STARTING_PAGE_TO_OPTION[props.startingPage]
+    if (
+      fromStartingPage &&
+      options.some((option) => option.value === fromStartingPage.value)
+    ) {
+      return fromStartingPage
+    }
+    return options[0] || DEFAULT_START_OPTIONS[0]
+  }
+
+  const [selectedSection, setSelectedSection] = useState(getInitialOption)
   const userRole = useSelector((state) => state.user?.user?.role)
 
-  const options = [
-    { value: 'alignment', label: 'Alignment' },
-    { value: 'productivity', label: 'Productivity' },
-    { value: 'competitiveness', label: 'Competitiveness' }
-  ]
+  useEffect(() => {
+    setSelectedSection((current) => {
+      if (
+        current &&
+        options.some((option) => option.value === current.value)
+      ) {
+        return current
+      }
+      return getInitialOption()
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [optionValuesKey, props.startingPage])
 
   const description = {
     alignment:

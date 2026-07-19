@@ -10,13 +10,72 @@ import WhoAmI from '../NewPortfolio/whoami'
 import WhatCanIDo from '../NewPortfolio/whatcanido'
 import HowDoIProveIt from '../NewPortfolio/howdoiproveit'
 import Start from '../NewPortfolio/start'
-import { changeViewMode } from '../../redux/portfolio/Actions'
+import {
+  changeActiveSection,
+  changeViewMode
+} from '../../redux/portfolio/Actions'
 import { getDefaultDashboard } from '../../utils/routeHelpers'
 import './index.css'
 import '../NewPortfolio/Portfolio.css'
 
 const UNPUBLISHED_PORTFOLIO_MESSAGE =
   'This user has not published their portfolio yet'
+
+const PAGE_TO_SECTION = {
+  'Who am I?': 'who-section',
+  'What can I do?': 'what-section',
+  'How Do I Prove it?': 'how-section',
+  'Start - Alignment': 'start-section',
+  'Start - Productivity': 'start-section',
+  'Start - Competitiveness': 'start-section'
+}
+
+const START_PAGE_TO_OPTION = {
+  'Start - Alignment': { value: 'alignment', label: 'Alignment' },
+  'Start - Productivity': { value: 'productivity', label: 'Productivity' },
+  'Start - Competitiveness': {
+    value: 'competitiveness',
+    label: 'Competitiveness'
+  }
+}
+
+const ALL_SECTIONS = [
+  'who-section',
+  'what-section',
+  'how-section',
+  'start-section'
+]
+
+function getVisibleSections(pagesToPublish) {
+  if (!Array.isArray(pagesToPublish)) {
+    return ALL_SECTIONS
+  }
+
+  const sections = new Set()
+  pagesToPublish.forEach((page) => {
+    const section = PAGE_TO_SECTION[page]
+    if (section) sections.add(section)
+  })
+  return ALL_SECTIONS.filter((section) => sections.has(section))
+}
+
+function getInitialSection(startingPage, visibleSections) {
+  const fromStartingPage = PAGE_TO_SECTION[startingPage]
+  if (fromStartingPage && visibleSections.includes(fromStartingPage)) {
+    return fromStartingPage
+  }
+  return visibleSections[0] || 'who-section'
+}
+
+function getPublishedStartOptions(pagesToPublish) {
+  if (!Array.isArray(pagesToPublish)) {
+    return Object.values(START_PAGE_TO_OPTION)
+  }
+
+  return pagesToPublish
+    .map((page) => START_PAGE_TO_OPTION[page])
+    .filter(Boolean)
+}
 
 function PublicPortfolio(props) {
   const [publicPortfolio, setPublicPortfolio] = useState(null)
@@ -89,7 +148,13 @@ function PublicPortfolio(props) {
           redirectForUnpublishedPortfolio()
           return
         }
-        if (response.data?.user || response.data?.whoAmI) {
+        if (response.data?.user || response.data?.whoAmI || response.data?.start) {
+          const visibleSections = getVisibleSections(response.data.pagesToPublish)
+          const initialSection = getInitialSection(
+            response.data.startingPage,
+            visibleSections
+          )
+          dispatch(changeActiveSection(initialSection))
           setPublicPortfolio(response.data)
         } else {
           redirectForUnpublishedPortfolio()
@@ -112,10 +177,17 @@ function PublicPortfolio(props) {
     return <PortfolioSkeletonLoader />
   }
 
+  const pagesToPublish = publicPortfolio?.pagesToPublish
+  const visibleSections = getVisibleSections(pagesToPublish)
+  const publishedStartOptions = getPublishedStartOptions(pagesToPublish)
+
   const userBasicInfo = {
-    ...(publicPortfolio?.whoAmI?.userBasicInfo?.data || {}),
+    ...(publicPortfolio?.userBasicInfo?.data ||
+      publicPortfolio?.whoAmI?.userBasicInfo?.data ||
+      {}),
     story:
       publicPortfolio?.whoAmI?.userStory?.data?.story ||
+      publicPortfolio?.userBasicInfo?.data?.story ||
       publicPortfolio?.whoAmI?.userBasicInfo?.data?.story ||
       ''
   }
@@ -125,6 +197,10 @@ function PublicPortfolio(props) {
   const myProjects = publicPortfolio?.whatCanIDo?.myProjects
   const how = publicPortfolio?.howDoIProve || {}
   const start = publicPortfolio?.start || {}
+
+  const safeActiveSection = visibleSections.includes(activeSection)
+    ? activeSection
+    : visibleSections[0]
 
   return (
     <div ref={scrollableRef}>
@@ -138,59 +214,69 @@ function PublicPortfolio(props) {
         <PortfolioHeader
           user={publicPortfolio.user}
           userStory={publicPortfolio?.whoAmI?.userBasicInfo}
+          visibleSections={visibleSections}
         />
 
-        {activeSection === 'who-section' && (
-          <WhoAmI
-            userBasicInfo={userBasicInfo}
-            myRelationships={myRelationships}
-            myFailures={myFailures}
-            myMentors={myMentors}
-            isPublicView
-            portfolioType='public'
-            isPreviewMode
-            hideSectionHeader
-          />
-        )}
+        {safeActiveSection === 'who-section' &&
+          visibleSections.includes('who-section') && (
+            <WhoAmI
+              userBasicInfo={userBasicInfo}
+              myRelationships={myRelationships}
+              myFailures={myFailures}
+              myMentors={myMentors}
+              isPublicView
+              portfolioType='public'
+              isPreviewMode
+              hideSectionHeader
+            />
+          )}
 
-        {activeSection === 'what-section' && (
-          <WhatCanIDo
-            myProjects={myProjects}
-            userBasicInfo={userBasicInfo}
-            isPublicView
-            portfolioType='public'
-            isPreviewMode
-            hideSectionHeader
-          />
-        )}
+        {safeActiveSection === 'what-section' &&
+          visibleSections.includes('what-section') && (
+            <WhatCanIDo
+              myProjects={myProjects}
+              userBasicInfo={userBasicInfo}
+              isPublicView
+              portfolioType='public'
+              isPreviewMode
+              hideSectionHeader
+            />
+          )}
 
-        {activeSection === 'how-section' && (
-          <HowDoIProveIt
-            educations={how.educations || []}
-            workExperiences={how.workExperiences || []}
-            communityInvolvements={how.communityInvolvements || []}
-            userBasicInfo={userBasicInfo}
-            isPublicView
-            portfolioType='public'
-            isPreviewMode
-            hideSectionHeader
-          />
-        )}
+        {safeActiveSection === 'how-section' &&
+          visibleSections.includes('how-section') && (
+            <HowDoIProveIt
+              educations={how.educations || []}
+              workExperiences={how.workExperiences || []}
+              communityInvolvements={how.communityInvolvements || []}
+              userBasicInfo={userBasicInfo}
+              isPublicView
+              portfolioType='public'
+              isPreviewMode
+              hideSectionHeader
+            />
+          )}
 
-        {activeSection === 'start-section' && (
-          <Start
-            userBasicInfo={userBasicInfo}
-            alignmentData={start.alignment || {}}
-            productivityData={start.productivity || {}}
-            competitivenessData={start.competitiveness || {}}
-            isPublicView
-            portfolioType='public'
-            isPreviewMode
-            hideSectionHeader
-          />
-        )}
+        {safeActiveSection === 'start-section' &&
+          visibleSections.includes('start-section') && (
+            <Start
+              userBasicInfo={userBasicInfo}
+              alignmentData={start.alignment || {}}
+              productivityData={start.productivity || {}}
+              competitivenessData={start.competitiveness || {}}
+              publishedStartOptions={publishedStartOptions}
+              startingPage={publicPortfolio?.startingPage}
+              isPublicView
+              portfolioType='public'
+              isPreviewMode
+              hideSectionHeader
+            />
+          )}
 
-        <PortfolioNavigator scrollToTop={scrollToTop} />
+        <PortfolioNavigator
+          scrollToTop={scrollToTop}
+          visibleSections={visibleSections}
+        />
       </div>
     </div>
   )

@@ -15,6 +15,9 @@ import { useSelector } from 'react-redux'
 
 function PortfolioHeader(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
+  const visibleSections = props.visibleSections
+  const isSectionVisible = (section) =>
+    !Array.isArray(visibleSections) || visibleSections.includes(section)
 
   return (
     <div className='portfolio-main-wrapper portfolio-tss-branded-header'>
@@ -30,8 +33,8 @@ function PortfolioHeader(props) {
           className='tss-portfolio-academy-logo'
         />
       </a>
-      <PortfolioProgressIndicator />
-      {activeSection === 'who-section' && (
+      <PortfolioProgressIndicator visibleSections={visibleSections} />
+      {activeSection === 'who-section' && isSectionVisible('who-section') && (
         <SectionDescription
           sectionTitle={'Who am i?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through <strong>Story</strong>, <strong>Relationship</strong>, <strong>Mentorship</strong>, and <strong>Failure</strong>.`}
@@ -39,7 +42,7 @@ function PortfolioHeader(props) {
           sectionIcon={whoIconColor}
         />
       )}
-      {activeSection === 'what-section' && (
+      {activeSection === 'what-section' && isSectionVisible('what-section') && (
         <SectionDescription
           sectionTitle={'What can I do?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Learn</strong>, <strong>Develop</strong>, and <strong>Brand</strong>.`}
@@ -47,7 +50,7 @@ function PortfolioHeader(props) {
           sectionIcon={whatIconColor}
         />
       )}
-      {activeSection === 'how-section' && (
+      {activeSection === 'how-section' && isSectionVisible('how-section') && (
         <SectionDescription
           sectionTitle={'How Do I Prove it?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Alignment</strong>, <strong>Productivity</strong>, and <strong>Competitiveness</strong>.`}
@@ -55,7 +58,7 @@ function PortfolioHeader(props) {
           sectionIcon={howIconColor}
         />
       )}
-      {activeSection === 'start-section' && (
+      {activeSection === 'start-section' && isSectionVisible('start-section') && (
         <SectionDescription
           sectionTitle={'Start'}
           sectionDescription={`My ability to prove the quality of my outcomes through the test metrics of <strong>sustainability</strong>, <strong>profitability</strong>, and <strong>efficiency</strong>.`}
