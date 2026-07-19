@@ -4,10 +4,10 @@ export const CHALLENGE_TASKS = [
     day: 1,
     title: 'Update your Portfolio',
     description:
-      'Add a personal bio and at least 1 social media link to the "About Me" section in your portfolio.',
+      'Complete the "My Details" section of your portfolio. Add at least 1 social media link.',
     cta: 'Go to Portfolio',
-    href: '/my-portfolio',
-    toast: 'Day 1 earned. Your About Me section is set up.'
+    href: '/my-portfolio#top',
+    toast: 'Day 1 earned. Your My Details section is set up.'
   },
   {
     key: 'builder_connected',

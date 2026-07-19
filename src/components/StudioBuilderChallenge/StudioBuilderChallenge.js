@@ -132,7 +132,15 @@ function TaskCard({ task, onInviteClick }) {
           </button>
         ) : (
           <Link
-            to={task.href}
+            to={
+              task.key === 'portfolio_updated'
+                ? {
+                    pathname: '/my-portfolio',
+                    hash: 'top',
+                    state: { scrollToTop: true, openSection: 'who-am-i' }
+                  }
+                : task.href
+            }
             className='studio-challenge__card-face studio-challenge__card-face--front'
           >
             {renderFrontFace()}
@@ -253,7 +261,7 @@ function StudioBuilderChallenge() {
             <span className='studio-challenge__eyebrow'>{wc.eyebrow}</span>
           </div>
           {/* {wc.link && (
-            <Link to='/my-portfolio' className='studio-challenge__details-link'>
+            <Link to={{ pathname: '/my-portfolio', hash: 'top', state: { scrollToTop: true } }} className='studio-challenge__details-link'>
               {wc.link} →
             </Link>
           )} */}

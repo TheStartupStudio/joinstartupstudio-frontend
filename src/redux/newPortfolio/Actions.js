@@ -247,6 +247,7 @@ import {
   updateUserStoryAPI,
   createUserStoryAPI
 } from './Service'
+import { fetchChallengeProgressStart } from '../studioChallenge/Actions'
 
 export const getPublicPortfolio = () => async (dispatch) => {
   dispatch({ type: GET_PUBLIC_PORTFOLIO })
@@ -456,6 +457,7 @@ export const saveUserBasicData = (userStory, id) => async (dispatch) => {
       response = await createUserBasicDataAPI(userStory)
     }
     dispatch(saveUserBasicDataSuccess(response?.data))
+    dispatch(fetchChallengeProgressStart({ force: true, silent: true }))
   } catch (e) {}
 }
 export const saveUserBasicDataSuccess = (response) => {

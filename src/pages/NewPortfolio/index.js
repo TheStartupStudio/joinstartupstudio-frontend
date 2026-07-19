@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import './Portfolio.css'
 import whoami from '../../assets/images/whoami.png'
 import MyPortfolio from '../../assets/images/my-portfolio-new.png'
@@ -39,6 +40,7 @@ import {
 
 const Portfolio = (props) => {
   const dispatch = useDispatch()
+  const location = useLocation()
 
   const { user } = useSelector((state) => state.user)
 
@@ -64,9 +66,32 @@ const Portfolio = (props) => {
   // Add isPreviewMode state
   const [isPreviewMode, setIsPreviewMode] = useState(false)
 
-  useEffect(() => {
+  const scrollPortfolioToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
+    const contentEl = document.getElementById('content')
+    if (contentEl) contentEl.scrollTop = 0
+  }
+
+  // Always land at the top of Who Am I when entering portfolio (e.g. from challenge CTA)
+  useLayoutEffect(() => {
+    const shouldResetToTop =
+      location.hash === '#top' ||
+      location.state?.scrollToTop ||
+      location.state?.openSection === 'who-am-i'
+
+    if (shouldResetToTop || location.pathname === '/my-portfolio') {
+      setActiveSection(sections[0].key)
+      scrollPortfolioToTop()
+      // Re-run after paint in case layout shifts the scroll position
+      requestAnimationFrame(scrollPortfolioToTop)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key, location.hash, location.pathname])
+
+  useEffect(() => {
+    scrollPortfolioToTop()
   }, [activeSection])
 
   const handlePrevious = () => {
