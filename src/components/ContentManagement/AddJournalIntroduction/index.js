@@ -157,36 +157,50 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
 
     const handleVideoUpload = async (e) => {
         const file = e.target.files[0]
-        if (file) {
-            try {
-                setVideoFile(file)
-                setVideoPreview(URL.createObjectURL(file))
-                setVideoUrl('')
-                setUploadingVideo(true)
+        if (!file) return
 
-                // Upload video to S3
-                const videoFormData = new FormData()
-                videoFormData.append('video', file)
+        const previousPreview = videoPreview
+        const previousUrl = videoUrl
 
-                const videoUploadResponse = await axiosInstance.post('/upload/journal-video', videoFormData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+        try {
+            setVideoFile(file)
+            setVideoPreview(URL.createObjectURL(file))
+            setUploadingVideo(true)
 
-                if (videoUploadResponse.data.success) {
-                    setVideoUrl(videoUploadResponse.data.fileLocation)
-                    console.log('Video uploaded successfully:', videoUploadResponse.data.fileLocation)
-                } else {
-                    console.error('Video upload failed')
-                    toast.error('Failed to upload video')
+            // Upload video to S3
+            const videoFormData = new FormData()
+            videoFormData.append('video', file)
+
+            const videoUploadResponse = await axiosInstance.post('/upload/journal-video', videoFormData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
-            } catch (error) {
-                console.error('Error uploading video:', error)
-                toast.error('Failed to upload video: ' + error.message)
-            } finally {
-                setUploadingVideo(false)
+            })
+
+            if (videoUploadResponse.data.success) {
+                setVideoUrl(videoUploadResponse.data.fileLocation)
+                setVideoFile(null)
+                console.log('Video uploaded successfully:', videoUploadResponse.data.fileLocation)
+            } else {
+                console.error('Video upload failed')
+                setVideoFile(null)
+                setVideoPreview(previousPreview)
+                setVideoUrl(previousUrl)
+                toast.error('Failed to upload video')
             }
+        } catch (error) {
+            console.error('Error uploading video:', error)
+            setVideoFile(null)
+            setVideoPreview(previousPreview)
+            setVideoUrl(previousUrl)
+            const apiError =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error.message
+            toast.error('Failed to upload video: ' + apiError)
+        } finally {
+            setUploadingVideo(false)
+            if (e?.target) e.target.value = ''
         }
     }
 
@@ -497,7 +511,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
         }
     }
 
-    const isVideoUploadPending = uploadingVideo || (videoFile && !videoUrl)
+    const isVideoUploadPending = uploadingVideo
 
     return (
         <>

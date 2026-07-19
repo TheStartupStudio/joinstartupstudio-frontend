@@ -427,39 +427,88 @@ const AddJournalModal = ({
             // Normalize color to hex format
             const normalizedColor = selectedColor.startsWith('rgb') ? rgbToHex(selectedColor) : selectedColor
 
+            const fallbackClientFromBaseUrl = (() => {
+                const baseUrl = process.env.REACT_APP_SERVER_BASE_URL || ''
+                const match = baseUrl.match(/\/([^/]+)\/?$/)
+                const candidate = match?.[1]
+                return candidate && isValidApiClientKey(candidate) ? candidate : 'academy'
+            })()
+
+            let globalIdToUse = recordGlobalId
             const clientPayload = getClientPayloadValue(selectedClient)
+
+            // For edit + client=all, backend requires globalId. Resolve it if missing.
+            if (mode === 'edit' && contentId && clientPayload === 'all' && !globalIdToUse) {
+                try {
+                    const fullResponse = await axiosInstance.get(
+                        `/manage-content/full/${contentId}`,
+                        { params: clientPayload ? { client: clientPayload } : undefined }
+                    )
+                    const fullData = fullResponse?.data?.data
+                    globalIdToUse =
+                        fullData?.manageContent?.globalId ??
+                        fullData?.globalId ??
+                        null
+                    if (globalIdToUse) {
+                        setRecordGlobalId(globalIdToUse)
+                    }
+                } catch (globalIdError) {
+                    console.error('Failed to resolve globalId before save:', globalIdError)
+                }
+            }
+
+            // Legacy records may not have globalId. Avoid client=all and save by numeric id.
+            const effectiveClientForSave =
+                clientPayload === 'all' && !globalIdToUse && mode === 'edit'
+                    ? fallbackClientFromBaseUrl
+                    : clientPayload
+
             const journalData = {
-                ...(clientPayload ? { client: clientPayload } : {}),
+                ...(effectiveClientForSave ? { client: effectiveClientForSave } : {}),
+                ...(globalIdToUse ? { globalId: globalIdToUse } : {}),
                 manageContent: {
                     ...(mode === 'edit' && contentId ? { id: contentId } : {}),
                     title: journalTitle,
                     subtitle: journalSubtitle,
                     icon: selectedIcon || DEFAULT_JOURNAL_ICON,
                     color: normalizedColor
-                    // Other fields will be added in AddJournalIntroduction
-                },
-                // Only send journalLevels for new journal creation, not for updates
-                    journalLevels: sections
-                        .filter(section => section.name && section.name.trim() !== '')
-                        .map((section, index) => ({
-                            title: section.name,
-                            order: index + 1,
-                            published: true,
-                            category: journalTitle,
-                            detailsText: section.detailsText,
-                            content: section.detailsRich || ''
-                        }))
-                
+                }
+            }
+
+            // Only send journalLevels for new journal creation — section edits use a separate flow.
+            // Sending levels on update triggers cross-journal title uniqueness 400s.
+            if (mode !== 'edit') {
+                journalData.journalLevels = sections
+                    .filter(section => section.name && section.name.trim() !== '')
+                    .map((section, index) => ({
+                        title: section.name.trim(),
+                        order: index + 1,
+                        published: true,
+                        category: journalTitle,
+                        detailsText: section.detailsText,
+                        content: section.detailsRich || ''
+                    }))
             }
 
             console.log('Saving journal data:', journalData)
 
             let response
             if (mode === 'edit' && contentId) {
-                // Use PUT for updating existing journal
+                const endpointId =
+                    effectiveClientForSave === 'all' && globalIdToUse
+                        ? globalIdToUse
+                        : contentId
                 response = await axiosInstance.put(
-                    `/manage-content/full/${contentId}`,
-                    attachGlobalIdToPayload(journalData, recordGlobalId)
+                    `/manage-content/full/${endpointId}`,
+                    attachGlobalIdToPayload(journalData, globalIdToUse),
+                    {
+                        params: {
+                            ...(effectiveClientForSave
+                                ? { client: effectiveClientForSave }
+                                : {}),
+                            ...(globalIdToUse ? { globalId: globalIdToUse } : {})
+                        }
+                    }
                 )
                 console.log('Journal updated successfully:', response.data.data)
             } else {
@@ -477,13 +526,14 @@ const AddJournalModal = ({
                     if (!responseData) {
                         return {
                             globalId: topLevelGlobalId,
-                            client: getClientPayloadValue(selectedClient)
+                            client: effectiveClientForSave || getClientPayloadValue(selectedClient)
                         }
                     }
 
                     // New multi-client create response: data is an array with per-client payloads
                     if (Array.isArray(responseData)) {
-                        const selectedClientValue = getClientPayloadValue(selectedClient)
+                        const selectedClientValue =
+                            effectiveClientForSave || getClientPayloadValue(selectedClient)
                         const preferredItem =
                             responseData.find((item) => item?.client === selectedClientValue) ||
                             responseData[0] ||
@@ -521,6 +571,7 @@ const AddJournalModal = ({
                             responseData?.client ??
                             responseData?.manageContent?.client ??
                             responseBody?.requestedClient ??
+                            effectiveClientForSave ??
                             getClientPayloadValue(selectedClient)
                     }
                 }
@@ -557,7 +608,13 @@ const AddJournalModal = ({
                 throw new Error(response.data.error || 'Failed to save journal')
             }
         } catch (error) {
-            toast.error(`Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${error.message}`)
+            const apiError =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error.message
+            toast.error(
+                `Failed to ${mode === 'edit' ? 'update' : 'create'} journal: ${apiError}`
+            )
         } finally {
             setLoading(false)
         }
