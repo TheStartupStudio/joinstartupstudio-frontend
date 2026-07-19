@@ -4625,7 +4625,7 @@ wave > wave:first-child {
 
 .modal-save-btn:hover {
   background-color: rgb(255, 255, 255);
-  color: #51c7df;
+  color: #51c7df !important;
   border: 2px solid #51c7df;
 }
 
