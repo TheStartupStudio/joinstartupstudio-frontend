@@ -16,15 +16,15 @@ import {
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 
-const stripePromise = loadStripe(
-  'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
-)
-
-
 // const stripePromise = loadStripe(
-//   process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ||
-//     'pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4'
+//   'pk_test_51RTfyARsRTWEGaAp4zxg2AegOVpnOw6MXZG2qSfmT91KqlRhD3buK7X8A9m63EDc4W87lzYmycQ82ClJWndZJYr600RCjzzCDK'
 // )
+
+
+const stripePromise = loadStripe(
+  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ||
+    'pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4'
+)
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
