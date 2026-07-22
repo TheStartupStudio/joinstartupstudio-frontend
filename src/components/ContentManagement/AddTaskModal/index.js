@@ -962,7 +962,7 @@ const AddTaskModal = ({
                             <p className='upload-info'>
                               Only mp4, avi, or webm file format
                               <br />
-                              supported (max. 50Mb)
+                              supported (max. 1.5 GB)
                             </p>
                           </label>
                         </>
