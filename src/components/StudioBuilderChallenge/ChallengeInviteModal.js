@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Modal, ModalBody } from 'reactstrap'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
 import { fetchChallengeProgressStart } from '../../redux/studioChallenge/Actions'
 import { sendFriendInviteViaConvertKit } from '../../utils/convertkitInvite'
@@ -11,6 +11,7 @@ import inviteIcon from '../../assets/images/academy-icons/svg/user-group-add.svg
 
 function ChallengeInviteModal({ show, onHide }) {
   const dispatch = useDispatch()
+  const currentUser = useSelector((state) => state.user?.user?.user)
   const [friendName, setFriendName] = useState('')
   const [friendEmail, setFriendEmail] = useState('')
   const [loading, setLoading] = useState(false)
@@ -47,7 +48,9 @@ function ChallengeInviteModal({ show, onHide }) {
     try {
       await sendFriendInviteViaConvertKit({
         friendName: trimmedName,
-        friendEmail: trimmedEmail
+        friendEmail: trimmedEmail,
+        inviterName: currentUser?.name || currentUser?.full_name || 'A Studio Builder',
+        inviterEmail: currentUser?.email || ''
       })
 
       await axiosInstance.post('/challenge/complete', {
