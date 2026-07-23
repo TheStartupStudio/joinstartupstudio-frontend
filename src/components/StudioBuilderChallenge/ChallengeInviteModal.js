@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
 import { fetchChallengeProgressStart } from '../../redux/studioChallenge/Actions'
+import { sendFriendInviteViaConvertKit } from '../../utils/convertkitInvite'
 import ModalInput from '../ModalInput/ModalInput'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import inviteIcon from '../../assets/images/academy-icons/svg/user-group-add.svg'
@@ -29,19 +30,30 @@ function ChallengeInviteModal({ show, onHide }) {
     event.preventDefault()
 
     const trimmedName = friendName.trim()
-    const trimmedEmail = friendEmail.trim()
+    const trimmedEmail = friendEmail.trim().toLowerCase()
 
     if (!trimmedName || !trimmedEmail) {
-      toast.error('Please enter your friend\'s name and email')
+      toast.error("Please enter your friend's name and email")
+      return
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailPattern.test(trimmedEmail)) {
+      toast.error('Please enter a valid email address')
       return
     }
 
     setLoading(true)
     try {
-      await axiosInstance.post('/challenge/invite-sent', {
+      await sendFriendInviteViaConvertKit({
         friendName: trimmedName,
         friendEmail: trimmedEmail
       })
+
+      await axiosInstance.post('/challenge/complete', {
+        taskKey: 'invite_sent'
+      })
+
       dispatch(fetchChallengeProgressStart({ force: true, silent: true }))
       toast.success('Invite sent successfully!')
       resetForm()
@@ -50,6 +62,7 @@ function ChallengeInviteModal({ show, onHide }) {
       const message =
         error?.response?.data?.error ||
         error?.response?.data?.message ||
+        error?.message ||
         'Failed to send invite. Please try again.'
       toast.error(message)
     } finally {
