@@ -829,6 +829,7 @@ body.portfolio-preview-open .wrapper > nav {
 }
 
 .portfolio-lts-container--previewing > .pt-5,
+.portfolio-lts-container--previewing > .p-1rem-tab,
 .portfolio-lts-container--previewing > hr {
   display: none !important;
 }
