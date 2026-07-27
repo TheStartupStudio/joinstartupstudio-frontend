@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faArrowRight, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MediaLightbox from '../../components/MediaLightbox'
@@ -24,6 +24,15 @@ import InstructorFeedback from './InstructorFeedback/InstructorFeedback.js'
 import circleIcon from '../../assets/images/circle-user-icon.png'
 import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 import { NotesButton } from '../../components/Notes/index.js'
+import BuildingTowardBanner from './BuildingTowardBanner'
+import PriorReflectionsStrip from './PriorReflectionsStrip'
+import {
+  findLessonIndex,
+  getBuildsTowardTask,
+  getLessonsForLevel,
+  getPriorReflectionLessons,
+  isTaskLesson
+} from './lessonNavUtils'
 
 function LtsJournalContent(props) {
   const location = useLocation()
@@ -59,10 +68,32 @@ function LtsJournalContent(props) {
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${props.match.params.journalId}/student/${0}`
+        `/ltsJournals/${props.match.params.journalId}/student/0`,
+        { params: { scope: 'course' } }
       )
       return data
-    } catch (err) { }
+    } catch (err) {
+      return null
+    }
+  }
+
+  function groupUserJournalEntries(data) {
+    const groupedByJournalEntry = {}
+    if (!data) return groupedByJournalEntry
+
+    for (const userJournalEntry of data) {
+      if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
+        groupedByJournalEntry[userJournalEntry.journalEntryId].push(
+          userJournalEntry
+        )
+      } else {
+        groupedByJournalEntry[userJournalEntry.journalEntryId] = [
+          userJournalEntry
+        ]
+      }
+    }
+
+    return groupedByJournalEntry
   }
 
   async function getUserJournalEntries() {
@@ -70,29 +101,21 @@ function LtsJournalContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/${props.match.params.journalId}/userEntries`
       )
-      let groupedByJournalEntry = {}
-      if (data) {
-        for (var userJournalEntry of data) {
-          if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
-            groupedByJournalEntry[userJournalEntry.journalEntryId].push(
-              userJournalEntry
-            )
-          } else {
-            groupedByJournalEntry[userJournalEntry.journalEntryId] = [
-              userJournalEntry
-            ]
-          }
-        }
-      }
-
-      return groupedByJournalEntry
-    } catch (err) { }
+      return groupUserJournalEntries(data)
+    } catch (err) {
+      return {}
+    }
   }
 
   function loadData() {
     setLoading(true)
-    Promise.all([getJournal(), getUserJournalEntries()])
-      .then(([journalData, userJournalEntries]) => {
+    getJournal()
+      .then(async (journalData) => {
+        if (!journalData?.id) {
+          setLoading(false)
+          return
+        }
+
         setJournal(journalData)
 
         if (
@@ -106,7 +129,13 @@ function LtsJournalContent(props) {
             )
           } catch (err) { }
         }
-        setUserJournalEntries(userJournalEntries)
+
+        if (journalData.userJournalEntries) {
+          setUserJournalEntries(journalData.userJournalEntries)
+        } else {
+          const entries = await getUserJournalEntries()
+          setUserJournalEntries(entries)
+        }
 
         if (props.contentContainer && props.contentContainer.current) {
           props.contentContainer.current.scrollTop = 0
@@ -122,6 +151,22 @@ function LtsJournalContent(props) {
   useEffect(() => {
     loadData()
   }, [props.match.params.journalId])
+
+  useEffect(() => {
+    const entryCount = Array.isArray(journal?.entries) ? journal.entries.length : 0
+    const requiresReflections = !isIntroVideo && entryCount > 0
+
+    props.onReflectionRequirementsChange?.(requiresReflections)
+
+    return () => {
+      props.onReflectionRequirementsChange?.(false)
+    }
+  }, [
+    journal?.id,
+    journal?.entries?.length,
+    isIntroVideo,
+    props.match.params.journalId
+  ])
 
   const updateUserReflectionsTable = (updatedTable, index) => {
     const updatedJournal = { ...journal }
@@ -348,14 +393,48 @@ function LtsJournalContent(props) {
     };
   };
 
-  if (!journal) {
-    return null
+  const currentJournalId = parseInt(props.match.params.journalId)
+  const levelLessons = useMemo(
+    () =>
+      getLessonsForLevel(
+        props.lessonsByLevel || {},
+        props.activeLevel ?? 0
+      ),
+    [props.lessonsByLevel, props.activeLevel]
+  )
+  const isTask = useMemo(() => {
+    const lesson = levelLessons[findLessonIndex(levelLessons, currentJournalId)]
+    if (lesson && isTaskLesson(lesson)) return true
+    return isTaskLesson({ title: journal?.title })
+  }, [levelLessons, currentJournalId, journal?.title])
+  const priorReflectionLessonIds = useMemo(() => {
+    if (!isTask) return []
+    return getPriorReflectionLessons(currentJournalId, levelLessons).map(
+      (l) => l.id
+    )
+  }, [isTask, currentJournalId, levelLessons])
+  const buildsTowardTask = useMemo(() => {
+    if (isTask) return null
+    return getBuildsTowardTask(currentJournalId, levelLessons)
+  }, [isTask, currentJournalId, levelLessons])
+  const paneClass = isTask ? 'lts-pane-task-weight' : ''
+
+  if (loading || !journal?.id) {
+    return (
+      <div className='lts-content-loading'>
+        <div className='lts-content-loading-spinner' />
+        <span>Loading lesson…</span>
+      </div>
+    )
   }
 
   return (
-    <>
-      <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
-        <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%', position: 'relative' }}>
+    <div className='lts-lesson-body'>
+      {isTask && priorReflectionLessonIds.length > 0 && (
+        <PriorReflectionsStrip lessonIds={priorReflectionLessonIds} />
+      )}
+      <div className="d-flex justify-content-between align-items-start general-video-container-journal">
+        <div id="video-container-journal" className={`video-container-bg ${paneClass}`} style={{ position: 'relative' }}>
           <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 999999999 }}>
             <NotesButton 
               key={props.noteButtonProps?.journalId}
@@ -425,7 +504,11 @@ function LtsJournalContent(props) {
         </div>
 
 
-        <div id="content-container" className="content-container" style={{ flex: '1 1 50%', width: '100%', boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
+        <div className='lts-content-pane'>
+        <div id="content-container" className={`content-container ${paneClass}`} style={{ boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
+          {!isTask && buildsTowardTask && (
+            <BuildingTowardBanner taskTitle={buildsTowardTask.title} />
+          )}
           <div className='d-flex align-items-center reflection-header'>
             <img
               src={WhoAmI}
@@ -437,16 +520,15 @@ function LtsJournalContent(props) {
         : journal.title}</h6>
           </div>
           
-          {videos[currentVideoIndex] && 
-           ((videos[currentVideoIndex].id === 140 && props.match.params.journalId === '60') || 
+          {videos[currentVideoIndex] &&
+           ((videos[currentVideoIndex].id === 140 && props.match.params.journalId === '60') ||
             (videos[currentVideoIndex].id === 727 && props.match.params.journalId === '70')) && (
             <div className="journal-content" style={{marginTop:'1rem'}} >
               {getContentByVideo(videos[currentVideoIndex].id).content}
             </div>
           )}
 
-          {videos[currentVideoIndex] && 
-           !isIntroVideo && 
+          {!isIntroVideo &&
            (journal.entries && journal.entries.length > 0 ? (
             <div className="col-12">
               <div className="journal-entries">
@@ -454,6 +536,7 @@ function LtsJournalContent(props) {
                   entries={journal.entries}
                   entryBoxTitle={journal?.title}
                   journal={journal}
+                  routeJournalId={props.match.params.journalId}
                   isEditable={true} 
                   isDeletable={true}
                   userJournalEntries={userJournalEntries}
@@ -476,6 +559,34 @@ function LtsJournalContent(props) {
           ) : (
             <p dangerouslySetInnerHTML={{ __html: journal.content }} style={{ fontFamily: 'Montserrat', fontSize: '16px', fontWeight: '400', color: '#000', padding: '1rem 0rem' }}></p>
           ))}
+        </div>
+        {!isIntroVideo && props.onSaveAndContinue && (
+          <button
+            type='button'
+            className='lts-save-continue-text'
+            onClick={props.onSaveAndContinue}
+            disabled={props.saving || props.hasIncompleteReflections}
+            title={
+              props.hasIncompleteReflections
+                ? 'Complete all reflections before continuing'
+                : undefined
+            }
+          >
+            {props.saving ? (
+              <FontAwesomeIcon icon={faSpinner} spin />
+            ) : (
+              <>
+                <span>
+                  {props.intl.formatMessage({
+                    id: 'my_journal.save_and_continue',
+                    defaultMessage: 'Save and Continue'
+                  })}
+                </span>
+                <FontAwesomeIcon icon={faArrowRight} />
+              </>
+            )}
+          </button>
+        )}
         </div>
       </div>
 
@@ -804,7 +915,7 @@ function LtsJournalContent(props) {
           />
         )}
       </div>
-    </>
+    </div>
   )
 }
 

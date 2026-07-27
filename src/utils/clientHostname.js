@@ -69,16 +69,37 @@ export function usesAllClientsDefault() {
 }
 
 /**
+ * True for real tenant/API client keys (fma, academy, local, all).
+ * Rejects hostnames/URLs mistakenly taken from REACT_APP_SERVER_BASE_URL
+ * (e.g. "localhost:8000", "dev-api.joinstudioos.com").
+ */
+export function isValidApiClientKey(value) {
+  if (value == null) return false
+  const v = String(value).trim().toLowerCase()
+  if (!v) return false
+  if (v === 'all') return true
+  if (v.includes('://') || v.includes('/') || v.includes(':')) return false
+  if (v.includes('.')) return false
+  return /^[a-z0-9_-]+$/i.test(v)
+}
+
+/**
  * Value for API `client` fields: manual selection when set; otherwise "all"
  * on studio/dev hosts or the current tenant slug (e.g. fma).
+ * Returns undefined when nothing valid is known (omit the query param —
+ * backend then uses this API instance's own DB).
  */
 export function getClientPayloadValue(selectedFromForm) {
   if (selectedFromForm != null && selectedFromForm !== '') {
+    if (!isValidApiClientKey(selectedFromForm)) return undefined
     return normalizeClientName(selectedFromForm)
   }
   if (usesAllClientsDefault()) return 'all'
   const slug = getHostnameSubdomainLabel()
-  return normalizeClientName(slug) || 'all'
+  if (slug && isValidApiClientKey(slug)) {
+    return normalizeClientName(slug)
+  }
+  return undefined
 }
 
 /**
@@ -102,10 +123,9 @@ export function attachGlobalIdToPayload(payload, recordGlobalId) {
 
 /** Body for DELETE (and similar) with `client` + optional `globalId`. */
 export function getClientAndGlobalBody(selectedFromForm, recordGlobalId) {
-  return attachGlobalIdToPayload(
-    { client: getClientPayloadValue(selectedFromForm) },
-    recordGlobalId
-  )
+  const client = getClientPayloadValue(selectedFromForm)
+  const base = client ? { client } : {}
+  return attachGlobalIdToPayload(base, recordGlobalId)
 }
 
 /**

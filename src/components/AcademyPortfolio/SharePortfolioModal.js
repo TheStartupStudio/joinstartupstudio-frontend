@@ -3,7 +3,6 @@ import ShareModal from '../../assets/images/academy-icons/svg/share-link-modal.s
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-import axiosInstance from '../../utils/AxiosInstance'
 
 function SharePortfolioModal({ sharePortfolio, setSharePortfolio, portfolioUrl }) {
   const [copied, setCopied] = useState(false)
@@ -13,7 +12,6 @@ function SharePortfolioModal({ sharePortfolio, setSharePortfolio, portfolioUrl }
       await navigator.clipboard.writeText(portfolioUrl)
       setCopied(true)
       toast.success('Link copied to clipboard!')
-      axiosInstance.post('/challenge/invite-sent').catch(() => {})
       setTimeout(() => setCopied(false), 2000)
       setSharePortfolio(false)
     } catch (err) {

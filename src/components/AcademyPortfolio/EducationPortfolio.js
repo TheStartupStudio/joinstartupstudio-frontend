@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMyEducations } from '../../redux/portfolio/Actions'
-import educationIcon from '../../assets/images/academy-icons/svg/education&ac.svg'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import PortfolioContent from './PortfolioContent'
 import PortfolioWrapper from './PortfolioWrapper'
 import EditEduction from './EditEduction'
@@ -35,8 +35,9 @@ function EducationPortfolio({ educationData = [], isUserPortfolio }) {
   return (
     <>
       <PortfolioWrapper
-        img={educationIcon}
+        img={academyBulb}
         title={'Education & Accomplishments'}
+        description='Include relevant coursework, achievements, certifications, leadership roles, clubs, athletics, volunteer work, or notable projects.'
         setOpenNew={isUserPortfolio ? setOpenNewEducation : null}
       >
         {displayData.map((education) => (

@@ -1,7 +1,7 @@
-.modal-save-btn {
+/* .modal-save-btn {
     box-shadow: 0px 3px 6px #00000029;
     border-radius: 8px;
-    background-color: #51c7df;
+    background-color: #52C7D3;
     border: 2px solid transparent;
     color: rgb(255, 255, 255);
     font-weight: 600;
@@ -9,14 +9,88 @@
     transition: all 0.2s ease-in;
     border-radius: 8px;
 
-}
+} */
 
-.close-btn {
-    box-shadow: 0px 3px 6px #00000029;
+.close-btn-portfolio {
+  /* box-shadow: 0px 3px 6px #00000029;
     border-radius: 8px;
     background-color: rgb(210, 210, 210);
     border: none;
     color: black;
     font-weight: 600;
-    padding: 0.85rem 2.5rem;
+    padding: 0.85rem 2.5rem; */
+  display: flex;
+  height: 54px;
+  min-width: 152px;
+  max-width: 250px;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  background: #dee1e6;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  border: none !important;
+  color: #000;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  font-variant: all-small-caps;
+}
+
+.modal-save-btn {
+  display: flex;
+  height: 54px;
+  min-width: 152px;
+  max-width: 250px;
+  min-height: 54px;
+  max-height: 54px;
+  padding: 6px 12px !important;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  background: #52c7d3;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  color: #fff !important;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  font-variant: all-small-caps;
+}
+
+@media (max-width: 477px) {
+  .close-btn-portfolio,
+  .modal-save-btn {
+    min-width: 100px !important;
+    width: 100px !important;
+  }
+
+  .portfolio-modal-btns-container {
+    justify-content: center !important;
+  }
+}
+
+/* .modal.edit-modal {
+
+    width: 70% !important;
+} */
+
+@media (max-width: 900px) {
+  .portfolio-modal-end-btns-container {
+    flex-direction: column !important;
+    gap: 15px;
+  }
+}
+
+.portfolio-modal-btns-container {
+  /* flex-wrap: wrap; */
+  gap: 15px;
+  justify-content: center !important;
 }

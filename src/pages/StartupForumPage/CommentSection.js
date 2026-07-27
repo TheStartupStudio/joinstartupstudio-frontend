@@ -29,6 +29,7 @@ import AddCommentModal from './AddCommentModal'
 import StartNewDiscussionModal from './StartNewDiscussionModal'
 import ReportPostModal from './ReportPostModal'
 import CategoryList from './CategoryList'
+import UserAgreementModal from '../../components/UserAgreementModal'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import arrowLeft from '../../assets/images/academy-icons/left-arrow.png'
 
@@ -245,11 +246,24 @@ const CommentSection = () => {
   const [reportingPost, setReportingPost] = useState(null)
   const [dbCategories, setDbCategories] = useState([])
   const [allCategories, setAllCategories] = useState([])
+  const [showUserAgreement, setShowUserAgreement] = useState(false)
   const headerRef = useRef(null)
+
+  useEffect(() => {
+    if (currentUser && !currentUser?.forumAgreement) {
+      setShowUserAgreement(true)
+    }
+  }, [currentUser?.forumAgreement])
 
   useEffect(() => {
     const fetchDiscussionData = async () => {
       if (!id) return
+
+      if (currentUser && !currentUser?.forumAgreement) {
+        setShowUserAgreement(true)
+        setLoading(false)
+        return
+      }
 
       setLoading(true)
       try {
@@ -293,6 +307,14 @@ const CommentSection = () => {
         }
       } catch (error) {
         console.error('Error fetching discussion:', error)
+        // The backend can gate discussion/comment actions until the user accepts
+        // the forum agreement. In that case, show the agreement modal instead
+        // of redirecting (which looks like a "reload").
+        if (currentUser && !currentUser?.forumAgreement) {
+          setShowUserAgreement(true)
+          return
+        }
+
         history.push('/startup-forum')
       } finally {
         setLoading(false)
@@ -300,7 +322,7 @@ const CommentSection = () => {
     }
 
     fetchDiscussionData()
-  }, [id, history])
+  }, [id, history, currentUser?.forumAgreement])
 
   useEffect(() => {
     if (location.state?.discussionData) {
@@ -1249,6 +1271,12 @@ const CommentSection = () => {
         onHide={() => setShowReportModal(false)}
         post={reportingPost}
         onSuccess={handleReportSuccess}
+      />
+
+      <UserAgreementModal
+        show={showUserAgreement}
+        onSuccess={() => setShowUserAgreement(false)}
+        onHide={() => setShowUserAgreement(false)}
       />
     </>
   )

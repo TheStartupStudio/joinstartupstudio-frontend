@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
 import {
@@ -21,6 +21,7 @@ import NotSavedModal from '../../components/Modals/notSavedNoteModal'
 import _ from 'lodash'
 import { ReflectionInfoBox } from '../../components/Modals/ReflectionInfoBox'
 import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions';
+import { refreshStreakProgress } from '../../utils/refreshStreakProgress';
 
 function LtsJournalReflection(props) {
   const dispatch = useDispatch()
@@ -83,21 +84,66 @@ function LtsJournalReflection(props) {
     'align',
   ];
 
+  // Register / sync content when this editor's identity or saved content changes.
+  useEffect(() => {
+    const initialContent = props.entry?.content || ''
+    const resolvedJournalId = props.routeJournalId || props.journal?.id
+    setContent(initialContent)
+    props.onContentChange?.(initialContent, {
+      content: initialContent,
+      journalId: resolvedJournalId,
+      journalEntryId: props.journalEntry?.id,
+      entryId: props.entry?.id,
+      foulWords: null
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.routeJournalId,
+    props.journal?.id,
+    props.journalEntry?.id,
+    props.entry?.id,
+    props.entry?.content
+  ])
+
+  // Drop this editor from parent tracking only when it unmounts or its
+  // identity changes — not on every content sync (that re-added empty keys).
+  useEffect(() => {
+    const resolvedJournalId = props.routeJournalId || props.journal?.id
+    const journalEntryId = props.journalEntry?.id
+    const entryId = props.entry?.id
+
+    return () => {
+      props.onContentChange?.(null, {
+        journalId: resolvedJournalId,
+        journalEntryId,
+        entryId,
+        remove: true
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.routeJournalId,
+    props.journal?.id,
+    props.journalEntry?.id,
+    props.entry?.id
+  ])
+
   const handleContentChange = (value) => {
-    setContent(value);
+    setContent(value)
+    const resolvedJournalId = props.routeJournalId || props.journal?.id
 
     props.onContentChange?.(value, {
       content: value,
-      journalId: props.journal?.id,
+      journalId: resolvedJournalId,
       journalEntryId: props.journalEntry?.id,
       entryId: props.entry?.id,
       foulWords: foulWords
-    });
+    })
 
     detectFoulWords(removeHtmlFromString(value), (data) => {
-      setFoulWords(data);
-    });
-  };
+      setFoulWords(data)
+    })
+  }
 
   const handleSubmit = async (content) => {
     if (saving) return;
@@ -127,6 +173,7 @@ function LtsJournalReflection(props) {
       toast.success('Reflection saved successfully!');
       
       dispatch(fetchLtsCoursefinishedContent({ silent: true, force: true }));
+      refreshStreakProgress(dispatch);
 
     } catch (error) {
       console.error('Save error:', error);

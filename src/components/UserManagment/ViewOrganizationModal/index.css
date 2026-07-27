@@ -813,7 +813,7 @@ outline: none;
   align-items: center;
   gap: 12px;
   padding: 4px;
-  background: rgba(227, 229, 233, 0.50);
+  /* background: rgba(227, 229, 233, 0.50); */
   border-radius: 4px;
   margin-bottom: 12px;
 }

@@ -6,7 +6,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import Switch from 'react-switch'
 import { Button, Modal, ModalBody } from 'reactstrap'
-import educationIcon from '../../assets/images/academy-icons/svg/education&ac.svg'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
@@ -170,7 +170,7 @@ function NewEducation({ isOpen, setIsOpen }) {
   return (
     <Modal isOpen={isOpen} toggle={() => setIsOpen(false)}>
       <ModalBody>
-        <img src={educationIcon} alt='user' className='mb-3' />
+        <img src={academyBulb} alt='Education' className='mb-3 portfolio-modal-icon mb-3 portfolio-modal-icon modal-credit rounded-circle p-2 mb-2 portfolio-modal-icon' />
         <div className='d-flex justify-content-between align-items-center'>
           <h3 className='fs-14' style={{ marginBottom: '0' }}>
             Add New Education
@@ -403,6 +403,9 @@ function NewEducation({ isOpen, setIsOpen }) {
             </div>
             <div className='mt-5'>
               <h4 className='fs-15'>Description*</h4>
+                <p className='portfolio-section-description fs-14 fw-light text-black mb-1'>
+                  Include relevant coursework, achievements, certifications, leadership roles, clubs, athletics, volunteer work, or notable projects.
+                </p>
               <ReactQuill
                 value={formData.description}
                 onChange={(content) =>

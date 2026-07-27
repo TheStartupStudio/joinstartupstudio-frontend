@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { FaRegCalendarAlt } from 'react-icons/fa'
@@ -6,7 +6,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import Switch from 'react-switch'
 import { Button, Modal, ModalBody } from 'reactstrap'
-import experienceIcon from '../../assets/images/academy-icons/svg/experience.svg'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
@@ -23,7 +23,7 @@ function NewExperience({ isOpen, setIsOpen }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [imageFile, setImageFile] = useState(null)
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     organizationName: '',
     location: '',
     website: '',
@@ -34,7 +34,25 @@ function NewExperience({ isOpen, setIsOpen }) {
     currentPosition: false,
     showSection: true,
     jobTitle: ''
+  }
+
+  const [formData, setFormData] = useState({
+    ...initialFormData
   })
+
+  const resetLocalState = () => {
+    setErrors({})
+    setIsSubmitting(false)
+    setImageFile(null)
+    setFormData({ ...initialFormData })
+  }
+
+  // This component stays mounted while the modal is toggled.
+  // Reset local image state whenever the modal is opened, so the previous
+  // experience’s preview image doesn’t carry over.
+  useEffect(() => {
+    if (isOpen) resetLocalState()
+  }, [isOpen])
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -80,9 +98,6 @@ function NewExperience({ isOpen, setIsOpen }) {
 
     if (!formData.organizationName?.trim()) {
       newErrors.organizationName = 'Organization name is required'
-    }
-    if (!formData.website) {
-      newErrors.website = 'Organization URL is required'
     }
     if (!formData.jobTitle?.trim()) {
       newErrors.jobTitle = 'Experience role is required'
@@ -149,18 +164,7 @@ function NewExperience({ isOpen, setIsOpen }) {
       toast.success('Experience added successfully!')
 
       setIsOpen(false)
-      setFormData({
-        organizationName: '',
-        location: '',
-        website: '',
-        startDate: null,
-        endDate: null,
-        description: '',
-        imageUrl: null,
-        currentPosition: false,
-        showSection: true,
-        jobTitle: ''
-      })
+      resetLocalState()
     } catch (error) {
       toast.error('Failed to add experience')
     } finally {
@@ -169,9 +173,16 @@ function NewExperience({ isOpen, setIsOpen }) {
   }
 
   return (
-    <Modal isOpen={isOpen} toggle={() => setIsOpen(false)}>
+    <Modal
+      isOpen={isOpen}
+      toggle={() => {
+        setIsOpen(false)
+        resetLocalState()
+      }}
+    >
       <ModalBody>
-        <img src={experienceIcon} alt='user' className='mb-3' />
+        
+        <img src={academyBulb} alt='Experience' className='mb-3 portfolio-modal-icon modal-credit rounded-circle p-2 mb-2 portfolio-modal-icon' />
         <div className='d-flex justify-content-between align-items-center'>
           <h3 className='fs-14' style={{ marginBottom: '0' }}>
             Add New Experience
@@ -192,7 +203,7 @@ function NewExperience({ isOpen, setIsOpen }) {
                     handleInputChange('organizationName', e.target.value)
                   }
                 />
-                {errors.startDate && (
+                {errors.organizationName && (
                   <span className='text-danger'>{errors.organizationName}</span>
                 )}
                 <ModalInput
@@ -202,9 +213,6 @@ function NewExperience({ isOpen, setIsOpen }) {
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                 />
-                {errors.startDate && (
-                  <span className='text-danger'>{errors.website}</span>
-                )}
                 <ModalInput
                   id={'jobTitle'}
                   labelTitle={'Experience Role*'}
@@ -214,7 +222,7 @@ function NewExperience({ isOpen, setIsOpen }) {
                     handleInputChange('jobTitle', e.target.value)
                   }
                 />
-                {errors.startDate && (
+                {errors.jobTitle && (
                   <span className='text-danger'>{errors.jobTitle}</span>
                 )}
               </div>
@@ -287,6 +295,8 @@ function NewExperience({ isOpen, setIsOpen }) {
                               </span>
                             </p>
                             <p className='fs-14'>
+                              Recommended size: 250 x 250px.
+                              <br />
                               Only png, jpg, or jpeg file format supported (max.
                               1MB)
                             </p>
@@ -423,6 +433,8 @@ function NewExperience({ isOpen, setIsOpen }) {
             </div>
             <div className='mt-5'>
               <h4 className='fs-15'>Description*</h4>
+              <p className='portfolio-section-description fs-14 fw-light text-black mb-1'>
+                Include relevant development of skills and knowledge, and the production of outcomes.</p>
               <ReactQuill
                 value={formData.description}
                 onChange={(content) =>
@@ -447,7 +459,10 @@ function NewExperience({ isOpen, setIsOpen }) {
             <div className='d-flex gap-3 flex-col-500 w-full-500'>
               <Button
                 className='close-btn w-full-500'
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false)
+                  resetLocalState()
+                }}
                 type='button'
               >
                 CANCEL

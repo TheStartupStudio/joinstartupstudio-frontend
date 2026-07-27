@@ -4,7 +4,11 @@ const ProgressIcon = (props) => {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <div className={'d-flex align-items-center flex-column position-relative'}>
+    <div
+      className={`d-flex align-items-center flex-column position-relative${
+        props.activeSection ? ' active' : ''
+      }`}
+    >
       <div
         className={'nav-icon-box'}
         onClick={() => {
@@ -31,8 +35,11 @@ const ProgressIcon = (props) => {
           }}
         />
       </div>
-      <div className={`${props.className} nav-icon-title`}>{props.title}</div>
+      <div className={`${props.className || ''} nav-icon-title`}>
+        {props.title}
+      </div>
     </div>
   )
 }
+
 export default ProgressIcon

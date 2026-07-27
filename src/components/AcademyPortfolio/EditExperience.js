@@ -8,7 +8,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import Switch from 'react-switch'
 import { Button, Modal, ModalBody } from 'reactstrap'
-import experienceIcon from '../../assets/images/academy-icons/svg/experience.svg'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
@@ -97,9 +97,6 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
 
     if (!formData.organizationName?.trim()) {
       newErrors.organizationName = 'Organization name is required'
-    }
-    if (!formData.website) {
-      newErrors.website = 'Organization URL is required'
     }
     if (!formData.jobTitle?.trim()) {
       newErrors.jobTitle = 'Experience role is required'
@@ -231,7 +228,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
   return (
     <Modal isOpen={isOpen} toggle={() => setIsOpen(false)}>
       <ModalBody>
-        <img src={experienceIcon} alt='user' className='mb-3' />
+        <img src={academyBulb} alt='Experience' className='mb-3 portfolio-modal-icon' />
         <div className='d-flex justify-content-between align-items-center'>
           <h3 className='fs-14' style={{ marginBottom: '0' }}>
             Edit Experience
@@ -258,14 +255,11 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
 
                 <ModalInput
                   id={'website'}
-                  labelTitle={'Organization Url*'}
+                  labelTitle={'Organization Url'}
                   imgSrc={penIcon}
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                 />
-                {errors.website && (
-                  <span className='text-danger'>{errors.website}</span>
-                )}
 
                 <ModalInput
                   id={'jobTitle'}
@@ -345,6 +339,8 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                               </span>
                             </p>
                             <p className='fs-14'>
+                              Recommended size: 250 x 250px.
+                              <br />
                               Only png, jpg, or jpeg file format supported (max.
                               1MB)
                             </p>

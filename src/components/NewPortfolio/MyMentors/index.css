@@ -1,31 +1,63 @@
 .mentor-card {
   background: linear-gradient(rgb(228, 233, 244), rgb(255, 255, 255));
-  border-radius: 20px;
+  border-radius: 30px;
+
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
   color: #333;
   position: relative;
   min-width: 95% !important;
+  min-height: 350px;
+  /* max-height: 1000px; */
+  /* large enough for any content */
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
 
+
+.mentor-card.expanded {
+  max-height: 1000px;
+}
+
+.mentor-image-container {
+
+  height: 175px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 30px 30px 0 0;
+}
+
+.mentor-image-container img {
+
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  object-fit: cover;
+}
+
+.mentor-description-container {
+  padding: 10px;
+}
+
+.carousel-slide-item:has(.mentor-card) {
+  margin-inline: 0 !important;
+}
+
+@media (max-width:973px) {
+  .carousel-slide-item:has(.mentor-card) {
+    width: 50% !important;
   }
-  
-  .mentor-card-div {
-    color:black;
+}
+
+@media (max-width:682px) {
+  .carousel-slide-item:has(.mentor-card) {
+    width: 100% !important;
   }
 
-  .mentor-image-container {
 
-    height: 175px;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 10px 10px 0 0;
-  }
+}
 
-  .mentor-image-container img{
-
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
-  }
+div.inner:has(.mentor-card) {
+  flex-wrap: wrap;
+}

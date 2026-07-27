@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Modal, ModalBody } from 'reactstrap'
 import { toast } from 'react-toastify'
-import courseLogo from '../../assets/images/academy-icons/course-progress.png'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
 import ModalInput from '../ModalInput/ModalInput'
@@ -26,7 +28,8 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
   const [formData, setFormData] = useState({
     projectFile: '',
     urlToVideo: '',
-    imageUrl: ''
+    imageUrl: '',
+    description: ''
   })
 
   useEffect(() => {
@@ -167,8 +170,8 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
       >
         <ModalBody>
           <img
-            className='modal-credit rounded-circle p-2 mb-2'
-            src={courseLogo}
+            className='modal-credit rounded-circle p-2 mb-2 portfolio-modal-icon'
+            src={academyBulb}
             alt='Course logo'
           />
           <p className='mb-0 fs-15 fw-medium'>Edit Project</p>
@@ -202,6 +205,26 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
                   <span className='text-danger'>{errors.urlToVideo}</span>
                 )}
               </div>
+            </div>
+
+            <div className='mt-5'>
+              <h4 className='fs-15'>Description</h4>
+              <p className='fs-14 fw-light text-secondary mb-2'>
+                Briefly describe the relevant outcomes of this project.
+              </p>
+              <ReactQuill
+                value={formData.description}
+                onChange={(content) => handleInputChange('description', content)}
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ align: [] }],
+                    ['link']
+                  ]
+                }}
+              />
             </div>
 
             <div className='mt-5'>

@@ -249,6 +249,180 @@
   color: #fff;
 }
 
+.studio-challenge__ring--compact {
+  width: 56px;
+  height: 56px;
+}
+
+.studio-challenge__ring-label--compact {
+  position: absolute;
+  inset: 0;
+}
+
+.studio-challenge__ring-count--compact {
+  font-size: 15px;
+}
+
+.studio-challenge__skeleton-ring--compact {
+  width: 56px;
+  height: 56px;
+}
+
+.studio-challenge__cards-row {
+  margin-top: 4px;
+}
+
+.studio-challenge__cards-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.studio-challenge__cards {
+  display: grid;
+  gap: 12px;
+}
+
+.studio-challenge__card {
+  /* aspect-ratio: 1 / 1;
+  perspective: 1000px; */
+  min-height: 200px;
+  height: 100%;
+  max-height: 300px;
+}
+
+.studio-challenge__card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.studio-challenge__card-inner--flipped {
+  transform: rotateY(180deg);
+}
+
+.studio-challenge__card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 14px;
+}
+
+.studio-challenge__card-face--front {
+  padding: clamp(10px, 1.1vw, 16px);
+  background: #fff;
+  border: 1px solid #e2f0f9;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.studio-challenge__card-face--front:hover {
+  border-color: rgba(81, 199, 223, 0.45);
+  box-shadow: 0 4px 12px rgba(81, 199, 223, 0.12);
+}
+
+.studio-challenge__card-button {
+  width: 100%;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  height: 100%;
+}
+
+.studio-challenge__card-button:focus-visible {
+  outline: 2px solid #51c7df;
+  outline-offset: 2px;
+}
+
+.studio-challenge__card-face--back {
+  background: linear-gradient(45deg, #51c7df, #ff3399);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: clamp(10px, 1.1vw, 16px);
+}
+
+.studio-challenge__card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.studio-challenge__card-icon-wrap {
+  width: clamp(26px, 2.2vw, 34px);
+  height: clamp(26px, 2.2vw, 34px);
+  border-radius: 8px;
+  background: linear-gradient(45deg, rgba(81, 199, 223, 0.08), rgba(255, 51, 153, 0.08));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-challenge__card-reward-label {
+  font-size: clamp(0.6rem, 0.48rem + 0.25vw, 0.75rem);
+  font-weight: 700;
+  color: #a0b8c4;
+}
+
+.studio-challenge__card-title {
+  font-size: clamp(0.75rem, 0.55rem + 0.42vw, 1rem);
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.25;
+  margin-bottom: 3px;
+}
+
+.studio-challenge__card-desc {
+  font-size: clamp(0.65rem, 0.5rem + 0.32vw, 0.825rem);
+  color: #6b8090;
+  line-height: 1.35;
+}
+
+.studio-challenge__card-cta {
+  font-size: clamp(0.65rem, 0.48rem + 0.35vw, 0.825rem);
+  font-weight: 700;
+  color: #ff3399;
+  margin-top: 6px;
+}
+
+.studio-challenge__card-earned-label {
+  font-size: clamp(0.65rem, 0.5rem + 0.3vw, 0.825rem);
+  font-weight: 600;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.studio-challenge__card-reward {
+  font-size: clamp(0.8rem, 0.62rem + 0.38vw, 1.05rem);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.studio-challenge__skeleton-card {
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #e8f4fb 0%, #f4fafd 50%, #e8f4fb 100%);
+  background-size: 200% 100%;
+  animation: studio-challenge-shimmer 1.4s ease-in-out infinite;
+}
+
+.studio-challenge__cards--skeleton {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .studio-challenge__task {
   display: flex;
   align-items: center;
@@ -348,6 +522,7 @@
   width: 100%;
   text-align: center;
   position: relative;
+  overflow: auto;
 }
 
 .studio-challenge__modal-accent {
@@ -405,6 +580,11 @@
 }
 
 @media (max-width: 768px) {
+  .studio-challenge__cards,
+  .studio-challenge__cards--skeleton {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
   .studio-challenge__task {
     flex-wrap: wrap;
   }

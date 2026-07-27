@@ -4331,6 +4331,17 @@ wave > wave:first-child {
   padding-bottom: 20px;
 }
 
+.dashboard-challenge-row {
+  grid-column: span 2;
+}
+
+.dashboard-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
 .academy-dashboard-layout {
   grid-template-columns: 3fr 4fr;
   padding-inline: 40px;
@@ -4614,7 +4625,7 @@ wave > wave:first-child {
 
 .modal-save-btn:hover {
   background-color: rgb(255, 255, 255);
-  color: #51c7df;
+  color: #51c7df !important;
   border: 2px solid #51c7df;
 }
 
@@ -5128,6 +5139,33 @@ wave > wave:first-child {
   object-fit: cover;
 }
 
+.portfolio-section-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.portfolio-modal-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.portfolio-section-description {
+  line-height: 1.5;
+  max-width: 720px;
+}
+
+.portfolio-experience-entry {
+  padding-bottom: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.portfolio-experience-entry--bordered {
+  border-bottom: 1px solid #dbe7ea;
+}
+
 .menu-icon-cie {
   display: none;
   width: 28px !important;
@@ -5168,7 +5206,7 @@ wave > wave:first-child {
 
 .progress-dashboard-card {
   height: fit-content;
-  min-height: 70%;
+  /* min-height: 70%; */
 }
 
 @media (max-width: 1135px) {

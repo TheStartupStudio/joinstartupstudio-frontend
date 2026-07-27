@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faTrash, faPencilAlt, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
+import {
+    uploadJournalVideo,
+    JOURNAL_VIDEO_MAX_LABEL
+} from '../../../utils/uploadJournalVideo'
 import { attachGlobalIdToPayload } from '../../../utils/clientHostname'
 import { toast } from 'react-toastify'
 
@@ -157,36 +161,33 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
 
     const handleVideoUpload = async (e) => {
         const file = e.target.files[0]
-        if (file) {
-            try {
-                setVideoFile(file)
-                setVideoPreview(URL.createObjectURL(file))
-                setVideoUrl('')
-                setUploadingVideo(true)
+        if (!file) return
 
-                // Upload video to S3
-                const videoFormData = new FormData()
-                videoFormData.append('video', file)
+        const previousPreview = videoPreview
+        const previousUrl = videoUrl
 
-                const videoUploadResponse = await axiosInstance.post('/upload/journal-video', videoFormData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+        try {
+            setVideoFile(file)
+            setVideoPreview(URL.createObjectURL(file))
+            setUploadingVideo(true)
 
-                if (videoUploadResponse.data.success) {
-                    setVideoUrl(videoUploadResponse.data.fileLocation)
-                    console.log('Video uploaded successfully:', videoUploadResponse.data.fileLocation)
-                } else {
-                    console.error('Video upload failed')
-                    toast.error('Failed to upload video')
-                }
-            } catch (error) {
-                console.error('Error uploading video:', error)
-                toast.error('Failed to upload video: ' + error.message)
-            } finally {
-                setUploadingVideo(false)
-            }
+            const fileLocation = await uploadJournalVideo(file)
+            setVideoUrl(fileLocation)
+            setVideoFile(null)
+            console.log('Video uploaded successfully:', fileLocation)
+        } catch (error) {
+            console.error('Error uploading video:', error)
+            setVideoFile(null)
+            setVideoPreview(previousPreview)
+            setVideoUrl(previousUrl)
+            const apiError =
+                error?.response?.data?.error ||
+                error?.response?.data?.message ||
+                error.message
+            toast.error('Failed to upload video: ' + apiError)
+        } finally {
+            setUploadingVideo(false)
+            if (e?.target) e.target.value = ''
         }
     }
 
@@ -277,31 +278,22 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
     // Journal modal specific handlers
     const handleJournalVideoUpload = async (e) => {
         const file = e.target.files[0]
-        if (file) {
-            try {
-                setJournalVideoFile(file)
-                setJournalVideoPreview(URL.createObjectURL(file))
+        if (!file) return
 
-                const videoFormData = new FormData()
-                videoFormData.append('video', file)
+        try {
+            setJournalVideoFile(file)
+            setJournalVideoPreview(URL.createObjectURL(file))
+            setUploadingVideo(true)
 
-                const videoUploadResponse = await axiosInstance.post('/upload/journal-video', videoFormData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-
-                if (videoUploadResponse.data.success) {
-                    setJournalVideoUrl(videoUploadResponse.data.fileLocation)
-                    console.log('Journal video uploaded successfully:', videoUploadResponse.data.fileLocation)
-                } else {
-                    console.error('Journal video upload failed')
-                    toast.error('Failed to upload journal video')
-                }
-            } catch (error) {
-                console.error('Error uploading journal video:', error)
-                toast.error('Failed to upload journal video: ' + error.message)
-            }
+            const fileLocation = await uploadJournalVideo(file)
+            setJournalVideoUrl(fileLocation)
+            console.log('Journal video uploaded successfully:', fileLocation)
+        } catch (error) {
+            console.error('Error uploading journal video:', error)
+            toast.error('Failed to upload journal video: ' + error.message)
+        } finally {
+            setUploadingVideo(false)
+            if (e?.target) e.target.value = ''
         }
     }
 
@@ -497,7 +489,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
         }
     }
 
-    const isVideoUploadPending = uploadingVideo || (videoFile && !videoUrl)
+    const isVideoUploadPending = uploadingVideo
 
     return (
         <>
@@ -785,7 +777,7 @@ const AddJournalIntroduction = ({ show, onClose, journalData = null, mode = 'add
                                                         </div>
                                                         <p className="upload-info">
                                                             Only mp4, avi, or webm file format<br />
-                                                            supported (max. 50Mb)
+                                                            supported (max. {JOURNAL_VIDEO_MAX_LABEL})
                                                         </p>
                                                     </label>
                                                 </>

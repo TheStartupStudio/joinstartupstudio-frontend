@@ -14,7 +14,7 @@ const LtsContainerWrapper = ({
         <h3 className='fw-bold page-title'>{title}</h3>
         <p className='school-page-desc page-description'>{titleDescription}</p>
       </div>
-      <hr />
+      {/* <hr /> */}
       <div className='m-0 p-0'>{children}</div>
     </div>
   )

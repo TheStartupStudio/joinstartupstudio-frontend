@@ -22,7 +22,7 @@ import Payment from './pages/Register/Payment'
 import Dashboard from './pages/Dashboard'
 import LtsJournal from './pages/LtsJournal'
 import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
-import PublicPortfolio2024 from './pages/Academy-Portfolio/index'
+import PublicPortfolio2024 from './pages/Portfolio2024/publicPortfolio'
 import SubscriptionSuccess from './pages/Register/SubscriptionSuccess'
 import { filterRoutesByAccess, getDefaultDashboard } from './utils/routeHelpers'
 import {

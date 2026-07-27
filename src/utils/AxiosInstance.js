@@ -59,6 +59,12 @@ axiosInstance.interceptors.request.use(
 
     req.headers['x-client-name'] = clientName
 
+    // Let the browser set multipart boundary; a bare multipart/form-data header breaks uploads.
+    if (req.data instanceof FormData) {
+      delete req.headers['Content-Type']
+      delete req.headers['content-type']
+    }
+
     return req
   },
   (error) => {

@@ -99,7 +99,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'intro-course',
-    title: 'Intro to the Course',
+    title: 'Intro to the Studio',
     srcImage: IntroToIcon,
     to: '/my-course-in-entrepreneurship',
     roles: [2, 1],
@@ -108,7 +108,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'course-entrepreneurship',
-    title: 'Course Sessions',
+    title: 'Course',
     srcImage: CoursEnIcon,
     to: '/my-course-in-entrepreneurship/journal',
     roles: [2, 1],
@@ -117,7 +117,7 @@ const SIDEBAR_MENU_ITEMS = [
   },
   {
     id: 'master-classes',
-    title: 'Studio Guidance',
+    title: 'Guidance',
     srcImage: MasterIcon,
     to: '/beyond-your-course',
     roles: [2, 1],
@@ -136,7 +136,7 @@ const SIDEBAR_MENU_ITEMS = [
   // },
   {
     id: 'forum',
-    title: 'Studio Forum',
+    title: 'Forum',
     srcImage: ForumIcon,
     to: '/startup-forum',
     roles: [3, 2, 1],
@@ -436,7 +436,7 @@ const InstructorSidebar = (props) => {
       if (shouldInsertStudioJournalSection && contentManagementChildren.length > 0) {
         result.push({
           id: 'content-management-new-parent',
-          title: userRoleId === 3 ? 'Content Management' : 'Studio Journals',
+          title: userRoleId === 3 ? 'Content Management' : 'Journals',
           srcImage: userRoleId === 3 ? ContentSiteIcon : LeadershipIcon,
           to: userRoleId === 3 ? '/manage-content-site' : '#',
           isAdminParent: userRoleId === 3,

@@ -34,6 +34,9 @@ import LeaderBoard from '../../components/LeaderBoard'
 import StudioBuilderChallenge from '../../components/StudioBuilderChallenge/StudioBuilderChallenge'
 import StudioBuilderChallengeInitializer from '../../components/StudioBuilderChallenge/StudioBuilderChallengeInitializer'
 import { fetchChallengeProgressStart } from '../../redux/studioChallenge/Actions'
+import { fetchStreakStart } from '../../redux/streak/Actions'
+import StreakWidget from '../../components/StreakWidget/StreakWidget'
+import StreakWidgetInitializer from '../../components/StreakWidget/StreakWidgetInitializer'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -55,10 +58,17 @@ function Dashboard() {
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
-    dispatch(fetchCourseProgressData())
-    dispatch(fetchChallengeProgressStart())
+
+    // On the first login, `user.id` (and token) may not be ready yet.
+    // If we kick off these requests too early, they can get stuck in `loading=true`
+    // and both widgets will never recover (their initializers block re-fetches while loading).
+    if (!user?.id) return
+
+    dispatch(fetchCourseProgressData({ force: true }))
+    dispatch(fetchChallengeProgressStart({ force: true }))
+    dispatch(fetchStreakStart({ force: true }))
     dispatch(changeSidebarState(false))
-  }, [dispatch])
+  }, [dispatch, user?.id])
 
   function getFormattedDate() {
     const today = new Date()
@@ -187,6 +197,7 @@ function Dashboard() {
         {/* Trial Countdown Banner */}
         <TrialTimerInitializer />
         <StudioBuilderChallengeInitializer />
+        <StreakWidgetInitializer />
         <CourseProgressInitializer />
         {isTrialActive && trialTimeRemaining && (
           <div 
@@ -249,9 +260,14 @@ function Dashboard() {
 
           <CourseProgress />
 
-          <StudioBuilderChallenge />
+          <div className='dashboard-right-col'>
+            <StreakWidget />
+            <UpcomingEventsCalendar />
+          </div>
 
-          {/* <UpcomingEventsCalendar /> */}
+          <div className='dashboard-challenge-row'>
+            <StudioBuilderChallenge />
+          </div>
 
           <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between flex-col-mob mb-1rem-tab gap-1rem-mob '>
             <div className='d-flex align-items-center gap-3 flex-col-mob'>

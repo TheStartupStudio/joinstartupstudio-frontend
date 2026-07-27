@@ -246,11 +246,37 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
     setShowEmailModal(false)
   }
 
-  const handleViewPortfolio = () => {
-    window.open(
-      `/public-portfolio/${encodeURIComponent(displayData.username || learner.id)}`,
-      '_blank'
-    )
+  const handleViewPortfolio = async () => {
+    const portfolioUsername = displayData?.username || learner?.username
+    if (!portfolioUsername) {
+      toast.error('This user has not published their portfolio yet')
+      return
+    }
+
+    try {
+      const response = await axiosInstance.get(
+        `/portfolio/${encodeURIComponent(portfolioUsername)}`
+      )
+
+      if (
+        response.data?.privateMessage ||
+        (!response.data?.user && !response.data?.whoAmI)
+      ) {
+        toast.error(
+          response.data?.privateMessage ||
+            'This user has not published their portfolio yet'
+        )
+        return
+      }
+
+      window.open(
+        `/public-portfolio/${encodeURIComponent(portfolioUsername)}`,
+        '_blank'
+      )
+    } catch (error) {
+      console.error('Error checking portfolio publish status:', error)
+      toast.error('This user has not published their portfolio yet')
+    }
   }
 
   const handleViewPerformanceData = () => {
@@ -711,12 +737,12 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
               imageSide={true}
               onClick={handleViewPortfolio}
             />
-            <AcademyBtn
+            {/* <AcademyBtn
               title={`View Performance Data`}
               icon={graphUp}
               imageSide={true}
               onClick={handleViewPerformanceData}
-            />
+            /> */}
           </div>
         </div>
       </Modal>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import './Portfolio.css'
-import whoami from '../../assets/images/whoami.png'
+import whoami from '../../assets/images/whoami.svg'
 import MainCard from '../../components/NewPortfolio/MainCard/index'
 import MultiCard from '../../components/NewPortfolio/MultiCard/index'
 import MentorCard from '../../components/NewPortfolio/MyMentors/index'
@@ -18,6 +18,8 @@ import EditCard from '../../components/NewPortfolio/EditCard'
 import AddCard from '../../components/NewPortfolio/AddCard'
 import ReactQuill from 'react-quill'
 import penIcon from '../../assets/images/pen-icon.svg'
+import ImageUploader from '../../components/NewPortfolio/ImageUploader/index'
+import linkIcon from '../../assets/images/link.svg'
 import {
   saveUserBasicData,
   saveMyRelationships,
@@ -25,14 +27,26 @@ import {
   updateMyFailure,
   createMyMentor,
   updateMyMentor,
-  deleteMyMentor
-} from '../../redux/portfolio/Actions'
+  deleteMyMentor,
+  deleteMyFailure
+} from '../../redux/newPortfolio/Actions'
 import { deleteImage, uploadImage } from '../../utils/helpers'
 import useImageEditor from '../../hooks/useImageEditor'
-
+import who from '../../assets/icons/Who.png'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import ReactImageUpload from '../Portfolio2024/Components/ReactAvatarEditor/ReactImageUpload'
+import nothingAdded from '../../assets/images/nothing-added.svg'
 
 const WhoAmI = (props) => {
+  const isPublicView = props?.isPublicView || props?.portfolioType === 'public'
+
+  const userData = useSelector((state) => state.user?.user)
+  const loggedInUserId = userData?.user?.id
+
+  const isOwner =
+    loggedInUserId && props?.userBasicInfo?.userId === loggedInUserId
+  const canEdit = !isPublicView && !props.isPreviewMode && isOwner
+
   const dispatch = useDispatch()
   const [showMoreValueProp, setShowMoreValueProp] = useState(false)
   const [showMoreMyStory, setShowMoreMyStory] = useState(false)
@@ -40,10 +54,27 @@ const WhoAmI = (props) => {
   const [playingVideos, setPlayingVideos] = useState({})
   const [isEditingDetails, setIsEditingDetails] = useState(false)
   const [isAddingDetails, setIsAddingDetails] = useState(false)
+  const [showMoreStates, setShowMoreStates] = useState({})
+  const [showMoreTextBlocks, setShowMoreTextBlocks] = useState({
+    failure: false,
+    pivot: false,
+    outcomes: false
+  })
   const [changedUser, setChangedUser] = useState({
-    primaryInterest: '',
-    valueProposition: '',
-    id: null
+    name: props?.userBasicInfo?.name || '',
+    userTitle: props?.userBasicInfo?.userTitle || '',
+    userImageUrl: props?.userBasicInfo?.userImageUrl || '',
+    company: props?.userBasicInfo?.company || '',
+    socialMediaLinks: props?.userBasicInfo?.socialMediaLinks || {
+      linkedIn: '',
+      instagram: '',
+      facebook: '',
+      tiktok: '',
+      x: ''
+    },
+    primaryInterest: props?.userBasicInfo?.primaryInterest || '',
+    valueProposition: props?.userBasicInfo?.valueProposition || '',
+    id: props?.userBasicInfo?.id || null
   })
 
   const [isEditingRelationships, setIsEditingRelationships] = useState(false)
@@ -65,13 +96,14 @@ const WhoAmI = (props) => {
   )
 
   const handleEditStory = () => {
+    if (!canEdit) return
     setIsEditingStory(true)
   }
 
   const handleSaveStory = () => {
+    if (!canEdit) return
     const userData = {
       story: editedStory,
-      // Include other fields that need to be preserved
       primaryInterest: props?.userBasicInfo?.primaryInterest || '',
       valueProposition: props?.userBasicInfo?.valueProposition || '',
       videoUrl: props?.userBasicInfo?.videoUrl || '',
@@ -81,12 +113,24 @@ const WhoAmI = (props) => {
     dispatch(saveUserBasicData(userData, props?.userBasicInfo?.id))
     setIsEditingStory(false)
   }
+
   const handleCancelStoryEdit = () => {
     setIsEditingStory(false)
     setEditedStory(props?.userBasicInfo?.story || '')
   }
   useEffect(() => {
     setChangedUser({
+      name: props?.userBasicInfo?.name || '',
+      userTitle: props?.userBasicInfo?.userTitle || '',
+      userImageUrl: props?.userBasicInfo?.userImageUrl || '',
+      company: props?.userBasicInfo?.company || '',
+      socialMediaLinks: props?.userBasicInfo?.socialMediaLinks || {
+        linkedIn: '',
+        instagram: '',
+        facebook: '',
+        tiktok: '',
+        x: ''
+      },
       primaryInterest: props?.userBasicInfo?.primaryInterest || '',
       valueProposition: props?.userBasicInfo?.valueProposition || '',
       id: props?.userBasicInfo?.id || null
@@ -102,21 +146,12 @@ const WhoAmI = (props) => {
     })
   }, [props?.myRelationships])
 
-  // useEffect(() => {
-  //   setEditedRelationships({
-  //     teamRole: props?.myRelationships?.teamRole || '',
-  //     collaborationStyle: props?.myRelationships?.collaborationStyle || '',
-  //     leadershipPhilosophy: props?.myRelationships?.leadershipPhilosophy || ''
-  //   })
-  // }, [props?.myMentors])
-
   const handleSaveRelationships = () => {
-    // Prepare data to save (you'll need to implement this API call)
+    if (!canEdit) return
     const relationshipsData = {
       teamRole: editedRelationships.teamRole,
       collaborationStyle: editedRelationships.collaborationStyle,
       leadershipPhilosophy: editedRelationships.leadershipPhilosophy,
-      // Include other necessary fields
       id: props?.myRelationships?.id || null
     }
 
@@ -127,7 +162,6 @@ const WhoAmI = (props) => {
 
   const handleCancelRelationshipsEdit = () => {
     setIsEditingRelationships(false)
-    // Reset to original values
     setEditedRelationships({
       teamRole: props?.myRelationships?.teamRole || '',
       collaborationStyle: props?.myRelationships?.collaborationStyle || '',
@@ -149,8 +183,8 @@ const WhoAmI = (props) => {
 
   const [isAddingFailure, setIsAddingFailure] = useState(false)
 
-  // Handle edit failure
   const handleEditFailure = (failure) => {
+    if (!canEdit) return
     setEditingFailureId(failure.id)
     setEditedFailure({
       videoUrl: failure.videoUrl || '',
@@ -165,6 +199,7 @@ const WhoAmI = (props) => {
   }
 
   const handleAddFailure = () => {
+    if (!canEdit) return
     setEditingFailureId(null)
     setEditedFailure({
       videoUrl: '',
@@ -179,8 +214,8 @@ const WhoAmI = (props) => {
     setIsEditingFailure(true)
   }
 
-  // Handle save failure
   const handleSaveFailure = () => {
+    if (!canEdit) return
     const failureData = {
       videoUrl: editedFailure.videoUrl,
       failure: editedFailure.failure,
@@ -200,15 +235,14 @@ const WhoAmI = (props) => {
     setIsEditingFailure(false)
   }
 
-  // Handle cancel edit
   const handleCancelFailureEdit = () => {
     setIsEditingFailure(false)
   }
 
-  const valueProposition =
-    props?.userBasicInfo?.valueProposition?.replace(/<[^>]*>/g, '') || ''
+  const valueProposition = props?.userBasicInfo?.valueProposition || ''
 
-  const myStory = props?.userBasicInfo?.story?.replace(/<[^>]*>/g, '') || ''
+  // const myStory = props?.userBasicInfo?.story?.replace(/<[^>]*>/g, '') || ''
+  const myStory = props?.userBasicInfo?.story || ''
 
   const toggleVideoVisibility = () => setIsVideoVisible(true)
 
@@ -220,10 +254,12 @@ const WhoAmI = (props) => {
   }
 
   const handleEditDetails = () => {
+    if (!canEdit) return
     setIsEditingDetails(true)
   }
 
   const handleAddDetails = () => {
+    if (!canEdit) return
     setIsAddingDetails(true)
   }
 
@@ -236,27 +272,48 @@ const WhoAmI = (props) => {
   }
 
   const handleSaveVideo = () => {
+    if (!canEdit) return
     const userData = {
       videoUrl: videoData.videoUrl,
-      // Include other fields that need to be preserved
+      thumbnailUrl: videoData.thumbnailUrl,
+      story: props?.userBasicInfo?.story || '',
       primaryInterest: props?.userBasicInfo?.primaryInterest || '',
       valueProposition: props?.userBasicInfo?.valueProposition || '',
+      userImageUrl: props?.userBasicInfo?.userImageUrl || '',
+      userTitle: props?.userBasicInfo?.userTitle || '',
+      name: props?.userBasicInfo?.name || '',
+      organization: props?.userBasicInfo?.organization || '',
+      company: props?.userBasicInfo?.company || '',
+      socialMediaLinks: props?.userBasicInfo?.socialMediaLinks || {},
       id: props?.userBasicInfo?.id || null
     }
 
     dispatch(saveUserBasicData(userData, props?.userBasicInfo?.id))
     setIsEditingVideo(false)
-    setIsVideoVisible(false) // Reset video visibility
+    setIsVideoVisible(false)
   }
+
   const handleEditVideo = () => {
+    if (!canEdit) return
+    // Set the current data from props when opening edit modal
+    setVideoData({
+      videoUrl: props?.userBasicInfo?.videoUrl || '',
+      thumbnailUrl: props?.userBasicInfo?.thumbnailUrl || ''
+    })
     setIsEditingVideo(true)
   }
 
   const handleSaveDetails = () => {
+    if (!canEdit) return
     const userData = {
+      id: changedUser.id,
+      name: changedUser.name,
+      userTitle: changedUser.userTitle,
+      company: changedUser.company,
+      userImageUrl: changedUser.userImageUrl,
       primaryInterest: changedUser.primaryInterest,
       valueProposition: changedUser.valueProposition,
-      id: changedUser.id
+      socialMediaLinks: changedUser.socialMediaLinks
     }
 
     dispatch(saveUserBasicData(userData, changedUser.id))
@@ -267,8 +324,18 @@ const WhoAmI = (props) => {
   const handleCancelEdit = () => {
     setIsEditingDetails(false)
     setIsAddingDetails(false)
-    // Reset to original values
     setChangedUser({
+      name: props?.userBasicInfo?.name || '',
+      userTitle: props?.userBasicInfo?.userTitle || '',
+      userImageUrl: props?.userBasicInfo?.userImageUrl || '',
+      company: props?.userBasicInfo?.company || '',
+      socialMediaLinks: props?.userBasicInfo?.socialMediaLinks || {
+        linkedIn: '',
+        instagram: '',
+        facebook: '',
+        tiktok: '',
+        x: ''
+      },
       primaryInterest: props?.userBasicInfo?.primaryInterest || '',
       valueProposition: props?.userBasicInfo?.valueProposition || '',
       id: props?.userBasicInfo?.id || null
@@ -287,9 +354,30 @@ const WhoAmI = (props) => {
     category: 'my-mentors'
   })
 
-  const [expandedCards, setExpandedCards] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [itemsToShow, setItemsToShow] = useState(3)
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      setWindowWidth(width)
+
+      if (width < 750) {
+        setItemsToShow(1)
+      } else if (width < 1030) {
+        setItemsToShow(2)
+      } else {
+        setItemsToShow(3)
+      }
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleEditMentor = (mentor) => {
+    if (!canEdit) return
     setEditingMentorId(mentor.id)
     setEditedMentor({
       mentorName: mentor.mentorName || '',
@@ -304,6 +392,7 @@ const WhoAmI = (props) => {
   }
 
   const handleAddMentor = () => {
+    if (!canEdit) return
     setEditingMentorId(null)
     setEditedMentor({
       mentorName: '',
@@ -319,11 +408,19 @@ const WhoAmI = (props) => {
   }
 
   const handleDeleteMentor = async () => {
+    if (!canEdit) return
     dispatch(deleteMyMentor(editedMentor.id))
     setIsEditingMentor(false)
   }
 
+  const handleDeleteFailure = async () => {
+    if (!canEdit) return
+    dispatch(deleteMyFailure(editedFailure.id))
+    setIsEditingFailure(false)
+  }
+
   const handleSaveMentor = async () => {
+    if (!canEdit) return
     let newImage = null
     if (imageProperties.croppedImage) {
       newImage = await uploadImage(imageProperties.croppedImage)
@@ -340,10 +437,8 @@ const WhoAmI = (props) => {
     }
 
     if (editedMentor.id) {
-      // For update, we need to send both the data and the ID
       dispatch(updateMyMentor(mentorData, editedMentor.id))
     } else {
-      // For create, we just send the data
       dispatch(createMyMentor(mentorData))
     }
 
@@ -358,22 +453,93 @@ const WhoAmI = (props) => {
   const isYouTubeLink =
     videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')
 
-  const getYouTubeEmbedUrl = (url) => {
-    if (url.includes('youtu.be')) {
-      const id = url.split('youtu.be/')[1]
-      return `https://www.youtube.com/embed/${id}`
-    } else if (url.includes('youtube.com/watch?v=')) {
-      const id = url.split('v=')[1]
-      const ampersandPosition = id.indexOf('&')
-      if (ampersandPosition !== -1) {
-        return `https://www.youtube.com/embed/${id.substring(
-          0,
-          ampersandPosition
-        )}`
-      }
-      return `https://www.youtube.com/embed/${id}`
+  // Mobile-safe visibility: if there's a video but no thumbnail, show the player on mobile
+  useEffect(() => {
+    const thumb = props?.userBasicInfo?.thumbnailUrl
+    if (videoUrl && !thumb) {
+      const isMobile =
+        typeof window !== 'undefined' &&
+        window.matchMedia &&
+        window.matchMedia('(max-width: 768px)').matches
+      if (isMobile) setIsVideoVisible(true)
     }
+    if (!videoUrl) setIsVideoVisible(false)
+  }, [videoUrl, props?.userBasicInfo?.thumbnailUrl])
+
+  // Extract YouTube ID and thumbnails for fallback when no custom thumbnail is provided
+  const getYouTubeId = (url) => {
+    if (!url) return null
+    try {
+      const u = new URL(url)
+      // youtu.be/<id>
+      if (u.hostname.includes('youtu.be')) {
+        const seg = u.pathname.split('/').filter(Boolean)
+        return seg[0] || null
+      }
+      // youtube.com/watch?v=<id>
+      const vParam = u.searchParams.get('v')
+      if (vParam) return vParam
+      // youtube.com/embed/<id> or /shorts/<id>
+      const parts = u.pathname.split('/').filter(Boolean)
+      const embedIndex = parts.indexOf('embed')
+      if (embedIndex !== -1 && parts[embedIndex + 1])
+        return parts[embedIndex + 1]
+      const shortsIndex = parts.indexOf('shorts')
+      if (shortsIndex !== -1 && parts[shortsIndex + 1])
+        return parts[shortsIndex + 1]
+    } catch (e) {
+      // ignore and try regex
+    }
+    const m = url.match(
+      /(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/
+    )
+    return m ? m[1] : null
+  }
+
+  const getYouTubeThumbnail = (url, quality = 'maxresdefault') => {
+    const id = getYouTubeId(url)
+    if (!id) return null
+    return `https://img.youtube.com/vi/${id}/${quality}.jpg`
+  }
+
+  const derivedBrandThumbnail =
+    props?.userBasicInfo?.thumbnailUrl ||
+    (isYouTubeLink ? getYouTubeThumbnail(videoUrl, 'maxresdefault') : null)
+
+  // Detect if the thumbnail is portrait to decide player/thumbnail sizing
+  const [isPortraitThumb, setIsPortraitThumb] = useState(null)
+  useEffect(() => {
+    let cancelled = false
+    if (!derivedBrandThumbnail) {
+      setIsPortraitThumb(null)
+      return
+    }
+    const img = new Image()
+    img.onload = () => {
+      if (cancelled) return
+      setIsPortraitThumb(img.naturalHeight >= img.naturalWidth)
+    }
+    img.onerror = () => {
+      if (cancelled) return
+      setIsPortraitThumb(null)
+    }
+    img.src = derivedBrandThumbnail
+    return () => {
+      cancelled = true
+    }
+  }, [derivedBrandThumbnail])
+
+  const getYouTubeEmbedUrl = (url) => {
+    const id = getYouTubeId(url)
+    if (id) return `https://www.youtube.com/embed/${id}`
     return url
+  }
+
+  const truncateAtWord = (text, maxLength) => {
+    if (!text || text.length <= maxLength) return text
+    let lastSpace = text.lastIndexOf(' ', maxLength)
+    if (lastSpace === -1) lastSpace = maxLength
+    return text.substring(0, lastSpace)
   }
 
   const {
@@ -390,52 +556,99 @@ const WhoAmI = (props) => {
     avatarEditorActions
   } = useImageEditor()
 
-  // Check if user has any details to show
+  const userRole = useSelector((state) => state.user?.user?.role)
+
   const hasDetails =
     props?.userBasicInfo?.primaryInterest ||
     props?.userBasicInfo?.valueProposition ||
     props?.userBasicInfo?.id
 
-  // Add this to your state declarations at the top
-  const [expandedFailures, setExpandedFailures] = useState({});
+  const hasContentBesidesTags = (htmlString) => {
+    if (!htmlString) return false
+    const textContent = htmlString.replace(/<[^>]*>/g, '').trim()
+    const isEmpty =
+      htmlString === '<p><br></p>' ||
+      htmlString === '<p></p>' ||
+      htmlString === '<br>' ||
+      htmlString === '<p>&nbsp;</p>' ||
+      textContent === ''
+    return !isEmpty && textContent.length > 0
+  }
+
+  const hasRelationshipsContent = () => {
+    const fields = ['teamRole', 'collaborationStyle', 'leadershipPhilosophy']
+    return fields.some((field) => {
+      const value = props?.myRelationships?.[field]
+      return hasContentBesidesTags(value)
+    })
+  }
+
+  if (!props?.userBasicInfo) {
+    return <div>Loading user data...</div>
+  }
 
   return (
     <div>
-      <div className='section-description-container'>
-        <div className='portf-section-maintitle'>
-          <div className='pe-3'>
-            <img src={whoami} alt='Who am I' />
-          </div>
-          <div>
-            <div className='align-items-center portfolio-section-title'>
-              <div className='section-title' style={{ fontSize: '20px' }}>
-                {props?.sectionTitle}
-              </div>
+      {!props.hideSectionHeader && (
+        <div className='section-description-container'>
+          <div className='portf-section-maintitle '>
+            <div className='pe-3'>
+              <img
+                src={who}
+                alt='Who am I'
+                style={{ width: '72px', height: '70px' }}
+              />
             </div>
-            <div
-              className='section-description'
-              dangerouslySetInnerHTML={{ __html: props?.sectionDescription }}
-            />
+            <div>
+              <div className='align-items-center portfolio-section-title'>
+                <div className='section-title' style={{ fontSize: '20px' }}>
+                  {props?.sectionTitle || 'WHO AM I?'}
+                </div>
+              </div>
+              <div
+                className='section-description'
+                dangerouslySetInnerHTML={{
+                  __html:
+                    props?.sectionDescription ||
+                    'LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div className='whoami-container'>
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '40px', gap:'15px' }} className='whoami-personal-details'>
+      <div
+        className='whoami-container'
+        style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '20px'
+          }}
+          className='userdetails-whoami-container'
+        >
           {/* My Details Card */}
-          <div style={{ width: '100%', marginBottom:'20px' }}>
-            {/* Always show MainCard */}
+          <div style={{ width: '100%' }}>
             <MainCard
               title={'My Details'}
               icon={myDetailsIcon}
-              onClick={hasDetails ? handleEditDetails : handleAddDetails}
+              onClick={
+                canEdit
+                  ? hasDetails
+                    ? handleEditDetails
+                    : handleAddDetails
+                  : () => {}
+              }
+              canEdit={canEdit}
             >
               <div
                 style={{
                   display: 'flex',
-                  gap: '20px',
-                  alignItems: 'center',
-                  marginBottom: '30px'
+                  marginBottom: '30px',
+                  gap: windowWidth <= 768 ? '12px' : '30px'
                 }}
                 className='user-basic-info'
               >
@@ -444,11 +657,13 @@ const WhoAmI = (props) => {
                     width: '100px',
                     height: '100px',
                     borderRadius: '50%',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    minWidth: '100px',
+                    flexShrink: 0
                   }}
                 >
                   <img
-                    src={props?.userBasicInfo?.userImageUrl}
+                    src={props?.userBasicInfo?.userImageUrl || blankProfile}
                     alt='Profile'
                     style={{
                       width: '100%',
@@ -457,107 +672,313 @@ const WhoAmI = (props) => {
                     }}
                   />
                 </div>
-                <div style={{ textAlign: 'left', width: '70%' }}>
+                <div
+                  style={{ textAlign: 'left', width: '70%' }}
+                  className='userinfo-right-text-portf'
+                >
                   <p
                     style={{
-                      fontSize: '25px',
-                      fontWeight: '800',
-                      color: 'black',
+                      color: '#000',
                       padding: '0',
-                      margin: '0'
+                      margin: '0',
+                      fontFamily: 'Montserrat',
+                      fontSize: '27px',
+                      fontStyle: 'normal',
+                      fontWeight: 700,
+                      lineHeight: 'normal',
+                      fontVariant: 'all-small-caps'
                     }}
                   >
                     {props?.userBasicInfo?.name}
                   </p>
                   <p
                     style={{
-                      fontSize: '16px',
-                      color: 'black'
+                      color: '#000',
+                      fontFamily: 'Montserrat',
+                      fontSize: '15px',
+                      fontStyle: 'normal',
+                      fontWeight: 500,
+                      lineHeight: 'normal'
                     }}
                   >
                     {props?.userBasicInfo?.userTitle}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'Montserrat',
+                      fontSize: '15px',
+                      fontStyle: 'normal',
+                      fontWeight: 500,
+                      lineHeight: 'normal'
+                    }}
+                  >
+                    {props?.userBasicInfo?.company}
                   </p>
                   <UserSocialMedia
                     data={props?.userBasicInfo?.socialMediaLinks}
                   />
                 </div>
-                {/* <img
-                  src={EditPencil}
-                  style={{ cursor: 'pointer', alignSelf: 'flex-start' }}
-                  title={'editpencil icon'}
-                  height={20}
-                  width={20}
-                  alt='editpencil icon'
-                  onClick={hasDetails ? handleEditDetails : handleAddDetails}
-                /> */}
               </div>
-
               <div>
-                <div style={{fontWeight: '600', marginBottom: '5px'}}>My Primary Interest</div>
-                <div style={{ fontSize: '16px', color: 'rgb(54, 54, 54)' }}>
-                  {props?.userBasicInfo?.primaryInterest || 'Not specified'}
+                <div
+                  style={{
+                    color: '#000000',
+                    fontWeight: 500,
+                    fontSize: '15px'
+                  }}
+                >
+                  My Primary Interest
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'Montserrat',
+                    fontSize: '15px',
+                    fontStyle: 'normal',
+                    color: '#000000',
+                    fontWeight: 400,
+                    lineHeight: '20px'
+                  }}
+                >
+                  {props?.userBasicInfo?.primaryInterest ||
+                    (canEdit
+                      ? 'No content has been added. Click the edit button to add.'
+                      : 'No content has been added.')}
                 </div>
               </div>
-
               <div style={{ marginTop: '10px' }}>
-                <div style={{fontWeight:'600', marginBottom: '5px'}}>My Value Proposition</div>
-                <div style={{ fontSize: '16px', color: 'rgb(54, 54, 54)' }}>
-                  {showMoreValueProp
-                    ? valueProposition || 'Not specified'
-                    : (valueProposition || 'Not specified').slice(0, 250)}
-                  {valueProposition && valueProposition.length > 150 && (
-                    <span
-                      onClick={() => setShowMoreValueProp(!showMoreValueProp)}
-                      style={{
-                        color: 'rgb(0, 218, 218)',
-                        cursor: 'pointer',
-                        marginLeft: '5px',
-                        fontWeight: '500'
-                      }}
-                    >
-                      {showMoreValueProp ? ' Read Less' : '... Read More'}
-                    </span>
-                  )}
-                </div>
+                <div>My Value Proposition</div>
+                <div
+                  style={{
+                    fontFamily: 'Montserrat',
+                    fontSize: '15px',
+                    color: '#000000',
+                    wordBreak: 'break-word',
+                    fontWeight: 400,
+                    lineHeight: '20px'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: showMoreValueProp
+                      ? valueProposition ||
+                        (canEdit
+                          ? 'No content has been added. Click the edit button to add.'
+                          : 'No content has been added.')
+                      : truncateAtWord(
+                          valueProposition ||
+                            (canEdit
+                              ? 'No content has been added. Click the edit button to add.'
+                              : 'No content has been added.'),
+                          150
+                        )
+                  }}
+                  onClick={() => setShowMoreValueProp(!showMoreValueProp)}
+                />
+
+                {(showMoreValueProp ||
+                  (valueProposition?.length || 0) > 150) && (
+                  <span
+                    onClick={() => setShowMoreValueProp(!showMoreValueProp)}
+                    style={{
+                      color: '#52C7D3',
+                      cursor: 'pointer',
+                      marginLeft: '5px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {showMoreValueProp ? ' Read less' : ' Read more'}
+                  </span>
+                )}
               </div>
             </MainCard>
 
-            {/* Show EditCard when editing existing details */}
-            {isEditingDetails && (
+            {/* Only show EditCard in private mode */}
+            {canEdit && (isEditingDetails || isAddingDetails) && (
               <EditCard
-                title={'Edit My Details'}
+                title={'Add My Details'}
                 icon={myDetailsIcon}
                 handleSubmit={handleSaveDetails}
                 toggle={handleCancelEdit}
               >
+                {/* Edit form content - same as before */}
                 <div style={{ marginTop: '10px' }}>
-                  <div style={{ fontSize: '14px' }}>
-                    To edit your name, position, headshot, and social media
-                    links, please update your Profile.
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      Name:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.name}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          name: e.target.value
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
+                  </div>
+                  {/* Headshot Upload */}
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      Headshot:
+                    </label>
+                    <ImageUploader
+                      currentImageUrl={changedUser.userImageUrl}
+                      onImageUploaded={(url) =>
+                        setChangedUser({ ...changedUser, userImageUrl: url })
+                      }
+                      onImageDeleted={() =>
+                        setChangedUser({ ...changedUser, userImageUrl: null })
+                      }
+                      title='Upload Your Headshot'
+                      maxSizeMB={10}
+                    />
+                  </div>
+
+                  {/* Position */}
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      Position:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.userTitle}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          userTitle: e.target.value
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
+                  </div>
+
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      Company:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.company || ''}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          company: e.target.value
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
+                  </div>
+
+                  {/* Social Media Links */}
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      LinkedIn:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.socialMediaLinks?.linkedIn || ''}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          socialMediaLinks: {
+                            ...changedUser.socialMediaLinks,
+                            linkedIn: e.target.value
+                          }
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
                   </div>
                   <div style={{ marginTop: '10px' }}>
-                    <div style={{ marginBottom: '10px', fontSize: '14px' }}>
-                      My Primary Interest:
-                    </div>
-                    <div
-                      style={{
-                        borderRadius: '12px',
-                        border: 'none',
-                        padding: '1rem 0.625rem 0.625rem',
-                        boxShadow: '0px 3px 6px #00000029',
-                        background: '#fff',
-                        position: 'relative',
-                        display: 'flex'
-                      }}
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      Facebook:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.socialMediaLinks?.facebook || ''}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          socialMediaLinks: {
+                            ...changedUser.socialMediaLinks,
+                            facebook: e.target.value
+                          }
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
+                  </div>
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      TikTok:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.socialMediaLinks?.tiktok || ''}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          socialMediaLinks: {
+                            ...changedUser.socialMediaLinks,
+                            tiktok: e.target.value
+                          }
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
+                  </div>
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      X:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.socialMediaLinks?.x || ''}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          socialMediaLinks: {
+                            ...changedUser.socialMediaLinks,
+                            x: e.target.value
+                          }
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
+                  </div>
+                  <div style={{ marginTop: '10px' }}>
+                    <label style={{ fontSize: '14px', display: 'block' }}>
+                      Instagram:
+                    </label>
+                    <input
+                      type='text'
+                      value={changedUser.socialMediaLinks?.instagram || ''}
+                      onChange={(e) =>
+                        setChangedUser({
+                          ...changedUser,
+                          socialMediaLinks: {
+                            ...changedUser.socialMediaLinks,
+                            instagram: e.target.value
+                          }
+                        })
+                      }
+                      style={{ width: '100%', padding: '8px' }}
+                    />
+                  </div>
+
+                  {/* Primary Interest */}
+                  <div style={{ marginTop: '10px' }}>
+                    <label
+                      style={{ fontSize: '14px', display: 'block' }}
+                      className='adddetails-interest-text'
                     >
+                      My Primary Interest:
+                    </label>
+
+                    <div style={{ position: 'relative', width: '100%' }}>
                       <input
-                        style={{
-                          display: 'block',
-                          width: '100%',
-                          fontSize: '0.875rem',
-                          color: 'black',
-                          background: 'transparent'
-                        }}
+                        className='primaryinterest-input'
+                        type='text'
                         value={changedUser.primaryInterest}
                         onChange={(e) =>
                           setChangedUser({
@@ -565,33 +986,44 @@ const WhoAmI = (props) => {
                             primaryInterest: e.target.value
                           })
                         }
+                        style={{ width: '100%', padding: '8px' }}
                       />
-                      <label
-                        style={{ display: 'inline-block' }}
-                        className='label-style'
-                        for='My Primary Interest'
+                      <span
+                        className='details-edit-pencil-icon'
+                        style={{
+                          position: 'absolute',
+                          right: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)'
+                        }}
                       >
-                        My Primary Interest:
-                      </label>
-                      <label
-                        style={{ display: 'inline-block' }}
-                        for='My Primary Interest'
-                      >
-                        <img
-                          src={EditPencil}
-                          style={{ cursor: 'pointer' }}
-                          title={'editpencil icon'}
-                          height={20}
-                          width={20}
-                          alt='editpencil icon'
-                        />
-                      </label>
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          width='20'
+                          height='20'
+                          viewBox='0 0 20 20'
+                          fill='none'
+                        >
+                          <path
+                            d='M11.9696 4.7098L12.9672 3.71218C13.7483 2.93113 15.0146 2.93113 15.7957 3.71218L16.5028 4.41928C17.2838 5.20033 17.2838 6.46666 16.5028 7.24771L15.5052 8.24533M11.9696 4.7098L4.04225 12.6372C3.71017 12.9692 3.50555 13.4076 3.46422 13.8754L3.29065 15.8402C3.23588 16.4602 3.75476 16.9791 4.37477 16.9243L6.33956 16.7507C6.80736 16.7094 7.24571 16.5048 7.57778 16.1727L15.5052 8.24533M11.9696 4.7098L15.5052 8.24533'
+                            stroke='black'
+                            strokeWidth='1.5'
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                          />
+                        </svg>
+                      </span>
                     </div>
                   </div>
+
+                  {/* Value Proposition */}
                   <div style={{ marginTop: '10px' }}>
-                    <div style={{ marginBottom: '10px', fontSize: '14px' }}>
+                    <label
+                      style={{ fontSize: '14px', display: 'block' }}
+                      className='adddetails-interest-text'
+                    >
                       My Value Proposition:
-                    </div>
+                    </label>
                     <ReactQuill
                       value={changedUser.valueProposition}
                       onChange={(content) =>
@@ -602,7 +1034,7 @@ const WhoAmI = (props) => {
                       }
                       style={{
                         boxShadow:
-                          ' 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)'
+                          '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)'
                       }}
                       className='text-black'
                       modules={{
@@ -621,307 +1053,358 @@ const WhoAmI = (props) => {
             )}
 
             {/* Show AddCard when adding new details */}
-            {isAddingDetails && (
-              <AddCard
-                title={'Add My Details'}
-                icon={myDetailsIcon}
-                handleSubmit={handleSaveDetails}
-                toggle={handleCancelEdit}
-              >
-                <div style={{ marginTop: '10px' }}>
-                  <div style={{ fontSize: '14px' }}>
-                    To edit your name, position, headshot, and social media
-                    links, please update your Profile.
-                  </div>
-                  <div style={{ marginTop: '10px' }}>
-                    <div style={{ marginBottom: '10px', fontSize: '14px' }}>
-                      My Primary Interest:
-                    </div>
-                    <div
-                      style={{
-                        borderRadius: '12px',
-                        border: 'none',
-                        padding: '1rem 0.625rem 0.625rem',
-                        boxShadow: '0px 3px 6px #00000029',
-                        background: '#fff',
-                        position: 'relative',
-                        display: 'flex'
-                      }}
-                    >
-                      <input
-                        style={{
-                          display: 'block',
-                          width: '100%',
-                          fontSize: '0.875rem',
-                          color: 'black',
-                          background: 'transparent'
-                        }}
-                        value={changedUser.primaryInterest}
-                        onChange={(e) =>
-                          setChangedUser({
-                            ...changedUser,
-                            primaryInterest: e.target.value
-                          })
-                        }
-                      />
-                      <label
-                        style={{ display: 'inline-block' }}
-                        className='label-style'
-                        for='My Primary Interest'
-                      >
-                        My Primary Interest:
-                      </label>
-                      <label
-                        style={{ display: 'inline-block' }}
-                        for='My Primary Interest'
-                      >
-                        <img
-                          src={EditPencil}
-                          style={{ cursor: 'pointer' }}
-                          title={'editpencil icon'}
-                          height={20}
-                          width={20}
-                          alt='editpencil icon'
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: '10px' }}>
-                    <div style={{ marginBottom: '10px', fontSize: '14px' }}>
-                      My Value Proposition:
-                    </div>
-                    <ReactQuill
-                      value={changedUser.valueProposition}
-                      onChange={(content) =>
-                        setChangedUser({
-                          ...changedUser,
-                          valueProposition: content
-                        })
-                      }
-                      style={{
-                        boxShadow:
-                          ' 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)'
-                      }}
-                      className='text-black'
-                      modules={{
-                        toolbar: [
-                          [{ header: [1, 2, 3, false] }],
-                          ['bold', 'italic', 'underline'],
-                          [{ list: 'ordered' }, { list: 'bullet' }],
-                          [{ align: [] }],
-                          ['link', 'image']
-                        ]
-                      }}
-                    />
-                  </div>
-                </div>
-              </AddCard>
-            )}
           </div>
 
           {/* My Personal Brand Story Card */}
-
-          <div style={{ width: '100%', marginBottom:'20px' }}>
-            {isEditingVideo ? (
-              <EditCard
-                title={'Edit My Personal Brand Story'}
-                icon={myPersonalBrandStory}
-                handleSubmit={handleSaveVideo}
-                toggle={handleCancelVideoEdit}
+          <div
+            style={{ width: '100%', position: 'relative' }}
+            className='mypersonal-brand-story'
+          >
+            <MainCard
+              title={'My Personal Brand Story'}
+              icon={myPersonalBrandStory}
+              onClick={canEdit ? handleEditVideo : () => {}}
+              canEdit={canEdit}
+            >
+              <div
+                className='personal-brand-story'
+                style={{ textAlign: 'center' }}
               >
-                <div style={{ marginTop: '10px' }}>
-                  <div style={{ marginBottom: '10px', fontSize: '14px' }}>
-                    Instructions:
+                {/* Check if there's any video content */}
+                {!props?.userBasicInfo?.thumbnailUrl &&
+                !props?.userBasicInfo?.videoUrl ? (
+                  <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+                    <img src={nothingAdded} alt='nothing-added' />
+                    <p
+                      className='text-uppercase text-medium nodata-portf-text'
+                      style={{ color: '#6F6F6F' }}
+                    >
+                      {canEdit
+                        ? 'Nothing has been added yet. click the edit button to get started.'
+                        : 'Nothing has been added yet.'}
+                    </p>
                   </div>
-                  <div style={{ marginBottom: '10px', fontSize: '16px' }}>
-                    Add link to your personal brand story video. Make sure it's
-                    viewable
-                  </div>
-                  <div
-                    style={{
-                      borderRadius: '12px',
-                      border: 'none',
-                      padding: '1rem 0.625rem 0.625rem',
-                      boxShadow: '0px 3px 6px #00000029',
-                      background: '#fff',
-                      position: 'relative',
-                      display: 'flex'
-                    }}
-                  >
-                    <input
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        fontSize: '0.875rem',
-                        color: 'black',
-                        background: 'transparent'
-                      }}
-                      value={videoData.videoUrl}
-                      onChange={(e) =>
-                        setVideoData({
-                          ...videoData,
-                          videoUrl: e.target.value
-                        })
-                      }
-                      placeholder='Enter YouTube or video URL'
-                    />
-                  </div>
-                </div>
-              </EditCard>
-            ) : (
-              <MainCard
-                title={'My Personal Brand Story'}
-                icon={myPersonalBrandStory}
-                onClick={handleEditVideo}
-              >
-                <div
-                  className='personal-brand-story'
-                  style={{ textAlign: 'center' }}
-                >
-                  {/* Thumbnail Image with play button and edit pencil */}
-                  <div style={{ position: 'relative' }}>
-                    {!isVideoVisible && props?.userBasicInfo?.thumbnailUrl && (
-                      <div
-                        onClick={toggleVideoVisibility}
-                        style={{
-                          position: 'relative',
-                          cursor: 'pointer',
-                          overflow: 'hidden',
-                          width: '100%',
-                        }}
-                      >
-                        <img
-                          src={props.userBasicInfo.thumbnailUrl}
-                          alt='Brand Thumbnail'
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                          }}
-                        />
+                ) : (
+                  <>
+                    {/* Thumbnail Image (real or auto-fetched from YouTube) with play button */}
+                    <div style={{ position: 'relative' }}>
+                      {!isVideoVisible && derivedBrandThumbnail && (
                         <div
+                          className='mybrandstory-media brandstory-thumbnail-wrapper'
+                          onClick={toggleVideoVisibility}
                           style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: '60px',
-                            height: '60px',
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
+                            width: isPortraitThumb ? '295px' : '612px',
+                            maxWidth: '100%',
+                            aspectRatio: isPortraitThumb
+                              ? '1 / 1'
+                              : '612 / 295',
+                            overflow: 'hidden',
+                            borderRadius: '10px',
+                            margin: '0 auto'
                           }}
                         >
-                          <div
+                          <img
+                            src={derivedBrandThumbnail}
+                            alt='Brand Thumbnail'
                             style={{
-                              width: 0,
-                              height: 0,
-                              borderTop: '12px solid transparent',
-                              borderBottom: '12px solid transparent',
-                              borderLeft: '18px solid white',
-                              marginLeft: '5px'
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain',
+                              display: 'block'
+                            }}
+                            onError={(e) => {
+                              if (
+                                isYouTubeLink &&
+                                e?.currentTarget?.dataset?.fallbacked !== 'true'
+                              ) {
+                                e.currentTarget.dataset.fallbacked = 'true'
+                                e.currentTarget.src = getYouTubeThumbnail(
+                                  videoUrl,
+                                  'hqdefault'
+                                )
+                              }
                             }}
                           />
+                          <div className='play-overlay'>
+                            <div
+                              style={{
+                                width: 0,
+                                height: 0,
+                                borderTop: '30px solid transparent',
+                                borderBottom: '30px solid transparent',
+                                borderLeft: '45px solid white',
+                                marginLeft: '8px'
+                              }}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {/* <img
-                      src={EditPencil}
-                      style={{
-                        position: 'absolute',
-                        top: '10px',
-                        right: '10px',
-                        cursor: 'pointer',
-                        zIndex: 1
-                      }}
-                      title={'edit video'}
-                      height={20}
-                      width={20}
-                      alt='edit video'
-                      onClick={handleEditVideo}
-                    /> */}
-                  </div>
-
-                  {/* Video or YouTube Embed */}
-                  {isVideoVisible && videoUrl && (
-                    <div style={{ marginTop: '10px' }}>
-                      {isYouTubeLink ? (
-                        <iframe
-                          width='100%'
-                          height='250'
-                          src={getYouTubeEmbedUrl(videoUrl)}
-                          title='YouTube video player'
-                          frameBorder='0'
-                          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                          allowFullScreen
-                          style={{ borderRadius: '10px' }}
-                        />
-                      ) : (
-                        <video
-                          src={videoUrl}
-                          controls
-                          autoPlay
-                          style={{
-                            width: '100%',
-                            height: '300px',
-                            borderRadius: '10px',
-                            backgroundColor: 'black'
-                          }}
-                        >
-                          Your browser does not support the video tag.
-                        </video>
                       )}
                     </div>
-                  )}
-                </div>
-              </MainCard>
+                    {/* Fallback tap-target: non-YouTube or cannot derive thumbnail */}
+                    {isVideoVisible && videoUrl && (
+                      <div style={{ marginTop: '10px' }}>
+                        {isYouTubeLink ? (
+                          <div
+                            style={{
+                              width: isPortraitThumb ? '295px' : '612px',
+                              maxWidth: '100%',
+                              borderRadius: '10px',
+                              overflow: 'hidden',
+                              // Keep portrait videos square to match the thumbnail
+                              aspectRatio: isPortraitThumb
+                                ? '1 / 1'
+                                : '612 / 295',
+                              margin: '0 auto'
+                            }}
+                          >
+                            <iframe
+                              className='mybrandstory-media'
+                              src={getYouTubeEmbedUrl(videoUrl)}
+                              title='YouTube video player'
+                              frameBorder='0'
+                              allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                              allowFullScreen
+                              loading='lazy'
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                border: '0'
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div
+                            style={{
+                              width: isPortraitThumb ? '295px' : '612px',
+                              maxWidth: '100%',
+                              borderRadius: '10px',
+                              overflow: 'hidden',
+                              // Keep portrait videos square to match the thumbnail
+                              aspectRatio: isPortraitThumb
+                                ? '1 / 1'
+                                : '612 / 295',
+                              margin: '0 auto'
+                            }}
+                          >
+                            <video
+                              className='mybrandstory-media'
+                              src={videoUrl}
+                              controls
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                backgroundColor: 'black'
+                              }}
+                            >
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </MainCard>
+
+            {/* Only show edit modal in private mode - positioned absolutely on top */}
+            {!isPublicView && isEditingVideo && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  zIndex: 1000
+                }}
+              >
+                <EditCard
+                  title={'Edit My Personal Brand Story'}
+                  icon={myPersonalBrandStory}
+                  handleSubmit={handleSaveVideo}
+                  toggle={handleCancelVideoEdit}
+                  modalDialogClassName={'brandstory-modal-dialog'}
+                >
+                  <div style={{ marginTop: '10px' }}>
+                    <div
+                      style={{ marginBottom: '10px', fontSize: '14px' }}
+                      className='adddetails-interest-text'
+                    >
+                      Instructions:
+                    </div>
+                    <div
+                      style={{
+                        marginBottom: '20px',
+                        color: '#000',
+                        fontFamily: 'Montserrat',
+                        fontSize: '15px',
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        lineHeight: '20px'
+                      }}
+                    >
+                      Add link to your personal brand story video. Make sure
+                      it's viewable
+                    </div>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                      }}
+                      className='brandvideo-modal-content-container'
+                    >
+                      <div
+                        style={{
+                          borderRadius: '12px',
+                          border: 'none',
+                          padding: '1rem 0.625rem 0.625rem',
+                          boxShadow: '0px 3px 6px #00000029',
+                          background: '#fff',
+                          position: 'relative',
+                          display: 'flex',
+                          width: '60%',
+                          height: '50px'
+                        }}
+                        className='link-input-resp'
+                      >
+                        <input
+                          style={{
+                            display: 'block',
+                            width: '100%',
+                            fontSize: '0.875rem',
+                            color: 'black',
+                            background: 'transparent'
+                          }}
+                          value={videoData.videoUrl}
+                          onChange={(e) =>
+                            setVideoData({
+                              ...videoData,
+                              videoUrl: e.target.value
+                            })
+                          }
+                          placeholder='Enter YouTube or video URL'
+                        />
+                        <span
+                          style={{
+                            display: 'flex',
+                            width: '35px',
+                            height: '35px',
+                            padding: '7.5px',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: '10px',
+                            flexShrink: 0,
+                            borderRadius: '17.5px',
+                            background: '#E4E9F4',
+                            marginTop: '-8px'
+                          }}
+                        >
+                          <img
+                            src={linkIcon}
+                            width={20}
+                            height={20}
+                            alt='link icon'
+                          />
+                        </span>
+                      </div>
+                      <div
+                        style={{ width: '35%' }}
+                        className='video-container-resp'
+                      >
+                        <ImageUploader
+                          currentImageUrl={videoData.thumbnailUrl}
+                          onImageUploaded={(url) => {
+                            setVideoData({
+                              ...videoData,
+                              thumbnailUrl: url
+                            })
+                          }}
+                          onImageDeleted={() => {
+                            setVideoData({
+                              ...videoData,
+                              thumbnailUrl: null
+                            })
+                          }}
+                          title='Add Video Thumbnail'
+                          maxSizeMB={20}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </EditCard>
+              </div>
             )}
           </div>
         </div>
 
         {/* My Story Card */}
-        <div style={{ marginTop: '20px', position: 'relative' }}>
-          {/* Always show MainCard */}
+        <div style={{ position: 'relative' }}>
           <MainCard
             title={'My Story'}
             icon={myStoryIcon}
-            onClick={handleEditStory}
+            onClick={canEdit ? handleEditStory : () => {}}
+            canEdit={canEdit} // Add this prop
           >
             <div style={{ position: 'relative' }}>
-              <div style={{ fontSize: '15px', color: 'black' }}>
-                {showMoreMyStory
-                  ? isEditingStory
-                    ? editedStory
-                    : myStory
-                  : (isEditingStory ? editedStory : myStory).slice(0, 630)}
-                {(isEditingStory ? editedStory : myStory).length > 6300 && (
-                  <span
-                    onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                    style={{
-                      color: 'rgb(0, 218, 218)',
-                      cursor: 'pointer',
-                      marginLeft: '5px',
-                      fontWeight: '500'
-                    }}
+              {!hasContentBesidesTags(props?.userBasicInfo?.story) ? (
+                <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+                  <img src={nothingAdded} alt='nothing-added' />
+                  <p
+                    className='text-uppercase text-medium nodata-portf-text'
+                    style={{ color: '#6F6F6F' }}
                   >
-                    {showMoreMyStory ? ' Show less' : '... Show more'}
-                  </span>
-                )}
-              </div>
+                    {canEdit
+                      ? 'Nothing has been added yet. click the edit button to get started.'
+                      : 'Nothing has been added yet.'}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div
+                    style={{
+                      fontFamily: 'Montserrat',
+                      fontSize: '15px',
+                      fontStyle: 'normal',
+                      fontWeight: 390,
+                      lineHeight: 'normal',
+                      wordBreak: 'break-word'
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: showMoreMyStory
+                        ? props?.userBasicInfo?.story || ''
+                        : truncateAtWord(myStory || '', 500)
+                    }}
+                  />
+                  {!isEditingStory &&
+                    hasContentBesidesTags(myStory) &&
+                    myStory?.length > 500 && (
+                      <span
+                        onClick={() => setShowMoreMyStory(!showMoreMyStory)}
+                        style={{
+                          color: '#52C7D3',
+                          cursor: 'pointer',
+                          marginLeft: '5px',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {showMoreMyStory ? ' Read less' : ' Read more'}
+                      </span>
+                    )}
+                </>
+              )}
             </div>
           </MainCard>
 
-          {/* Show EditCard on top when editing */}
-          {isEditingStory && (
+          {/* Only show edit modal in private mode */}
+          {!isPublicView && isEditingStory && (
             <div
               style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 right: 0,
-                zIndex: 10
+                zIndex: 1000
               }}
             >
               <EditCard
@@ -930,10 +1413,14 @@ const WhoAmI = (props) => {
                 handleSubmit={handleSaveStory}
                 toggle={handleCancelStoryEdit}
               >
-                <div style={{ marginTop: '10px' }}>
+                <div
+                  style={{ marginTop: '10px' }}
+                  className='whoami-edit-container'
+                >
                   <ReactQuill
                     value={editedStory}
                     onChange={setEditedStory}
+                    placeholder='Add your story here...'
                     style={{
                       height: '90%',
                       marginBottom: '50px',
@@ -956,53 +1443,121 @@ const WhoAmI = (props) => {
             </div>
           )}
         </div>
+
         {/* My Relationships Card */}
-        <div style={{ marginTop: '40px', position: 'relative' }}>
-          {/* Always show MainCard */}
+        <div style={{ position: 'relative' }}>
           <MainCard
             title={'My Relationships'}
             icon={myRelationshipIcon}
-            onClick={() => setIsEditingRelationships(true)}
+            onClick={canEdit ? () => setIsEditingRelationships(true) : () => {}}
+            canEdit={canEdit} // Add this prop
           >
             <div style={{ position: 'relative' }}>
-              <div className='my-relationships-container'>
-                {['TEAM ROLE', 'COLLABORATION STYLE', 'LEADERSHIP PHILOSOPHY'].map(
-                  (displayTitle, index) => {
-                    const field = ['teamRole', 'collaborationStyle', 'leadershipPhilosophy'][index];
+              {!hasRelationshipsContent() ? (
+                <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+                  <img src={nothingAdded} alt='nothing-added' />
+                  <p
+                    className='text-uppercase text-medium nodata-portf-text'
+                    style={{ color: '#6F6F6F' }}
+                  >
+                    {canEdit
+                      ? 'Nothing has been added yet. click the edit button to get started.'
+                      : 'Nothing has been added yet.'}
+                  </p>
+                </div>
+              ) : (
+                <div className='my-relationships-container'>
+                  {[
+                    'teamRole',
+                    'collaborationStyle',
+                    'leadershipPhilosophy'
+                  ].map((field) => {
+                    const value =
+                      props?.myRelationships?.[field] ||
+                      (canEdit
+                        ? 'No content has been added. Click the edit button to add.'
+                        : 'No content has been added.')
+                    const isLong = value.length > 150
+                    const isExpanded = showMoreStates[field] || false
+
                     return (
                       <div key={field} className='my-relationships-card'>
                         <div
                           style={{
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            marginBottom: '6px',
-                            textAlign: 'center'
+                            color: '#000',
+                            textAlign: 'center',
+                            fontFamily: 'Montserrat',
+                            fontSize: '15px',
+                            fontStyle: 'normal',
+                            fontWeight: 600,
+                            lineHeight: 'normal',
+                            fontVariant: 'all-small-caps',
+                            marginBottom: '6px'
                           }}
                         >
-                          {displayTitle}
+                          {field
+                            .replace(/([A-Z])/g, ' $1')
+                            .replace(/^./, (str) => str.toUpperCase())}
                         </div>
-                        <div style={{ fontSize: '15px' }}>
-                          {props?.myRelationships?.[field] 
-                            ? props.myRelationships[field].replace(/<[^>]*>/g, '')
-                            : 'Not specified'}
+                        <div
+                          style={{
+                            maxWidth: '100%',
+                            whiteSpace: 'normal',
+                            wordWrap: 'break-word',
+                            overflowWrap: 'break-word',
+                            color: '#000',
+                            textAlign: 'center',
+                            fontFamily: 'Montserrat',
+                            fontSize: '15px',
+                            fontStyle: 'normal',
+                            fontWeight: 300,
+                            lineHeight: 'normal'
+                          }}
+                        >
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: isExpanded
+                                ? value
+                                : truncateAtWord(value, 150)
+                            }}
+                          />
+                          {isLong && (
+                            <span
+                              onClick={() =>
+                                setShowMoreStates((prev) => ({
+                                  ...prev,
+                                  [field]: !prev[field]
+                                }))
+                              }
+                              style={{
+                                color: '#52C7D3',
+                                cursor: 'pointer',
+                                marginLeft: '5px',
+                                fontWeight: '500',
+                                fontSize: '12px'
+                              }}
+                            >
+                              {isExpanded ? ' Read less' : ' Read more'}
+                            </span>
+                          )}
                         </div>
                       </div>
-                    );
-                  }
-                )}
-              </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           </MainCard>
 
-          {/* Edit Card */}
-          {isEditingRelationships && (
+          {/* Only show edit modal in private mode */}
+          {!isPublicView && isEditingRelationships && (
             <div
               style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 right: 0,
-                zIndex: 10
+                zIndex: 1000
               }}
             >
               <EditCard
@@ -1020,9 +1575,10 @@ const WhoAmI = (props) => {
                     <div key={field} style={{ marginBottom: '20px' }}>
                       <div
                         style={{
-                          fontSize: '14px',
-                          fontWeight: '600',
-                          marginBottom: '8px'
+                          fontSize: '15px',
+                          fontWeight: '500',
+                          marginBottom: '8px',
+                          color: '#000'
                         }}
                       >
                         {field.charAt(0).toUpperCase() +
@@ -1037,9 +1593,12 @@ const WhoAmI = (props) => {
                             [field]: content
                           }))
                         }
+                        placeholder='Add explanation here...'
                         style={{
-                          // height: '100px',
+                          height: '150px',
+                          overflowY: 'auto',
                           marginBottom: '40px',
+                          borderRadius: '10px',
                           boxShadow:
                             '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)'
                         }}
@@ -1059,11 +1618,13 @@ const WhoAmI = (props) => {
           )}
         </div>
 
-        <div style={{ marginTop: '40px', position: 'relative' }}>
+        {/* My Failures */}
+        <div style={{ position: 'relative' }}>
           <MultiCard
             title={'My Failures'}
             icon={myFailures}
-            onClick={handleAddFailure}
+            onAddClick={canEdit ? handleAddFailure : () => {}}
+            canEdit={canEdit} // Add this prop
           >
             {props?.myFailures?.length > 0 ? (
               <CarouselComponent
@@ -1071,135 +1632,132 @@ const WhoAmI = (props) => {
                 renderItems={(item, index) => {
                   const itemVideoUrl = item?.videoUrl || ''
                   const itemThumbnailUrl = item?.thumbnailUrl || ''
-                  const isPlaying = playingVideos[index]
-                  const itemFailure =
-                    item?.failure?.replace(/<[^>]*>/g, '') || ''
-                  const itemPivot = item?.pivot?.replace(/<[^>]*>/g, '') || ''
-                  const itemOutcomes =
-                    item?.outcomes?.replace(/<[^>]*>/g, '') || ''
+                  const itemFailure = item?.failure || ''
+                  const itemPivot = item?.pivot || ''
+                  const itemOutcomes = item?.outcomes || ''
+                  const itemIsYouTube =
+                    itemVideoUrl.includes('youtube.com') ||
+                    itemVideoUrl.includes('youtu.be')
+                  const computedItemThumb =
+                    itemThumbnailUrl ||
+                    (itemIsYouTube
+                      ? getYouTubeThumbnail(itemVideoUrl, 'maxresdefault')
+                      : null)
 
                   return (
                     <MainCard
                       key={index}
-                      onClick={() => handleEditFailure(item)}
+                      onClick={
+                        canEdit ? () => handleEditFailure(item) : () => {}
+                      }
                       multi={true}
+                      canEdit={canEdit} // Add this prop
                     >
+                      {/* Failure card content - same as before */}
                       <div style={{ position: 'relative' }}>
                         <div
                           style={{
                             display: 'flex',
                             justifyContent: 'space-between'
                           }}
-                          className='whoami-personal-details'
+                          className='myfailure-card-container'
                         >
                           {/* Left side - Video */}
                           <div
-                            style={{ minWidth: '48%', aspectRatio: '16/9', }}
+                            style={{ minWidth: '48%' }}
                             className='my-failure-video-div'
                           >
                             {itemVideoUrl ? (
-                              <>
-                                {!isPlaying && (
-                                  <div
-                                    onClick={() => toggleVideoPlay(index)}
-                                    style={{
-                                      position: 'relative',
-                                      width: '100%',
-                                      cursor: 'pointer',
-                                      overflow: 'hidden',
-                                      marginBottom: '10px',
-                                      boxShadow: '0px 5px 15px rgb(211, 211, 211)',
-                                      padding:'25px',
-                                      borderRadius: '15px'
+                              <div
+                                onClick={() =>
+                                  window.open(itemVideoUrl, '_blank')
+                                }
+                                style={{
+                                  position: 'relative',
+                                  width: '100%',
+                                  height: '319px',
+                                  cursor: 'pointer',
+                                  overflow: 'hidden',
+                                  marginBottom: '10px',
+                                  borderRadius: '20px',
+                                  boxShadow:
+                                    '0px 3px 6px 0px rgba(0, 0, 0, 0.25)'
+                                }}
+                              >
+                                {computedItemThumb ? (
+                                  <img
+                                    src={computedItemThumb}
+                                    alt='Failure Thumbnail'
+                                    onError={(e) => {
+                                      if (
+                                        itemIsYouTube &&
+                                        e?.currentTarget?.dataset
+                                          ?.fallbacked !== 'true'
+                                      ) {
+                                        e.currentTarget.dataset.fallbacked =
+                                          'true'
+                                        e.currentTarget.src =
+                                          getYouTubeThumbnail(
+                                            itemVideoUrl,
+                                            'hqdefault'
+                                          )
+                                      }
                                     }}
-                                  >
-                                    {itemThumbnailUrl ? (
-                                      <img
-                                        src={itemThumbnailUrl}
-                                        alt='Failure Thumbnail'
-                                        style={{
-                                          width: '100%',
-                                          height: '100%',
-                                          objectFit: 'cover',
-                                          aspectRatio: '16/9',
-                                        }}
-                                      />
-                                    ) : (
-                                      <div
-                                        style={{
-                                          width: '100%',
-                                          height: '100%',
-                                          backgroundColor: '#f2f2f2',
-                                          display: 'flex',
-                                          justifyContent: 'center',
-                                          alignItems: 'center'
-                                        }}
-                                      >
-                                        <span
-                                          style={{
-                                            color: '#888',
-                                            fontSize: '16px'
-                                          }}
-                                        >
-                                          Click to play video
-                                        </span>
-                                      </div>
-                                    )}
-                                    <div
-                                      style={{
-                                        position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translate(-50%, -50%)',
-                                        width: '60px',
-                                        height: '60px',
-                                        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                                        borderRadius: '50%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                      }}
-                                    >
-                                      <div
-                                        style={{
-                                          width: 0,
-                                          height: 0,
-                                          borderTop: '12px solid transparent',
-                                          borderBottom:
-                                            '12px solid transparent',
-                                          borderLeft: '18px solid white',
-                                          marginLeft: '5px'
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                )}
-                                {isPlaying && (
+                                    style={{
+                                      width: '100%',
+                                      height: '100%',
+                                      objectFit: 'contain',
+                                      borderRadius: '20px',
+                                      padding: '10px'
+                                    }}
+                                  />
+                                ) : (
                                   <div
                                     style={{
                                       width: '100%',
-                                      height: '250px',
-                                      marginBottom: '10px'
+                                      height: '100%',
+                                      backgroundColor: '#f2f2f2',
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center'
                                     }}
                                   >
-                                    <video
-                                      src={itemVideoUrl}
-                                      controls
-                                      autoPlay
-                                      playsInline
+                                    <span
                                       style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        borderRadius: '10px'
+                                        color: '#888',
+                                        fontSize: '16px'
                                       }}
                                     >
-                                      Your browser does not support the video
-                                      tag.
-                                    </video>
+                                      Click to open link
+                                    </span>
                                   </div>
                                 )}
-                              </>
+
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '60px',
+                                    height: '60px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      width: 0,
+                                      height: 0,
+                                      borderTop: '30px solid transparent',
+                                      borderBottom: '30px solid transparent',
+                                      borderLeft: '45px solid white',
+                                      marginLeft: '8px'
+                                    }}
+                                  />
+                                </div>
+                              </div>
                             ) : (
                               <div
                                 style={{
@@ -1215,7 +1773,7 @@ const WhoAmI = (props) => {
                                 <span
                                   style={{ color: '#888', fontSize: '16px' }}
                                 >
-                                  No video available
+                                  No link available
                                 </span>
                               </div>
                             )}
@@ -1226,85 +1784,225 @@ const WhoAmI = (props) => {
                             style={{ minWidth: '48%' }}
                             className='my-failure-text-div'
                           >
-                            <div style={{ width: '100%' }} className='my-relationships-card'>
-                              <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+                            <div
+                              style={{ width: '100%', margin: '15px' }}
+                              className='my-relationships-card'
+                            >
+                              <div
+                                style={{
+                                  maxWidth: '100%',
+                                  whiteSpace: 'normal',
+                                  wordWrap: 'break-word',
+                                  overflowWrap: 'break-word',
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '15px',
+                                  fontStyle: 'normal',
+                                  fontWeight: 600,
+                                  lineHeight: 'normal',
+                                  fontVariant: 'all-small-caps',
+                                  marginBottom: '6px',
+                                  textAlign: 'left'
+                                }}
+                              >
                                 MY FAILURE
                               </div>
-                              <div style={{ fontSize: '15px' }}>
-                                {expandedFailures[`failure-${index}`] 
-                                  ? itemFailure 
-                                  : itemFailure.slice(0, 225)}
-                                {itemFailure.length > 225 && (
-                                  <span
-                                    onClick={() => setExpandedFailures(prev => ({
-                                      ...prev,
-                                      [`failure-${index}`]: !prev[`failure-${index}`]
-                                    }))}
-                                    style={{
-                                      color: 'rgb(0, 218, 218)',
-                                      cursor: 'pointer',
-                                      marginLeft: '5px',
-                                      fontWeight: '500'
-                                    }}
-                                  >
-                                    {expandedFailures[`failure-${index}`] ? ' Read Less' : '... Read More'}
-                                  </span>
-                                )}
+                              <div
+                                style={{
+                                  maxWidth: '100%',
+                                  whiteSpace: 'normal',
+                                  wordWrap: 'break-word',
+                                  overflowWrap: 'break-word',
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '15px',
+                                  fontStyle: 'normal',
+                                  fontWeight: 300,
+                                  lineHeight: '1.4',
+                                  display: showMoreTextBlocks.failure
+                                    ? 'block'
+                                    : '-webkit-box',
+                                  WebkitLineClamp: showMoreTextBlocks.failure
+                                    ? 'none'
+                                    : 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis'
+                                }}
+                              >
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: showMoreTextBlocks.failure
+                                      ? itemFailure?.replace(/&nbsp;/g, ' ') ||
+                                        ''
+                                      : itemFailure?.replace(/&nbsp;/g, ' ') ||
+                                        ''
+                                  }}
+                                />
                               </div>
+                              {itemFailure?.length > 150 && (
+                                <span
+                                  onClick={() =>
+                                    setShowMoreTextBlocks((prev) => ({
+                                      ...prev,
+                                      failure: !prev.failure
+                                    }))
+                                  }
+                                  style={{
+                                    color: '#52C7D3',
+                                    cursor: 'pointer',
+                                    marginLeft: '5px',
+                                    fontWeight: '500',
+                                    fontSize: '12px'
+                                  }}
+                                >
+                                  {showMoreTextBlocks.failure
+                                    ? ' Read less'
+                                    : ' Read more'}
+                                </span>
+                              )}
                             </div>
 
-                            <div style={{ width: '100%' }} className='my-relationships-card'>
-                              <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+                            <div
+                              style={{ width: '100%', margin: '15px' }}
+                              className='my-relationships-card'
+                            >
+                              <div
+                                style={{
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '15px',
+                                  fontStyle: 'normal',
+                                  fontWeight: 600,
+                                  lineHeight: 'normal',
+                                  fontVariant: 'all-small-caps',
+                                  marginBottom: '6px',
+                                  textAlign: 'left'
+                                }}
+                              >
                                 MY PIVOT
                               </div>
-                              <div style={{ fontSize: '15px' }}>
-                                {expandedFailures[`pivot-${index}`] 
-                                  ? itemPivot 
-                                  : itemPivot.slice(0, 225)}
-                                {itemPivot.length > 225 && (
-                                  <span
-                                    onClick={() => setExpandedFailures(prev => ({
-                                      ...prev,
-                                      [`pivot-${index}`]: !prev[`pivot-${index}`]
-                                    }))}
-                                    style={{
-                                      color: 'rgb(0, 218, 218)',
-                                      cursor: 'pointer',
-                                      marginLeft: '5px',
-                                      fontWeight: '500'
-                                    }}
-                                  >
-                                    {expandedFailures[`pivot-${index}`] ? ' Read Less' : '... Read More'}
-                                  </span>
-                                )}
+                              <div
+                                style={{
+                                  maxWidth: '100%',
+                                  whiteSpace: 'normal',
+                                  wordWrap: 'break-word',
+                                  overflowWrap: 'break-word',
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '15px',
+                                  fontStyle: 'normal',
+                                  fontWeight: 300,
+                                  lineHeight: '1.4',
+                                  display: showMoreTextBlocks.pivot
+                                    ? 'block'
+                                    : '-webkit-box',
+                                  WebkitLineClamp: showMoreTextBlocks.pivot
+                                    ? 'none'
+                                    : 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis'
+                                }}
+                              >
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: showMoreTextBlocks.pivot
+                                      ? itemPivot?.replace(/&nbsp;/g, ' ') || ''
+                                      : itemPivot?.replace(/&nbsp;/g, ' ') || ''
+                                  }}
+                                />
                               </div>
+                              {itemPivot?.length > 150 && (
+                                <span
+                                  onClick={() =>
+                                    setShowMoreTextBlocks((prev) => ({
+                                      ...prev,
+                                      pivot: !prev.pivot
+                                    }))
+                                  }
+                                  style={{
+                                    color: '#52C7D3',
+                                    cursor: 'pointer',
+                                    marginLeft: '5px',
+                                    fontWeight: '500',
+                                    fontSize: '12px'
+                                  }}
+                                >
+                                  {showMoreTextBlocks.pivot
+                                    ? ' Read less'
+                                    : ' Read more'}
+                                </span>
+                              )}
                             </div>
 
-                            <div style={{ width: '100%' }} className='my-relationships-card'>
-                              <div style={{ fontSize: '12px', fontWeight: '600', marginBottom: '6px' }}>
+                            <div
+                              style={{ width: '100%', margin: '15px' }}
+                              className='my-relationships-card'
+                            >
+                              <div
+                                style={{
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '15px',
+                                  fontStyle: 'normal',
+                                  fontWeight: 600,
+                                  lineHeight: 'normal',
+                                  fontVariant: 'all-small-caps',
+                                  marginBottom: '6px',
+                                  textAlign: 'left'
+                                }}
+                              >
                                 MY OUTCOMES
                               </div>
-                              <div style={{ fontSize: '15px' }}>
-                                {expandedFailures[`outcomes-${index}`] 
-                                  ? itemOutcomes 
-                                  : itemOutcomes.slice(0, 225)}
-                                {itemOutcomes.length > 225 && (
-                                  <span
-                                    onClick={() => setExpandedFailures(prev => ({
-                                      ...prev,
-                                      [`outcomes-${index}`]: !prev[`outcomes-${index}`]
-                                    }))}
-                                    style={{
-                                      color: 'rgb(0, 218, 218)',
-                                      cursor: 'pointer',
-                                      marginLeft: '5px',
-                                      fontWeight: '500'
-                                    }}
-                                  >
-                                    {expandedFailures[`outcomes-${index}`] ? ' Read Less' : '... Read More'}
-                                  </span>
-                                )}
+                              <div
+                                style={{
+                                  maxWidth: '100%',
+                                  whiteSpace: 'normal',
+                                  wordWrap: 'break-word',
+                                  overflowWrap: 'break-word',
+                                  fontFamily: 'Montserrat',
+                                  fontSize: '15px',
+                                  fontStyle: 'normal',
+                                  fontWeight: 300,
+                                  lineHeight: '1.4',
+                                  display: showMoreTextBlocks.outcomes
+                                    ? 'block'
+                                    : '-webkit-box',
+                                  WebkitLineClamp: showMoreTextBlocks.outcomes
+                                    ? 'none'
+                                    : 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis'
+                                }}
+                              >
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: showMoreTextBlocks.outcomes
+                                      ? itemOutcomes?.replace(/&nbsp;/g, ' ') ||
+                                        ''
+                                      : itemOutcomes?.replace(/&nbsp;/g, ' ') ||
+                                        ''
+                                  }}
+                                />
                               </div>
+                              {itemOutcomes?.length > 150 && (
+                                <span
+                                  onClick={() =>
+                                    setShowMoreTextBlocks((prev) => ({
+                                      ...prev,
+                                      outcomes: !prev.outcomes
+                                    }))
+                                  }
+                                  style={{
+                                    color: '#52C7D3',
+                                    cursor: 'pointer',
+                                    marginLeft: '5px',
+                                    fontWeight: '500',
+                                    fontSize: '12px'
+                                  }}
+                                >
+                                  {showMoreTextBlocks.outcomes
+                                    ? ' Read less'
+                                    : ' Read more'}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -1314,65 +2012,123 @@ const WhoAmI = (props) => {
                 }}
               />
             ) : (
-              <div>No failures to show</div>
+              <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+                <img src={nothingAdded} alt='nothing-added' />
+                <p
+                  className='text-uppercase text-medium nodata-portf-text'
+                  style={{ color: '#6F6F6F' }}
+                >
+                  {canEdit
+                    ? 'Nothing has been added yet. click the plus button to get started.'
+                    : 'Nothing has been added yet.'}
+                </p>
+              </div>
             )}
           </MultiCard>
 
-          {/* Edit Failure Modal */}
-          {isEditingFailure && (
+          {/* Only show edit modal in private mode */}
+          {!isPublicView && isEditingFailure && (
             <EditCard
-              title='Edit My Failure'
+              title={editingFailureId ? 'Edit My Failure' : 'Add My Failure'}
               icon={myFailures}
               handleSubmit={handleSaveFailure}
               toggle={handleCancelFailureEdit}
+              onDelete={editingFailureId ? handleDeleteFailure : null}
+              deleteText={'My Failure'}
             >
-              {/* Video URL */}
-              <div>Instructions:</div>
               <div style={{ marginBottom: '20px' }}>
-                <label
-                  style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontWeight: '600'
-                  }}
-                >
-                  Add link to your failure story evidence. Make sure it's
-                  viewable.
-                </label>
                 <div
                   style={{
-                    width: '100%',
-                    padding: '8px',
-                    borderRadius: '4px',
-                    boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
-                    background: 'white',
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start'
                   }}
+                  className='failure-modal-link-content-container'
                 >
-                  <input
-                    type='url'
-                    value={editedFailure.videoUrl}
-                    style={{ background: 'transparent', width: '100%' }}
-                    onChange={(e) =>
-                      setEditedFailure({
-                        ...editedFailure,
-                        videoUrl: e.target.value
-                      })
-                    }
-                    placeholder='Add link to video...'
-                  />
-                  <img src={penIcon} alt='pen-icon' />
+                  <div
+                    style={{
+                      width: '65%'
+                    }}
+                    className='failure-modal-left-content'
+                  >
+                    <div>
+                      <div style={{ fontWeight: '500', marginBottom: '8px' }}>
+                        My Failure Story Video:
+                      </div>
+                      <div style={{ marginBottom: '8px', fontSize: '15px' }}>
+                        Add link to your failure story evidence. Make sure it's
+                        viewable.
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        padding: '8px',
+                        borderRadius: '4px',
+                        boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
+                        background: 'white',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: '20px',
+                        height: '50px'
+                      }}
+                    >
+                      <input
+                        type='url'
+                        value={editedFailure.videoUrl}
+                        style={{ background: 'transparent', width: '100%' }}
+                        onChange={(e) =>
+                          setEditedFailure({
+                            ...editedFailure,
+                            videoUrl: e.target.value
+                          })
+                        }
+                        placeholder='Add link to evidence'
+                      />
+                      <img src={linkIcon} alt='pen-icon' />
+                    </div>
+                  </div>
+                  <div
+                    style={{ marginBottom: '20px', width: '30%' }}
+                    className='failure-modal-right-content'
+                  >
+                    <div style={{ fontWeight: '600', marginBottom: '8px' }}>
+                      Add Evidence Thumbnail:
+                    </div>
+                    <ImageUploader
+                      currentImageUrl={editedFailure.thumbnailUrl}
+                      onImageUploaded={(url) => {
+                        setEditedFailure({
+                          ...editedFailure,
+                          thumbnailUrl: url
+                        })
+                      }}
+                      onImageDeleted={() => {
+                        setEditedFailure({
+                          ...editedFailure,
+                          thumbnailUrl: null
+                        })
+                      }}
+                      title='Click to upload or drag and drop'
+                      description='Only png, jpg, or jpeg file format supported (max. 2Mb)'
+                      maxSizeMB={2}
+                      style={{
+                        border: '1px dashed #ccc',
+                        padding: '20px',
+                        textAlign: 'center'
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Failure */}
+              {/* My Failure */}
               <div style={{ marginBottom: '20px' }}>
                 <label
                   style={{
                     display: 'block',
                     marginBottom: '8px',
-                    fontWeight: '600'
+                    fontWeight: '500',
+                    fontSize: '15px'
                   }}
                 >
                   My Failure:
@@ -1386,8 +2142,9 @@ const WhoAmI = (props) => {
                     marginBottom: '40px',
                     border: 'none',
                     boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
-                    borderRadius: '30px'
+                    borderRadius: '4px'
                   }}
+                  placeholder='Explain the context and outcomes of your failure...'
                   modules={{
                     toolbar: [
                       ['bold', 'italic', 'underline'],
@@ -1398,13 +2155,14 @@ const WhoAmI = (props) => {
                 />
               </div>
 
-              {/* Pivot */}
+              {/* My Pivot */}
               <div style={{ marginBottom: '20px' }}>
                 <label
                   style={{
                     display: 'block',
                     marginBottom: '8px',
-                    fontWeight: '600'
+                    fontWeight: '500',
+                    fontSize: '15px'
                   }}
                 >
                   My Pivot:
@@ -1418,8 +2176,9 @@ const WhoAmI = (props) => {
                     marginBottom: '40px',
                     border: 'none',
                     boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
-                    borderRadius: '30px'
+                    borderRadius: '4px'
                   }}
+                  placeholder='Explain how you turned your failure experience into an opportunity...'
                   modules={{
                     toolbar: [
                       ['bold', 'italic', 'underline'],
@@ -1430,13 +2189,14 @@ const WhoAmI = (props) => {
                 />
               </div>
 
-              {/* Outcomes */}
+              {/* My Outcomes */}
               <div style={{ marginBottom: '20px' }}>
                 <label
                   style={{
                     display: 'block',
                     marginBottom: '8px',
-                    fontWeight: '600'
+                    fontWeight: '500',
+                    fontSize: '15px'
                   }}
                 >
                   My Outcomes:
@@ -1450,8 +2210,9 @@ const WhoAmI = (props) => {
                     marginBottom: '40px',
                     border: 'none',
                     boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
-                    borderRadius: '30px'
+                    borderRadius: '4px'
                   }}
+                  placeholder='Explain how you turned your failure experience into an opportunity...'
                   modules={{
                     toolbar: [
                       ['bold', 'italic', 'underline'],
@@ -1464,34 +2225,73 @@ const WhoAmI = (props) => {
             </EditCard>
           )}
         </div>
-        <div style={{ marginTop: '40px' }}>
+        <div style={{ position: 'relative' }}>
           <MultiCard
             title={'My Mentors'}
             icon={myMentors}
-            onClick={handleAddMentor}
+            onAddClick={canEdit ? handleAddMentor : () => {}}
+            canEdit={canEdit} // Add this prop
           >
-            {props?.myMentors?.length > 0 ? (
-              <CarouselComponent
-                className='my-mentors-card'
-                data={props?.myMentors}
-                itemsToShow={3}
-                renderItems={(item, index) => (
+            <CarouselComponent
+              key={`${props?.myMentors?.length}-${itemsToShow}`}
+              data={
+                props?.myMentors?.length > 0
+                  ? props?.myMentors
+                  : [{ isEmpty: true }]
+              }
+              itemsToShow={itemsToShow}
+              renderItems={(item, index) => {
+                // Check if this is the skeleton/empty card
+                if (item.isEmpty) {
+                  return (
+                    <div
+                      key='empty-skeleton'
+                      style={{
+                        width: '95%',
+                        minHeight: '350px',
+                        // background: 'linear-gradient(rgb(228, 233, 244), rgb(255, 255, 255))',
+                        borderRadius: '30px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '20px 0',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                      }}
+                    >
+                      <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+                        <img src={nothingAdded} alt='nothing-added' />
+                        <p
+                          className='text-uppercase text-medium nodata-portf-text'
+                          style={{
+                            color: '#6F6F6F',
+                            textAlign: 'center',
+                            padding: '0 20px'
+                          }}
+                        >
+                          {canEdit
+                            ? 'Nothing has been added yet. click the plus button to get started.'
+                            : 'Nothing has been added yet.'}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                }
+
+                // Render normal mentor card
+                return (
                   <MentorCard
                     mentor={item}
                     onClick={() => handleEditMentor(item)}
                     width={'95%'}
-                    isExpanded={expandedCards}
-                    onToggleExpand={() => setExpandedCards(!expandedCards)}
+                    canEdit={canEdit}
                   />
-                )}
-              />
-            ) : (
-              <div>No mentors to show</div>
-            )}
+                )
+              }}
+            />
           </MultiCard>
 
-          {/* Edit Mentor Modal */}
-          {isEditingMentor && (
+          {/* Only show edit modal in private mode */}
+          {!isPublicView && isEditingMentor && (
             <EditCard
               title={editingMentorId ? 'Edit My Mentor' : 'Add My Mentor'}
               icon={myMentors}
@@ -1499,36 +2299,37 @@ const WhoAmI = (props) => {
               toggle={handleCancelMentorEdit}
               onDelete={handleDeleteMentor}
               deleteText={'Mentor'}
+              modalDialogClassName={'mymentor-modal-dialog'}
             >
               <div style={{ marginBottom: '20px' }}>
-                <div
-                  style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontWeight: '600'
+                <div style={{ fontWeight: '600', marginBottom: '8px' }}>
+                  Mentor Headshot:
+                </div>
+                <ImageUploader
+                  currentImageUrl={editedMentor.mentorImage}
+                  onImageUploaded={(url) => {
+                    setEditedMentor({
+                      ...editedMentor,
+                      mentorImage: url
+                    })
                   }}
-                >
-                  Mentor Headshot
-                </div>
-
-                <div>Upload an image of your mentor.</div>
-                <div className='d-flex flex-column justify-content-center mentor-modal-imgs'>
-                  <ReactImageUpload
-                    value={userImageUrl}
-                    {...imageProperties}
-                    onChangeImageCrop={updateCroppedProfileImage}
-                    onImageLoadSuccess={handleImageLoadSuccess}
-                    onLabelClick={handleLabelClick}
-                    onFileInputChange={handleFileInputChange}
-                    onPositionChange={handlePositionChange}
-                    actions={avatarEditorActions}
-                    title='Mentor Image'
-                    editorRef={editorRef}
-                    style={{ width: '660px' }}
-                    // readOnly={readOnly}
-                  />
-                </div>
+                  onImageDeleted={() => {
+                    setEditedMentor({
+                      ...editedMentor,
+                      mentorImage: null
+                    })
+                  }}
+                  title='Click to upload or drag and drop'
+                  description='Only png, jpg, or jpeg file format supported (max. 2Mb)'
+                  maxSizeMB={2}
+                  style={{
+                    border: '1px dashed #ccc',
+                    padding: '20px',
+                    textAlign: 'center'
+                  }}
+                />
               </div>
+
               {/* Mentor Name */}
               <div style={{ marginBottom: '20px' }}>
                 <label
@@ -1548,12 +2349,29 @@ const WhoAmI = (props) => {
                     boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
                     background: 'white',
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    position: 'relative'
                   }}
                 >
+                  <span
+                    style={{
+                      position: 'absolute',
+                      fontSize: '12px',
+                      color: '#888',
+                      backgroundColor: 'white',
+                      padding: '0 4px',
+                      zIndex: 2
+                    }}
+                  >
+                    Mentor Name:
+                  </span>
                   <input
                     type='url'
-                    style={{ background: 'transparent', width: '100%' }}
+                    style={{
+                      background: 'transparent',
+                      width: '100%',
+                      paddingTop: '20px'
+                    }}
                     value={editedMentor.mentorName}
                     onChange={(e) =>
                       setEditedMentor({
@@ -1586,12 +2404,29 @@ const WhoAmI = (props) => {
                     boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
                     background: 'white',
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    position: 'relative'
                   }}
                 >
+                  <span
+                    style={{
+                      position: 'absolute',
+                      fontSize: '12px',
+                      color: '#888',
+                      backgroundColor: 'white',
+                      padding: '0 4px',
+                      zIndex: 2
+                    }}
+                  >
+                    Mentor Position:
+                  </span>
                   <input
                     type='url'
-                    style={{ background: 'transparent', width: '100%' }}
+                    style={{
+                      background: 'transparent',
+                      width: '100%',
+                      paddingTop: '20px'
+                    }}
                     value={editedMentor.mentorRole}
                     onChange={(e) =>
                       setEditedMentor({
@@ -1624,12 +2459,29 @@ const WhoAmI = (props) => {
                     boxShadow: 'rgba(0, 0, 0, 0.16) 1px 1px 5px 1px',
                     background: 'white',
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    position: 'relative'
                   }}
                 >
+                  <span
+                    style={{
+                      position: 'absolute',
+                      fontSize: '12px',
+                      color: '#888',
+                      backgroundColor: 'white',
+                      padding: '0 4px',
+                      zIndex: 2
+                    }}
+                  >
+                    Mentor Name:
+                  </span>
                   <input
                     type='url'
-                    style={{ background: 'transparent', width: '100%' }}
+                    style={{
+                      background: 'transparent',
+                      width: '100%',
+                      paddingTop: '20px'
+                    }}
                     value={editedMentor.mentorCompany}
                     onChange={(e) =>
                       setEditedMentor({

@@ -12,6 +12,10 @@ import 'react-quill/dist/quill.snow.css'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import {
+  uploadJournalVideo,
+  validateJournalVideoFile
+} from '../../../utils/uploadJournalVideo'
+import {
   attachGlobalIdToPayload,
   canChooseClientInUI,
   fetchClientsConfig,
@@ -54,6 +58,7 @@ const AddTaskModal = ({
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
   const [uploadedVideoUrl, setUploadedVideoUrl] = useState(null)
   const [uploadedThumbnailUrl, setUploadedThumbnailUrl] = useState(null)
+  const [videoUploadProgress, setVideoUploadProgress] = useState(0)
   const dropdownRef = useRef(null)
 
   const isViewMode = currentMode === 'view'
@@ -157,6 +162,7 @@ const AddTaskModal = ({
       setThumbnailPreview(null)
       setUploadedVideoUrl(null)
       setUploadedThumbnailUrl(null)
+      setVideoUploadProgress(0)
       setInformation('')
       setDescription('')
       setReflectionItems([{ id: 1, question: '', instructions: '' }])
@@ -256,6 +262,11 @@ const AddTaskModal = ({
         }
       }
 
+      const taskGlobalId =
+        taskData?.globalId ??
+        taskData?.journal?.globalId ??
+        taskData?.journalData?.globalId
+
       const payload = {
         title: taskTitle,
         category: categoryValue,
@@ -275,13 +286,14 @@ const AddTaskModal = ({
       }
 
       if (includeClient) {
-        payload.client = getClientPayloadValue(selectedClient)
+        // Backend requires `globalId` when using client="all".
+        // Some records we get here are missing `globalId`, so avoid sending
+        // client="all" unless we also have a globalId to resolve the record.
+        const clientValue = getClientPayloadValue(selectedClient)
+        if (clientValue !== 'all') {
+          payload.client = clientValue
+        }
       }
-
-      const taskGlobalId =
-        taskData?.globalId ??
-        taskData?.journal?.globalId ??
-        taskData?.journalData?.globalId
 
       let response
       if (isEditMode && taskData?.id) {
@@ -343,6 +355,7 @@ const AddTaskModal = ({
     setThumbnailPreview(null)
     setUploadedVideoUrl(null)
     setUploadedThumbnailUrl(null)
+    setVideoUploadProgress(0)
     setInformation('')
     setDescription('')
     setReflectionItems(
@@ -404,7 +417,11 @@ const AddTaskModal = ({
         taskToDelete?.globalId ??
         taskToDelete?.journal?.globalId ??
         taskToDelete?.journalData?.globalId
-      const deleteBody = getClientAndGlobalBody(selectedClient, deleteGlobalId)
+      // If `client="all"` and we don't have globalId, omitting the client
+      // avoids backend errors.
+      const clientValue = getClientPayloadValue(selectedClient)
+      const deleteBody =
+        clientValue === 'all' ? {} : getClientAndGlobalBody(selectedClient, deleteGlobalId)
       if (isMasterClass) {
         await axiosInstance.delete(`/contents/${taskToDelete.id}`, {
           data: deleteBody
@@ -433,28 +450,52 @@ const AddTaskModal = ({
     const file = e.target.files[0]
     if (!file) return
 
+    const validationError = validateJournalVideoFile(file)
+    if (validationError) {
+      toast.error(validationError)
+      e.target.value = ''
+      return
+    }
+
+    // Keep the previously saved/valid video so a failed upload never
+    // clobbers it with an unusable local blob: URL.
+    const previousVideoFile = videoFile
+    const previousVideoPreview = videoPreview
+    const previousUploadedVideoUrl = uploadedVideoUrl
+    const blobPreviewUrl = URL.createObjectURL(file)
+
     setVideoFile(file)
-    setVideoPreview(URL.createObjectURL(file))
+    setVideoPreview(blobPreviewUrl)
     setUploadedVideoUrl(null)
     setUploadingVideo(true)
+    setVideoUploadProgress(0)
 
     try {
-      const formData = new FormData()
-      formData.append('video', file)
-      const res = await axiosInstance.post('/upload/journal-video', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const fileLocation = await uploadJournalVideo(file, {
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent?.total) return
+          setVideoUploadProgress(
+            Math.round((progressEvent.loaded / progressEvent.total) * 100)
+          )
+        }
       })
-      if (res.data.success) {
-        setUploadedVideoUrl(res.data.fileLocation)
-        toast.success('Video uploaded successfully')
-      } else {
-        toast.error('Video upload failed')
-      }
+      setUploadedVideoUrl(fileLocation)
+      setVideoPreview(fileLocation)
+      if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
+      toast.success('Video uploaded successfully')
     } catch (err) {
       console.error('Video upload error:', err)
-      toast.error('Video upload failed')
+      toast.error(err?.message || 'Video upload failed')
+      // Revert so the broken blob: preview can never be saved with the task.
+      if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
+      setVideoFile(previousVideoFile)
+      setVideoPreview(previousVideoPreview)
+      setUploadedVideoUrl(previousUploadedVideoUrl)
+      const videoInput = document.getElementById('video-upload')
+      if (videoInput) videoInput.value = ''
     } finally {
       setUploadingVideo(false)
+      setVideoUploadProgress(0)
     }
   }
 
@@ -463,8 +504,13 @@ const AddTaskModal = ({
     const file = e.target.files[0]
     if (!file) return
 
+    const previousThumbnailFile = thumbnailFile
+    const previousThumbnailPreview = thumbnailPreview
+    const previousUploadedThumbnailUrl = uploadedThumbnailUrl
+    const blobPreviewUrl = URL.createObjectURL(file)
+
     setThumbnailFile(file)
-    setThumbnailPreview(URL.createObjectURL(file))
+    setThumbnailPreview(blobPreviewUrl)
     setUploadedThumbnailUrl(null)
     setUploadingThumbnail(true)
 
@@ -476,13 +522,22 @@ const AddTaskModal = ({
       })
       if (res.data.success) {
         setUploadedThumbnailUrl(res.data.fileLocation)
+        setThumbnailPreview(res.data.fileLocation)
+        if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
         toast.success('Thumbnail uploaded successfully')
       } else {
-        toast.error('Thumbnail upload failed')
+        throw new Error('Thumbnail upload failed')
       }
     } catch (err) {
       console.error('Thumbnail upload error:', err)
-      toast.error('Thumbnail upload failed')
+      toast.error(err?.response?.data?.message || 'Thumbnail upload failed')
+      // Revert so a broken blob: preview can never be saved with the task.
+      if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
+      setThumbnailFile(previousThumbnailFile)
+      setThumbnailPreview(previousThumbnailPreview)
+      setUploadedThumbnailUrl(previousUploadedThumbnailUrl)
+      const thumbnailInput = document.getElementById('thumbnail-upload')
+      if (thumbnailInput) thumbnailInput.value = ''
     } finally {
       setUploadingThumbnail(false)
     }
@@ -885,7 +940,11 @@ const AddTaskModal = ({
                             zIndex: 10, borderRadius: '12px'
                           }}>
                             <div className='spinner-border text-primary' role='status' />
-                            <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>Uploading video...</span>
+                            <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>
+                              {videoUploadProgress > 0
+                                ? `Uploading video... ${videoUploadProgress}%`
+                                : 'Uploading video...'}
+                            </span>
                           </div>
                         )}
                         {!isViewMode && !uploadingVideo && (
@@ -952,7 +1011,7 @@ const AddTaskModal = ({
                             <p className='upload-info'>
                               Only mp4, avi, or webm file format
                               <br />
-                              supported (max. 50Mb)
+                              supported (max. 1.5 GB)
                             </p>
                           </label>
                         </>

@@ -1,28 +1,27 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6'
 import { changeActiveSection } from '../../../redux/portfolio/Actions'
 import { useDispatch, useSelector } from 'react-redux'
+
+const ALL_SECTIONS = [
+  { type: 'who-section', name: 'Who Am I?' },
+  { type: 'what-section', name: 'What Can I Do?' },
+  { type: 'how-section', name: 'How Do I Prove It?' },
+  { type: 'start-section', name: 'Start' }
+]
 
 function PortfolioNavigator(props) {
   const dispatch = useDispatch()
   const activeSection = useSelector((state) => state.portfolio.activeSection)
 
-  const sections = [
-    { type: 'who-section', name: 'Who Am I?' },
-    {
-      type: 'what-section',
-      name: 'What Can I Do?'
-      // disabled: true
-    },
-    {
-      type: 'how-section',
-      name: 'How Do I Prove It?'
-      // disabled: true
-    },
-    { type: 'start-section', name: 'Start', disabled: true }
-  ]
+  const sections = Array.isArray(props.visibleSections)
+    ? ALL_SECTIONS.filter((section) =>
+        props.visibleSections.includes(section.type)
+      )
+    : ALL_SECTIONS
+
   const activeSectionIndex = sections.findIndex(
-    (section, index) => section.type === activeSection
+    (section) => section.type === activeSection
   )
 
   const handleNextSection = () => {
@@ -37,7 +36,7 @@ function PortfolioNavigator(props) {
     if (changeSectionIndex < sections.length) {
       dispatch(changeActiveSection(sections[changeSectionIndex].type))
     }
-    props.scrollToTop()
+    props.scrollToTop?.()
   }
 
   const handlePreviousSection = () => {
@@ -49,33 +48,8 @@ function PortfolioNavigator(props) {
     if (changeSectionIndex >= 0) {
       dispatch(changeActiveSection(sections[changeSectionIndex].type))
     }
-    props.scrollToTop()
+    props.scrollToTop?.()
   }
-
-  // DO NOT DELETE THESE TWO FUNCTIONS !!!
-  // todo: use these functions when all sections are disabled
-
-  // const handleNextSection = () => {
-  //   let changeSectionIndex = activeSectionIndex + 1
-  //
-  //   if (changeSectionIndex === sections.length) {
-  //     changeSectionIndex = null
-  //   }
-  //
-  //   if (changeSectionIndex !== null) {
-  //     dispatch(changeActiveSection(sections[changeSectionIndex].type))
-  //   }
-  // }
-  //
-  // const handlePreviousSection = () => {
-  //   let changeSectionIndex = activeSectionIndex - 1
-  //   if (changeSectionIndex < 0) {
-  //     changeSectionIndex = null
-  //   }
-  //   if (changeSectionIndex !== null) {
-  //     dispatch(changeActiveSection(sections[changeSectionIndex].type))
-  //   }
-  // }
 
   const getPreviousSectionName = () => {
     if (activeSectionIndex < 0) {

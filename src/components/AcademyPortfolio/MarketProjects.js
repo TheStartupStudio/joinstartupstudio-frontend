@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PortfolioWrapper from './PortfolioWrapper'
-import courseLogo from '../../assets/images/academy-icons/course-progress.png'
+import academyBulb from '../../assets/images/academy-icons/academy-logo.png'
 import MarketCard from './MarketCard'
 import nemoursMarketing from '../../assets/images/academy-icons/Nemours-marketing.png'
 import NewProject from './NewProject'
@@ -39,8 +39,9 @@ function MarketProjects({ projectsData = [], isUserPortfolio }) {
   return (
     <>
       <PortfolioWrapper
-        img={courseLogo}
+        img={academyBulb}
         title={'Market-Ready Projects'}
+        description='Briefly describe the relevant outcomes of each project.'
         setOpenNew={isUserPortfolio ? setOpenNew : null}
       >
         <div

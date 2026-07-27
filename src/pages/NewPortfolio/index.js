@@ -1,10 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import './Portfolio.css'
 import whoami from '../../assets/images/whoami.png'
+import MyPortfolio from '../../assets/images/my-portfolio-new.png'
+import PublishPortfolioIcon from '../../assets/images/publish-portfolio-icon.svg'
+import UnPublishIcon from '../../assets/images/unpublisht-portfolio.svg'
+import ViewPortfolioIcon from '../../assets/images/view-portfolio-icon.svg'
+import SharePortfolioIcon from '../../assets/images/share-portfolio-icon.svg'
+import LeftArrow from '../../assets/images/arrow-left.svg'
+import RightArrow from '../../assets/images/arrow-right.svg'
+import CopyUrl from '../../assets/images/cop-url.svg'
 import WhoAmI from './whoami'
 import WhatCanIDo from './whatcanido'
 import HowDoIProveIt from './howdoiproveit'
+import Start from './start'
+import StartProd from './startProd'
+import StartCompetitiveness from './startcompetitiveness'
+import Select from 'react-select'
+import axiosInstance from '../../utils/AxiosInstance'
+import LtsContainerWrapper from '../../ui/LtsContainerWrapper'
 
 import {
   getMyCompetitiveness,
@@ -20,19 +36,94 @@ import {
   getUserStory,
   getMyProjectsAPI,
   getProjects
-} from '../../redux/portfolio/Actions'
-import Start from './start'
-import StartProd from './startProd'
-import StartCompetitiveness from './startcompetitiveness'
-import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
+} from '../../redux/newPortfolio/Actions'
 
 const Portfolio = (props) => {
   const dispatch = useDispatch()
-  const [activeSection, setActiveSection] = useState('who-am-i')
+  const location = useLocation()
+
+  const { user } = useSelector((state) => state.user)
+
+  const isRole4 = user?.user?.role_id === 5
+  const sections = [
+    { key: 'who-am-i', label: 'Who Am I?' },
+    { key: 'what-can-i-do', label: 'What Can I Do?' },
+    { key: 'how-do-i-prove-it', label: 'How Do I Prove it?' },
+    ...(isRole4 ? [] : [{ key: 'start', label: 'Start' }]) // Only include Start if not role 4
+  ]
+  const [activeSection, setActiveSection] = useState(sections[0].key)
   const [refreshData, setRefreshData] = useState(false)
 
+  // Modal & form state
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false)
+  const [isUnpublishModalOpen, setIsUnpublishModalOpen] = useState(false)
+  const [selectedPages, setSelectedPages] = useState([])
+  const [startingPage, setStartingPage] = useState('')
+  const [sharingSettings, setSharingSettings] = useState(null)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [isFullscreenView, setIsFullscreenView] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  // Add isPreviewMode state
+  const [isPreviewMode, setIsPreviewMode] = useState(false)
+
+  const scrollPortfolioToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+    const contentEl = document.getElementById('content')
+    if (contentEl) contentEl.scrollTop = 0
+  }
+
+  // Always land at the top of Who Am I when entering portfolio (e.g. from challenge CTA)
+  useLayoutEffect(() => {
+    const shouldResetToTop =
+      location.hash === '#top' ||
+      location.state?.scrollToTop ||
+      location.state?.openSection === 'who-am-i'
+
+    if (shouldResetToTop || location.pathname === '/my-portfolio') {
+      setActiveSection(sections[0].key)
+      scrollPortfolioToTop()
+      // Re-run after paint in case layout shifts the scroll position
+      requestAnimationFrame(scrollPortfolioToTop)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key, location.hash, location.pathname])
+
   useEffect(() => {
-    // Dispatch all the actions when the component mounts
+    scrollPortfolioToTop()
+  }, [activeSection])
+
+  const handlePrevious = () => {
+    const currentIndex = sections.findIndex(
+      (section) => section.key === activeSection
+    )
+    if (currentIndex > 0) {
+      setActiveSection(sections[currentIndex - 1].key)
+    }
+  }
+
+  const handleNext = () => {
+    const currentIndex = sections.findIndex(
+      (section) => section.key === activeSection
+    )
+    if (currentIndex < sections.length - 1) {
+      setActiveSection(sections[currentIndex + 1].key)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  // Fetch sharing settings from backend
+  const fetchSharingSettings = async () => {
+    try {
+      const { data } = await axiosInstance.get('/hsPortfolio/sharingSettings')
+      setSharingSettings(data)
+    } catch (error) {
+      console.error('Error fetching sharing settings:', error)
+    }
+  }
+
+  useEffect(() => {
     dispatch(getUserBasicInfo())
     dispatch(getUserStory())
     dispatch(getMyWorkExperiences())
@@ -43,455 +134,932 @@ const Portfolio = (props) => {
     dispatch(getMyRelationships())
     dispatch(getMyMentors())
     dispatch(getMyFailures())
-    dispatch(getSharingSettings())
-    dispatch(getProjects()), dispatch(getMyEducations())
-  }, [dispatch, refreshData]) // The effect will only run when dispatch changes
+    dispatch(getProjects())
+    fetchSharingSettings()
+  }, [dispatch, refreshData])
 
-  // const { userBasicInfo } = useSelector((state) => state.portfolio.whoSection)
-  
-
-    const userBasicInfo = {
-    "id": 4,
-    "userId": 128,
-     "thumbnailUrl": "https://imgs.search.brave.com/38IO7tZqTz6u3VDGFzE2Gg2bfshvjexjv4LUIGdV2h8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YXZlcnkuY29tL2Js/b2cvd3AtY29udGVu/dC91cGxvYWRzLzIw/MjEvMDMvYmxvZy1o/ZXJvLWJlc3RpbWFn/ZXJlc291cmNlcy0z/MDAweDExMzQtMS1z/Y2FsZWQuanBn",
-    "videoUrl": "https://www.youtube.com/watch?v=iL87nv4pQsk",
-    "valueProposition": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</p>",
-    "story": "<p><span style=\"color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span><span style=\"color: rgb(100, 107, 107); background-color: rgb(255, 255, 255);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation sadasdullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span></p>",
-    "userImageUrl": blankProfile,
-    "userTitle": "Student",
-    "name": "Testing ",
-    "organization": "Organization",
-    "socialMediaLinks": {
-        "linkedIn": "/testing",
-        "instagram": "/test",
-        "facebook": "/test"
-    },
-    "primaryInterest": "Lorem ipsum dolor sit amet."
-}
-
-  // const { myRelationships } = useSelector((state) => state.portfolio.whoSection)
-
-  const myRelationships = {
-    "id": 4,
-    "userId": 128,
-    "teamRole": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod teasdasdasdas</p>",
-    "collaborationStyle": "<p>WhoAmI WhoAmI Who mI sed do eiusmod te&nbsp;<span style=\"background-color: rgb(255, 255, 255);\">Lorem ipsum dolor</span></p>",
-    "leadershipPhilosophy": "<p>WhoAmI WhoAmI sed do eiusmod te&nbsp;<span style=\"background-color: rgb(255, 255, 255);\">Lorem ipsum dolor</span></p>",
-    "showRelationships": 1
-}
-
-  // const { myFailures } = useSelector((state) => state.portfolio.whoSection)
-
-  const myFailures = [
-    {
-        "id": 22,
-        "userId": 128,
-        "thumbnailUrl": "https://imgs.search.brave.com/C0OsfontM1F1-tzzwxhasUer0HscrpGqrCkjFuHE6_k/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMx/MDgxNDA0MS9waG90/by9wb3J0cmFpdC1v/Zi1hLWJ1c2luZXNz/d29tYW4tc3RhbmRp/bmctaW4tYS1hLW1v/ZGVybi1vZmZpY2Uu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PXJMRFlFR2FHZmJG/cTZtSlBMYzJGSGpj/NktCS3lKRVR1Mzh5/NGEzeDExY009",
-        "videoUrl": "https://www.instagram.com/baby_gift_shop_ks/",
-        "failure": "<p>An&nbsp;IP address&nbsp;is&nbsp;<span style=\"background-color: rgba(0, 0, 0, 0);\">a unique identifier assigned to every device connected to the internet or a local network, allowing it to communicate with other devices</span>. It serves two main functions: identifying the device and providing its location within the network to establish a path for communication.6</p><p><br></p><p>There are two standards for IP addresses: IPv4 and IPv6. IPv4 uses 32 binary bits to create a single unique address, typically displayed as four numbers separated by periods, such as 192.0.2.1.46&nbsp;IPv6, which uses 128 bits, was introduced to accommodate the growing number of devices and to address the exhaustion of IPv4 addresses.6</p><p>IP addresses can be either public, visible to the internet, or private, used within a local network.5&nbsp;They can also be static, remaining the same, or dynamic, changing periodically</p>",
-        "pivot": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.</p>",
-        "outcomes": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.</p>",
-        "showSection": true,
-        "createdAt": "2025-04-29T10:57:20.000Z",
-        "updatedAt": "2025-05-29T13:34:33.000Z"
-    },
-    {
-        "id": 26,
-        "userId": 128,
-        "thumbnailUrl": "https://imgs.search.brave.com/C0OsfontM1F1-tzzwxhasUer0HscrpGqrCkjFuHE6_k/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMx/MDgxNDA0MS9waG90/by9wb3J0cmFpdC1v/Zi1hLWJ1c2luZXNz/d29tYW4tc3RhbmRp/bmctaW4tYS1hLW1v/ZGVybi1vZmZpY2Uu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PXJMRFlFR2FHZmJG/cTZtSlBMYzJGSGpj/NktCS3lKRVR1Mzh5/NGEzeDExY009",
-        "videoUrl": "https://www.youtube.com/watch?v=tpodNruOVoI",
-        "failure": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.</p>",
-        "pivot": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.</p>",
-        "outcomes": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.</p>",
-        "showSection": true,
-        "createdAt": "2025-05-27T00:16:42.000Z",
-        "updatedAt": "2025-05-27T00:16:42.000Z"
+  // Initialize form with existing data when modal opens
+  useEffect(() => {
+    if (isPublishModalOpen && sharingSettings) {
+      setSelectedPages(sharingSettings.pagesToPublish || [])
+      setStartingPage(sharingSettings.startingPage || '')
     }
-]
+  }, [isPublishModalOpen, sharingSettings])
 
-  // const { myMentors } = useSelector((state) => state.portfolio.whoSection)
+  const {
+    userBasicInfo,
+    myRelationships,
+    myFailures,
+    myMentors,
+    myProjects,
+    myAlignments,
+    myProductivity
+  } = useSelector((state) => ({
+    userBasicInfo: state.newPortfolio.whoSection.userBasicInfo,
+    myRelationships: state.newPortfolio.whoSection.myRelationships,
+    myFailures: state.newPortfolio.whoSection.myFailures,
+    myMentors: state.newPortfolio.whoSection.myMentors,
+    myProjects: state.newPortfolio.whatSection.myProjects,
+    myAlignments: state.newPortfolio.howSection.myAlignments,
+    myProductivity: state.newPortfolio.howSection.myProductivity
+  }))
 
-  const myMentors = [
-    {
-        "id": 121,
-        "userId": 128,
-        "mentorImage": 'https://imgs.search.brave.com/LgTj_WkGxLqhmr0vMPlX80haq42bMkfdaZ6ovjRE9VM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTcw/NTUwMzk2Ny9waG90/by9jb25maWRlbnQt/YnVzaW5lc3N3b21h/bi1pbi1tb2Rlcm4t/b2ZmaWNlLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1fZjJz/QXRDVWtCQmdLSzhv/eERuekdzMkNMdllC/VE41amZPTGwxZ2xR/OHl3PQ',
-        "mentorName": "ANASTASIA HALL",
-        "mentorRole": "Direcotr of Learning & Development",
-        "mentorCompany": "Learn to Start",
-        "mentorDescription": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.</p>",
-        "showSection": true,
-        "category": "my-mentors",
-        "createdAt": "2024-10-30T19:49:31.000Z",
-        "updatedAt": "2025-04-30T07:19:32.000Z"
-    },
-    {
-        "id": 124,
-        "userId": 128,
-        "mentorImage": 'https://imgs.search.brave.com/LgTj_WkGxLqhmr0vMPlX80haq42bMkfdaZ6ovjRE9VM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTcw/NTUwMzk2Ny9waG90/by9jb25maWRlbnQt/YnVzaW5lc3N3b21h/bi1pbi1tb2Rlcm4t/b2ZmaWNlLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1fZjJz/QXRDVWtCQmdLSzhv/eERuekdzMkNMdllC/VE41amZPTGwxZ2xR/OHl3PQ',
-        "mentorName": "test 1",
-        "mentorRole": "Role",
-        "mentorCompany": "Company",
-        "mentorDescription": "Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.",
-        "showSection": false,
-        "category": "my-mentors",
-        "createdAt": "2024-10-30T19:57:52.000Z",
-        "updatedAt": "2025-04-28T00:01:47.000Z"
-    },
-    {
-        "id": 129,
-        "userId": 128,
-        "mentorImage": 'https://imgs.search.brave.com/LgTj_WkGxLqhmr0vMPlX80haq42bMkfdaZ6ovjRE9VM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTcw/NTUwMzk2Ny9waG90/by9jb25maWRlbnQt/YnVzaW5lc3N3b21h/bi1pbi1tb2Rlcm4t/b2ZmaWNlLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1fZjJz/QXRDVWtCQmdLSzhv/eERuekdzMkNMdllC/VE41amZPTGwxZ2xR/OHl3PQ',
-        "mentorName": "Test 2",
-        "mentorRole": "Role",
-        "mentorCompany": "Company",
-        "mentorDescription": "Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.",
-        "showSection": true,
-        "category": "my-mentors",
-        "createdAt": "2024-10-31T10:00:45.000Z",
-        "updatedAt": "2024-10-31T10:00:45.000Z"
-    },
-    {
-        "id": 141,
-        "userId": 128,
-        "mentorImage": 'https://imgs.search.brave.com/LgTj_WkGxLqhmr0vMPlX80haq42bMkfdaZ6ovjRE9VM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTcw/NTUwMzk2Ny9waG90/by9jb25maWRlbnQt/YnVzaW5lc3N3b21h/bi1pbi1tb2Rlcm4t/b2ZmaWNlLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1fZjJz/QXRDVWtCQmdLSzhv/eERuekdzMkNMdllC/VE41amZPTGwxZ2xR/OHl3PQ',
-        "mentorName": "Test 3",
-        "mentorRole": "dev",
-        "mentorCompany": "learnttoostart",
-        "mentorDescription": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Elit quisque faucibus ex sapien vitae pellentesque sem. Sem placerat in id cursus mi pretium tellus. Tellus duis convallis tempus leo eu aenean sed. Sed diam urna tempor pulvinar vivamus fringilla lacus. Lacus nec metus bibendum egestas iaculis massa nisl. Nisl malesuada lacinia integer nunc posuere ut hendrerit.</p>",
-        "showSection": true,
-        "category": "my-mentors",
-        "createdAt": "2025-04-30T15:51:47.000Z",
-        "updatedAt": "2025-04-30T15:51:47.000Z"
+  const educations = myAlignments?.educations
+  const workExperiences = myProductivity?.workExperiences
+
+  const getPortfolioUrl = () => {
+    const username = user?.user?.username || 'user'
+    const currentOrigin = window.location.origin
+    return `${currentOrigin}/public-portfolio/${encodeURIComponent(username)}`
+  }
+
+  const pages = [
+    'Who am I?',
+    'What can I do?',
+    'How Do I Prove it?',
+    'Start - Alignment',
+    'Start - Productivity',
+    'Start - Competitiveness'
+  ]
+
+  const startingOptions = [
+    { value: 'Who am I?', label: 'Who am I?' },
+    { value: 'Start - Alignment', label: 'Start - Alignment' }
+  ]
+
+  const togglePageSelection = (page) => {
+    setSelectedPages((prev) =>
+      prev.includes(page) ? prev.filter((p) => p !== page) : [...prev, page]
+    )
+  }
+
+  const canPublish =
+    (selectedPages.includes('Who am I?') ||
+      selectedPages.some((page) => page.startsWith('Start'))) &&
+    startingPage
+
+  const handlePublish = async () => {
+    setIsLoading(true)
+    try {
+      const payload = {
+        pagesToPublish: selectedPages,
+        startingPage,
+        isPublicShared: true
+      }
+
+      const endpoint = '/hsPortfolio/sharingSettings'
+      const response = await axiosInstance.post(endpoint, payload)
+
+      setSharingSettings(response.data)
+      setIsPublishModalOpen(false)
+    } catch (error) {
+      console.error('Publish error:', error)
+      alert('Failed to save sharing settings. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
-]
-  // const { myProjects } = useSelector((state) => state.portfolio.whatSection)
+  }
 
-  const myProjects = [
-    {
-        "id": 917,
-        "title": 'A New Aluminum Spotlight',
-        "updatedAt": "2025-05-26T17:57:05.000Z",
-        "createdAt": "2025-05-26T17:51:38.000Z",
-        "children": [
-            {
-                "id": 918,
-                "type": "learn",
-                "showSection": true,
-                "editorContent": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-                "userId": 128,
-                "parentId": 917,
-                "title": null,
-                "createdAt": "2025-05-26T17:51:38.000Z",
-                "updatedAt": "2025-05-26T17:57:05.000Z",
-                "evidences": [
-                    {
-                        "id": 1438,
-                        "type": "evidence-1",
-                        "userId": 128,
-                        "imageUrl": "https://imgs.search.brave.com/TnFM-Yy1z8ROaeCDcM-Yb5ZDEIUYuznPuTCcSYx5Q60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZnJlZWltYWdl/cy5jb20vaW1hZ2Vz/L2xhcmdlLXByZXZp/ZXdzLzA1Zi9taW5p/bWFsaXN0LWxhcHRv/cC1kZXNpZ24tMDQx/MC01NzA5OTcwLmpw/Zz9mbXQ",
-                        "linkInputValue": "test",
-                        "evidenceTitle": "test",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:06.000Z",
-                        "projectId": 918,
-                        "selectedSkills": []
-                    },
-                    {
-                        "id": 1439,
-                        "type": "evidence-2",
-                        "userId": 128,
-                        "imageUrl": "https://imgs.search.brave.com/TnFM-Yy1z8ROaeCDcM-Yb5ZDEIUYuznPuTCcSYx5Q60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZnJlZWltYWdl/cy5jb20vaW1hZ2Vz/L2xhcmdlLXByZXZp/ZXdzLzA1Zi9taW5p/bWFsaXN0LWxhcHRv/cC1kZXNpZ24tMDQx/MC01NzA5OTcwLmpw/Zz9mbXQ",
-                        "linkInputValue": "test",
-                        "evidenceTitle": "test",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:06.000Z",
-                        "projectId": 918,
-                        "selectedSkills": []
-                    },
-                    {
-                        "id": 1440,
-                        "type": "evidence-3",
-                        "userId": 128,
-                        "imageUrl": "https://imgs.search.brave.com/TnFM-Yy1z8ROaeCDcM-Yb5ZDEIUYuznPuTCcSYx5Q60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZnJlZWltYWdl/cy5jb20vaW1hZ2Vz/L2xhcmdlLXByZXZp/ZXdzLzA1Zi9taW5p/bWFsaXN0LWxhcHRv/cC1kZXNpZ24tMDQx/MC01NzA5OTcwLmpw/Zz9mbXQ",
-                        "linkInputValue": "test",
-                        "evidenceTitle": "test",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:06.000Z",
-                        "projectId": 918,
-                        "selectedSkills": []
-                    }
-                ]
-            },
-            {
-                "id": 919,
-                "type": "develop",
-                "showSection": true,
-                "editorContent": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-                "userId": 128,
-                "parentId": 917,
-                "title": null,
-                "createdAt": "2025-05-26T17:51:38.000Z",
-                "updatedAt": "2025-05-26T17:57:05.000Z",
-                "evidences": [
-                    {
-                        "id": 1441,
-                        "type": "evidence-1",
-                        "userId": 128,
-                        "imageUrl": "https://imgs.search.brave.com/TnFM-Yy1z8ROaeCDcM-Yb5ZDEIUYuznPuTCcSYx5Q60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZnJlZWltYWdl/cy5jb20vaW1hZ2Vz/L2xhcmdlLXByZXZp/ZXdzLzA1Zi9taW5p/bWFsaXN0LWxhcHRv/cC1kZXNpZ24tMDQx/MC01NzA5OTcwLmpw/Zz9mbXQ",
-                        "linkInputValue": "test 2",
-                        "evidenceTitle": "testt 2",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:07.000Z",
-                        "projectId": 919,
-                        "selectedSkills": []
-                    },
-                    {
-                        "id": 1442,
-                        "type": "evidence-2",
-                        "userId": 128,
-                        "imageUrl": "https://imgs.search.brave.com/TnFM-Yy1z8ROaeCDcM-Yb5ZDEIUYuznPuTCcSYx5Q60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZnJlZWltYWdl/cy5jb20vaW1hZ2Vz/L2xhcmdlLXByZXZp/ZXdzLzA1Zi9taW5p/bWFsaXN0LWxhcHRv/cC1kZXNpZ24tMDQx/MC01NzA5OTcwLmpw/Zz9mbXQ",
-                        "linkInputValue": "das",
-                        "evidenceTitle": "rwa",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:07.000Z",
-                        "projectId": 919,
-                        "selectedSkills": []
-                    },
-                    {
-                        "id": 1443,
-                        "type": "evidence-3",
-                        "userId": 128,
-                        "imageUrl": "https://imgs.search.brave.com/TnFM-Yy1z8ROaeCDcM-Yb5ZDEIUYuznPuTCcSYx5Q60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZnJlZWltYWdl/cy5jb20vaW1hZ2Vz/L2xhcmdlLXByZXZp/ZXdzLzA1Zi9taW5p/bWFsaXN0LWxhcHRv/cC1kZXNpZ24tMDQx/MC01NzA5OTcwLmpw/Zz9mbXQ",
-                        "linkInputValue": "asdasda",
-                        "evidenceTitle": "dasda",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:07.000Z",
-                        "projectId": 919,
-                        "selectedSkills": []
-                    }
-                ]
-            },
-            {
-                "id": 920,
-                "type": "brand",
-                "showSection": true,
-                "editorContent": "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-                "userId": 128,
-                "parentId": 917,
-                "title": null,
-                "createdAt": "2025-05-26T17:51:38.000Z",
-                "updatedAt": "2025-05-26T17:57:05.000Z",
-                "evidences": [
-                    {
-                        "id": 1444,
-                        "type": "evidence-1",
-                        "userId": 128,
-                        "imageUrl": "https://imgs.search.brave.com/TnFM-Yy1z8ROaeCDcM-Yb5ZDEIUYuznPuTCcSYx5Q60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZnJlZWltYWdl/cy5jb20vaW1hZ2Vz/L2xhcmdlLXByZXZp/ZXdzLzA1Zi9taW5p/bWFsaXN0LWxhcHRv/cC1kZXNpZ24tMDQx/MC01NzA5OTcwLmpw/Zz9mbXQ",
-                        "linkInputValue": "test",
-                        "evidenceTitle": "test",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:08.000Z",
-                        "projectId": 920,
-                        "selectedSkills": []
-                    },
-                    {
-                        "id": 1445,
-                        "type": "evidence-2",
-                        "userId": 128,
-                        "imageUrl": "https://demo-startupstudio-drive.s3.amazonaws.com/users/128/de525b59fc5d01e2bc3d83e2692ae9be-1748281972085.webp",
-                        "linkInputValue": "dasda",
-                        "evidenceTitle": "asdas",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:08.000Z",
-                        "projectId": 920,
-                        "selectedSkills": []
-                    },
-                    {
-                        "id": 1446,
-                        "type": "evidence-3",
-                        "userId": 128,
-                        "imageUrl": "https://demo-startupstudio-drive.s3.amazonaws.com/users/128/ff165f739f70e277b7e9792b585174dd-1748281977759.webp",
-                        "linkInputValue": "asdasd",
-                        "evidenceTitle": "asdasd",
-                        "createdAt": "2025-05-26T17:51:39.000Z",
-                        "updatedAt": "2025-05-26T17:57:08.000Z",
-                        "projectId": 920,
-                        "selectedSkills": []
-                    }
-                ]
-            }
-        ]
+  const handleUnpublish = async () => {
+    setIsLoading(true)
+    try {
+      const payload = {
+        pagesToPublish: [],
+        startingPage: '',
+        isPublicShared: false
+      }
+
+      const response = await axiosInstance.post(
+        '/hsPortfolio/sharingSettings',
+        payload
+      )
+      setSharingSettings(response.data)
+      setIsUnpublishModalOpen(false)
+    } catch (error) {
+      console.error('Unpublish error:', error)
+      alert('Failed to unpublish portfolio. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
-]
-  const { myAlignments } = useSelector((state) => state.portfolio.howSection)
-  const { myProductivity } = useSelector((state) => state.portfolio.howSection)
+  }
 
-  // const { educations } = myAlignments
-
-  const educations = [
-    {
-        "id": 23,
-        "user_id": 128,
-        "school_logo": "https://demo-startupstudio-drive.s3.amazonaws.com/users/128/32979043701994f42dda8f53ed8ee5e6-1748300819859.jpg",
-        "school_name": "test",
-        "date_started": "2025-04-26T22:00:00.000Z",
-        "date_graduated": null,
-        "current_education": true,
-        "skills_developed": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "opportunities_experienced": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "network_of_mentors": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "created_at": "2025-05-26T23:07:08.000Z",
-        "updated_at": "2025-05-26T23:07:08.000Z"
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(getPortfolioUrl())
+      alert('URL copied to clipboard!')
+    } catch (error) {
+      console.error('Failed to copy URL:', error)
+      alert('Failed to copy URL to clipboard')
     }
-]
-  // const { workExperiences } = myProductivity
+  }
 
-  const workExperiences = [
-    {
-        "id": 7,
-        "user_id": 128,
-        "organization_logo": "https://demo-startupstudio-drive.s3.amazonaws.com/users/128/c96c90776f07fe11bc4b3e25fc3cca52-1748300871946.png",
-        "organization_name": "My Organization 1",
-        "date_started": "2025-04-27T22:00:00.000Z",
-        "date_graduated": null,
-        "current_involved": true,
-        "skills_developed": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "opportunities_experienced": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "network_of_mentors": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "created_at": "2025-05-26T23:08:00.000Z",
-        "updated_at": "2025-05-26T23:08:00.000Z"
-    }
-]
+  // Update the fullscreen view logic to set preview mode
+  const handleToggleFullscreen = () => {
+    setIsFullscreenView(!isFullscreenView)
+    setIsPreviewMode(!isFullscreenView) // Set preview mode when entering fullscreen
+  }
 
-const communityInvolvements = [
-  {
-        "id": 7,
-        "user_id": 128,
-        "organization_logo": "https://demo-startupstudio-drive.s3.amazonaws.com/users/128/c96c90776f07fe11bc4b3e25fc3cca52-1748300871946.png",
-        "organization_name": "My Organization 2",
-        "date_started": "2025-04-27T22:00:00.000Z",
-        "date_graduated": null,
-        "current_involved": true,
-        "skills_developed": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "opportunities_experienced": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "network_of_mentors": "<p> Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        "created_at": "2025-05-26T23:08:00.000Z",
-        "updated_at": "2025-05-26T23:08:00.000Z"
+  useEffect(() => {
+    if (!isFullscreenView) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.classList.add('portfolio-preview-open')
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.classList.remove('portfolio-preview-open')
+      document.body.style.overflow = previousOverflow
     }
-]
+  }, [isFullscreenView])
 
   const renderActiveSection = () => {
     switch (activeSection) {
       case 'who-am-i':
         return (
           <WhoAmI
-            sectionTitle={'WHO AM I?'}
-            sectionDescription={
-              'LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
-            }
-            userBasicInfo={userBasicInfo}
-            myRelationships={myRelationships}
-            myFailures={myFailures}
-            myMentors={myMentors}
+            sectionTitle='WHO AM I?'
+            sectionDescription='LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
+            userBasicInfo={userBasicInfo?.data}
+            myRelationships={myRelationships?.data}
+            myFailures={myFailures?.data}
+            myMentors={myMentors?.data}
+            isPreviewMode={isPreviewMode} // Add this prop
           />
         )
       case 'what-can-i-do':
         return (
           <WhatCanIDo
-            sectionTitle={'WHAT CAN I DO?'}
-            sectionDescription={
-              'LTS participants communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
-            }
+            sectionTitle='WHAT CAN I DO?'
+            sectionDescription='LTS participants communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
             myProjects={myProjects}
             setRefreshData={setRefreshData}
+            userBasicInfo={userBasicInfo?.data}
+            isPreviewMode={isPreviewMode} // Add this prop
           />
         )
       case 'how-do-i-prove-it':
         return (
           <HowDoIProveIt
-            sectionTitle={'HOW DO I PROVE IT?'}
-            sectionDescription={
-              'LTS participants communicate the value they have produced in themselves through the outcomes of Alignment, Productivity, and Competitiveness. '
-            }
-            educations={educations}
-            communityInvolvements = {communityInvolvements}
-            workExprience={workExperiences}
+            sectionTitle='HOW DO I PROVE IT?'
+            sectionDescription='LTS participants communicate the value they have produced in themselves through the outcomes of Alignment, Productivity, and Competitiveness.'
+            educations={educations?.data}
+            workExprience={workExperiences?.data}
+            userBasicInfo={userBasicInfo?.data}
+            isPreviewMode={isPreviewMode} // Add this prop
           />
         )
       case 'start':
         return (
           <Start
-            sectionTitle={'START:ALIGNMENT'}
-            sectionDescription={
-              'My ability to prove the quality of my outcomes through the test metrics of alignment, productivity, and competitiveness.'
-            }
+            sectionTitle='START: ALIGNMENT'
+            sectionDescription='My ability to prove the quality of my outcomes through the test metrics of alignment, productivity, and competitiveness.'
+            userBasicInfo={userBasicInfo?.data}
+            isPreviewMode={isPreviewMode} // Add this prop
           />
         )
       default:
-        return (
-          <WhoAmI
-            sectionTitle={'WHO AM I?'}
-            sectionDescription={
-              'LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
-            }
-            userBasicInfo={userBasicInfo}
-            myRelationships={myRelationships}
-            myFailures={myFailures}
-            myMentors={myMentors}
-          />
-        )
+        return null
     }
   }
 
-  return (
-    <div>
-      <div className='porfolio-header'>
-        <h3>MY PORTFOLIO</h3>
-        <p>
-          Complete your assigned tasks, works towards building out your
-          Market-Ready Portfolio and develop you Market-Ready skills.
-        </p>
-      </div>
-      <div className='portfolio-container'>
-        <div className='portfolio-navbar'>
-          <div
-            className={`portfolio-navbar-item ${
-              activeSection === 'who-am-i' ? 'active' : ''
-            }`}
-            onClick={() => setActiveSection('who-am-i')}
-          >
-            Who am I?
-          </div>
-          <div
-            className={`portfolio-navbar-item ${
-              activeSection === 'what-can-i-do' ? 'active' : ''
-            }`}
-            onClick={() => setActiveSection('what-can-i-do')}
-          >
-            What Can I Do?
-          </div>
-          <div
-            className={`portfolio-navbar-item ${
-              activeSection === 'how-do-i-prove-it' ? 'active' : ''
-            }`}
-            onClick={() => setActiveSection('how-do-i-prove-it')}
-          >
-            How Do I Prove it?
-          </div>
-          <div
-            className={`portfolio-navbar-item ${
-              activeSection === 'start' ? 'active' : ''
-            }`}
-            onClick={() => setActiveSection('start')}
-          >
-            Start
-          </div>
+  const renderNavigationButtons = () => {
+    const currentIndex = sections.findIndex(
+      (section) => section.key === activeSection
+    )
+    const isFirst = currentIndex === 0
+    const isLast = currentIndex === sections.length - 1
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginTop: '20px',
+          padding: '20px'
+        }}
+      >
+        <div
+          onClick={handlePrevious}
+          disabled={isFirst}
+          style={{
+            color: isFirst ? '#999' : 'black',
+            border: 'none',
+            cursor: isFirst ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          <img
+            src={LeftArrow}
+            width={16}
+            style={{
+              opacity: isFirst ? 0.5 : 1
+            }}
+          />
+          Previous
         </div>
 
-        {renderActiveSection()}
+        <div
+          onClick={handleNext}
+          disabled={isLast}
+          style={{
+            color: isLast ? '#999' : 'black',
+
+            cursor: isLast ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          Next
+          <img
+            src={RightArrow}
+            width={16}
+            style={{
+              opacity: isLast ? 0.5 : 1
+            }}
+          />
+        </div>
       </div>
-    </div>
+    )
+  }
+
+  return (
+    <LtsContainerWrapper
+      title={props.archived ? 'Archived Portfolio' : 'My Portfolio'}
+      titleDescription='Complete your assigned tasks, work toward building your Market-Ready Portfolio and develop your Market-Ready skills.'
+      className={`portfolio-lts-container${
+        isFullscreenView ? ' portfolio-lts-container--previewing' : ''
+      }`}
+      showBreadcrumbs={false}
+    >
+      <div>
+        {!isFullscreenView ? (
+          // Normal View
+          <>
+            {/* <div className={` ${props.containerClassname} ${sharingSettings && sharingSettings.isPublicShared
+                            ? 'view-portfolio-con'
+                            : 'preview-portfolio-container'}
+                            
+                            
+                            
+                            
+                            portfolio-container`}> */}
+            <div className={`${props.containerClassname}  portfolio-container`}>
+              <div
+                className='section-description-container '
+                style={{ marginBottom: '15px' }}
+              >
+                <div
+                  className='portf-section-maintitle'
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    margin: '10px 0'
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '5px'
+                    }}
+                  >
+                    <img src={MyPortfolio} width={30} alt='Portfolio Icon' />
+                    <div
+                      style={{
+                        fontFamily: 'Montserrat',
+                        fontSize: '21px',
+                        fontStyle: 'normal',
+                        fontWeight: '500',
+                        lineHeight: 'normal',
+                        textTransform: 'uppercase',
+                        marginLeft: '9px'
+                      }}
+                    >
+                      {props.archived ? 'ARCHIVED PORTFOLIO' : 'MY PORTFOLIO'}
+                    </div>
+                  </div>
+                  <div
+                    style={{ display: 'flex' }}
+                    className='portf-main-title-btn-container'
+                  >
+                    {sharingSettings && sharingSettings.isPublicShared && (
+                      <div className='gradient-wrapper'>
+                        <div
+                          className='publish-buttons'
+                          onClick={() =>
+                            !isRole4 && setIsUnpublishModalOpen(true)
+                          }
+                          style={{ background: isRole4 ? '#e0e0e0' : 'white' }}
+                        >
+                          <div>
+                            <img src={UnPublishIcon} alt='UnPublishIcon' />
+                          </div>
+                          <div
+                            style={{
+                              padding: '7px',
+                              cursor: isRole4 ? 'not-allowed' : 'pointer',
+                              color: '#000',
+                              fontFamily: 'Montserrat',
+                              fontSize: '17px',
+                              fontStyle: 'normal',
+                              fontWeight: '600',
+                              lineHeight: '1',
+                              fontVariant: 'all-small-caps'
+                            }}
+                          >
+                            UNPUBLISH PORTFOLIO
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className='gradient-wrapper'>
+                      <div
+                        className='publish-buttons'
+                        onClick={() => !isRole4 && setIsPublishModalOpen(true)}
+                        style={{
+                          background: 'white',
+                          padding: '7px',
+                          cursor: 'pointer',
+                          cursor: isRole4 ? 'not-allowed' : 'pointer',
+                          fontFamily: 'Montserrat',
+                          fontSize: '17px',
+                          fontStyle: 'normal',
+                          fontWeight: '600',
+                          lineHeight: '1',
+                          fontVariant: 'all-small-caps'
+                        }}
+                      >
+                        <img src={PublishPortfolioIcon} alt='Publish icon' />
+                        {sharingSettings?.isPublicShared
+                          ? 'Republish Portfolio'
+                          : 'Publish Portfolio'}
+                      </div>
+                    </div>
+
+                    {sharingSettings && sharingSettings.isPublicShared && (
+                      <div className='gradient-wrapper'>
+                        <div
+                          className='publish-buttons'
+                          onClick={() => setIsShareModalOpen(true)}
+                        >
+                          <div>
+                            <img
+                              src={SharePortfolioIcon}
+                              alt='SharePortfolioIcon'
+                            />
+                          </div>
+                          <div
+                            style={{
+                              // background: 'white',
+                              padding: '7px',
+                              cursor: 'pointer',
+                              // background: 'white',
+                              padding: '7px',
+                              cursor: 'pointer',
+                              color: '#000',
+                              fontFamily: 'Montserrat',
+                              fontSize: '17px',
+                              fontStyle: 'normal',
+                              fontWeight: '600',
+                              lineHeight: 'normal',
+                              fontVariant: 'all-small-caps'
+                            }}
+                          >
+                            SHARE
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className='gradient-wrapper'>
+                      <div
+                        className='publish-buttons'
+                        onClick={isRole4 ? null : handleToggleFullscreen}
+                        style={{ cursor: isRole4 ? 'not-allowed' : 'pointer' }}
+                      >
+                        <div>
+                          <img
+                            src={ViewPortfolioIcon}
+                            alt='ViewPortfolioIcon'
+                          />
+                        </div>
+                        <div
+                          style={{
+                            // background: 'white',
+                            padding: '7px',
+                            cursor: isRole4 ? 'not-allowed' : 'pointer',
+
+                            padding: '7px',
+                            cursor: 'pointer',
+                            color: '#000',
+                            fontFamily: 'Montserrat',
+                            fontSize: '17px',
+                            fontStyle: 'normal',
+                            fontWeight: '600',
+                            lineHeight: 'normal',
+                            fontVariant: 'all-small-caps'
+                          }}
+                        >
+                          {sharingSettings && sharingSettings.isPublicShared
+                            ? 'View'
+                            : 'Preview'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className='portfolio-navbar'>
+                {sections.map(({ key, label }) => (
+                  <div
+                    key={key}
+                    className={`portfolio-navbar-item ${activeSection === key ? 'active' : ''
+                      }`}
+                    onClick={() => setActiveSection(key)}
+                  >
+                    {label}
+                  </div>
+                ))}
+              </div>
+
+              {renderActiveSection()}
+              {renderNavigationButtons()}
+            </div>
+          </>
+        ) : null}
+
+        {isFullscreenView &&
+          createPortal(
+            <div className='portfolio-preview-overlay' role='dialog' aria-modal='true'>
+              <button
+                type='button'
+                className='portfolio-preview-close'
+                onClick={handleToggleFullscreen}
+              >
+                <img src={LeftArrow} width={20} alt='' />
+                <span>Close Preview</span>
+              </button>
+
+              <div className='portfolio-preview-inner portfolio-container preview-portfolio-container'>
+                <div
+                  className='section-description-container'
+                  style={{ marginBottom: '15px' }}
+                >
+                  <div
+                    className='portf-section-maintitle'
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      margin: '10px 0'
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '5px'
+                      }}
+                    >
+                      <img
+                        src={MyPortfolio}
+                        width={30}
+                        alt='Portfolio Icon'
+                      />
+                      <div
+                        style={{
+                          fontFamily: 'Montserrat',
+                          fontSize: '21px',
+                          fontStyle: 'normal',
+                          fontWeight: '500',
+                          lineHeight: 'normal',
+                          textTransform: 'uppercase',
+                          marginLeft: '9px'
+                        }}
+                      >
+                        {props.archived
+                          ? 'ARCHIVED PORTFOLIO'
+                          : 'MY PORTFOLIO'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='portfolio-navbar'>
+                  {sections.map(({ key, label }) => (
+                    <div
+                      key={key}
+                      className={`portfolio-navbar-item ${
+                        activeSection === key ? 'active' : ''
+                      }`}
+                      onClick={() => setActiveSection(key)}
+                    >
+                      {label}
+                    </div>
+                  ))}
+                </div>
+
+                {renderActiveSection()}
+                {renderNavigationButtons()}
+              </div>
+            </div>,
+            document.body
+          )}
+
+        {isUnpublishModalOpen && (
+          <div style={{ display: 'block' }} className='modal'>
+            <div className='modal-dialog'>
+              <div className='modal-content'>
+                <div
+                  style={{
+                    marginBottom: '30px'
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#d1d1d1',
+                      borderRadius: '50%',
+                      height: '30px',
+                      width: '30px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: '20px'
+                    }}
+                  >
+                    <img src={UnPublishIcon} alt='Unpublish Icon' width={20} />
+                  </div>
+                  <div style={{ marginTop: '10px' }}>Unpublish Portfolio?</div>
+                </div>
+
+                <p style={{ marginBottom: '30px', textAlign: 'center' }}>
+                  Are you sure you want to unpublish your portfolio? If you
+                  unpublish your portfolio, it will no longer be shared and
+                  anyone with the link will lose access.
+                </p>
+
+                <div
+                  style={{
+                    marginTop: '20px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '10px'
+                  }}
+                >
+                  <button
+                    style={{
+                      width: '200px',
+                      padding: '10px',
+                      borderRadius: '12px',
+                      background: '#52C7D3',
+                      boxShadow: '0px 4px 10px 0px #00000040',
+                      color: 'white',
+                      border: 'none'
+                    }}
+                    onClick={() => setIsUnpublishModalOpen(false)}
+                    disabled={isLoading}
+                  >
+                    NO, TAKE ME BACK
+                  </button>
+                  <button
+                    style={{
+                      width: '200px',
+                      padding: '10px',
+                      borderRadius: '12px',
+                      background: 'white',
+                      color: '#EE3C96',
+                      boxShadow: '0px 4px 10px 0px #00000040',
+                      border: 'none'
+                    }}
+                    onClick={handleUnpublish}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Processing...' : 'YES, UNPUBLISH'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isShareModalOpen && (
+          <div style={{ display: 'block' }} className='modal'>
+            <div className='modal-dialog'>
+              <div className='modal-content'>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '30px'
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#d1d1d1',
+                      borderRadius: '50%',
+                      height: '30px',
+                      width: '30px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: '20px'
+                    }}
+                  >
+                    <img src={SharePortfolioIcon} alt='Share Icon' width={20} />
+                  </div>
+                  <div>Share Your Portfolio</div>
+                </div>
+
+                <p style={{ marginBottom: '10px', fontWeight: '500' }}>
+                  Share this link with others
+                </p>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '30px',
+                    background: '#f5f5f5',
+                    padding: '10px',
+                    borderRadius: '8px'
+                  }}
+                >
+                  <div
+                    style={{
+                      flex: 1,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    {getPortfolioUrl()}
+                  </div>
+                  <button
+                    onClick={handleCopyUrl}
+                    style={{
+                      marginLeft: '10px',
+                      cursor: 'pointer',
+                      border: 'none'
+                    }}
+                  >
+                    <img src={CopyUrl} />
+                  </button>
+                </div>
+
+                <div
+                  style={{
+                    marginTop: '20px',
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <button
+                    style={{
+                      width: '200px',
+                      padding: '10px',
+                      borderRadius: '12px',
+                      background: '#52C7D3',
+                      color: 'white',
+                      boxShadow: '0px 4px 10px 0px #00000040',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => setIsShareModalOpen(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isPublishModalOpen && (
+          <div style={{ display: 'block' }} className='modal'>
+            <div className='modal-dialog' style={{ maxWidth: '750px' }}>
+              <div className='modal-content'>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '50px'
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#d1d1d1',
+                      borderRadius: '50%',
+                      height: '30px',
+                      width: '30px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: '20px'
+                    }}
+                  >
+                    <img
+                      src={PublishPortfolioIcon}
+                      alt='Portfolio Icon'
+                      width={20}
+                    />
+                  </div>
+                  <div style={{ fontWeight: '500' }}>
+                    {sharingSettings && sharingSettings.isPublicShared
+                      ? 'Update Portfolio'
+                      : 'Publish Portfolio'}
+                  </div>
+                </div>
+
+                <p style={{ fontWeight: '500', color: '#000' }}>
+                  Select Page(s) to Publish:
+                </p>
+                <p
+                  style={{ fontSize: '13px' }}
+                >{`(You must have either the Who Am I page or Start page selected in order to publish)`}</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    gap: '20px'
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    {pages.slice(0, 3).map((page) => (
+                      <div key={page}>
+                        <label
+                          htmlFor={page}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            padding: '4px 10px',
+                            borderRadius: '8px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <input
+                            type='checkbox'
+                            id={page}
+                            checked={selectedPages.includes(page)}
+                            onChange={() => togglePageSelection(page)}
+                            style={{
+                              width: '16px',
+                              height: '16px',
+                              appearance: 'none',
+                              WebkitAppearance: 'none',
+                              MozAppearance: 'none',
+                              backgroundColor: selectedPages.includes(page)
+                                ? '#52C7D3'
+                                : '#fff',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.25)'
+                            }}
+                          />
+                          {page}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ flex: 1 }}>
+                    {pages.slice(3).map((page) => (
+                      <div key={page}>
+                        <label
+                          htmlFor={page}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            padding: '4px 10px',
+                            borderRadius: '8px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <input
+                            type='checkbox'
+                            id={page}
+                            checked={selectedPages.includes(page)}
+                            onChange={() => togglePageSelection(page)}
+                            style={{
+                              width: '16px',
+                              height: '16px',
+                              appearance: 'none',
+                              WebkitAppearance: 'none',
+                              MozAppearance: 'none',
+                              backgroundColor: selectedPages.includes(page)
+                                ? '#52C7D3'
+                                : '#fff',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.25)',
+                              cursor: 'pointer'
+                            }}
+                          />
+                          {page}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <p
+                  style={{
+                    marginTop: '15px',
+                    fontSize: '15px',
+                    fontWeight: '500',
+                    marginBottom: '30px'
+                  }}
+                >
+                  Select Your Starting Page:
+                </p>
+                <Select
+                  options={startingOptions}
+                  value={startingOptions.find(
+                    (opt) => opt.value === startingPage
+                  )}
+                  onChange={(selectedOption) =>
+                    setStartingPage(selectedOption ? selectedOption.value : '')
+                  }
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderRadius: '10px',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+                      border: 'none',
+                      padding: '2px'
+                    })
+                  }}
+                />
+
+                <div
+                  style={{
+                    textAlign: 'center',
+                    fontSize: '15px',
+                    fontWeight: '600',
+                    margin: '30px 0'
+                  }}
+                >
+                  Remember, once you publish your portfolio, you can share it
+                  with others and they will be able to see your work.
+                </div>
+                <div
+                  style={{
+                    marginTop: '20px',
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <button
+                    style={{
+                      width: '200px',
+                      padding: '10px',
+                      borderRadius: '12px',
+                      background: '#DEE1E6',
+                      boxShadow: '0px 4px 10px 0px #00000040',
+                      outline: 'none',
+                      border: 'none'
+                    }}
+                    onClick={() => setIsPublishModalOpen(false)}
+                    disabled={isLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    style={{
+                      width: '200px',
+                      padding: '10px',
+                      borderRadius: '12px',
+                      background: '#52C7D3',
+                      color: 'white',
+                      marginLeft: '5px',
+                      boxShadow: '0px 4px 10px 0px #00000040',
+                      border: 'none'
+                    }}
+                    onClick={handlePublish}
+                    disabled={!canPublish || isLoading}
+                  >
+                    {isLoading
+                      ? 'Saving...'
+                      : sharingSettings
+                        ? 'Update'
+                        : 'Publish'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </LtsContainerWrapper>
   )
 }
 

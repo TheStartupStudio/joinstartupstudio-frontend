@@ -137,7 +137,10 @@ export const fetchLtsCoursefinishedContent =
       lastProgressFetchTime &&
       Date.now() - lastProgressFetchTime < STALE_MS
     ) {
-      return
+      return {
+        finishedContent: course.finishedContent || [],
+        levelProgress: course.levelProgress
+      }
     }
 
     if (!silent && !progressLoaded) {
@@ -153,6 +156,7 @@ export const fetchLtsCoursefinishedContent =
         type: FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED,
         payload: response.data
       })
+      return response.data
     } catch (error) {
       dispatch({
         type: FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED,

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import myValueIcon from '../../assets/images/values-icon.svg'
 import passion from '../../assets/images/passion.svg'
 import leaf from '../../assets/images/leaf.svg'
@@ -11,9 +12,21 @@ import './Portfolio.css'
 import EditCard from '../../components/NewPortfolio/EditCard/index'
 import ReactQuill from 'react-quill'
 import EditPencil from '../../assets/images/edit-pencil.png'
+import nothingAdded from '../../assets/images/nothing-added.svg'
 
 function StartAlignment(props) {
+  const isPublicView = props.isPublicView || props.portfolioType === 'public'
+
+  const userData = useSelector((state) => state.user.user)
+  const loggedInUserId = userData?.user?.id
+
+  const isOwner =
+    loggedInUserId && props?.userBasicInfo?.userId === loggedInUserId
+  const canEdit = !isPublicView && !props.isPreviewMode && isOwner
+
   const [showMoreMyStory, setShowMoreMyStory] = useState(false)
+  const [showMorePassion, setShowMorePassion] = useState(false)
+  const [showMoreSuccess, setShowMoreSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [alignmentData, setAlignmentData] = useState({
@@ -38,6 +51,9 @@ function StartAlignment(props) {
     created_at: '',
     updated_at: ''
   })
+  const [editableAlignmentData, setEditableAlignmentData] = useState({
+    ...alignmentData
+  })
   const [editValuesMode, setEditValuesMode] = useState(false)
   const [editPassionMode, setEditPassionMode] = useState(false)
   const [editWorkCultureMode, setEditWorkCultureMode] = useState(false)
@@ -45,68 +61,113 @@ function StartAlignment(props) {
 
   const accordionRefs = useRef([])
 
+  const [showMoreStates, setShowMoreStates] = useState({})
+
   useEffect(() => {
-    // const fetchAlignmentData = async () => {
-    //   try {
-    //     setIsLoading(true)
-    //     const response = await axiosInstance.get(
-    //       '/hsPortfolio/user-start-alignment'
-    //     )
-    //     const data = response.data['0'] || {
-    //       value_1: '',
-    //       value_2: '',
-    //       value_3: '',
-    //       value_1_explanation: '',
-    //       value_2_explanation: '',
-    //       value_3_explanation: '',
-    //       passion: '',
-    //       connected_interest_1: '',
-    //       connected_interest_2: '',
-    //       explanation: '',
-    //       leadership: '',
-    //       collaboration: '',
-    //       feedback: '',
-    //       opportunities: '',
-    //       environment: '',
-    //       definition_of_success: ''
-    //     }
-    //     setAlignmentData(data)
-    //   } catch (err) {
-    //     setError(err.message || 'Failed to fetch alignment data')
-    //   } finally {
-    //     setIsLoading(false)
-    //   }
-    // }
+    const fetchAlignmentData = async () => {
+      try {
+        setIsLoading(true)
 
-    // fetchAlignmentData()
+        if (
+          props.alignmentData &&
+          Object.keys(props.alignmentData).length > 0
+        ) {
+          setAlignmentData(props.alignmentData)
+          setEditableAlignmentData(props.alignmentData)
+        } else {
+          try {
+            if (!isOwner) {
+              setIsLoading(false)
+              return
+            }
+            const response = await axiosInstance.get(
+              '/hsPortfolio/user-start-alignment'
+            )
+            console.log('API Response:', response)
 
+            const data =
+              response.data && response.data.length > 0
+                ? response.data[0]
+                : {
+                    value_1: '',
+                    value_2: '',
+                    value_3: '',
+                    value_1_explanation: '',
+                    value_2_explanation: '',
+                    value_3_explanation: '',
+                    passion: '',
+                    connected_interest_1: '',
+                    connected_interest_2: '',
+                    explanation: '',
+                    leadership: '',
+                    collaboration: '',
+                    feedback: '',
+                    opportunities: '',
+                    environment: '',
+                    definition_of_success: ''
+                  }
 
-      const data = {
-        id: 3,
-        user_id: 128,
-        value_1: "Honasty",
-        value_2: "Passion", 
-        value_3: "Integrity",
-        passion: "Design ",
-        connected_interest_1: "Technology ",
-        connected_interest_2: "Art ",
-        explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        leadership: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
-        collaboration: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
-        feedback: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
-        opportunities: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
-        environment: "<h4>Lorem ipsum dolor sit amet consectetur adipiscing elit. Consectetur adipiscing elit quisque faucibus ex sapien vitae. Ex sapien vitae pellentesque sem placerat in id. Placerat in id cursus mi pretium tellus duis. Pretium tellus duis convallis tempus leo eu aenean.</h4>",
-        definition_of_success: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        value_1_explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        value_2_explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        value_3_explanation: "<p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Placerat in id cursus mi pretium tellus duis. Urna tempor pulvinar vivamus fringilla lacus nec metus. Integer nunc posuere ut hendrerit semper vel class. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Mus donec rhoncus eros lobortis nulla molestie mattis. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Sodales consequat magna ante condimentum neque at luctus. Ligula congue sollicitudin erat viverra ac tincidunt nam. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Cras eleifend turpis fames primis vulputate ornare sagittis. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Cubilia curae hac habitasse platea dictumst lorem ipsum. Faucibus ex sapien vitae pellentesque sem placerat in. Tempus leo eu aenean sed diam urna tempor.</p>",
-        created_at: "2025-05-01T06:45:10.000Z",
-        updated_at: "2025-05-27T00:18:06.000Z"
-      }
-        setAlignmentData(data)
+            setAlignmentData(data)
+            setEditableAlignmentData(data)
+          } catch (apiError) {
+            console.warn(
+              'API call failed, using empty data structure:',
+              apiError.message
+            )
 
+            const emptyData = {
+              value_1: '',
+              value_2: '',
+              value_3: '',
+              value_1_explanation: '',
+              value_2_explanation: '',
+              value_3_explanation: '',
+              passion: '',
+              connected_interest_1: '',
+              connected_interest_2: '',
+              explanation: '',
+              leadership: '',
+              collaboration: '',
+              feedback: '',
+              opportunities: '',
+              environment: '',
+              definition_of_success: ''
+            }
+
+            setAlignmentData(emptyData)
+            setEditableAlignmentData(emptyData)
+          }
+        }
+      } catch (err) {
+        console.error('Error in fetchAlignmentData:', err)
+        const emptyData = {
+          value_1: '',
+          value_2: '',
+          value_3: '',
+          value_1_explanation: '',
+          value_2_explanation: '',
+          value_3_explanation: '',
+          passion: '',
+          connected_interest_1: '',
+          connected_interest_2: '',
+          explanation: '',
+          leadership: '',
+          collaboration: '',
+          feedback: '',
+          opportunities: '',
+          environment: '',
+          definition_of_success: ''
+        }
+
+        setAlignmentData(emptyData)
+        setEditableAlignmentData(emptyData)
+      } finally {
         setIsLoading(false)
-  }, [])
+      }
+    }
+
+    fetchAlignmentData()
+  }, [props.alignmentData])
 
   useEffect(() => {
     accordionRefs.current.forEach((ref) => {
@@ -126,177 +187,201 @@ function StartAlignment(props) {
   }
 
   const handleValuesCardClick = () => {
+    if (!canEdit) return
+    setEditableAlignmentData({ ...alignmentData })
     setEditValuesMode(true)
   }
 
   const handlePassionCardClick = () => {
+    if (!canEdit) return
+    setEditableAlignmentData({ ...alignmentData })
     setEditPassionMode(true)
   }
 
   const handleWorkCultureCardClick = () => {
+    if (!canEdit) return
+    setEditableAlignmentData({ ...alignmentData })
     setEditWorkCultureMode(true)
   }
 
   const handleSuccessCardClick = () => {
+    if (!canEdit) return
+    setEditableAlignmentData({ ...alignmentData })
     setEditSuccessMode(true)
   }
 
   const handleValuesFormChange = (field, value) => {
-    setAlignmentData((prev) => ({
+    setEditableAlignmentData((prev) => ({
       ...prev,
       [field]: value
     }))
   }
 
-  const handleFormChange = (field, value) => {
-    setAlignmentData((prev) => ({
+  const handleFormChange = (field, content) => {
+    setEditableAlignmentData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: content
     }))
   }
 
   const handleSaveValues = async () => {
-    // try {
-    //   setIsLoading(true)
-    //   const payload = {
-    //     value_1: alignmentData.value_1,
-    //     value_2: alignmentData.value_2,
-    //     value_3: alignmentData.value_3,
-    //     value_1_explanation: alignmentData.value_1_explanation,
-    //     value_2_explanation: alignmentData.value_2_explanation,
-    //     value_3_explanation: alignmentData.value_3_explanation
-    //   }
+    try {
+      setIsLoading(true)
+      const payload = {
+        value_1: editableAlignmentData.value_1,
+        value_2: editableAlignmentData.value_2,
+        value_3: editableAlignmentData.value_3,
+        value_1_explanation: editableAlignmentData.value_1_explanation,
+        value_2_explanation: editableAlignmentData.value_2_explanation,
+        value_3_explanation: editableAlignmentData.value_3_explanation
+      }
 
-    //   let response
-    //   if (alignmentData.id) {
-    //     response = await axiosInstance.put(
-    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
-    //       payload
-    //     )
-    //   } else {
-    //     response = await axiosInstance.post(
-    //       `/hsPortfolio/start-alignment`,
-    //       payload
-    //     )
-    //   }
+      let response
+      if (alignmentData.id) {
+        response = await axiosInstance.put(
+          `/hsPortfolio/start-alignment/${alignmentData.id}`,
+          payload
+        )
+      } else {
+        response = await axiosInstance.post(
+          `/hsPortfolio/start-alignment`,
+          payload
+        )
+      }
 
-    //   // Merge the existing data with the updated values
-    //   setAlignmentData((prev) => ({
-    //     ...prev,
-    //     ...response.data['0']
-    //   }))
-    //   setEditValuesMode(false)
-    // } catch (err) {
-    //   setError(err.message || 'Failed to save values')
-    // } finally {
-    //   setIsLoading(false)
-    // }
+      const updatedData = response.data
+      setAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditableAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditValuesMode(false)
+    } catch (err) {
+      setError(err.message || 'Failed to save values')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleSavePassion = async () => {
-    // try {
-    //   setIsLoading(true)
-    //   const payload = {
-    //     passion: alignmentData.passion,
-    //     connected_interest_1: alignmentData.connected_interest_1,
-    //     connected_interest_2: alignmentData.connected_interest_2,
-    //     explanation: alignmentData.explanation
-    //   }
+    try {
+      setIsLoading(true)
+      const payload = {
+        passion: editableAlignmentData.passion,
+        connected_interest_1: editableAlignmentData.connected_interest_1,
+        connected_interest_2: editableAlignmentData.connected_interest_2,
+        explanation: editableAlignmentData.explanation
+      }
 
-    //   let response
-    //   if (alignmentData.id) {
-    //     response = await axiosInstance.put(
-    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
-    //       payload
-    //     )
-    //   } else {
-    //     response = await axiosInstance.post(
-    //       `/hsPortfolio/start-alignment`,
-    //       payload
-    //     )
-    //   }
+      let response
+      if (alignmentData.id) {
+        response = await axiosInstance.put(
+          `/hsPortfolio/start-alignment/${alignmentData.id}`,
+          payload
+        )
+      } else {
+        response = await axiosInstance.post(
+          `/hsPortfolio/start-alignment`,
+          payload
+        )
+      }
 
-    //   // Merge the existing data with the updated values
-    //   setAlignmentData((prev) => ({
-    //     ...prev,
-    //     ...response.data['0']
-    //   }))
-    //   setEditPassionMode(false)
-    // } catch (err) {
-    //   setError(err.message || 'Failed to save passion')
-    // } finally {
-    //   setIsLoading(false)
-    // }
+      const updatedData = response.data
+      setAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditableAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditPassionMode(false)
+    } catch (err) {
+      setError(err.message || 'Failed to save passion')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleSaveWorkCulture = async () => {
-    // try {
-    //   setIsLoading(true)
-    //   const payload = {
-    //     leadership: alignmentData.leadership,
-    //     collaboration: alignmentData.collaboration,
-    //     feedback: alignmentData.feedback,
-    //     opportunities: alignmentData.opportunities,
-    //     environment: alignmentData.environment
-    //   }
+    try {
+      setIsLoading(true)
+      const payload = {
+        leadership: editableAlignmentData.leadership,
+        collaboration: editableAlignmentData.collaboration,
+        feedback: editableAlignmentData.feedback,
+        opportunities: editableAlignmentData.opportunities,
+        environment: editableAlignmentData.environment
+      }
 
-    //   let response
-    //   if (alignmentData.id) {
-    //     response = await axiosInstance.put(
-    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
-    //       payload
-    //     )
-    //   } else {
-    //     response = await axiosInstance.post(
-    //       `/hsPortfolio/start-alignment`,
-    //       payload
-    //     )
-    //   }
+      let response
+      if (alignmentData.id) {
+        response = await axiosInstance.put(
+          `/hsPortfolio/start-alignment/${alignmentData.id}`,
+          payload
+        )
+      } else {
+        response = await axiosInstance.post(
+          `/hsPortfolio/start-alignment`,
+          payload
+        )
+      }
 
-    //   // Merge the existing data with the updated values
-    //   setAlignmentData((prev) => ({
-    //     ...prev,
-    //     ...response.data['0']
-    //   }))
-    //   setEditWorkCultureMode(false)
-    // } catch (err) {
-    //   setError(err.message || 'Failed to save work culture')
-    // } finally {
-    //   setIsLoading(false)
-    // }
+      const updatedData = response.data
+      setAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditableAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditWorkCultureMode(false)
+    } catch (err) {
+      setError(err.message || 'Failed to save work culture')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleSaveSuccess = async () => {
-    // try {
-    //   setIsLoading(true)
-    //   const payload = {
-    //     definition_of_success: alignmentData.definition_of_success
-    //   }
+    try {
+      setIsLoading(true)
+      const payload = {
+        definition_of_success: editableAlignmentData.definition_of_success
+      }
 
-    //   let response
-    //   if (alignmentData.id) {
-    //     response = await axiosInstance.put(
-    //       `/hsPortfolio/start-alignment/${alignmentData.id}`,
-    //       payload
-    //     )
-    //   } else {
-    //     response = await axiosInstance.post(
-    //       `/hsPortfolio/start-alignment`,
-    //       payload
-    //     )
-    //   }
+      let response
+      if (alignmentData.id) {
+        response = await axiosInstance.put(
+          `/hsPortfolio/start-alignment/${alignmentData.id}`,
+          payload
+        )
+      } else {
+        response = await axiosInstance.post(
+          `/hsPortfolio/start-alignment`,
+          payload
+        )
+      }
 
-    //   // Merge the existing data with the updated values
-    //   setAlignmentData((prev) => ({
-    //     ...prev,
-    //     ...response.data['0']
-    //   }))
-    //   setEditSuccessMode(false)
-    // } catch (err) {
-    //   setError(err.message || 'Failed to save success definition')
-    // } finally {
-    //   setIsLoading(false)
-    // }
+      const updatedData = response.data
+      setAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditableAlignmentData((prev) => ({
+        ...prev,
+        ...updatedData
+      }))
+      setEditSuccessMode(false)
+    } catch (err) {
+      setError(err.message || 'Failed to save success definition')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleCancelEdit = () => {
@@ -306,28 +391,54 @@ function StartAlignment(props) {
     setEditSuccessMode(false)
   }
 
-  // Check if any values exist
+  const hasContentBesidesTags = (htmlString) => {
+    if (!htmlString) return false
+    const textContent = htmlString.replace(/<[^>]*>/g, '').trim()
+    const isEmpty =
+      htmlString === '<p><br></p>' ||
+      htmlString === '<p></p>' ||
+      htmlString === '<br>' ||
+      htmlString === '<p>&nbsp;</p>' ||
+      textContent === ''
+    return !isEmpty && textContent.length > 0
+  }
+
   const hasValuesData =
-    alignmentData?.value_1 || alignmentData?.value_2 || alignmentData?.value_3
+    alignmentData?.value_1 ||
+    alignmentData?.value_2 ||
+    alignmentData?.value_3 ||
+    hasContentBesidesTags(alignmentData?.value_1_explanation) ||
+    hasContentBesidesTags(alignmentData?.value_2_explanation) ||
+    hasContentBesidesTags(alignmentData?.value_3_explanation)
+
   const hasPassionData =
     alignmentData?.passion ||
     alignmentData?.connected_interest_1 ||
     alignmentData?.connected_interest_2 ||
-    alignmentData?.explanation
+    hasContentBesidesTags(alignmentData?.explanation)
+
   const hasWorkCultureData =
-    alignmentData?.leadership ||
-    alignmentData?.collaboration ||
-    alignmentData?.feedback ||
-    alignmentData?.opportunities ||
-    alignmentData?.environment
-  const hasSuccessData = alignmentData?.definition_of_success
+    hasContentBesidesTags(alignmentData?.leadership) ||
+    hasContentBesidesTags(alignmentData?.collaboration) ||
+    hasContentBesidesTags(alignmentData?.feedback) ||
+    hasContentBesidesTags(alignmentData?.opportunities) ||
+    hasContentBesidesTags(alignmentData?.environment)
+
+  const hasSuccessData = hasContentBesidesTags(
+    alignmentData?.definition_of_success
+  )
 
   if (isLoading) {
     return <div>Loading...</div>
   }
 
-  if (error) {
-    return <div>Error: {error}</div>
+  const truncateAtWord = (text, maxLength) => {
+    if (!text || text.length <= maxLength) return text
+    let lastSpace = text.lastIndexOf(' ', maxLength)
+
+    if (lastSpace === -1) lastSpace = maxLength
+
+    return text.substring(0, lastSpace)
   }
 
   return (
@@ -335,107 +446,96 @@ function StartAlignment(props) {
       {/* Values Card */}
       {hasValuesData ? (
         <MainCard
-          title={'Values'}
+          title={'Value'}
           icon={myValueIcon}
-          onClick={handleValuesCardClick}
+          onClick={canEdit ? handleValuesCardClick : () => {}}
+          canEdit={canEdit}
         >
           <div style={{ position: 'relative' }}>
             <div
-              className='start-alignment-container'
+              className='d-grid gap-3 value-container-grid-resp'
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr 1fr',
+                alignItems: 'start',
+                wordBreak: 'break-word'
+              }}
             >
-              {alignmentData.value_1 && (
-                <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
-                  <h4 className='value-header'>VALUE 1:</h4>
-                  <h5 className='value-subheader'>{alignmentData.value_1}</h5>
-                  {showMoreMyStory
-                    ? alignmentData?.value_1_explanation?.replace(
-                        /<[^>]*>/g,
-                        ''
-                      )
-                    : (
-                        alignmentData?.value_1_explanation?.replace(
-                          /<[^>]*>/g,
-                          ''
-                        ) || ''
-                      ).slice(0, 150)}
-                  {alignmentData.value_1_explanation &&
-                    alignmentData.value_1_explanation.length > 150 && (
-                      <span
-                        onClick={() => setShowMoreMyStory(!showMoreMyStory)}
+              {[1, 2, 3].map((num) => {
+                const value = alignmentData[`value_${num}`]
+                const explanation =
+                  alignmentData[`value_${num}_explanation`] || ''
+
+                if (!value) return null
+
+                const stateKey = `value-${num}`
+                const isExpanded = showMoreStates[stateKey] || false
+                const content = explanation.replace(/<[^>]*>/g, '') || ''
+                const isLong = content.length > 150
+
+                return (
+                  <div key={num} style={{ fontSize: '13px', color: 'grey' }}>
+                    <h4 className='value-header'>{`VALUE ${num}:`}</h4>
+                    <h5 className='value-subheader'>{value}</h5>
+                    <div
+                      style={{
+                        maxWidth: '100%',
+                        whiteSpace: 'normal',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'break-word',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                      className='value-desc'
+                    >
+                      <div
                         style={{
-                          color: 'rgb(0, 218, 218)',
-                          cursor: 'pointer',
-                          marginLeft: '5px',
-                          fontWeight: '500'
+                          maxWidth: '100%',
+                          whiteSpace: 'normal',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          fontFamily: 'Montserrat',
+                          fontSize: '13px',
+                          fontStyle: 'normal',
+                          fontWeight: 400,
+                          lineHeight: '1.4',
+                          display: isExpanded ? 'block' : '-webkit-box',
+                          WebkitLineClamp: isExpanded ? 'none' : 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
                         }}
                       >
-                        {showMoreMyStory ? ' Show less' : '... Show more'}
-                      </span>
-                    )}
-                </div>
-              )}
-              {alignmentData.value_2 && (
-                <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
-                  <h4 className='value-header'>VALUE 2:</h4>
-                  <h5 className='value-subheader'>{alignmentData.value_2}</h5>
-                  {showMoreMyStory
-                    ? alignmentData?.value_2_explanation?.replace(
-                        /<[^>]*>/g,
-                        ''
-                      )
-                    : (
-                        alignmentData?.value_2_explanation?.replace(
-                          /<[^>]*>/g,
-                          ''
-                        ) || ''
-                      ).slice(0, 150)}
-                  {alignmentData.value_2_explanation &&
-                    alignmentData.value_2_explanation.length > 150 && (
-                      <span
-                        onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                        style={{
-                          color: 'rgb(0, 218, 218)',
-                          cursor: 'pointer',
-                          marginLeft: '5px',
-                          fontWeight: '500'
-                        }}
-                      >
-                        {showMoreMyStory ? ' Show less' : '... Show more'}
-                      </span>
-                    )}
-                </div>
-              )}
-              {alignmentData.value_3 && (
-                <div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
-                  <h4 className='value-header'>VALUE 3:</h4>
-                  <h5 className='value-subheader'>{alignmentData.value_3}</h5>
-                  {showMoreMyStory
-                    ? alignmentData?.value_3_explanation?.replace(
-                        /<[^>]*>/g,
-                        ''
-                      )
-                    : (
-                        alignmentData?.value_3_explanation?.replace(
-                          /<[^>]*>/g,
-                          ''
-                        ) || ''
-                      ).slice(0, 150)}
-                  {alignmentData.value_3_explanation &&
-                    alignmentData.value_3_explanation.length > 150 && (
-                      <span
-                        onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                        style={{
-                          color: 'rgb(0, 218, 218)',
-                          cursor: 'pointer',
-                          marginLeft: '5px',
-                          fontWeight: '500'
-                        }}
-                      >
-                        {showMoreMyStory ? ' Show less' : '... Show more'}
-                      </span>
-                    )}
-                </div>
-              )}
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: isExpanded
+                              ? explanation?.replace(/&nbsp;/g, ' ') || ''
+                              : explanation?.replace(/&nbsp;/g, ' ') || ''
+                          }}
+                        />
+                      </div>
+                      {isLong && (
+                        <span
+                          onClick={() =>
+                            setShowMoreStates((prev) => ({
+                              ...prev,
+                              [stateKey]: !prev[stateKey]
+                            }))
+                          }
+                          style={{
+                            color: '#52C7D3',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            fontSize: '12px'
+                          }}
+                        >
+                          {isExpanded ? ' Read less' : 'Read more'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </MainCard>
@@ -443,12 +543,25 @@ function StartAlignment(props) {
         <MainCard
           title={'Values'}
           icon={myValueIcon}
-          onClick={handleValuesCardClick}
-        />
+          onClick={canEdit ? handleValuesCardClick : () => {}}
+          canEdit={canEdit}
+        >
+          <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+            <img src={nothingAdded} alt='nothing-added' />
+            <p
+              className='text-uppercase text-medium nodata-portf-text'
+              style={{ color: '#6F6F6F' }}
+            >
+              {canEdit
+                ? 'Nothing has been added yet. click the edit button to get started.'
+                : 'Nothing has been added yet.'}
+            </p>
+          </div>
+        </MainCard>
       )}
 
-      {/* Edit Values Card - shown when in edit mode */}
-      {editValuesMode && (
+      {/* Only show edit modal when user can edit */}
+      {canEdit && editValuesMode && (
         <EditCard
           title={hasValuesData ? 'Edit Values' : 'Add Values'}
           icon={myValueIcon}
@@ -456,7 +569,10 @@ function StartAlignment(props) {
           toggle={handleCancelEdit}
         >
           <div>
-            <div style={{ marginTop: '30px', fontWeight: '600' }}>
+            <div
+              style={{ marginTop: '30px' }}
+              className='howdoiproveit-label-text'
+            >
               Instructions:
             </div>
             <div style={{ marginTop: '15px', fontSize: '14px' }}>
@@ -471,6 +587,7 @@ function StartAlignment(props) {
                 justifyContent: 'space-between',
                 alignItems: 'flex-end'
               }}
+              className='start-value-container-resp'
             >
               {/* Value 1 */}
               <div
@@ -479,12 +596,13 @@ function StartAlignment(props) {
                   flexDirection: 'column',
                   width: '30%'
                 }}
+                className='start-value-inputs-resp'
               >
                 <div style={{ position: 'relative' }} className='mt-4'>
-                  <label>Value 1:</label>
+                  <label className='howdoiproveit-label-text'>Value 1:</label>
                   <input
                     className='form-control'
-                    value={alignmentData.value_1 || ''}
+                    value={editableAlignmentData.value_1 || ''}
                     onChange={(e) =>
                       handleValuesFormChange('value_1', e.target.value)
                     }
@@ -499,15 +617,20 @@ function StartAlignment(props) {
                   />
                 </div>
                 <div className='mt-3'>
-                  <label>Explanation:</label>
+                  <label className='howdoiproveit-label-text'>
+                    Explanation:
+                  </label>
                   <ReactQuill
-                    value={alignmentData.value_1_explanation || ''}
+                    value={editableAlignmentData.value_1_explanation || ''}
+                    placeholder='Add explanation here'
                     onChange={(content) =>
                       handleValuesFormChange('value_1_explanation', content)
                     }
                     style={{
-                      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
-                      borderRadius: '15px'
+                      height: '300px',
+                      borderRadius: '15px',
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                      overflow: 'hidden'
                     }}
                   />
                 </div>
@@ -520,12 +643,13 @@ function StartAlignment(props) {
                   flexDirection: 'column',
                   width: '30%'
                 }}
+                className='start-value-inputs-resp'
               >
                 <div style={{ position: 'relative' }} className='mt-4'>
-                  <label>Value 2:</label>
+                  <label className='howdoiproveit-label-text'>Value 2:</label>
                   <input
                     className='form-control'
-                    value={alignmentData.value_2 || ''}
+                    value={editableAlignmentData.value_2 || ''}
                     onChange={(e) =>
                       handleValuesFormChange('value_2', e.target.value)
                     }
@@ -540,15 +664,20 @@ function StartAlignment(props) {
                   />
                 </div>
                 <div className='mt-3'>
-                  <label>Explanation:</label>
+                  <label className='howdoiproveit-label-text'>
+                    Explanation:
+                  </label>
                   <ReactQuill
-                    value={alignmentData.value_2_explanation || ''}
+                    value={editableAlignmentData.value_2_explanation || ''}
+                    placeholder='Add explanation here'
                     onChange={(content) =>
                       handleValuesFormChange('value_2_explanation', content)
                     }
                     style={{
-                      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
-                      borderRadius: '15px'
+                      height: '300px',
+                      borderRadius: '15px',
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                      overflow: 'hidden'
                     }}
                   />
                 </div>
@@ -561,12 +690,13 @@ function StartAlignment(props) {
                   flexDirection: 'column',
                   width: '30%'
                 }}
+                className='start-value-inputs-resp'
               >
                 <div style={{ position: 'relative' }} className='mt-4'>
-                  <label>Value 3:</label>
+                  <label className='howdoiproveit-label-text'>Value 3:</label>
                   <input
                     className='form-control'
-                    value={alignmentData.value_3 || ''}
+                    value={editableAlignmentData.value_3 || ''}
                     onChange={(e) =>
                       handleValuesFormChange('value_3', e.target.value)
                     }
@@ -581,15 +711,20 @@ function StartAlignment(props) {
                   />
                 </div>
                 <div className='mt-3'>
-                  <label>Explanation:</label>
+                  <label className='howdoiproveit-label-text'>
+                    Explanation:
+                  </label>
                   <ReactQuill
-                    value={alignmentData.value_3_explanation || ''}
+                    value={editableAlignmentData.value_3_explanation || ''}
+                    placeholder='Add explanation here'
                     onChange={(content) =>
                       handleValuesFormChange('value_3_explanation', content)
                     }
                     style={{
-                      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
-                      borderRadius: '15px'
+                      height: '300px',
+                      borderRadius: '15px',
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                      overflow: 'hidden'
                     }}
                   />
                 </div>
@@ -602,23 +737,25 @@ function StartAlignment(props) {
         <MainCard
           title={'Passion'}
           icon={passion}
-          onClick={handlePassionCardClick}
+          onClick={canEdit ? handlePassionCardClick : () => {}}
+          canEdit={canEdit}
         >
           <div style={{ position: 'relative' }}>
             <div
-              className='start-alignment-container'
+              className='d-grid gap-3 value-container-grid-resp'
+              style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
             >
-<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
+              <div style={{ fontSize: '13px', color: 'grey' }}>
                 <h4 className='value-header'>PASSION:</h4>
                 <h5 className='value-subheader'>{alignmentData.passion}</h5>
               </div>
-<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
+              <div style={{ fontSize: '13px', color: 'grey' }}>
                 <h4 className='value-header'>CONNECTED INTEREST 1:</h4>
                 <h5 className='value-subheader'>
                   {alignmentData.connected_interest_1}
                 </h5>
               </div>
-<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
+              <div style={{ fontSize: '13px', color: 'grey' }}>
                 <h4 className='value-header'>CONNECTED INTEREST 2:</h4>
                 <h5 className='value-subheader'>
                   {alignmentData.connected_interest_2}
@@ -626,29 +763,73 @@ function StartAlignment(props) {
               </div>
             </div>
 
-<div style={{ fontSize: '16px', marginTop: '10px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
+            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
               <h5 className='value-subheader'>Explanation</h5>
-              {showMoreMyStory
-                ? alignmentData.explanation.replace(/<[^>]*>/g, '') || ''
-                : (
-                    alignmentData.explanation.replace(/<[^>]*>/g, '') ||
-                    '' ||
-                    ''
-                  ).slice(0, 600)}
-              {alignmentData.explanation &&
-                alignmentData.explanation.length > 350 && (
-                  <span
-                    onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                    style={{
-                      color: 'rgb(0, 218, 218)',
-                      cursor: 'pointer',
-                      marginLeft: '5px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    {showMoreMyStory ? ' Show less' : '... Show more'}
-                  </span>
-                )}
+              <div
+                className='value-desc'
+                style={{
+                  maxWidth: '100%',
+                  whiteSpace: 'normal',
+                  wordWrap: 'break-word',
+                  overflowWrap: 'break-word'
+                }}
+              >
+                {(() => {
+                  const stateKey = 'passion-explanation'
+                  const isExpanded = showMoreStates[stateKey] || false
+                  const content = alignmentData?.explanation || ''
+                  const isLong = content.replace(/<[^>]*>/g, '').length > 150
+
+                  return (
+                    <div>
+                      <div
+                        style={{
+                          maxWidth: '100%',
+                          whiteSpace: 'normal',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          fontFamily: 'Montserrat',
+                          fontSize: '13px',
+                          fontStyle: 'normal',
+                          fontWeight: 400,
+                          lineHeight: '1.4',
+                          display: isExpanded ? 'block' : '-webkit-box',
+                          WebkitLineClamp: isExpanded ? 'none' : 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: isExpanded
+                              ? content?.replace(/&nbsp;/g, ' ') || ''
+                              : content?.replace(/&nbsp;/g, ' ') || ''
+                          }}
+                        />
+                      </div>
+                      {isLong && (
+                        <span
+                          onClick={() =>
+                            setShowMoreStates((prev) => ({
+                              ...prev,
+                              [stateKey]: !prev[stateKey]
+                            }))
+                          }
+                          style={{
+                            color: '#52C7D3',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            fontSize: '12px'
+                          }}
+                        >
+                          {isExpanded ? ' Read less' : 'Read more'}
+                        </span>
+                      )}
+                    </div>
+                  )
+                })()}
+              </div>
             </div>
           </div>
         </MainCard>
@@ -656,92 +837,185 @@ function StartAlignment(props) {
         <MainCard
           title={'Passion'}
           icon={passion}
-          onClick={handlePassionCardClick}
-        />
+          onClick={canEdit ? handlePassionCardClick : () => {}}
+          canEdit={canEdit}
+        >
+          <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+            <img src={nothingAdded} alt='nothing-added' />
+            <p
+              className='text-uppercase text-medium nodata-portf-text'
+              style={{ color: '#6F6F6F' }}
+            >
+              {canEdit
+                ? 'Nothing has been added yet. click the edit button to get started.'
+                : 'Nothing has been added yet.'}
+            </p>
+          </div>
+        </MainCard>
       )}
 
-      {/* Edit Passion Card */}
-      {editPassionMode && (
+      {/* Only show edit modal when user can edit */}
+      {canEdit && editPassionMode && (
         <EditCard
           title={hasPassionData ? 'Edit Passion' : 'Add Passion'}
           icon={passion}
           handleSubmit={handleSavePassion}
           toggle={handleCancelEdit}
+          modalDialogClassName={'start-passion-modal-dialog'}
         >
           <div>
-            <div style={{ marginTop: '30px', fontWeight: '600' }}>
+            <div
+              style={{
+                marginTop: '30px',
+                color: '#000',
+                fontFamily: 'Montserrat',
+                fontSize: '15px',
+                fontStyle: 'normal',
+                fontWeight: 500,
+                lineHeight: 'normal'
+              }}
+            >
               Instructions:
             </div>
             <div style={{ marginTop: '15px', fontSize: '14px' }}>
-              Share your main passion and two connected interests. Explain how
-              these influence your professional life.
+              Identify your primary passion and 2 of your interests that connect
+              to it. Together, your passion and interests communicate the type
+              of work you want to do. Once you have identified your passion and
+              interests, explain what they mean to you as a professional.
             </div>
             <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px',
+                marginTop: '15px'
+              }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ width: '33%' }}>
-                  <label>Passion:</label>
-                  <input
-                    className='form-control'
-                    value={alignmentData.passion || ''}
-                    onChange={(e) =>
-                      handleFormChange('passion', e.target.value)
-                    }
-                    style={{
-                      border: 'none',
-                      width: '100%',
-                      fontSize: '0.875rem',
-                      color: 'black',
-                      background: 'transparent',
-                      boxShadow: '0px 3px 14px #00000029'
-                    }}
-                  />
+              <div
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+                className='passion-inputs-container'
+              >
+                <div style={{ width: '35%' }} className='passion-input-resp'>
+                  <label className='passion-title-label'>Passion:</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      className='form-control passion-input'
+                      placeholder='Add passion here...'
+                      value={editableAlignmentData.passion || ''}
+                      onChange={(e) =>
+                        handleValuesFormChange('passion', e.target.value)
+                      }
+                      style={{
+                        border: 'none',
+                        width: '100%',
+                        fontSize: '0.875rem',
+                        color: 'black',
+                        background: 'transparent',
+                        boxShadow: '0px 3px 14px #00000029',
+                        paddingRight: '40px'
+                      }}
+                    />
+                    <img
+                      src={EditPencil}
+                      alt='Edit'
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '16px',
+                        height: '16px',
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </div>
                 </div>
-                <div style={{ width: '33%' }}>
-                  <label>Connected Interest 1:</label>
-                  <input
-                    className='form-control'
-                    value={alignmentData.connected_interest_1 || ''}
-                    onChange={(e) =>
-                      handleFormChange('connected_interest_1', e.target.value)
-                    }
-                    style={{
-                      border: 'none',
-                      width: '100%',
-                      fontSize: '0.875rem',
-                      color: 'black',
-                      background: 'transparent',
-                      boxShadow: '0px 3px 14px #00000029'
-                    }}
-                  />
+                <div style={{ width: '50%' }} className='passion-input-resp'>
+                  <label className='passion-title-label'>
+                    Connected Interest 1:
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      className='form-control passion-input'
+                      placeholder='Add connected interest here...'
+                      value={editableAlignmentData.connected_interest_1 || ''}
+                      onChange={(e) =>
+                        handleValuesFormChange(
+                          'connected_interest_1',
+                          e.target.value
+                        )
+                      }
+                      style={{
+                        border: 'none',
+                        width: '100%',
+                        fontSize: '0.875rem',
+                        color: 'black',
+                        background: 'transparent',
+                        boxShadow: '0px 3px 14px #00000029'
+                      }}
+                    />
+                    <img
+                      src={EditPencil}
+                      alt='Edit'
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '16px',
+                        height: '16px',
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </div>
                 </div>
 
-                <div style={{ width: '33%' }}>
-                  <label>Connected Interest 2:</label>
-                  <input
-                    className='form-control'
-                    value={alignmentData.connected_interest_2 || ''}
-                    onChange={(e) =>
-                      handleFormChange('connected_interest_2', e.target.value)
-                    }
-                    style={{
-                      border: 'none',
-                      width: '100%',
-                      fontSize: '0.875rem',
-                      color: 'black',
-                      background: 'transparent',
-                      boxShadow: '0px 3px 14px #00000029'
-                    }}
-                  />
+                <div style={{ width: '50%' }} className='passion-input-resp'>
+                  <label className='passion-title-label'>
+                    Connected Interest 2:
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      className='form-control passion-input'
+                      placeholder='Add connected interest here...'
+                      value={editableAlignmentData.connected_interest_2 || ''}
+                      onChange={(e) =>
+                        handleValuesFormChange(
+                          'connected_interest_2',
+                          e.target.value
+                        )
+                      }
+                      style={{
+                        border: 'none',
+                        width: '100%',
+                        fontSize: '0.875rem',
+                        color: 'black',
+                        background: 'transparent',
+                        boxShadow: '0px 3px 14px #00000029'
+                      }}
+                    />
+                    <img
+                      src={EditPencil}
+                      alt='Edit'
+                      style={{
+                        position: 'absolute',
+                        right: '10px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '16px',
+                        height: '16px',
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <div>
-                <label>Explanation:</label>
+                <label className='passion-title-label'>Explanation:</label>
                 <ReactQuill
-                  value={alignmentData.explanation || ''}
+                  value={editableAlignmentData?.explanation || ''}
                   onChange={(content) =>
-                    handleFormChange('explanation', content)
+                    handleValuesFormChange('explanation', content)
                   }
                   style={{
                     boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
@@ -758,10 +1032,13 @@ function StartAlignment(props) {
         <MainCard
           title={'Work Culture'}
           icon={leaf}
-          onClick={handleWorkCultureCardClick}
+          onClick={canEdit ? handleWorkCultureCardClick : () => {}}
+          canEdit={canEdit}
         >
-          <h5 className='value-subheader'>What I Am Seeking:</h5>
-          <div className='accordion mt-5' id='progressAccordion'>
+          <h5 className='value-subheader seeking-title-acordioncard'>
+            What I Am Seeking:
+          </h5>
+          <div className='accordion' id='progressAccordion'>
             {[
               {
                 title: 'LEADERSHIP',
@@ -804,11 +1081,6 @@ function StartAlignment(props) {
                     aria-controls={`collapse${index}`}
                   >
                     <span style={{ fontSize: '.85rem' }}>{item.title}</span>
-                    <img
-                      style={{ width: '16px' }}
-                      src={dropdown}
-                      alt='dropdown-img'
-                    />
                   </button>
                 </h2>
                 <div
@@ -818,12 +1090,16 @@ function StartAlignment(props) {
                   aria-labelledby={`heading${index}`}
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body'>
-                    <h4 className='text-black'>{item.question}</h4>
-                    <p className='text-black ml-2 accordion-paragraph'>
-                      {item?.answer?.replace(/<[^>]*>/g, '') || ''}
-                    </p>
-                  </div>
+                  <div
+                    className='text-black ml-2 accordion-full-box'
+                    style={{
+                      wordBreak: 'break-word',
+                      whiteSpace: 'pre-wrap',
+                      overflowWrap: 'break-word',
+                      margin: '0 10px 15px 0'
+                    }}
+                    dangerouslySetInnerHTML={{ __html: item.answer || '' }}
+                  />
                 </div>
               </div>
             ))}
@@ -833,31 +1109,53 @@ function StartAlignment(props) {
         <MainCard
           title={'Work Culture'}
           icon={leaf}
-          onClick={handleWorkCultureCardClick}
-        />
+          onClick={canEdit ? handleWorkCultureCardClick : () => {}}
+          canEdit={canEdit}
+        >
+          <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+            <img src={nothingAdded} alt='nothing-added' />
+            <p
+              className='text-uppercase text-medium nodata-portf-text'
+              style={{ color: '#6F6F6F' }}
+            >
+              {canEdit
+                ? 'Nothing has been added yet. click the edit button to get started.'
+                : 'Nothing has been added yet.'}
+            </p>
+          </div>
+        </MainCard>
       )}
 
-      {editWorkCultureMode && (
+      {/* Only show edit modal when user can edit */}
+      {canEdit && editWorkCultureMode && (
         <EditCard
           title={hasWorkCultureData ? 'Edit Work Culture' : 'Add Work Culture'}
           icon={leaf}
           handleSubmit={handleSaveWorkCulture}
-          onCancel={() => setEditWorkCultureMode(false)}
+          toggle={() => setEditWorkCultureMode(false)}
         >
           <div>
-            <div style={{ marginTop: '30px', fontWeight: '600' }}>
+            <div
+              style={{ marginTop: '30px', fontWeight: '500' }}
+              className='howdoiproveit-label-text'
+            >
               Instructions:
             </div>
             <div style={{ marginTop: '15px', fontSize: '14px' }}>
-              For each of the 5 categories fo work culture, you must explain the
-              type of each you are seeking in your profession.What type
-              ofleadership do you respond to? What type of collaboration do you
+              For each of the 5 categories of work culture, you must explain the
+              type of each you are seeking in your profession. What type of
+              leadership do you respond to? What type of collaboration do you
               want to participate in? What type of feedback do you want to
-              recieve? What type of opportunities do you want to have access to
-              ? What type of environment do you want to work in?
+              receive? What type of opportunities do you want to have access to?
+              What type of environment do you want to work in?
             </div>
-
-            <div className='accordion mt-5' id='workCultureAccordion'>
+            <div
+              style={{ marginTop: '30px', fontWeight: '500' }}
+              className='howdoiproveit-label-text'
+            >
+              What I Am Seeking:
+            </div>
+            <div className='accordion mt-1' id='workCultureAccordion'>
               {[
                 {
                   title: 'LEADERSHIP',
@@ -905,11 +1203,6 @@ function StartAlignment(props) {
                       aria-controls={`editCollapse${index}`}
                     >
                       <span style={{ fontSize: '.85rem' }}>{item.title}</span>
-                      <img
-                        style={{ width: '16px' }}
-                        src={dropdown}
-                        alt='dropdown-img'
-                      />
                     </button>
                   </h2>
                   <div
@@ -923,13 +1216,15 @@ function StartAlignment(props) {
                       <h4 className='text-black'>{item.question}</h4>
                       <div className='mt-3'>
                         <ReactQuill
-                          value={item.content}
+                          value={editableAlignmentData[item.field] || ''}
                           onChange={(content) =>
                             handleFormChange(item.field, content)
                           }
                           style={{
                             boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 6px',
-                            borderRadius: '15px'
+                            borderRadius: '15px',
+                            height: 'auto',
+                            minHeight: '150px'
                           }}
                         />
                       </div>
@@ -947,30 +1242,71 @@ function StartAlignment(props) {
         <MainCard
           title={'Success'}
           icon={leaderStar}
-          onClick={handleSuccessCardClick}
+          onClick={canEdit ? handleSuccessCardClick : () => {}}
+          canEdit={canEdit}
         >
           <div style={{ position: 'relative' }}>
-<div style={{ fontSize: '16px', color: 'black', padding: '15px', boxShadow: '0px 5px 15px #00000029', borderRadius: '10px' }}>
-              <h5 className='value-subheader'>Definition of Success:</h5>
-              {showMoreMyStory
-                ? alignmentData?.definition_of_success?.replace(/<[^>]*>/g, '')
-                : alignmentData.definition_of_success
-                    ?.slice(0, 250)
-                    .replace(/<[^>]*>/g, '')}
-              {alignmentData.definition_of_success &&
-                alignmentData.definition_of_success.length > 250 && (
-                  <span
-                    onClick={() => setShowMoreMyStory(!showMoreMyStory)}
-                    style={{
-                      color: ' rgb(0, 218, 218)',
-                      cursor: 'pointer',
-                      marginLeft: '5px',
-                      fontWeight: '500'
-                    }}
-                  >
-                    {showMoreMyStory ? ' Show less' : '... Show more'}
-                  </span>
-                )}
+            <div className='mt-3' style={{ fontSize: '13px', color: 'grey' }}>
+              <h5 className='value-subheader seeking-title-acordioncard'>
+                Definition of Success:
+              </h5>
+              <div className='success-desc-text'>
+                {(() => {
+                  const stateKey = 'success-definition'
+                  const isExpanded = showMoreStates[stateKey] || false
+                  const content = alignmentData?.definition_of_success || ''
+                  const isLong = content.replace(/<[^>]*>/g, '').length > 150
+
+                  return (
+                    <div>
+                      <div
+                        style={{
+                          maxWidth: '100%',
+                          whiteSpace: 'normal',
+                          wordWrap: 'break-word',
+                          overflowWrap: 'break-word',
+                          fontFamily: 'Montserrat',
+                          fontSize: '13px',
+                          fontStyle: 'normal',
+                          fontWeight: 400,
+                          lineHeight: '1.4',
+                          display: isExpanded ? 'block' : '-webkit-box',
+                          WebkitLineClamp: isExpanded ? 'none' : 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: isExpanded
+                              ? content?.replace(/&nbsp;/g, ' ') || ''
+                              : content?.replace(/&nbsp;/g, ' ') || ''
+                          }}
+                        />
+                      </div>
+                      {isLong && (
+                        <span
+                          onClick={() =>
+                            setShowMoreStates((prev) => ({
+                              ...prev,
+                              [stateKey]: !prev[stateKey]
+                            }))
+                          }
+                          style={{
+                            color: '#52C7D3',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            fontSize: '12px'
+                          }}
+                        >
+                          {isExpanded ? ' Read less' : 'Read more'}
+                        </span>
+                      )}
+                    </div>
+                  )
+                })()}
+              </div>
             </div>
           </div>
         </MainCard>
@@ -978,11 +1314,25 @@ function StartAlignment(props) {
         <MainCard
           title={'Success'}
           icon={leaderStar}
-          onClick={handleSuccessCardClick}
-        />
+          onClick={canEdit ? handleSuccessCardClick : () => {}}
+          canEdit={canEdit}
+        >
+          <div className='d-flex flex-column justify-content-center align-items-center gap-2'>
+            <img src={nothingAdded} alt='nothing-added' />
+            <p
+              className='text-uppercase text-medium nodata-portf-text'
+              style={{ color: '#6F6F6F' }}
+            >
+              {canEdit
+                ? 'Nothing has been added yet. click the edit button to get started.'
+                : 'Nothing has been added yet.'}
+            </p>
+          </div>
+        </MainCard>
       )}
 
-      {editSuccessMode && (
+      {/* Only show edit modal when user can edit */}
+      {canEdit && editSuccessMode && (
         <EditCard
           title={
             hasSuccessData
@@ -991,10 +1341,13 @@ function StartAlignment(props) {
           }
           icon={leaderStar}
           handleSubmit={handleSaveSuccess}
-          onCancel={() => setEditSuccessMode(false)}
+          toggle={() => setEditSuccessMode(false)}
         >
           <div>
-            <div style={{ marginTop: '30px', fontWeight: '600' }}>
+            <div
+              style={{ marginTop: '30px', fontWeight: '600' }}
+              className='howdoiproveit-label-text'
+            >
               Instructions:
             </div>
             <div style={{ marginTop: '15px', fontSize: '14px' }}>
@@ -1002,9 +1355,11 @@ function StartAlignment(props) {
               yourself and how do you measure it for yourself?
             </div>
             <div className='mt-4'>
-              <label>Definition of Success:</label>
+              <label className='howdoiproveit-label-text'>
+                Definition of Success:
+              </label>
               <ReactQuill
-                value={alignmentData.definition_of_success || ''}
+                value={editableAlignmentData.definition_of_success || ''}
                 onChange={(content) =>
                   handleFormChange('definition_of_success', content)
                 }

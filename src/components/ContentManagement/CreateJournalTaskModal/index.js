@@ -4,6 +4,10 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 import axiosInstance from '../../../utils/AxiosInstance'
 import {
+  uploadJournalVideo,
+  validateJournalVideoFile
+} from '../../../utils/uploadJournalVideo'
+import {
   attachGlobalIdToPayload,
   getClientAndGlobalBody,
   getClientPayloadValue
@@ -36,6 +40,7 @@ const CreateJournalTaskModal = ({
   const [loading, setLoading] = useState(false)
   const [uploadingVideo, setUploadingVideo] = useState(false)
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
+  const [videoUploadProgress, setVideoUploadProgress] = useState(0)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [modalHeaderTitle, setModalHeaderTitle] = useState('Section Intro')
 
@@ -102,31 +107,52 @@ const CreateJournalTaskModal = ({
     const file = e.target.files[0]
     if (!file) return
 
+    const validationError = validateJournalVideoFile(file)
+    if (validationError) {
+      toast.error(validationError)
+      e.target.value = ''
+      return
+    }
+
+    // Keep the previously saved/valid video so a failed upload never
+    // clobbers it with an unusable local blob: URL.
+    const previousVideoFile = journalVideoFile
+    const previousVideoPreview = journalVideoPreview
+    const previousVideoUrl = journalVideoUrl
+    const blobPreviewUrl = URL.createObjectURL(file)
+
     setJournalVideoFile(file)
-    setJournalVideoPreview(URL.createObjectURL(file))
+    setJournalVideoPreview(blobPreviewUrl)
+    setJournalVideoUrl('')
     setUploadingVideo(true)
+    setVideoUploadProgress(0)
 
     try {
-      const videoFormData = new FormData()
-      videoFormData.append('video', file)
-
-      const videoUploadResponse = await axiosInstance.post(
-        '/upload/journal-video',
-        videoFormData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      )
-
-      if (videoUploadResponse.data.success) {
-        setJournalVideoUrl(videoUploadResponse.data.fileLocation)
-        toast.success('Video uploaded successfully')
-      } else {
-        toast.error('Failed to upload journal video')
-      }
+      const fileLocation = await uploadJournalVideo(file, {
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent?.total) return
+          setVideoUploadProgress(
+            Math.round((progressEvent.loaded / progressEvent.total) * 100)
+          )
+        }
+      })
+      setJournalVideoUrl(fileLocation)
+      setJournalVideoPreview(fileLocation)
+      if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
+      toast.success('Video uploaded successfully')
     } catch (error) {
       console.error('Error uploading journal video:', error)
-      toast.error('Failed to upload journal video: ' + error.message)
+      toast.error(error?.message || 'Failed to upload journal video')
+      // Revert so the broken blob: preview can never be saved with the task.
+      if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
+      setJournalVideoFile(previousVideoFile)
+      setJournalVideoPreview(previousVideoPreview)
+      setJournalVideoUrl(previousVideoUrl)
+      const videoInput = document.getElementById('journal-video-upload')
+      if (videoInput) videoInput.value = ''
     } finally {
       setUploadingVideo(false)
+      setVideoUploadProgress(0)
     }
   }
 
@@ -134,8 +160,13 @@ const CreateJournalTaskModal = ({
     const file = e.target.files[0]
     if (!file) return
 
+    const previousThumbnailFile = journalThumbnailFile
+    const previousThumbnailPreview = journalThumbnailPreview
+    const previousThumbnailUrl = journalVideoThumbnailUrl
+    const blobPreviewUrl = URL.createObjectURL(file)
+
     setJournalThumbnailFile(file)
-    setJournalThumbnailPreview(URL.createObjectURL(file))
+    setJournalThumbnailPreview(blobPreviewUrl)
     setUploadingThumbnail(true)
 
     try {
@@ -151,13 +182,24 @@ const CreateJournalTaskModal = ({
       if (thumbnailUploadResponse.data.success) {
         setJournalVideoThumbnailUrl(thumbnailUploadResponse.data.fileLocation)
         setJournalThumbnailPreview(thumbnailUploadResponse.data.fileLocation)
+        if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
         toast.success('Thumbnail uploaded successfully')
       } else {
-        toast.error('Failed to upload journal thumbnail')
+        throw new Error('Failed to upload journal thumbnail')
       }
     } catch (error) {
       console.error('Error uploading journal thumbnail:', error)
-      toast.error('Failed to upload journal thumbnail: ' + error.message)
+      toast.error(
+        error?.response?.data?.message ||
+          'Failed to upload journal thumbnail: ' + error.message
+      )
+      // Revert so a broken blob: preview can never be saved with the task.
+      if (blobPreviewUrl) URL.revokeObjectURL(blobPreviewUrl)
+      setJournalThumbnailFile(previousThumbnailFile)
+      setJournalThumbnailPreview(previousThumbnailPreview)
+      setJournalVideoThumbnailUrl(previousThumbnailUrl)
+      const thumbnailInput = document.getElementById('journal-thumbnail-upload')
+      if (thumbnailInput) thumbnailInput.value = ''
     } finally {
       setUploadingThumbnail(false)
     }
@@ -192,6 +234,7 @@ const CreateJournalTaskModal = ({
         taskData?.journal?.globalId ??
         taskData?.journalData?.globalId
 
+      const clientPayload = getClientPayloadValue(null)
       const payload = {
         title: journalTitle,
         category: category,
@@ -205,7 +248,9 @@ const CreateJournalTaskModal = ({
         information: journalText || null,
         reflectionItems: [],
         isSection: modalHeaderTitle === 'Section Intro',
-        client: getClientPayloadValue(null)
+        ...(clientPayload && clientPayload !== 'all'
+          ? { client: clientPayload }
+          : {})
       }
 
       let response
@@ -248,6 +293,7 @@ const CreateJournalTaskModal = ({
     setJournalThumbnailFile(null)
     setJournalVideoPreview(null)
     setJournalThumbnailPreview(null)
+    setVideoUploadProgress(0)
     setActiveTab('video')
     setCurrentMode('add')
     setShowDeleteModal(false)
@@ -496,7 +542,11 @@ const CreateJournalTaskModal = ({
                                   zIndex: 10, borderRadius: '12px'
                                 }}>
                                   <div className='spinner-border text-primary' role='status' />
-                                  <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>Uploading video...</span>
+                                  <span style={{ marginTop: 8, fontWeight: 500, fontSize: 13 }}>
+                                    {videoUploadProgress > 0
+                                      ? `Uploading video... ${videoUploadProgress}%`
+                                      : 'Uploading video...'}
+                                  </span>
                                 </div>
                               )}
                               {!isViewMode && !uploadingVideo && (
@@ -576,7 +626,7 @@ const CreateJournalTaskModal = ({
                                     <p className='upload-info'>
                                       Only mp4, avi, or webm file format
                                       <br />
-                                      supported (max. 50Mb)
+                                      supported (max. 1.5 GB)
                                     </p>
                                   </label>
                                 </>

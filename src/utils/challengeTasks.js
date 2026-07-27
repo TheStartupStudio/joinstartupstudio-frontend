@@ -3,10 +3,11 @@ export const CHALLENGE_TASKS = [
     key: 'portfolio_updated',
     day: 1,
     title: 'Update your Portfolio',
-    description: 'Set up and update your Market-Ready Portfolio.',
+    description:
+      'Complete the "My Details" section of your portfolio. Add at least 1 social media link.',
     cta: 'Go to Portfolio',
-    href: '/my-portfolio',
-    toast: 'Day 1 earned. Your Portfolio is live.'
+    href: '/my-portfolio#top',
+    toast: 'Day 1 earned. Your My Details section is set up.'
   },
   {
     key: 'builder_connected',
@@ -31,9 +32,10 @@ export const CHALLENGE_TASKS = [
     key: 'iam_video_posted',
     day: 4,
     title: 'Post your I Am Video',
-    description: 'Share your I Am Video in the forum and ask for feedback.',
+    description:
+      'Share your I am Video in the forum in the "ask for feedback" channel.',
     cta: 'Post Your Video',
-    href: '/startup-forum',
+    href: '/startup-forum/ask-for-feedback',
     toast: 'Day 4 earned. Your I Am Video is live.'
   },
   {
@@ -41,9 +43,10 @@ export const CHALLENGE_TASKS = [
     day: 5,
     title: 'Invite a friend to The Studio',
     description:
-      'Send your unique invite link to someone who should be building.',
+      "Enter a friend's name and email and we'll send them an invite to join The Studio.",
     cta: 'Send an Invite',
-    href: '/my-portfolio',
+    href: null,
+    opensModal: true,
     toast: 'Day 5 earned. Your invite is on its way.'
   }
 ]
@@ -106,4 +109,12 @@ export const BRAND = {
   blue: '#51c7df',
   pink: '#ff3399',
   gradient: 'linear-gradient(45deg, #51c7df, #ff3399)'
+}
+
+export const TASK_ICON_KEYS = {
+  portfolio_updated: 'folder',
+  builder_connected: 'chat',
+  forum_intro_posted: 'wave',
+  iam_video_posted: 'video',
+  invite_sent: 'invite'
 }

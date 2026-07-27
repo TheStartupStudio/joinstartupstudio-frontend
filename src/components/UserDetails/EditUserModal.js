@@ -35,6 +35,7 @@ import CustomBirthDateCalendar from '../CustomBirthDateCalendar'
 import { FaRegCalendarAlt } from 'react-icons/fa'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { COUNTRY_OPTIONS } from '../../utils/countries'
 
 function EditUserModal({ isOpen, toggle, subToggle }) {
   const [loading, setLoading] = useState(false)
@@ -47,10 +48,11 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
   const editorRef = React.useRef(null)
 
   // Demographics states
-  const [showStateDropdown, setShowStateDropdown] = useState(false)
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false)
   const [showGenderDropdown, setShowGenderDropdown] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
   const calendarRef = useRef(null)
+  const [countrySearch, setCountrySearch] = useState('')
 
   // Add null check for user state
   const userState = useSelector((state) => state.user?.user) || {}
@@ -83,18 +85,9 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
   // Dropdown options
   const genderOptions = ['Female', 'Male', 'Non-binary', 'Other']
   
-  const stateOptions = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
-    'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
-    'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-    'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
-    'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
-    'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
-    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-    'West Virginia', 'Wisconsin', 'Wyoming'
-  ]
+  // This app stores the selected country into the user's `state` field.
+  // The UI label should still be "Country" (full country list).
+  const countryOptions = COUNTRY_OPTIONS
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -143,7 +136,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       [field]: value
     }))
     setShowGenderDropdown(false)
-    setShowStateDropdown(false)
+    setShowCountryDropdown(false)
   }
 
   const handleInputFocus = (inputId) => {
@@ -173,9 +166,10 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       setEditorImage(null)
       setScale(1)
       setRotate(0)
-      setShowStateDropdown(false)
+      setShowCountryDropdown(false)
       setShowGenderDropdown(false)
       setShowCalendar(false)
+      setCountrySearch('')
       // Clean up Redux state
       dispatch(setImageCropperData(null))
       dispatch(setCroppedImage(null))
@@ -207,7 +201,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       return
     }
     if (!changedUser.state) {
-      toast.error('State is required')
+      toast.error('Country is required')
       return
     }
     if (!changedUser.gender) {
@@ -695,19 +689,22 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                       </div>
                     </div>
 
-                    {/* State */}
+                  {/* Country */}
                     <div style={{ flex: 1, position: 'relative' }}>
                       <div
                         style={{
                           borderRadius: '12px',
                           border: 'none',
-                          padding: '1rem 0.625rem 0.625rem',
+                          padding: '1.1rem 0.625rem 0.625rem',
                           boxShadow: '0px 3px 6px #00000029',
                           background: '#ffffff',
                           cursor: 'pointer',
-                          position: 'relative'
+                          position: 'relative',
+                          height: '50px'
                         }}
-                        onClick={() => !loading && setShowStateDropdown(!showStateDropdown)}
+                        onClick={() =>
+                          !loading && setShowCountryDropdown(!showCountryDropdown)
+                        }
                       >
                         <label 
                           style={{
@@ -719,7 +716,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                             fontFamily: 'Montserrat'
                           }}
                         >
-                          State
+                          Country
                         </label>
                         <span style={{
                           fontSize: '14px',
@@ -744,36 +741,93 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                           <path d="M1 1.5L6 6.5L11 1.5" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
-                      {showStateDropdown && (
+                      {showCountryDropdown && (
                         <div style={{
                           position: 'absolute',
                           top: '100%',
                           left: 0,
                           right: 0,
                           marginTop: '4px',
-                          maxHeight: '200px',
-                          overflowY: 'auto',
                           backgroundColor: '#fff',
                           borderRadius: '8px',
                           boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
-                          zIndex: 1000
+                          zIndex: 1000,
+                          padding: '15px'
                         }}>
-                          {stateOptions.map((state, index) => (
-                            <div
-                              key={index}
+                          <div style={{ borderBottom: 'none' }}>
+                            <input
+                              type='text'
+                              placeholder='Search countries...'
+                              value={countrySearch}
+                              onChange={(e) => setCountrySearch(e.target.value)}
+                              autoFocus
                               style={{
-                                padding: '10px 14px',
-                                cursor: 'pointer',
+                                width: '100%',
+                                padding: '6px 8px',
                                 fontSize: '14px',
-                                fontFamily: 'Montserrat',
+                                border: 'none',
+                                borderRadius: '4px',
+                                borderBottom: '1px solid #d1d5db',
+                                backgroundColor: 'transparent'
                               }}
-                              onClick={() => handleDropdownSelect('state', state)}
-                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                            >
-                              {state}
-                            </div>
-                          ))}
+                            />
+                          </div>
+
+                          <div
+                            style={{
+                              maxHeight: '200px',
+                              overflowY: 'auto',
+                              scrollbarWidth: 'none'
+                            }}
+                          >
+                            {countryOptions
+                              .filter((country) =>
+                                country
+                                  .toLowerCase()
+                                  .includes(countrySearch.toLowerCase())
+                              )
+                              .map((country, index) => (
+                                <div
+                                  key={`${country}-${index}`}
+                                  style={{
+                                    padding: '6px 6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontFamily: 'Montserrat',
+                                  }}
+                                  onClick={() => {
+                                    handleDropdownSelect('state', country)
+                                    setCountrySearch('')
+                                  }}
+                                  onMouseEnter={(e) =>
+                                    (e.currentTarget.style.backgroundColor =
+                                      '#f5f5f5')
+                                  }
+                                  onMouseLeave={(e) =>
+                                    (e.currentTarget.style.backgroundColor =
+                                      'transparent')
+                                  }
+                                >
+                                  {country}
+                                </div>
+                              ))}
+
+                            {countryOptions.length > 0 &&
+                              countryOptions.filter((country) =>
+                                country
+                                  .toLowerCase()
+                                  .includes(countrySearch.toLowerCase())
+                              ).length === 0 &&
+                              countrySearch && (
+                                <div style={{
+                                  padding: '12px 16px',
+                                  color: '#6c757d',
+                                  fontSize: '12px'
+                                }}>
+                                  No countries found
+                                </div>
+                              )}
+                          </div>
                         </div>
                       )}
                     </div>

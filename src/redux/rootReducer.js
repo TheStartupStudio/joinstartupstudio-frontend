@@ -16,11 +16,13 @@ import myImmersionReducer from './myImmersion/reducer'
 import PathwaysReducer from './pathways/reducer'
 import platformBadgesReducer from './platformBadges/reducer'
 import portfolioReducer from './portfolio/Reducer'
+import newPortfolioReducer from './newPortfolio/Reducer'
 import taskLessonReducer from './taskLessons/reducer'
 import backButtonReducer from './backButtonReducer'
 import sidebarReducer from './sidebar/Reducer'
 import trialTimerReducer from './trialTimer/reducer'
 import studioChallengeReducer from './studioChallenge/reducer'
+import streakReducer from './streak/reducer'
 import adminDashboardReducer from './adminDashboard/reducer'
 import organizationBrandingReducer from './organizationBranding/Reducer'
 
@@ -42,10 +44,12 @@ const rootReducer = combineReducers({
   platformBadges: platformBadgesReducer,
   lessons: taskLessonReducer,
   portfolio: portfolioReducer,
+  newPortfolio: newPortfolioReducer,
   backButton: backButtonReducer,
   sidebar: sidebarReducer,
   trialTimer: trialTimerReducer,
   studioChallenge: studioChallengeReducer,
+  streak: streakReducer,
   adminDashboard: adminDashboardReducer,
   organizationBranding: organizationBrandingReducer
 

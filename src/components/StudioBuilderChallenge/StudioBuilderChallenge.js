@@ -1,117 +1,162 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import {
   WIDGET_COPY,
   DAY_MODAL_COPY,
   COMPLETE_MODAL_COPY,
-  BRAND
+  BRAND,
+  TASK_ICON_KEYS
 } from '../../utils/challengeTasks'
+import ChallengeInviteModal from './ChallengeInviteModal'
 import './StudioBuilderChallenge.css'
 
-const B = {
-  blue: BRAND.blue,
-  pink: BRAND.pink,
-  gradient: BRAND.gradient,
-  gradientBg:
-    'linear-gradient(45deg, rgba(81,199,223,0.08), rgba(255,51,153,0.08))',
-  border: 'rgba(81,199,223,0.2)',
-  text: '#1a1a2e',
-  muted: '#6b8090',
-  faint: '#a0b8c4',
-  cardBorder: '#e2f0f9',
-  track: '#e8f4fb',
-  white: '#fff'
-}
-
-function CheckIcon({ day }) {
-  return (
-    <svg width='18' height='18' viewBox='0 0 18 18' aria-hidden='true'>
-      <defs>
-        <linearGradient id={`cg${day}`} x1='0%' y1='100%' x2='100%' y2='0%'>
-          <stop offset='0%' stopColor={B.blue} />
-          <stop offset='100%' stopColor={B.pink} />
-        </linearGradient>
-      </defs>
-      <circle cx='9' cy='9' r='9' fill={`url(#cg${day})`} />
-      <path
-        d='M5 9l3 3 5-5'
-        stroke='#fff'
-        strokeWidth='1.8'
-        strokeLinecap='round'
-        strokeLinejoin='round'
-        fill='none'
-      />
-    </svg>
-  )
-}
-
-function LockIcon() {
-  return (
-    <svg width='16' height='16' viewBox='0 0 16 16' fill='none' aria-hidden='true'>
-      <rect x='2' y='7' width='12' height='8' rx='2' stroke='#c8dce8' strokeWidth='1.5' />
-      <path
-        d='M5 7V5.5a4 4 0 018 0V7'
-        stroke='#c8dce8'
-        strokeWidth='1.5'
-        strokeLinecap='round'
-      />
-    </svg>
-  )
+const CARD_ICONS = {
+  folder: (
+    <path
+      d='M2 5a1.3 1.3 0 011.3-1.3h4L9 5.3h6.7A1.3 1.3 0 0117 6.6v8a1.3 1.3 0 01-1.3 1.3H3.3A1.3 1.3 0 012 14.6z'
+      stroke={BRAND.blue}
+      strokeWidth='1.4'
+      fill='none'
+    />
+  ),
+  chat: (
+    <>
+      <rect x='2' y='3.3' width='16' height='10.6' rx='2.5' stroke={BRAND.blue} strokeWidth='1.4' fill='none' />
+      <path d='M6.6 13.9v2.6l3.3-2.6' stroke={BRAND.blue} strokeWidth='1.4' fill='none' strokeLinejoin='round' />
+    </>
+  ),
+  wave: (
+    <>
+      <circle cx='10' cy='6.6' r='3.3' stroke={BRAND.pink} strokeWidth='1.4' fill='none' />
+      <path d='M4 16.6c0-3.3 2.6-5.3 6-5.3s6 2 6 5.3' stroke={BRAND.pink} strokeWidth='1.4' fill='none' />
+    </>
+  ),
+  video: (
+    <>
+      <rect x='2' y='4.6' width='10.6' height='10.6' rx='2' stroke={BRAND.pink} strokeWidth='1.4' fill='none' />
+      <path d='M12.6 8.6l5.3-2.6v8l-5.3-2.6z' stroke={BRAND.pink} strokeWidth='1.4' fill='none' strokeLinejoin='round' />
+    </>
+  ),
+  invite: (
+    <>
+      <circle cx='8' cy='6.6' r='3.3' stroke={BRAND.blue} strokeWidth='1.4' fill='none' />
+      <path d='M2.6 16.6c0-2.6 2.4-4.6 5.3-4.6' stroke={BRAND.blue} strokeWidth='1.4' fill='none' />
+      <path d='M14.6 9.3v5.3M12 12h5.3' stroke={BRAND.pink} strokeWidth='1.4' strokeLinecap='round' />
+    </>
+  ),
+  default: <circle cx='10' cy='10' r='7' stroke={BRAND.blue} strokeWidth='1.4' fill='none' />
 }
 
 function ProgressRing({ completed, total }) {
-  const r = 32
+  const r = 22
   const circ = 2 * Math.PI * r
-  const progress = (completed / total) * circ
+  const progress = total > 0 ? (completed / total) * circ : 0
 
   return (
-    <div className='studio-challenge__ring'>
-      <svg width='80' height='80' viewBox='0 0 80 80' className='studio-challenge__ring-svg'>
-        <circle cx='40' cy='40' r={r} fill='none' stroke={B.track} strokeWidth='6' />
+    <div className='studio-challenge__ring studio-challenge__ring--compact'>
+      <svg width='56' height='56' viewBox='0 0 56 56' className='studio-challenge__ring-svg'>
+        <circle cx='28' cy='28' r={r} fill='none' stroke='#e8f4fb' strokeWidth='4.5' />
         <defs>
           <linearGradient id='ringGrad' x1='0%' y1='100%' x2='100%' y2='0%'>
-            <stop offset='0%' stopColor={B.blue} />
-            <stop offset='100%' stopColor={B.pink} />
+            <stop offset='0%' stopColor={BRAND.blue} />
+            <stop offset='100%' stopColor={BRAND.pink} />
           </linearGradient>
         </defs>
         <circle
-          cx='40'
-          cy='40'
+          cx='28'
+          cy='28'
           r={r}
           fill='none'
           stroke='url(#ringGrad)'
-          strokeWidth='6'
+          strokeWidth='4.5'
           strokeLinecap='round'
           strokeDasharray={`${progress} ${circ}`}
         />
       </svg>
-      <div className='studio-challenge__ring-label'>
-        <span className='studio-challenge__ring-count'>{completed}</span>
+      <div className='studio-challenge__ring-label studio-challenge__ring-label--compact'>
+        <span className='studio-challenge__ring-count studio-challenge__ring-count--compact'>{completed}</span>
         <span className='studio-challenge__ring-total'>of {total}</span>
       </div>
     </div>
   )
 }
 
-function TaskRow({ task }) {
+function TaskCard({ task, onInviteClick }) {
+  const iconKey = TASK_ICON_KEYS[task.key] || 'default'
+  const opensInviteModal = task.opensModal || task.key === 'invite_sent'
+
+  const handleInviteClick = (event) => {
+    event.preventDefault()
+    onInviteClick?.()
+  }
+
+  const renderFrontFace = () => (
+    <>
+      <div className='studio-challenge__card-top'>
+        <div className='studio-challenge__card-icon-wrap'>
+          <svg width='15' height='15' viewBox='0 0 20 20' aria-hidden='true'>
+            {CARD_ICONS[iconKey] || CARD_ICONS.default}
+          </svg>
+        </div>
+        <span className='studio-challenge__card-reward-label'>Day {task.day}</span>
+      </div>
+      <div>
+        <div className='studio-challenge__card-title'>{task.title}</div>
+        <div className='studio-challenge__card-desc'>{task.description}</div>
+        {!task.completed && (
+          <div className='studio-challenge__card-cta'>{task.cta} →</div>
+        )}
+      </div>
+    </>
+  )
+
   return (
-    <div
-      className={`studio-challenge__task${task.completed ? ' studio-challenge__task--done' : ''}`}
-    >
-      <div className='studio-challenge__task-icon'>
-        {task.completed ? <CheckIcon day={task.day} /> : <LockIcon />}
+    <div className='studio-challenge__card'>
+      <div
+        className={`studio-challenge__card-inner${
+          task.completed ? ' studio-challenge__card-inner--flipped' : ''
+        }`}
+      >
+        {task.completed ? (
+          <div className='studio-challenge__card-face studio-challenge__card-face--front'>
+            {renderFrontFace()}
+          </div>
+        ) : opensInviteModal ? (
+          <button
+            type='button'
+            className='studio-challenge__card-face studio-challenge__card-face--front studio-challenge__card-button'
+            onClick={handleInviteClick}
+          >
+            {renderFrontFace()}
+          </button>
+        ) : (
+          <Link
+            to={
+              task.key === 'portfolio_updated'
+                ? {
+                    pathname: '/my-portfolio',
+                    hash: 'top',
+                    state: { scrollToTop: true, openSection: 'who-am-i' }
+                  }
+                : task.href
+            }
+            className='studio-challenge__card-face studio-challenge__card-face--front'
+          >
+            {renderFrontFace()}
+          </Link>
+        )}
+
+        <div className='studio-challenge__card-face studio-challenge__card-face--back'>
+          <svg width='34' height='34' viewBox='0 0 40 40' fill='none' aria-hidden='true'>
+            <circle cx='20' cy='16' r='10' fill='rgba(255,255,255,0.25)' stroke='#fff' strokeWidth='2' />
+            <path d='M14 24l-2 10 8-4 8 4-2-10' stroke='#fff' strokeWidth='2' strokeLinejoin='round' fill='none' />
+            <path d='M16 16l3 3 5-5' stroke='#fff' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' fill='none' />
+          </svg>
+          <div className='studio-challenge__card-earned-label'>Earned</div>
+          <div className='studio-challenge__card-reward'>Day {task.day}</div>
+        </div>
       </div>
-      <div className='studio-challenge__task-body'>
-        <div className='studio-challenge__task-title'>{task.title}</div>
-        <div className='studio-challenge__task-desc'>{task.description}</div>
-      </div>
-      <div className='studio-challenge__task-day'>+Day {task.day}</div>
-      {!task.completed && (
-        <Link to={task.href} className='studio-challenge__task-cta'>
-          {task.cta}
-        </Link>
-      )}
     </div>
   )
 }
@@ -124,22 +169,18 @@ function ChallengeSkeleton() {
         <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--link' />
       </div>
       <div className='studio-challenge__band'>
-        <div className='studio-challenge__skeleton-ring' />
+        <div className='studio-challenge__skeleton-ring studio-challenge__skeleton-ring--compact' />
         <div className='studio-challenge__skeleton-copy'>
           <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--headline' />
           <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--subline' />
           <div className='studio-challenge__skeleton-pill' />
         </div>
       </div>
-      {[1, 2, 3].map((row) => (
-        <div key={row} className='studio-challenge__skeleton-task'>
-          <div className='studio-challenge__skeleton-icon' />
-          <div className='studio-challenge__skeleton-task-copy'>
-            <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--task' />
-            <div className='studio-challenge__skeleton-line studio-challenge__skeleton-line--task-sub' />
-          </div>
-        </div>
-      ))}
+      <div className='studio-challenge__cards studio-challenge__cards--skeleton'>
+        {[1, 2, 3, 4, 5].map((card) => (
+          <div key={card} className='studio-challenge__skeleton-card' />
+        ))}
+      </div>
     </div>
   )
 }
@@ -150,8 +191,37 @@ function StudioBuilderChallenge() {
   )
   const { isTrialActive } = useSelector((state) => state.trialTimer)
   const [modal, setModal] = useState(null)
+  const [showInviteModal, setShowInviteModal] = useState(false)
+  const prevDaysEarnedRef = useRef(null)
+  const prevChallengeCompleteRef = useRef(false)
 
   const showSkeleton = !loaded && (loading || isTrialActive)
+
+  useEffect(() => {
+    if (!loaded || !progress) return
+
+    const { daysEarned, challengeComplete, trialEnd } = progress
+    const prevDays = prevDaysEarnedRef.current
+    const prevComplete = prevChallengeCompleteRef.current
+
+    if (prevDays !== null && daysEarned > prevDays) {
+      const newTrialEnd = trialEnd || new Date().toISOString()
+
+      if (challengeComplete && !prevComplete) {
+        setModal({ type: 'complete', newTrialEnd })
+      } else {
+        setModal({
+          type: 'day',
+          day: daysEarned,
+          newTrialEnd,
+          remaining: Math.max(0, (progress.tasks?.length || 5) - daysEarned)
+        })
+      }
+    }
+
+    prevDaysEarnedRef.current = daysEarned
+    prevChallengeCompleteRef.current = challengeComplete
+  }, [loaded, progress])
 
   if (showSkeleton) {
     return <ChallengeSkeleton />
@@ -162,6 +232,8 @@ function StudioBuilderChallenge() {
   }
 
   const { tasks, daysEarned, challengeComplete, windowExpired } = progress
+  const safeTasks = Array.isArray(tasks) ? tasks : []
+  const totalTasks = safeTasks.length || 5
 
   const wc = challengeComplete
     ? WIDGET_COPY.complete
@@ -175,7 +247,7 @@ function StudioBuilderChallenge() {
 
   return (
     <>
-      <div className='studio-challenge studio-challenge--loaded'>
+      <div className='studio-challenge studio-challenge--loaded studio-challenge--engine'>
         <div className='studio-challenge__header'>
           <div className='studio-challenge__brand'>
             <div className='studio-challenge__brand-icon'>
@@ -188,15 +260,15 @@ function StudioBuilderChallenge() {
             </div>
             <span className='studio-challenge__eyebrow'>{wc.eyebrow}</span>
           </div>
-          {wc.link && (
-            <Link to='/my-portfolio' className='studio-challenge__details-link'>
+          {/* {wc.link && (
+            <Link to={{ pathname: '/my-portfolio', hash: 'top', state: { scrollToTop: true } }} className='studio-challenge__details-link'>
               {wc.link} →
             </Link>
-          )}
+          )} */}
         </div>
 
         <div className='studio-challenge__band'>
-          <ProgressRing completed={daysEarned} total={5} />
+          <ProgressRing completed={daysEarned} total={totalTasks} />
           <div>
             <div className='studio-challenge__headline'>{headline}</div>
             <div className='studio-challenge__subline'>{wc.subline}</div>
@@ -204,10 +276,20 @@ function StudioBuilderChallenge() {
           </div>
         </div>
 
-        <div>
-          {tasks.map((task) => (
-            <TaskRow key={task.key} task={task} />
-          ))}
+        <div className='studio-challenge__cards-row'>
+          <div className='studio-challenge__cards-title'>Your Challenge Tasks</div>
+          <div
+            className='studio-challenge__cards'
+            style={{ gridTemplateColumns: `repeat(${totalTasks}, minmax(0, 1fr))` }}
+          >
+            {safeTasks.map((task) => (
+              <TaskCard
+                key={task.key}
+                task={task}
+                onInviteClick={() => setShowInviteModal(true)}
+              />
+            ))}
+          </div>
         </div>
 
         {wc.footer && <div className='studio-challenge__footer'>{wc.footer}</div>}
@@ -284,6 +366,11 @@ function StudioBuilderChallenge() {
           </div>
         </div>
       )}
+
+      <ChallengeInviteModal
+        show={showInviteModal}
+        onHide={() => setShowInviteModal(false)}
+      />
     </>
   )
 }
