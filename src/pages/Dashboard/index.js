@@ -208,7 +208,7 @@ function Dashboard() {
               minHeight: '4rem',
             }}
           >
-            <div className='dashboard-trial-countdown__content d-flex align-items-center justify-content-center flex-wrap gap-4 text-center' 
+            <div className='dashboard-trial-countdown__content d-flex align-items-center justify-content-center flex-wrap gap-2 text-center' 
             style={{
                 color: '#000',
                 fontFamily: 'Montserrat',
