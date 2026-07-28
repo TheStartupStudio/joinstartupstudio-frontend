@@ -61,6 +61,7 @@ const SubscriptionSuccess = () => {
           subscription_status: 'active',
           stripe_subscription_id: response.data.stripe_subscription_id,
           synced: response.data.synced,
+          is_one_time: response.data.is_one_time,
           message: response.data.message
         }
       }
@@ -92,16 +93,22 @@ const SubscriptionSuccess = () => {
         
         const data = await verifyAndSyncSession(sessionId)
 
-        const hasActiveSubscription = 
-          data.subscription_status === 'active' && 
-          data.stripe_subscription_id
+        // Recurring plans create a Stripe subscription id.
+        // One-time payments activate with subscription_status only.
+        const hasActiveSubscription =
+          data.subscription_status === 'active' &&
+          (data.stripe_subscription_id || data.is_one_time)
 
         if (hasActiveSubscription) {
-          setStatus('Subscription activated! Refreshing your account...')
+          setStatus('Payment activated! Refreshing your account...')
           
           await refreshUserData()
           
-          toast.success('🎉 Subscription activated successfully!')
+          toast.success(
+            data.is_one_time
+              ? '🎉 Payment completed successfully!'
+              : '🎉 Subscription activated successfully!'
+          )
           
           // ✅ Use window.location.href for full page reload to correct dashboard
           setTimeout(() => {
@@ -125,8 +132,8 @@ const SubscriptionSuccess = () => {
           
           const finalUserData = await refreshUserData()
           
-          if (finalUserData.subscription_status === 'active' && finalUserData.stripe_subscription_id) {
-            toast.success('🎉 Subscription activated successfully!')
+          if (finalUserData.subscription_status === 'active') {
+            toast.success('🎉 Payment activated successfully!')
             
             // ✅ Use window.location.href for full page reload
             setTimeout(() => {
@@ -135,7 +142,7 @@ const SubscriptionSuccess = () => {
             }, 2000)
           } else {
             toast.warning(
-              'Your subscription is being processed. Please refresh the page in a moment or contact support if issues persist.',
+              'Your payment is being processed. Please refresh the page in a moment or contact support if issues persist.',
               { autoClose: 8000 }
             )
             
