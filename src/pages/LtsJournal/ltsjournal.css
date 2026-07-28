@@ -764,6 +764,12 @@ display: flex
 
 
 
+@media (max-width: 768px) {
+  .lts-save-row {
+    justify-content: center;
+  }
+}
+
 @media (max-width: 450px) {
   .review-course-btn{
     width: 90%;

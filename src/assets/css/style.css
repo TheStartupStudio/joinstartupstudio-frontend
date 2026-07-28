@@ -5607,6 +5607,37 @@ wave > wave:first-child {
   .saveContinue-btn {
     width: 100%;
   }
+
+  .dashboard-trial-countdown__content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .dashboard-trial-countdown__label,
+  .dashboard-trial-countdown__timer {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .academy-dashboard-bottom {
+    align-items: center !important;
+    text-align: center;
+  }
+
+  .dashboard-course-info {
+    align-items: center !important;
+  }
+
+  .dashboard-continue-btn-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .dashboard-continue-btn-wrap .saveContinue-btn {
+    width: auto;
+  }
 }
 
 @media (max-width: 600px) {

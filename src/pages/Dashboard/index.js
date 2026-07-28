@@ -201,14 +201,14 @@ function Dashboard() {
         <CourseProgressInitializer />
         {isTrialActive && trialTimeRemaining && (
           <div 
-            className='mb-1rem-tab'
+            className='mb-1rem-tab dashboard-trial-countdown'
             style={{
               background: 'linear-gradient(180deg, var(--COLORS-Light-Blue, #B9DFEC) 0%, var(--COLORS-White, #FFF) 100%)',
               padding: '10px',
               minHeight: '4rem',
             }}
           >
-            <div className='d-flex align-items-center justify-content-center flex-wrap gap-4 text-center' 
+            <div className='dashboard-trial-countdown__content d-flex align-items-center justify-content-center flex-wrap gap-4 text-center' 
             style={{
                 color: '#000',
                 fontFamily: 'Montserrat',
@@ -216,11 +216,11 @@ function Dashboard() {
                 fontStyle: 'normal',
                 fontWeight: 500,
               }}>
-              <div>
+              <div className='dashboard-trial-countdown__label'>
                 TIME REMAINING IN TRIAL PERIOD:
               </div>
               
-              <div className='d-flex gap-2 align-items-center flex-wrap'>
+              <div className='dashboard-trial-countdown__timer d-flex gap-2 align-items-center flex-wrap justify-content-center'>
                 {trialTimeRemaining.days > 0 && (
                   <>
                     <div>{trialTimeRemaining.days}d</div>
@@ -270,7 +270,7 @@ function Dashboard() {
           </div>
 
           <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between flex-col-mob mb-1rem-tab gap-1rem-mob '>
-            <div className='d-flex align-items-center gap-3 flex-col-mob'>
+            <div className='d-flex align-items-center gap-3 flex-col-mob dashboard-course-info'>
               <div className='d-flex gap-1'>
                 <img src={AcademyLogo} alt='logo' style={{ width: '150px' }} />
               </div>
@@ -278,10 +278,12 @@ function Dashboard() {
                 Course Sessions - BUILDING YOU FIRST
               </h3>
             </div>
-            <AcademyBtn
-              title={'Continue'}
-              onClick={handleContinueCourse}
-            />
+            <div className='dashboard-continue-btn-wrap'>
+              <AcademyBtn
+                title={'Continue'}
+                onClick={handleContinueCourse}
+              />
+            </div>
             </div>
               <div style={{gridColumn: 'span 2'}}>
                 <ForumSection />
