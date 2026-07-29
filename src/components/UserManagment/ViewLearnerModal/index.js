@@ -496,6 +496,20 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                 <span>Payments</span>
               </div>
 
+              {displayData.planLabel && (
+                <div className='d-flex justify-content-between align-items-center mb-2'>
+                  <label className='info-label'>PLAN</label>
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {displayData.planLabel}
+                  </span>
+                </div>
+              )}
+
               <div className='payments-table-container'>
                 <table className='payments-table'>
                   <thead>
@@ -503,6 +517,7 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                       <th className='payment-date-header'>Date</th>
                       <th className='payment-amount-header'>Amount</th>
                       <th className='payment-status-header'>Status</th>
+                      <th className='payment-receipt-header'>Invoice</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -555,16 +570,37 @@ const ViewLearnerModal = ({ show, onHide, learner, onEdit }) => {
                                         ? 'Failed'
                                         : payment.status === 'pending'
                                           ? 'Pending'
-                                          : payment.status || 'Unknown'}
+                                          : payment.status === 'refunded'
+                                            ? 'Refunded'
+                                            : payment.status || 'Unknown'}
                                   </p>
                                 </div>
+                              </td>
+                              <td className='payment-receipt'>
+                                {payment.invoice_url ||
+                                payment.receiptUrl ||
+                                payment.url ? (
+                                  <a
+                                    href={
+                                      payment.invoice_url ||
+                                      payment.receiptUrl ||
+                                      payment.url
+                                    }
+                                    target='_blank'
+                                    rel='noreferrer'
+                                  >
+                                    View
+                                  </a>
+                                ) : (
+                                  '—'
+                                )}
                               </td>
                             </tr>
                           )
                         })
                       ) : (
                         <tr>
-                          <td colSpan='3' className='no-payments-message'>
+                          <td colSpan='4' className='no-payments-message'>
                             There is no payment history
                           </td>
                         </tr>

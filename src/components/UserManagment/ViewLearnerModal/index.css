@@ -646,15 +646,25 @@ border: 1px solid rgba(110, 110, 110, 0.25);
 }
 
 .view-learner-modal .payment-date-header {
-  width: 30%;
+  width: 25%;
 }
 
 .view-learner-modal .payment-amount-header {
-  width: 30%;
+  width: 25%;
 }
 
 .view-learner-modal .payment-status-header {
-  width: 40%;
+  width: 30%;
+}
+
+.view-learner-modal .payment-receipt-header {
+  width: 20%;
+}
+
+.view-learner-modal .payment-receipt a {
+  color: #51c7df;
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 .view-learner-modal .payment-date {
