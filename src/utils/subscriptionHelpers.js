@@ -84,6 +84,11 @@ export const getOrganizationType = (userOrSource) => {
 export const isStandAloneUniversity = (userOrSource) =>
   isStandAloneOrganizationType(getOrganizationType(userOrSource))
 
+export const hasLifetimeAccess = (userState) => {
+  const user = userState?.user || userState
+  return isSubscriptionExempt(user?.lifetime_access)
+}
+
 export const hasSubscriptionAccess = (userState) => {
   const user = userState?.user || userState
   if (!user) return false
@@ -96,6 +101,7 @@ export const hasSubscriptionAccess = (userState) => {
 
   return (
     isSubscriptionExempt(subscriptionExempt) ||
+    hasLifetimeAccess(user) ||
     isStandAloneUniversity(user) ||
     subscriptionStatus === 'active' ||
     (subscriptionStatus === 'canceling' && stripeSubscriptionId)
@@ -107,6 +113,7 @@ export const shouldSkipSubscriptionFlow = (source) => {
 
   return (
     isSubscriptionExempt(source?.subscriptionExempt ?? source?.subscription_exempt) ||
+    isSubscriptionExempt(source?.lifetimeAccess ?? source?.lifetime_access) ||
     isStandAloneOrganizationType(organizationType)
   )
 }

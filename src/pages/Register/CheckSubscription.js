@@ -252,11 +252,16 @@ useEffect(() => {
 
     try {
       if (isReturningUser) {
+        const selectedPlanDetails = planDetails[selectedPlan]
         const checkoutResponse = await axiosInstance.post(
           '/course-subscription/create-checkout-session',
           {
             planType: selectedPlan,
-            organizationPriceId: planDetails[selectedPlan]?.priceId 
+            organizationPriceId: selectedPlanDetails?.priceId,
+            frequency: selectedPlanDetails?.frequency || selectedPlan,
+            isOneTime:
+              selectedPlan === 'one-time' ||
+              selectedPlanDetails?.frequency === 'one-time'
           },
           {
             headers: {
@@ -293,13 +298,18 @@ useEffect(() => {
         })
 
         if (registrationResponse.status === 200 || registrationResponse.status === 201) {
+          const selectedPlanDetails = planDetails[selectedPlan]
           const checkoutResponse = await axiosInstance.post(
             '/course-subscription/create-checkout-session',
             {
               planType: selectedPlan,
               paymentMethodId: registrationData.paymentMethodId,
               email: registrationData.email,
-              organizationPriceId: planDetails[selectedPlan]?.priceId // ✅ Send org price ID
+              organizationPriceId: selectedPlanDetails?.priceId,
+              frequency: selectedPlanDetails?.frequency || selectedPlan,
+              isOneTime:
+                selectedPlan === 'one-time' ||
+                selectedPlanDetails?.frequency === 'one-time'
             },
             {
               headers: {
