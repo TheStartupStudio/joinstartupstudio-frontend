@@ -610,7 +610,7 @@ const WhoAmI = (props) => {
                 dangerouslySetInnerHTML={{
                   __html:
                     props?.sectionDescription ||
-                    'LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
+                    'Studio Builders communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
                 }}
               />
             </div>

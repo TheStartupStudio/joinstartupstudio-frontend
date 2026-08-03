@@ -37,7 +37,7 @@ function PortfolioHeader(props) {
       {activeSection === 'who-section' && isSectionVisible('who-section') && (
         <SectionDescription
           sectionTitle={'Who am i?'}
-          sectionDescription={`LTS Participants communicate the value they have produced in themselves through <strong>Story</strong>, <strong>Relationship</strong>, <strong>Mentorship</strong>, and <strong>Failure</strong>.`}
+          sectionDescription={`Studio Builders communicate the value they have produced in themselves through <strong>Story</strong>, <strong>Relationship</strong>, <strong>Mentorship</strong>, and <strong>Failure</strong>.`}
           triangleIcon={whoTriangle}
           sectionIcon={whoIconColor}
         />
@@ -45,7 +45,7 @@ function PortfolioHeader(props) {
       {activeSection === 'what-section' && isSectionVisible('what-section') && (
         <SectionDescription
           sectionTitle={'What can I do?'}
-          sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Learn</strong>, <strong>Develop</strong>, and <strong>Brand</strong>.`}
+          sectionDescription={`Studio Builders communicate the value they have produced in themselves through the outcomes of <strong>Learn</strong>, <strong>Develop</strong>, and <strong>Brand</strong>.`}
           triangleIcon={whatTriangle}
           sectionIcon={whatIconColor}
         />
@@ -53,7 +53,7 @@ function PortfolioHeader(props) {
       {activeSection === 'how-section' && isSectionVisible('how-section') && (
         <SectionDescription
           sectionTitle={'How Do I Prove it?'}
-          sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Alignment</strong>, <strong>Productivity</strong>, and <strong>Competitiveness</strong>.`}
+          sectionDescription={`Studio Builders communicate the value they have produced in themselves through the outcomes of <strong>Alignment</strong>, <strong>Productivity</strong>, and <strong>Competitiveness</strong>.`}
           triangleIcon={howTriangle}
           sectionIcon={howIconColor}
         />
