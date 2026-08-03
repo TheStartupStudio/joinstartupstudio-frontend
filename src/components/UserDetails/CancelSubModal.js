@@ -38,8 +38,9 @@ function CancelSubModal({
     } catch (error) {
       console.error('Error canceling subscription:', error)
       alert(
-        error.response?.data?.error || 
-        'Something went wrong while canceling the subscription. Please try again.'
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          'Something went wrong while canceling the subscription. Please try again.'
       )
     }
   }
