@@ -311,24 +311,24 @@ const EnLangs = {
   'register.platform': 'PLATFORM',
   'register.my_startup_live': 'MY STARTUP LIVE ™',
   'register.my_startup_live_text':
-    'LTS participants gain access to our streaming platform, StartUp Live ™, where they engage with our expert instructors as they are introduced to the Learn to Start model.',
+    'Studio Builders gain access to our streaming platform, StartUp Live ™, where they engage with our expert instructors as they are introduced to the Learn to Start model.',
   'register.my_portfolio': 'MY PORTFOLIO',
 
   'register.my_portfolio_text':
     'Every LTS participant creates a Learn to Start portfolio inside of the Learn to Start e-learning platform that features their outcomes of empowerment, performance, and wellness. The portfolio can be used to promote every LTS participant’s personal brand as well as allowing each participant to gain feedback from multiple sources as part of engaging in the program.',
   'register.beyond_learn_to_start':
-    'LTS participants gain access to powerful content, including encouragement and guidance from The Startup Studio’s CEO and founder, who created this series to offer his experiences and expertise. They also gain access to powerful Studio Guidance from our exclusive community of Global Ambassadors ™.',
+    'Studio Builders gain access to powerful content, including encouragement and guidance from The Startup Studio’s CEO and founder, who created this series to offer his experiences and expertise. They also gain access to powerful Studio Guidance from our exclusive community of Global Ambassadors ™.',
   'register.spotlight': 'SPOTLIGHT®',
   'portfolio.my_portfolio_edit':
     'Sharing my empowerment, wellness, and performance with the global community',
   'register.spotlight_text':
-    'LTS participants gain access to our pitch platform to apply for funding and mentorship from our LTS Alliance.',
+    'Studio Builders gain access to our pitch platform to apply for funding and mentorship from our LTS Alliance.',
   'register.coming_spring': '- COMING SPRING 2022 -',
   'register.spotlight_text_1':
-    'LTS participants gain access to network building within our global community.',
+    'Studio Builders gain access to network building within our global community.',
   'register.my_marketplace': 'MY MARKETPLACE',
   'register.my_marketplace_text':
-    'LTS participants offer their services to other LTS participants within the community.',
+    'Studio Builders offer their services to other Studio Builders within the community.',
   'register.story_in_motion': 'STORY IN MOTION®',
   'register.story_in_motion_text':
     'LTS Global Ambassadors ™ share their professional and personal journeys as a guide to all who tune in.',

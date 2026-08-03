@@ -731,7 +731,7 @@ const WhatCanIDo = ({
                 dangerouslySetInnerHTML={{
                   __html:
                     sectionDescription ||
-                    'LTS participants communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
+                    'Studio Builders communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
                 }}
               />
             </div>

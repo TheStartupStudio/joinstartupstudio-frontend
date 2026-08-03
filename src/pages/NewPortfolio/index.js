@@ -278,7 +278,7 @@ const Portfolio = (props) => {
         return (
           <WhoAmI
             sectionTitle='WHO AM I?'
-            sectionDescription='LTS participants communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
+            sectionDescription='Studio Builders communicate the value they have produced in themselves through Story, Relationship, Mentorship and Failure'
             userBasicInfo={userBasicInfo?.data}
             myRelationships={myRelationships?.data}
             myFailures={myFailures?.data}
@@ -290,7 +290,7 @@ const Portfolio = (props) => {
         return (
           <WhatCanIDo
             sectionTitle='WHAT CAN I DO?'
-            sectionDescription='LTS participants communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
+            sectionDescription='Studio Builders communicate the value they have produced in themselves through the outcomes of Learn, Develop and Brand'
             myProjects={myProjects}
             setRefreshData={setRefreshData}
             userBasicInfo={userBasicInfo?.data}
@@ -301,7 +301,7 @@ const Portfolio = (props) => {
         return (
           <HowDoIProveIt
             sectionTitle='HOW DO I PROVE IT?'
-            sectionDescription='LTS participants communicate the value they have produced in themselves through the outcomes of Alignment, Productivity, and Competitiveness.'
+            sectionDescription='Studio Builders communicate the value they have produced in themselves through the outcomes of Alignment, Productivity, and Competitiveness.'
             educations={educations?.data}
             workExprience={workExperiences?.data}
             userBasicInfo={userBasicInfo?.data}
