@@ -24,6 +24,13 @@ import {
   formatTrialLabel,
   getTrialSettingsFromUniversity
 } from '../../utils/trialSettings'
+import {
+  DEFAULT_PLAN_DETAILS,
+  buildSubscriptionCheckoutPayload,
+  fetchOrganizationPricingForUser,
+  getDefaultSelectedPlan,
+  resolvePlanDetailsFromApiResponse
+} from '../../utils/organizationPricing'
 
 
 // const stripePromise = loadStripe(
@@ -51,22 +58,7 @@ function CheckSubscription() {
   
   const user = useSelector((state) => state.user?.user?.user)
 
-  const defaultPlanDetails = {
-    monthly: {
-      price: '15.00',
-      total: '15.00',
-      period: 'month',
-      priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID,
-      commitment: '12-months commitment'
-    },
-    annual: {
-      price: '150.00',
-      total: '150.00',
-      period: 'year',
-      priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID,
-      commitment: 'Get 2 months free when you pay for the entire year'
-    }
-  }
+  const defaultPlanDetails = DEFAULT_PLAN_DETAILS
 
   const planDetails = organizationPricing || defaultPlanDetails
 
@@ -92,80 +84,34 @@ useEffect(() => {
     try {
       console.log('📌 Fetching organization pricing for user:', user.id)
       
-      const response = await axiosInstance.get('/super-admin/user/organization-pricing', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-      })
+      const response = await fetchOrganizationPricingForUser(user.id)
 
-      console.log('✅ Organization pricing response:', response.data)
+      console.log('✅ Organization pricing response:', response)
 
-      if (response.data.success) {
-        if (response.data.trialSettings) {
-          setTrialSettings(response.data.trialSettings)
+      if (response.success) {
+        if (response.trialSettings) {
+          setTrialSettings(response.trialSettings)
         }
 
-        if (shouldSkipSubscriptionFlow(response.data)) {
-          grantSubscriptionAccess(getOrganizationType(response.data), user?.id)
+        if (shouldSkipSubscriptionFlow(response)) {
+          grantSubscriptionAccess(getOrganizationType(response), user?.id)
           history.replace(
             getPostSubscriptionAccessPath(user, history.location.pathname)
           )
           return
         }
 
-        if (response.data.hasOrganizationPricing && response.data.pricing) {
-          console.log('✅ Organization pricing found:', response.data.pricing)
-          
-          const orgPricing = {}
-          
-          Object.keys(response.data.pricing).forEach(key => {
-            const pricing = response.data.pricing[key]
-            
-            const periodMap = {
-              'monthly': 'month',
-              'yearly': 'year',
-              'one-time': 'one-time',
-              '6-month': '6 months'
-            }
-            
-            const commitmentMap = {
-              'monthly': '12 months',
-              'yearly': 'year',
-              'one-time': 'one-time payment',
-              '6-month': '6 months'
-            }
-            
-            orgPricing[key] = {
-              price: pricing.amount.toFixed(2),
-              total: pricing.amount.toFixed(2),
-              period: periodMap[pricing.frequency] || pricing.frequency,
-              priceId: pricing.priceId,
-              commitment: commitmentMap[pricing.frequency] || pricing.frequency,
-              description: pricing.description,
-              frequency: pricing.frequency,
-              isOrganizationPrice: true
-            }
-          })
+        const resolvedPlans = resolvePlanDetailsFromApiResponse(response)
 
-          console.log('✅ Transformed org pricing:', orgPricing)
-          setOrganizationPricing(orgPricing)
-          
-          if (orgPricing.monthly) {
-            setSelectedPlan('monthly')
-          } else if (orgPricing.annual) {
-            setSelectedPlan('annual')
-          } else if (orgPricing['6-month']) {
-            setSelectedPlan('6-month')
-          } else if (orgPricing['one-time']) {
-            setSelectedPlan('one-time')
-          } else {
-            setSelectedPlan(Object.keys(orgPricing)[0])
-          }
+        if (resolvedPlans) {
+          console.log('✅ Organization pricing found:', resolvedPlans)
+          setOrganizationPricing(resolvedPlans)
+          setSelectedPlan(getDefaultSelectedPlan(resolvedPlans))
         } else {
           console.log('ℹ️ Using default pricing')
           setOrganizationPricing(null)
-          if (response.data.trialSettings) {
-            setTrialSettings(response.data.trialSettings)
+          if (response.trialSettings) {
+            setTrialSettings(response.trialSettings)
           }
         }
       }
@@ -256,12 +202,8 @@ useEffect(() => {
         const checkoutResponse = await axiosInstance.post(
           '/course-subscription/create-checkout-session',
           {
-            planType: selectedPlan,
+            ...buildSubscriptionCheckoutPayload(selectedPlan, planDetails),
             organizationPriceId: selectedPlanDetails?.priceId,
-            frequency: selectedPlanDetails?.frequency || selectedPlan,
-            isOneTime:
-              selectedPlan === 'one-time' ||
-              selectedPlanDetails?.frequency === 'one-time'
           },
           {
             headers: {
@@ -299,18 +241,13 @@ useEffect(() => {
 
         if (registrationResponse.status === 200 || registrationResponse.status === 201) {
           const selectedPlanDetails = planDetails[selectedPlan]
-          const checkoutResponse = await axiosInstance.post(
-            '/course-subscription/create-checkout-session',
-            {
-              planType: selectedPlan,
-              paymentMethodId: registrationData.paymentMethodId,
-              email: registrationData.email,
-              organizationPriceId: selectedPlanDetails?.priceId,
-              frequency: selectedPlanDetails?.frequency || selectedPlan,
-              isOneTime:
-                selectedPlan === 'one-time' ||
-                selectedPlanDetails?.frequency === 'one-time'
-            },
+        const checkoutResponse = await axiosInstance.post(
+          '/course-subscription/create-checkout-session',
+          {
+            ...buildSubscriptionCheckoutPayload(selectedPlan, planDetails),
+            paymentMethodId: registrationData.paymentMethodId,
+            email: registrationData.email,
+          },
             {
               headers: {
                 'Content-Type': 'application/json'

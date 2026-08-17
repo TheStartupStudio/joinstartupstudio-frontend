@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -16,6 +16,13 @@ import {
   DEFAULT_TRIAL_SETTINGS,
   formatTrialLabel
 } from '../../utils/trialSettings'
+import {
+  DEFAULT_PLAN_DETAILS,
+  buildSubscriptionCheckoutPayload,
+  fetchOrganizationPricingByEmail,
+  getDefaultSelectedPlan,
+  resolvePlanDetailsFromApiResponse
+} from '../../utils/organizationPricing'
 
 const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -25,24 +32,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
   const [trialSettings, setTrialSettings] = useState(DEFAULT_TRIAL_SETTINGS)
   const history = useHistory()
 
-  const displayPlans = {
-    monthly: {
-      price: '15.00',
-      total: '15.00',
-      period: 'month',
-      priceId: process.env.REACT_APP_STRIPE_MONTHLY_PRICE_ID || 'price_1RbhmbE4OMqDE3oQyb89B1dy',
-      commitment: '12-months commitment'
-    },
-    annual: {
-      price: '150.00',
-      total: '150.00',
-      period: 'year',
-      priceId: process.env.REACT_APP_STRIPE_ANNUAL_PRICE_ID || 'price_1SFxTOE4OMqDE3oQ4QJgzMBZ',
-      commitment: 'Get 2 months free when you pay for the entire year'
-    }
-  }
-
-  const planDetails = organizationPricing || displayPlans
+  const planDetails = organizationPricing || DEFAULT_PLAN_DETAILS
   const trialLabel = formatTrialLabel(trialSettings.trialPeriodDays)
 
   const handleSubscription = useCallback(async () => {
@@ -52,12 +42,20 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
       return
     }
 
+    const selectedPlanDetails = planDetails[selectedPlan]
+    if (!selectedPlanDetails) {
+      toast.error('Please select a subscription plan.')
+      return
+    }
+
     setIsLoading(true)
 
     try {
       const response = await axiosInstance.post('/auth/register-with-subscription', {
         ...registrationData,
-        selectedPlan: selectedPlan
+        selectedPlan,
+        priceId: selectedPlanDetails.priceId,
+        ...buildSubscriptionCheckoutPayload(selectedPlan, planDetails)
       })
 
       if (response.data.success) {
@@ -68,7 +66,7 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
           localStorage.setItem('refreshToken', response.data.tokens.refreshToken)
         }
 
-        const subscriptionValue = parseFloat(displayPlans[selectedPlan].price)
+        const subscriptionValue = parseFloat(selectedPlanDetails.price)
 
         trackSignUp('email')
         trackSubscribe({
@@ -90,24 +88,33 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
     } finally {
       setIsLoading(false)
     }
-  }, [registrationData, selectedPlan, onHide, history, displayPlans])
+  }, [registrationData, selectedPlan, onHide, history, planDetails])
+
+  const handleSubscriptionRef = useRef(handleSubscription)
+  handleSubscriptionRef.current = handleSubscription
+
+  const registrationEmail = registrationData?.email || ''
 
   // Fetch organization pricing based on email
   useEffect(() => {
+    if (!show || !registrationEmail) {
+      setLoadingPricing(false)
+      return undefined
+    }
+
+    let cancelled = false
+
     const fetchOrganizationPricing = async () => {
-      if (!registrationData?.email) {
-        console.log('❌ No email found, using default pricing')
-        setLoadingPricing(false)
-        return
-      }
+      setLoadingPricing(true)
 
       try {
-        console.log('📌 Checking organization pricing for email:', registrationData.email)
-        
-        // Try to fetch organization pricing by email (unauthenticated endpoint)
+        console.log('📌 Checking organization pricing for email:', registrationEmail)
+
         const response = await axiosInstance.post('/auth/check-organization-pricing', {
-          email: registrationData.email
+          email: registrationEmail
         })
+
+        if (cancelled) return
 
         console.log('✅ Organization pricing response:', response.data)
 
@@ -123,77 +130,38 @@ const CheckSubscriptionModal = ({ show, onHide, registrationData }) => {
               response.data.university_type,
             null
           )
-          await handleSubscription()
+          await handleSubscriptionRef.current()
           return
         }
 
-        if (response.data.success && response.data.hasOrganizationPricing && response.data.pricing) {
-          console.log('✅ Organization pricing found:', response.data.pricing)
-          
-          const orgPricing = {}
-          
-          Object.keys(response.data.pricing).forEach(key => {
-            const pricing = response.data.pricing[key]
-            
-            const periodMap = {
-              'monthly': 'month',
-              'yearly': 'year',
-              'one-time': 'one-time',
-              '6-month': '6 months'
-            }
-            
-            const commitmentMap = {
-              'monthly': '12 months',
-              'yearly': 'year',
-              'one-time': 'one-time payment',
-              '6-month': '6 months'
-            }
-            
-            orgPricing[key] = {
-              price: pricing.amount.toFixed(2),
-              total: pricing.amount.toFixed(2),
-              period: periodMap[pricing.frequency] || pricing.frequency,
-              priceId: pricing.priceId,
-              commitment: commitmentMap[pricing.frequency] || pricing.frequency,
-              description: pricing.description,
-              frequency: pricing.frequency,
-              isOrganizationPrice: true
-            }
-          })
+        const resolvedPlans = resolvePlanDetailsFromApiResponse(response.data)
 
-          console.log('✅ Transformed org pricing:', orgPricing)
-          setOrganizationPricing(orgPricing)
-          
-          // Set default selected plan based on available options
-          if (orgPricing.monthly) {
-            setSelectedPlan('monthly')
-          } else if (orgPricing.annual) {
-            setSelectedPlan('annual')
-          } else if (orgPricing['6-month']) {
-            setSelectedPlan('6-month')
-          } else if (orgPricing['one-time']) {
-            setSelectedPlan('one-time')
-          } else {
-            setSelectedPlan(Object.keys(orgPricing)[0])
-          }
+        if (resolvedPlans) {
+          console.log('✅ Organization pricing found:', resolvedPlans)
+          setOrganizationPricing(resolvedPlans)
+          setSelectedPlan(getDefaultSelectedPlan(resolvedPlans))
         } else {
           console.log('ℹ️ Using default pricing')
           setOrganizationPricing(null)
         }
       } catch (error) {
+        if (cancelled) return
         console.error('❌ Error fetching organization pricing:', error)
         console.error('Error response:', error.response?.data)
-        // If endpoint doesn't exist or fails, use default pricing
         setOrganizationPricing(null)
       } finally {
-        setLoadingPricing(false)
+        if (!cancelled) {
+          setLoadingPricing(false)
+        }
       }
     }
 
-    if (show) {
-      fetchOrganizationPricing()
+    fetchOrganizationPricing()
+
+    return () => {
+      cancelled = true
     }
-  }, [registrationData, show, handleSubscription])
+  }, [show, registrationEmail])
 
   return (
     <Modal

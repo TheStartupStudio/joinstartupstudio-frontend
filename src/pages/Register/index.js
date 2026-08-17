@@ -42,6 +42,14 @@ import {
   grantSubscriptionAccess,
   shouldSkipSubscriptionFlow
 } from '../../utils/subscriptionHelpers'
+import {
+  DEFAULT_PLAN_DETAILS,
+  fetchOrganizationPricingByEmail,
+  getRegisterHeadline,
+  getRegisterTrialNotice,
+  resolvePlanDetailsFromApiResponse
+} from '../../utils/organizationPricing'
+import { DEFAULT_TRIAL_SETTINGS } from '../../utils/trialSettings'
 
 
 // Initialize Stripe
@@ -80,6 +88,7 @@ function RegistrationForm() {
   const organizationLogo = useSelector((state) => state.organizationBranding?.logo)
   const [protectModal, setProtectModal] = useState(false)
   const [showCheckSubscription, setShowCheckSubscription] = useState(false)
+  const [modalRegistrationData, setModalRegistrationData] = useState(null)
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
@@ -88,6 +97,25 @@ function RegistrationForm() {
   const currentUrl = window.location.origin
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [formData, setFormData] = useState({
+    fullName: '',
+    emailAddress: '',
+    password: '',
+    confirmPassword: '',
+    birthDate: null,
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    nameOn: '',
+    zipC: ''
+  })
+  const [planDetails, setPlanDetails] = useState(DEFAULT_PLAN_DETAILS)
+  const [trialSettings, setTrialSettings] = useState(DEFAULT_TRIAL_SETTINGS)
+  const registerHeadline = getRegisterHeadline(planDetails, trialSettings)
+  const registerTrialNotice = getRegisterTrialNotice(trialSettings)
+  const [showCalendar, setShowCalendar] = useState(false)
+  const lastFetchedPricingEmailRef = useRef('')
 
   // Load cached logo first (instant), then fetch fresh branding
   useEffect(() => {
@@ -103,12 +131,39 @@ function RegistrationForm() {
     if (organizationLogo) preloadImage(organizationLogo)
   }, [organizationLogo])
 
-  // useEffect(() => {
-  //   trackLead({
-  //     contentName: 'Registration Page',
-  //     contentCategory: 'signup'
-  //   })
-  // }, [])
+  useEffect(() => {
+    const email = formData.emailAddress?.trim()
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!email || !emailRegex.test(email)) {
+      lastFetchedPricingEmailRef.current = ''
+      return undefined
+    }
+
+    const timer = setTimeout(async () => {
+      if (lastFetchedPricingEmailRef.current === email) {
+        return
+      }
+
+      lastFetchedPricingEmailRef.current = email
+
+      try {
+        const data = await fetchOrganizationPricingByEmail(email)
+
+        if (data.trialSettings) {
+          setTrialSettings(data.trialSettings)
+        }
+
+        const resolvedPlans = resolvePlanDetailsFromApiResponse(data)
+        setPlanDetails(resolvedPlans || DEFAULT_PLAN_DETAILS)
+      } catch (error) {
+        console.error('Failed to load register pricing:', error)
+        lastFetchedPricingEmailRef.current = ''
+      }
+    }, 400)
+
+    return () => clearTimeout(timer)
+  }, [formData.emailAddress])
 
   const validateForm = () => {
     let newErrors = {}
@@ -163,21 +218,6 @@ function RegistrationForm() {
     return Object.keys(newErrors).length === 0
   }
 
-  const [formData, setFormData] = useState({
-    fullName: '',
-    emailAddress: '',
-    password: '',
-    confirmPassword: '',
-    birthDate: null,
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    nameOn: '',
-    zipC: '' 
-  })
-
-  const [showCalendar, setShowCalendar] = useState(false)
   const calendarRef = useRef(null)
 
   const handleInputChange = (e) => {
@@ -232,6 +272,7 @@ function RegistrationForm() {
       console.error('Stand-alone registration check failed:', error)
     }
 
+    setModalRegistrationData(registrationData)
     setShowCheckSubscription(true)
   }
 
@@ -521,11 +562,16 @@ function RegistrationForm() {
       <main className='register-main'>
         <section className='px-5 pb-5 p-t-5 register-section'>
           <h1 className='text-center fs-48 fw-light'>
-            {/* $15 per month subscription */}
-            Start your 14-day free trial today
+            {registerHeadline}
           </h1>
 
-          <p className='text-center fs-5 fw-light'>Start building today for free</p>
+          <p className='text-center fs-5 fw-light'>
+            {trialSettings.trialEnabled
+              ? 'Start building today for free'
+              : planDetails.monthly
+                ? `Full access from $${planDetails.monthly.price}/month`
+                : 'Start building today'}
+          </p>
 
           {/* Add Google Pay button here - before the form */}
           {paymentRequest && (
@@ -940,9 +986,7 @@ function RegistrationForm() {
                   </div>
 
                   <p className='fs-13 fw-light text-black mt-3'>
-                    Your card is stored securely and won’t be charged today. After your 14-day free trial, 
-                    your card will be charged based on the plan you choose. You may cancel at any time by 
-                    going to your account settings page. Cancellation must be submitted at least 48 hours prior to renewal.
+                    {registerTrialNotice}
                   </p>
                 </div>
               </div>
@@ -1057,7 +1101,7 @@ function RegistrationForm() {
         <CheckSubscriptionModal 
           show={showCheckSubscription}
           onHide={() => setShowCheckSubscription(false)}
-          registrationData={JSON.parse(sessionStorage.getItem('registrationData') || '{}')}
+          registrationData={modalRegistrationData || {}}
         />
       </main>
     </>
