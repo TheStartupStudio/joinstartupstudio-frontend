@@ -29,7 +29,6 @@ import googleLogo from '../../../assets/images/academy-icons/svg/icons8-google.s
 import microsoftLogo from '../../../assets/images/academy-icons/svg/icons8-microsoft.svg'
 import closeBtn from '../../../assets/images/academy-icons/svg/icons8-close (1).svg'
 
-import Footer from '../../../components/Footer'
 import Faq from '../../../components/FAQ/Faq'
 import HowWeProtect from '../../../components/HowWeProtect'
 const ChooseLogin = () => {

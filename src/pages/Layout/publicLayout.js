@@ -3,11 +3,19 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import PublicHeader from '../../components/PublicHeader'
 import Footer from '../../components/Footer'
+import PlatformFooter from '../../components/PlatformFooter'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
+
+const PLATFORM_FOOTER_PATHS = ['/', '/register']
 
 function PublicLayout({ children }) {
   const location = useLocation()
   const TopScroll = useRef()
+  const usePlatformFooter = PLATFORM_FOOTER_PATHS.includes(location.pathname)
+  const hideFooter =
+    location.pathname === '/payment' ||
+    location.pathname === '/confirm-email' ||
+    location.pathname === '/check-email'
 
   useEffect(() => {
     if (TopScroll.current) {
@@ -40,11 +48,8 @@ function PublicLayout({ children }) {
           autoClose={5000}
         />
 
-        <>
-          {location.pathname !== '/payment' &&
-            location.pathname !== '/confirm-email' &&
-            location.pathname !== '/check-email' && <Footer />}
-        </>
+        {!hideFooter &&
+          (usePlatformFooter ? <PlatformFooter /> : <Footer />)}
       </div>
     </React.Fragment>
   )
