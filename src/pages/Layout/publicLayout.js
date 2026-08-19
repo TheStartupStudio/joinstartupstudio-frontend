@@ -6,7 +6,7 @@ import Footer from '../../components/Footer'
 import PlatformFooter from '../../components/PlatformFooter'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 
-const PLATFORM_FOOTER_PATHS = ['/', '/register']
+const PLATFORM_FOOTER_PATHS = ['/register']
 
 function PublicLayout({ children }) {
   const location = useLocation()
