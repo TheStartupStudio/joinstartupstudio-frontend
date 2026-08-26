@@ -101,10 +101,10 @@ const SIDEBAR_MENU_ITEMS = [
     id: 'intro-course',
     title: 'Intro to the Studio',
     srcImage: IntroToIcon,
-    to: '/my-course-in-entrepreneurship',
+    to: '/introduction-to-the-studio',
     roles: [2, 1],
     className: (pathname) =>
-      pathname === '/my-course-in-entrepreneurship' ? 'active' : ''
+      pathname === '/introduction-to-the-studio' ? 'active' : ''
   },
   {
     id: 'course-entrepreneurship',
