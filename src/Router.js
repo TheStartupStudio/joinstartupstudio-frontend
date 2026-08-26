@@ -22,6 +22,7 @@ import Payment from './pages/Register/Payment'
 import Dashboard from './pages/Dashboard'
 import LtsJournal from './pages/LtsJournal'
 import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
+import IntroductionToTheStudio from './pages/IntroductionToTheStudio'
 import PublicPortfolio2024 from './pages/Portfolio2024/publicPortfolio'
 import SubscriptionSuccess from './pages/Register/SubscriptionSuccess'
 import { filterRoutesByAccess, getDefaultDashboard } from './utils/routeHelpers'
@@ -107,6 +108,11 @@ function Router(props) {
         {
           path: '/my-course-in-entrepreneurship',
           component: MyCourseEntrepreneurship,
+          exact: true
+        },
+        {
+          path: '/introduction-to-the-studio',
+          component: IntroductionToTheStudio,
           exact: true
         },
         {

@@ -7,6 +7,7 @@ import StudentJournals from '../pages/studentJournals'
 import VerifyEmailByCode from '../pages/Register/verifyEmailByCode'
 import AddOccupationItemForm from '../components/Pathways/CreateOccupation'
 import MyCourseEntrepreneurship from '../pages/MyCourseEntrepreneurship'
+import IntroductionToTheStudio from '../pages/IntroductionToTheStudio'
 import Payment from '../pages/Register/Payment'
 import ConfirmEmail from '../pages/Register/ConfirmEmail'
 import CheckEmail from '../pages/Register/CheckEmail'
@@ -447,6 +448,11 @@ export const mutualRoutes = [
   {
     path: '/my-course-in-entrepreneurship',
     component: MyCourseEntrepreneurship,
+    exact: true
+  },
+  {
+    path: '/introduction-to-the-studio',
+    component: IntroductionToTheStudio,
     exact: true
   }
 ]
