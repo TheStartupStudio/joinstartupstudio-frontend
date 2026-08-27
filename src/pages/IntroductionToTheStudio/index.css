@@ -23,6 +23,12 @@
   background: #ffffff;
   padding: 32px 32px 28px;
   border-bottom: 1px solid var(--its-hairline);
+  flex-wrap: nowrap;
+}
+
+.its-header__text {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .its-header__title {
@@ -49,8 +55,10 @@
 .its-header__actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 12px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  margin-left: auto;
   padding-top: 2px;
 }
 
@@ -266,6 +274,13 @@
   opacity: 1;
 }
 
+/* Touch / coarse pointers: always show play so posters read as videos */
+@media (hover: none), (pointer: coarse) {
+  .its-player__play-badge {
+    opacity: 1;
+  }
+}
+
 .its-track-label {
   font-family: var(--its-font);
   font-weight: 600;
@@ -452,12 +467,32 @@
   .its-row {
     min-height: 84px;
   }
+
+  .its-player__play-badge {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 767px) {
   .its-header {
     padding: 20px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  .its-header__actions {
+    position: relative;
+    z-index: 2;
+    align-self: flex-start;
+  }
+
+  .its-header__title {
+    font-size: 22px;
+    padding-right: 4px;
+  }
+
+  .its-player__play-badge {
+    opacity: 1;
   }
 
   .its-body {
